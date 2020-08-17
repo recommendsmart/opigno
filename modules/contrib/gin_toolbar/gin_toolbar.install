@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * Implements hook_requirements().
+ */
+function gin_toolbar_requirements($phase) {
+  $requirements = [];
+  if ($phase == 'install') {
+    // We need to check if Gin theme is installed.
+    if (!\Drupal::service('theme_handler')->themeExists('gin')) {
+      $requirements['gin'] = [
+        'title' => t('Gin'),
+        'description' => t('Module works with <a href="https://www.drupal.org/project/gin" target="_blank">Gin</a> theme only'),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
+  }
+  return $requirements;
+}

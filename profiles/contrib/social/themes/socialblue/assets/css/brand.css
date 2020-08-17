@@ -295,6 +295,10 @@ html:not(.js) .navbar-default .dropdown:focus > a .navbar-nav__icon, html:not(.j
   fill: #f3f3f3;
 }
 
+.dropdown.has-alert.has-alert--desktop > a:before {
+  background-color: #ffc142;
+}
+
 .navbar-nav__icon {
   fill: #ffffff;
 }
@@ -484,6 +488,19 @@ html:not(.js) .navbar-default .dropdown:focus > a .navbar-nav__icon, html:not(.j
 
 .teaser--tile.teaser-profile .teaser__image {
   background-color: #29abe2;
+}
+
+.email-preview .btn-link-bg {
+  background: #29abe2;
+}
+
+.email-preview .btn-link {
+  border-color: #29abe2;
+  color: #29abe2;
+}
+
+.email-preview .main a:not(.btn-link) {
+  color: #29abe2;
 }
 
 @media (min-width: 900px) {
