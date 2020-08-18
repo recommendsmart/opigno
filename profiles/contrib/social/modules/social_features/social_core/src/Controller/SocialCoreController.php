@@ -115,7 +115,6 @@ class SocialCoreController extends ControllerBase {
       $event_id = $request->attributes->get('group');
       if (!empty($event_id) && !empty($view_data['event_id'])) {
         if ($event_id !== $view_data['event_id']) {
-          $x = 1;
           $view_data['list'] = [];
           $view_data['event_id'] = $event_id;
           $view_data['total_results'] = 0;
@@ -172,6 +171,29 @@ class SocialCoreController extends ControllerBase {
     $response = new AjaxResponse();
     $response->setData(['count' => $count]);
     return $response;
+  }
+
+  /**
+   * Redirects a user to the group or events invite page, or home if empty.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   Returns a redirect to the events of the currently logged in user.
+   */
+  public function myInvitesUserPage() {
+    /** @var \Drupal\social_core\InviteService $core_invites */
+    $core_invites = \Drupal::service('social_core.invite');
+    // Only when there are actual Invite plugins enabled.
+    if (!empty($core_invites->getInviteData('name'))) {
+      return $this->redirect($core_invites->getInviteData('name'), [
+        'user' => $this->currentUser()->id(),
+      ]);
+    }
+
+    // If there are no invites found or no module enabled
+    // lets redirect user to their stream.
+    return $this->redirect('social_user.user_home', [
+      'user' => $this->currentUser()->id(),
+    ]);
   }
 
 }
