@@ -10,4 +10,3 @@ dependencies:
   - drupal:options
   - field_group:field_group
   - social_tagging:social_tagging
-  - social:social_core

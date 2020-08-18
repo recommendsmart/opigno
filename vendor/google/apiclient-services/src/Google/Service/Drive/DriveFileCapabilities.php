@@ -18,7 +18,6 @@
 class Google_Service_Drive_DriveFileCapabilities extends Google_Model
 {
   public $canAddChildren;
-  public $canAddFolderFromAnotherDrive;
   public $canAddMyDriveParent;
   public $canChangeCopyRequiresWriterPermission;
   public $canChangeViewersCanCopyContent;
@@ -30,7 +29,6 @@ class Google_Service_Drive_DriveFileCapabilities extends Google_Model
   public $canEdit;
   public $canListChildren;
   public $canModifyContent;
-  public $canModifyContentRestriction;
   public $canMoveChildrenOutOfDrive;
   public $canMoveChildrenOutOfTeamDrive;
   public $canMoveChildrenWithinDrive;
@@ -59,14 +57,6 @@ class Google_Service_Drive_DriveFileCapabilities extends Google_Model
   public function getCanAddChildren()
   {
     return $this->canAddChildren;
-  }
-  public function setCanAddFolderFromAnotherDrive($canAddFolderFromAnotherDrive)
-  {
-    $this->canAddFolderFromAnotherDrive = $canAddFolderFromAnotherDrive;
-  }
-  public function getCanAddFolderFromAnotherDrive()
-  {
-    return $this->canAddFolderFromAnotherDrive;
   }
   public function setCanAddMyDriveParent($canAddMyDriveParent)
   {
@@ -155,14 +145,6 @@ class Google_Service_Drive_DriveFileCapabilities extends Google_Model
   public function getCanModifyContent()
   {
     return $this->canModifyContent;
-  }
-  public function setCanModifyContentRestriction($canModifyContentRestriction)
-  {
-    $this->canModifyContentRestriction = $canModifyContentRestriction;
-  }
-  public function getCanModifyContentRestriction()
-  {
-    return $this->canModifyContentRestriction;
   }
   public function setCanMoveChildrenOutOfDrive($canMoveChildrenOutOfDrive)
   {

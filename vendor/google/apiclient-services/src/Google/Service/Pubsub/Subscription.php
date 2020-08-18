@@ -20,7 +20,6 @@ class Google_Service_Pubsub_Subscription extends Google_Model
   public $ackDeadlineSeconds;
   protected $deadLetterPolicyType = 'Google_Service_Pubsub_DeadLetterPolicy';
   protected $deadLetterPolicyDataType = '';
-  public $enableMessageOrdering;
   protected $expirationPolicyType = 'Google_Service_Pubsub_ExpirationPolicy';
   protected $expirationPolicyDataType = '';
   public $filter;
@@ -30,8 +29,6 @@ class Google_Service_Pubsub_Subscription extends Google_Model
   protected $pushConfigType = 'Google_Service_Pubsub_PushConfig';
   protected $pushConfigDataType = '';
   public $retainAckedMessages;
-  protected $retryPolicyType = 'Google_Service_Pubsub_RetryPolicy';
-  protected $retryPolicyDataType = '';
   public $topic;
 
   public function setAckDeadlineSeconds($ackDeadlineSeconds)
@@ -55,14 +52,6 @@ class Google_Service_Pubsub_Subscription extends Google_Model
   public function getDeadLetterPolicy()
   {
     return $this->deadLetterPolicy;
-  }
-  public function setEnableMessageOrdering($enableMessageOrdering)
-  {
-    $this->enableMessageOrdering = $enableMessageOrdering;
-  }
-  public function getEnableMessageOrdering()
-  {
-    return $this->enableMessageOrdering;
   }
   /**
    * @param Google_Service_Pubsub_ExpirationPolicy
@@ -131,20 +120,6 @@ class Google_Service_Pubsub_Subscription extends Google_Model
   public function getRetainAckedMessages()
   {
     return $this->retainAckedMessages;
-  }
-  /**
-   * @param Google_Service_Pubsub_RetryPolicy
-   */
-  public function setRetryPolicy(Google_Service_Pubsub_RetryPolicy $retryPolicy)
-  {
-    $this->retryPolicy = $retryPolicy;
-  }
-  /**
-   * @return Google_Service_Pubsub_RetryPolicy
-   */
-  public function getRetryPolicy()
-  {
-    return $this->retryPolicy;
   }
   public function setTopic($topic)
   {

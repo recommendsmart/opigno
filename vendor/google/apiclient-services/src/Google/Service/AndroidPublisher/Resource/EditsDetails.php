@@ -26,10 +26,12 @@
 class Google_Service_AndroidPublisher_Resource_EditsDetails extends Google_Service_Resource
 {
   /**
-   * Gets details of an app. (details.get)
+   * Fetches app details for this edit. This includes the default language and
+   * developer support contact information. (details.get)
    *
-   * @param string $packageName Package name of the app.
-   * @param string $editId Identifier of the edit.
+   * @param string $packageName Unique identifier for the Android app that is
+   * being updated; for example, "com.spiffygame".
+   * @param string $editId Unique identifier for this edit.
    * @param array $optParams Optional parameters.
    * @return Google_Service_AndroidPublisher_AppDetails
    */
@@ -40,10 +42,12 @@ class Google_Service_AndroidPublisher_Resource_EditsDetails extends Google_Servi
     return $this->call('get', array($params), "Google_Service_AndroidPublisher_AppDetails");
   }
   /**
-   * Patches details of an app. (details.patch)
+   * Updates app details for this edit. This method supports patch semantics.
+   * (details.patch)
    *
-   * @param string $packageName Package name of the app.
-   * @param string $editId Identifier of the edit.
+   * @param string $packageName Unique identifier for the Android app that is
+   * being updated; for example, "com.spiffygame".
+   * @param string $editId Unique identifier for this edit.
    * @param Google_Service_AndroidPublisher_AppDetails $postBody
    * @param array $optParams Optional parameters.
    * @return Google_Service_AndroidPublisher_AppDetails
@@ -55,10 +59,11 @@ class Google_Service_AndroidPublisher_Resource_EditsDetails extends Google_Servi
     return $this->call('patch', array($params), "Google_Service_AndroidPublisher_AppDetails");
   }
   /**
-   * Updates details of an app. (details.update)
+   * Updates app details for this edit. (details.update)
    *
-   * @param string $packageName Package name of the app.
-   * @param string $editId Identifier of the edit.
+   * @param string $packageName Unique identifier for the Android app that is
+   * being updated; for example, "com.spiffygame".
+   * @param string $editId Unique identifier for this edit.
    * @param Google_Service_AndroidPublisher_AppDetails $postBody
    * @param array $optParams Optional parameters.
    * @return Google_Service_AndroidPublisher_AppDetails

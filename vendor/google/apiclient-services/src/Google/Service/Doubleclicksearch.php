@@ -19,12 +19,12 @@
  * Service definition for Doubleclicksearch (v2).
  *
  * <p>
- * The Search Ads 360 API allows developers to automate uploading conversions
- * and downloading reports from Search Ads 360.</p>
+ * Reports and modifies your advertising data in DoubleClick Search (for
+ * example, campaigns, ad groups, keywords, and conversions).</p>
  *
  * <p>
  * For more information about this service, see the API
- * <a href="https://developers.google.com/search-ads" target="_blank">Documentation</a>
+ * <a href="https://developers.google.com/doubleclick-search/" target="_blank">Documentation</a>
  * </p>
  *
  * @author Google, Inc.
@@ -49,7 +49,7 @@ class Google_Service_Doubleclicksearch extends Google_Service
   {
     parent::__construct($client);
     $this->rootUrl = $rootUrl ?: 'https://www.googleapis.com/';
-    $this->servicePath = '';
+    $this->servicePath = 'doubleclicksearch/v2/';
     $this->batchPath = 'batch/doubleclicksearch/v2';
     $this->version = 'v2';
     $this->serviceName = 'doubleclicksearch';
@@ -61,7 +61,7 @@ class Google_Service_Doubleclicksearch extends Google_Service
         array(
           'methods' => array(
             'get' => array(
-              'path' => 'doubleclicksearch/v2/agency/{agencyId}/advertiser/{advertiserId}/engine/{engineAccountId}/conversion',
+              'path' => 'agency/{agencyId}/advertiser/{advertiserId}/engine/{engineAccountId}/conversion',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'agencyId' => array(
@@ -103,6 +103,10 @@ class Google_Service_Doubleclicksearch extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                 ),
+                'adId' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
                 'campaignId' => array(
                   'location' => 'query',
                   'type' => 'string',
@@ -111,21 +115,17 @@ class Google_Service_Doubleclicksearch extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'adId' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
               ),
             ),'insert' => array(
-              'path' => 'doubleclicksearch/v2/conversion',
+              'path' => 'conversion',
               'httpMethod' => 'POST',
               'parameters' => array(),
             ),'update' => array(
-              'path' => 'doubleclicksearch/v2/conversion',
+              'path' => 'conversion',
               'httpMethod' => 'PUT',
               'parameters' => array(),
             ),'updateAvailability' => array(
-              'path' => 'doubleclicksearch/v2/conversion/updateAvailability',
+              'path' => 'conversion/updateAvailability',
               'httpMethod' => 'POST',
               'parameters' => array(),
             ),
@@ -139,11 +139,11 @@ class Google_Service_Doubleclicksearch extends Google_Service
         array(
           'methods' => array(
             'generate' => array(
-              'path' => 'doubleclicksearch/v2/reports/generate',
+              'path' => 'reports/generate',
               'httpMethod' => 'POST',
               'parameters' => array(),
             ),'get' => array(
-              'path' => 'doubleclicksearch/v2/reports/{reportId}',
+              'path' => 'reports/{reportId}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'reportId' => array(
@@ -153,7 +153,7 @@ class Google_Service_Doubleclicksearch extends Google_Service
                 ),
               ),
             ),'getFile' => array(
-              'path' => 'doubleclicksearch/v2/reports/{reportId}/files/{reportFragment}',
+              'path' => 'reports/{reportId}/files/{reportFragment}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'reportId' => array(
@@ -168,7 +168,7 @@ class Google_Service_Doubleclicksearch extends Google_Service
                 ),
               ),
             ),'request' => array(
-              'path' => 'doubleclicksearch/v2/reports',
+              'path' => 'reports',
               'httpMethod' => 'POST',
               'parameters' => array(),
             ),
@@ -182,7 +182,7 @@ class Google_Service_Doubleclicksearch extends Google_Service
         array(
           'methods' => array(
             'list' => array(
-              'path' => 'doubleclicksearch/v2/agency/{agencyId}/advertiser/{advertiserId}/savedcolumns',
+              'path' => 'agency/{agencyId}/advertiser/{advertiserId}/savedcolumns',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'agencyId' => array(

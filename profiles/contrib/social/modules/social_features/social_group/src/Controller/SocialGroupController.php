@@ -7,8 +7,6 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\group\Entity\Group;
-use Drupal\group\Entity\GroupContent;
-use Drupal\group\Entity\GroupInterface;
 use Drupal\user\Entity\User;
 use Drupal\views_bulk_operations\Form\ViewsBulkOperationsFormTrait;
 use Drupal\views_bulk_operations\Service\ViewsBulkOperationsActionProcessorInterface;
@@ -121,19 +119,6 @@ class SocialGroupController extends ControllerBase {
    *   The page title.
    */
   public function groupAddMemberTitle() {
-    $group_content = \Drupal::routeMatch()->getParameter('group_content');
-    $group = \Drupal::routeMatch()->getParameter('group');
-    if ($group_content instanceof GroupContent &&
-      $group_content->getGroupContentType()->getContentPluginId() === 'group_invitation') {
-      if ($group instanceof GroupInterface) {
-        return $this->t('Add invites to group: @group_name', ['@group_name' => $group->label()]);
-      }
-      return $this->t('Add invites');
-    }
-    if ($group instanceof GroupInterface) {
-      return $this->t('Add members to group: @group_name', ['@group_name' => $group->label()]);
-    }
-
     return $this->t('Add members');
   }
 
@@ -143,16 +128,7 @@ class SocialGroupController extends ControllerBase {
    * @return string
    *   The page title.
    */
-  public function groupRemoveContentTitle($group) {
-    $group_content = \Drupal::routeMatch()->getParameter('group_content');
-    if ($group_content instanceof GroupContent &&
-      $group_content->getGroupContentType()->getContentPluginId() === 'group_invitation') {
-      $group = \Drupal::routeMatch()->getParameter('group');
-      if ($group instanceof GroupInterface) {
-        return $this->t('Remove invitee from group: @group_name', ['@group_name' => $group->label()]);
-      }
-      return $this->t('Remove invitation');
-    }
+  public function groupRemoveContentTitle() {
     return $this->t('Remove a member');
   }
 
@@ -181,10 +157,6 @@ class SocialGroupController extends ControllerBase {
       if (!$user instanceof User) {
         return AccessResult::neutral();
       }
-    }
-
-    if ($user->isBlocked()) {
-      return AccessResult::allowedIfHasPermission($account, 'view blocked user');
     }
 
     // Own profile?

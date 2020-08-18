@@ -23,8 +23,6 @@ class Google_Service_HangoutsChat_Message extends Google_Collection
   protected $annotationsType = 'Google_Service_HangoutsChat_Annotation';
   protected $annotationsDataType = 'array';
   public $argumentText;
-  protected $attachmentType = 'Google_Service_HangoutsChat_Attachment';
-  protected $attachmentDataType = 'array';
   protected $cardsType = 'Google_Service_HangoutsChat_Card';
   protected $cardsDataType = 'array';
   public $createTime;
@@ -74,20 +72,6 @@ class Google_Service_HangoutsChat_Message extends Google_Collection
   public function getArgumentText()
   {
     return $this->argumentText;
-  }
-  /**
-   * @param Google_Service_HangoutsChat_Attachment
-   */
-  public function setAttachment($attachment)
-  {
-    $this->attachment = $attachment;
-  }
-  /**
-   * @return Google_Service_HangoutsChat_Attachment
-   */
-  public function getAttachment()
-  {
-    return $this->attachment;
   }
   /**
    * @param Google_Service_HangoutsChat_Card

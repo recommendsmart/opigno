@@ -5,8 +5,6 @@
  * Install and update functions for the social_group_flexible_group module.
  */
 
-use Drupal\search_api\Entity\Index;
-
 /**
  * Implements hook_install().
  */
@@ -85,16 +83,4 @@ function social_group_flexible_group_update_8801() {
 
   // Output logged messages to related channel of update execution.
   return $updateHelper->logger()->output();
-}
-
-/**
- * Trigger a search_api re-index.
- */
-function social_group_flexible_group_update_8802() {
-  $index = Index::load('social_groups');
-  if ($index->status()) {
-    $index->save();
-    $index->clear();
-    $index->reindex();
-  }
 }

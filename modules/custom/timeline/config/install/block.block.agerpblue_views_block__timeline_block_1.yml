@@ -1,0 +1,30 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.timeline
+  module:
+    - system
+    - views
+  theme:
+    - agerpblue
+id: agerpblue_views_block__timeline_block_1
+theme: agerpblue
+region: content
+weight: 0
+provider: null
+plugin: 'views_block:timeline-block_1'
+settings:
+  id: 'views_block:timeline-block_1'
+  label: Timeline
+  provider: views
+  label_display: visible
+  views_label: Timeline
+  items_per_page: '20'
+  type: none
+visibility:
+  request_path:
+    id: request_path
+    pages: "/timeline\r\n/Basic"
+    negate: false
+    context_mapping: {  }

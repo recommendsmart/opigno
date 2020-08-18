@@ -85,8 +85,7 @@
   .region--content-bottom,
   .region--hero,
   .region--secondary-navigation {
-    max-width: calc(1200px - 2rem);
-    padding: 0 1rem;
+    max-width: 1200px;
   }
   .region--title {
     margin-top: 1rem;

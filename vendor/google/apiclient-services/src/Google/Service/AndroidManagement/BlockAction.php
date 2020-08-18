@@ -18,7 +18,6 @@
 class Google_Service_AndroidManagement_BlockAction extends Google_Model
 {
   public $blockAfterDays;
-  public $blockScope;
 
   public function setBlockAfterDays($blockAfterDays)
   {
@@ -27,13 +26,5 @@ class Google_Service_AndroidManagement_BlockAction extends Google_Model
   public function getBlockAfterDays()
   {
     return $this->blockAfterDays;
-  }
-  public function setBlockScope($blockScope)
-  {
-    $this->blockScope = $blockScope;
-  }
-  public function getBlockScope()
-  {
-    return $this->blockScope;
   }
 }

@@ -22,7 +22,6 @@ class Google_Service_Dfareporting_FloodlightActivity extends Google_Collection
   public $advertiserId;
   protected $advertiserIdDimensionValueType = 'Google_Service_Dfareporting_DimensionValue';
   protected $advertiserIdDimensionValueDataType = '';
-  public $attributionEnabled;
   public $cacheBustingType;
   public $countingMethod;
   protected $defaultTagsType = 'Google_Service_Dfareporting_FloodlightActivityDynamicTag';
@@ -82,14 +81,6 @@ class Google_Service_Dfareporting_FloodlightActivity extends Google_Collection
   public function getAdvertiserIdDimensionValue()
   {
     return $this->advertiserIdDimensionValue;
-  }
-  public function setAttributionEnabled($attributionEnabled)
-  {
-    $this->attributionEnabled = $attributionEnabled;
-  }
-  public function getAttributionEnabled()
-  {
-    return $this->attributionEnabled;
   }
   public function setCacheBustingType($cacheBustingType)
   {

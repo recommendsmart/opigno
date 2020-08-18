@@ -7,7 +7,6 @@ use Drupal\activity_creator\ActivityFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\Sql\QueryFactory;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\social_event\EventEnrollmentInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -80,13 +79,7 @@ class OrganizerActivityContext extends ActivityContextBase {
     if (isset($data['related_object']) && !empty($data['related_object'])) {
       $related_entity = ActivityFactory::getActivityRelatedEntity($data);
       if ($data['related_object'][0]['target_type'] === 'event_enrollment') {
-        /** @var \Drupal\social_event\EventEnrollmentInterface $event_enrollment */
-        $event_enrollment = $this->entityTypeManager->getStorage('event_enrollment')
-          ->load($data['related_object'][0]['target_id']);
-        // Send out enrollments notifications when people actually enrolled.
-        if ($event_enrollment instanceof EventEnrollmentInterface && !$event_enrollment->get('field_enrollment_status')->isEmpty() && $event_enrollment->get('field_enrollment_status')->value !== '0') {
-          $recipients = $this->getRecipientOrganizerFromEntity($related_entity, $data);
-        }
+        $recipients = $this->getRecipientOrganizerFromEntity($related_entity, $data);
       }
     }
 

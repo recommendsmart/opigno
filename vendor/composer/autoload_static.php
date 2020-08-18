@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit398220cc917fea5d365e8aa2d6adcc2e
+class ComposerStaticInitb61204997c11e4fe727082b49922ea84
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -13,7 +13,6 @@ class ComposerStaticInit398220cc917fea5d365e8aa2d6adcc2e
         'bd9634f2d41831496de0d3dfe4c94881' => __DIR__ . '/..' . '/symfony/polyfill-php56/bootstrap.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
-        'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         'cf97c57bfe0f23854afd2f3818abb7a0' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/create_uploaded_file.php',
@@ -74,7 +73,6 @@ class ComposerStaticInit398220cc917fea5d365e8aa2d6adcc2e
             'Symfony\\Polyfill\\Php70\\' => 23,
             'Symfony\\Polyfill\\Php56\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
-            'Symfony\\Polyfill\\Intl\\Normalizer\\' => 33,
             'Symfony\\Polyfill\\Intl\\Idn\\' => 26,
             'Symfony\\Polyfill\\Iconv\\' => 23,
             'Symfony\\Polyfill\\Ctype\\' => 23,
@@ -238,10 +236,6 @@ class ComposerStaticInit398220cc917fea5d365e8aa2d6adcc2e
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
-        ),
-        'Symfony\\Polyfill\\Intl\\Normalizer\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer',
         ),
         'Symfony\\Polyfill\\Intl\\Idn\\' => 
         array (
@@ -569,24 +563,22 @@ class ComposerStaticInit398220cc917fea5d365e8aa2d6adcc2e
         'Error' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/Error.php',
         'Google_Service_Exception' => __DIR__ . '/..' . '/google/apiclient/src/Google/Service/Exception.php',
         'Google_Service_Resource' => __DIR__ . '/..' . '/google/apiclient/src/Google/Service/Resource.php',
-        'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
         'PEAR_Exception' => __DIR__ . '/..' . '/pear/pear_exception/PEAR/Exception.php',
         'ParseError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/ParseError.php',
         'SessionUpdateTimestampHandlerInterface' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/SessionUpdateTimestampHandlerInterface.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'TypeError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/TypeError.php',
-        'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
         'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit398220cc917fea5d365e8aa2d6adcc2e::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit398220cc917fea5d365e8aa2d6adcc2e::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit398220cc917fea5d365e8aa2d6adcc2e::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInit398220cc917fea5d365e8aa2d6adcc2e::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInit398220cc917fea5d365e8aa2d6adcc2e::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitb61204997c11e4fe727082b49922ea84::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitb61204997c11e4fe727082b49922ea84::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitb61204997c11e4fe727082b49922ea84::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInitb61204997c11e4fe727082b49922ea84::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInitb61204997c11e4fe727082b49922ea84::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -30,7 +30,7 @@ class Google_Service_AndroidPublisher_ExternallyHostedApk extends Google_Collect
   public $nativeCodes;
   public $packageName;
   public $usesFeatures;
-  protected $usesPermissionsType = 'Google_Service_AndroidPublisher_UsesPermission';
+  protected $usesPermissionsType = 'Google_Service_AndroidPublisher_ExternallyHostedApkUsesPermission';
   protected $usesPermissionsDataType = 'array';
   public $versionCode;
   public $versionName;
@@ -132,14 +132,14 @@ class Google_Service_AndroidPublisher_ExternallyHostedApk extends Google_Collect
     return $this->usesFeatures;
   }
   /**
-   * @param Google_Service_AndroidPublisher_UsesPermission
+   * @param Google_Service_AndroidPublisher_ExternallyHostedApkUsesPermission
    */
   public function setUsesPermissions($usesPermissions)
   {
     $this->usesPermissions = $usesPermissions;
   }
   /**
-   * @return Google_Service_AndroidPublisher_UsesPermission
+   * @return Google_Service_AndroidPublisher_ExternallyHostedApkUsesPermission
    */
   public function getUsesPermissions()
   {

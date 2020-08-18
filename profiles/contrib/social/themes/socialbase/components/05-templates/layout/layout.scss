@@ -61,8 +61,7 @@
   margin-right: auto;
 
   @include for-tablet-landscape-up {
-    max-width: calc(1200px - 2rem);
-    padding: 0 1rem
+    max-width: 1200px;
   }
 }
 

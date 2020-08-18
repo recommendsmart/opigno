@@ -24,7 +24,7 @@ interface FileLocator
     /**
      * Gets all class names that are found with this file locator.
      *
-     * @param string|null $globalBasename Passed to allow excluding the basename.
+     * @param string $globalBasename Passed to allow excluding the basename.
      *
      * @return string[]
      */
@@ -49,7 +49,7 @@ interface FileLocator
     /**
      * Gets the file extension that mapping files are suffixed with.
      *
-     * @return string|null
+     * @return string
      */
     public function getFileExtension();
 }

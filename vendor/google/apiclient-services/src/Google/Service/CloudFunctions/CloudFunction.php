@@ -18,7 +18,6 @@
 class Google_Service_CloudFunctions_CloudFunction extends Google_Model
 {
   public $availableMemoryMb;
-  public $buildId;
   public $description;
   public $entryPoint;
   public $environmentVariables;
@@ -51,14 +50,6 @@ class Google_Service_CloudFunctions_CloudFunction extends Google_Model
   public function getAvailableMemoryMb()
   {
     return $this->availableMemoryMb;
-  }
-  public function setBuildId($buildId)
-  {
-    $this->buildId = $buildId;
-  }
-  public function getBuildId()
-  {
-    return $this->buildId;
   }
   public function setDescription($description)
   {

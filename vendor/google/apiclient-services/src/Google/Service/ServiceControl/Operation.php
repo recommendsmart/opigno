@@ -20,7 +20,6 @@ class Google_Service_ServiceControl_Operation extends Google_Collection
   protected $collection_key = 'traceSpans';
   public $consumerId;
   public $endTime;
-  public $extensions;
   public $importance;
   public $labels;
   protected $logEntriesType = 'Google_Service_ServiceControl_LogEntry';
@@ -53,14 +52,6 @@ class Google_Service_ServiceControl_Operation extends Google_Collection
   public function getEndTime()
   {
     return $this->endTime;
-  }
-  public function setExtensions($extensions)
-  {
-    $this->extensions = $extensions;
-  }
-  public function getExtensions()
-  {
-    return $this->extensions;
   }
   public function setImportance($importance)
   {

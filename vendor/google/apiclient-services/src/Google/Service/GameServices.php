@@ -16,7 +16,7 @@
  */
 
 /**
- * Service definition for GameServices (v1).
+ * Service definition for GameServices (v1beta).
  *
  * <p>
  * Deploy and manage infrastructure for global multiplayer gaming experiences.</p>
@@ -53,7 +53,7 @@ class Google_Service_GameServices extends Google_Service
     $this->rootUrl = $rootUrl ?: 'https://gameservices.googleapis.com/';
     $this->servicePath = '';
     $this->batchPath = 'batch';
-    $this->version = 'v1';
+    $this->version = 'v1beta';
     $this->serviceName = 'gameservices';
 
     $this->projects_locations = new Google_Service_GameServices_Resource_ProjectsLocations(
@@ -63,7 +63,7 @@ class Google_Service_GameServices extends Google_Service
         array(
           'methods' => array(
             'get' => array(
-              'path' => 'v1/{+name}',
+              'path' => 'v1beta/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -73,7 +73,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'list' => array(
-              'path' => 'v1/{+name}/locations',
+              'path' => 'v1beta/{+name}/locations',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -81,9 +81,9 @@ class Google_Service_GameServices extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageSize' => array(
+                'filter' => array(
                   'location' => 'query',
-                  'type' => 'integer',
+                  'type' => 'string',
                 ),
                 'includeUnrevealedLocations' => array(
                   'location' => 'query',
@@ -93,9 +93,9 @@ class Google_Service_GameServices extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'filter' => array(
+                'pageSize' => array(
                   'location' => 'query',
-                  'type' => 'string',
+                  'type' => 'integer',
                 ),
               ),
             ),
@@ -109,7 +109,7 @@ class Google_Service_GameServices extends Google_Service
         array(
           'methods' => array(
             'create' => array(
-              'path' => 'v1/{+parent}/gameServerDeployments',
+              'path' => 'v1beta/{+parent}/gameServerDeployments',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'parent' => array(
@@ -123,7 +123,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'delete' => array(
-              'path' => 'v1/{+name}',
+              'path' => 'v1beta/{+name}',
               'httpMethod' => 'DELETE',
               'parameters' => array(
                 'name' => array(
@@ -133,7 +133,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'fetchDeploymentState' => array(
-              'path' => 'v1/{+name}:fetchDeploymentState',
+              'path' => 'v1beta/{+name}:fetchDeploymentState',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'name' => array(
@@ -143,7 +143,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'get' => array(
-              'path' => 'v1/{+name}',
+              'path' => 'v1beta/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -153,7 +153,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'getIamPolicy' => array(
-              'path' => 'v1/{+resource}:getIamPolicy',
+              'path' => 'v1beta/{+resource}:getIamPolicy',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'resource' => array(
@@ -167,7 +167,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'getRollout' => array(
-              'path' => 'v1/{+name}/rollout',
+              'path' => 'v1beta/{+name}/rollout',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -177,21 +177,13 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'list' => array(
-              'path' => 'v1/{+parent}/gameServerDeployments',
+              'path' => 'v1beta/{+parent}/gameServerDeployments',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'parent' => array(
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'pageSize' => array(
-                  'location' => 'query',
-                  'type' => 'integer',
-                ),
-                'orderBy' => array(
-                  'location' => 'query',
-                  'type' => 'string',
                 ),
                 'filter' => array(
                   'location' => 'query',
@@ -201,9 +193,17 @@ class Google_Service_GameServices extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                 ),
+                'orderBy' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
               ),
             ),'patch' => array(
-              'path' => 'v1/{+name}',
+              'path' => 'v1beta/{+name}',
               'httpMethod' => 'PATCH',
               'parameters' => array(
                 'name' => array(
@@ -217,7 +217,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'previewRollout' => array(
-              'path' => 'v1/{+name}/rollout:preview',
+              'path' => 'v1beta/{+name}/rollout:preview',
               'httpMethod' => 'PATCH',
               'parameters' => array(
                 'name' => array(
@@ -225,17 +225,17 @@ class Google_Service_GameServices extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'updateMask' => array(
+                'previewTime' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'previewTime' => array(
+                'updateMask' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
               ),
             ),'setIamPolicy' => array(
-              'path' => 'v1/{+resource}:setIamPolicy',
+              'path' => 'v1beta/{+resource}:setIamPolicy',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'resource' => array(
@@ -245,7 +245,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'testIamPermissions' => array(
-              'path' => 'v1/{+resource}:testIamPermissions',
+              'path' => 'v1beta/{+resource}:testIamPermissions',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'resource' => array(
@@ -255,7 +255,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'updateRollout' => array(
-              'path' => 'v1/{+name}/rollout',
+              'path' => 'v1beta/{+name}/rollout',
               'httpMethod' => 'PATCH',
               'parameters' => array(
                 'name' => array(
@@ -279,7 +279,7 @@ class Google_Service_GameServices extends Google_Service
         array(
           'methods' => array(
             'create' => array(
-              'path' => 'v1/{+parent}/configs',
+              'path' => 'v1beta/{+parent}/configs',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'parent' => array(
@@ -293,7 +293,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'delete' => array(
-              'path' => 'v1/{+name}',
+              'path' => 'v1beta/{+name}',
               'httpMethod' => 'DELETE',
               'parameters' => array(
                 'name' => array(
@@ -303,7 +303,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'get' => array(
-              'path' => 'v1/{+name}',
+              'path' => 'v1beta/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -313,7 +313,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'list' => array(
-              'path' => 'v1/{+parent}/configs',
+              'path' => 'v1beta/{+parent}/configs',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'parent' => array(
@@ -321,11 +321,11 @@ class Google_Service_GameServices extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageSize' => array(
-                  'location' => 'query',
-                  'type' => 'integer',
-                ),
                 'filter' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'pageToken' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -333,9 +333,9 @@ class Google_Service_GameServices extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'pageToken' => array(
+                'pageSize' => array(
                   'location' => 'query',
-                  'type' => 'string',
+                  'type' => 'integer',
                 ),
               ),
             ),
@@ -349,7 +349,7 @@ class Google_Service_GameServices extends Google_Service
         array(
           'methods' => array(
             'cancel' => array(
-              'path' => 'v1/{+name}:cancel',
+              'path' => 'v1beta/{+name}:cancel',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'name' => array(
@@ -359,7 +359,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'delete' => array(
-              'path' => 'v1/{+name}',
+              'path' => 'v1beta/{+name}',
               'httpMethod' => 'DELETE',
               'parameters' => array(
                 'name' => array(
@@ -369,7 +369,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'get' => array(
-              'path' => 'v1/{+name}',
+              'path' => 'v1beta/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -379,7 +379,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'list' => array(
-              'path' => 'v1/{+name}/operations',
+              'path' => 'v1beta/{+name}/operations',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -391,13 +391,13 @@ class Google_Service_GameServices extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'filter' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
+                ),
+                'filter' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),
@@ -411,7 +411,7 @@ class Google_Service_GameServices extends Google_Service
         array(
           'methods' => array(
             'create' => array(
-              'path' => 'v1/{+parent}/realms',
+              'path' => 'v1beta/{+parent}/realms',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'parent' => array(
@@ -425,7 +425,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'delete' => array(
-              'path' => 'v1/{+name}',
+              'path' => 'v1beta/{+name}',
               'httpMethod' => 'DELETE',
               'parameters' => array(
                 'name' => array(
@@ -435,7 +435,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'get' => array(
-              'path' => 'v1/{+name}',
+              'path' => 'v1beta/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -445,7 +445,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'list' => array(
-              'path' => 'v1/{+parent}/realms',
+              'path' => 'v1beta/{+parent}/realms',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'parent' => array(
@@ -453,9 +453,9 @@ class Google_Service_GameServices extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'pageSize' => array(
+                'filter' => array(
                   'location' => 'query',
-                  'type' => 'integer',
+                  'type' => 'string',
                 ),
                 'pageToken' => array(
                   'location' => 'query',
@@ -465,13 +465,13 @@ class Google_Service_GameServices extends Google_Service
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'filter' => array(
+                'pageSize' => array(
                   'location' => 'query',
-                  'type' => 'string',
+                  'type' => 'integer',
                 ),
               ),
             ),'patch' => array(
-              'path' => 'v1/{+name}',
+              'path' => 'v1beta/{+name}',
               'httpMethod' => 'PATCH',
               'parameters' => array(
                 'name' => array(
@@ -485,7 +485,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'previewUpdate' => array(
-              'path' => 'v1/{+name}:previewUpdate',
+              'path' => 'v1beta/{+name}:previewUpdate',
               'httpMethod' => 'PATCH',
               'parameters' => array(
                 'name' => array(
@@ -513,7 +513,7 @@ class Google_Service_GameServices extends Google_Service
         array(
           'methods' => array(
             'create' => array(
-              'path' => 'v1/{+parent}/gameServerClusters',
+              'path' => 'v1beta/{+parent}/gameServerClusters',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'parent' => array(
@@ -527,7 +527,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'delete' => array(
-              'path' => 'v1/{+name}',
+              'path' => 'v1beta/{+name}',
               'httpMethod' => 'DELETE',
               'parameters' => array(
                 'name' => array(
@@ -537,7 +537,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'get' => array(
-              'path' => 'v1/{+name}',
+              'path' => 'v1beta/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -547,7 +547,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'list' => array(
-              'path' => 'v1/{+parent}/gameServerClusters',
+              'path' => 'v1beta/{+parent}/gameServerClusters',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'parent' => array(
@@ -573,7 +573,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'patch' => array(
-              'path' => 'v1/{+name}',
+              'path' => 'v1beta/{+name}',
               'httpMethod' => 'PATCH',
               'parameters' => array(
                 'name' => array(
@@ -587,7 +587,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'previewCreate' => array(
-              'path' => 'v1/{+parent}/gameServerClusters:previewCreate',
+              'path' => 'v1beta/{+parent}/gameServerClusters:previewCreate',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'parent' => array(
@@ -605,7 +605,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'previewDelete' => array(
-              'path' => 'v1/{+name}:previewDelete',
+              'path' => 'v1beta/{+name}:previewDelete',
               'httpMethod' => 'DELETE',
               'parameters' => array(
                 'name' => array(
@@ -619,7 +619,7 @@ class Google_Service_GameServices extends Google_Service
                 ),
               ),
             ),'previewUpdate' => array(
-              'path' => 'v1/{+name}:previewUpdate',
+              'path' => 'v1beta/{+name}:previewUpdate',
               'httpMethod' => 'PATCH',
               'parameters' => array(
                 'name' => array(
@@ -627,11 +627,11 @@ class Google_Service_GameServices extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'previewTime' => array(
+                'updateMask' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'updateMask' => array(
+                'previewTime' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),

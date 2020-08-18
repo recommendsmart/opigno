@@ -26,11 +26,12 @@
 class Google_Service_AndroidPublisher_Resource_EditsTesters extends Google_Service_Resource
 {
   /**
-   * Gets testers. (testers.get)
+   * (testers.get)
    *
-   * @param string $packageName Package name of the app.
-   * @param string $editId Identifier of the edit.
-   * @param string $track The track to read from.
+   * @param string $packageName Unique identifier for the Android app that is
+   * being updated; for example, "com.spiffygame".
+   * @param string $editId Unique identifier for this edit.
+   * @param string $track The track to read or modify.
    * @param array $optParams Optional parameters.
    * @return Google_Service_AndroidPublisher_Testers
    */
@@ -41,11 +42,12 @@ class Google_Service_AndroidPublisher_Resource_EditsTesters extends Google_Servi
     return $this->call('get', array($params), "Google_Service_AndroidPublisher_Testers");
   }
   /**
-   * Patches testers. (testers.patch)
+   * (testers.patch)
    *
-   * @param string $packageName Package name of the app.
-   * @param string $editId Identifier of the edit.
-   * @param string $track The track to update.
+   * @param string $packageName Unique identifier for the Android app that is
+   * being updated; for example, "com.spiffygame".
+   * @param string $editId Unique identifier for this edit.
+   * @param string $track The track to read or modify.
    * @param Google_Service_AndroidPublisher_Testers $postBody
    * @param array $optParams Optional parameters.
    * @return Google_Service_AndroidPublisher_Testers
@@ -57,11 +59,12 @@ class Google_Service_AndroidPublisher_Resource_EditsTesters extends Google_Servi
     return $this->call('patch', array($params), "Google_Service_AndroidPublisher_Testers");
   }
   /**
-   * Updates testers. (testers.update)
+   * (testers.update)
    *
-   * @param string $packageName Package name of the app.
-   * @param string $editId Identifier of the edit.
-   * @param string $track The track to update.
+   * @param string $packageName Unique identifier for the Android app that is
+   * being updated; for example, "com.spiffygame".
+   * @param string $editId Unique identifier for this edit.
+   * @param string $track The track to read or modify.
    * @param Google_Service_AndroidPublisher_Testers $postBody
    * @param array $optParams Optional parameters.
    * @return Google_Service_AndroidPublisher_Testers

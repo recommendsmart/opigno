@@ -9,7 +9,6 @@ Feature: Create Public Group
       | name         | mail                     | status |
       | GivenUserOne | group_user_1@example.com | 1      |
       | GivenUserTwo | group_user_2@example.com | 1      |
-      | Outsider     | outsider@example.com     | 1      |
     Given "event_types" terms:
       | name     |
       | Webinar  |
@@ -128,9 +127,7 @@ Feature: Create Public Group
     And I should see "Groups"
     And I should not see "Test public group"
 
-    # DS-722 As an outsider I am not allowed to enrol to an event in group
-    Given I am logged in as "Outsider"
-    When I am on "/community-events"
+    When I click "Events"
     And I click "Test group event"
     And I should not see "Enroll" in the "Hero buttons"
 

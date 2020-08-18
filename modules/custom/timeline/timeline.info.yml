@@ -1,0 +1,25 @@
+name: Timeline
+description: 'Timeline content type and related view for timeline block.'
+type: module
+core: 8.x
+dependencies:
+  - block
+  - datetime
+  - ds
+  - dynamic_entity_reference
+  - field
+  - group
+  - layout_builder
+  - link
+  - linked_field
+  - media
+  - menu_ui
+  - node
+  - path
+  - simple_timeline
+  - system
+  - text
+  - user
+  - views
+version: 8.x-1.0
+core_incompatible: false

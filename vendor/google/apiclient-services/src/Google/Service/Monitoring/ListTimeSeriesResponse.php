@@ -23,7 +23,6 @@ class Google_Service_Monitoring_ListTimeSeriesResponse extends Google_Collection
   public $nextPageToken;
   protected $timeSeriesType = 'Google_Service_Monitoring_TimeSeries';
   protected $timeSeriesDataType = 'array';
-  public $unit;
 
   /**
    * @param Google_Service_Monitoring_Status
@@ -60,13 +59,5 @@ class Google_Service_Monitoring_ListTimeSeriesResponse extends Google_Collection
   public function getTimeSeries()
   {
     return $this->timeSeries;
-  }
-  public function setUnit($unit)
-  {
-    $this->unit = $unit;
-  }
-  public function getUnit()
-  {
-    return $this->unit;
   }
 }

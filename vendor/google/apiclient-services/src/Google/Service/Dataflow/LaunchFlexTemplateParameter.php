@@ -21,7 +21,6 @@ class Google_Service_Dataflow_LaunchFlexTemplateParameter extends Google_Model
   protected $containerSpecDataType = '';
   public $containerSpecGcsPath;
   public $jobName;
-  public $launchOptions;
   public $parameters;
 
   /**
@@ -53,14 +52,6 @@ class Google_Service_Dataflow_LaunchFlexTemplateParameter extends Google_Model
   public function getJobName()
   {
     return $this->jobName;
-  }
-  public function setLaunchOptions($launchOptions)
-  {
-    $this->launchOptions = $launchOptions;
-  }
-  public function getLaunchOptions()
-  {
-    return $this->launchOptions;
   }
   public function setParameters($parameters)
   {

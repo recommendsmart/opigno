@@ -373,8 +373,7 @@ class Google_Service_Compute_Resource_InstanceGroupManagers extends Google_Servi
   }
   /**
    * Lists all errors thrown by actions on instances for a given managed instance
-   * group. The filter and orderBy query parameters are not supported.
-   * (instanceGroupManagers.listErrors)
+   * group. (instanceGroupManagers.listErrors)
    *
    * @param string $project Project ID for this request.
    * @param string $zone The name of the zone where the managed instance group is
@@ -436,8 +435,7 @@ class Google_Service_Compute_Resource_InstanceGroupManagers extends Google_Servi
    * the list has a currentAction, which indicates the action that the managed
    * instance group is performing on the instance. For example, if the group is
    * still creating an instance, the currentAction is CREATING. If a previous
-   * action failed, the list displays the errors for that failed action. The
-   * orderBy query parameter is not supported.
+   * action failed, the list displays the errors for that failed action.
    * (instanceGroupManagers.listManagedInstances)
    *
    * @param string $project Project ID for this request.

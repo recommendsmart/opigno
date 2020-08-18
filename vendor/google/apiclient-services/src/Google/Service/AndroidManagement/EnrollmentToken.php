@@ -18,7 +18,6 @@
 class Google_Service_AndroidManagement_EnrollmentToken extends Google_Model
 {
   public $additionalData;
-  public $allowPersonalUsage;
   public $duration;
   public $expirationTimestamp;
   public $name;
@@ -36,14 +35,6 @@ class Google_Service_AndroidManagement_EnrollmentToken extends Google_Model
   public function getAdditionalData()
   {
     return $this->additionalData;
-  }
-  public function setAllowPersonalUsage($allowPersonalUsage)
-  {
-    $this->allowPersonalUsage = $allowPersonalUsage;
-  }
-  public function getAllowPersonalUsage()
-  {
-    return $this->allowPersonalUsage;
   }
   public function setDuration($duration)
   {

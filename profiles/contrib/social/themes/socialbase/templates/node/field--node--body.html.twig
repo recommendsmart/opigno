@@ -15,14 +15,7 @@
     %}
     <div{{ title_attributes.addClass(title_classes) }}>{{ label }}</div>
   {% endif %}
-
-  {%
-    set body_classes = [
-    'body-text',
-    'clearfix',
-  ]
-  %}
-  <div {{ attributes.addClass(body_classes) }}>
+  <div class="body-text clearfix">
     {% for item in items %}
       {{ item.content }}
     {% endfor %}

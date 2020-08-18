@@ -194,8 +194,7 @@ class Google_Service_ShoppingContent_Resource_Liasettings extends Google_Service
     return $this->call('setposdataprovider', array($params), "Google_Service_ShoppingContent_LiasettingsSetPosDataProviderResponse");
   }
   /**
-   * Updates the LIA settings of the account. Any fields that are not provided are
-   * deleted from the resource. (liasettings.update)
+   * Updates the LIA settings of the account. (liasettings.update)
    *
    * @param string $merchantId The ID of the managing account. If this parameter
    * is not the same as accountId, then this account must be a multi-client

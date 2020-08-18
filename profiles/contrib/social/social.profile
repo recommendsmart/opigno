@@ -110,7 +110,6 @@ function social_verify_custom_requirements(array &$install_state) {
       'title' => t('Social Auth LinkedIn module requirements'),
       'value' => t('Not installed'),
       'description' => t('Social Auth LinkedIn requires LinkedIn PHP Library. Make sure the library is installed via Composer.'),
-      'severity' => REQUIREMENT_ERROR,
     ];
   }
 

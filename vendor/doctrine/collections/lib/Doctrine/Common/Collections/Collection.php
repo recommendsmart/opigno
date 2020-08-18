@@ -179,9 +179,9 @@ interface Collection extends Countable, IteratorAggregate, ArrayAccess
     /**
      * Gets the key/index of the element at the current iterator position.
      *
-     * @return int|string|null
+     * @return int|string
      *
-     * @psalm-return TKey|null
+     * @psalm-return TKey
      */
     public function key();
 

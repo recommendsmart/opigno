@@ -15,15 +15,13 @@
  * the License.
  */
 
-class Google_Service_ShoppingContent_AccountsCustomBatchRequestEntry extends Google_Collection
+class Google_Service_ShoppingContent_AccountsCustomBatchRequestEntry extends Google_Model
 {
-  protected $collection_key = 'labelIds';
   protected $accountType = 'Google_Service_ShoppingContent_Account';
   protected $accountDataType = '';
   public $accountId;
   public $batchId;
   public $force;
-  public $labelIds;
   protected $linkRequestType = 'Google_Service_ShoppingContent_AccountsCustomBatchRequestEntryLinkRequest';
   protected $linkRequestDataType = '';
   public $merchantId;
@@ -67,14 +65,6 @@ class Google_Service_ShoppingContent_AccountsCustomBatchRequestEntry extends Goo
   public function getForce()
   {
     return $this->force;
-  }
-  public function setLabelIds($labelIds)
-  {
-    $this->labelIds = $labelIds;
-  }
-  public function getLabelIds()
-  {
-    return $this->labelIds;
   }
   /**
    * @param Google_Service_ShoppingContent_AccountsCustomBatchRequestEntryLinkRequest

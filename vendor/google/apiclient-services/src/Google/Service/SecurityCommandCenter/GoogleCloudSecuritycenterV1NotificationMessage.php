@@ -20,8 +20,6 @@ class Google_Service_SecurityCommandCenter_GoogleCloudSecuritycenterV1Notificati
   protected $findingType = 'Google_Service_SecurityCommandCenter_Finding';
   protected $findingDataType = '';
   public $notificationConfigName;
-  protected $resourceType = 'Google_Service_SecurityCommandCenter_GoogleCloudSecuritycenterV1Resource';
-  protected $resourceDataType = '';
 
   /**
    * @param Google_Service_SecurityCommandCenter_Finding
@@ -44,19 +42,5 @@ class Google_Service_SecurityCommandCenter_GoogleCloudSecuritycenterV1Notificati
   public function getNotificationConfigName()
   {
     return $this->notificationConfigName;
-  }
-  /**
-   * @param Google_Service_SecurityCommandCenter_GoogleCloudSecuritycenterV1Resource
-   */
-  public function setResource(Google_Service_SecurityCommandCenter_GoogleCloudSecuritycenterV1Resource $resource)
-  {
-    $this->resource = $resource;
-  }
-  /**
-   * @return Google_Service_SecurityCommandCenter_GoogleCloudSecuritycenterV1Resource
-   */
-  public function getResource()
-  {
-    return $this->resource;
   }
 }

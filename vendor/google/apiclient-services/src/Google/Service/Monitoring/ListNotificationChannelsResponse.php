@@ -21,7 +21,6 @@ class Google_Service_Monitoring_ListNotificationChannelsResponse extends Google_
   public $nextPageToken;
   protected $notificationChannelsType = 'Google_Service_Monitoring_NotificationChannel';
   protected $notificationChannelsDataType = 'array';
-  public $totalSize;
 
   public function setNextPageToken($nextPageToken)
   {
@@ -44,13 +43,5 @@ class Google_Service_Monitoring_ListNotificationChannelsResponse extends Google_
   public function getNotificationChannels()
   {
     return $this->notificationChannels;
-  }
-  public function setTotalSize($totalSize)
-  {
-    $this->totalSize = $totalSize;
-  }
-  public function getTotalSize()
-  {
-    return $this->totalSize;
   }
 }

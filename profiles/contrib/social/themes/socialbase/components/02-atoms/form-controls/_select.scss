@@ -24,6 +24,14 @@
   width: 100%;
   max-width: $form-control-max-width;
 
+  .form-inline & {
+    width: auto;
+  }
+
+  .input-group & {
+    display: table-cell;
+  }
+
   select {
     appearance: none;
     line-height: 1;
@@ -48,18 +56,6 @@
     z-index: 2;
   }
 
-}
-
-.form-inline {
-  .select-wrapper {
-    width: auto;
-  }
-}
-
-.input-group {
-  .select-wrapper {
-    display: table-cell;
-  }
 }
 
 // Reset custom styles of the arrow for the select widget on the IE11.

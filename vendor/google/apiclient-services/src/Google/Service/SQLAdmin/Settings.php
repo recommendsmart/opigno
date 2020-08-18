@@ -23,7 +23,6 @@ class Google_Service_SQLAdmin_Settings extends Google_Collection
   public $availabilityType;
   protected $backupConfigurationType = 'Google_Service_SQLAdmin_BackupConfiguration';
   protected $backupConfigurationDataType = '';
-  public $collation;
   public $crashSafeReplicationEnabled;
   public $dataDiskSizeGb;
   public $dataDiskType;
@@ -82,14 +81,6 @@ class Google_Service_SQLAdmin_Settings extends Google_Collection
   public function getBackupConfiguration()
   {
     return $this->backupConfiguration;
-  }
-  public function setCollation($collation)
-  {
-    $this->collation = $collation;
-  }
-  public function getCollation()
-  {
-    return $this->collation;
   }
   public function setCrashSafeReplicationEnabled($crashSafeReplicationEnabled)
   {

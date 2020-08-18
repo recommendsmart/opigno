@@ -26,12 +26,14 @@
 class Google_Service_AndroidPublisher_Resource_EditsListings extends Google_Service_Resource
 {
   /**
-   * Deletes a localized store listing. (listings.delete)
+   * Deletes the specified localized store listing from an edit. (listings.delete)
    *
-   * @param string $packageName Package name of the app.
-   * @param string $editId Identifier of the edit.
-   * @param string $language Language localization code (a BCP-47 language tag;
-   * for example, "de-AT" for Austrian German).
+   * @param string $packageName Unique identifier for the Android app that is
+   * being updated; for example, "com.spiffygame".
+   * @param string $editId Unique identifier for this edit.
+   * @param string $language The language code (a BCP-47 language tag) of the
+   * localized listing to read or modify. For example, to select Austrian German,
+   * pass "de-AT".
    * @param array $optParams Optional parameters.
    */
   public function delete($packageName, $editId, $language, $optParams = array())
@@ -41,10 +43,11 @@ class Google_Service_AndroidPublisher_Resource_EditsListings extends Google_Serv
     return $this->call('delete', array($params));
   }
   /**
-   * Deletes all store listings. (listings.deleteall)
+   * Deletes all localized listings from an edit. (listings.deleteall)
    *
-   * @param string $packageName Package name of the app.
-   * @param string $editId Identifier of the edit.
+   * @param string $packageName Unique identifier for the Android app that is
+   * being updated; for example, "com.spiffygame".
+   * @param string $editId Unique identifier for this edit.
    * @param array $optParams Optional parameters.
    */
   public function deleteall($packageName, $editId, $optParams = array())
@@ -54,12 +57,14 @@ class Google_Service_AndroidPublisher_Resource_EditsListings extends Google_Serv
     return $this->call('deleteall', array($params));
   }
   /**
-   * Gets a localized store listing. (listings.get)
+   * Fetches information about a localized store listing. (listings.get)
    *
-   * @param string $packageName Package name of the app.
-   * @param string $editId Identifier of the edit.
-   * @param string $language Language localization code (a BCP-47 language tag;
-   * for example, "de-AT" for Austrian German).
+   * @param string $packageName Unique identifier for the Android app that is
+   * being updated; for example, "com.spiffygame".
+   * @param string $editId Unique identifier for this edit.
+   * @param string $language The language code (a BCP-47 language tag) of the
+   * localized listing to read or modify. For example, to select Austrian German,
+   * pass "de-AT".
    * @param array $optParams Optional parameters.
    * @return Google_Service_AndroidPublisher_Listing
    */
@@ -70,10 +75,12 @@ class Google_Service_AndroidPublisher_Resource_EditsListings extends Google_Serv
     return $this->call('get', array($params), "Google_Service_AndroidPublisher_Listing");
   }
   /**
-   * Lists all localized store listings. (listings.listEditsListings)
+   * Returns all of the localized store listings attached to this edit.
+   * (listings.listEditsListings)
    *
-   * @param string $packageName Package name of the app.
-   * @param string $editId Identifier of the edit.
+   * @param string $packageName Unique identifier for the Android app that is
+   * being updated; for example, "com.spiffygame".
+   * @param string $editId Unique identifier for this edit.
    * @param array $optParams Optional parameters.
    * @return Google_Service_AndroidPublisher_ListingsListResponse
    */
@@ -84,12 +91,15 @@ class Google_Service_AndroidPublisher_Resource_EditsListings extends Google_Serv
     return $this->call('list', array($params), "Google_Service_AndroidPublisher_ListingsListResponse");
   }
   /**
-   * Patches a localized store listing. (listings.patch)
+   * Creates or updates a localized store listing. This method supports patch
+   * semantics. (listings.patch)
    *
-   * @param string $packageName Package name of the app.
-   * @param string $editId Identifier of the edit.
-   * @param string $language Language localization code (a BCP-47 language tag;
-   * for example, "de-AT" for Austrian German).
+   * @param string $packageName Unique identifier for the Android app that is
+   * being updated; for example, "com.spiffygame".
+   * @param string $editId Unique identifier for this edit.
+   * @param string $language The language code (a BCP-47 language tag) of the
+   * localized listing to read or modify. For example, to select Austrian German,
+   * pass "de-AT".
    * @param Google_Service_AndroidPublisher_Listing $postBody
    * @param array $optParams Optional parameters.
    * @return Google_Service_AndroidPublisher_Listing
@@ -103,10 +113,12 @@ class Google_Service_AndroidPublisher_Resource_EditsListings extends Google_Serv
   /**
    * Creates or updates a localized store listing. (listings.update)
    *
-   * @param string $packageName Package name of the app.
-   * @param string $editId Identifier of the edit.
-   * @param string $language Language localization code (a BCP-47 language tag;
-   * for example, "de-AT" for Austrian German).
+   * @param string $packageName Unique identifier for the Android app that is
+   * being updated; for example, "com.spiffygame".
+   * @param string $editId Unique identifier for this edit.
+   * @param string $language The language code (a BCP-47 language tag) of the
+   * localized listing to read or modify. For example, to select Austrian German,
+   * pass "de-AT".
    * @param Google_Service_AndroidPublisher_Listing $postBody
    * @param array $optParams Optional parameters.
    * @return Google_Service_AndroidPublisher_Listing

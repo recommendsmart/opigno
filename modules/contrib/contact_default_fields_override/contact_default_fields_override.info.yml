@@ -1,0 +1,11 @@
+name: Contact Default Field Override
+type: module
+core: 8.x
+dependencies:
+  - drupal:contact
+  - drupal:field_ui
+
+# Information added by Drupal.org packaging script on 2019-10-02
+version: '8.x-1.5'
+project: 'contact_default_fields_override'
+datestamp: 1570009396

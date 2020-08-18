@@ -20,9 +20,6 @@ class Google_Service_CloudAsset_TemporalAsset extends Google_Model
   protected $assetType = 'Google_Service_CloudAsset_Asset';
   protected $assetDataType = '';
   public $deleted;
-  protected $priorAssetType = 'Google_Service_CloudAsset_Asset';
-  protected $priorAssetDataType = '';
-  public $priorAssetState;
   protected $windowType = 'Google_Service_CloudAsset_TimeWindow';
   protected $windowDataType = '';
 
@@ -47,28 +44,6 @@ class Google_Service_CloudAsset_TemporalAsset extends Google_Model
   public function getDeleted()
   {
     return $this->deleted;
-  }
-  /**
-   * @param Google_Service_CloudAsset_Asset
-   */
-  public function setPriorAsset(Google_Service_CloudAsset_Asset $priorAsset)
-  {
-    $this->priorAsset = $priorAsset;
-  }
-  /**
-   * @return Google_Service_CloudAsset_Asset
-   */
-  public function getPriorAsset()
-  {
-    return $this->priorAsset;
-  }
-  public function setPriorAssetState($priorAssetState)
-  {
-    $this->priorAssetState = $priorAssetState;
-  }
-  public function getPriorAssetState()
-  {
-    return $this->priorAssetState;
   }
   /**
    * @param Google_Service_CloudAsset_TimeWindow

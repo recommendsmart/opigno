@@ -88,9 +88,7 @@ Feature: Group access roles
     When I am logged in as "Group User One"
     And I am on the stream of group "Test closed group 3"
     And I click "Manage members"
-    And I click the group member dropdown
-    And I click "Add directly"
-    And I fill in select2 input ".form-type-select" with "Group User Two" and select "Group User Two"
+    And I click "Add members"
+    And I fill in "Group User Two" for "Select members to add"
     And I press "Save"
-    And I click "Manage members"
     Then I should see "Group Admin"

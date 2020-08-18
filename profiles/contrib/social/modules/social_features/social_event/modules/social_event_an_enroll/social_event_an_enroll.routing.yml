@@ -15,7 +15,6 @@ social_event_an_enroll.enroll_dialog:
     parameters:
       node:
         type: entity:node
-    _event_an_enroll_route: TRUE
   requirements:
     _user_is_logged_in: 'FALSE'
     _custom_access: '\Drupal\social_event_an_enroll\Controller\EventAnEnrollController::enrollAccess'
@@ -32,4 +31,3 @@ social_event_an_enroll.enroll_form:
     parameters:
       node:
         type: entity:node
-    _event_an_enroll_route: TRUE

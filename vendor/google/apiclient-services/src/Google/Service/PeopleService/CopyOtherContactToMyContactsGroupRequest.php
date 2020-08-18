@@ -15,12 +15,10 @@
  * the License.
  */
 
-class Google_Service_PeopleService_CopyOtherContactToMyContactsGroupRequest extends Google_Collection
+class Google_Service_PeopleService_CopyOtherContactToMyContactsGroupRequest extends Google_Model
 {
-  protected $collection_key = 'sources';
   public $copyMask;
   public $readMask;
-  public $sources;
 
   public function setCopyMask($copyMask)
   {
@@ -37,13 +35,5 @@ class Google_Service_PeopleService_CopyOtherContactToMyContactsGroupRequest exte
   public function getReadMask()
   {
     return $this->readMask;
-  }
-  public function setSources($sources)
-  {
-    $this->sources = $sources;
-  }
-  public function getSources()
-  {
-    return $this->sources;
   }
 }

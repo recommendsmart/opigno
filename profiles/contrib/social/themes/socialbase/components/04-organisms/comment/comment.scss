@@ -63,15 +63,12 @@ a[id^="comment-"] {
   margin: .25em 0 .5em;
   line-height: 1.3;
 
-  p:last-of-type {
-    margin-bottom: 0;
-  }
-
-  p,
-  ul,
-  ul li,
-  a {
+  p {
     word-break: break-word;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
   }
 
   // like badge

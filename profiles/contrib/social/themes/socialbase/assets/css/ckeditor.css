@@ -429,7 +429,7 @@ th {
   height: 20px;
 }
 
-form:not(.layout-builder-add-block) .tabledrag-handle {
+.tabledrag-handle {
   color: #777777;
   cursor: move;
   position: absolute;
@@ -438,7 +438,7 @@ form:not(.layout-builder-add-block) .tabledrag-handle {
   padding: 10px;
 }
 
-form:not(.layout-builder-add-block) .tabledrag-handle ~ .form-managed-file {
+.tabledrag-handle ~ .form-managed-file {
   display: block;
   padding-left: 24px;
 }

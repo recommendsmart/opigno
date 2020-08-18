@@ -23,7 +23,6 @@ class Google_Service_Testing_TestSetup extends Google_Collection
   protected $additionalApksType = 'Google_Service_Testing_Apk';
   protected $additionalApksDataType = 'array';
   public $directoriesToPull;
-  public $dontAutograntPermissions;
   protected $environmentVariablesType = 'Google_Service_Testing_EnvironmentVariable';
   protected $environmentVariablesDataType = 'array';
   protected $filesToPushType = 'Google_Service_Testing_DeviceFile';
@@ -67,14 +66,6 @@ class Google_Service_Testing_TestSetup extends Google_Collection
   public function getDirectoriesToPull()
   {
     return $this->directoriesToPull;
-  }
-  public function setDontAutograntPermissions($dontAutograntPermissions)
-  {
-    $this->dontAutograntPermissions = $dontAutograntPermissions;
-  }
-  public function getDontAutograntPermissions()
-  {
-    return $this->dontAutograntPermissions;
   }
   /**
    * @param Google_Service_Testing_EnvironmentVariable

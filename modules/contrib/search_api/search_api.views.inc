@@ -203,8 +203,7 @@ function _search_api_views_get_handlers(FieldInterface $field) {
       $types[] = 'language';
     }
 
-    if ($definition->getSetting('allowed_values')
-        || $definition->getSetting('allowed_values_function')) {
+    if ($definition->getSetting('allowed_values')) {
       $types[] = 'options';
     }
 

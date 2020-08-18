@@ -28,11 +28,12 @@ class Google_Service_AndroidPublisher_Resource_EditsApks extends Google_Service_
   /**
    * Creates a new APK without uploading the APK itself to Google Play, instead
    * hosting the APK at a specified URL. This function is only available to
-   * organizations using Managed Play whose application is configured to restrict
-   * distribution to the organizations. (apks.addexternallyhosted)
+   * enterprises using Google Play for Work whose application is configured to
+   * restrict distribution to the enterprise domain. (apks.addexternallyhosted)
    *
-   * @param string $packageName Package name of the app.
-   * @param string $editId Identifier of the edit.
+   * @param string $packageName Unique identifier for the Android app that is
+   * being updated; for example, "com.spiffygame".
+   * @param string $editId Unique identifier for this edit.
    * @param Google_Service_AndroidPublisher_ApksAddExternallyHostedRequest $postBody
    * @param array $optParams Optional parameters.
    * @return Google_Service_AndroidPublisher_ApksAddExternallyHostedResponse
@@ -44,10 +45,11 @@ class Google_Service_AndroidPublisher_Resource_EditsApks extends Google_Service_
     return $this->call('addexternallyhosted', array($params), "Google_Service_AndroidPublisher_ApksAddExternallyHostedResponse");
   }
   /**
-   * Lists all current APKs of the app and edit. (apks.listEditsApks)
+   * (apks.listEditsApks)
    *
-   * @param string $packageName Package name of the app.
-   * @param string $editId Identifier of the edit.
+   * @param string $packageName Unique identifier for the Android app that is
+   * being updated; for example, "com.spiffygame".
+   * @param string $editId Unique identifier for this edit.
    * @param array $optParams Optional parameters.
    * @return Google_Service_AndroidPublisher_ApksListResponse
    */
@@ -58,10 +60,11 @@ class Google_Service_AndroidPublisher_Resource_EditsApks extends Google_Service_
     return $this->call('list', array($params), "Google_Service_AndroidPublisher_ApksListResponse");
   }
   /**
-   * Uploads an APK and adds to the current edit. (apks.upload)
+   * (apks.upload)
    *
-   * @param string $packageName Package name of the app.
-   * @param string $editId Identifier of the edit.
+   * @param string $packageName Unique identifier for the Android app that is
+   * being updated; for example, "com.spiffygame".
+   * @param string $editId Unique identifier for this edit.
    * @param array $optParams Optional parameters.
    * @return Google_Service_AndroidPublisher_Apk
    */

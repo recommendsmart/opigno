@@ -26,14 +26,17 @@
 class Google_Service_AndroidPublisher_Resource_EditsDeobfuscationfiles extends Google_Service_Resource
 {
   /**
-   * Uploads a new deobfuscation file and attaches to the specified APK.
-   * (deobfuscationfiles.upload)
+   * Uploads the deobfuscation file of the specified APK. If a deobfuscation or
+   * symbolication file already exists, it will be replaced. See
+   * https://developer.android.com/studio/build/shrink-code to learn more about
+   * deobfuscation files. (deobfuscationfiles.upload)
    *
-   * @param string $packageName Unique identifier for the Android app.
+   * @param string $packageName Unique identifier of the Android app for which the
+   * deobfuscation files are being uploaded; for example, "com.spiffygame".
    * @param string $editId Unique identifier for this edit.
-   * @param int $apkVersionCode The version code of the APK whose Deobfuscation
-   * File is being uploaded.
-   * @param string $deobfuscationFileType The type of the deobfuscation file.
+   * @param int $apkVersionCode The version code of the APK whose deobfuscation
+   * file is being uploaded.
+   * @param string $deobfuscationFileType
    * @param array $optParams Optional parameters.
    * @return Google_Service_AndroidPublisher_DeobfuscationFilesUploadResponse
    */

@@ -17,7 +17,6 @@
 
 class Google_Service_Compute_NetworkEndpointGroup extends Google_Model
 {
-  public $annotations;
   public $creationTimestamp;
   public $defaultPort;
   public $description;
@@ -31,14 +30,6 @@ class Google_Service_Compute_NetworkEndpointGroup extends Google_Model
   public $subnetwork;
   public $zone;
 
-  public function setAnnotations($annotations)
-  {
-    $this->annotations = $annotations;
-  }
-  public function getAnnotations()
-  {
-    return $this->annotations;
-  }
   public function setCreationTimestamp($creationTimestamp)
   {
     $this->creationTimestamp = $creationTimestamp;

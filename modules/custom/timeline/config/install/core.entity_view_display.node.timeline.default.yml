@@ -1,0 +1,194 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.timeline.body
+    - field.field.node.timeline.field_timeline_date
+    - field.field.node.timeline.field_timeline_link
+    - field.field.node.timeline.field_timeline_media
+    - node.type.timeline
+  module:
+    - datetime
+    - ds
+    - dynamic_entity_reference
+    - layout_builder
+    - linked_field
+    - text
+    - user
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: node.timeline.default
+targetEntityType: node
+bundle: timeline
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 7
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_timeline_date:
+    weight: 0
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: html_year
+    third_party_settings:
+      ds:
+        ft:
+          id: default
+          settings:
+            lb: ''
+            lb-col: false
+            classes: {  }
+    type: datetime_default
+    region: content
+  field_timeline_media:
+    type: dynamic_entity_reference_entity_view
+    weight: 8
+    label: hidden
+    settings:
+      media:
+        view_mode: default
+      activity:
+        view_mode: default
+        link: false
+      comment:
+        view_mode: default
+        link: false
+      node:
+        view_mode: default
+        link: false
+      crop:
+        view_mode: default
+        link: false
+      block_content:
+        view_mode: default
+        link: false
+      menu_link_content:
+        view_mode: default
+        link: false
+      entity_subqueue:
+        view_mode: default
+        link: false
+      event_enrollment:
+        view_mode: default
+        link: false
+      entity_embed_fake_entity:
+        view_mode: default
+        link: false
+      file:
+        view_mode: default
+        link: false
+      flagging:
+        view_mode: default
+        link: false
+      font:
+        view_mode: default
+        link: false
+      group:
+        view_mode: default
+        link: false
+      group_content:
+        view_mode: default
+        link: false
+      mentions:
+        view_mode: default
+        link: false
+      message:
+        view_mode: default
+        link: false
+      paragraph:
+        view_mode: default
+        link: false
+      post:
+        view_mode: default
+        link: false
+      profile:
+        view_mode: default
+        link: false
+      queue_storage_entity:
+        view_mode: default
+        link: false
+      search_api_task:
+        view_mode: default
+        link: false
+      taxonomy_term:
+        view_mode: default
+        link: false
+      path_alias:
+        view_mode: default
+        link: false
+      user:
+        view_mode: default
+        link: false
+      vote:
+        view_mode: default
+        link: false
+      vote_result:
+        view_mode: default
+        link: false
+    third_party_settings:
+      ds:
+        ds_limit: ''
+        ft:
+          id: default
+          settings:
+            lb: ''
+            lb-col: false
+            classes: {  }
+      linked_field:
+        linked: '1'
+        type: field
+        destination: field_timeline_link
+        advanced: {  }
+    region: content
+  flag_follow_content:
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  groups:
+    label: above
+    weight: 1
+    region: content
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+  groups_type_closed_group:
+    label: above
+    weight: 2
+    region: content
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+  groups_type_open_group:
+    label: above
+    weight: 3
+    region: content
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+  groups_type_public_group:
+    label: above
+    weight: 4
+    region: content
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+  links:
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_timeline_link: true
+  search_api_excerpt: true

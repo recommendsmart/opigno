@@ -17,4 +17,3 @@ dependencies:
   - message:message
   - social:social_editor
   - social_post:social_post
-  - social:social_core

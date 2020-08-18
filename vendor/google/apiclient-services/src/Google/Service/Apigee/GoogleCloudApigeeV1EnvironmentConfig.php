@@ -19,8 +19,6 @@ class Google_Service_Apigee_GoogleCloudApigeeV1EnvironmentConfig extends Google_
 {
   protected $collection_key = 'targets';
   public $createTime;
-  protected $dataCollectorsType = 'Google_Service_Apigee_GoogleCloudApigeeV1DataCollectorConfig';
-  protected $dataCollectorsDataType = 'array';
   protected $debugMaskType = 'Google_Service_Apigee_GoogleCloudApigeeV1DebugMask';
   protected $debugMaskDataType = '';
   protected $deploymentsType = 'Google_Service_Apigee_GoogleCloudApigeeV1DeploymentConfig';
@@ -50,20 +48,6 @@ class Google_Service_Apigee_GoogleCloudApigeeV1EnvironmentConfig extends Google_
   public function getCreateTime()
   {
     return $this->createTime;
-  }
-  /**
-   * @param Google_Service_Apigee_GoogleCloudApigeeV1DataCollectorConfig
-   */
-  public function setDataCollectors($dataCollectors)
-  {
-    $this->dataCollectors = $dataCollectors;
-  }
-  /**
-   * @return Google_Service_Apigee_GoogleCloudApigeeV1DataCollectorConfig
-   */
-  public function getDataCollectors()
-  {
-    return $this->dataCollectors;
   }
   /**
    * @param Google_Service_Apigee_GoogleCloudApigeeV1DebugMask

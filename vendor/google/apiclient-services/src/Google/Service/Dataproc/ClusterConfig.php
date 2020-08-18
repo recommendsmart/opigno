@@ -23,8 +23,6 @@ class Google_Service_Dataproc_ClusterConfig extends Google_Collection
   public $configBucket;
   protected $encryptionConfigType = 'Google_Service_Dataproc_EncryptionConfig';
   protected $encryptionConfigDataType = '';
-  protected $endpointConfigType = 'Google_Service_Dataproc_EndpointConfig';
-  protected $endpointConfigDataType = '';
   protected $gceClusterConfigType = 'Google_Service_Dataproc_GceClusterConfig';
   protected $gceClusterConfigDataType = '';
   protected $initializationActionsType = 'Google_Service_Dataproc_NodeInitializationAction';
@@ -39,7 +37,6 @@ class Google_Service_Dataproc_ClusterConfig extends Google_Collection
   protected $securityConfigDataType = '';
   protected $softwareConfigType = 'Google_Service_Dataproc_SoftwareConfig';
   protected $softwareConfigDataType = '';
-  public $tempBucket;
   protected $workerConfigType = 'Google_Service_Dataproc_InstanceGroupConfig';
   protected $workerConfigDataType = '';
 
@@ -78,20 +75,6 @@ class Google_Service_Dataproc_ClusterConfig extends Google_Collection
   public function getEncryptionConfig()
   {
     return $this->encryptionConfig;
-  }
-  /**
-   * @param Google_Service_Dataproc_EndpointConfig
-   */
-  public function setEndpointConfig(Google_Service_Dataproc_EndpointConfig $endpointConfig)
-  {
-    $this->endpointConfig = $endpointConfig;
-  }
-  /**
-   * @return Google_Service_Dataproc_EndpointConfig
-   */
-  public function getEndpointConfig()
-  {
-    return $this->endpointConfig;
   }
   /**
    * @param Google_Service_Dataproc_GceClusterConfig
@@ -190,14 +173,6 @@ class Google_Service_Dataproc_ClusterConfig extends Google_Collection
   public function getSoftwareConfig()
   {
     return $this->softwareConfig;
-  }
-  public function setTempBucket($tempBucket)
-  {
-    $this->tempBucket = $tempBucket;
-  }
-  public function getTempBucket()
-  {
-    return $this->tempBucket;
   }
   /**
    * @param Google_Service_Dataproc_InstanceGroupConfig

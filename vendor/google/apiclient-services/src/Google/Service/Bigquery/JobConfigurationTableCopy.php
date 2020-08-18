@@ -21,10 +21,8 @@ class Google_Service_Bigquery_JobConfigurationTableCopy extends Google_Collectio
   public $createDisposition;
   protected $destinationEncryptionConfigurationType = 'Google_Service_Bigquery_EncryptionConfiguration';
   protected $destinationEncryptionConfigurationDataType = '';
-  public $destinationExpirationTime;
   protected $destinationTableType = 'Google_Service_Bigquery_TableReference';
   protected $destinationTableDataType = '';
-  public $operationType;
   protected $sourceTableType = 'Google_Service_Bigquery_TableReference';
   protected $sourceTableDataType = '';
   protected $sourceTablesType = 'Google_Service_Bigquery_TableReference';
@@ -53,14 +51,6 @@ class Google_Service_Bigquery_JobConfigurationTableCopy extends Google_Collectio
   {
     return $this->destinationEncryptionConfiguration;
   }
-  public function setDestinationExpirationTime($destinationExpirationTime)
-  {
-    $this->destinationExpirationTime = $destinationExpirationTime;
-  }
-  public function getDestinationExpirationTime()
-  {
-    return $this->destinationExpirationTime;
-  }
   /**
    * @param Google_Service_Bigquery_TableReference
    */
@@ -74,14 +64,6 @@ class Google_Service_Bigquery_JobConfigurationTableCopy extends Google_Collectio
   public function getDestinationTable()
   {
     return $this->destinationTable;
-  }
-  public function setOperationType($operationType)
-  {
-    $this->operationType = $operationType;
-  }
-  public function getOperationType()
-  {
-    return $this->operationType;
   }
   /**
    * @param Google_Service_Bigquery_TableReference

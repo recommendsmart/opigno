@@ -1,0 +1,129 @@
+<?php
+
+/**
+ * @file
+ * Contact default fields override module file.
+ */
+
+use Drupal\contact\Entity\ContactForm;
+use Drupal\Core\Render\Markup;
+use Drupal\Core\Field\Entity\BaseFieldOverride;
+use Drupal\Core\Entity\EntityTypeInterface;
+
+/**
+ * {@inheritdoc}
+ */
+function contact_default_fields_override_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+  if ($entity_type->id() !== 'contact_message' || $bundle === NULL) {
+    return [];
+  }
+
+  $contactForm = ContactForm::load($bundle);
+
+  if( $contactForm === NULL ) {
+    return;
+  }
+
+  $fields = [];
+
+  $settings = $contactForm->getThirdPartySettings('contact_default_fields_override');
+
+  foreach (contact_default_fields_override_get_fields_to_override() as $field_to_override) {
+    $field = BaseFieldOverride::createFromBaseFieldDefinition($base_field_definitions[$field_to_override], $bundle);
+
+    if (isset($settings[$field_to_override . '_required'])) {
+      $field->setRequired($settings[$field_to_override . '_required']);
+    }
+
+    $fields[$field_to_override] = $field;
+  }
+
+  return $fields;
+}
+
+/**
+ * Determines which fields are overridable.
+ *
+ * See \Drupal\contact\Entity\Message::baseFieldDefinitions for all available
+ * options.
+ *
+ * @return string[]
+ *   The fields to override.
+ */
+function contact_default_fields_override_get_fields_to_override() {
+  $overidable_fields = [
+    'name',
+    'mail',
+    'subject',
+    'message',
+  ];
+
+  Drupal::moduleHandler()
+    ->invokeAll('contact_default_fields_override_alter', [&$overidable_fields]);
+
+  return $overidable_fields;
+}
+
+/**
+ * {@inheritDoc}
+ */
+function contact_default_fields_override_entity_type_alter(array &$entity_types) {
+  if (!isset($entity_types['contact_message'])) {
+    return;
+  }
+
+  $entity_types['contact_message']->setHandlerClass('form', ['default' => \Drupal\contact_default_fields_override\Form\MessageForm::class]);
+}
+
+/**
+ * {@inheritDoc}
+ */
+function contact_default_fields_override_element_info_alter(&$info) {
+  $info['textfield']['#pre_render'][] = 'contact_default_fields_override_element_pre_render';
+  $info['textarea']['#pre_render'][] = 'contact_default_fields_override_element_pre_render';
+  $info['item']['#pre_render'][] = 'contact_default_fields_override_element_pre_render';
+}
+
+/**
+ * Overrides the element titles.
+ *
+ * @param $element
+ *
+ * @return mixed
+ */
+function contact_default_fields_override_element_pre_render($element) {
+
+  if (!isset($element['#contact_default_fields_override_bundle'])) {
+    return $element;
+  }
+
+  $fields_to_override = contact_default_fields_override_get_fields_to_override();
+  $field_to_override = $element['#parents'][0];
+
+  if (!in_array($field_to_override, $fields_to_override, FALSE)) {
+    return $element;
+  }
+
+  $currentLanguageId = Drupal::languageManager()->getCurrentLanguage()->getId();
+
+  /* @var Drupal\contact\Entity\ContactForm $contactForm */
+  $contactForm = ContactForm::load($element['#contact_default_fields_override_bundle']);
+
+  if (!$contactForm) {
+    return $element;
+  }
+
+  $settings = $contactForm->getThirdPartySettings('contact_default_fields_override');
+
+  if (isset($settings[$field_to_override . '_label_' . $currentLanguageId])) {
+    $element['#title'] = Markup::create($settings[$field_to_override . '_label_' . $currentLanguageId]);
+  }
+  if (isset($settings[$field_to_override . '_description_' . $currentLanguageId])) {
+    $element['#description'] = Markup::create($settings[$field_to_override . '_description_' . $currentLanguageId]);
+  }
+  if (isset($settings[$field_to_override . '_required'])) {
+    $element['#required'] = $settings[$field_to_override . '_required'];
+  }
+
+  return $element;
+}

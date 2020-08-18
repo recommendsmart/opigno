@@ -84,23 +84,14 @@ class FetchAuthTokenCache implements
         // TODO: correct caching; enable the cache to be cleared.
         $cacheKey = $this->fetcher->getCacheKey();
         $cached = $this->getCachedValue($cacheKey);
-        if (is_array($cached)) {
-            if (empty($cached['expires_at'])) {
-                // If there is no expiration data, assume token is not expired.
-                // (for JwtAccess and ID tokens)
-                return $cached;
-            }
-            if (time() < $cached['expires_at']) {
-                // access token is not expired
-                return $cached;
-            }
+        if (!empty($cached)) {
+            return ['access_token' => $cached];
         }
 
         $auth_token = $this->fetcher->fetchAuthToken($httpHandler);
 
-        if (isset($auth_token['access_token']) ||
-            isset($auth_token['id_token'])) {
-            $this->setCachedValue($cacheKey, $auth_token);
+        if (isset($auth_token['access_token'])) {
+            $this->setCachedValue($cacheKey, $auth_token['access_token']);
         }
 
         return $auth_token;

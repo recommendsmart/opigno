@@ -36,8 +36,6 @@ class Google_Service_PeopleService_Person extends Google_Collection
   public $etag;
   protected $eventsType = 'Google_Service_PeopleService_Event';
   protected $eventsDataType = 'array';
-  protected $fileAsesType = 'Google_Service_PeopleService_FileAs';
-  protected $fileAsesDataType = 'array';
   protected $gendersType = 'Google_Service_PeopleService_Gender';
   protected $gendersDataType = 'array';
   protected $imClientsType = 'Google_Service_PeopleService_ImClient';
@@ -209,20 +207,6 @@ class Google_Service_PeopleService_Person extends Google_Collection
   public function getEvents()
   {
     return $this->events;
-  }
-  /**
-   * @param Google_Service_PeopleService_FileAs
-   */
-  public function setFileAses($fileAses)
-  {
-    $this->fileAses = $fileAses;
-  }
-  /**
-   * @return Google_Service_PeopleService_FileAs
-   */
-  public function getFileAses()
-  {
-    return $this->fileAses;
   }
   /**
    * @param Google_Service_PeopleService_Gender

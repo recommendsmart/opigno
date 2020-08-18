@@ -304,8 +304,7 @@ class Google_Service_Compute_Resource_RegionInstanceGroupManagers extends Google
   }
   /**
    * Lists all errors thrown by actions on instances for a given regional managed
-   * instance group. The filter and orderBy query parameters are not supported.
-   * (regionInstanceGroupManagers.listErrors)
+   * instance group. (regionInstanceGroupManagers.listErrors)
    *
    * @param string $project Project ID for this request.
    * @param string $region Name of the region scoping this request. This should
@@ -365,8 +364,8 @@ class Google_Service_Compute_Resource_RegionInstanceGroupManagers extends Google
   /**
    * Lists the instances in the managed instance group and instances that are
    * scheduled to be created. The list includes any current actions that the group
-   * has scheduled for its instances. The orderBy query parameter is not
-   * supported. (regionInstanceGroupManagers.listManagedInstances)
+   * has scheduled for its instances.
+   * (regionInstanceGroupManagers.listManagedInstances)
    *
    * @param string $project Project ID for this request.
    * @param string $region Name of the region scoping this request.

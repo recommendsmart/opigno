@@ -17,7 +17,6 @@ dependencies:
   - drupal:path
   - profile:profile
   - social:social_comment
-  - social:social_core
   - social:social_node
   - social:social_profile
   - drupal:text
