@@ -17,7 +17,15 @@ Group: Don't try to re-save deleted entities
 Source: https://www.drupal.org/files/issues/2018-11-01/3010896-02.patch
 
 
-Rely on toUrl defaults for Entit url link
+Request membership feature
+Source: https://www.drupal.org/files/issues/2019-07-04/group-request_membership_feature_grequest_module-2752603-110.patch
+
+
+Rely on toUrl defaults for Entity url link
 Source: https://www.drupal.org/files/issues/2019-12-04/group-3098675-2.patch
+
+
+Group Invite
+Source: https://www.drupal.org/files/issues/2020-03-26/ginvite_module_port-2801603-112.patch
 
 
