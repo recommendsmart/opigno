@@ -114,14 +114,9 @@ class AjaxCommentsForm extends CommentForm {
 
     /** @var \Drupal\comment\CommentInterface $comment */
     $comment = $form_state->getFormObject()->getEntity();
-
-    /** @var \Drupal\ajax_comments\TempStore $tempStore */
-    $tempStore = \Drupal::service('ajax_comments.temp_store');
-    $view_mode = $tempStore->getViewMode($comment->getCommentedEntity()->getEntityType()->getLabel());
-
     // Check to see if this comment field uses ajax comments.
-    $comment_formatter = $this->fieldSettingsHelper->getFieldFormatterFromComment($comment, $view_mode);
-    if (!empty($comment_formatter) && !$this->fieldSettingsHelper->isEnabled($comment_formatter)) {
+    $comment_formatter = $this->fieldSettingsHelper->getFieldFormatterFromComment($comment, 'full');
+    if (!$this->fieldSettingsHelper->isEnabled($comment_formatter)) {
       // If not using Ajax Comments, return the unmodified form.
       return $form;
     }
@@ -198,13 +193,8 @@ class AjaxCommentsForm extends CommentForm {
     // Populate the comment-specific variables.
     /** @var \Drupal\comment\CommentInterface $comment */
     $comment = $form_state->getFormObject()->getEntity();
-
-    /** @var \Drupal\ajax_comments\TempStore $tempStore */
-    $tempStore = \Drupal::service('ajax_comments.temp_store');
-    $view_mode = $tempStore->getViewMode($comment->getCommentedEntity()->getEntityType()->getLabel());
-
-    $comment_formatter = $this->fieldSettingsHelper->getFieldFormatterFromComment($comment, $view_mode);
-    if (!empty($comment_formatter) && !$this->fieldSettingsHelper->isEnabled($comment_formatter)) {
+    $comment_formatter = $this->fieldSettingsHelper->getFieldFormatterFromComment($comment, 'full');
+    if (!$this->fieldSettingsHelper->isEnabled($comment_formatter)) {
       // If not using Ajax Comments, return the unmodified element.
       return $element;
     }
@@ -386,13 +376,8 @@ class AjaxCommentsForm extends CommentForm {
     parent::save($form, $form_state);
     /** @var \Drupal\comment\CommentInterface $comment */
     $comment = $form_state->getFormObject()->getEntity();
-
-    /** @var \Drupal\ajax_comments\TempStore $tempStore */
-    $tempStore = \Drupal::service('ajax_comments.temp_store');
-    $view_mode = $tempStore->getViewMode($comment->getCommentedEntity()->getEntityType()->getLabel());
-
-    $comment_formatter = $this->fieldSettingsHelper->getFieldFormatterFromComment($comment, $view_mode);
-    if (!empty($comment_formatter) && !$this->fieldSettingsHelper->isEnabled($comment_formatter)) {
+    $comment_formatter = $this->fieldSettingsHelper->getFieldFormatterFromComment($comment, 'full');
+    if (!$this->fieldSettingsHelper->isEnabled($comment_formatter)) {
       // If not using Ajax Comments, do not change the redirect.
       return;
     }

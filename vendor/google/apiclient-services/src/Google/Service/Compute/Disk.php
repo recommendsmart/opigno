@@ -38,6 +38,7 @@ class Google_Service_Compute_Disk extends Google_Collection
   public $region;
   public $replicaZones;
   public $resourcePolicies;
+  public $satisfiesPzs;
   public $selfLink;
   public $sizeGb;
   public $sourceDisk;
@@ -86,14 +87,14 @@ class Google_Service_Compute_Disk extends Google_Collection
     return $this->diskEncryptionKey;
   }
   /**
-   * @param Google_Service_Compute_GuestOsFeature
+   * @param Google_Service_Compute_GuestOsFeature[]
    */
   public function setGuestOsFeatures($guestOsFeatures)
   {
     $this->guestOsFeatures = $guestOsFeatures;
   }
   /**
-   * @return Google_Service_Compute_GuestOsFeature
+   * @return Google_Service_Compute_GuestOsFeature[]
    */
   public function getGuestOsFeatures()
   {
@@ -210,6 +211,14 @@ class Google_Service_Compute_Disk extends Google_Collection
   public function getResourcePolicies()
   {
     return $this->resourcePolicies;
+  }
+  public function setSatisfiesPzs($satisfiesPzs)
+  {
+    $this->satisfiesPzs = $satisfiesPzs;
+  }
+  public function getSatisfiesPzs()
+  {
+    return $this->satisfiesPzs;
   }
   public function setSelfLink($selfLink)
   {

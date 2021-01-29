@@ -27,7 +27,6 @@ function swiftmailer_requirements($phase) {
  */
 function swiftmailer_install() {
   $settings = Drupal::configFactory()->getEditable('mailsystem.settings');
-  $settings->set('filter_format', 'plain_text');
   $settings->set('modules.swiftmailer.none', [
     'formatter' => 'swiftmailer',
     'sender' => 'swiftmailer',

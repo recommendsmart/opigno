@@ -19,6 +19,7 @@ class Google_Service_Compute_Snapshot extends Google_Collection
 {
   protected $collection_key = 'storageLocations';
   public $autoCreated;
+  public $chainName;
   public $creationTimestamp;
   public $description;
   public $diskSizeGb;
@@ -30,6 +31,7 @@ class Google_Service_Compute_Snapshot extends Google_Collection
   public $licenseCodes;
   public $licenses;
   public $name;
+  public $satisfiesPzs;
   public $selfLink;
   protected $snapshotEncryptionKeyType = 'Google_Service_Compute_CustomerEncryptionKey';
   protected $snapshotEncryptionKeyDataType = '';
@@ -49,6 +51,14 @@ class Google_Service_Compute_Snapshot extends Google_Collection
   public function getAutoCreated()
   {
     return $this->autoCreated;
+  }
+  public function setChainName($chainName)
+  {
+    $this->chainName = $chainName;
+  }
+  public function getChainName()
+  {
+    return $this->chainName;
   }
   public function setCreationTimestamp($creationTimestamp)
   {
@@ -137,6 +147,14 @@ class Google_Service_Compute_Snapshot extends Google_Collection
   public function getName()
   {
     return $this->name;
+  }
+  public function setSatisfiesPzs($satisfiesPzs)
+  {
+    $this->satisfiesPzs = $satisfiesPzs;
+  }
+  public function getSatisfiesPzs()
+  {
+    return $this->satisfiesPzs;
   }
   public function setSelfLink($selfLink)
   {

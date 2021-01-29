@@ -1,0 +1,204 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the grequest module.
+ */
+
+use Drupal\Core\Config\ExtensionInstallStorage;
+use Drupal\Core\Config\InstallStorage;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\grequest\Plugin\GroupContentEnabler\GroupMembershipRequest;
+use Drupal\group\Entity\GroupContentType;
+
+/**
+ * Make sure the views.view.group_pending_members is updated.
+ */
+function grequest_update_8001() {
+  $message = NULL;
+
+  $name = 'views.view.group_pending_members';
+  $view = \Drupal::configFactory()->getEditable($name);
+
+  // Only update or insert the view if the views module is enabled.
+  if (\Drupal::moduleHandler()->moduleExists('views')) {
+    // Get the storage for optional extension configuration.
+    $optional_storage = new ExtensionInstallStorage(
+      \Drupal::service('config.storage'),
+      InstallStorage::CONFIG_OPTIONAL_DIRECTORY
+    );
+    $new_view = $optional_storage->read($name);
+    $old_view = \Drupal::configFactory()->getEditable($name);
+
+    // Update dependencies.
+    $old_fields = $old_view->get('display.default.display_options.fields');
+    $dependencies = $old_view->get('dependencies.module');
+    $dependencies[] = 'grequest';
+    $old_view->set('dependencies.module', $dependencies);
+
+    // Remove old fields.
+    if (!empty($old_fields['dropbutton'])) {
+      foreach ($old_fields['dropbutton']['fields'] as $field_value) {
+        if (!empty($field_value)) {
+          unset($old_fields[$field_value]);
+          unset($old_fields['dropbutton']['fields'][$field_value]);
+        }
+      }
+    }
+
+    // Set new fields.
+    $operation_fields = [
+      'approve_membership_request',
+      'reject_membership_request',
+    ];
+
+    foreach ($operation_fields as $operation_field) {
+      if (!empty($new_view['display']['default']['display_options']['fields'][$operation_field])) {
+        $old_fields['dropbutton']['fields'][$operation_field] = $operation_field;
+        $old_fields = array_merge([$operation_field => $new_view['display']['default']['display_options']['fields'][$operation_field]], $old_fields);
+      }
+    }
+
+    $old_view->set('display.default.display_options.fields', $old_fields);
+    $old_view->save(TRUE);
+  }
+  // Otherwise delete the view if it exists in the storage.
+  elseif (!$view->isNew()) {
+    $view->delete();
+    $message = 'The view had been added even though the Views module is not installed. Removed the view.';
+  }
+
+  return $message;
+}
+
+/**
+ * Switch to state machine field.
+ */
+function grequest_update_8002() {
+
+  $group_content_types = GroupContentType::loadByContentPluginId('group_membership_request');
+  if (empty($group_content_types)) {
+    return;
+  }
+
+  $table = 'group_content__grequest_status';
+  $field_name = GroupMembershipRequest::STATUS_FIELD;
+  $entity_type = 'group_content';
+
+  // Backup data.
+  $rows = [];
+  $database = \Drupal::database();
+  if ($database->schema()->tableExists($table)) {
+    // The table data to restore after the update is completed.
+    $rows = $database->select($table, 'n')
+      ->fields('n')
+      ->execute()
+      ->fetchAll();
+  }
+
+  $field_storage = FieldStorageConfig::loadByName($entity_type, $field_name);
+  if (empty($field_storage)) {
+    return;
+  }
+  $field_storage->delete();
+
+  // Maybe we need more items here.
+  field_purge_batch(1000);
+
+  // Get field storage from config.
+  $install_storage = new ExtensionInstallStorage(
+    \Drupal::service('config.storage'),
+    InstallStorage::CONFIG_INSTALL_DIRECTORY
+  );
+  $field_storage_config = $install_storage->read("field.storage.$entity_type.$field_name");
+
+  // Create new field storage.
+  $new_field_storage = FieldStorageConfig::create($field_storage_config);
+  $new_field_storage->save();
+
+  foreach ($group_content_types as $group_content_type_id => $group_content_type) {
+    FieldConfig::create([
+      'field_storage' => FieldStorageConfig::loadByName($entity_type, $field_name),
+      'bundle' => $group_content_type_id,
+      'label' => t('Request status'),
+      'required' => TRUE,
+      'settings' => [
+        'workflow' => 'request',
+        'workflow_callback' => '',
+      ],
+    ])->save();
+  }
+
+  // Restore existing data in the same table.
+  if (!empty($rows)) {
+    foreach ($rows as $row) {
+      $row->grequest_status_value = _grequest_get_status($row->grequest_status_value);
+      $database->insert($table)
+        ->fields((array) $row)
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Get a new status value.
+ *
+ * @param int $status
+ *   Old status value.
+ *
+ * @return string
+ *   New status value.
+ */
+function _grequest_get_status($status) {
+  switch ($status) {
+    case 0:
+      return GroupMembershipRequest::REQUEST_PENDING;
+
+    case 1:
+      return GroupMembershipRequest::REQUEST_APPROVED;
+
+    case 2:
+      return GroupMembershipRequest::REQUEST_REJECTED;
+  }
+
+  return NULL;
+}
+
+/**
+ * Make sure the views.view.group_pending_members is switched to state machine.
+ */
+function grequest_update_8003() {
+  $message = NULL;
+
+  $name = 'views.view.group_pending_members';
+  $view = \Drupal::configFactory()->getEditable($name);
+
+  // Only update or insert the view if the views module is enabled.
+  if (\Drupal::moduleHandler()->moduleExists('views')) {
+    // Get the storage for optional extension configuration.
+    $optional_storage = new ExtensionInstallStorage(
+      \Drupal::service('config.storage'),
+      InstallStorage::CONFIG_OPTIONAL_DIRECTORY
+    );
+    $new_view = $optional_storage->read($name);
+    $old_view = \Drupal::configFactory()->getEditable($name);
+
+    // Update dependencies.
+    $dependencies = $old_view->get('dependencies.module');
+    $dependencies[] = 'state_machine';
+    $old_view->set('dependencies.module', $dependencies);
+
+    // Update filters.
+
+    $old_view->set('display.default.display_options.filters', $new_view['display']['default']['display_options']['filters']);
+    $old_view->save(TRUE);
+  }
+  // Otherwise delete the view if it exists in the storage.
+  elseif (!$view->isNew()) {
+    $view->delete();
+    $message = 'The view had been added even though the Views module is not installed. Removed the view.';
+  }
+
+  return $message;
+}

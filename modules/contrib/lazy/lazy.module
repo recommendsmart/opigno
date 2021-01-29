@@ -114,8 +114,7 @@ function lazy_is_enabled() {
   ]);
   $filters = $query->fetchAllKeyed();
   foreach ($filters as $key => $filter) {
-    $filter = \Drupal::config($key)->get();
-    
+    $filter = unserialize($filter);
     if (
       isset($filter['status'], $filter['dependencies']['module'])
       && $filter['status']
@@ -237,13 +236,6 @@ function lazy_disabled_by_path($disabled_paths) {
   // Current path. Do not trim a trailing slash if that is the complete path.
   $current_path = \Drupal::service('path.current')->getPath();
   $current_path = $current_path === '/' ? $current_path : rtrim($current_path, '/');
-
-  // Running Cron seems to render empty path aliases sometimes.
-  // See AliasManager.php getAliasByPath().
-  if ($current_path[0] !== '/') {
-    return FALSE;
-  }
-
   // Path alias.
   $path_alias = \Drupal::service('path.alias_manager')->getAliasByPath($current_path);
   $path_alias = mb_strtolower($path_alias);

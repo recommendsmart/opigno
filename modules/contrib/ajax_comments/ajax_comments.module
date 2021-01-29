@@ -30,58 +30,18 @@ use Drupal\Core\Routing\RouteMatch;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Implements hook_entity_view_mode_alter().
- */
-function ajax_comments_entity_view_mode_alter(&$view_mode, Drupal\Core\Entity\EntityInterface $entity, $context) {
-
-  /** @var \Drupal\ajax_comments\FieldSettingsHelper $field_settings_helper */
-  $field_settings_helper = \Drupal::service('ajax_comments.field_settings_helper');
-
-  // We lookup through the node fields
-  // and check out that the attached file was provided.
-  $nodeFields = \Drupal::service('entity_field.manager')->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle());
-  foreach ($nodeFields as $nodeField) {
-    if ($nodeField->getType() == 'comment') {
-      // Load the configuration entity for the entity's view display settings.
-      /** @var \Drupal\Core\Entity\Display\EntityDisplayInterface $view_display */
-      $view_display = \Drupal::service('entity_type.manager')
-        ->getStorage('entity_view_display')
-        ->load($entity->getEntityTypeId() . '.' . $entity->bundle() . '.' . $view_mode);
-
-      if (empty($view_display)) {
-        continue;
-      }
-      $comment_formatter = $field_settings_helper->getFieldFormatter($view_display, $nodeField->getName(), $nodeField, $view_mode);
-
-      if (!empty($comment_formatter) && $field_settings_helper->isEnabled($comment_formatter)) {
-        /** @var \Drupal\ajax_comments\TempStore $tempStore */
-        $tempStore = \Drupal::service('ajax_comments.temp_store');
-
-        $tempStore->setViewMode($entity->getEntityType()->getLabel(), $view_mode);
-      }
-    }
-  }
-
-}
-
-/**
  * Implements hook_comment_links_alter().
  *
  * For entity bundles with ajax comments enabled, alter the comment link
  * classes to allow ajax behaviors to be attached.
  */
 function ajax_comments_comment_links_alter(array &$links, CommentInterface &$entity, array &$context) {
-
-  /** @var \Drupal\ajax_comments\TempStore $tempStore */
-  $tempStore = \Drupal::service('ajax_comments.temp_store');
-  $view_mode = $tempStore->getViewMode($entity->getCommentedEntity()->getEntityType()->getLabel());
-
+  $request = \Drupal::request();
   /** @var \Drupal\ajax_comments\FieldSettingsHelper $field_settings_helper */
   $field_settings_helper = \Drupal::service('ajax_comments.field_settings_helper');
+  $comment_formatter = $field_settings_helper->getFieldFormatterFromComment($entity, $context['view_mode']);
 
-  $comment_formatter = $field_settings_helper->getFieldFormatterFromComment($entity, $view_mode);
-
-  if (!empty($comment_formatter) && $field_settings_helper->isEnabled($comment_formatter)) {
+  if ($field_settings_helper->isEnabled($comment_formatter)) {
     // A little HACK for do not mark as NEW own comments.
     if ($entity->isNew() && ($entity->getOwnerId() === \Drupal::currentUser()->id())) {
       $entity->enforceIsNew(FALSE);
@@ -236,12 +196,9 @@ function ajax_comments_entity_view_alter(array &$build, ContentEntityInterface $
         $field_formatter = $field_settings_helper->getFieldFormatter($display, $machine_name, $field_config, $display->getMode());
         if (!empty($field_formatter) && $field_settings_helper->isEnabled($field_formatter)) {
           $build['#attached']['library'][] = 'ajax_comments/commands';
-          if (isset($build[$machine_name]['0']['comments'])) {
-            $elements = &$build[$machine_name]['0']['comments'];
-            Utility::addCommentClasses($elements);
-          }
           $commands_added = TRUE;
           break;
+
         }
       }
     }
@@ -271,13 +228,9 @@ function ajax_comments_form_comment_form_alter(&$form, \Drupal\Core\Form\FormSta
   $commented_entity = $comment->getCommentedEntity();
   $field_name = $comment->getFieldName();
 
-  /** @var \Drupal\ajax_comments\TempStore $tempStore */
-  $tempStore = \Drupal::service('ajax_comments.temp_store');
-  $view_mode = $tempStore->getViewMode($commented_entity->getEntityType()->getLabel());
-
   // Check to see if this node type uses ajax comments.
-  $comment_formatter = $field_settings_helper->getFieldFormatterFromComment($comment, $view_mode);
-  if (!empty($comment_formatter) && !$field_settings_helper->isEnabled($comment_formatter)) {
+  $comment_formatter = $field_settings_helper->getFieldFormatterFromComment($comment, 'full');
+  if (!$field_settings_helper->isEnabled($comment_formatter)) {
     return;
   }
 
@@ -328,6 +281,15 @@ function _ajax_comments_preview_js($form, FormStateInterface $form_state) {
   $response = new AjaxResponse();
   $response->addCommand(new AlertCommand($message));
   return $response;
+}
+
+/**
+ * Implements template_preprocess_comment().
+ */
+function ajax_comments_preprocess_comment(&$variables) {
+  /** @var \Drupal\comment\CommentInterface $comment */
+  $comment = $variables['elements']['#comment'];
+  $variables['attributes']['class'][] = AjaxCommentsController::$commentClassPrefix . $comment->id();
 }
 
 /**

@@ -103,15 +103,7 @@ class PrivateMessageThreadViewBuilder extends EntityViewBuilder {
 
     $last_access_time = $entity->getLastAccessTimestamp($this->currentUser);
     $newest_message_timestamp = $entity->getNewestMessageCreationTimestamp();
-    $messages = $entity->getMessages();
-
-    foreach ($messages as $message) {
-      if ($message->getCreatedTime() == $newest_message_timestamp) {
-        break;
-      }
-    }
-
-    if ($last_access_time <= $newest_message_timestamp && $message->getOwnerId() != $this->currentUser->id()) {
+    if ($last_access_time <= $newest_message_timestamp) {
       $classes[] = 'unread-thread';
     }
 

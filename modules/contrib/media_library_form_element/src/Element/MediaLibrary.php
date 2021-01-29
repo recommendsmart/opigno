@@ -92,6 +92,7 @@ class MediaLibrary extends FormElement {
           'id' => $wrapper_id,
           'class' => ['media-library-form-element'],
         ],
+        '#modal_selector' => '#modal-media-library',
         '#attached' => [
           'library' => [
             'media_library_form_element/media_library_form_element',
@@ -211,6 +212,7 @@ class MediaLibrary extends FormElement {
 
     // Create a new media library URL with the correct state parameters.
     $selected_type_id = reset($allowed_media_type_ids);
+    $remaining = $cardinality_unlimited ? FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED : $remaining;
     // This particular media library opener needs some extra metadata for its
     // \Drupal\media_library\MediaLibraryOpenerInterface::getSelectionResponse()
     // to be able to target the element
@@ -547,7 +549,7 @@ class MediaLibrary extends FormElement {
     $library_ui = \Drupal::service('media_library.ui_builder')->buildUi($triggering_element['#media_library_state']);
     $dialog_options = MediaLibraryUiBuilder::dialogOptions();
 
-    return (new AjaxResponse())->addCommand(new OpenModalDialogCommand($dialog_options['title'], $library_ui, $dialog_options));
+    return (new AjaxResponse())->addCommand(new OpenModalDialogCommand($dialog_options['title'], $library_ui, $dialog_options, NULL, '#modal-media-library'));
   }
 
   /**
@@ -575,4 +577,5 @@ class MediaLibrary extends FormElement {
       '#theme' => 'media_library_element',
     ];
   }
+
 }

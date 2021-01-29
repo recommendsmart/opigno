@@ -94,14 +94,9 @@ function gin_toolbar_page_attachments_alter(&$page) {
     // Attach accent overrides CSS.
     $page['#attached']['library'][] = 'gin/gin_accent';
 
-    // If paragraphs_modal_edit is activated.
-    $moduleHandler = \Drupal::service('module_handler');
-
-    if ($moduleHandler->moduleExists('paragraphs_modal_edit')) {
-      // Attach the init script.
-      $page['#attached']['library'][] = 'claro/claro.drupal.dialog';
-      $page['#attached']['library'][] = 'gin/gin_dialog';
-    }
+    // Add library for dialog.
+    $page['#attached']['library'][] = 'gin/gin_dialog';
+    $page['#attached']['library'][] = 'claro/claro.drupal.dialog';
 
     // Expose settings to JS.
     $page['#attached']['drupalSettings']['gin']['darkmode'] = $darkmode;
@@ -166,6 +161,21 @@ function gin_toolbar_ckeditor_css_alter(array &$css) {
 }
 
 /**
+ * Set Gin_login CSS on top of all other CSS files.
+ */
+function gin_toolbar_css_alter(&$css, $assets) {
+  // UPDATE THIS PATH TO YOUR MODULE'S CSS PATH.
+  $path = drupal_get_path('theme', 'gin') . '/dist/css/gin_dialog.css';
+
+  if (isset($css[$path])) {
+    // Use anything greater than 100 to have it load after the theme
+    // as CSS_AGGREGATE_THEME is set to 100.
+    // Let's be on the safe side and assign a high number to it.
+    $css[$path]['group'] = 101;
+  }
+}
+
+/**
  * Helper function for check if Gin is active.
  */
 function _gin_toolbar_gin_is_active() {
@@ -187,7 +197,7 @@ function _gin_toolbar_gin_is_active() {
   $admin_theme_name = \Drupal::config('system.theme')->get('admin');
 
   // Admin theme will have no value if is set to use the default theme.
-  if ($admin_theme_name) {
+  if ($admin_theme_name && isset($theme_handler[$admin_theme_name]->base_themes)) {
     $admin_base_themes = $theme_handler[$admin_theme_name]->base_themes;
     $admin_base_themes[$admin_theme_name] = $admin_theme_name;
   }
@@ -243,6 +253,10 @@ function _gin_toolbar_user__get_user_id() {
  * Check user has enabled darkmode helper function.
  */
 function _gin_toolbar_user__overrides_enabled() {
+  if (_gin_toolbar_get_admin_theme_setting('show_user_theme_settings') !== TRUE) {
+    return FALSE;
+  }
+
   $uid = _gin_toolbar_user__get_user_id();
 
   /** @var \Drupal\user\UserDataInterface $userData */
@@ -266,17 +280,16 @@ function _gin_toolbar_user__overrides_enabled() {
 function _gin_toolbar_dark_mode_enabled() {
   // Get user config.
   if (_gin_toolbar_user__overrides_enabled()) {
-    $uid = _gin_toolbar_user__get_user_id();
     $darkmode = _gin_toolbar_user__get_darkmode_enabled();
-
-    // Convert older versions to boolean.
-    $darkmode = $darkmode === 0 || $darkmode === '0' ? FALSE : $darkmode;
-    $darkmode = $darkmode === 1 || $darkmode === '1' ? TRUE : $darkmode;
   }
   // Get general config.
   else {
     $darkmode = _gin_toolbar_get_admin_theme_setting('enable_darkmode');
   }
+
+  // Convert older versions to boolean.
+  $darkmode = $darkmode === 0 || $darkmode === '0' ? FALSE : $darkmode;
+  $darkmode = $darkmode === 1 || $darkmode === '1' ? TRUE : $darkmode;
 
   return $darkmode;
 }

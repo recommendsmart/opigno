@@ -144,9 +144,9 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
     if (!$is_in_preview) {
       /** @var \Drupal\comment\CommentInterface $entity */
       $entity = $this->entityTypeManager->getStorage('comment')->load($comment_entity_id);
-      $commented_entity = $entity->getCommentedEntity();
-
-      $links['comment'] = $this->buildLinks($entity, $commented_entity);
+      if ($commented_entity = $entity->getCommentedEntity()) {
+        $links['comment'] = $this->buildLinks($entity, $commented_entity);
+      }
 
       // Allow other modules to alter the comment links.
       $hook_context = [
@@ -172,7 +172,7 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
    */
   protected function buildLinks(CommentInterface $entity, EntityInterface $commented_entity) {
     $links = [];
-    $status = $commented_entity->getFieldValue($entity->getFieldName(), 'status');
+    $status = $commented_entity->get($entity->getFieldName())->status;
 
     if ($status == CommentItemInterface::OPEN) {
       if ($entity->access('delete')) {

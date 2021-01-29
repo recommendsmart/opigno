@@ -13,6 +13,9 @@
   // The selector for both manual load and automatic pager.
   var pagerSelector = '[data-drupal-views-infinite-scroll-pager]';
 
+  // The selector for the automatic pager.
+  var contentWrapperSelector = '[data-drupal-views-infinite-scroll-content-wrapper]';
+
   // The event and namespace that is bound to window for automatic scrolling.
   var scrollEvent = 'scroll.views_infinite_scroll';
 
@@ -36,12 +39,6 @@
     // Make sure infinite scroll can be reinitialized.
     var $existingPager = view.$view.find(pagerSelector);
     $existingPager.removeOnce('infinite-scroll');
-
-    // The selector for the automatic pager.
-    var contentWrapperSelector = '[data-drupal-views-infinite-scroll-content-wrapper]';
-    if ($newView.find('[data-drupal-views-infinite-scroll-table]' + ' > tbody').length) {
-      contentWrapperSelector = '[data-drupal-views-infinite-scroll-table]' + ' > tbody';
-    }
 
     var $newRows = $newView.find(contentWrapperSelector).children();
     var $newPager = $newView.find(pagerSelector);

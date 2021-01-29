@@ -448,16 +448,12 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
     if ($log_message_field && isset($form[$log_message_field])) {
       $form[$log_message_field] += [
         '#group' => 'revision_information',
-      ];
-      if ($form['revision']['#access']) {
-        $form[$log_message_field] += [
-          '#states' => [
-            'visible' => [
-              ':input[name="revision"]' => ['checked' => TRUE],
-            ],
+        '#states' => [
+          'visible' => [
+            ':input[name="revision"]' => ['checked' => TRUE],
           ],
-        ];
-      }
+        ],
+      ];
     }
   }
 

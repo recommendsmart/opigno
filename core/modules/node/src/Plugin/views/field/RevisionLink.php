@@ -21,15 +21,10 @@ class RevisionLink extends LinkBase {
   protected function getUrlInfo(ResultRow $row) {
     /** @var \Drupal\node\NodeInterface $node */
     $node = $this->getEntity($row);
-    if ($node) {
-      // Current revision uses the node view path.
-      return !$node->isDefaultRevision() ?
-        Url::fromRoute('entity.node.revision', [
-          'node' => $node->id(),
-          'node_revision' => $node->getRevisionId(),
-        ]) :
-        $node->toUrl();
-    }
+    // Current revision uses the node view path.
+    return !$node->isDefaultRevision() ?
+      Url::fromRoute('entity.node.revision', ['node' => $node->id(), 'node_revision' => $node->getRevisionId()]) :
+      $node->toUrl();
   }
 
   /**
@@ -38,7 +33,7 @@ class RevisionLink extends LinkBase {
   protected function renderLink(ResultRow $row) {
     /** @var \Drupal\node\NodeInterface $node */
     $node = $this->getEntity($row);
-    if (!$node || !$node->getRevisionid()) {
+    if (!$node->getRevisionid()) {
       return '';
     }
     $text = parent::renderLink($row);

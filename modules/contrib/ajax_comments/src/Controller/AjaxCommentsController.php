@@ -125,19 +125,11 @@ class AjaxCommentsController extends ControllerBase {
     // Load the display settings to ensure that the field formatter
     // configuration is properly applied to the rendered field when it is
     // returned in the ajax response.
-
-    /** @var \Drupal\ajax_comments\TempStore $tempStore */
-    $tempStore = \Drupal::service('ajax_comments.temp_store');
-    $view_mode = $tempStore->getViewMode($entity->getEntityType()->getLabel());
-
     $display_options = $this->entityTypeManager
       ->getStorage('entity_view_display')
-      ->load($entity->getEntityTypeId() . '.' . $entity->bundle() . '.' . $view_mode)
+      ->load($entity->getEntityTypeId() . '.' . $entity->bundle() . '.default')
       ->getComponent($field_name);
     $comment_display = $comment_field->view($display_options);
-
-    // Add default classes to comments elements.
-    Utility::addCommentClasses($comment_display[0]['comments']);
 
     // To avoid infinite nesting of #theme_wrappers elements on subsequent
     // ajax responses, unset them here.
@@ -362,6 +354,7 @@ class AjaxCommentsController extends ControllerBase {
    */
   public function save(Request $request, CommentInterface $comment) {
     $response = new AjaxResponse();
+
     // Store the selectors from the incoming request, if applicable.
     // If the selectors are not in the request, the stored ones will
     // not be overwritten.
@@ -767,6 +760,7 @@ class AjaxCommentsController extends ControllerBase {
    */
   public function saveReply(Request $request, EntityInterface $entity, $field_name, $pid) {
     $response = new AjaxResponse();
+
     // Check the user's access to reply.
     // The user should not have made it this far without proper permission,
     // but adding this access check as a fallback.

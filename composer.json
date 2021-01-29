@@ -6,14 +6,18 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "composer/installers": "^1.0",
-        "drupal-composer/drupal-scaffold": "^2.6.1",
-        "cweagans/composer-patches": "^1.0",
-        "goalgorilla/open_social": "~9.0",
+        "goalgorilla/open_social": "^9.6",
         "php": "^7.2",
-        "monolog/monolog": "^1.17",
-        "drupal/media_library_form_element": "^2.0",
-        "drupal/media_library_theme_reset": "^1.0"
+        "monolog/monolog": "^1.17"
+    },
+    "scripts": {
+      "this-is-a-comment": "The Plugin::scaffold post-*-cmd can be removed when upgrading to Open Social 10.0",
+      "post-install-cmd": [
+        "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
+      ],
+      "post-update-cmd": [
+        "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
+      ]
     },
     "repositories": [
         {
@@ -25,15 +29,12 @@
             "url": "https://asset-packagist.org"
         }
     ],
-    "scripts": {
-      "post-install-cmd": [
-        "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
-      ],
-      "post-update-cmd": [
-        "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
-      ]
-    },
     "extra": {
+        "drupal-scaffold": {
+            "locations": {
+                "web-root": "./"
+            }
+        },
         "installer-types": [
             "bower-asset",
             "npm-asset"
@@ -63,6 +64,9 @@
                 "type:drupal-drush"
             ]
         },
-        "enable-patching": true
+        "enable-patching": true,
+        "patchLevel": {
+            "drupal/core": "-p2"
+        }
     }
 }

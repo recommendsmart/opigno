@@ -208,7 +208,8 @@ class Vote extends ContentEntityBase implements VoteInterface {
 
     $fields['timestamp'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
-      ->setDescription(t('The time that the entity was created.'));
+      ->setDescription(t('The time that the entity was created.'))
+      ->setDefaultValueCallback('time');
 
     $fields['vote_source'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Vote Source'))

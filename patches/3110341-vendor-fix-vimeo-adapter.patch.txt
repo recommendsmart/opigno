@@ -1,0 +1,83 @@
+diff --git a/src/Adapters/Vimeo.php b/src/Adapters/Vimeo.php
+new file mode 100644
+index 0000000..20908e0
+--- /dev/null
++++ b/src/Adapters/Vimeo.php
+@@ -0,0 +1,38 @@
++<?php
++
++namespace Embed\Adapters;
++
++use Embed\Request;
++use Embed\Providers;
++
++/**
++ * Adapter to provide information from Vimeo.
++ * Required when Vimeo returns a 403 status code.
++ */
++class Vimeo extends Webpage implements AdapterInterface
++{
++  /**
++   * {@inheritdoc}
++   */
++  public static function check(Request $request)
++  {
++    return $request->isValid([200, 403]) && $request->match([
++        'https?://*.vimeo.com*',
++        'https?://vimeo.com*',
++      ]);
++  }
++
++  /**
++   * @inheritDoc
++   */
++  protected function run() {
++    if ($this->request->getHttpCode() === 403) {
++      $this->addProvider('oembed', new Providers\OEmbed());
++
++      return;
++    }
++
++    parent::run();
++  }
++
++}
+diff --git a/src/Providers/OEmbed/Vimeo.php b/src/Providers/OEmbed/Vimeo.php
+new file mode 100644
+index 0000000..1a03bf8
+--- /dev/null
++++ b/src/Providers/OEmbed/Vimeo.php
+@@ -0,0 +1,33 @@
++<?php
++
++namespace Embed\Providers\OEmbed;
++
++use Embed\Url;
++
++class Vimeo extends OEmbedImplementation
++{
++
++  /**
++   * @inheritDoc
++   */
++  public static function getEndPoint(Url $url) {
++    return 'https://vimeo.com/api/oembed.json';
++  }
++
++  /**
++   * @inheritDoc
++   */
++  public static function getPatterns() {
++    return [
++      'https?://*.vimeo.com*',
++      'https?://vimeo.com*',
++    ];
++  }
++
++  /**
++   * @inheritDoc
++   */
++  public static function getParams(Url $url) {
++    return ['url' => $url->withScheme('http')->getUrl()];
++  }
++}

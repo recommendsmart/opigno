@@ -19,7 +19,7 @@
  * Service definition for Dfareporting (v3.4).
  *
  * <p>
- * Manages your DoubleClick Campaign Manager ad campaigns and reports.</p>
+ * Manage your DoubleClick Campaign Manager ad campaigns and reports.</p>
  *
  * <p>
  * For more information about this service, see the API
@@ -103,7 +103,7 @@ class Google_Service_Dfareporting extends Google_Service
   public $userRolePermissions;
   public $userRoles;
   public $videoFormats;
-  
+
   /**
    * Constructs the internal representation of the Dfareporting service.
    *
@@ -113,9 +113,9 @@ class Google_Service_Dfareporting extends Google_Service
   public function __construct(Google_Client $client, $rootUrl = null)
   {
     parent::__construct($client);
-    $this->rootUrl = $rootUrl ?: 'https://www.googleapis.com/';
+    $this->rootUrl = $rootUrl ?: 'https://dfareporting.googleapis.com/';
     $this->servicePath = 'dfareporting/v3.4/';
-    $this->batchPath = 'batch/dfareporting/v3.4';
+    $this->batchPath = 'batch';
     $this->version = 'v3.4';
     $this->serviceName = 'dfareporting';
 
@@ -3779,7 +3779,7 @@ class Google_Service_Dfareporting extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'remarketingListId' => array(
+                'id' => array(
                   'location' => 'query',
                   'type' => 'string',
                   'required' => true,
@@ -3976,6 +3976,21 @@ class Google_Service_Dfareporting extends Google_Service
                 'sortOrder' => array(
                   'location' => 'query',
                   'type' => 'string',
+                ),
+              ),
+            ),'patch' => array(
+              'path' => 'userprofiles/{profileId}/reports/{reportId}',
+              'httpMethod' => 'PATCH',
+              'parameters' => array(
+                'profileId' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'reportId' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
                 ),
               ),
             ),'run' => array(
