@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a6c60e7d84f2d15ce59c9de6b0f164a7",
+    "content-hash": "301344445c2b5ad35be83c8b5a4f1706",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -11055,7 +11055,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "drupal/social_auth_extra": 20
+        "drupal/social_auth_extra": 20,
+        "zoonman/linkedin-api-php-client": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
