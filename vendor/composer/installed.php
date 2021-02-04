@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '7b554bd08e64b490ba9e4dbba0d2fe1e317f630c',
+    'reference' => '4605513e975a018db116ca7936a09e4128d5888a',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -1569,7 +1569,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '7b554bd08e64b490ba9e4dbba0d2fe1e317f630c',
+      'reference' => '4605513e975a018db116ca7936a09e4128d5888a',
     ),
     'google/apiclient' => 
     array (
