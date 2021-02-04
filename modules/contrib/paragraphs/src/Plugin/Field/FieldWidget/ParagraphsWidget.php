@@ -18,6 +18,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\TypedData\TranslationStatusInterface;
 use Drupal\paragraphs\ParagraphInterface;
 use Drupal\paragraphs\Plugin\EntityReferenceSelection\ParagraphSelection;
+use Drupal\paragraphs\Traits\FieldWidgetTrait;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
@@ -34,6 +35,8 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  * )
  */
 class ParagraphsWidget extends WidgetBase {
+
+  use FieldWidgetTrait;
 
   /**
    * Action position is in the add paragraphs place.
@@ -2340,6 +2343,9 @@ class ParagraphsWidget extends WidgetBase {
       return;
     }
     $this->isTranslating = FALSE;
+
+    $this->initFormLangcodes($form_state, $host);
+
     if (!$host->isTranslatable()) {
       return;
     }

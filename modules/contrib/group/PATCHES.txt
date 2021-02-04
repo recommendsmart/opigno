@@ -29,3 +29,7 @@ Group Invite
 Source: https://www.drupal.org/files/issues/2020-03-26/ginvite_module_port-2801603-112.patch
 
 
+Cache context update
+Source: https://www.drupal.org/files/issues/2018-05-04/group-cache-context-2882102-2.patch
+
+

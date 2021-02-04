@@ -125,11 +125,18 @@ class AjaxCommentsController extends ControllerBase {
     // Load the display settings to ensure that the field formatter
     // configuration is properly applied to the rendered field when it is
     // returned in the ajax response.
+
+    /** @var \Drupal\ajax_comments\TempStore $tempStore */
+    $tempStore = \Drupal::service('ajax_comments.temp_store');
+    $view_mode = $tempStore->getViewMode($entity->getEntityType()->getLabel()->getUntranslatedString());
     $display_options = $this->entityTypeManager
       ->getStorage('entity_view_display')
-      ->load($entity->getEntityTypeId() . '.' . $entity->bundle() . '.default')
+      ->load($entity->getEntityTypeId() . '.' . $entity->bundle() . '.' . $view_mode)
       ->getComponent($field_name);
     $comment_display = $comment_field->view($display_options);
+
+    // Add default classes to comments elements.
+    Utility::addCommentClasses($comment_display[0]['comments']);
 
     // To avoid infinite nesting of #theme_wrappers elements on subsequent
     // ajax responses, unset them here.
@@ -140,26 +147,6 @@ class AjaxCommentsController extends ControllerBase {
     unset($comment_display[0]['comments']['pager']['#route_parameters']['entity']);
     unset($comment_display[0]['comments']['pager']['#route_parameters']['field_name']);
     unset($comment_display[0]['comments']['pager']['#route_parameters']['pid']);
-
-    $entity_type = $entity->getEntityType();
-
-    // For replies, the passed $entity is the parent comment.
-    // However, for the pager we want the parent entity.
-    if ($entity_type->id() === 'comment') {
-      $entity = $entity->getCommentedEntity();
-      $entity_type = $entity->getEntityType();
-    }
-
-    $handler = $this->entityTypeManager()->getRouteProviders($entity_type->id())['html'];
-    $route_collection = $handler->getRoutes($entity_type);
-    $name = 'entity.' . $entity_type->get('id') . '.canonical';
-    $route = $route_collection->get($name);
-    // Override the ajax route object with the actual entity route.
-    $entity_url = $entity->toURL();
-    if ($route) {
-      $comment_display[0]['comments']['pager']['#route_name'] = $route;
-      $comment_display[0]['comments']['pager']['#route_parameters'] = $entity_url->getRouteParameters();
-    }
 
     return $comment_display;
   }

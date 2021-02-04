@@ -703,9 +703,11 @@ class Bootstrap {
       'variables' => [
         'alignment' => 'down',
         'attributes' => [],
+        'default_button' => TRUE,
         'items' => [],
         'split' => FALSE,
         'toggle' => NULL,
+        'toggle_label' => NULL,
       ],
     ];
 

@@ -55,6 +55,14 @@ class TempStore {
     return $this->privateTempStore->get('cid');
   }
 
+  public function setViewMode($entity_type, $viewmode) {
+    $this->privateTempStore->set('view_mode_entity_type_' . $entity_type, $viewmode);
+  }
+
+  public function getViewMode($entity_type) {
+    return $this->privateTempStore->get('view_mode_entity_type_' . $entity_type);
+  }
+
   /**
    * Get a single selector value, without the '#' prefix.
    *

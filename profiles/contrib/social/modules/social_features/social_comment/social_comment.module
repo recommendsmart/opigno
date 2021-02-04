@@ -5,15 +5,16 @@
  * The Social comment module.
  */
 
+use Drupal\comment\CommentInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\comment\CommentInterface;
+use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\group\Entity\GroupContent;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\social_comment\Entity\Comment;
 use Drupal\social_comment\SocialCommentViewBuilder;
 
@@ -217,14 +218,14 @@ function social_comment_comment_links_alter(array &$links, CommentInterface $ent
  * Implements hook_preprocess_comment().
  */
 function social_comment_preprocess_comment(&$variables) {
-  /* @var \Drupal\comment\Entity\Comment $comment */
+  /** @var \Drupal\comment\Entity\Comment $comment */
   $comment = $variables['elements']['#comment'];
   // Display comment created date in format 'time ago'.
   $created_time_ago = \Drupal::service('date.formatter')
     ->formatTimeDiffSince($comment->getCreatedTime(), ['granularity' => 1, 'return_as_object' => TRUE]);
   $date = t('%time ago', ['%time' => $created_time_ago->getString()]);
 
-  $variables['submitted'] = Link::fromTextAndUrl($date, $comment->urlInfo('canonical'));
+  $variables['submitted'] = Link::fromTextAndUrl($date, $comment->toUrl('canonical'));
   $variables['#cache']['max-age'] = $created_time_ago->getMaxAge();
 
   $account = $comment->getOwner();
@@ -272,6 +273,7 @@ function social_comment_comment_access(EntityInterface $entity, $operation, Acco
  */
 function social_comment_comment_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
   if ($view_mode === 'activity') {
+    /** @var \Drupal\comment\Entity\Comment $entity */
     $commented_entity = $entity->getCommentedEntity();
     if (is_object($commented_entity)) {
       $commented_entity_type = $commented_entity->getEntityTypeId();
@@ -333,7 +335,7 @@ function social_comment_comment_view(array &$build, EntityInterface $entity, Ent
         ];
 
         // Set path to post node.
-        $link_url = $commented_entity->urlInfo('canonical');
+        $link_url = $commented_entity->toUrl('canonical');
 
         // Attach the attributes.
         $link_url->setOptions($more_link_options);
@@ -358,5 +360,34 @@ function social_comment_comment_view(array &$build, EntityInterface $entity, Ent
 function social_comment_field_info_alter(&$info) {
   if (isset($info['comment'])) {
     $info['comment']['list_class'] = '\Drupal\social_comment\SocialCommentFieldItemList';
+  }
+}
+
+/**
+ * Implements hook_preprocess_pager().
+ */
+function social_comment_preprocess_pager(&$variables) {
+  $items = &$variables['items'];
+  $pattern = '/%2C.$/';
+
+  if (empty($items)) {
+    return;
+  }
+
+  $attributes = Drupal::moduleHandler()->moduleExists('ajax_comments') ? new Attribute(['class' => ['use-ajax']]) : new Attribute();
+
+  // Change href for all pager items except "pages"
+  // (E.G. first, previous, next, last, etc.).
+  foreach ($items as $key => $item) {
+    if (isset($item['href'])) {
+      $items[$key]['href'] = preg_replace($pattern, '', $item['href']);
+      $items[$key]['attributes'] = $attributes;
+    }
+  }
+
+  // Change href for pager "pages" items.
+  foreach ($items['pages'] as $key => &$item) {
+    $items['pages'][$key]['href'] = preg_replace($pattern, '', $item['href']);
+    $items['pages'][$key]['attributes'] = $attributes;
   }
 }

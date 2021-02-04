@@ -32,6 +32,11 @@ class GroupCacheContext extends GroupCacheContextBase implements CacheContextInt
    * {@inheritdoc}
    */
   public function getContext() {
+    // Check if there was no existing group on the route.
+    if (!$this->hasExistingGroup()) {
+      return 'none';
+    }
+
     // If we have an existing group, we can simply return its ID because that is
     // a unique identifier. However, when dealing with unsaved groups, they all
     // share the same ID 0. In order to avoid collisions when the 'group.type'

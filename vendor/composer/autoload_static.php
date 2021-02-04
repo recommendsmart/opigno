@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitb61204997c11e4fe727082b49922ea84
+class ComposerStaticInit7f85919fd5fa1e3a195b91e2a0c381f7
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -15,9 +15,10 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
         'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
+        'def43f6c87e4f8dfd0c9e1b1bab14fe8' => __DIR__ . '/..' . '/symfony/polyfill-iconv/bootstrap.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
-        'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
+        'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '07d7f1a47144818725fd8d91a907ac57' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/functions/create_uploaded_file.php',
         'da94ac5d3ca7d2dbab84ce561ce72bfd' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/functions/marshal_headers_from_sapi.php',
@@ -35,24 +36,14 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
         'cc8e14526dc240491e17a838cb78508c' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/functions/normalize_server.legacy.php',
         '786bf90caabc9e09b6ad4cc5ca8f0e30' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/functions/normalize_uploaded_files.legacy.php',
         '751a5a3f463e4be759be31748b61737c' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/functions/parse_cookie_header.legacy.php',
-        'def43f6c87e4f8dfd0c9e1b1bab14fe8' => __DIR__ . '/..' . '/symfony/polyfill-iconv/bootstrap.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
-        'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
-        '9c67151ae59aff4788964ce8eb2a0f43' => __DIR__ . '/..' . '/clue/stream-filter/src/functions_include.php',
         '9e4824c5afbdc1482b6025ce3d4dfde8' => __DIR__ . '/..' . '/league/csv/src/functions_include.php',
-        '8cff32064859f4559445b89279f3199c' => __DIR__ . '/..' . '/php-http/message/src/filters.php',
-        'c65d09b6820da036953a371c8c73a9b1' => __DIR__ . '/..' . '/facebook/graph-sdk/src/Facebook/polyfills.php',
-        'a8d3953fd9959404dd22d3dfcd0a79f0' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
     );
 
     public static $prefixLengthsPsr4 = array (
         'z' => 
         array (
             'zaporylie\\ComposerDrupalOptimizations\\' => 38,
-        ),
-        'p' => 
-        array (
-            'phpseclib3\\' => 11,
         ),
         'l' => 
         array (
@@ -65,6 +56,7 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
         'T' => 
         array (
             'Twig\\' => 5,
+            'TijsVerkoyen\\CssToInlineStyles\\' => 31,
             'TYPO3\\PharStreamWrapper\\' => 24,
         ),
         'S' => 
@@ -88,6 +80,7 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
             'Symfony\\Component\\EventDispatcher\\' => 34,
             'Symfony\\Component\\DependencyInjection\\' => 38,
             'Symfony\\Component\\Debug\\' => 24,
+            'Symfony\\Component\\CssSelector\\' => 30,
             'Symfony\\Component\\Console\\' => 26,
             'Symfony\\Component\\ClassLoader\\' => 30,
             'Symfony\\Cmf\\Component\\Routing\\' => 30,
@@ -98,8 +91,6 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
             'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
-            'Psr\\Cache\\' => 10,
-            'ParagonIE\\ConstantTime\\' => 23,
         ),
         'O' => 
         array (
@@ -112,7 +103,6 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
         ),
         'L' => 
         array (
-            'LinkedIn\\' => 9,
             'League\\Csv\\' => 11,
             'Laminas\\ZendFrameworkBridge\\' => 28,
             'Laminas\\Stdlib\\' => 15,
@@ -122,11 +112,6 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
         ),
         'H' => 
         array (
-            'Http\\Promise\\' => 13,
-            'Http\\Message\\' => 13,
-            'Http\\Discovery\\' => 15,
-            'Http\\Client\\Curl\\' => 17,
-            'Http\\Client\\' => 12,
             'Html2Text\\' => 10,
         ),
         'G' => 
@@ -134,14 +119,11 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
-            'Google\\Auth\\' => 12,
-            'Google\\' => 7,
+            'GraphQL\\' => 8,
         ),
         'F' => 
         array (
             'FontLib\\' => 8,
-            'Firebase\\JWT\\' => 13,
-            'Facebook\\' => 9,
         ),
         'E' => 
         array (
@@ -154,8 +136,8 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
             'Drupal\\social\\' => 14,
             'Drupal\\Driver\\' => 14,
             'Drupal\\Core\\' => 12,
+            'Drupal\\Composer\\Plugin\\Scaffold\\' => 32,
             'Drupal\\Component\\' => 17,
-            'DrupalComposer\\DrupalScaffold\\' => 30,
             'Doctrine\\Persistence\\' => 21,
             'Doctrine\\Inflector\\' => 19,
             'Doctrine\\Common\\Lexer\\' => 22,
@@ -171,12 +153,10 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
             'Composer\\Installers\\' => 20,
             'Composer\\CaBundle\\' => 18,
             'CommerceGuys\\Addressing\\' => 24,
-            'Clue\\StreamFilter\\' => 18,
         ),
         'A' => 
         array (
             'Asm89\\Stack\\' => 12,
-            'Abraham\\TwitterOAuth\\' => 21,
         ),
     );
 
@@ -184,10 +164,6 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
         'zaporylie\\ComposerDrupalOptimizations\\' => 
         array (
             0 => __DIR__ . '/..' . '/zaporylie/composer-drupal-optimizations/src',
-        ),
-        'phpseclib3\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
         ),
         'lsolesen\\pel\\' => 
         array (
@@ -200,6 +176,10 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
         'Twig\\' => 
         array (
             0 => __DIR__ . '/..' . '/twig/twig/src',
+        ),
+        'TijsVerkoyen\\CssToInlineStyles\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/tijsverkoyen/css-to-inline-styles/src',
         ),
         'TYPO3\\PharStreamWrapper\\' => 
         array (
@@ -281,6 +261,10 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
         array (
             0 => __DIR__ . '/..' . '/symfony/debug',
         ),
+        'Symfony\\Component\\CssSelector\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/css-selector',
+        ),
         'Symfony\\Component\\Console\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/console',
@@ -309,14 +293,6 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
-        'Psr\\Cache\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/cache/src',
-        ),
-        'ParagonIE\\ConstantTime\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
-        ),
         'OomphInc\\ComposerInstallersExtender\\' => 
         array (
             0 => __DIR__ . '/..' . '/oomphinc/composer-installers-extender/src',
@@ -328,10 +304,6 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
         'Masterminds\\' => 
         array (
             0 => __DIR__ . '/..' . '/masterminds/html5/src',
-        ),
-        'LinkedIn\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/zoonman/linkedin-api-php-client/src',
         ),
         'League\\Csv\\' => 
         array (
@@ -357,27 +329,6 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-diactoros/src',
         ),
-        'Http\\Promise\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/php-http/promise/src',
-        ),
-        'Http\\Message\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/php-http/message/src',
-            1 => __DIR__ . '/..' . '/php-http/message-factory/src',
-        ),
-        'Http\\Discovery\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/php-http/discovery/src',
-        ),
-        'Http\\Client\\Curl\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/php-http/curl-client/src',
-        ),
-        'Http\\Client\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/php-http/httplug/src',
-        ),
         'Html2Text\\' => 
         array (
             0 => __DIR__ . '/..' . '/html2text/html2text/src',
@@ -395,25 +346,13 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
-        'Google\\Auth\\' => 
+        'GraphQL\\' => 
         array (
-            0 => __DIR__ . '/..' . '/google/auth/src',
-        ),
-        'Google\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/google/apiclient/src',
+            0 => __DIR__ . '/..' . '/webonyx/graphql-php/src',
         ),
         'FontLib\\' => 
         array (
             0 => __DIR__ . '/..' . '/phenx/php-font-lib/src/FontLib',
-        ),
-        'Firebase\\JWT\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
-        ),
-        'Facebook\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/facebook/graph-sdk/src/Facebook',
         ),
         'Embed\\' => 
         array (
@@ -439,13 +378,13 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
         array (
             0 => __DIR__ . '/../..' . '/core/lib/Drupal/Core',
         ),
+        'Drupal\\Composer\\Plugin\\Scaffold\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/drupal/core-composer-scaffold',
+        ),
         'Drupal\\Component\\' => 
         array (
             0 => __DIR__ . '/../..' . '/core/lib/Drupal/Component',
-        ),
-        'DrupalComposer\\DrupalScaffold\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/drupal-composer/drupal-scaffold/src',
         ),
         'Doctrine\\Persistence\\' => 
         array (
@@ -498,17 +437,9 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
         array (
             0 => __DIR__ . '/..' . '/commerceguys/addressing/src',
         ),
-        'Clue\\StreamFilter\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/clue/stream-filter/src',
-        ),
         'Asm89\\Stack\\' => 
         array (
             0 => __DIR__ . '/..' . '/asm89/stack-cors/src/Asm89/Stack',
-        ),
-        'Abraham\\TwitterOAuth\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/abraham/twitteroauth/src',
         ),
     );
 
@@ -525,13 +456,6 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
             'Stack' => 
             array (
                 0 => __DIR__ . '/..' . '/stack/builder/src',
-            ),
-        ),
-        'G' => 
-        array (
-            'Google_Service_' => 
-            array (
-                0 => __DIR__ . '/..' . '/google/apiclient-services/src',
             ),
         ),
         'E' => 
@@ -563,6 +487,7 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
 
     public static $classMap = array (
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Drupal' => __DIR__ . '/../..' . '/core/lib/Drupal.php',
         'Drupal\\Component\\Utility\\Timer' => __DIR__ . '/../..' . '/core/lib/Drupal/Component/Utility/Timer.php',
         'Drupal\\Component\\Utility\\Unicode' => __DIR__ . '/../..' . '/core/lib/Drupal/Component/Utility/Unicode.php',
@@ -570,27 +495,6 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
         'Drupal\\Core\\DrupalKernel' => __DIR__ . '/../..' . '/core/lib/Drupal/Core/DrupalKernel.php',
         'Drupal\\Core\\DrupalKernelInterface' => __DIR__ . '/../..' . '/core/lib/Drupal/Core/DrupalKernelInterface.php',
         'Drupal\\Core\\Site\\Settings' => __DIR__ . '/../..' . '/core/lib/Drupal/Core/Site/Settings.php',
-        'Google_AccessToken_Revoke' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_AccessToken_Verify' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_AuthHandler_AuthHandlerFactory' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_AuthHandler_Guzzle5AuthHandler' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_AuthHandler_Guzzle6AuthHandler' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_AuthHandler_Guzzle7AuthHandler' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Client' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Collection' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Exception' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Http_Batch' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Http_MediaFileUpload' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Http_REST' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Model' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Service' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Service_Exception' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Service_Resource' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Task_Composer' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Task_Exception' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Task_Retryable' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Task_Runner' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Utils_UriTemplate' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
         'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
         'PEAR_Exception' => __DIR__ . '/..' . '/pear/pear_exception/PEAR/Exception.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
@@ -601,11 +505,11 @@ class ComposerStaticInitb61204997c11e4fe727082b49922ea84
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitb61204997c11e4fe727082b49922ea84::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitb61204997c11e4fe727082b49922ea84::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitb61204997c11e4fe727082b49922ea84::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInitb61204997c11e4fe727082b49922ea84::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInitb61204997c11e4fe727082b49922ea84::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit7f85919fd5fa1e3a195b91e2a0c381f7::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit7f85919fd5fa1e3a195b91e2a0c381f7::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit7f85919fd5fa1e3a195b91e2a0c381f7::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInit7f85919fd5fa1e3a195b91e2a0c381f7::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInit7f85919fd5fa1e3a195b91e2a0c381f7::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -3,6 +3,7 @@
 namespace Drupal\Tests\image_effects\Functional;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Image\ImageInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\image\Entity\ImageStyle;
@@ -18,12 +19,16 @@ abstract class ImageEffectsTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'image',
     'image_effects',
-    'simpletest',
     'imagemagick',
   ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
 
   /**
    * Test image style.
@@ -53,6 +58,13 @@ abstract class ImageEffectsTestBase extends BrowserTestBase {
    */
   protected $imageFactory;
 
+  /**
+   * The file system service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
   // Colors that are used in testing.
   // @codingStandardsIgnoreStart
   protected $black       = [  0,   0,   0,   0];
@@ -70,11 +82,14 @@ abstract class ImageEffectsTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     // Set the image factory.
     $this->imageFactory = $this->container->get('image.factory');
+
+    // Set the file system.
+    $this->fileSystem = $this->container->get('file_system');
 
     // Create a user and log it in.
     $this->adminUser = $this->drupalCreateUser([
@@ -88,7 +103,7 @@ abstract class ImageEffectsTestBase extends BrowserTestBase {
       'name' => $this->testImageStyleName,
       'label' => $this->testImageStyleLabel,
     ]);
-    $this->assertEqual(SAVED_NEW, $this->testImageStyle->save());
+    $this->assertEquals(SAVED_NEW, $this->testImageStyle->save());
   }
 
   /**
@@ -111,13 +126,14 @@ abstract class ImageEffectsTestBase extends BrowserTestBase {
     $image_style_pre = ImageStyle::load($this->testImageStyleName);
 
     // Add the effect.
-    $this->drupalPostForm('admin/config/media/image-styles/manage/' . $this->testImageStyleName, ['new' => $effect['id']], t('Add'));
+    $this->drupalGet('admin/config/media/image-styles/manage/' . $this->testImageStyleName);
+    $this->submitForm(['new' => $effect['id']], 'Add');
     if (!empty($effect['data'])) {
       $effect_edit = [];
       foreach ($effect['data'] as $field => $value) {
         $effect_edit['data[' . $field . ']'] = $value;
       }
-      $this->drupalPostForm(NULL, $effect_edit, t('Add effect'));
+      $this->submitForm($effect_edit, 'Add effect');
     }
 
     // Get UUID of newly added effect.
@@ -139,7 +155,7 @@ abstract class ImageEffectsTestBase extends BrowserTestBase {
   protected function removeEffectFromTestStyle($uuid) {
     $effect = $this->testImageStyle->getEffect($uuid);
     $this->testImageStyle->deleteImageEffect($effect);
-    $this->assertEqual(SAVED_UPDATED, $this->testImageStyle->save());
+    $this->assertEquals(SAVED_UPDATED, $this->testImageStyle->save());
   }
 
   /**
@@ -243,24 +259,24 @@ abstract class ImageEffectsTestBase extends BrowserTestBase {
    */
   protected function getTestImageCopyUri($path, $name = NULL, $type = 'module') {
     $test_directory = 'public://test-images/';
-    file_prepare_directory($test_directory, FILE_CREATE_DIRECTORY);
+    $this->fileSystem->prepareDirectory($test_directory, FileSystemInterface::CREATE_DIRECTORY);
     $source_uri = $name ? drupal_get_path($type, $name) : '';
     $source_uri .= $path;
     $target_uri = $test_directory . \Drupal::service('file_system')->basename($source_uri);
-    return file_unmanaged_copy($source_uri, $target_uri, FILE_EXISTS_REPLACE);
+    return $this->fileSystem->copy($source_uri, $target_uri, FileSystemInterface::EXISTS_REPLACE);
   }
 
   /**
    * Assert two colors are equal by RGBA.
    */
-  public function assertColorsAreEqual(array $actual, array $expected) {
+  public function assertColorsAreEqual(array $actual, array $expected): void {
     $this->assertColorsAreClose($actual, $expected, 0);
   }
 
   /**
    * Assert two colors are not equal by RGBA.
    */
-  public function assertColorsAreNotEqual(array $actual, array $expected) {
+  public function assertColorsAreNotEqual(array $actual, array $expected): void {
     // Fully transparent colors are equal, regardless of RGB.
     if ($expected[3] == 127) {
       $this->assertNotEquals(127, $actual[3]);
@@ -282,7 +298,7 @@ abstract class ImageEffectsTestBase extends BrowserTestBase {
    * @param int $tolerance
    *   The acceptable difference between the colors.
    */
-  public function assertColorsAreClose(array $actual, array $expected, $tolerance) {
+  public function assertColorsAreClose(array $actual, array $expected, $tolerance): void {
     // Fully transparent colors are equal, regardless of RGB.
     if ($actual[3] == 127 && $expected[3] == 127) {
       return;
@@ -304,7 +320,7 @@ abstract class ImageEffectsTestBase extends BrowserTestBase {
    * @param int $tolerance
    *   The acceptable difference between the colors.
    */
-  public function assertColorsAreNotClose(array $actual, array $expected, $tolerance) {
+  public function assertColorsAreNotClose(array $actual, array $expected, $tolerance): void {
     $distance = pow(($actual[0] - $expected[0]), 2) + pow(($actual[1] - $expected[1]), 2) + pow(($actual[2] - $expected[2]), 2) + pow(($actual[3] - $expected[3]), 2);
     $this->assertGreaterThan($tolerance, $distance, "Actual: {" . implode(',', $actual) . "}, Expected: {" . implode(',', $expected) . "}, Distance: " . $distance . ", Tolerance: " . $tolerance);
   }
@@ -343,7 +359,7 @@ abstract class ImageEffectsTestBase extends BrowserTestBase {
   /**
    * Asserts a Text overlay image.
    */
-  protected function assertTextOverlay($image, $width, $height) {
+  protected function assertTextOverlay($image, $width, $height): void {
     $w_error = abs($image->getWidth() - $width);
     $h_error = abs($image->getHeight() - $height);
     $tolerance = 0.1;
@@ -365,7 +381,7 @@ abstract class ImageEffectsTestBase extends BrowserTestBase {
    * @param string $message
    *   (optional) The message to display along with the assertion.
    */
-  protected function assertImagesAreEqual(ImageInterface $expected_image, ImageInterface $actual_image, $max_diff = 1, $message = NULL) {
+  protected function assertImagesAreEqual(ImageInterface $expected_image, ImageInterface $actual_image, $max_diff = 1, $message = ''): void {
     // Only works with GD.
     $this->assertSame('gd', $expected_image->getToolkitId());
     $this->assertSame('gd', $actual_image->getToolkitId());
@@ -379,6 +395,41 @@ abstract class ImageEffectsTestBase extends BrowserTestBase {
     $mean = GdImageAnalysis::mean($difference);
     imagedestroy($difference);
     $this->assertTrue($mean < $max_diff, $message);
+  }
+
+  /**
+   * Asserts that two GD images are not equal.
+   *
+   * Some difference can be allowed to account for e.g. compression artifacts.
+   *
+   * @param \Drupal\Core\Image\ImageInterface $expected_image
+   *   A GD image resource for the expected image.
+   * @param \Drupal\Core\Image\ImageInterface $actual_image
+   *   A GD image resource for the actual image.
+   * @param int $max_diff
+   *   (optional) The maximum allowed difference, range from 0 to 255. Defaults
+   *   to 1.
+   * @param string $message
+   *   (optional) The message to display along with the assertion.
+   */
+  protected function assertImagesAreNotEqual(ImageInterface $expected_image, ImageInterface $actual_image, $max_diff = 1, $message = ''): void {
+    // Only works with GD.
+    $this->assertSame('gd', $expected_image->getToolkitId());
+    $this->assertSame('gd', $actual_image->getToolkitId());
+
+    // Check dimensions.
+    if ($expected_image->getWidth() !== $actual_image->getWidth()) {
+      return;
+    }
+    if ($expected_image->getHeight() !== $actual_image->getHeight()) {
+      return;
+    }
+
+    // Image difference.
+    $difference = GdImageAnalysis::difference($expected_image->getToolkit()->getResource(), $actual_image->getToolkit()->getResource());
+    $mean = GdImageAnalysis::mean($difference);
+    imagedestroy($difference);
+    $this->assertGreaterThan($max_diff, $mean, $message);
   }
 
 }

@@ -45,10 +45,10 @@
             selectionObject.update(this.checked, index, $(this).val());
           }
         });
-        $element.on('mousedown', function (event) {
+        $element.on('click', function (event) {
           // Act only on left button click.
           if (event.which === 1) {
-            selectionObject.update(this.checked, index, $(this).val());
+            selectionObject.update(!this.checked, index, $(this).val());
           }
         });
       }

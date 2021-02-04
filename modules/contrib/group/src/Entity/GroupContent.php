@@ -247,7 +247,10 @@ class GroupContent extends ContentEntityBase implements GroupContentInterface {
         // trying to save an entity that just got deleted and triggered the
         // deletion of its group content entities.
         // @todo Revisit when https://www.drupal.org/node/2754399 lands.
-        $entity->save();
+        if ($entity = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId())->loadUnchanged($entity->id())) {
+          // The entity is reloaded from storage, so it has not been deleted.
+          $entity->save();
+        }
 
         // If a membership gets deleted, we need to reset the internal group
         // roles cache for the member in that group, but only if the user still
