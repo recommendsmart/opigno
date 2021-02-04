@@ -1,0 +1,14 @@
+name: Social Auth Extra
+type: module
+description: Open Social coupling for the Social API Auth module.
+core_version_requirement: ^8.8 || ^9
+package: Social
+dependencies:
+  - drupal:social_auth
+  - drupal:social_api
+  - profile:profile
+
+# Information added by Drupal.org packaging script on 2021-02-03
+version: '8.x-1.x-dev'
+project: 'social_auth_extra'
+datestamp: 1612380054

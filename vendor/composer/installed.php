@@ -6,11 +6,20 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'b528c45466e712d1ce8cb8afbb9d8b90f8a5e6c7',
+    'reference' => '4afe0d6ed467618eb10ac581dec0b0383d3df937',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
   array (
+    'abraham/twitteroauth' => 
+    array (
+      'pretty_version' => '0.7.4',
+      'version' => '0.7.4.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'c6f9e692552dd037b2324ed0dfa28a4e60875acf',
+    ),
     'asm89/stack-cors' => 
     array (
       'pretty_version' => '1.3.0',
@@ -1253,6 +1262,24 @@
         0 => '8.9.13',
       ),
     ),
+    'drupal/social_api' => 
+    array (
+      'pretty_version' => '1.1.0',
+      'version' => '1.1.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-1.1',
+    ),
+    'drupal/social_auth' => 
+    array (
+      'pretty_version' => '1.0.0',
+      'version' => '1.0.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-1.0',
+    ),
     'drupal/socialbase' => 
     array (
       'pretty_version' => '1.0.0',
@@ -1489,6 +1516,24 @@
       ),
       'reference' => '99f6d95aebd94251573e4f4febf14bc6aba28697',
     ),
+    'facebook/graph-sdk' => 
+    array (
+      'pretty_version' => '5.7.0',
+      'version' => '5.7.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '2d8250638b33d73e7a87add65f47fabf91f8ad9b',
+    ),
+    'firebase/php-jwt' => 
+    array (
+      'pretty_version' => 'v5.2.0',
+      'version' => '5.2.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'feb0e820b8436873675fd3aca04f3728eb2185cb',
+    ),
     'goalgorilla/open_social' => 
     array (
       'pretty_version' => '10.0.0',
@@ -1505,7 +1550,34 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'b528c45466e712d1ce8cb8afbb9d8b90f8a5e6c7',
+      'reference' => '4afe0d6ed467618eb10ac581dec0b0383d3df937',
+    ),
+    'google/apiclient' => 
+    array (
+      'pretty_version' => 'v2.9.1',
+      'version' => '2.9.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '2fb6e702aca5d68203fa737f89f6f774022494c6',
+    ),
+    'google/apiclient-services' => 
+    array (
+      'pretty_version' => 'v0.158.0',
+      'version' => '0.158.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '859f9c95ed85df02370f355b69c0dcad99367728',
+    ),
+    'google/auth' => 
+    array (
+      'pretty_version' => 'v1.14.3',
+      'version' => '1.14.3.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'c1503299c779af0cbc99b43788f75930988852cf',
     ),
     'guzzlehttp/guzzle' => 
     array (
@@ -1894,6 +1966,24 @@
       ),
       'reference' => '8d3fe38a1723e0e91076920c8bb946b1696e28ca',
     ),
+    'paragonie/constant_time_encoding' => 
+    array (
+      'pretty_version' => 'v2.4.0',
+      'version' => '2.4.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'f34c2b11eb9d2c9318e13540a1dbc2a3afbd939c',
+    ),
+    'paragonie/random_compat' => 
+    array (
+      'pretty_version' => 'v9.99.100',
+      'version' => '9.99.100.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '996434e5492cb4c3edcb9168db6fbb1359ef965a',
+    ),
     'pear/archive_tar' => 
     array (
       'pretty_version' => '1.4.12',
@@ -1938,6 +2028,24 @@
       array (
       ),
       'reference' => '19ad2bebc35be028fcc0221025fcbf3d436a3962',
+    ),
+    'phpseclib/phpseclib' => 
+    array (
+      'pretty_version' => '3.0.4',
+      'version' => '3.0.4.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '845a2275e886ba9fb386c8f59cb383dd9c8963e9',
+    ),
+    'psr/cache' => 
+    array (
+      'pretty_version' => '1.0.1',
+      'version' => '1.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'd11b50ad223250cf17b86e38383413f5a6764bf8',
     ),
     'psr/container' => 
     array (
@@ -2342,6 +2450,16 @@
       array (
         0 => '^3.2.1',
       ),
+    ),
+    'zoonman/linkedin-api-php-client' => 
+    array (
+      'pretty_version' => 'dev-master',
+      'version' => 'dev-master',
+      'aliases' => 
+      array (
+        0 => '9999999-dev',
+      ),
+      'reference' => 'd06531c48d5efc8aaf7dc074a5320f5ba3f906c9',
     ),
   ),
 );
