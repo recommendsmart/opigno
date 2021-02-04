@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'f3f5e78a678b2e6e38fb4fe9d34c2a9220a6472a',
+    'reference' => 'bb6b165d24c5551befa02644a5939526ac4e578f',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -1592,7 +1592,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'f3f5e78a678b2e6e38fb4fe9d34c2a9220a6472a',
+      'reference' => 'bb6b165d24c5551befa02644a5939526ac4e578f',
     ),
     'google/apiclient' => 
     array (
