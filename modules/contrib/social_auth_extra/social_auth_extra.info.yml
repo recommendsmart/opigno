@@ -7,8 +7,3 @@ dependencies:
   - drupal:social_auth
   - drupal:social_api
   - profile:profile
-
-# Information added by Drupal.org packaging script on 2021-02-03
-version: '8.x-1.x-dev'
-project: 'social_auth_extra'
-datestamp: 1612380054

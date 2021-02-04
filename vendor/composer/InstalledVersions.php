@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '8d3e26aa9c663cae36e0731efaba17a4f01a28c9',
+    'reference' => 'f3f5e78a678b2e6e38fb4fe9d34c2a9220a6472a',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -51,6 +51,15 @@ private static $installed = array (
       array (
       ),
       'reference' => 'b9c31def6a83f84b4d4a40d35996d375755f0e08',
+    ),
+    'clue/stream-filter' => 
+    array (
+      'pretty_version' => 'v1.5.0',
+      'version' => '1.5.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'aeb7d8ea49c7963d3b581378955dbf5bc49aa320',
     ),
     'commerceguys/addressing' => 
     array (
@@ -1303,6 +1312,16 @@ private static $installed = array (
       ),
       'reference' => '8.x-1.0',
     ),
+    'drupal/social_auth_extra' => 
+    array (
+      'pretty_version' => 'dev-1.x',
+      'version' => 'dev-1.x',
+      'aliases' => 
+      array (
+        0 => '1.x-dev',
+      ),
+      'reference' => '03b01f6d4ecd3eec93fdb51a11356ae052af45ad',
+    ),
     'drupal/socialbase' => 
     array (
       'pretty_version' => '1.0.0',
@@ -1573,7 +1592,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '8d3e26aa9c663cae36e0731efaba17a4f01a28c9',
+      'reference' => 'f3f5e78a678b2e6e38fb4fe9d34c2a9220a6472a',
     ),
     'google/apiclient' => 
     array (
@@ -2051,6 +2070,81 @@ private static $installed = array (
       array (
       ),
       'reference' => '19ad2bebc35be028fcc0221025fcbf3d436a3962',
+    ),
+    'php-http/async-client-implementation' => 
+    array (
+      'provided' => 
+      array (
+        0 => '1.0',
+      ),
+    ),
+    'php-http/client-implementation' => 
+    array (
+      'provided' => 
+      array (
+        0 => '1.0',
+      ),
+    ),
+    'php-http/curl-client' => 
+    array (
+      'pretty_version' => 'v1.7.1',
+      'version' => '1.7.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '6341a93d00e5d953fc868a3928b5167e6513f2b6',
+    ),
+    'php-http/discovery' => 
+    array (
+      'pretty_version' => '1.13.0',
+      'version' => '1.13.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '788f72d64c43dc361e7fcc7464c3d947c64984a7',
+    ),
+    'php-http/httplug' => 
+    array (
+      'pretty_version' => 'v1.1.0',
+      'version' => '1.1.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1c6381726c18579c4ca2ef1ec1498fdae8bdf018',
+    ),
+    'php-http/message' => 
+    array (
+      'pretty_version' => '1.11.0',
+      'version' => '1.11.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'fb0dbce7355cad4f4f6a225f537c34d013571f29',
+    ),
+    'php-http/message-factory' => 
+    array (
+      'pretty_version' => 'v1.0.2',
+      'version' => '1.0.2.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'a478cb11f66a6ac48d8954216cfed9aa06a501a1',
+    ),
+    'php-http/message-factory-implementation' => 
+    array (
+      'provided' => 
+      array (
+        0 => '1.0',
+      ),
+    ),
+    'php-http/promise' => 
+    array (
+      'pretty_version' => '1.1.0',
+      'version' => '1.1.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '4c4c1f9b7289a2ec57cde7f1e9762a5789506f88',
     ),
     'phpseclib/phpseclib' => 
     array (
