@@ -35,7 +35,6 @@ class SocialGroupSelection extends DefaultSelection {
       }
     }
 
-    $plugin_id = 'group_node' . $configuration['entity']->bundle();
     $storage = $this->entityTypeManager->getStorage('group_type');
 
     if (!$all_group_types) {
@@ -48,9 +47,7 @@ class SocialGroupSelection extends DefaultSelection {
       /** @var \Drupal\group\Entity\GroupTypeInterface $group_type */
       $group_type = $storage->load($group_type_id);
 
-      if (!$group_type->hasContentPlugin($plugin_id)) {
-        $excluded_group_types[] = $group_type_id;
-      }
+
     }
 
     if ($excluded_group_types) {
