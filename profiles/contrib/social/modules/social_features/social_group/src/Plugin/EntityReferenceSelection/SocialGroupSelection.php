@@ -35,7 +35,7 @@ class SocialGroupSelection extends DefaultSelection {
       }
     }
 
-    $plugin_id = 'group_node:' . $configuration['entity']->bundle();
+    $plugin_id = 'group_node' . $configuration['entity']->bundle();
     $storage = $this->entityTypeManager->getStorage('group_type');
 
     if (!$all_group_types) {
