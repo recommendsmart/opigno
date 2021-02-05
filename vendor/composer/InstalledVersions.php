@@ -29,20 +29,11 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'c345f91e22891235a827100b677a0e3122bc9a5e',
+    'reference' => '57a8c8dd38ca1a27090475910caf1186222fb8cc',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
   array (
-    'abraham/twitteroauth' => 
-    array (
-      'pretty_version' => '0.7.4',
-      'version' => '0.7.4.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'c6f9e692552dd037b2324ed0dfa28a4e60875acf',
-    ),
     'asm89/stack-cors' => 
     array (
       'pretty_version' => '1.3.0',
@@ -52,15 +43,6 @@ private static $installed = array (
       ),
       'reference' => 'b9c31def6a83f84b4d4a40d35996d375755f0e08',
     ),
-    'clue/stream-filter' => 
-    array (
-      'pretty_version' => 'v1.5.0',
-      'version' => '1.5.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'aeb7d8ea49c7963d3b581378955dbf5bc49aa320',
-    ),
     'commerceguys/addressing' => 
     array (
       'pretty_version' => 'v1.1.1',
@@ -69,6 +51,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '6df5c0eea9d1f370095585eef1b08f4dff73d51f',
+    ),
+    'commerceguys/intl' => 
+    array (
+      'pretty_version' => 'v1.0.7',
+      'version' => '1.0.7.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '0bf0beb12e37ef1a61e0d09dc66cdaa1a23e62e1',
     ),
     'composer/ca-bundle' => 
     array (
@@ -219,6 +210,15 @@ private static $installed = array (
         0 => '8.9.13',
       ),
     ),
+    'drupal/aggrid' => 
+    array (
+      'pretty_version' => '1.0.0-alpha44',
+      'version' => '1.0.0.0-alpha44',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-1.0-alpha44',
+    ),
     'drupal/ajax_comments' => 
     array (
       'pretty_version' => '1.0.0-beta2',
@@ -359,6 +359,15 @@ private static $installed = array (
       array (
         0 => '8.9.13',
       ),
+    ),
+    'drupal/commerce' => 
+    array (
+      'pretty_version' => '2.23.0',
+      'version' => '2.23.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-2.23',
     ),
     'drupal/config' => 
     array (
@@ -923,6 +932,15 @@ private static $installed = array (
       ),
       'reference' => '8.x-2.2',
     ),
+    'drupal/inline_entity_form' => 
+    array (
+      'pretty_version' => '1.0.0-rc8',
+      'version' => '1.0.0.0-RC8',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-1.0-rc8',
+    ),
     'drupal/inline_form_errors' => 
     array (
       'replaced' => 
@@ -1294,51 +1312,23 @@ private static $installed = array (
         0 => '8.9.13',
       ),
     ),
-    'drupal/social_api' => 
+    'drupal/socialbase' => 
     array (
       'pretty_version' => '1.1.0',
       'version' => '1.1.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '8.x-1.1',
-    ),
-    'drupal/social_auth' => 
-    array (
-      'pretty_version' => '1.0.0',
-      'version' => '1.0.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '8.x-1.0',
-    ),
-    'drupal/social_auth_extra' => 
-    array (
-      'pretty_version' => 'dev-1.x',
-      'version' => 'dev-1.x',
-      'aliases' => 
-      array (
-        0 => '1.x-dev',
-      ),
-      'reference' => '03b01f6d4ecd3eec93fdb51a11356ae052af45ad',
-    ),
-    'drupal/socialbase' => 
-    array (
-      'pretty_version' => '1.0.0',
-      'version' => '1.0.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '1.0.0',
+      'reference' => '1.1.0',
     ),
     'drupal/socialblue' => 
     array (
-      'pretty_version' => '1.0.0',
-      'version' => '1.0.0.0',
+      'pretty_version' => '1.1.0',
+      'version' => '1.1.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '1.0.0',
+      'reference' => '1.1.0',
     ),
     'drupal/standard' => 
     array (
@@ -1354,12 +1344,30 @@ private static $installed = array (
         0 => '8.9.13',
       ),
     ),
+    'drupal/state_machine' => 
+    array (
+      'pretty_version' => '1.0.0',
+      'version' => '1.0.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-1.0',
+    ),
     'drupal/statistics' => 
     array (
       'replaced' => 
       array (
         0 => '8.9.13',
       ),
+    ),
+    'drupal/subgroup' => 
+    array (
+      'pretty_version' => '1.0.0-rc1',
+      'version' => '1.0.0.0-RC1',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1.0.0-rc1',
     ),
     'drupal/swiftmailer' => 
     array (
@@ -1558,24 +1566,6 @@ private static $installed = array (
       ),
       'reference' => '99f6d95aebd94251573e4f4febf14bc6aba28697',
     ),
-    'facebook/graph-sdk' => 
-    array (
-      'pretty_version' => '5.7.0',
-      'version' => '5.7.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '2d8250638b33d73e7a87add65f47fabf91f8ad9b',
-    ),
-    'firebase/php-jwt' => 
-    array (
-      'pretty_version' => 'v5.2.0',
-      'version' => '5.2.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'feb0e820b8436873675fd3aca04f3728eb2185cb',
-    ),
     'goalgorilla/open_social' => 
     array (
       'pretty_version' => '10.0.0',
@@ -1592,34 +1582,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'c345f91e22891235a827100b677a0e3122bc9a5e',
-    ),
-    'google/apiclient' => 
-    array (
-      'pretty_version' => 'v2.9.1',
-      'version' => '2.9.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '2fb6e702aca5d68203fa737f89f6f774022494c6',
-    ),
-    'google/apiclient-services' => 
-    array (
-      'pretty_version' => 'v0.158.0',
-      'version' => '0.158.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '859f9c95ed85df02370f355b69c0dcad99367728',
-    ),
-    'google/auth' => 
-    array (
-      'pretty_version' => 'v1.14.3',
-      'version' => '1.14.3.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'c1503299c779af0cbc99b43788f75930988852cf',
+      'reference' => '57a8c8dd38ca1a27090475910caf1186222fb8cc',
     ),
     'guzzlehttp/guzzle' => 
     array (
@@ -2008,24 +1971,6 @@ private static $installed = array (
       ),
       'reference' => '8d3fe38a1723e0e91076920c8bb946b1696e28ca',
     ),
-    'paragonie/constant_time_encoding' => 
-    array (
-      'pretty_version' => 'v2.4.0',
-      'version' => '2.4.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'f34c2b11eb9d2c9318e13540a1dbc2a3afbd939c',
-    ),
-    'paragonie/random_compat' => 
-    array (
-      'pretty_version' => 'v9.99.100',
-      'version' => '9.99.100.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '996434e5492cb4c3edcb9168db6fbb1359ef965a',
-    ),
     'pear/archive_tar' => 
     array (
       'pretty_version' => '1.4.12',
@@ -2070,99 +2015,6 @@ private static $installed = array (
       array (
       ),
       'reference' => '19ad2bebc35be028fcc0221025fcbf3d436a3962',
-    ),
-    'php-http/async-client-implementation' => 
-    array (
-      'provided' => 
-      array (
-        0 => '1.0',
-      ),
-    ),
-    'php-http/client-implementation' => 
-    array (
-      'provided' => 
-      array (
-        0 => '1.0',
-      ),
-    ),
-    'php-http/curl-client' => 
-    array (
-      'pretty_version' => 'v1.7.1',
-      'version' => '1.7.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '6341a93d00e5d953fc868a3928b5167e6513f2b6',
-    ),
-    'php-http/discovery' => 
-    array (
-      'pretty_version' => '1.13.0',
-      'version' => '1.13.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '788f72d64c43dc361e7fcc7464c3d947c64984a7',
-    ),
-    'php-http/httplug' => 
-    array (
-      'pretty_version' => 'v1.1.0',
-      'version' => '1.1.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '1c6381726c18579c4ca2ef1ec1498fdae8bdf018',
-    ),
-    'php-http/message' => 
-    array (
-      'pretty_version' => '1.11.0',
-      'version' => '1.11.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'fb0dbce7355cad4f4f6a225f537c34d013571f29',
-    ),
-    'php-http/message-factory' => 
-    array (
-      'pretty_version' => 'v1.0.2',
-      'version' => '1.0.2.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'a478cb11f66a6ac48d8954216cfed9aa06a501a1',
-    ),
-    'php-http/message-factory-implementation' => 
-    array (
-      'provided' => 
-      array (
-        0 => '1.0',
-      ),
-    ),
-    'php-http/promise' => 
-    array (
-      'pretty_version' => '1.1.0',
-      'version' => '1.1.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '4c4c1f9b7289a2ec57cde7f1e9762a5789506f88',
-    ),
-    'phpseclib/phpseclib' => 
-    array (
-      'pretty_version' => '3.0.4',
-      'version' => '3.0.4.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '845a2275e886ba9fb386c8f59cb383dd9c8963e9',
-    ),
-    'psr/cache' => 
-    array (
-      'pretty_version' => '1.0.1',
-      'version' => '1.0.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'd11b50ad223250cf17b86e38383413f5a6764bf8',
     ),
     'psr/container' => 
     array (
@@ -2567,16 +2419,6 @@ private static $installed = array (
       array (
         0 => '^3.2.1',
       ),
-    ),
-    'zoonman/linkedin-api-php-client' => 
-    array (
-      'pretty_version' => 'dev-master',
-      'version' => 'dev-master',
-      'aliases' => 
-      array (
-        0 => '9999999-dev',
-      ),
-      'reference' => 'd06531c48d5efc8aaf7dc074a5320f5ba3f906c9',
     ),
   ),
 );
