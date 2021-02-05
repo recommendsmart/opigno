@@ -1,0 +1,149 @@
+<?php
+
+/**
+ * @file
+ * The activity_send_push module file.
+ */
+
+use Drupal\activity_creator\ActivityInterface;
+use Drupal\Core\Url;
+use Drupal\message\Entity\Message;
+use Minishlink\WebPush\WebPush;
+use Drupal\file\Entity\File;
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function activity_send_push_activity_insert(ActivityInterface $activity) {
+
+  $push_enabled = \Drupal::config('social_pwa.settings')->get('status.all');
+  $destinations = $activity->getDestinations();
+
+  // Check first if sending push notifications is enabled and this is something
+  // we need to do something with anyway.
+  if ($push_enabled && in_array('push', $destinations)) {
+    /* @var $activity_send_factory Drupal\activity_send\Plugin\ActivitySendManager */
+    $activity_send_factory = \Drupal::service('plugin.manager.activity_send.processor');
+    // Trigger the create action for entities.
+    /* @var $create_action \Drupal\activity_send_push\Plugin\ActivitySend\PushActivitySend */
+    $create_action = $activity_send_factory->createInstance('push_activity_send');
+    $create_action->create($activity);
+
+    $uid = $activity->field_activity_recipient_user->target_id;
+
+    if (!empty($uid)) {
+      // Prepare the payload with the message.
+      $message_loaded = Message::load($activity->field_activity_message->target_id);
+      $message = $message_loaded->getText();
+
+      $message_to_send = '';
+      if (!empty($message[0])) {
+        $message_to_send = $message[0];
+      }
+
+      // Get subscription object of the selected user.
+      $user_subscription = \Drupal::service('user.data')->get('social_pwa', $uid, 'subscription');
+
+      if (empty($user_subscription)) {
+        return;
+      }
+      if ($message_to_send === '') {
+        \Drupal::logger('activity_send_push')->error('Tried to send an empty push notification for mid: %mid', ['%mid' => $activity->field_activity_message->target_id]);
+        return;
+      }
+
+      $url = $activity->getRelatedEntityUrl();
+      // If the related entity does not have a canonical URL then we don't have
+      // anywhere for the user to go to when they click the push notification so
+      // we shouldn't send a notification at all.
+      if (!($url instanceof Url)) {
+        \Drupal::logger('activity_send_push')->error("Tried to send push notification for mid: %mid but the target entity doesn't have a canonical url", ['%mid' => $activity->field_activity_message->target_id]);
+        return;
+      }
+
+      $pwa_settings = \Drupal::config('social_pwa.settings');
+
+      // Set fields for payload.
+      $message_to_send = html_entity_decode($message_to_send);
+      $fields = [
+        'message' => strip_tags($message_to_send),
+        'url' => $url->toString(),
+        'site_name' => $pwa_settings->get('name'),
+      ];
+
+      $icon = $pwa_settings->get('icons.icon');
+      if (!empty($icon)) {
+        // Get the file id and path.
+        $fid = $icon[0];
+        /** @var \Drupal\file\Entity\File $file */
+        $file = File::load($fid);
+        $path = $file->url();
+
+        $fields['icon'] = file_url_transform_relative($path);
+      }
+
+      // Encode payload.
+      $payload = json_encode($fields);
+
+      $notifications = [];
+      foreach ($user_subscription as $subscription) {
+        $notifications[] = [
+          'endpoint' => $subscription['endpoint'],
+          'payload' => $payload,
+          'userPublicKey' => $subscription['key'],
+          'userAuthToken' => $subscription['token'],
+        ];
+      }
+
+      // Get the VAPID keys that were generated before.
+      $vapid_keys = \Drupal::state()->get('social_pwa.vapid_keys');
+
+      $auth = [
+        'VAPID' => [
+          'subject' => Url::fromRoute('<front>', [], ['absolute' => TRUE]),
+          'publicKey' => $vapid_keys['public'],
+          'privateKey' => $vapid_keys['private'],
+        ],
+      ];
+
+      $webPush = new WebPush($auth);
+
+      foreach ($notifications as $notification) {
+        $webPush->sendNotification(
+          $notification['endpoint'],
+          $notification['payload'],
+          $notification['userPublicKey'],
+          $notification['userAuthToken']
+        );
+      }
+
+      // Send out all the push notifications.
+      $push_results = $webPush->flush();
+
+      $removed = FALSE;
+      // Loop through the push results.
+      foreach ($push_results as $push_result) {
+        // If we had any results back that we're unsuccessful, we should act and
+        // remove the push subscription endpoint.
+        if (empty($push_result['success'])) {
+          // Loop through the users subscriptions.
+          foreach ($user_subscription as $key => $subscription) {
+            // Remove from list of subscriptions, as the endpoint is no longer
+            // being used.
+            if ($subscription['endpoint'] === $push_result['endpoint']) {
+              unset($user_subscription[$key]);
+              $removed = TRUE;
+            }
+          }
+        }
+      }
+
+      // Update the users subscriptions if we removed something from the list.
+      if ($removed) {
+        \Drupal::service('user.data')->set('social_pwa', $uid, 'subscription', $user_subscription);
+      }
+
+    }
+  }
+
+}

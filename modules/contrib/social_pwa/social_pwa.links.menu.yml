@@ -1,0 +1,11 @@
+social_pwa.admin_settings:
+  title: 'Social PWA Settings'
+  description: 'Configure the Manifest.json output.'
+  parent: system.admin_config_system
+  route_name: social_pwa.settings
+
+social_pwa.push_notification:
+  title: 'Send Push Notification'
+  description: 'Send push notifications to that have enabled notifications'
+  parent: social_pwa.admin_settings
+  route_name: social_pwa.send-push-notification

@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '57a8c8dd38ca1a27090475910caf1186222fb8cc',
+    'reference' => '257bc98654041aa1635f69eb8098c51849f1bb40',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -42,6 +42,15 @@ private static $installed = array (
       array (
       ),
       'reference' => 'b9c31def6a83f84b4d4a40d35996d375755f0e08',
+    ),
+    'beberlei/assert' => 
+    array (
+      'pretty_version' => 'v2.9.9',
+      'version' => '2.9.9.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '124317de301b7c91d5fce34c98bba2c6925bec95',
     ),
     'commerceguys/addressing' => 
     array (
@@ -184,6 +193,15 @@ private static $installed = array (
       array (
         0 => '8.9.13',
       ),
+    ),
+    'drupal/activity_send_push' => 
+    array (
+      'pretty_version' => '1.0.0-alpha10',
+      'version' => '1.0.0.0-alpha10',
+      'aliases' => 
+      array (
+      ),
+      'reference' => NULL,
     ),
     'drupal/address' => 
     array (
@@ -843,6 +861,43 @@ private static $installed = array (
         0 => '8.9.13',
       ),
     ),
+    'drupal/geocoder' => 
+    array (
+      'pretty_version' => '2.22.0',
+      'version' => '2.22.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-2.22',
+    ),
+    'drupal/geolocation' => 
+    array (
+      'pretty_version' => 'dev-2.x',
+      'version' => 'dev-2.x',
+      'aliases' => 
+      array (
+        0 => '2.x-dev',
+      ),
+      'reference' => '264a4a5f1585d58b3c055cc4a0f55fff424f117a',
+    ),
+    'drupal/geolocation_address' => 
+    array (
+      'pretty_version' => '3.2.0',
+      'version' => '3.2.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => NULL,
+    ),
+    'drupal/geolocation_leaflet' => 
+    array (
+      'pretty_version' => '3.2.0',
+      'version' => '3.2.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => NULL,
+    ),
     'drupal/gin' => 
     array (
       'pretty_version' => '3.0.0-alpha20',
@@ -1259,6 +1314,15 @@ private static $installed = array (
       ),
       'reference' => '8.x-1.15',
     ),
+    'drupal/search_api_location' => 
+    array (
+      'pretty_version' => '1.0.0-alpha2',
+      'version' => '1.0.0.0-alpha2',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-1.0-alpha2',
+    ),
     'drupal/select2' => 
     array (
       'pretty_version' => '1.8.0',
@@ -1311,6 +1375,33 @@ private static $installed = array (
       array (
         0 => '8.9.13',
       ),
+    ),
+    'drupal/social_course' => 
+    array (
+      'pretty_version' => '2.11.0',
+      'version' => '2.11.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-2.11',
+    ),
+    'drupal/social_geolocation' => 
+    array (
+      'pretty_version' => '1.2.0',
+      'version' => '1.2.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-1.2',
+    ),
+    'drupal/social_pwa' => 
+    array (
+      'pretty_version' => '1.0.0-alpha10',
+      'version' => '1.0.0.0-alpha10',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-1.0-alpha10',
     ),
     'drupal/socialbase' => 
     array (
@@ -1484,6 +1575,15 @@ private static $installed = array (
         0 => '8.9.13',
       ),
     ),
+    'drupal/video_embed_field' => 
+    array (
+      'pretty_version' => '1.6.0',
+      'version' => '1.6.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-1.6',
+    ),
     'drupal/views' => 
     array (
       'replaced' => 
@@ -1525,6 +1625,15 @@ private static $installed = array (
       ),
       'reference' => '8.x-3.0-beta1',
     ),
+    'drupal/weight' => 
+    array (
+      'pretty_version' => '3.2.0',
+      'version' => '3.2.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-3.2',
+    ),
     'drupal/workflows' => 
     array (
       'replaced' => 
@@ -1548,6 +1657,15 @@ private static $installed = array (
       ),
       'reference' => 'acd09dfe0555fbcfa254291e433c45fdd4652566',
     ),
+    'egeloen/http-adapter' => 
+    array (
+      'pretty_version' => '0.8.0',
+      'version' => '0.8.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '9641f11487ec26b24c6bbcee4f267cf62f60b855',
+    ),
     'egulias/email-validator' => 
     array (
       'pretty_version' => '2.1.25',
@@ -1566,6 +1684,15 @@ private static $installed = array (
       ),
       'reference' => '99f6d95aebd94251573e4f4febf14bc6aba28697',
     ),
+    'fgrosse/phpasn1' => 
+    array (
+      'pretty_version' => 'v2.2.0',
+      'version' => '2.2.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'd1978f7abd580f3fc33561e7f71d4c12c7531fad',
+    ),
     'goalgorilla/open_social' => 
     array (
       'pretty_version' => '10.0.0',
@@ -1582,7 +1709,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '57a8c8dd38ca1a27090475910caf1186222fb8cc',
+      'reference' => '257bc98654041aa1635f69eb8098c51849f1bb40',
     ),
     'guzzlehttp/guzzle' => 
     array (
@@ -1619,6 +1746,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '61ad68e934066a6f8df29a3d23a6460536d0855c',
+    ),
+    'igorw/get-in' => 
+    array (
+      'pretty_version' => 'v1.0.3',
+      'version' => '1.0.3.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '170ded831f49abc6a6061f655aba9bdbcf7b8111',
     ),
     'laminas/laminas-diactoros' => 
     array (
@@ -1692,6 +1828,24 @@ private static $installed = array (
       ),
       'reference' => '9227822783c75406cfe400984b2f095cdf03d417',
     ),
+    'mdanter/ecc' => 
+    array (
+      'pretty_version' => 'v0.5.2',
+      'version' => '0.5.2.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'b95f25cc1bacc83a9f0ccd375900b7cfd343029e',
+    ),
+    'minishlink/web-push' => 
+    array (
+      'pretty_version' => 'v2.0.1',
+      'version' => '2.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '6e1b88c46351ea3850cb1e9ae9565b8c61a58396',
+    ),
     'monolog/monolog' => 
     array (
       'pretty_version' => '1.26.0',
@@ -1700,6 +1854,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '2209ddd84e7ef1256b7af205d0717fb62cfc9c33',
+    ),
+    'mustangostang/spyc' => 
+    array (
+      'pretty_version' => '0.6.3',
+      'version' => '0.6.3.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '4627c838b16550b666d15aeae1e5289dd5b77da0',
     ),
     'npm-asset/autosize' => 
     array (
@@ -2007,6 +2170,15 @@ private static $installed = array (
       ),
       'reference' => 'dbb42a5a0e45f3adcf99babfb2a1ba77b8ac36a7',
     ),
+    'phayes/geophp' => 
+    array (
+      'pretty_version' => '1.2',
+      'version' => '1.2.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '015404e85b602e0df1f91441f8db0f9e98f7e567',
+    ),
     'phenx/php-font-lib' => 
     array (
       'pretty_version' => '0.5',
@@ -2015,6 +2187,24 @@ private static $installed = array (
       array (
       ),
       'reference' => '19ad2bebc35be028fcc0221025fcbf3d436a3962',
+    ),
+    'piwik/device-detector' => 
+    array (
+      'pretty_version' => '3.13.1',
+      'version' => '3.13.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'e90533302c58acf41f0d8075a0151537d0ddf34d',
+    ),
+    'psr/cache' => 
+    array (
+      'pretty_version' => '1.0.1',
+      'version' => '1.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'd11b50ad223250cf17b86e38383413f5a6764bf8',
     ),
     'psr/container' => 
     array (
@@ -2094,6 +2284,42 @@ private static $installed = array (
       array (
         0 => '*',
       ),
+    ),
+    'spomky-labs/aes-key-wrap' => 
+    array (
+      'pretty_version' => 'v4.0.1',
+      'version' => '4.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '6d302dc2d20cd61fc8bf0e253d628c70724d302a',
+    ),
+    'spomky-labs/base64url' => 
+    array (
+      'pretty_version' => 'v1.0.2',
+      'version' => '1.0.2.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'ef6d5fb93894063d9cee996022259fd08d6646ea',
+    ),
+    'spomky-labs/jose' => 
+    array (
+      'pretty_version' => 'v7.1.0',
+      'version' => '7.1.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'c7835297fa6a2c00dcdcbfadd67f7ea099b226a1',
+    ),
+    'spomky-labs/php-aes-gcm' => 
+    array (
+      'pretty_version' => 'v1.2.1',
+      'version' => '1.2.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'e3900f2eb29a98476ae94c25c5c4aebb32ebf338',
     ),
     'stack/builder' => 
     array (
@@ -2382,6 +2608,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '115a20e419439a27092788cdf36f1ac5f0fa429b',
+    ),
+    'willdurand/geocoder' => 
+    array (
+      'pretty_version' => 'v3.3.2',
+      'version' => '3.3.2.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'ccc178e2984c0af24881faa0ffe515f20e5e8c23',
     ),
     'zaporylie/composer-drupal-optimizations' => 
     array (

@@ -11,7 +11,10 @@
         "monolog/monolog": "^1.17",
         "drupal/subgroup": "^1.0",
         "drupal/aggrid": "^1.0@alpha",
-        "drupal/commerce": "^2.23"
+        "drupal/commerce": "^2.23",
+        "drupal/social_course": "^2.11",
+        "drupal/social_geolocation": "^1.2",
+        "drupal/social_pwa": "^1.0@alpha"
     },
     "repositories": [
         {

@@ -1,0 +1,10 @@
+{
+  "name": "drupal/social_pwa",
+  "description": "Social PWA.",
+  "type": "drupal-module",
+  "license": "GPL-2.0+",
+  "require": {
+    "minishlink/web-push": "^2.0",
+    "piwik/device-detector": "^3.0"
+  }
+}
