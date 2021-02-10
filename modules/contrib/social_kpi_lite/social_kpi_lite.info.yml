@@ -1,0 +1,12 @@
+name: Social KPI (Lite)
+type: module
+description: Implements KPI Analytics for Open Social distribution.
+core: 8.x
+dependencies:
+  - kpi_analytics:kpi_analytics
+package: Social
+
+# Information added by Drupal.org packaging script on 2020-11-04
+version: '8.x-1.0-alpha6'
+project: 'social_kpi_lite'
+datestamp: 1604503686
