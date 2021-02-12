@@ -14,7 +14,8 @@
         "drupal/commerce": "^2.23",
         "drupal/social_course": "^2.13",
         "drupal/social_geolocation": "^1.2",
-        "drupal/social_pwa": "^1.0@alpha"
+        "drupal/social_pwa": "^1.0@alpha",
+        "drupal/feeds": "^3.0@alpha"
     },
     "repositories": [
         {
