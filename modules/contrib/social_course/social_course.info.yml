@@ -1,0 +1,20 @@
+name: 'Social Course'
+description: 'Provides course feature.'
+type: module
+core: 8.x
+dependencies:
+  - drupal:file
+  - drupal:image
+  - drupal:text
+  - inline_entity_form:inline_entity_form
+  - paragraphs:paragraphs
+  - video_embed_field:video_embed_field
+  - weight:weight
+package: Social
+# project: 'social_course'
+hidden: true
+
+# Information added by Drupal.org packaging script on 2021-02-05
+version: '8.x-2.13'
+project: 'social_course'
+datestamp: 1612538945
