@@ -1,8 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-label: Supplier
-id: supplier
-description: 'A person or company that supplies goods or services.'
-locked: false
-primary_fields: {  }
