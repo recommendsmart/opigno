@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'b2e6e1b1e339d4a095cd3c57e452b441e2a1e6fc',
+    'reference' => '5f075beda3d80ece1cd250016db9a5e006dce514',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -357,12 +357,12 @@
     ),
     'drupal/commerce' => 
     array (
-      'pretty_version' => '2.23.0',
-      'version' => '2.23.0.0',
+      'pretty_version' => '2.24.0',
+      'version' => '2.24.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '8.x-2.23',
+      'reference' => '8.x-2.24',
     ),
     'drupal/config' => 
     array (
@@ -1681,12 +1681,12 @@
     ),
     'goalgorilla/open_social' => 
     array (
-      'pretty_version' => '10.0.0',
-      'version' => '10.0.0.0',
+      'pretty_version' => '10.0.1',
+      'version' => '10.0.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'd55272e83944b80c08cebd422e2d0d335899e383',
+      'reference' => 'f1cb1886ede49e6856c9f15a6be3c83d045bb944',
     ),
     'goalgorilla/social_template' => 
     array (
@@ -1695,7 +1695,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'b2e6e1b1e339d4a095cd3c57e452b441e2a1e6fc',
+      'reference' => '5f075beda3d80ece1cd250016db9a5e006dce514',
     ),
     'guzzlehttp/guzzle' => 
     array (
@@ -2122,12 +2122,12 @@
     ),
     'pear/archive_tar' => 
     array (
-      'pretty_version' => '1.4.12',
-      'version' => '1.4.12.0',
+      'pretty_version' => '1.4.13',
+      'version' => '1.4.13.0',
       'aliases' => 
       array (
       ),
-      'reference' => '19bb8e95490d3e3ad92fcac95500ca80bdcc7495',
+      'reference' => '2b87b41178cc6d4ad3cba678a46a1cae49786011',
     ),
     'pear/console_getopt' => 
     array (
@@ -2408,8 +2408,8 @@
     ),
     'symfony/polyfill-ctype' => 
     array (
-      'pretty_version' => 'v1.22.0',
-      'version' => '1.22.0.0',
+      'pretty_version' => 'v1.22.1',
+      'version' => '1.22.1.0',
       'aliases' => 
       array (
       ),
@@ -2417,39 +2417,39 @@
     ),
     'symfony/polyfill-iconv' => 
     array (
-      'pretty_version' => 'v1.22.0',
-      'version' => '1.22.0.0',
+      'pretty_version' => 'v1.22.1',
+      'version' => '1.22.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'b34bfb8c4c22650ac080d2662ae3502e5f2f4ae6',
+      'reference' => '06fb361659649bcfd6a208a0f1fcaf4e827ad342',
     ),
     'symfony/polyfill-intl-idn' => 
     array (
-      'pretty_version' => 'v1.22.0',
-      'version' => '1.22.0.0',
+      'pretty_version' => 'v1.22.1',
+      'version' => '1.22.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '0eb8293dbbcd6ef6bf81404c9ce7d95bcdf34f44',
+      'reference' => '2d63434d922daf7da8dd863e7907e67ee3031483',
     ),
     'symfony/polyfill-intl-normalizer' => 
     array (
-      'pretty_version' => 'v1.22.0',
-      'version' => '1.22.0.0',
+      'pretty_version' => 'v1.22.1',
+      'version' => '1.22.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '6e971c891537eb617a00bb07a43d182a6915faba',
+      'reference' => '43a0283138253ed1d48d352ab6d0bdb3f809f248',
     ),
     'symfony/polyfill-mbstring' => 
     array (
-      'pretty_version' => 'v1.22.0',
-      'version' => '1.22.0.0',
+      'pretty_version' => 'v1.22.1',
+      'version' => '1.22.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'f377a3dd1fde44d37b9831d68dc8dea3ffd28e13',
+      'reference' => '5232de97ee3b75b0360528dae24e73db49566ab1',
     ),
     'symfony/polyfill-php56' => 
     array (
@@ -2471,8 +2471,8 @@
     ),
     'symfony/polyfill-php72' => 
     array (
-      'pretty_version' => 'v1.22.0',
-      'version' => '1.22.0.0',
+      'pretty_version' => 'v1.22.1',
+      'version' => '1.22.1.0',
       'aliases' => 
       array (
       ),
@@ -2480,8 +2480,8 @@
     ),
     'symfony/polyfill-php80' => 
     array (
-      'pretty_version' => 'v1.22.0',
-      'version' => '1.22.0.0',
+      'pretty_version' => 'v1.22.1',
+      'version' => '1.22.1.0',
       'aliases' => 
       array (
       ),
@@ -2588,12 +2588,12 @@
     ),
     'webonyx/graphql-php' => 
     array (
-      'pretty_version' => 'v14.5.0',
-      'version' => '14.5.0.0',
+      'pretty_version' => 'v14.5.1',
+      'version' => '14.5.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '115a20e419439a27092788cdf36f1ac5f0fa429b',
+      'reference' => '3af8b92d07e0d7a9085c0b83daf86beaeb76f092',
     ),
     'willdurand/geocoder' => 
     array (
