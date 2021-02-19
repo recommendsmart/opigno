@@ -48,6 +48,12 @@ class ComposerStaticInitc57549eb6c7c9f12f114a0a413c5516d
         array (
             'zaporylie\\ComposerDrupalOptimizations\\' => 38,
         ),
+        'm' => 
+        array (
+            'mikehaertl\\wkhtmlto\\' => 20,
+            'mikehaertl\\tmp\\' => 15,
+            'mikehaertl\\shellcommand\\' => 24,
+        ),
         'l' => 
         array (
             'lsolesen\\pel\\' => 13,
@@ -189,6 +195,18 @@ class ComposerStaticInitc57549eb6c7c9f12f114a0a413c5516d
         'zaporylie\\ComposerDrupalOptimizations\\' => 
         array (
             0 => __DIR__ . '/..' . '/zaporylie/composer-drupal-optimizations/src',
+        ),
+        'mikehaertl\\wkhtmlto\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mikehaertl/phpwkhtmltopdf/src',
+        ),
+        'mikehaertl\\tmp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mikehaertl/php-tmpfile/src',
+        ),
+        'mikehaertl\\shellcommand\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mikehaertl/php-shellcommand/src',
         ),
         'lsolesen\\pel\\' => 
         array (
