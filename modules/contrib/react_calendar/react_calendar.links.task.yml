@@ -1,0 +1,4 @@
+entity.node_type.react_calendar:
+  route_name: entity.node_type.react_calendar
+  base_route: entity.node_type.edit_form
+  title: 'React Calendar'

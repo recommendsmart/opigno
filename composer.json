@@ -16,7 +16,9 @@
         "drupal/social_geolocation": "^1.2",
         "drupal/social_pwa": "^1.0@alpha",
         "drupal/feeds": "^3.0@alpha",
-        "drupal/book_pdf": "^1.0@alpha"
+        "drupal/book_pdf": "^1.0@alpha",
+        "drupal/fullcalendar_view": "^5.0",
+        "drupal/react_calendar": "^2.0@alpha"
     },
     "repositories": [
         {

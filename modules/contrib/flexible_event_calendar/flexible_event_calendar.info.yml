@@ -1,0 +1,11 @@
+name: Flexible Event Calendar API
+type: module
+description: It is a javascript API to integrate with evo-calendar library.
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: JS libraries
+
+# Information added by Drupal.org packaging script on 2020-06-01
+version: '8.x-1.0'
+project: 'flexible_event_calendar'
+datestamp: 1591005437

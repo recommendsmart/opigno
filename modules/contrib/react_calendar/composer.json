@@ -1,0 +1,16 @@
+{
+  "name": "drupal/react_calendar",
+  "type": "drupal-module",
+  "description": "React frontend for the Drupal 8 Calendar module.",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/react_calendar",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/react_calendar",
+    "source": "http://cgit.drupalcode.org/react_calendar"
+  },
+  "require": {
+    "drupal/core": "^8.7.7 || ^9"
+  }
+}

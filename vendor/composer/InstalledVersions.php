@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'efd956a3973acac526dcbb1078c3e8bb999cf632',
+    'reference' => 'cf7176865504143ced4f8a4a97f1ea1b05d36587',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -879,6 +879,15 @@ private static $installed = array (
         0 => '8.9.13',
       ),
     ),
+    'drupal/fullcalendar_view' => 
+    array (
+      'pretty_version' => '5.0.7',
+      'version' => '5.0.7.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '5.0.7',
+    ),
     'drupal/geocoder' => 
     array (
       'pretty_version' => '2.22.0',
@@ -1283,6 +1292,15 @@ private static $installed = array (
       array (
         0 => '8.9.13',
       ),
+    ),
+    'drupal/react_calendar' => 
+    array (
+      'pretty_version' => '2.0.0-alpha2',
+      'version' => '2.0.0.0-alpha2',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '2.0.0-alpha2',
     ),
     'drupal/redirect' => 
     array (
@@ -1727,7 +1745,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'efd956a3973acac526dcbb1078c3e8bb999cf632',
+      'reference' => 'cf7176865504143ced4f8a4a97f1ea1b05d36587',
     ),
     'guzzlehttp/guzzle' => 
     array (

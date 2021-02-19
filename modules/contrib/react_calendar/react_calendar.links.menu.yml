@@ -1,0 +1,6 @@
+react_calendar.settings_form:
+  title: 'React Calendar'
+  route_name: react_calendar.settings_form
+  description: 'Configure the default view and JSON API content translation.'
+  parent: system.admin_config_system
+  weight: 99

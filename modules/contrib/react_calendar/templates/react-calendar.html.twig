@@ -1,0 +1,23 @@
+{#
+  Displays the React Calendar.
+  Available variables
+   - default_view:
+     Default view that will be displayed for the calendar.
+     Possible values: month, week, @todo complete list.
+   - data_source:
+     Bundles that are enabled to be displayed in the calendar.
+     Contains the bundle_id, entity_type_id, date_field_name properties.
+   - language_prefix:
+     Boolean that indicates, in multilingual environments,
+     to use the language prefix so the content is fetched depending
+     on the current interface language.
+   - language_id:
+     The language id (e.g. 'fr') in multilingual environments.
+#}
+
+<div id="react-app-container"
+  data-default-view="{{ default_view }}"
+  data-data-source="{{ data_source }}"
+  data-language-prefix="{{ language_prefix }}"
+  data-language-id="{{ language_id }}">
+</div>

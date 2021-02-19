@@ -1,0 +1,11 @@
+# flexible_event_calendar library.
+flexible_event_calendar_js:
+  css:
+    layout:
+      css/evo-calendar.min.css: {}    
+      css/flexible_event_calendar.custom.css: {}
+  js:
+    js/evo-calendar.min.js: {}    
+    js/flexible_event_calendar.custom.js: {}
+  dependencies:
+    - core/jquery

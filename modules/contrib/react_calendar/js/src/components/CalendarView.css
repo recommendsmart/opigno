@@ -1,0 +1,9 @@
+.container {
+  /* @todo styling */
+}
+
+/* Temp fix for month rows */
+.rbc-month-row {
+  overflow: visible;
+  min-height: 6rem;
+}
