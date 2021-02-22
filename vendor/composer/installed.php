@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'cf7176865504143ced4f8a4a97f1ea1b05d36587',
+    'reference' => '6bf06feb470988cda4e34ed90f16f36478bbfe7a',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -855,6 +855,15 @@
       array (
         0 => '8.9.13',
       ),
+    ),
+    'drupal/friggeri_cv' => 
+    array (
+      'pretty_version' => '1.0.0-alpha1',
+      'version' => '1.0.0.0-alpha1',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1.0.0-alpha1',
     ),
     'drupal/fullcalendar_view' => 
     array (
@@ -1722,7 +1731,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'cf7176865504143ced4f8a4a97f1ea1b05d36587',
+      'reference' => '6bf06feb470988cda4e34ed90f16f36478bbfe7a',
     ),
     'guzzlehttp/guzzle' => 
     array (

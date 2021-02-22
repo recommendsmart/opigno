@@ -1,0 +1,41 @@
+content_as_config.general:
+  route_name: content_as_config.general.form
+  title: General settings
+  base_route: content_as_config
+  weight: 1
+
+content_as_config.taxonomies.export:
+  route_name: content_as_config.taxonomies.export
+  title: Export taxonomies
+  base_route: content_as_config
+  weight: 2
+
+content_as_config.taxonomies.import:
+  route_name: content_as_config.taxonomies.import
+  title: Import taxonomies
+  base_route: content_as_config
+  weight: 3
+
+content_as_config.blocks.export:
+  route_name: content_as_config.blocks.export
+  title: Export custom blocks
+  base_route: content_as_config
+  weight: 4
+
+content_as_config.blocks.import:
+  route_name: content_as_config.blocks.import
+  title: Import custom blocks
+  base_route: content_as_config
+  weight: 5
+
+content_as_config.menu.export:
+  route_name: content_as_config.menu.export
+  title: Export menu links
+  base_route: content_as_config
+  weight: 6
+
+content_as_config.menu.import:
+  route_name: content_as_config.menu.import
+  title: Export menu links
+  base_route: content_as_config
+  weight: 7

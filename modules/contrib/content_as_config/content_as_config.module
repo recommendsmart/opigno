@@ -1,0 +1,35 @@
+<?php
+
+use Drupal\Core\Menu\LocalTaskDefault;
+
+/**
+ * @file
+ * Module file for content_as_config.
+ */
+
+/**
+ * Implements hook_local_tasks_alter().
+ */
+function content_as_config_local_tasks_alter(&$local_tasks) {
+
+  if (\Drupal::moduleHandler()->moduleExists('feeds')) {
+    $local_tasks['content_as_config.feeds.export'] = [
+      'route_name' => 'content_as_config.feeds.export',
+      'title' => 'Export feeds',
+      'base_route' => 'content_as_config',
+      'weight' => 8,
+      'class' => LocalTaskDefault::class,
+      'options' => [],
+    ];
+
+    $local_tasks['content_as_config.feeds.import'] = [
+      'route_name' => 'content_as_config.feeds.import',
+      'title' => 'Import feeds',
+      'base_route' => 'content_as_config',
+      'weight' => 9,
+      'class' => LocalTaskDefault::class,
+      'options' => [],
+    ];
+  }
+
+}

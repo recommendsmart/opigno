@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6afed94ac11ddeacec31af718e925173",
+    "content-hash": "0d242cc1c1787d4e77b26264c90bae1c",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3488,6 +3488,60 @@
             "homepage": "https://www.drupal.org/project/flag",
             "support": {
                 "source": "https://git.drupalcode.org/project/flag"
+            }
+        },
+        {
+            "name": "drupal/friggeri_cv",
+            "version": "1.0.0-alpha1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/friggeri_cv.git",
+                "reference": "1.0.0-alpha1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/friggeri_cv-1.0.0-alpha1.zip",
+                "reference": "1.0.0-alpha1",
+                "shasum": "980718a2f0c1550b5191e546f5d21893a776193d"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "require-dev": {
+                "drupal/inline_entity_form": "^1.0@RC",
+                "drupal/multiple_fields_remove_button": "^1.0@alpha",
+                "mikehaertl/phpwkhtmltopdf": "^2.4.2"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0-alpha1",
+                    "datestamp": "1613429504",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Ara Martirosyan",
+                    "homepage": "https://www.drupal.org/u/ara-martirosyan",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Friggeri CV",
+            "homepage": "https://www.drupal.org/project/friggeri_cv",
+            "keywords": [
+                "Drupal"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/friggeri_cv",
+                "issues": "https://www.drupal.org/project/issues/friggeri_cv"
             }
         },
         {
@@ -12196,7 +12250,8 @@
         "drupal/social_pwa": 15,
         "drupal/feeds": 15,
         "drupal/book_pdf": 15,
-        "drupal/react_calendar": 15
+        "drupal/react_calendar": 15,
+        "drupal/friggeri_cv": 15
     },
     "prefer-stable": true,
     "prefer-lowest": false,
