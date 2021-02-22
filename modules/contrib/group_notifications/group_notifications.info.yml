@@ -1,0 +1,13 @@
+name: 'Group notifications'
+description: 'Receive notifications when certain Group operations are done'
+package: 'Group'
+type: 'module'
+core_version_requirement: ^9
+dependencies:
+  - 'group:group'
+  - 'drupal:user'
+
+# Information added by Drupal.org packaging script on 2021-01-12
+version: '1.0.0-alpha1'
+project: 'group_notifications'
+datestamp: 1610437809

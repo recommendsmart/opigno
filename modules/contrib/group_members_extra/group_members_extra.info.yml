@@ -1,0 +1,14 @@
+name: Group members extra
+type: module
+description: Enable extra functionality for group memberships
+package: Group
+core_version_requirement: ^8.8 || ^9
+dependencies:
+  - group:group
+  - drupal:user
+  - drupal:views
+
+# Information added by Drupal.org packaging script on 2021-02-17
+version: '1.0.0-alpha2'
+project: 'group_members_extra'
+datestamp: 1613553598
