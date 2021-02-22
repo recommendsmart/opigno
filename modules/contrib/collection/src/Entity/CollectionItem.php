@@ -37,7 +37,6 @@ use Drupal\Core\Cache\Cache;
  *     "access" = "Drupal\collection\CollectionAccessControlHandler",
  *   },
  *   base_table = "collection_item",
- *   data_table = "collection_item_field_data",
  *   admin_permission = "administer collections",
  *   entity_keys = {
  *     "id" = "id",

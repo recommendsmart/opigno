@@ -1,16 +1,3 @@
-collection.node.collections:
-  path: '/node/{node}/collections'
-  defaults:
-    _form: '\Drupal\collection\Form\NodeCollectionsForm'
-    _title_callback: '\Drupal\collection\Form\NodeCollectionsForm::addTitle'
-  requirements:
-    _permission: 'edit own collections'
-  options:
-    _admin_route: TRUE
-    parameters:
-      node:
-        type: entity:node
-
 collection_item.new.node:
   path: '/collection/{collection}/items/new/node'
   defaults:
@@ -23,3 +10,6 @@ collection_item.new.node:
     parameters:
       collection:
         type: entity:collection
+
+route_callbacks:
+  - '\Drupal\collection\Routing\CollectionDynamicRoutes::routes'

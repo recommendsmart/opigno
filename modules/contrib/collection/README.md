@@ -65,6 +65,35 @@ Note that edit and delete permissions are not per collection type, but based on 
 
 Optionally, create new _Collection item_ types at Administration » Structure » Collection item types. Collection items are fieldable and can be edited using the 'Edit collection item' operation on Collection item listings (the _Items_ tab on Collections). If _Inline entity form_ is enabled, the Collection item entity form will be embedded on the content entity edit form (e.g. the node edit form). It will use the `mini` form mode for Collection items if configured for that Collection item type.
 
+## Notes
+
+### Automatically created Collection items
+
+There are times when adding a content entity to a collection (for example adding an Article node to a Blog collection) when the collection item type must be deduced.
+
+For example, a _Blog_ collection type might allow two collection item types: _Blog item_ and _Page item_. If both _Blog item_ and _Page item_ types allow _Article_ nodes, which one should be used?
+
+Currently, for the 'Add new content' (`collection_new_node_form`) functionality, we pick the first collection item type that can handle the entity/bundle combo. In this example, _Blog item_ would be used since it's returned first alphabetically.
+
+To override this default behavior, you can manually set the type by altering the form to call a `#submit` handler. For example:
+
+```
+function MYMODULE_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id === 'collection_new_node_form') {
+    if ($form_state->get('collection')->bundle() === 'special') {
+      // Add a 'presubmit' handler to allow setting the collection item type to special.
+      array_unshift($form['#submit'], 'MYMODULE_form_collection_new_node_form_presubmit');
+    }
+  }
+}
+
+function MYMODULE_form_collection_new_node_form_presubmit($form, FormStateInterface $form_state) {
+  if ($form_state->getValue('bundle') === 'article') {
+    $form_state->set('collection_item_type', 'special_item');
+  }
+}
+```
+
 ## Similar modules
 
 Collection has some similarities to the Group module (https://www.drupal.org/project/group), in that it uses Collection item entities as relation objects to join content/configuration to Collections. But Collection does not enable custom permissions and roles per Collection, and Collection allows users to place configuration entities, such as menus, into Collections.

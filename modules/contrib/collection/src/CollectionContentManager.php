@@ -32,12 +32,41 @@ class CollectionContentManager {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity.
+   * @param string $access
+   *   The access level to check.
    *
    * @return array
    *   The collections to which this entity belongs.
    */
-  public function getCollectionsForEntity(EntityInterface $entity) {
+  public function getCollectionsForEntity(EntityInterface $entity, $access = 'update') {
     $collections = [];
+
+    foreach ($this->getCollectionItemsForEntity($entity, $access) as $collection_item) {
+      $collection = $collection_item->collection->entity;
+
+      if (!$collection->access($access)) {
+        continue;
+      }
+
+      $collections[$collection->id()] = $collection;
+    }
+
+    return $collections;
+  }
+
+  /**
+   * Get collection items which collect this entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity.
+   * @param string $access
+   *   The access level to check.
+   *
+   * @return array
+   *   The collections_items that collect this entity.
+   */
+  public function getCollectionItemsForEntity(EntityInterface $entity, $access = 'update') {
+    $collections_items = [];
 
     // Load all collection items that reference this entity.
     $collection_item_storage = $this->entityTypeManager->getStorage('collection_item');
@@ -49,20 +78,51 @@ class CollectionContentManager {
 
     $collection_items = $collection_item_storage->loadMultiple($collection_item_ids);
 
-    if (count($collection_items) === 0) {
-      return [];
+    foreach ($collection_items as $cid => $collection_item) {
+      if (!$collection_item->access($access)) {
+        unset($collection_items[$cid]);
+      }
     }
 
-    foreach ($collection_items as $collection_item) {
-      $collection = $collection_item->collection->entity;
+    return $collection_items;
+  }
 
-      if (!$collection->access('update')) {
+  /**
+   * Check which collections a given entity can be added to, based on the
+   * collection type configuration. This is used, for example, by the
+   * collection_request submodule.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity.
+   * @param string $access
+   *   The access level to check.
+   *
+   * @return array
+   *   The collections to which this entity can be added.
+   */
+  public function getAvailableCollections(EntityInterface $entity, $access = 'view') {
+    $available_collections = [];
+    $available_collection_types = [];
+    $collection_type_storage = $this->entityTypeManager->getStorage('collection_type');
+    $collection_storage = $this->entityTypeManager->getStorage('collection');
+
+    foreach ($collection_type_storage->loadMultiple() as $id => $collection_type) {
+      if (empty($collection_type->getAllowedCollectionItemTypes($entity->getEntityTypeId(), $entity->bundle()))) {
         continue;
       }
 
-      $collections[$collection->id()] = $collection;
+      $collections_by_type = $collection_storage->loadByProperties([
+        'type' => $id,
+      ]);
+
+      foreach ($collections_by_type as $cid => $collection) {
+        if ($collection->access($access)) {
+          $available_collections[$cid] = $collection;
+        }
+      }
     }
 
-    return $collections;
+    return $available_collections;
   }
+
 }

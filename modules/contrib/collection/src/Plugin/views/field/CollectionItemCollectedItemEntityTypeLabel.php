@@ -28,7 +28,8 @@ class CollectionItemCollectedItemEntityTypeLabel extends FieldPluginBase {
         $entity_type_label .= ': ' . node_get_type_label($collection_item->item->entity);
       }
       elseif ($collection_item->item->entity->getEntityType()->get('bundle_entity_type') !== NULL) {
-        $entity_type_label .= ': ' . $collection_item->item->entity->bundle();
+        $bundle_key = $collection_item->item->entity->getEntityType()->getKey('bundle');
+        $entity_type_label .= ': ' . $collection_item->item->entity->$bundle_key->entity->label();
       }
     }
 

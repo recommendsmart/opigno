@@ -237,7 +237,12 @@ function collection_entity_operation(EntityInterface $entity) {
  */
 function collection_entity_operation_alter(array &$operations, EntityInterface $entity) {
   if ($entity->getEntityTypeId() == 'collection_item') {
-    $operations['edit']['title'] = t('Edit collection item');
-    $operations['delete']['title'] = t('Remove from collection');
+    if (isset($operations['edit'])) {
+      $operations['edit']['title'] = t('Edit collection item');
+    }
+
+    if (isset($operations['delete'])) {
+      $operations['delete']['title'] = t('Remove from collection');
+    }
   }
 }

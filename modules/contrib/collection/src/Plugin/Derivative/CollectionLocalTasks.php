@@ -5,6 +5,8 @@ namespace Drupal\collection\Plugin\Derivative;
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\Routing\RouteProvider;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\ContentEntityType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,13 +22,24 @@ class CollectionLocalTasks extends DeriverBase implements ContainerDeriverInterf
   protected $routeProvider;
 
   /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * Constructs a new CollectionLocalTasks.
    *
    * @param Drupal\Core\Routing\RouteProvider $route_provider
    *   The route_provider service.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    */
-  public function __construct($route_provider) {
+  public function __construct(RouteProvider $route_provider, EntityTypeManagerInterface $entity_type_manager) {
     $this->routeProvider = $route_provider;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -34,7 +47,8 @@ class CollectionLocalTasks extends DeriverBase implements ContainerDeriverInterf
    */
   public static function create(ContainerInterface $container, $base_plugin_id) {
     return new static(
-      $container->get('router.route_provider')
+      $container->get('router.route_provider'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -60,6 +74,24 @@ class CollectionLocalTasks extends DeriverBase implements ContainerDeriverInterf
       $this->derivatives['entity.collection.items']['route_name'] = $collection_item_route;
       $this->derivatives['entity.collection.items']['base_route'] = 'entity.collection.canonical';
       $this->derivatives['entity.collection.items']['weight'] = 1;
+    }
+
+    /* @var $route \Symfony\Component\Routing\Route */
+    foreach ($this->routeProvider->getAllRoutes() as $route) {
+      // Add Collections tabs to supported content entities. The
+      // _collection_entity_type_id option is added when the dynamic routes are
+      // generated in CollectionDynamicRoutes::routes(). The base_route should
+      // exist because the _collection_entity_type_id option is only added when
+      // there is a canonical link template. The name should always be
+      // 'entity.$entity_type_id.canonical' according to
+      // https://www.drupal.org/project/drupal/issues/2720215#comment-12270831
+      if ($entity_type_id = $route->getOption('_collection_entity_type_id')) {
+        $this->derivatives['entity.' . $entity_type_id . '.collections'] = $base_plugin_definition;
+        $this->derivatives['entity.' . $entity_type_id . '.collections']['title'] = 'Collections';
+        $this->derivatives['entity.' . $entity_type_id . '.collections']['route_name'] = 'collection.' . $entity_type_id . '.collections';
+        $this->derivatives['entity.' . $entity_type_id . '.collections']['base_route'] = 'entity.' . $entity_type_id . '.canonical';
+        $this->derivatives['entity.' . $entity_type_id . '.collections']['weight'] = 2;
+      }
     }
 
     return parent::getDerivativeDefinitions($base_plugin_definition);

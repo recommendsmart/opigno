@@ -91,7 +91,8 @@ class CollectionItemListBuilder extends BulkFormEntityListBuilder {
       $type .= ': ' . node_get_type_label($entity->item->entity);
     }
     elseif ($entity->item->entity->getEntityType()->get('bundle_entity_type') !== NULL) {
-      $type .= ': ' . $entity->item->entity->bundle();
+      $bundle_key = $entity->item->entity->getEntityType()->getKey('bundle');
+      $type .= ': ' . $entity->item->entity->$bundle_key->entity->label();
     }
 
     $row['type'] = [
