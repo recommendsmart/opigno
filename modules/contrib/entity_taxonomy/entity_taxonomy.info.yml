@@ -1,0 +1,14 @@
+name: Entity taxonomy
+type: module
+description: 'Enables the categorization of each entity.'
+package: Taxonomy
+core_version_requirement: ^8.8 || ^9.0
+dependencies:
+  - drupal:node
+  - drupal:text
+configure: entity.entity_taxonomy_vocabulary.collection
+
+# Information added by Drupal.org packaging script on 2021-02-22
+version: '1.0.0'
+project: 'entity_taxonomy'
+datestamp: 1614020606
