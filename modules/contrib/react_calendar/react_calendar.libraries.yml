@@ -1,7 +1,0 @@
-react_calendar:
-  css:
-    theme:
-      js/build/static/css/react_calendar.css: {}
-  js:
-    js/startsWithPolyfill.js: { attributes: { defer: true }}
-    js/build/static/js/react_calendar.js: { attributes: { defer: true }}

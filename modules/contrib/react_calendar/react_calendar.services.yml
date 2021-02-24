@@ -1,4 +1,0 @@
-services:
-  react_calendar.config:
-    class: Drupal\react_calendar\CalendarConfiguration
-    arguments: ['@entity_type.manager', '@entity.manager', '@config.factory']
