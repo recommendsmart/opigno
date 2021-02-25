@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '6bf06feb470988cda4e34ed90f16f36478bbfe7a',
+    'reference' => 'f5b0b16752ae62cc02631253509d394047847251',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -1279,15 +1279,6 @@
         0 => '8.9.13',
       ),
     ),
-    'drupal/react_calendar' => 
-    array (
-      'pretty_version' => '2.0.0-alpha2',
-      'version' => '2.0.0.0-alpha2',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '2.0.0-alpha2',
-    ),
     'drupal/redirect' => 
     array (
       'pretty_version' => '1.4.0',
@@ -1731,7 +1722,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '6bf06feb470988cda4e34ed90f16f36478bbfe7a',
+      'reference' => 'f5b0b16752ae62cc02631253509d394047847251',
     ),
     'guzzlehttp/guzzle' => 
     array (
