@@ -4,6 +4,7 @@ namespace Drupal\social_pwa\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 use Minishlink\WebPush\WebPush;
@@ -12,6 +13,8 @@ use Minishlink\WebPush\WebPush;
  * Configure Push Notifications form.
  */
 class PushNotificationForm extends FormBase {
+
+  use MessengerTrait;
 
   /**
    * {@inheritdoc}
@@ -28,7 +31,7 @@ class PushNotificationForm extends FormBase {
     // Check first if sending push notifications is enabled.
     $push_enabled = \Drupal::config('social_pwa.settings')->get('status.all');
     if (!$push_enabled) {
-      drupal_set_message(t('Sending push notifications is disabled.'), 'warning');
+      $this->messenger()->addWarning($this->t('Sending push notifications is disabled.'));
 
       return $form;
     }
@@ -55,7 +58,7 @@ class PushNotificationForm extends FormBase {
 
     // Check if the $user_list does have values.
     if (empty($user_list)) {
-      drupal_set_message(t('There are currently no users subscribed to receive push notifications.'), 'warning');
+      $this->messenger()->addWarning($this->t('There are currently no users subscribed to receive push notifications.'));
     }
     else {
       // Start the form for sending push notifications.
@@ -173,7 +176,7 @@ class PushNotificationForm extends FormBase {
         \Drupal::service('user.data')->set('social_pwa', $uid, 'subscription', $user_subscription);
       }
     }
-    drupal_set_message($this->t('Message was successfully sent!'));
+    $this->messenger()->addStatus($this->t('Message was successfully sent!'));
   }
 
 }

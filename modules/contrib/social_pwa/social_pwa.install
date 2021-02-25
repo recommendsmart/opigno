@@ -11,7 +11,7 @@ use Minishlink\WebPush\VAPID;
  * Implements hook_install().
  */
 function social_pwa_install() {
-  drupal_set_message(t('The Social PWA module has been enabled.'));
+  \Drupal::messenger()->addStatus(t('The Social PWA module has been enabled.'));
 
   // Check for existing keys.
   $vapid_keys = \Drupal::state()->get('social_pwa.vapid_keys');

@@ -77,7 +77,7 @@ function activity_send_push_activity_insert(ActivityInterface $activity) {
         $fid = $icon[0];
         /** @var \Drupal\file\Entity\File $file */
         $file = File::load($fid);
-        $path = $file->url();
+        $path = $file->createFileUrl(FALSE);
 
         $fields['icon'] = file_url_transform_relative($path);
       }

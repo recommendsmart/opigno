@@ -132,7 +132,7 @@ class ManifestSettingsForm extends ConfigFormBase {
       '#description' => $this->t('Provide a square (.png) image. This image serves as your icon when the user adds the website to their home screen. <i>Minimum dimensions are 512px by 512px.</i>'),
       '#default_value' => $icon ?: [],
       '#required' => TRUE,
-      '#upload_location' => file_default_scheme() . '://images/touch/',
+      '#upload_location' => \Drupal::config('system.file')->get('default_scheme') . '://images/touch/',
       '#upload_validators' => [
         'file_validate_extensions' => ['png'],
         'file_validate_image_resolution' => ['512x512', '512x512'],

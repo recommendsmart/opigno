@@ -1558,8 +1558,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Open Social\n"
-"POT-Creation-Date: 2021-02-05 00:18+0000\n"
-"PO-Revision-Date: 2021-02-15 22:03+0000\n"
+"POT-Creation-Date: 2021-02-20 00:32+0000\n"
+"PO-Revision-Date: 2021-02-22 13:38+0000\n"
 "Last-Translator: Gabriela Petkova <gabriela.petkova@greenpeace.org>\n"
 "Language-Team: Bulgarian <https://translate.getopensocial.com/projects/gpcee/"
 "distribution/bg/>\n"
@@ -1592,8 +1592,8 @@ msgstr ""
 "<li>Невалидно потребителски име/мейл или парола. </li>\n"
 "<li>След няколко неуспешни опита за вход в платформата, потребителското име "
 "е блокирано. </li>\n"
-"<li>Безброй неуспешни опити за вход в платформата от този копмютър (IP адрес)"
-". Този IP адресis е временно блокиран. </li>\n"
+"<li>Безброй неуспешни опити за вход в платформата от този копмютър (IP "
+"адрес). Този IP адресis е временно блокиран. </li>\n"
 "</ul>\n"
 "<p>За да разрешиш този проблем, опитай да използваш друг потребителска "
 "информация, опитай да влезеш отново по-късно, или <a href=\":url\">изпрати "
@@ -1625,8 +1625,8 @@ msgstr ""
 "запитване за нова парола</a>"
 
 #: modules/social_features/social_swiftmail/social_swiftmail.module:72
-msgid "#madetoshare"
-msgstr "#madetoshare"
+msgid "#MadeToShare"
+msgstr ""
 
 #: modules/social_features/social_comment/social_comment.module:226
 #: modules/social_features/social_post/post.page.inc:40
@@ -1754,8 +1754,8 @@ msgstr "0 сваляния"
 #: modules/social_features/social_follow_taxonomy/config/install/views.view.following_tags.yml:0
 msgid "1"
 msgid_plural "@count"
-msgstr[0] "1"
-msgstr[1] "@count"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/social_features/social_comment_upload/social_comment_upload.module:74
 msgid "1 attachment."
@@ -1867,8 +1867,8 @@ msgstr ":num_comments коментарa"
 msgid ""
 "<a href=\"/node/{{ raw_arguments.nid }}/enrollments\">See all enrollments</a>"
 msgstr ""
-"<a href=\"/node/{{ raw_arguments.nid }}/enrollments\">Виж всички "
-"записвания</a>"
+"<a href=\"/node/{{ raw_arguments.nid }}/enrollments\">Виж всички записвания</"
+"a>"
 
 #: modules/social_features/social_album/config/install/views.view.albums.yml:0
 msgid ""
@@ -1931,16 +1931,16 @@ msgid ""
 "<h1 class=\"h4 section-title\">[view:total-rows] Enroll invite(s) to event: "
 "{{ arguments.nid }}</h1>"
 msgstr ""
-"<h1 class=\"h4 section-title\">[view:total-rows] Приеми покана(и) за събитие:"
-" {{ arguments.nid }}</h1>"
+"<h1 class=\"h4 section-title\">[view:total-rows] Приеми покана(и) за "
+"събитие: {{ arguments.nid }}</h1>"
 
 #: modules/social_features/social_event/config/install/views.view.event_manage_enrollment_requests.yml:0
 msgid ""
 "<h1 class=\"h4 section-title\">[view:total-rows] Enroll request(s) to event: "
 "{{ arguments.nid }}</h1>"
 msgstr ""
-"<h1 class=\"h4 section-title\">[view:total-rows] Приеми заявка(и) за събитие:"
-" {{ arguments.nid }}</h1>"
+"<h1 class=\"h4 section-title\">[view:total-rows] Приеми заявка(и) за "
+"събитие: {{ arguments.nid }}</h1>"
 
 #: modules/custom/sitewide_js/src/Form/SiteWideJSForm.php:37
 msgid ""
@@ -1963,15 +1963,15 @@ msgstr "<h4>Резултати от съдържанието</h4>"
 
 #: modules/social_features/social_search/config/install/views.view.search_groups.yml:0;0
 msgid "<h4>Group results</h4>"
-msgstr ""
+msgstr "<h4>Резултати за група</h4>"
 
 #: modules/social_features/social_user/src/Form/SocialUserNavigationSettingsForm.php:89
 msgid ""
 "<i>Disabling this will simply hide the 'My Groups' button from the main "
 "navigation.</i>"
 msgstr ""
-"<i>При деактивиране ще скриете бутона 'Моите групи' от основната "
-"навигация.</i>"
+"<i>При деактивиране ще скриете бутона 'Моите групи' от основната навигация.</"
+"i>"
 
 #: modules/social_features/social_user/src/Form/SocialUserNavigationSettingsForm.php:79
 msgid ""
@@ -1984,8 +1984,8 @@ msgid ""
 "<p><a href=\"\">[message:author:display-name]</a> mentioned <a href=\"\">"
 "[social_mentions:mentioned_user]</a> in a post</p>\n"
 msgstr ""
-"<p><a href=\"\">[message:author:display-name]</a> спомена <a href=\"\""
-">[social_mentions:mentioned_user]</a>в публикация</p>\n"
+"<p><a href=\"\">[message:author:display-name]</a> спомена <a href=\"\">"
+"[social_mentions:mentioned_user]</a>в публикация</p>\n"
 
 #: modules/social_features/social_mentions/config/install/message.template.create_mention_comment_stream.yml:0
 msgid ""
@@ -2018,9 +2018,9 @@ msgid ""
 "[message:gtitle]</a></p>"
 msgstr ""
 "<p><a href=\"[message:author:url:absolute]\">[message:author:display-name]</"
-"a>и @count други коментираха поста на [social_comment:parent_entity_author]"
-"'s [social_comment:commented_content_type] in <a href=\"[message:gurl]\""
-">[message:gtitle]</a></p>"
+"a>и @count други коментираха поста на [social_comment:"
+"parent_entity_author]'s [social_comment:commented_content_type] in <a href="
+"\"[message:gurl]\">[message:gtitle]</a></p>"
 
 #: modules/social_features/social_activity/config/install/message.template.create_comment_community_node.yml:0
 msgid ""
@@ -2039,8 +2039,8 @@ msgid ""
 "[message:gtitle]</a></p>"
 msgstr ""
 "<p><a href=\"[message:author:url:absolute]\">[message:author:display-name]</"
-"a> и @count коментираха публикация в <a href=\"[message:gurl]\""
-">[message:gtitle]</a></p>"
+"a> и @count коментираха публикация в <a href=\"[message:gurl]\">[message:"
+"gtitle]</a></p>"
 
 #: modules/social_features/social_activity/config/install/message.template.create_comment_community_post.yml:0
 msgid ""
@@ -2057,8 +2057,8 @@ msgid ""
 "event_iam_organizing]</p>\r\n"
 msgstr ""
 "<p><a href=\"[message:author:url:absolute]\">[message:author:display-name]</"
-"a> одобри заявката ти за включване към "
-"събитието[social_event:event_iam_organizing]</p>\n"
+"a> одобри заявката ти за включване към събитието[social_event:"
+"event_iam_organizing]</p>\n"
 
 #: modules/social_features/social_follow_content/config/install/message.template.create_comment_following_node.yml:0;0
 msgid ""
@@ -2069,9 +2069,9 @@ msgid ""
 msgstr ""
 "<p><a href=\"[message:author:url:absolute]\">[message:author:display-name]</"
 "a> коментира съдържанието на [social_comment:parent_entity_author] "
-"[social_comment:commented_content_type] <a href=\""
-"[message:field_message_related_object:entity:url:absolute]\">[message:node-"
-"title]</a> , което следваш</p>\n"
+"[social_comment:commented_content_type] <a href=\"[message:"
+"field_message_related_object:entity:url:absolute]\">[message:node-title]</"
+"a> , което следваш</p>\n"
 
 #: modules/social_features/social_follow_content/config/install/message.template.create_comment_following_node.yml:0
 msgid ""
@@ -2099,10 +2099,10 @@ msgid ""
 "</table>"
 msgstr ""
 "<p><a href=\"[message:author:url:absolute]\">[message:author:display-name]</"
-"a> коментира съдържанието на "
-"[social_comment:parent_entity_author][social_comment:commented_content_type] "
-"<a href=\"[message:field_message_related_object:entity:url:absolute]\""
-">[message:node-title]</a>, което следваш</p>\n"
+"a> коментира съдържанието на [social_comment:parent_entity_author]"
+"[social_comment:commented_content_type] <a href=\"[message:"
+"field_message_related_object:entity:url:absolute]\">[message:node-title]</"
+"a>, което следваш</p>\n"
 "\n"
 "<table class=\"comments\">\n"
 "<tr>\n"
@@ -2115,8 +2115,8 @@ msgstr ""
 "<table class=\"btn-wrapp\">\n"
 "\t<tbody>\n"
 "\t\t<tr>\n"
-"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-"
-"one\" href=\"[social_comment:commented_entity_link]\">Отговори на този "
+"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-one"
+"\" href=\"[social_comment:commented_entity_link]\">Отговори на този "
 "коментар</a></td>\n"
 "\t\t</tr>\n"
 "\t</tbody>\n"
@@ -2130,9 +2130,9 @@ msgid ""
 "p>\n"
 msgstr ""
 "<p><a href=\"[message:author:url:absolute]\">[message:author:display-name]</"
-"a> коментира съдържанието на "
-"[social_comment:parent_entity_author][social_comment:commented_content_type] "
-"в <a href=\"[message:gurl]\">[message:gtitle]</a></p>\n"
+"a> коментира съдържанието на [social_comment:parent_entity_author]"
+"[social_comment:commented_content_type] в <a href=\"[message:gurl]\">"
+"[message:gtitle]</a></p>\n"
 
 #: modules/social_features/social_activity/config/install/message.template.create_comment_community_node.yml:0
 msgid ""
@@ -2159,8 +2159,8 @@ msgid ""
 "url]\">profile</a></p>\r\n"
 msgstr ""
 "<p><a href=\"[message:author:url:absolute]\">[message:author:display-name]</"
-"a> коментира публикация в твоя <a href=\"[message:recipient-user-url]\""
-">профил</a></p>\n"
+"a> коментира публикация в твоя <a href=\"[message:recipient-user-"
+"url]\">профил</a></p>\n"
 
 #: modules/social_features/social_activity/config/install/message.template.create_comment_post_profile.yml:0
 msgid ""
@@ -2186,8 +2186,8 @@ msgid ""
 "</table>"
 msgstr ""
 "<p><a href=\"[message:author:url:absolute]\">[message:author:display-name]</"
-"a> коментира публикация в твоя <a href=\"[message:recipient-user-url]\""
-">профил</a></p>\n"
+"a> коментира публикация в твоя <a href=\"[message:recipient-user-"
+"url]\">профил</a></p>\n"
 "<table class=\"comments\">\n"
 "<tr>\n"
 "<td class=\"post\"><strong>[social_comment:comment_author]</strong> <small>• "
@@ -2199,8 +2199,8 @@ msgstr ""
 "<table class=\"btn-wrapp\">\n"
 "\t<tbody>\n"
 "\t\t<tr>\n"
-"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-"
-"one\" href=\"[social_comment:comment_reply_link_html]\">Отговори на този "
+"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-one"
+"\" href=\"[social_comment:comment_reply_link_html]\">Отговори на този "
 "коментар </a></td>\n"
 "\t\t</tr>\n"
 "\t</tbody>\n"
@@ -2257,8 +2257,8 @@ msgstr ""
 "<table class=\"btn-wrapp\">\n"
 "\t<tbody>\n"
 "\t\t<tr>\n"
-"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-"
-"one\" href=\"[social_comment:comment_reply_link_html]\">Отговри на този "
+"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-one"
+"\" href=\"[social_comment:comment_reply_link_html]\">Отговри на този "
 "коментар </a></td>\n"
 "\t\t</tr>\n"
 "\t</tbody>\n"
@@ -2271,8 +2271,8 @@ msgid ""
 "[message:gtitle]</a></p>"
 msgstr ""
 "<p><a href=\"[message:author:url:absolute]\">[message:author:display-name]</"
-"a> създаде [social_group:content_type] в <a href=\"[message:gurl]\""
-">[message:gtitle]</a></p>"
+"a> създаде [social_group:content_type] в <a href=\"[message:gurl]\">[message:"
+"gtitle]</a></p>"
 
 #: modules/social_features/social_activity/config/install/message.template.create_content_in_joined_group.yml:0;0
 msgid ""
@@ -2281,8 +2281,8 @@ msgid ""
 "gurl]\">[message:gtitle]</a> group</p>"
 msgstr ""
 "<p><a href=\"[message:author:url:absolute]\">[message:author:display-name]</"
-"a> създаде [social_group:created_entity_link_html] в <a href=\"[message:gurl]"
-"\">[message:gtitle]</a> групата</p>"
+"a> създаде [social_group:created_entity_link_html] в <a href=\"[message:"
+"gurl]\">[message:gtitle]</a> групата</p>"
 
 #: modules/social_features/social_activity/config/install/message.template.create_content_in_joined_group.yml:0
 msgid ""
@@ -2291,8 +2291,9 @@ msgid ""
 "gurl]\">[message:gtitle]</a> group</p><p>[message:additional_information]</p>"
 msgstr ""
 "<p><a href=\"[message:author:url:absolute]\">[message:author:display-name]</"
-"a> създаде[social_group:created_entity_link_html] в <a href=\"[message:gurl]"
-"\">[message:gtitle]</a> групата</p><p>[message:additional_information]</p>"
+"a> създаде[social_group:created_entity_link_html] в <a href=\"[message:"
+"gurl]\">[message:gtitle]</a> групата</p><p>[message:additional_information]</"
+"p>"
 
 #: modules/social_features/social_follow_taxonomy/modules/social_follow_tag/config/install/message.template.create_node_following_tag.yml:0
 msgid ""
@@ -2302,9 +2303,9 @@ msgid ""
 "follow.</p>"
 msgstr ""
 "<p><a href=\"[message:author:url:absolute]\">[message:author:display-name]</"
-"a> създаде [social_taxonomy:indefinite_article] "
-"[social_taxonomy:content_type] с отбелязване, "
-"[social_taxonomy:taxonomy_i_follow] което следваш.</p>"
+"a> създаде [social_taxonomy:indefinite_article] [social_taxonomy:"
+"content_type] с отбелязване, [social_taxonomy:taxonomy_i_follow] което "
+"следваш.</p>"
 
 #: modules/social_features/social_activity/config/install/message.template.create_topic_group.yml:0
 msgid ""
@@ -2354,9 +2355,8 @@ msgid ""
 "p>"
 msgstr ""
 "<p><a href=\"[message:author:url:absolute]\">[message:author:display-name]</"
-"a> спомена те в <a href=\""
-"[message:field_message_related_object:entity:url:absolute]\">коментар</a> на "
-"[social_mentions:commented_entity_link_html]</p>"
+"a> спомена те в <a href=\"[message:field_message_related_object:entity:url:"
+"absolute]\">коментар</a> на [social_mentions:commented_entity_link_html]</p>"
 
 #: modules/social_features/social_mentions/config/install/message.template.create_mention_post.yml:0
 msgid ""
@@ -2365,9 +2365,8 @@ msgid ""
 "url:absolute]\">post</a></p>"
 msgstr ""
 "<p><a href=\"[message:author:url:absolute]\">[message:author:display-name]</"
-"a> спомена те в <a href=\""
-"[message:field_message_related_object:entity:url:absolute]\""
-">публикация</a></p>"
+"a> спомена те в <a href=\"[message:field_message_related_object:entity:url:"
+"absolute]\">публикация</a></p>"
 
 #: modules/social_features/social_mentions/config/install/message.template.create_mention_post.yml:0;0
 msgid ""
@@ -2400,8 +2399,8 @@ msgid ""
 "[message:additional_information]</p>"
 msgstr ""
 "<p><a href=\"[message:author:url:absolute]\">[message:author:display-name]</"
-"a> публикува в твоя <a href=\"[message:recipient-user-url]\""
-">профил</a></p><p>[message:additional_information]</p>"
+"a> публикува в твоя <a href=\"[message:recipient-user-url]\">профил</a></"
+"p><p>[message:additional_information]</p>"
 
 #: modules/social_features/social_activity/config/install/message.template.create_post_profile.yml:0;0
 #: modules/social_features/social_activity/config/install/message.template.create_post_profile_stream.yml:0
@@ -2428,9 +2427,9 @@ msgid ""
 "p>\r\n"
 msgstr ""
 "<p><a href=\"[message:author:url:absolute]\">[message:author:display-name]</"
-"a> отговори на твоя <a href=\""
-"[message:field_message_related_object:entity:url:absolute]\">коментар</a> в "
-"[social_comment:commented_entity_link_html]</p>\n"
+"a> отговори на твоя <a href=\"[message:field_message_related_object:entity:"
+"url:absolute]\">коментар</a> в [social_comment:commented_entity_link_html]</"
+"p>\n"
 
 #: modules/social_features/social_activity/config/install/message.template.create_comment_reply.yml:0
 msgid ""
@@ -2462,9 +2461,9 @@ msgid ""
 "</table>\r\n"
 msgstr ""
 "<p><a href=\"[message:author:url:absolute]\">[message:author:display-name]</"
-"a> отговори на твоя <a href=\""
-"[message:field_message_related_object:entity:url:absolute]\">коменар</a> в "
-"[social_comment:commented_entity_link_html]</p>\n"
+"a> отговори на твоя <a href=\"[message:field_message_related_object:entity:"
+"url:absolute]\">коменар</a> в [social_comment:commented_entity_link_html]</"
+"p>\n"
 "<table class=\"comments\">\n"
 "<tr>\n"
 "<td class=\"comment\"><strong>[social_comment:parent_comment_author]</"
@@ -2481,9 +2480,9 @@ msgstr ""
 "<table class=\"btn-wrapp\">\n"
 "\t<tbody>\n"
 "\t\t<tr>\n"
-"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-"
-"one\" href=\"[social_comment:commented_entity_link]\">Отговори на този "
-"коментар </a></td>\n"
+"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-one"
+"\" href=\"[social_comment:commented_entity_link]\">Отговори на този коментар "
+"</a></td>\n"
 "\t\t</tr>\n"
 "\t</tbody>\n"
 "</table>\n"
@@ -2495,9 +2494,8 @@ msgid ""
 "absolute]\">comment</a> where you are mentioned</p>"
 msgstr ""
 "<p><a href=\"[message:author:url:absolute]\">[message:author:display-name]</"
-"a> отговори на <a href=\""
-"[message:field_message_related_object:entity:url:absolute]\">коментар,</a> в "
-"който си споменат/а.</p>"
+"a> отговори на <a href=\"[message:field_message_related_object:entity:url:"
+"absolute]\">коментар,</a> в който си споменат/а.</p>"
 
 #: modules/social_features/social_mentions/config/install/message.template.create_comment_reply_mention.yml:0;0
 msgid ""
@@ -2523,9 +2521,9 @@ msgid ""
 "display-name]</a> has requested membership to the <a href=\"[message:gurl]\">"
 "[message:gtitle]</a> group</p>\r\n"
 msgstr ""
-"<p><a href=\"[message:recipient-user:url:absolute]\">[message:recipient-user"
-":display-name]</a> изпрати заявка за членство към <a href=\"[message:gurl]\""
-">[message:gtitle]</a> групата</p>\n"
+"<p><a href=\"[message:recipient-user:url:absolute]\">[message:recipient-user:"
+"display-name]</a> изпрати заявка за членство към <a href=\"[message:gurl]\">"
+"[message:gtitle]</a> групата</p>\n"
 
 #: modules/social_features/social_group/modules/social_group_request/config/install/message.template.request_to_join_a_group.yml:0
 msgid ""
@@ -2543,16 +2541,16 @@ msgid ""
 "\t</tbody>\r\n"
 "</table>\r\n"
 msgstr ""
-"<p><a href=\"[message:recipient-user:url:absolute]\">[message:recipient-user"
-":display-name]</a> изпрати заявка за членство към <a href=\"[message:gurl]\""
-">[message:gtitle]</a> групата</p>\n"
+"<p><a href=\"[message:recipient-user:url:absolute]\">[message:recipient-user:"
+"display-name]</a> изпрати заявка за членство към <a href=\"[message:gurl]\">"
+"[message:gtitle]</a> групата</p>\n"
 "\n"
 "<table class=\"btn-wrapp\">\n"
 "\t<tbody>\n"
 "\t\t<tr>\n"
-"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-"
-"one\" href=\"[social_group_request:request_page_link]\">Прегледай "
-"заявката</a></td>\n"
+"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-one"
+"\" href=\"[social_group_request:request_page_link]\">Прегледай заявката</a></"
+"td>\n"
 "\t\t</tr>\n"
 "\t</tbody>\n"
 "</table>\n"
@@ -2563,8 +2561,8 @@ msgid ""
 "display-name]</a> joined the <a href=\"[message:gurl]\">[message:gtitle]</a> "
 "group</p>"
 msgstr ""
-"<p><a href=\"[message:recipient-user:url:absolute]\">[message:recipient-user"
-":display-name]</a> се включи <a href=\"[message:gurl]\">[message:gtitle]</a> "
+"<p><a href=\"[message:recipient-user:url:absolute]\">[message:recipient-user:"
+"display-name]</a> се включи <a href=\"[message:gurl]\">[message:gtitle]</a> "
 "в групата</p>"
 
 #: modules/social_features/social_event/config/optional/message.template.activity_on_events_im_organizing.yml:0;0;0
@@ -2573,9 +2571,9 @@ msgid ""
 "</a> has enrolled to the event [social_event:event_iam_organizing] you are "
 "organizing</p>"
 msgstr ""
-"<p><a href=\"[social_event:enrolled_event_url]\""
-">[social_event:enrolled_user]</a> се записа за "
-"събитието,[social_event:event_iam_organizing] което организираш</p>"
+"<p><a href=\"[social_event:enrolled_event_url]\">[social_event:enrolled_user]"
+"</a> се записа за събитието,[social_event:event_iam_organizing] което "
+"организираш</p>"
 
 #: modules/social_features/social_activity/config/install/message.template.request_event_enrollment.yml:0;0;0
 msgid ""
@@ -2583,13 +2581,13 @@ msgid ""
 "</a> has requested enrollment to the event [social_event:"
 "event_iam_organizing] you are organizing</p>\r\n"
 msgstr ""
-"<p><a href=\"[social_event:enrolled_event_url]\""
-">[social_event:enrolled_user]</a> изпрати заявка за включване в събитието, "
-"[social_event:event_iam_organizing] което организираш</p>\n"
+"<p><a href=\"[social_event:enrolled_event_url]\">[social_event:enrolled_user]"
+"</a> изпрати заявка за включване в събитието, [social_event:"
+"event_iam_organizing] което организираш</p>\n"
 
 #: modules/social_features/social_event/modules/social_event_an_enroll/config/install/views.view.manage_enrollments.yml:0
 msgid "<p>@total people have enrolled anonymously</p>"
-msgstr ""
+msgstr "<p>@total човека се записаха анонимно</p>"
 
 #: modules/custom/social_queue_storage/config/install/message.template.background_process_finished.yml:0;0;0
 msgid ""
@@ -2630,11 +2628,11 @@ msgstr ""
 "<table class=\"btn-wrap\">\n"
 "\t<tbody>\n"
 "\t\t<tr>\n"
-"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-"
-"one\" href=\"[social_event_invite:user_login_event_destination]\">Виж "
+"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-one"
+"\" href=\"[social_event_invite:user_login_event_destination]\">Виж "
 "събитието</a></td>\n"
-"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-"
-"one\" href=\"[site:url]\">За сайта [site:name]</a></td>\n"
+"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-one"
+"\" href=\"[site:url]\">За сайта [site:name]</a></td>\n"
 "\t\t</tr>\n"
 "\t</tbody>\n"
 "</table>\n"
@@ -2670,10 +2668,10 @@ msgstr ""
 "<table class=\"btn-wrap\">\n"
 "\t<tbody>\n"
 "\t\t<tr>\n"
-"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-"
-"one\" href=\"[message:gurl]\">Прегледай групата</a></td>\n"
-"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-"
-"one\" href=\"[site:url]\">За сайта [site:name]</a></td>\n"
+"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-one"
+"\" href=\"[message:gurl]\">Прегледай групата</a></td>\n"
+"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-one"
+"\" href=\"[site:url]\">За сайта [site:name]</a></td>\n"
 "\t\t</tr>\n"
 "\t</tbody>\n"
 "</table>\n"
@@ -2704,10 +2702,10 @@ msgstr ""
 "<table class=\"btn-wrap\">\n"
 "\t<tbody>\n"
 "\t\t<tr>\n"
-"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-"
-"one\" href=\"[social_event_invite:register_link]\">Виж събитието</a></td>\n"
-"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-"
-"one\" href=\"[site:url]\">За сайта [site:name]</a></td>\n"
+"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-one"
+"\" href=\"[social_event_invite:register_link]\">Виж събитието</a></td>\n"
+"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-one"
+"\" href=\"[site:url]\">За сайта [site:name]</a></td>\n"
 "\t\t</tr>\n"
 "\t</tbody>\n"
 "</table>\n"
@@ -2742,8 +2740,8 @@ msgid ""
 "<p>You have been invited to join the group <a href=\"gurl]\">[message:gtitle]"
 "</a></p>\r\n"
 msgstr ""
-"<p>Получип покана да се включиш в групата <a href=\"gurl]\""
-">[message:gtitle]</a></p>\n"
+"<p>Получип покана да се включиш в групата <a href=\"gurl]\">[message:gtitle]"
+"</a></p>\n"
 
 #: modules/social_features/social_core/src/Controller/SocialCoreController.php:67
 msgid ""
@@ -2755,14 +2753,21 @@ msgid ""
 "browser to go back where you came from or click <a href=\":url\">here</a> to "
 "go to the homepage</p>"
 msgstr ""
+"<p>Нямаш достъп до страницата, в която се опитваш да влезеш. Има няколко "
+"възможни причини за това:</p><ul><li>Опитваш се да редактираш съдържание, "
+"без да имаш право.</li><li>Опитваш се да видиш съдържание (от група), до "
+"която нямаш достъп.</li><li>Опитваш се да влезеш в администраторски страници."
+"</li></ul><p>Натисни бутона за обратно връщане в страницата, от която дойде "
+"или кликни <a href=\":url\">тук,</a> за да се върнеш към началната страница</"
+"p>"
 
 #: modules/social_features/social_private_message/config/install/message.template.create_private_message.yml:0;0;0
 msgid ""
 "<p>You have received a <a href=\"[message:pmt-url]\">message</a> from <a "
 "href=\"[message:author:url:absolute]\">[message:author:display-name]</a></p>"
 msgstr ""
-"<p>Получи <a href=\"[message:pmt-url]\">съобщение</a> от <a href=\""
-"[message:author:url:absolute]\">[message:author:display-name]</a></p>"
+"<p>Получи <a href=\"[message:pmt-url]\">съобщение</a> от <a href=\"[message:"
+"author:url:absolute]\">[message:author:display-name]</a></p>"
 
 #: modules/social_features/social_group/modules/social_group_request/config/install/message.template.approve_request_join_group.yml:0
 msgid ""
@@ -2784,8 +2789,8 @@ msgstr ""
 "<table class=\"btn-wrapp\">\n"
 "\t<tbody>\n"
 "\t\t<tr>\n"
-"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-"
-"one\" href=\"[message:gurl]\">Посети групата</a></td>\n"
+"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-one"
+"\" href=\"[message:gurl]\">Посети групата</a></td>\n"
 "\t\t</tr>\n"
 "\t</tbody>\n"
 "</table>\n"
@@ -2864,7 +2869,7 @@ msgstr "преди @interval"
 
 #: translations.php:62
 msgid "@interval hence"
-msgstr ""
+msgstr "@interval след"
 
 #: modules/custom/dropdown/src/Plugin/Field/FieldWidget/DropdownWidgetType.php:158
 msgid "@name field is required."
@@ -2911,14 +2916,17 @@ msgid "@usernames is already invited or enrolled, you can't invite them again"
 msgid_plural ""
 "@usernames are already invited or enrolled, you can't invite them again"
 msgstr[0] ""
+"@usernames е вече поканен/а или записан/а. Не можеш да го/я поканиш отново"
 msgstr[1] ""
+"@usernames са вече поканени или записани. Не можеш да ги поканиш отново"
 
 #: modules/social_features/social_group/src/Element/SocialGroupEntityAutocomplete.php:85
 msgid "@usernames is already member of the group, you can't add them again"
 msgid_plural ""
 "@usernames are already members of the group, you can't add them again"
-msgstr[0] ""
+msgstr[0] "@usernames е вече член на групата. Не можеш да го/я добавиш отново"
 msgstr[1] ""
+"@usernames са вече членове на групата. Не можеш да ги добавиш отново"
 
 #: translations.php:57;97
 msgid ""
@@ -2932,23 +2940,23 @@ msgstr ""
 
 #: modules/social_features/social_core/config/install/block_content.type.basic.yml:0
 msgid "A basic block contains a title and a body."
-msgstr ""
+msgstr "Основният блок съдържа заглавие и съдържание."
 
 #: modules/social_features/social_landing_page/config/install/paragraphs.paragraphs_type.section.yml:0
 msgid "A block section where can be selected a block or a paragraph"
-msgstr ""
+msgstr "Блок секция, в която могат да бъдат избрани блок или абзац"
 
 #: modules/custom/activity_creator/src/Entity/Activity.php:174
 msgid "A boolean indicating whether the Activity is published."
-msgstr ""
+msgstr "Булева стойност, показваща дали дейността е публикувана."
 
 #: modules/social_features/social_event/src/Entity/EventEnrollment.php:245
 msgid "A boolean indicating whether the Event enrollment is published."
-msgstr ""
+msgstr "Булева стойност, показваща дали записването за събитие е публикувано."
 
 #: modules/custom/social_font/src/Entity/Font.php:198
 msgid "A boolean indicating whether the Font is published."
-msgstr ""
+msgstr "Булева стойност, показваща дали шрифтът е публикуван."
 
 #: modules/social_features/social_content_block/social_content_block.info.yml:0
 #: modules/social_features/social_content_block/config/install/block_content.type.custom_content_list.yml:0
@@ -2956,6 +2964,8 @@ msgid ""
 "A custom block to generate a list of content dynamically according to "
 "specific filters."
 msgstr ""
+"Персонализиран блок за динамично генериране на списък със съдържание според "
+"конкретни филтри."
 
 #: modules/social_features/social_content_report/social_content_report.module:79
 msgid "A description of your report is mandatory."
@@ -2966,16 +2976,22 @@ msgid ""
 "A list of featured content that can have a title, link, group/node/profile, "
 "and description."
 msgstr ""
+"Списък на представено съдържание, което може да има заглавие, връзка, "
+"група / възел / профил и описание."
 
 #: modules/social_features/social_featured_items/config/install/block_content.type.featured_items.yml:0
 msgid ""
 "A list of featured items that can have a title, link, image/icon, and "
 "description."
 msgstr ""
+"Списък на представените елементи, които могат да имат заглавие, връзка, "
+"изображение / икона и описание."
 
 #: modules/social_features/social_content_report/config/install/taxonomy.vocabulary.report_reasons.yml:0
 msgid "A list of reasons users can choose from for reporting content."
 msgstr ""
+"Списък с причини, които потребителите могат да отбелязват за докладване на "
+"съдържание."
 
 #: modules/social_features/social_event/modules/social_event_managers/config/optional/message.template.member_added_by_event_organiser.yml:0;0
 msgid "A organizer added me to a Event"
@@ -3037,7 +3053,7 @@ msgstr "Някой ме спомена в публикация (stream: profile)
 
 #: modules/social_features/social_activity/config/install/message.template.moved_content_between_groups.yml:0
 msgid "A person moved event or topic to other group"
-msgstr ""
+msgstr "Някой премести събитие или тема в друга група"
 
 #: modules/social_features/social_activity/config/install/message.template.create_comment_reply.yml:0
 msgid "A person replied on my comments"
@@ -3068,6 +3084,8 @@ msgid ""
 "A section with a background image and buttons (optional). Looks good on top "
 "of each page. Also nice as a seperator."
 msgstr ""
+"Секция с фоново изображение и бутони (по избор). Изглежда добре в горната "
+"част на всяка страница. Също стои добре и като разделител."
 
 #: modules/social_features/social_core/config/install/crop.type.hero_small.yml:0
 msgid "A smaller variant for the hero region"
@@ -3079,7 +3097,7 @@ msgstr ""
 
 #: modules/custom/social_demo/social_demo.drush.inc:19;32;45;61
 msgid "A space-separated list of content types."
-msgstr ""
+msgstr "Разделен от интервал списък с типове съдържание."
 
 #: modules/social_features/social_activity/config/install/message.template.create_comment_community_node.yml:0
 msgid "A user add a comment to content in the community"
@@ -3140,12 +3158,12 @@ msgstr "Получих лично съобщение"
 #: translations.php:81
 #: modules/social_features/social_profile/config/install/taxonomy.vocabulary.expertise.yml:0
 msgid "A users expertises"
-msgstr ""
+msgstr "Умения на потребители"
 
 #: translations.php:83
 #: modules/social_features/social_profile/config/install/taxonomy.vocabulary.interests.yml:0
 msgid "A users interests for their profile."
-msgstr ""
+msgstr "Потребителите се интересуват от своя профил."
 
 #: modules/social_features/social_user/config/schema/social_user.schema.yml:0
 msgid "A valid route name that is used as default user profile page"
@@ -3234,7 +3252,7 @@ msgstr "Достъп до търсачка на съдържание"
 
 #: modules/social_features/social_group/social_group.module:419;1819;2495;2501
 msgid "Access permissions"
-msgstr ""
+msgstr "Разрешения за достъп"
 
 #: modules/social_features/social_post/social_post.group.permissions.yml:0
 msgid "Access posts in group"
@@ -3296,7 +3314,7 @@ msgstr ""
 #: modules/social_features/social_user/social_user.routing.yml:0
 #: modules/social_features/social_event/config/install/field.field.event_enrollment.event_enrollment.field_account.yml:0
 msgid "Account"
-msgstr ""
+msgstr "Профил"
 
 #: modules/social_features/social_user/src/Plugin/Block/AccountHeaderBlock.php:18
 #: modules/social_features/social_user/config/optional/block.block.accountheaderblock.yml:0
@@ -3306,11 +3324,11 @@ msgstr ""
 
 #: modules/social_features/social_user/src/Plugin/GraphQL/DataProducer/AccountId.php:8
 msgid "Account identifier"
-msgstr ""
+msgstr "Идентификатор на профила"
 
 #: translations.php:77
 msgid "Account information"
-msgstr ""
+msgstr "Информация за профила"
 
 #: modules/social_features/social_user/src/Plugin/GraphQL/DataProducer/AccountId.php:8
 msgid "AccountInterface instance"
@@ -3330,11 +3348,11 @@ msgstr ""
 
 #: modules/custom/activity_basics/src/Plugin/ActivityAction/MoveActivityAction.php:7
 msgid "Action that is triggered when a entity is moved"
-msgstr ""
+msgstr "Действие, което се задейства при преместване на обект"
 
 #: modules/custom/activity_basics/src/Plugin/ActivityAction/UpdateActivityAction.php:7
 msgid "Action that is triggered when a entity is updated"
-msgstr ""
+msgstr "Действие, което се задейства, когато даден обект се актуализира"
 
 #: modules/social_features/social_event/modules/social_event_managers/src/Plugin/views/field/SocialEventManagersViewsBulkOperationsBulkForm.php:233
 #: modules/social_features/social_group/src/Plugin/views/field/SocialGroupViewsBulkOperationsBulkForm.php:163
@@ -3367,7 +3385,7 @@ msgstr ""
 
 #: modules/custom/activity_creator/activity_creator.info.yml:0
 msgid "Activity Creator"
-msgstr ""
+msgstr "Създател на дейности"
 
 #: modules/custom/activity_creator/activity_creator.tokens.inc:15
 msgid "Activity Entity tokens"
@@ -3562,7 +3580,7 @@ msgstr ""
 #: modules/social_features/social_event/modules/social_event_managers/social_event_managers.links.action.yml:0
 #: modules/social_features/social_event/modules/social_event_managers/social_event_managers.routing.yml:0
 msgid "Add enrollees"
-msgstr ""
+msgstr "Добави регистрирани"
 
 #: modules/social_features/social_event/modules/social_event_addtocal/social_event_addtocal.routing.yml:0
 msgid "Add event to Calendar"
@@ -3571,7 +3589,7 @@ msgstr "Добави събитието в календар"
 #: modules/custom/template_suggestions_extra/template_suggestions_extra.module:19
 #: modules/custom/template_suggestions_extra/template_suggestions_extra.info.yml:0
 msgid "Add extra useful template suggestsions"
-msgstr ""
+msgstr "Добави допълнителни полезни предложения за шаблони"
 
 #: modules/social_features/social_album/config/install/field.field.post.photo.field_album.yml:0
 msgid "Add image(s) to an album"
@@ -3632,8 +3650,8 @@ msgstr "Добави тип публикация"
 #: modules/social_features/social_group/src/Plugin/Action/AddMembersToGroup.php:119
 msgid "Add selected member to a group"
 msgid_plural "Add @count selected members to a group"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Добави избрания член към групата"
+msgstr[1] "Добави @count избраните членове към групата"
 
 #: modules/social_features/social_event/modules/social_event_addtocal/social_event_addtocal.module:18;60;112
 msgid "Add to Calendar"
@@ -3658,7 +3676,7 @@ msgstr "Допълнителна информация."
 
 #: modules/social_features/social_activity/social_activity.tokens.inc:19
 msgid "Additional message information."
-msgstr ""
+msgstr "Допълнителна информация за съобщението."
 
 #: modules/social_features/social_profile/modules/social_profile_fields/src/Form/SocialProfileFieldsSettingsForm.php:208
 #: modules/social_features/social_event/config/install/field.field.node.event.field_event_address.yml:0
@@ -3738,10 +3756,11 @@ msgstr "Добави Тайна Група към тип групи."
 #: modules/custom/social_lets_connect/social_lets_connect.info.yml:0
 msgid "Adds a link to https://www.getopensocial.com in the admin menu."
 msgstr ""
+"Добави линк към https://www.getopensocial.com в администраторското меню."
 
 #: modules/social_features/social_post/social_post.views.inc:15
 msgid "Adds a sitewide post form."
-msgstr ""
+msgstr "Добавя формуляр за публикация в целия сайт."
 
 #: modules/social_features/social_group/modules/social_group_gvbo/social_group_gvbo.info.yml:0
 msgid "Adds ability to act on Group Content."
@@ -3920,7 +3939,7 @@ msgstr ""
 msgid "Album"
 msgstr "Албум"
 
-#: modules/social_features/social_album/social_album.module:226
+#: modules/social_features/social_album/social_album.module:227
 msgid ""
 "Album @title is successfully created. Now you can add images to this album."
 msgstr "Албумът @title е успешно създаден. Вече можеш да добавяш снимки."
@@ -3941,7 +3960,7 @@ msgstr "Снимка на албума"
 msgid "Album label"
 msgstr ""
 
-#: modules/social_features/social_album/src/Plugin/Field/FieldWidget/SocialAlbumOptionsSelectWidget.php:67
+#: modules/social_features/social_album/src/Plugin/Field/FieldWidget/SocialAlbumOptionsSelectWidget.php:83
 msgid "Album name"
 msgstr "Име на албума"
 
@@ -4945,7 +4964,7 @@ msgstr "Промени часовата зона"
 msgid "Changed"
 msgstr "Променено"
 
-#: modules/social_features/social_album/social_album.module:370
+#: modules/social_features/social_album/social_album.module:371
 msgid ""
 "Changing groups and visibility isn't allowed for Albums yet, consider "
 "creating a new Album instead."
@@ -5445,7 +5464,7 @@ msgstr ""
 msgid "Create Event"
 msgstr "Създай събитие"
 
-#: modules/social_features/social_album/social_album.module:76
+#: modules/social_features/social_album/social_album.module:77
 msgid "Create New Album"
 msgstr "Създай нов албум"
 
@@ -5613,7 +5632,7 @@ msgid "Create new account"
 msgstr "Регистрирай се"
 
 #: modules/social_features/social_album/src/Plugin/Block/SocialAlbumCountAndAddBlock.php:181;192
-#: modules/social_features/social_album/src/Plugin/Field/FieldWidget/SocialAlbumOptionsSelectWidget.php:44
+#: modules/social_features/social_album/src/Plugin/Field/FieldWidget/SocialAlbumOptionsSelectWidget.php:60
 msgid "Create new album"
 msgstr "Създай нов албум"
 
@@ -6440,7 +6459,7 @@ msgstr ""
 #: modules/social_features/social_event/modules/social_event_an_enroll/config/install/views.view.manage_enrollments.yml:0
 #: modules/social_features/social_group/modules/social_group_invite/config/optional/views.view.social_group_invitations.yml:0
 msgid "Email"
-msgstr "Имейл адрес"
+msgstr "Имейл"
 
 #: modules/social_features/social_event/modules/social_event_an_enroll/src/Form/EventAnEnrollForm.php:58
 #: modules/social_features/social_event/modules/social_event_an_enroll/config/optional/field.field.event_enrollment.event_enrollment.field_email.yml:0
@@ -7331,7 +7350,7 @@ msgstr "Последователи"
 
 #: modules/social_features/social_follow_content/social_follow_content.module:112
 msgid "Following"
-msgstr ""
+msgstr "Следване"
 
 #: modules/social_features/social_follow_content/src/Plugin/ActivityContext/FollowContentActivityContext.php:10
 msgid "Following content activity context"
@@ -8058,7 +8077,7 @@ msgstr ""
 msgid "Image"
 msgstr "Снимка"
 
-#: modules/social_features/social_album/social_album.module:42
+#: modules/social_features/social_album/social_album.module:43
 msgid "Images"
 msgstr "Снимки"
 
@@ -8338,7 +8357,7 @@ msgstr "Новини"
 #: modules/social_features/social_topic/config/install/views.view.topics.yml:0
 #: modules/social_features/social_user/config/install/views.view.user_admin_people.yml:0
 msgid "Items per page"
-msgstr ""
+msgstr "Елементи на страница"
 
 #: modules/custom/sitewide_js/src/Form/SiteWideJSForm.php:48
 msgid "JS Location"
@@ -9149,7 +9168,7 @@ msgstr "Моите групи"
 msgid "My Invitations"
 msgstr "Моите покани"
 
-#: modules/social_features/social_album/social_album.module:520
+#: modules/social_features/social_album/social_album.module:518
 msgid "My albums"
 msgstr "Моите албуми"
 
@@ -9207,7 +9226,7 @@ msgstr ""
 msgid "Navigation Settings"
 msgstr ""
 
-#: modules/social_features/social_album/social_album.module:78
+#: modules/social_features/social_album/social_album.module:79
 msgid "New Album"
 msgstr "Нов албум"
 
@@ -9517,7 +9536,7 @@ msgstr ""
 msgid "Number of Likes"
 msgstr "Брой харесвания"
 
-#: modules/social_features/social_private_message/src/Plugin/UserExportPlugin/UserAnalyticsPrivateMessage.php:23;8
+#: modules/social_features/social_private_message/src/Plugin/UserExportPlugin/UserAnalyticsPrivateMessage.php:24;9
 msgid "Number of Private messages"
 msgstr "Брой на лични съобщения"
 
@@ -9777,7 +9796,7 @@ msgstr ""
 #: modules/social_features/social_follow_content/config/install/views.view.following.yml:0
 #: modules/social_features/social_user/config/install/views.view.user_admin_people.yml:0
 msgid "Operations"
-msgstr "Операции"
+msgstr "Действия"
 
 #: modules/social_features/social_landing_page/config/install/field.field.paragraph.block.field_block_title.yml:0
 msgid ""
@@ -9791,7 +9810,7 @@ msgstr ""
 
 #: modules/social_features/social_post/src/Plugin/Field/FieldFormatter/CommentPostFormatter.php:170
 msgid "Order"
-msgstr ""
+msgstr "Подреди по"
 
 #: modules/custom/social_tour/config/install/tour.tour.social_user.yml:0
 msgid "Organise events"
@@ -10226,7 +10245,7 @@ msgstr ""
 msgid "Post on profile of others block"
 msgstr ""
 
-#: modules/social_features/social_album/social_album.module:404
+#: modules/social_features/social_album/social_album.module:405
 msgid "Post operations links"
 msgstr ""
 
@@ -10711,7 +10730,7 @@ msgid ""
 "Provides landing page content type for dynamic content, such as a home page."
 msgstr ""
 
-#: modules/social_features/social_album/social_album.module:405
+#: modules/social_features/social_album/social_album.module:406
 msgid "Provides links to perform post operations."
 msgstr ""
 
@@ -12978,7 +12997,7 @@ msgstr "Тема"
 
 #: modules/social_features/social_comment/social_comment.module:72;73
 msgid "Submit"
-msgstr "Запис"
+msgstr "Изпрати"
 
 #: modules/social_features/social_content_block/config/install/field.field.block_content.custom_content_list.field_subtitle.yml:0
 #: modules/social_features/social_landing_page/config/install/field.field.paragraph.hero.field_hero_subtitle.yml:0
@@ -14555,7 +14574,7 @@ msgstr ""
 #: modules/custom/social_graphql/src/Plugin/GraphQL/DataProducer/MediaBridge.php:14
 #: modules/social_features/social_profile/modules/social_profile_privacy/config/schema/social_profile_privacy.schema.yml:0
 msgid "Value"
-msgstr ""
+msgstr "Стойност"
 
 #: modules/custom/social_graphql/src/Plugin/GraphQL/DataProducer/MediaBridge.php:14
 msgid "Value (Media source or FileItem)"
@@ -14654,7 +14673,7 @@ msgstr ""
 msgid "View mode"
 msgstr ""
 
-#: modules/social_features/social_album/social_album.module:518
+#: modules/social_features/social_album/social_album.module:516
 msgid "View my albums"
 msgstr "Прегледай моите албуми"
 
@@ -14874,13 +14893,13 @@ msgstr ""
 
 #: modules/social_features/social_event/modules/social_event_type/src/SocialEventTypeConfigOverride.php:108
 msgid "What type of events do you want to see?"
-msgstr ""
+msgstr "Какъв тип събития искаш да виждаш?"
 
 #: modules/social_features/social_post/config/install/core.entity_form_display.post.post.default.yml:0
 #: modules/social_features/social_post/config/install/core.entity_form_display.post.post.group.yml:0
 #: modules/social_features/social_post/config/install/core.entity_form_display.post.post.profile.yml:0
 msgid "What's on your mind?"
-msgstr ""
+msgstr "Какво мислиш?"
 
 #: modules/social_features/social_group/src/Form/SocialGroupSettings.php:73
 msgid ""
@@ -14898,6 +14917,9 @@ msgid ""
 "profile. When disabled, users will be able to control the visibility of "
 "their emailaddress."
 msgstr ""
+"Когато са активирани, потребителите не могат да скрият имейл адреса си в "
+"своя профил. Когато са деактивирани, потребителите ще могат да контролират "
+"видимостта на имейл адреса си."
 
 #: modules/social_features/social_profile/src/Form/SocialProfileSettingsForm.php:97
 msgid ""
@@ -14905,6 +14927,9 @@ msgid ""
 "profile. When disabled, users will be able to control the visibility of "
 "their language preference."
 msgstr ""
+"Когато са активирани, потребителите не могат да скрият предпочитания от тях "
+"език в профила си. Когато са деактивирани, потребителите ще могат да "
+"контролират видимостта на своите езикови предпочитания."
 
 #: modules/social_features/social_event/modules/social_event_type/src/Form/SocialEventTypeSettings.php:47
 msgid ""
@@ -14926,31 +14951,36 @@ msgid ""
 "created events by default. The event organiser will still be able to change "
 "this if they have the permission."
 msgstr ""
+"Когато тази настройка е активирана, анонимните потребители имат право да се "
+"записват в новосъздадени събития по подразбиране. Организаторът на събитието "
+"пак ще може да промени това, ако има разрешение."
 
 #: modules/social_features/social_user/src/Form/SocialUserSettingsForm.php:40
 msgid "When visiting a profile the user will end up at this page first"
-msgstr ""
+msgstr "При посещение на профил потребителят първо ще се озове на тази страница"
 
 #: modules/social_features/social_content_report/config/schema/social_content_report.schema.yml:0
 msgid "Whether a reason is mandatory when reporting inappropriate content."
-msgstr ""
+msgstr "Дали причината е задължителна при докладване на неподходящо съдържание."
 
 #: modules/social_features/social_event/modules/social_event_an_enroll/config/schema/social_event_an_enroll.schema.yml:0
 msgid "Whether anonymous enrollment is enabled by default for new events."
-msgstr ""
+msgstr "Дали анонимното записване е активирано по подразбиране за нови събития."
 
 #: modules/social_features/social_event/modules/social_event_an_enroll/config/schema/social_event_an_enroll.schema.yml:0
 msgid ""
 "Whether event creators can edit the anonymous enrollment setting per event."
 msgstr ""
+"Дали създателите на събития могат да редактират настройката за анонимно "
+"записване за събитие."
 
 #: modules/social_features/social_event/modules/social_event_an_enroll/config/schema/social_event_an_enroll.schema.yml:0
 msgid "Whether event enrollment for anonymous users is enabled."
-msgstr ""
+msgstr "Дали записването на събития за анонимни потребители е активирано."
 
 #: modules/social_features/social_event/modules/social_event_managers/config/schema/social_event_managers.schema.yml:0
 msgid "Whether the author of an event is automatically an event organiser."
-msgstr ""
+msgstr "Дали авторът на събитие е автоматично организатор на събитие."
 
 #: modules/social_features/social_content_report/config/schema/social_content_report.schema.yml:0
 #: modules/social_features/social_content_report/src/Form/ContentReportSettingsForm.php:74
@@ -14969,32 +14999,35 @@ msgstr ""
 
 #: modules/social_features/social_event/modules/social_event_type/config/schema/social_event_type.schema.yml:0
 msgid "Whether the type selection is required for events."
-msgstr ""
+msgstr "Дали се изисква избор на тип за събития."
 
 #: modules/social_features/social_profile/config/schema/social_profile.schema.yml:0
 msgid "Whether to show e-mail addresses on user profiles."
-msgstr ""
+msgstr "Дали да се показват имейл адреси в потребителски профили."
 
 #: modules/social_features/social_profile/config/schema/social_profile.schema.yml:0
 msgid "Whether to show preferred language on user profiles."
-msgstr ""
+msgstr "Дали да се показва предпочитан език в потребителските профили."
 
 #: modules/social_features/social_event/modules/social_event_an_enroll/config/schema/social_event_an_enroll.schema.yml:0
 msgid ""
 "Whether users get notified by e-mail after they've enrolled anonymously."
 msgstr ""
+"Дали потребителите получават известия по имейл, след като се запишат "
+"анонимно."
 
 #: modules/social_features/social_content_report/src/Form/ContentReportSettingsForm.php:96
 msgid "Whether users should fill in a mandatory reason or if it is optional."
 msgstr ""
+"Дали потребителите трябва да попълват задължителна причина или е по желание."
 
 #: modules/social_features/social_group/modules/social_group_flexible_group/config/install/field.field.group.flexible_group.field_flexible_group_visibility.yml:0
 msgid "Who can see the group."
-msgstr ""
+msgstr "Кой може да вижда тази група."
 
 #: modules/social_features/social_like/config/install/views.view.who_liked_this_entity.yml:0;0
 msgid "Who liked this entity"
-msgstr ""
+msgstr "Кой хареса този обект"
 
 #: modules/social_features/social_profile/modules/social_profile_fields/src/SocialProfileFieldsBatch.php:92
 msgid "Whoops... something went wrong!"
@@ -15003,6 +15036,8 @@ msgstr "Опа... Нещо се обърка!"
 #: src/Installer/Form/ModuleConfigureForm.php:117
 msgid "Will generate files, users, groups, events, topics, comments and posts."
 msgstr ""
+"Ще генерира файлове, потребители, групи, събития, теми, коментари и "
+"публикации."
 
 #: modules/social_features/social_event/modules/social_event_addtocal/src/Plugin/SocialAddToCalendar/AddToYahoo.php:9
 msgid "Yahoo"
@@ -15043,21 +15078,27 @@ msgid ""
 "You are not allowed to view comments on content in a group you are not "
 "member of. You can join the group @group_link."
 msgstr ""
+"Нямаш разрешение да виждаш коментари в съдържание на група, на която не си "
+"член. Присъедини се към групата @group_link."
 
 #: modules/social_features/social_follow_content/social_follow_content.module:159
 msgid "You are now automatically following this @type. @unfollow_link."
-msgstr ""
+msgstr "Не следваш автоматично този @type. @unfollow_link."
 
 #: modules/custom/mentions/mentions.module:23
 msgid ""
 "You can enable 'Mentions Filter' for the mentions type below for the "
 "appropriate @text_format"
 msgstr ""
+"Можеш да активираш 'Филтър за споменавания' за типа споменавания по-долу за "
+"подходящия @text_format"
 
 #: modules/social_features/social_core/src/Form/InviteEmailBaseForm.php:102
 #: modules/social_features/social_group/modules/social_group_invite/src/Form/SocialBulkGroupInvitation.php:210
 msgid "You can enter or paste multiple entries separated by comma or semicolon"
 msgstr ""
+"Можеш да въведеш или поставиш множество записи, разделени със запетая или "
+"точка и запетая"
 
 #: modules/social_features/social_profile/modules/social_profile_fields/src/Form/SocialProfileFieldsSettingsForm.php:198
 msgid ""
@@ -15121,7 +15162,7 @@ msgstr[1] ""
 
 #: modules/social_features/social_event/modules/social_event_invite/src/Controller/UserEnrollInviteController.php:92
 msgid "You have accepted the invitation for the @event event."
-msgstr ""
+msgstr "Прие поканата за събитието @event."
 
 #: modules/social_features/social_event/modules/social_event_an_enroll/src/Form/EventAnEnrollForm.php:136
 msgid ""
@@ -15135,6 +15176,8 @@ msgid ""
 "enrollment anytime using the following link: [social_event_an_enroll:"
 "enrolled_event]."
 msgstr ""
+"Записал си се в събитието [node:title]. Можеш по всяко време да се отпишеш "
+"като последваш този линк: [social_event_an_enroll:enrolled_event]."
 
 #: modules/social_features/social_group/modules/social_group_invite/config/optional/message.template.invited_to_join_group.yml:0
 msgid "You have been invited to join a group"
@@ -15174,16 +15217,18 @@ msgid ""
 "You have just used your one-time login link. It is no longer necessary to "
 "use this link to log in."
 msgstr ""
+"Току-що използва еднократна връзка за вход. Вече не е необходимо да "
+"използваш тази връзка, за да влезеш."
 
-#: modules/social_features/social_album/social_album.module:242
+#: modules/social_features/social_album/social_album.module:243
 msgid "You have posted successfully in your new album @link"
 msgstr "Публикува успешно в новия ти албум @link"
 
 #: modules/custom/activity_send/modules/activity_send_email/src/Plugin/QueueWorker/ActivityDigestWorker.php:151
 msgid "You have received <strong>:count</strong> notification"
 msgid_plural "You have received <strong>:count</strong> notifications"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Получи <strong>:count</strong> известие"
+msgstr[1] "Получи <strong>:count</strong> известия"
 
 #: modules/social_features/social_follow_content/social_follow_content.module:92
 msgid ""
@@ -15213,6 +15258,8 @@ msgid ""
 "You must update Open Social to the latest version of 8.x before upgrading to "
 "9.0 or later."
 msgstr ""
+"Трябва да актуализираш Open Social до последната версия на 8.x, преди да "
+"преминеш към 9.0 или по-нова версия."
 
 #: modules/custom/social_magic_login/src/Controller/MagicLoginController.php:134
 msgid "You need to set your password in order to log in."
@@ -15234,34 +15281,34 @@ msgstr "Беше добавен в групата."
 msgid "Your email has been sent to 1 selected enrollee successfully"
 msgid_plural ""
 "Your email has been sent to @count selected enrollees successfully"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Имейлът ти е изпратен успешно до 1 избран участник"
+msgstr[1] "Имейлът ти е изпратен успешно до @count избрани участници"
 
 #: translations.php:119
 msgid "Your email has been sent to 1 selected member successfully"
 msgid_plural "Your email has been sent to @count selected members successfully"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Имейлът ти е изпратен успешно до 1 избран член"
+msgstr[1] "Имейлът ти е изпратен успешно до @count избрани членове"
 
 #: translations.php:110
 msgid "Your email has not been sent to 1 selected enrollee successfully"
 msgid_plural ""
 "Your email has not been sent to @count selected enrollees successfully"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Имейлът ти не е изпратен успешно до 1 избран участник"
+msgstr[1] "Имейлът ти не е изпратен успешно до @count избрани участници"
 
 #: translations.php:120
 msgid "Your email has not been sent to 1 selected member successfully"
 msgid_plural ""
 "Your email has not been sent to @count selected members successfully"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Имейлът ти не е изпратен успешно до 1 избран член"
+msgstr[1] "Имейлът ти не е изпратен успешно до @count избрани членове"
 
 #: translations.php:121
 msgid "Your email will be send to 1 selected enrollee"
 msgid_plural "Your email will be send to @count selected enrollees"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Имейлът ти ще бъде изпратен до 1 избран участник"
+msgstr[1] "Имейлът ти ще бъде изпратен до @count избрани участници"
 
 #: translations.php:122
 msgid "Your email will be send to 1 selected member"
@@ -15275,7 +15322,8 @@ msgstr ""
 
 #: modules/social_features/social_group/src/Controller/DeleteGroup.php:50
 msgid "Your group and all of its topics, events and posts have been deleted."
-msgstr "Групата ти, както и всички теми, събития и публикации в нея са изтрити."
+msgstr ""
+"Групата ти, както и всички теми, събития и публикации в нея са изтрити."
 
 #: modules/social_features/social_private_message/social_private_message.module:193
 msgid "Your message has been created."
@@ -15334,8 +15382,8 @@ msgstr ""
 msgid ""
 "[current-user:display-name] has invited you to join a group on [site:name]."
 msgstr ""
-"[current-user:display-name] те покани да се присъединиш към група в "
-"[site:name]."
+"[current-user:display-name] те покани да се присъединиш към група в [site:"
+"name]."
 
 #: modules/custom/social_metatag/config/install/metatag.metatag_defaults.group.yml:0
 msgid "[group:field_group_address:address_line1]"
@@ -15529,11 +15577,11 @@ msgstr "настройки за известяване по мейл"
 
 #: modules/social_features/social_like/config/install/views.view.who_liked_this_entity.yml:0
 msgid "entity id from url"
-msgstr ""
+msgstr "идентификатор на обект от url"
 
 #: modules/social_features/social_like/config/install/views.view.who_liked_this_entity.yml:0
 msgid "entity type from url"
-msgstr ""
+msgstr "тип на обекта от url"
 
 #: modules/social_features/social_group/social_group.module:339
 #: modules/social_features/social_group/config/install/group.content_type.closed_group-group_node-event.yml:0
@@ -15657,7 +15705,7 @@ msgstr "групи"
 
 #: modules/social_features/social_topic/config/install/views.view.topics.yml:0
 msgid "has the publish status of"
-msgstr ""
+msgstr "има публикуван статус на"
 
 #: modules/social_features/social_activity/config/optional/views.view.activity_stream.yml:0
 msgid "header_postblock"
@@ -15924,7 +15972,7 @@ msgstr "теми"
 #: modules/social_features/social_landing_page/templates/node--landing-page.html.twig:93
 #: modules/social_features/social_post/src/PostListBuilder.php:43
 msgid "unpublished"
-msgstr "непубликувано"
+msgstr "непубликуван"
 
 #: social.profile:123
 #: modules/social_features/social_landing_page/src/Plugin/Block/ActivityOverviewBlock.php:190
@@ -16066,7 +16114,7 @@ msgstr ""
 #: modules/social_features/social_topic/config/install/views.view.topics.yml:0
 #: modules/social_features/social_user/config/install/views.view.user_admin_people.yml:0
 msgid "‹ Previous"
-msgstr ""
+msgstr "‹ Предишен"
 
 #: modules/social_features/social_activity/config/install/views.view.activity_stream_notifications.yml:0
 #: modules/social_features/social_activity/config/optional/views.view.activity_stream.yml:0
@@ -16119,6 +16167,9 @@ msgstr "‹‹"
 #: modules/social_features/social_search/config/install/views.view.search_users.yml:0
 msgid "››"
 msgstr "››"
+
+#~ msgid "#madetoshare"
+#~ msgstr "#madetoshare"
 
 #~ msgid "Default"
 #~ msgstr "По подразбиране"

@@ -2,13 +2,14 @@ name: 'Social PWA'
 description: 'Makes the website "Installable" like an App on smartphones and enhances it with Service Workers for the use of Push Notifications and an Offline User Experience.'
 type: module
 core: 8.x
+core_version_requirement: ^8 || ^9
 package: Social
 configure: social_pwa.settings
 dependencies:
   - activity_send_push_notification
   - social_pwa:activity_send_push
 
-# Information added by Drupal.org packaging script on 2021-01-26
-version: '8.x-1.0-alpha10'
+# Information added by Drupal.org packaging script on 2021-02-24
+version: '8.x-1.0-alpha12'
 project: 'social_pwa'
-datestamp: 1611672716
+datestamp: 1614182452

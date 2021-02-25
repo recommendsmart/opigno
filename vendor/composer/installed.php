@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'f5b0b16752ae62cc02631253509d394047847251',
+    'reference' => '82a473bdbe2ff9d06d4085c924b5f1180da1edc4',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -85,12 +85,12 @@
     ),
     'doctrine/annotations' => 
     array (
-      'pretty_version' => '1.11.1',
-      'version' => '1.11.1.0',
+      'pretty_version' => '1.12.1',
+      'version' => '1.12.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'ce77a7ba1770462cd705a91a151b6c3746f9c6ad',
+      'reference' => 'b17c5014ef81d212ac539f07a1001832df1b6d3b',
     ),
     'doctrine/cache' => 
     array (
@@ -173,8 +173,8 @@
     ),
     'drupal/activity_send_push' => 
     array (
-      'pretty_version' => '1.0.0-alpha10',
-      'version' => '1.0.0.0-alpha10',
+      'pretty_version' => '1.0.0-alpha12',
+      'version' => '1.0.0.0-alpha12',
       'aliases' => 
       array (
       ),
@@ -1400,21 +1400,21 @@
     ),
     'drupal/social_geolocation' => 
     array (
-      'pretty_version' => '1.2.0',
-      'version' => '1.2.0.0',
+      'pretty_version' => '1.3.0',
+      'version' => '1.3.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '8.x-1.2',
+      'reference' => '8.x-1.3',
     ),
     'drupal/social_pwa' => 
     array (
-      'pretty_version' => '1.0.0-alpha10',
-      'version' => '1.0.0.0-alpha10',
+      'pretty_version' => '1.0.0-alpha12',
+      'version' => '1.0.0.0-alpha12',
       'aliases' => 
       array (
       ),
-      'reference' => '8.x-1.0-alpha10',
+      'reference' => '8.x-1.0-alpha12',
     ),
     'drupal/socialbase' => 
     array (
@@ -1708,12 +1708,12 @@
     ),
     'goalgorilla/open_social' => 
     array (
-      'pretty_version' => '10.0.1',
-      'version' => '10.0.1.0',
+      'pretty_version' => '10.0.2',
+      'version' => '10.0.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'f1cb1886ede49e6856c9f15a6be3c83d045bb944',
+      'reference' => '0d08729ede822daab89f49d6c952143e6a6dfc20',
     ),
     'goalgorilla/social_template' => 
     array (
@@ -1722,7 +1722,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'f5b0b16752ae62cc02631253509d394047847251',
+      'reference' => '82a473bdbe2ff9d06d4085c924b5f1180da1edc4',
     ),
     'guzzlehttp/guzzle' => 
     array (
