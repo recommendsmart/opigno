@@ -88,7 +88,7 @@ function ajax_comments_comment_links_alter(array &$links, CommentInterface &$ent
   $field_settings_helper = \Drupal::service('ajax_comments.field_settings_helper');
   $comment_formatter = $field_settings_helper->getFieldFormatterFromComment($entity, $view_mode);
 
-  if ($field_settings_helper->isEnabled($comment_formatter)) {
+  if (!empty($comment_formatter) && $field_settings_helper->isEnabled($comment_formatter)) {
     // A little HACK for do not mark as NEW own comments.
     if ($entity->isNew() && ($entity->getOwnerId() === \Drupal::currentUser()->id())) {
       $entity->enforceIsNew(FALSE);

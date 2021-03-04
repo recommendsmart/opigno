@@ -14,8 +14,7 @@ use Drupal\views\Plugin\views\cache\Tag;
  * @ViewsCache(
  *   id = "social_geolocation_maps_tag",
  *   title = @Translation("Social Geolocation Maps tag based"),
- *   help = @Translation("Tag based caching of data. Caches will persist until
- *   any related cache tags are invalidated.")
+ *   help = @Translation("Tag based caching of data. Caches will persist until any related cache tags are invalidated.")
  * )
  */
 class SocialGeolocationMapsTag extends Tag {

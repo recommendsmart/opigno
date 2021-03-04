@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '82a473bdbe2ff9d06d4085c924b5f1180da1edc4',
+    'reference' => '1bf5a49261f1873fd4cc037f5caf207cdab9b7c7',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -662,12 +662,12 @@ private static $installed = array (
     ),
     'drupal/data_policy' => 
     array (
-      'pretty_version' => '1.0.0-beta6',
-      'version' => '1.0.0.0-beta6',
+      'pretty_version' => '1.0.0-beta7',
+      'version' => '1.0.0.0-beta7',
       'aliases' => 
       array (
       ),
-      'reference' => '8.x-1.0-beta6',
+      'reference' => '8.x-1.0-beta7',
     ),
     'drupal/datetime' => 
     array (
@@ -1423,12 +1423,12 @@ private static $installed = array (
     ),
     'drupal/social_geolocation' => 
     array (
-      'pretty_version' => '1.3.0',
-      'version' => '1.3.0.0',
+      'pretty_version' => '1.4.0',
+      'version' => '1.4.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '8.x-1.3',
+      'reference' => '8.x-1.4',
     ),
     'drupal/social_pwa' => 
     array (
@@ -1731,12 +1731,12 @@ private static $installed = array (
     ),
     'goalgorilla/open_social' => 
     array (
-      'pretty_version' => '10.0.2',
-      'version' => '10.0.2.0',
+      'pretty_version' => '10.0.3',
+      'version' => '10.0.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => '0d08729ede822daab89f49d6c952143e6a6dfc20',
+      'reference' => '5f07bd110d864438057bc24a9df4230a5a301bc3',
     ),
     'goalgorilla/social_template' => 
     array (
@@ -1745,7 +1745,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '82a473bdbe2ff9d06d4085c924b5f1180da1edc4',
+      'reference' => '1bf5a49261f1873fd4cc037f5caf207cdab9b7c7',
     ),
     'guzzlehttp/guzzle' => 
     array (
@@ -1830,12 +1830,12 @@ private static $installed = array (
     ),
     'laminas/laminas-zendframework-bridge' => 
     array (
-      'pretty_version' => '1.1.1',
-      'version' => '1.1.1.0',
+      'pretty_version' => '1.2.0',
+      'version' => '1.2.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '6ede70583e101030bcace4dcddd648f760ddf642',
+      'reference' => '6cccbddfcfc742eb02158d6137ca5687d92cee32',
     ),
     'league/csv' => 
     array (
@@ -1884,12 +1884,12 @@ private static $installed = array (
     ),
     'mikehaertl/php-tmpfile' => 
     array (
-      'pretty_version' => '1.1.7',
-      'version' => '1.1.7.0',
+      'pretty_version' => '1.2.1',
+      'version' => '1.2.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'f162f70b472c3c1bad2b66c5a7922000a8065638',
+      'reference' => '70a5b70b17bc0d9666388e6a551ecc93d0b40a10',
     ),
     'mikehaertl/phpwkhtmltopdf' => 
     array (
