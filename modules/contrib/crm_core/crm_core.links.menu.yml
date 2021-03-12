@@ -1,0 +1,24 @@
+crm_core.manage:
+  title: 'CRM'
+  description: 'Manage contact types, activity types and contact relationship types.'
+  route_name: crm_core.manage
+  parent: system.admin_structure
+
+crm_core.overview:
+  route_name: crm_core.overview
+  parent: system.admin
+  description: 'CRM Overview. Manage Contacts, Activities and Relationships.'
+  title: 'CRM'
+
+crm_core.config_overview:
+  route_name: crm_core.config_overview
+  parent: system.admin_config
+  title: 'CRM'
+  description: 'CRM module and feature settings.'
+
+crm_core.settings:
+  title: 'General settings'
+  description: 'General settings for CRM'
+  route_name: crm_core.settings
+  parent: crm_core.config_overview
+  weight: 0

@@ -1,0 +1,16 @@
+{
+    "name": "drupal/crm_core",
+    "description": "CRM Core is a set of modules that provide contact management functionality within Drupal web sites.",
+    "type": "drupal-module",
+    "license": "GPL-2.0+",
+    "require": {
+        "drupal/core": "^8.9.13"
+    },
+    "require-dev": {
+        "drupal/address": "^1.0",
+        "drupal/dynamic_entity_reference": "^1.0",
+        "drupal/entity": "^1.0",
+        "drupal/name": "^1.0",
+        "drupal/relation": "1.x-dev"
+    }
+}

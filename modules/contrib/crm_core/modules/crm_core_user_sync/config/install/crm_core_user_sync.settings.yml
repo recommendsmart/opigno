@@ -1,0 +1,5 @@
+rules: {}
+auto_sync_user_create: FALSE
+auto_sync_user_relate: FALSE
+contact_load: FALSE
+contact_show: FALSE

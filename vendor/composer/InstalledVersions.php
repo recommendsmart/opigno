@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '1bf5a49261f1873fd4cc037f5caf207cdab9b7c7',
+    'reference' => 'f5869d49ed839aa5951a2d8a9728454a223a018a',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -632,6 +632,16 @@ private static $installed = array (
       array (
         0 => '8.9.13',
       ),
+    ),
+    'drupal/crm_core' => 
+    array (
+      'pretty_version' => 'dev-3.x',
+      'version' => 'dev-3.x',
+      'aliases' => 
+      array (
+        0 => '3.x-dev',
+      ),
+      'reference' => 'ebab15bd25c2d07734bd368c824773ced4ef1909',
     ),
     'drupal/crop' => 
     array (
@@ -1745,7 +1755,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '1bf5a49261f1873fd4cc037f5caf207cdab9b7c7',
+      'reference' => 'f5869d49ed839aa5951a2d8a9728454a223a018a',
     ),
     'guzzlehttp/guzzle' => 
     array (

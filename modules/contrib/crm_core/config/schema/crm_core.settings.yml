@@ -1,0 +1,7 @@
+crm_core.settings:
+  type: config_object
+  label: 'CRM Core Global Settings'
+  mapping:
+    custom_theme:
+      type: string
+      label: 'Custom theme'
