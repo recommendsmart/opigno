@@ -1,0 +1,213 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.contact.body
+    - field.field.node.contact.field_contact_email
+    - field.field.node.contact.field_contact_family_name
+    - field.field.node.contact.field_contact_first_name
+    - field.field.node.contact.field_contact_phone
+    - field.field.node.contact.field_contact_position
+    - field.field.node.contact.field_contact_type
+    - field.field.node.contact.field_metatag
+    - field.field.node.contact.field_teaser
+    - field.field.node.contact.field_unit_or_department
+    - node.type.contact
+  module:
+    - ds
+    - field_formatter_filter
+    - field_group
+    - metatag
+    - telephone
+    - text
+    - user
+third_party_settings:
+  ds:
+    layout:
+      id: ds_1col
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        wrappers:
+          ds_content: div
+        outer_wrapper: div
+        attributes: ''
+        link_attribute: ''
+        link_custom: ''
+        classes:
+          layout_class: {  }
+          ds_content: {  }
+    regions:
+      ds_content:
+        - field_teaser
+        - group_meta
+        - body
+        - field_metatag
+        - field_contact_first_name
+        - field_contact_family_name
+        - field_unit_or_department
+        - field_contact_position
+        - field_contact_email
+        - field_contact_phone
+  field_group:
+    group_meta:
+      children:
+        - field_contact_first_name
+        - field_contact_family_name
+        - field_unit_or_department
+        - field_contact_position
+        - field_contact_email
+        - field_contact_phone
+      parent_name: ''
+      weight: 1
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: 'meta call-to-action-left-line'
+        element: div
+        show_label: false
+        label_element: h3
+        attributes: ''
+        effect: none
+        speed: fast
+      label: Meta
+      region: hidden
+id: node.contact.default
+targetEntityType: node
+bundle: contact
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 2
+    settings: {  }
+    third_party_settings:
+      field_formatter_filter:
+        format: full_html
+      ds:
+        ft:
+          id: default
+          settings:
+            lb: ''
+            classes:
+              - prose
+            lb-col: false
+    region: ds_content
+  field_contact_email:
+    weight: 17
+    label: inline
+    settings: {  }
+    third_party_settings:
+      ds:
+        ft:
+          id: default
+          settings:
+            lb: ''
+            lb-col: true
+            classes: {  }
+    type: email_mailto
+    region: ds_content
+  field_contact_family_name:
+    weight: 12
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings:
+      ds:
+        ft:
+          id: default
+          settings:
+            lb: ''
+            lb-col: true
+            classes: {  }
+    type: string
+    region: ds_content
+  field_contact_first_name:
+    weight: 10
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings:
+      ds:
+        ft:
+          id: default
+          settings:
+            lb: ''
+            lb-col: true
+            classes: {  }
+    type: string
+    region: ds_content
+  field_contact_phone:
+    weight: 19
+    label: inline
+    settings:
+      title: ''
+    third_party_settings:
+      ds:
+        ft:
+          id: default
+          settings:
+            lb: ''
+            lb-col: true
+            classes: {  }
+    type: telephone_link
+    region: ds_content
+  field_contact_position:
+    weight: 15
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings:
+      ds:
+        ft:
+          id: default
+          settings:
+            lb: ''
+            lb-col: true
+            classes: {  }
+    type: string
+    region: ds_content
+  field_metatag:
+    weight: 7
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: metatag_empty_formatter
+    region: ds_content
+  field_teaser:
+    type: entity_reference_entity_view
+    weight: 0
+    region: ds_content
+    label: hidden
+    settings:
+      view_mode: full_width
+      link: false
+    third_party_settings:
+      ds:
+        ft:
+          id: default
+          settings:
+            lb: ''
+            classes:
+              - media--featured
+            lb-col: false
+  field_unit_or_department:
+    type: entity_reference_label
+    weight: 14
+    region: ds_content
+    label: inline
+    settings:
+      link: false
+    third_party_settings:
+      ds:
+        ft:
+          id: default
+          settings:
+            lb: ''
+            lb-col: true
+            classes: {  }
+hidden:
+  field_contact_type: true
+  links: true
