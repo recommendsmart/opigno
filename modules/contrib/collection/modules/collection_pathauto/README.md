@@ -13,3 +13,5 @@ For example, if:
 Then the resulting pattern for the `post` node would be `my-blog/post/[node:title]`.
 
 When modifying the pathauto pattern, this module fires a new alter hook to allow further modification of the already modified pattern. See collection_pathauto.api.php.
+
+Additionally, if an item is removed from a collection, or is no longer `canonical`, then the alias for the collected entity will be re-generated.

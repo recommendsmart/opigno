@@ -32,22 +32,17 @@ class CollectionContentManager {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity.
-   * @param string $access
-   *   The access level to check.
+   * @param string|boolean $access
+   *   The access level to check, or false to return all items.
    *
    * @return array
    *   The collections to which this entity belongs.
    */
-  public function getCollectionsForEntity(EntityInterface $entity, $access = 'update') {
+  public function getCollectionsForEntity(EntityInterface $entity, $access = 'view') {
     $collections = [];
 
     foreach ($this->getCollectionItemsForEntity($entity, $access) as $collection_item) {
       $collection = $collection_item->collection->entity;
-
-      if (!$collection->access($access)) {
-        continue;
-      }
-
       $collections[$collection->id()] = $collection;
     }
 
@@ -59,13 +54,13 @@ class CollectionContentManager {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity.
-   * @param string $access
-   *   The access level to check.
+   * @param string|boolean $access
+   *   The access level to check, or false to return all items.
    *
    * @return array
    *   The collections_items that collect this entity.
    */
-  public function getCollectionItemsForEntity(EntityInterface $entity, $access = 'update') {
+  public function getCollectionItemsForEntity(EntityInterface $entity, $access = 'view') {
     $collections_items = [];
 
     // Load all collection items that reference this entity.
@@ -79,7 +74,7 @@ class CollectionContentManager {
     $collection_items = $collection_item_storage->loadMultiple($collection_item_ids);
 
     foreach ($collection_items as $cid => $collection_item) {
-      if (!$collection_item->access($access)) {
+      if ($access !== FALSE && !$collection_item->access($access)) {
         unset($collection_items[$cid]);
       }
     }
@@ -94,8 +89,8 @@ class CollectionContentManager {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity.
-   * @param string $access
-   *   The access level to check.
+   * @param string|boolean $access
+   *   The access level to check, or false to return all items.
    *
    * @return array
    *   The collections to which this entity can be added.
@@ -116,7 +111,7 @@ class CollectionContentManager {
       ]);
 
       foreach ($collections_by_type as $cid => $collection) {
-        if ($collection->access($access)) {
+        if ($access === FALSE || $collection->access($access)) {
           $available_collections[$cid] = $collection;
         }
       }

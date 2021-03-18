@@ -11,6 +11,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -33,6 +34,13 @@ class SettingsForm extends ConfigFormBase {
   protected $entityTypeBundleInfo;
 
   /**
+   * The entity type bundle info service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs a \Drupal\ajax_comments\Form\SettingsForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -41,11 +49,14 @@ class SettingsForm extends ConfigFormBase {
    *   The entity type manager service.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The entity type bundle info service.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The entity type bundle info service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
+  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, ModuleHandlerInterface $module_handler) {
     parent::__construct($config_factory);
     $this->entityTypeManager = $entity_type_manager;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -55,7 +66,8 @@ class SettingsForm extends ConfigFormBase {
     return new static(
       $container->get('config.factory'),
       $container->get('entity_type.manager'),
-      $container->get('entity_type.bundle.info')
+      $container->get('entity_type.bundle.info'),
+      $container->get('module_handler')
     );
   }
 
@@ -80,16 +92,22 @@ class SettingsForm extends ConfigFormBase {
     $config = $this->config('ajax_comments.settings');
 
     $field_list = $this->entityTypeManager
-      ->getListBuilder('field_storage_config')->load();
+      ->getStorage('field_storage_config')->loadMultiple();
+
+    $field_ui_exists = $this->moduleHandler->moduleExists('field_ui');
+
+    $description = $field_ui_exists ?
+      $this->t('These entity types and bundles have comment fields. You can enable or disable Ajax Comments on the field display settings. Click the links to visit the field display settings edit forms. Ajax Comments is enabled by default on all comment fields.') :
+      $this->t('These entity types and bundles have comment fields. You can enable or disable Ajax Comments on the field display settings. Enable the Field UI module to edit the field display settings. Ajax Comments is enabled by default on all comment fields.');
 
     $form['entity_bundles'] = [
       '#type' => 'fieldset',
       '#title' => t("Enable Ajax Comments on the comment fields' display settings"),
-      '#description' => t('These entity types and bundles have comment fields. You can enable or disable Ajax Comments on the field display settings. Click the links to visit the field display settings edit forms. Ajax Comments is enabled by default on all comment fields.'),
+      '#description' => $description,
     ];
 
     $links = [];
-    foreach ($field_list as $machine_name => $field_storage_config) {
+    foreach ($field_list as $field_storage_config) {
       if ($field_storage_config->getType() === 'comment') {
         $entity_type_id = $field_storage_config->getTargetEntityTypeId();
         /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
@@ -105,28 +123,19 @@ class SettingsForm extends ConfigFormBase {
           $entity_type_label = $entity_type->getLabel()->render();
           $label = $entity_type_label . ': ' . $bundle_label;
 
-          /** @var \Drupal\ajax_comments\TempStore $temp_store */
-          $temp_store = \Drupal::service('ajax_comments.temp_store');
-          $view_mode = !empty($temp_store->getViewMode($entity_type->getLabel()))
-            ? $temp_store->getViewMode($entity_type->getLabel())
-            : 'default';
-
           // Create the render array for the link to edit the display mode.
-          $route_params = FieldUI::getRouteBundleParameter($entity_type, $bundle);
-          $route_suffix = 'default';
-          if ($view_mode != 'default') {
-            $route_suffix = 'view_mode';
-            $route_params['view_mode_name'] = $view_mode;
-          }
-          $url = Url::fromRoute(
-            'entity.entity_view_display.' . $entity_type_id . '.' . $route_suffix,
-            $route_params
-          );
-          if ($url instanceof Url && $url->access()) {
+          if ($field_ui_exists) {
             $links[$entity_type_id . '.' . $bundle] = [
               '#type' => 'link',
               '#title' => $label,
-              '#url' => $url,
+              '#url' => Url::fromRoute(
+                'entity.entity_view_display.' . $entity_type_id . '.default',
+                FieldUI::getRouteBundleParameter($entity_type, $bundle)
+              ),
+            ];
+          } else {
+            $links[$entity_type_id . '.' . $bundle] = [
+              '#markup' => $label,
             ];
           }
         }

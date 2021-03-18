@@ -145,8 +145,8 @@ function collection_theme_suggestions_collection(array $variables) {
  * Update the name of collection items when an entity is modified.
  */
 function collection_entity_update(EntityInterface $entity) {
-  // Don't run on collection_items.
-  if ($entity->getEntityTypeId() === 'collection_item') {
+  // Don't run on collection_items or paragraphs.
+  if (in_array($entity->getEntityTypeId(), ['collection_item', 'paragraph'])) {
     return;
   }
 

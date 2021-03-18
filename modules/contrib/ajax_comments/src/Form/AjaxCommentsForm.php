@@ -114,14 +114,9 @@ class AjaxCommentsForm extends CommentForm {
 
     /** @var \Drupal\comment\CommentInterface $comment */
     $comment = $form_state->getFormObject()->getEntity();
-
-    /** @var \Drupal\ajax_comments\TempStore $tempStore */
-    $tempStore = \Drupal::service('ajax_comments.temp_store');
-    $view_mode = $tempStore->getViewMode($comment->getCommentedEntity()->getEntityType()->getLabel()->getUntranslatedString());
-
     // Check to see if this comment field uses ajax comments.
-    $comment_formatter = $this->fieldSettingsHelper->getFieldFormatterFromComment($comment, $view_mode);
-    if (!empty($comment_formatter) && !$this->fieldSettingsHelper->isEnabled($comment_formatter)) {
+    $comment_formatter = $this->fieldSettingsHelper->getFieldFormatterFromComment($comment, 'full');
+    if (empty($comment_formatter) || !$this->fieldSettingsHelper->isEnabled($comment_formatter)) {
       // If not using Ajax Comments, return the unmodified form.
       return $form;
     }
@@ -198,12 +193,8 @@ class AjaxCommentsForm extends CommentForm {
     // Populate the comment-specific variables.
     /** @var \Drupal\comment\CommentInterface $comment */
     $comment = $form_state->getFormObject()->getEntity();
-   /** @var \Drupal\ajax_comments\TempStore $tempStore */
-    $tempStore = \Drupal::service('ajax_comments.temp_store');
-    $view_mode = $tempStore->getViewMode($comment->getCommentedEntity()->getEntityType()->getLabel()->getUntranslatedString());
-
-    $comment_formatter = $this->fieldSettingsHelper->getFieldFormatterFromComment($comment, $view_mode);
-    if (!empty($comment_formatter) && !$this->fieldSettingsHelper->isEnabled($comment_formatter)) {
+    $comment_formatter = $this->fieldSettingsHelper->getFieldFormatterFromComment($comment, 'full');
+    if (empty($comment_formatter) || !$this->fieldSettingsHelper->isEnabled($comment_formatter)) {
       // If not using Ajax Comments, return the unmodified element.
       return $element;
     }
@@ -211,7 +202,7 @@ class AjaxCommentsForm extends CommentForm {
     $commented_entity = $comment->getCommentedEntity();
     $field_name = $comment->getFieldName();
     $cid = $comment->id() ? $comment->id() : 0;
-    $pid = $comment->get('pid')->target_id ? $comment->get('pid')->target_id : 0;
+    $pid = $comment->get('pid')->target_id ? $comment->get('pid')->target_id : NULL;
 
     // Build the #ajax array.
     $ajax = [
@@ -355,6 +346,15 @@ class AjaxCommentsForm extends CommentForm {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
+
+    /** @var \Drupal\comment\CommentInterface $comment */
+    $comment = $form_state->getFormObject()->getEntity();
+    $comment_formatter = $this->fieldSettingsHelper->getFieldFormatterFromComment($comment, 'full');
+    if ($comment_formatter && !$this->fieldSettingsHelper->isEnabled($comment_formatter)) {
+      // If not using Ajax Comments, do not process further.
+      return;
+    }
+
     $request = $this->requestStack->getCurrentRequest();
     $route_name = $this->currentRouteMatch->getRouteName();
     $this->tempStore->processForm($request, $form, $form_state, $is_validating = TRUE);
@@ -385,12 +385,8 @@ class AjaxCommentsForm extends CommentForm {
     parent::save($form, $form_state);
     /** @var \Drupal\comment\CommentInterface $comment */
     $comment = $form_state->getFormObject()->getEntity();
-    /** @var \Drupal\ajax_comments\TempStore $tempStore */
-    $tempStore = \Drupal::service('ajax_comments.temp_store');
-    $view_mode = $tempStore->getViewMode($comment->getCommentedEntity()->getEntityType()->getLabel()->getUntranslatedString());
-
-    $comment_formatter = $this->fieldSettingsHelper->getFieldFormatterFromComment($comment, $view_mode);
-    if (!empty($comment_formatter) && !$this->fieldSettingsHelper->isEnabled($comment_formatter)) {
+    $comment_formatter = $this->fieldSettingsHelper->getFieldFormatterFromComment($comment, 'full');
+    if (empty($comment_formatter) || !$this->fieldSettingsHelper->isEnabled($comment_formatter)) {
       // If not using Ajax Comments, do not change the redirect.
       return;
     }

@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Url;
 use Drupal\user\Entity\User;
+use Minishlink\WebPush\Subscription;
 use Minishlink\WebPush\WebPush;
 
 /**
@@ -114,56 +115,46 @@ class PushNotificationForm extends FormBase {
 
       // Prepare the payload with the message.
       $message = $form_state->getValue('message');
-      $payload = json_encode(['message' => $message]);
-
-      // Array of notifications.
-      $notifications = [];
-      foreach ($user_subscription as $subscription) {
-        $notifications[] = [
-          'endpoint' => $subscription['endpoint'],
-          'payload' => $payload,
-          'userPublicKey' => $subscription['key'],
-          'userAuthToken' => $subscription['token'],
-        ];
-      }
+      $serialized_payload = json_encode(['message' => $message]);
 
       // Get the VAPID keys that were generated before.
       $vapid_keys = \Drupal::state()->get('social_pwa.vapid_keys');
 
       $auth = [
         'VAPID' => [
-          'subject' => Url::fromRoute('<front>', [], ['absolute' => TRUE]),
+          'subject' => Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(),
           'publicKey' => $vapid_keys['public'],
           'privateKey' => $vapid_keys['private'],
         ],
       ];
-
-      /** @var \Minishlink\WebPush\WebPush $webPush */
       $webPush = new WebPush($auth);
 
-      foreach ($notifications as $notification) {
-        $webPush->sendNotification(
-          $notification['endpoint'],
-          $notification['payload'],
-          $notification['userPublicKey'],
-          $notification['userAuthToken']
+      foreach ($user_subscription as $subscription_data) {
+        $subscription = new Subscription(
+          $subscription_data['endpoint'],
+          $subscription_data['key'],
+          $subscription_data['token']
+        );
+        $webPush->queueNotification(
+          $subscription,
+          $serialized_payload
         );
       }
 
-      // Send out all the push notifications.
-      $push_results = $webPush->flush();
-
       $removed = FALSE;
-      // Loop through the push results.
-      foreach ($push_results as $push_result) {
+      // Send each notification and check the results.
+      // flush() returns a generator that won't actually send all batches until
+      // we've consumed all the results of the previous batch.
+      /** @var \Minishlink\WebPush\MessageSentReport $push_result */
+      foreach ($webPush->flush() as $push_result) {
         // If we had any results back that we're unsuccessful, we should act and
         // remove the push subscription endpoint.
-        if (empty($push_result['success'])) {
+        if (!$push_result->isSuccess()) {
           // Loop through the users subscriptions.
           foreach ($user_subscription as $key => $subscription) {
             // Remove from list of subscriptions, as the endpoint is no longer
             // being used.
-            if ($subscription['endpoint'] === $push_result['endpoint']) {
+            if ($subscription['endpoint'] === $push_result->getEndpoint()) {
               unset($user_subscription[$key]);
               $removed = TRUE;
             }

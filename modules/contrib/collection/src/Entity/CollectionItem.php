@@ -3,6 +3,10 @@
 namespace Drupal\collection\Entity;
 
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\collection\Event\CollectionEvents;
+use Drupal\collection\Event\CollectionItemCreateEvent;
+use Drupal\collection\Event\CollectionItemUpdateEvent;
+use Drupal\collection\Event\CollectionItemDeleteEvent;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
@@ -100,6 +104,36 @@ class CollectionItem extends ContentEntityBase implements CollectionItemInterfac
   /**
    * {@inheritdoc}
    */
+  public function save() {
+    // Check the new status before running parent::save(), where it will be set
+    // to false.
+    $is_new = $this->isNew();
+
+    // Save the collection_item and run core postSave hooks (e.g.
+    // hook_entity_insert()).
+    $return = parent::save();
+
+    // Get the event_dispatcher service and dispatch the event.
+    $event_dispatcher = \Drupal::service('event_dispatcher');
+
+    // Is the collection item being inserted (e.g. is new)?
+    if ($is_new) {
+      // Dispatch new collection item event.
+      $event = new CollectionItemCreateEvent($this);
+      $event_dispatcher->dispatch(CollectionEvents::COLLECTION_ITEM_ENTITY_CREATE, $event);
+    }
+    else {
+      // Dispatch update collection item event.
+      $event = new CollectionItemUpdateEvent($this);
+      $event_dispatcher->dispatch(CollectionEvents::COLLECTION_ITEM_ENTITY_UPDATE, $event);
+    }
+
+    return $return;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
     Cache::invalidateTags($this->collection->entity->getCacheTagsToInvalidate());
@@ -112,6 +146,9 @@ class CollectionItem extends ContentEntityBase implements CollectionItemInterfac
   public static function postDelete(EntityStorageInterface $storage, array $entities) {
     static::invalidateTagsOnDelete($storage->getEntityType(), $entities);
 
+    // Get the event_dispatcher service and dispatch the event.
+    $event_dispatcher = \Drupal::service('event_dispatcher');
+
     foreach ($entities as $entity) {
       if ($entity->collection->entity) {
         Cache::invalidateTags($entity->collection->entity->getCacheTagsToInvalidate());
@@ -120,6 +157,10 @@ class CollectionItem extends ContentEntityBase implements CollectionItemInterfac
       if ($entity->item->entity) {
         Cache::invalidateTags($entity->item->entity->getCacheTagsToInvalidate());
       }
+
+      // Dispatch delete collection item event.
+      $event = new CollectionItemDeleteEvent($entity);
+      $event_dispatcher->dispatch(CollectionEvents::COLLECTION_ITEM_ENTITY_DELETE, $event);
     }
   }
 

@@ -5,6 +5,7 @@
  * Generates and attaches the <meta> and <link> tags needed for the PWA.
  */
 
+use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
 
@@ -12,14 +13,6 @@ use Drupal\image\Entity\ImageStyle;
  * Implements hook_page_attachments().
  */
 function social_pwa_page_attachments(array &$page) {
-
-  $account = \Drupal::currentUser();
-  // PWA is for logged in users only since
-  // we store the subscription ID to the uid.
-  if ($account->isAnonymous()) {
-    return;
-  }
-
   // Check first if sending push notifications is enabled.
   $pwa_enabled = \Drupal::config('social_pwa.settings')->get('status.all');
   if (!$pwa_enabled) {
@@ -59,12 +52,14 @@ function social_pwa_page_attachments(array &$page) {
 
   // Add the public VAPID key.
   $vapid_keys = \Drupal::state()->get('social_pwa.vapid_keys');
-  $page['#attached']['drupalSettings']['vapidPublicKey'] = $vapid_keys['public'];
 
-  // Get all the subscriptions for this user and attach them to the page.
-  $user_subscriptions = \Drupal::service('user.data')
-    ->get('social_pwa', $account->id(), 'subscription');
-  $page['#attached']['drupalSettings']['pushNotificationSubscriptions'] = !empty($user_subscriptions) ? array_keys($user_subscriptions) : [];
+  // Set up the social_pwa settings for all users.
+  $page['#attached']['drupalSettings']['social_pwa'] = [
+    'vapidPublicKey' => $vapid_keys['public'],
+    'serviceWorkerUrl' => Url::fromRoute('social_pwa.service-worker')->toString(),
+    'subscriptionAddUrl' => Url::fromRoute('social_pwa.save-subscription')->toString(),
+    'subscriptionRemoveUrl' => Url::fromRoute('social_pwa.remove-subscription')->toString(),
+  ];
 
   // Attach the generated data from /manifest.json.
   $page['#attached']['html_head_link'][][] = [
@@ -143,18 +138,28 @@ function social_pwa_page_attachments(array &$page) {
     $page['#attached']['html_head'][] = [$value, $key];
   }
 
-  // Check if we need to show a prompt for the user to accept push
-  // notifications.
-  $route = \Drupal::routeMatch()->getRouteObject();
-  $prompt = \Drupal::service('user.data')->get('social_pwa', $account->id(), 'prompt');
+  // Push notification support is only available to authenticated users.
+  $account = \Drupal::currentUser();
+  if ($account->isAuthenticated()) {
+    // Get all the subscriptions for this user and attach them to the page.
+    $user_subscriptions = \Drupal::service('user.data')
+      ->get('social_pwa', $account->id(), 'subscription');
+    $page['#attached']['drupalSettings']['social_pwa']['pushNotificationSubscriptions'] = !empty($user_subscriptions) ? array_keys($user_subscriptions) : [];
 
-  // Show the dialog only if the user didn't see it yet and we're not on an
-  // admin page.
-  if (empty($prompt) && \Drupal::service('router.admin_context')->isAdminRoute($route) !== TRUE) {
-    $prompt_time = \Drupal::config('social_pwa.settings')->get('prompt_timing');
-    $page['#attached']['library'][] = 'core/drupal.dialog.ajax';
-    $page['#attached']['library'][] = 'social_pwa/push-notification';
-    $page['#attached']['drupalSettings']['pushNotificationPrompt'] = TRUE;
-    $page['#attached']['drupalSettings']['pushNotificationPromptTime'] = (isset($prompt_time) && is_numeric($prompt_time)) ? $prompt_time : 3;
+    // Check if we need to show a prompt for the user to accept push
+    // notifications.
+    $route = \Drupal::routeMatch()->getRouteObject();
+    $prompt = \Drupal::service('user.data')
+      ->get('social_pwa', $account->id(), 'prompt');
+
+    // Show the dialog only if the user didn't see it yet and we're not on an
+    // admin page.
+    if (empty($prompt)
+      && \Drupal::service('router.admin_context')->isAdminRoute($route) !== TRUE) {
+      $prompt_time = \Drupal::config('social_pwa.settings')->get('prompt_timing');
+      $page['#attached']['library'][] = 'core/drupal.dialog.ajax';
+      $page['#attached']['library'][] = 'social_pwa/push-notification';
+      $page['#attached']['drupalSettings']['social_pwa']['pushNotificationPromptTime'] = (isset($prompt_time) && is_numeric($prompt_time)) ? $prompt_time : 3;
+    }
   }
 }

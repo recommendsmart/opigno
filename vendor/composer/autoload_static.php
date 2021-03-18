@@ -16,8 +16,8 @@ class ComposerStaticInitc57549eb6c7c9f12f114a0a413c5516d
         'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
-        'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
+        'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         'def43f6c87e4f8dfd0c9e1b1bab14fe8' => __DIR__ . '/..' . '/symfony/polyfill-iconv/bootstrap.php',
         '07d7f1a47144818725fd8d91a907ac57' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/functions/create_uploaded_file.php',
@@ -36,7 +36,6 @@ class ComposerStaticInitc57549eb6c7c9f12f114a0a413c5516d
         'cc8e14526dc240491e17a838cb78508c' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/functions/normalize_server.legacy.php',
         '786bf90caabc9e09b6ad4cc5ca8f0e30' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/functions/normalize_uploaded_files.legacy.php',
         '751a5a3f463e4be759be31748b61737c' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/functions/parse_cookie_header.legacy.php',
-        'a4ecaeafb8cfb009ad0e052c90355e98' => __DIR__ . '/..' . '/beberlei/assert/lib/Assert/functions.php',
         'a16312f9300fed4a097923eacb0ba814' => __DIR__ . '/..' . '/igorw/get-in/src/get_in.php',
         '9e4824c5afbdc1482b6025ce3d4dfde8' => __DIR__ . '/..' . '/league/csv/src/functions_include.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
@@ -99,8 +98,8 @@ class ComposerStaticInitc57549eb6c7c9f12f114a0a413c5516d
         array (
             'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
+            'Psr\\Http\\Client\\' => 16,
             'Psr\\Container\\' => 14,
-            'Psr\\Cache\\' => 10,
         ),
         'O' => 
         array (
@@ -110,7 +109,6 @@ class ComposerStaticInitc57549eb6c7c9f12f114a0a413c5516d
         array (
             'Monolog\\' => 8,
             'Minishlink\\WebPush\\' => 19,
-            'Mdanter\\Ecc\\' => 12,
             'Masterminds\\' => 12,
         ),
         'L' => 
@@ -124,7 +122,11 @@ class ComposerStaticInitc57549eb6c7c9f12f114a0a413c5516d
         ),
         'J' => 
         array (
-            'Jose\\' => 5,
+            'Jose\\Component\\Signature\\Algorithm\\' => 35,
+            'Jose\\Component\\Signature\\' => 25,
+            'Jose\\Component\\KeyManagement\\' => 29,
+            'Jose\\Component\\Core\\Util\\Ecc\\' => 29,
+            'Jose\\Component\\Core\\' => 20,
         ),
         'I' => 
         array (
@@ -180,14 +182,12 @@ class ComposerStaticInitc57549eb6c7c9f12f114a0a413c5516d
         ),
         'B' => 
         array (
+            'Brick\\Math\\' => 11,
             'Base64Url\\' => 10,
         ),
         'A' => 
         array (
-            'Assert\\' => 7,
             'Asm89\\Stack\\' => 12,
-            'AESKW\\' => 6,
-            'AESGCM\\' => 7,
         ),
     );
 
@@ -330,15 +330,16 @@ class ComposerStaticInitc57549eb6c7c9f12f114a0a413c5516d
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
+        'Psr\\Http\\Client\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-client/src',
         ),
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
-        ),
-        'Psr\\Cache\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/cache/src',
         ),
         'OomphInc\\ComposerInstallersExtender\\' => 
         array (
@@ -351,10 +352,6 @@ class ComposerStaticInitc57549eb6c7c9f12f114a0a413c5516d
         'Minishlink\\WebPush\\' => 
         array (
             0 => __DIR__ . '/..' . '/minishlink/web-push/src',
-        ),
-        'Mdanter\\Ecc\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/mdanter/ecc/src',
         ),
         'Masterminds\\' => 
         array (
@@ -384,9 +381,25 @@ class ComposerStaticInitc57549eb6c7c9f12f114a0a413c5516d
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-diactoros/src',
         ),
-        'Jose\\' => 
+        'Jose\\Component\\Signature\\Algorithm\\' => 
         array (
-            0 => __DIR__ . '/..' . '/spomky-labs/jose/src',
+            0 => __DIR__ . '/..' . '/web-token/jwt-signature-algorithm-ecdsa',
+        ),
+        'Jose\\Component\\Signature\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/web-token/jwt-signature',
+        ),
+        'Jose\\Component\\KeyManagement\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/web-token/jwt-key-mgmt',
+        ),
+        'Jose\\Component\\Core\\Util\\Ecc\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/web-token/jwt-util-ecc',
+        ),
+        'Jose\\Component\\Core\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/web-token/jwt-core',
         ),
         'Ivory\\HttpAdapter\\' => 
         array (
@@ -516,25 +529,17 @@ class ComposerStaticInitc57549eb6c7c9f12f114a0a413c5516d
         array (
             0 => __DIR__ . '/..' . '/commerceguys/addressing/src',
         ),
+        'Brick\\Math\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/brick/math/src',
+        ),
         'Base64Url\\' => 
         array (
             0 => __DIR__ . '/..' . '/spomky-labs/base64url/src',
         ),
-        'Assert\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/beberlei/assert/lib/Assert',
-        ),
         'Asm89\\Stack\\' => 
         array (
             0 => __DIR__ . '/..' . '/asm89/stack-cors/src/Asm89/Stack',
-        ),
-        'AESKW\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/spomky-labs/aes-key-wrap/src',
-        ),
-        'AESGCM\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/spomky-labs/php-aes-gcm/src',
         ),
     );
 

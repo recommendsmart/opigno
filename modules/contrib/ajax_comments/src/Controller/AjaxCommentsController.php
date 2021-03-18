@@ -18,6 +18,7 @@ use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
@@ -65,6 +66,13 @@ class AjaxCommentsController extends ControllerBase {
   protected $tempStore;
 
   /**
+   * The messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * Constructs a AjaxCommentsController object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -77,13 +85,16 @@ class AjaxCommentsController extends ControllerBase {
    *   The Router service.
    * @param \Drupal\ajax_comments\TempStore $temp_store
    *   The TempStore service.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The Messenger service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, AccountInterface $current_user, RendererInterface $renderer, RouterInterface $router, TempStore $temp_store) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, AccountInterface $current_user, RendererInterface $renderer, RouterInterface $router, TempStore $temp_store, MessengerInterface $messenger) {
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $current_user;
     $this->renderer = $renderer;
     $this->router = $router;
     $this->tempStore = $temp_store;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -95,7 +106,8 @@ class AjaxCommentsController extends ControllerBase {
       $container->get('current_user'),
       $container->get('renderer'),
       $container->get('router.no_access_checks'),
-      $container->get('ajax_comments.temp_store')
+      $container->get('ajax_comments.temp_store'),
+      $container->get('messenger')
     );
   }
 
@@ -206,7 +218,7 @@ class AjaxCommentsController extends ControllerBase {
     $settings = \Drupal::config('ajax_comments.settings');
     $notify = $settings->get('notify');
 
-    if ($notify) {
+    if ($notify || !empty($this->messenger->messagesByType(MessengerInterface::TYPE_ERROR))) {
       if (empty($selector)) {
         // Use the first id found in the ajax replacement markup to be
         // inserted into the page as the selector, if none was provided.
@@ -262,6 +274,11 @@ class AjaxCommentsController extends ControllerBase {
       $response->addCommand(
         $command
       );
+    }
+    else {
+      // Render messages to avoid display them when reloading the page.
+      $status_messages = ['#type' => 'status_messages'];
+      $this->renderer->renderRoot($status_messages);
     }
 
     return $response;
@@ -687,9 +704,10 @@ class AjaxCommentsController extends ControllerBase {
         return $response;
       }
 
-      // Remove any existing status messages in the comment field,
-      // if applicable.
+      // Remove any existing status messages and ajax reply forms in the
+      // comment field, if applicable.
       $response->addCommand(new RemoveCommand($wrapper_html_id . ' .js-ajax-comments-messages'));
+      $response->addCommand(new RemoveCommand($wrapper_html_id . ' .ajax-comments-form-reply'));
 
       // Build the comment entity form.
       // This approach is very similar to the one taken in

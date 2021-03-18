@@ -1,0 +1,37 @@
+--- ajax_comments.module
++++ ajax_comments.module
+@@ -80,12 +124,15 @@ use Symfony\Component\HttpFoundation\Request;
+  * classes to allow ajax behaviors to be attached.
+  */
+ function ajax_comments_comment_links_alter(array &$links, CommentInterface &$entity, array &$context) {
+-  $request = \Drupal::request();
++  /** @var \Drupal\ajax_comments\TempStore $tempStore */
++  $tempStore = \Drupal::service('ajax_comments.temp_store');
++  $view_mode = $tempStore->getViewMode($entity->getCommentedEntity()->getEntityType()->getLabel()->getUntranslatedString());
++
+   /** @var \Drupal\ajax_comments\FieldSettingsHelper $field_settings_helper */
+   $field_settings_helper = \Drupal::service('ajax_comments.field_settings_helper');
+-  $comment_formatter = $field_settings_helper->getFieldFormatterFromComment($entity, $context['view_mode']);
++  $comment_formatter = $field_settings_helper->getFieldFormatterFromComment($entity, $view_mode);
+ 
+-  if ($field_settings_helper->isEnabled($comment_formatter)) {
++  if (!empty($comment_formatter) && $field_settings_helper->isEnabled($comment_formatter)) {
+     // A little HACK for do not mark as NEW own comments.
+     if ($entity->isNew() && ($entity->getOwnerId() === \Drupal::currentUser()->id())) {
+       $entity->enforceIsNew(FALSE);
+@@ -276,9 +327,13 @@ function ajax_comments_form_comment_form_alter(&$form, \Drupal\Core\Form\FormSta
+   $commented_entity = $comment->getCommentedEntity();
+   $field_name = $comment->getFieldName();
+ 
++  /** @var \Drupal\ajax_comments\TempStore $tempStore */
++  $tempStore = \Drupal::service('ajax_comments.temp_store');
++  $view_mode = $tempStore->getViewMode($commented_entity->getEntityType()->getLabel()->getUntranslatedString());
++
+   // Check to see if this node type uses ajax comments.
+-  $comment_formatter = $field_settings_helper->getFieldFormatterFromComment($comment, 'full');
+-  if (!$field_settings_helper->isEnabled($comment_formatter)) {
++  $comment_formatter = $field_settings_helper->getFieldFormatterFromComment($comment, $view_mode);
++  if (!empty($comment_formatter) && !$field_settings_helper->isEnabled($comment_formatter)) {
+     return;
+   }
+ 

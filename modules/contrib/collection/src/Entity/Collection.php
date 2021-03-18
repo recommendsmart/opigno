@@ -182,7 +182,7 @@ class Collection extends EditorialContentEntityBase implements CollectionInterfa
       $event = new CollectionCreateEvent($this);
       $event_dispatcher->dispatch(CollectionEvents::COLLECTION_ENTITY_CREATE, $event);
     }
-    else { // Check whether the url is being changed.
+    else {
       // Dispatch update collection event.
       $event = new CollectionUpdateEvent($this);
       $event_dispatcher->dispatch(CollectionEvents::COLLECTION_ENTITY_UPDATE, $event);

@@ -9,7 +9,7 @@ dependencies:
   - drupal:path
   - key_value_field
 
-# Information added by Drupal.org packaging script on 2021-02-18
-version: '2.2.0-alpha1'
+# Information added by Drupal.org packaging script on 2021-03-17
+version: '2.3.1-alpha1'
 project: 'collection'
-datestamp: 1613669276
+datestamp: 1616021066

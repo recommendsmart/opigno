@@ -77,26 +77,6 @@ class AjaxCommentsDeleteForm extends DeleteForm {
         '#value' => $wrapper_html_id,
       ];
 
-      // Workaround for the core issue with markup in dialog titles:
-      // https://www.drupal.org/node/2207247
-      // Replace the emphasis tags with quote marks.
-      $title_args = $form['#title']->getArguments();
-      $arg_replacements = [];
-      foreach ($title_args as $placeholder => $replacement) {
-        if (strpos($placeholder, '%') === 0) {
-          $new_placeholder = '@' . substr($placeholder, 1);
-          $arg_replacements[$placeholder] = $new_placeholder;
-          $title_args[$new_placeholder] = $replacement;
-          unset($title_args[$placeholder]);
-        }
-        else {
-          $arg_replacements[$placeholder] = $placeholder;
-        }
-      }
-      $raw_string = $form['#title']->getUntranslatedString();
-      $new_string = strtr($raw_string, $arg_replacements);
-      $form['#title'] = $this->t($new_string, $title_args);
-
       // Add a class to target this form in JavaScript.
       $form['#attributes']['class'][] = 'ajax-comments';
 

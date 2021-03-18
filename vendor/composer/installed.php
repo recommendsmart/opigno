@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '1011ef7c924cbe427a93147bab526173a73d9d0a',
+    'reference' => 'f88f03dd8e0f4436e283e9a7055206dff6143e3e',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -20,32 +20,32 @@
       ),
       'reference' => 'b9c31def6a83f84b4d4a40d35996d375755f0e08',
     ),
-    'beberlei/assert' => 
+    'brick/math' => 
     array (
-      'pretty_version' => 'v2.9.9',
-      'version' => '2.9.9.0',
+      'pretty_version' => '0.9.2',
+      'version' => '0.9.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => '124317de301b7c91d5fce34c98bba2c6925bec95',
+      'reference' => 'dff976c2f3487d42c1db75a3b180e2b9f0e72ce0',
     ),
     'commerceguys/addressing' => 
     array (
-      'pretty_version' => 'v1.1.1',
-      'version' => '1.1.1.0',
+      'pretty_version' => 'v1.2.0',
+      'version' => '1.2.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '6df5c0eea9d1f370095585eef1b08f4dff73d51f',
+      'reference' => '00c263fa945e7f78524bbb6b99d331f3b493be2a',
     ),
     'commerceguys/intl' => 
     array (
-      'pretty_version' => 'v1.0.7',
-      'version' => '1.0.7.0',
+      'pretty_version' => 'v1.0.8',
+      'version' => '1.0.8.0',
       'aliases' => 
       array (
       ),
-      'reference' => '0bf0beb12e37ef1a61e0d09dc66cdaa1a23e62e1',
+      'reference' => 'b8df285687b8d5d6494874d22e2e5cf625dbe180',
     ),
     'composer/ca-bundle' => 
     array (
@@ -173,8 +173,8 @@
     ),
     'drupal/activity_send_push' => 
     array (
-      'pretty_version' => '1.0.0-alpha12',
-      'version' => '1.0.0.0-alpha12',
+      'pretty_version' => '1.0.0-alpha13',
+      'version' => '1.0.0.0-alpha13',
       'aliases' => 
       array (
       ),
@@ -216,12 +216,12 @@
     ),
     'drupal/ajax_comments' => 
     array (
-      'pretty_version' => '1.0.0-beta2',
-      'version' => '1.0.0.0-beta2',
+      'pretty_version' => '1.0.0-beta3',
+      'version' => '1.0.0.0-beta3',
       'aliases' => 
       array (
       ),
-      'reference' => '8.x-1.0-beta2',
+      'reference' => '8.x-1.0-beta3',
     ),
     'drupal/automated_cron' => 
     array (
@@ -893,6 +893,24 @@
       ),
       'reference' => '8.x-2.22',
     ),
+    'drupal/geocoder_field' => 
+    array (
+      'pretty_version' => '3.17.0',
+      'version' => '3.17.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => NULL,
+    ),
+    'drupal/geofield' => 
+    array (
+      'pretty_version' => '1.20.0',
+      'version' => '1.20.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-1.20',
+    ),
     'drupal/geolocation' => 
     array (
       'pretty_version' => 'dev-2.x',
@@ -1248,6 +1266,16 @@
       ),
       'reference' => '8.x-1.6',
     ),
+    'drupal/places' => 
+    array (
+      'pretty_version' => 'dev-1.0.x',
+      'version' => 'dev-1.0.x',
+      'aliases' => 
+      array (
+        0 => '1.0.x-dev',
+      ),
+      'reference' => '20ad99a2b34e2409bb686ba6e143323f042c7e5d',
+    ),
     'drupal/private_message' => 
     array (
       'pretty_version' => '1.2.0',
@@ -1419,12 +1447,12 @@
     ),
     'drupal/social_pwa' => 
     array (
-      'pretty_version' => '1.0.0-alpha12',
-      'version' => '1.0.0.0-alpha12',
+      'pretty_version' => '1.0.0-alpha13',
+      'version' => '1.0.0.0-alpha13',
       'aliases' => 
       array (
       ),
-      'reference' => '8.x-1.0-alpha12',
+      'reference' => '8.x-1.0-alpha13',
     ),
     'drupal/socialbase' => 
     array (
@@ -1732,7 +1760,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '1011ef7c924cbe427a93147bab526173a73d9d0a',
+      'reference' => 'f88f03dd8e0f4436e283e9a7055206dff6143e3e',
     ),
     'guzzlehttp/guzzle' => 
     array (
@@ -1799,12 +1827,12 @@
     ),
     'laminas/laminas-feed' => 
     array (
-      'pretty_version' => '2.13.1',
-      'version' => '2.13.1.0',
+      'pretty_version' => '2.14.0',
+      'version' => '2.14.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '45d36702d09afd5d8ca01192ecd3b5afaf37126b',
+      'reference' => '85cf475aa76c10b8c12134873100f592251456a6',
     ),
     'laminas/laminas-stdlib' => 
     array (
@@ -1851,23 +1879,14 @@
       ),
       'reference' => '9227822783c75406cfe400984b2f095cdf03d417',
     ),
-    'mdanter/ecc' => 
-    array (
-      'pretty_version' => 'v0.5.2',
-      'version' => '0.5.2.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'b95f25cc1bacc83a9f0ccd375900b7cfd343029e',
-    ),
     'mikehaertl/php-shellcommand' => 
     array (
-      'pretty_version' => '1.6.3',
-      'version' => '1.6.3.0',
+      'pretty_version' => '1.6.4',
+      'version' => '1.6.4.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'fe86ec847877b83bf61a96719e7f2e3b3e516a6b',
+      'reference' => '3488d7803df1e8f1a343d3d0ca452d527ad8d5e5',
     ),
     'mikehaertl/php-tmpfile' => 
     array (
@@ -1889,12 +1908,12 @@
     ),
     'minishlink/web-push' => 
     array (
-      'pretty_version' => 'v2.0.1',
-      'version' => '2.0.1.0',
+      'pretty_version' => 'v6.0.3',
+      'version' => '6.0.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => '6e1b88c46351ea3850cb1e9ae9565b8c61a58396',
+      'reference' => '8911bad58026db19ab5e39d19341ea9925cb1edb',
     ),
     'monolog/monolog' => 
     array (
@@ -2247,15 +2266,6 @@
       ),
       'reference' => 'e90533302c58acf41f0d8075a0151537d0ddf34d',
     ),
-    'psr/cache' => 
-    array (
-      'pretty_version' => '1.0.1',
-      'version' => '1.0.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'd11b50ad223250cf17b86e38383413f5a6764bf8',
-    ),
     'psr/container' => 
     array (
       'pretty_version' => '1.1.1',
@@ -2271,6 +2281,24 @@
       array (
         0 => '1.0',
       ),
+    ),
+    'psr/http-client' => 
+    array (
+      'pretty_version' => '1.0.1',
+      'version' => '1.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '2dfb5f6c5eff0e91e20e913f8c5452ed95b86621',
+    ),
+    'psr/http-factory' => 
+    array (
+      'pretty_version' => '1.0.1',
+      'version' => '1.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '12ac7fcd07e5b077433f5f2bee95b3a771bf61be',
     ),
     'psr/http-message' => 
     array (
@@ -2335,41 +2363,14 @@
         0 => '*',
       ),
     ),
-    'spomky-labs/aes-key-wrap' => 
-    array (
-      'pretty_version' => 'v4.0.1',
-      'version' => '4.0.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '6d302dc2d20cd61fc8bf0e253d628c70724d302a',
-    ),
     'spomky-labs/base64url' => 
     array (
-      'pretty_version' => 'v1.0.2',
-      'version' => '1.0.2.0',
+      'pretty_version' => 'v2.0.4',
+      'version' => '2.0.4.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'ef6d5fb93894063d9cee996022259fd08d6646ea',
-    ),
-    'spomky-labs/jose' => 
-    array (
-      'pretty_version' => 'v7.1.0',
-      'version' => '7.1.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'c7835297fa6a2c00dcdcbfadd67f7ea099b226a1',
-    ),
-    'spomky-labs/php-aes-gcm' => 
-    array (
-      'pretty_version' => 'v1.2.1',
-      'version' => '1.2.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'e3900f2eb29a98476ae94c25c5c4aebb32ebf338',
+      'reference' => '7752ce931ec285da4ed1f4c5aa27e45e097be61d',
     ),
     'stack/builder' => 
     array (
@@ -2649,6 +2650,51 @@
       array (
       ),
       'reference' => '60131cb573a1e478cfecd34e4ea38e3b31505f75',
+    ),
+    'web-token/jwt-core' => 
+    array (
+      'pretty_version' => 'v2.2.9',
+      'version' => '2.2.9.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '53beb6f6c1eec4fa93c1c3e5d9e5701e71fa1678',
+    ),
+    'web-token/jwt-key-mgmt' => 
+    array (
+      'pretty_version' => 'v2.2.9',
+      'version' => '2.2.9.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '0b116379515700d237b4e5de86879078ccb09d8a',
+    ),
+    'web-token/jwt-signature' => 
+    array (
+      'pretty_version' => 'v2.2.9',
+      'version' => '2.2.9.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '015b59aaf3b6e8fb9f5bd1338845b7464c7d8103',
+    ),
+    'web-token/jwt-signature-algorithm-ecdsa' => 
+    array (
+      'pretty_version' => 'v2.2.9',
+      'version' => '2.2.9.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '44cbbb4374c51f1cf48b82ae761efbf24e1a8591',
+    ),
+    'web-token/jwt-util-ecc' => 
+    array (
+      'pretty_version' => 'v2.2.9',
+      'version' => '2.2.9.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'a7ec5beb004a171f0305f8ba771d8b0ee9823839',
     ),
     'webonyx/graphql-php' => 
     array (

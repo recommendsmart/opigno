@@ -7,7 +7,7 @@ package: Social
 dependencies:
   - activity_send
 
-# Information added by Drupal.org packaging script on 2021-02-24
-version: '8.x-1.0-alpha12'
+# Information added by Drupal.org packaging script on 2021-03-17
+version: '8.x-1.0-alpha13'
 project: 'social_pwa'
-datestamp: 1614182452
+datestamp: 1616002088
