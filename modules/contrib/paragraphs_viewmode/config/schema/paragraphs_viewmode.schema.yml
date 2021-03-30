@@ -11,3 +11,6 @@ paragraphs.behavior.settings.paragraphs_viewmode_behavior:
       sequence:
         type: text
         label: 'View Mode'
+    override_default:
+      type: text
+      label: 'Select default view mode'

@@ -1,0 +1,30 @@
+name: Intercept Core
+description: 'Provides core components required by other features.'
+type: module
+core: 8.x
+dependencies:
+  - address:address
+  - consumer_image_styles:consumer_image_styles
+  - drupal:field
+  - drupal:file
+  - drupal:jsonapi
+  - drupal:media
+  - drupal:node
+  - drupal:options
+  - drupal:path
+  - drupal:taxonomy
+  - drupal:text
+  - drupal:user
+  - drupal:views
+  - entity:entity
+  - externalauth:externalauth
+  - focal_point:focal_point
+  - intercept:intercept
+  - intercept:intercept_ils
+  - profile:profile
+package: 'Intercept'
+
+# Information added by Drupal.org packaging script on 2021-03-25
+version: '8.x-1.0-alpha31'
+project: 'intercept'
+datestamp: 1616691772

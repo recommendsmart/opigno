@@ -123,7 +123,7 @@ class ParagraphsViewmodeBehavior extends ParagraphsBehaviorBase implements Parag
     $override_default = $form_state->getValue('override_default');
 
     $this->configuration['override_mode'] = $override_mode;
-    $this->configuration['override_available'] = $override_available;
+    $this->configuration['override_available'] = array_filter($override_available);
     $this->configuration['override_default'] = $override_default;
 
     parent::submitConfigurationForm($form, $form_state);

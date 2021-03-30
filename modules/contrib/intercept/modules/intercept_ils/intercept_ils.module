@@ -1,0 +1,84 @@
+<?php
+
+/**
+ * @file
+ * Defines common functionality for intercept_ils.
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+/**
+ * Implements hook_help().
+ */
+function intercept_ils_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the intercept_ils module.
+    case 'help.page.intercept_ils':
+      $output = '';
+      $output .= '<h3>' . new TranslatableMarkup('About') . '</h3>';
+      $output .= '<p>' . new TranslatableMarkup('ILS integration for the Intercept library') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_entity_bundle_field_info().
+ */
+function intercept_ils_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+  $fields = [];
+
+  if ($entity_type->id() == 'node' && $bundle == 'location') {
+    $fields['ils'] = BaseFieldDefinition::create('ils_mapping')
+      ->setLabel(new TranslatableMarkup('ILS Mapping'))
+      ->setComputed(TRUE)
+      ->setCardinality(1)
+      ->setDefaultValue(FALSE);
+  }
+
+  if ($entity_type->id() == 'user') {
+    $fields['ils'] = BaseFieldDefinition::create('ils_mapping')
+      ->setLabel(new TranslatableMarkup('ILS Mapping'))
+      ->setComputed(TRUE)
+      ->setCardinality(1)
+      ->setDefaultValue(FALSE);
+  }
+
+  return $fields;
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function intercept_ils_page_attachments(array &$attachments) {
+  $current_user = \Drupal::currentUser();
+  $authmap = \Drupal::service('externalauth.authmap');
+  $plugin_id = \Drupal::config('intercept_ils.settings')->get('intercept_ils_plugin', '');
+  if (!empty($plugin_id) && $authdata = $authmap->getAuthdata($current_user->id(), $plugin_id)) {
+    $authdata_data = unserialize($authdata['data']);
+    if (isset($authdata_data)) {
+      $attachments['#attached']['drupalSettings']['intercept']['user']['telephone'] = $authdata_data->PhoneNumber;
+      $attachments['#attached']['drupalSettings']['intercept']['user']['email'] = $authdata_data->EmailAddress;
+    }
+  }
+
+  $attachments['#cache']['contexts'][] = 'user';
+  $attachments['#cache']['tags'][] = 'user:' . $current_user->id();
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function intercept_ils_entity_extra_field_info() {
+  $extra['profile']['customer']['form']['pin'] = [
+    'label' => new TranslatableMarkup('PIN'),
+    'description' => new TranslatableMarkup('ILS PIN'),
+    'visible' => FALSE,
+  ];
+
+  return $extra;
+}

@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.room_reservation.field_user
+  module:
+    - intercept_room_reservation
+id: room_reservation.room_reservation.field_user
+field_name: field_user
+entity_type: room_reservation
+bundle: room_reservation
+label: 'Reserved for'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: views
+  handler_settings:
+    view:
+      view_name: intercept_users
+      display_name: entity_reference
+      arguments: {  }
+field_type: entity_reference
