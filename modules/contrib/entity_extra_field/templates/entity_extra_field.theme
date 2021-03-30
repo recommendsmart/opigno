@@ -14,6 +14,7 @@ function template_preprocess_entity_extra_field(&$variables) {
   $element = $variables['element'];
   $extra_field = $element['#field'];
 
+  $variables['label'] = $element['label'];
   $variables['content'] = $element['content'];
   $variables['attributes']['class'][] = 'extra-field';
 
@@ -24,6 +25,7 @@ function template_preprocess_entity_extra_field(&$variables) {
     $variables['attributes']['class'][] = 'extra-field--' . $field_class_name;
     $variables['attributes']['class'][] = 'extra-field--type-' . $extra_field->getFieldTypePluginId();
   }
+  $variables['title_attributes']['class'][] = 'extra-field--label';
   $variables['content_attributes']['class'][] = 'extra-field--content';
 }
 

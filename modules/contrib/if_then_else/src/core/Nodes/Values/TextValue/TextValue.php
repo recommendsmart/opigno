@@ -4,7 +4,6 @@ namespace Drupal\if_then_else\core\Nodes\Values\TextValue;
 
 use Drupal\if_then_else\core\Nodes\Values\Value;
 use Drupal\if_then_else\Event\NodeSubscriptionEvent;
-use Drupal\Component\Utility\Html;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
@@ -94,7 +93,7 @@ class TextValue extends Value {
       $text = str_replace('{{input5}}', $this->inputs['input5'], $text);
     }
 
-    $this->outputs['text'] = Html::escape($text);
+    $this->outputs['text'] = $text;
   }
 
 }

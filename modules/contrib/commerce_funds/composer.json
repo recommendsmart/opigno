@@ -19,6 +19,6 @@
   "license": "GPL-2.0+",
   "minimum-stability": "dev",
   "require": {
-    "drupal/commerce": "^2.0"
+    "drupal/commerce": "^2.16"
   }
 }

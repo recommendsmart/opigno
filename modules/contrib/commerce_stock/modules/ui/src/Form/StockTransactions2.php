@@ -63,6 +63,16 @@ class StockTransactions2 extends FormBase {
   }
 
   /**
+   * Returns the page title.
+   */
+  public function getTitle() {
+    $variation_id = $this->request->query->get('commerce_product_v_id');
+    $product_variation = $this->productVariationStorage->load($variation_id);
+
+    return $this->t('Create stock transaction for :product_variation', [':product_variation' => $product_variation->label()]);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getFormId() {
@@ -221,6 +231,7 @@ class StockTransactions2 extends FormBase {
     elseif ($transaction_type == 'sellStock') {
       $order_id = $form_state->getValue('order');
       $user_id = $form_state->getValue('user');
+      $this->stockServiceManager->sellStock($product_variation, $source_location, $source_zone, $qty, NULL, $currency_code = NULL, $order_id, $user_id, $transaction_note);
       $this->messenger()->addMessage($this->t('@qty has been removed from "@variation_title" using a "Sell Stock" transaction.', ['@qty' => $qty, '@variation_title' => $product_variation->getTitle()]));
     }
     elseif ($transaction_type == 'returnStock') {

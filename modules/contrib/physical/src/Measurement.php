@@ -40,9 +40,9 @@ abstract class Measurement {
    */
   public function __construct($number, $unit) {
     Calculator::assertNumberFormat($number);
-    /** @var \Drupal\physical\UnitInterface $units_class */
-    $units_class = MeasurementType::getUnitClass($this->type);
-    $units_class::assertExists($unit);
+    /** @var \Drupal\physical\UnitInterface $unit_class */
+    $unit_class = MeasurementType::getUnitClass($this->type);
+    $unit_class::assertExists($unit);
 
     $this->number = (string) $number;
     $this->unit = $unit;
@@ -98,11 +98,11 @@ abstract class Measurement {
    *   The resulting length.
    */
   public function convert($new_unit) {
-    /** @var \Drupal\physical\UnitInterface $units_class */
-    $units_class = MeasurementType::getUnitClass($this->type);
+    /** @var \Drupal\physical\UnitInterface $unit_class */
+    $unit_class = MeasurementType::getUnitClass($this->type);
     // Convert the number to the base unit, then from there to the new unit.
-    $base_number = Calculator::multiply($this->number, $units_class::getBaseFactor($this->unit));
-    $new_number = Calculator::divide($base_number, $units_class::getBaseFactor($new_unit));
+    $base_number = Calculator::multiply($this->number, $unit_class::getBaseFactor($this->unit));
+    $new_number = Calculator::divide($base_number, $unit_class::getBaseFactor($new_unit));
 
     return new static($new_number, $new_unit);
   }

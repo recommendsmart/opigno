@@ -9,6 +9,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Routing\RouteMatchInterface;
+Use \Drupal\Core\File\FileSystemInterface;
 
 /**
  * Implements hook_form_alter().
@@ -22,7 +23,9 @@ function easy_install_form_alter(&$form, FormStateInterface $form_state, $form_i
     foreach ($modules as $module) {
       $install_dir = drupal_get_path('module', $module) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
       $optional_dir = drupal_get_path('module', $module) . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY;
-      $install_details = file_scan_directory($install_dir, "/\.(yml)$/");
+      if(file_exists($install_dir)) {
+          $install_details = \Drupal::service('file_system')->scanDirectory($install_dir, "/\.(yml)$/");
+      }    
       if (!empty($install_details)) {
         $form['modules_config'][$module] = [
           '#type' => 'details',
@@ -32,7 +35,9 @@ function easy_install_form_alter(&$form, FormStateInterface $form_state, $form_i
           '#validated' => TRUE,
           '#open' => TRUE,
         ];
-        $install_details = file_scan_directory($install_dir, "/\.(yml)$/");
+        if(file_exists($install_dir)) {
+            $install_details = \Drupal::service('file_system')->scanDirectory($install_dir, "/\.(yml)$/");
+        }
         $ins_options = [];
         foreach ($install_details as $config_value) {
           $ins_options[$config_value->name] = $config_value->name;
@@ -46,7 +51,9 @@ function easy_install_form_alter(&$form, FormStateInterface $form_state, $form_i
             '#validated' => TRUE,
           ];
         }
-        $optional_details = file_scan_directory($optional_dir, "/\.(yml)$/");
+        if(file_exists($optional_dir)) {
+            $optional_details = \Drupal::service('file_system')->scanDirectory($optional_dir, "/\.(yml)$/");
+        }    
         $opt_options = [];
         foreach ($optional_details as $config_value) {
           $opt_options[$config_value->name] = $config_value->name;
@@ -157,11 +164,11 @@ function easy_install_form_submit(array $form, FormStateInterface $form_state) {
     }
   }
   if ($config_deteted) {
-    drupal_set_message(t('The selected modules have been uninstalled and configurations
+    \Drupal::messenger()->addMessage(t('The selected modules have been uninstalled and configurations
          deleted'));
   }
   else {
-    drupal_set_message(t('The selected modules have been uninstalled'));
+    \Drupal::messenger()->addMessage(t('The selected modules have been uninstalled'));
   }
   $redirect = new Url('system.modules_uninstall');
   $form_state->setRedirectUrl($redirect);
@@ -183,9 +190,9 @@ function easy_install_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dl>';
       $output .= '<dt>' . t('Configuring Easy Install') . '</dt>';
       $output .= '<dd>' . t('There is no configuration for Easy Install, you can use the module at below listed pages') . '</dd>';
-      $output .= '<dd>' . t('On the <a href=":easy_install-purge">Purge configuration page</a>, you can purge the configuration of uninstalled modules.', [':easy_install-purge' => \Drupal::url('easy_install.purge_configurations')]) . '</dd>';
+      $output .= '<dd>' . t('On the <a href=":easy_install-purge">Purge configuration page</a>, you can purge the configuration of uninstalled modules.', [':easy_install-purge' => Url::fromRoute('easy_install.purge_configurations')]) . '</dd>';
 
-      $output .= '<dd>' . t('On the <a href=":easy_install-uninstall">Module Uninstall page </a>, you can uninstall the modules with delete configurations option.', [':easy_install-uninstall' => \Drupal::url('system.modules_uninstall')]) . '</dd>';
+      $output .= '<dd>' . t('On the <a href=":easy_install-uninstall">Module Uninstall page </a>, you can uninstall the modules with delete configurations option.', [':easy_install-uninstall' => Url::fromRoute('system.modules_uninstall')]) . '</dd>';
       $output .= '<dt>' . t('Disabling Easy Install') . '</dt>';
       $output .= '<dd>' . t('To disable Easy Install, the recommended method is to uninstall the module.') . '</dd>';
       $output .= '</dl>';

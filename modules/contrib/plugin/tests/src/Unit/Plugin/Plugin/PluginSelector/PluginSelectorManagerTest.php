@@ -55,7 +55,7 @@ class PluginSelectorManagerTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     $this->discovery = $this->createMock(DiscoveryInterface::class);
 
     $this->factory = $this->createMock(FactoryInterface::class);
@@ -90,7 +90,7 @@ class PluginSelectorManagerTest extends UnitTestCase {
   public function testGetFallbackPluginId() {
     $plugin_id = $this->randomMachineName();
     $plugin_configuration = [$this->randomMachineName()];
-    $this->assertInternalType('string', $this->sut->getFallbackPluginId($plugin_id, $plugin_configuration));
+    $this->assertIsString($this->sut->getFallbackPluginId($plugin_id, $plugin_configuration));
   }
 
   /**

@@ -5,7 +5,6 @@ namespace Drupal\Tests\commerce_invoice\Kernel\Entity;
 use Drupal\commerce_order\Adjustment;
 use Drupal\commerce_invoice\Entity\InvoiceItem;
 use Drupal\commerce_order\Entity\OrderItem;
-use Drupal\commerce_order\Entity\OrderItemType;
 use Drupal\commerce_price\Price;
 use Drupal\Tests\commerce_invoice\Kernel\InvoiceKernelTestBase;
 
@@ -120,11 +119,6 @@ class InvoiceItemTest extends InvoiceKernelTestBase {
     $invoice_item = InvoiceItem::create([
       'type' => 'commerce_product_variation',
     ]);
-    OrderItemType::create([
-      'id' => 'test',
-      'label' => 'Test',
-      'orderType' => 'default',
-    ])->save();
     $order_item = OrderItem::create([
       'type' => 'test',
       'quantity' => 3,

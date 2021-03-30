@@ -20,20 +20,12 @@ class GroupDeleteTest extends SubgroupKernelTestBase {
   protected $subgroupHandler;
 
   /**
-   * The group storage to use in testing.
-   *
-   * @var \Drupal\Core\Entity\ContentEntityStorageInterface
-   */
-  protected $storage;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
 
     $this->subgroupHandler = $this->entityTypeManager->getHandler('group', 'subgroup');
-    $this->storage = $this->entityTypeManager->getStorage('group');
 
     // Set up two group types to form a tree.
     $foo = $this->createGroupType(['id' => 'foo']);
@@ -82,10 +74,10 @@ class GroupDeleteTest extends SubgroupKernelTestBase {
   public function testLeafWithDescendantsDeleteAccess() {
     $parent = $this->createGroup(['type' => 'foo']);
     $child = $this->createGroup(['type' => 'bar']);
-    $this->subgroupHandler->initTree($parent);
-    $this->subgroupHandler->addLeaf($parent, $child);
+    $parent->addContent($child, 'subgroup:bar');
 
-    $access = $parent->access('delete', NULL, TRUE);
+    // Reload the parent from cache so that it knows it's a leaf.
+    $access = $this->groupStorage->load($parent->id())->access('delete', NULL, TRUE);
     $this->assertInstanceOf(AccessResultForbidden::class, $access, 'Group delete access check returned an AccessResultForbidden.');
     /** @var \Drupal\Core\Access\AccessResultForbidden $access */
     $this->assertEquals('Cannot delete a leaf that still has descendants.', $access->getReason());
@@ -97,7 +89,7 @@ class GroupDeleteTest extends SubgroupKernelTestBase {
   public function testRegularDelete() {
     $group = $this->createGroup(['type' => $this->createGroupType()->id()]);
     $group->delete();
-    $this->assertNull($this->storage->load($group->id()), 'Group was deleted just fine.');
+    $this->assertNull($this->groupStorage->load($group->id()), 'Group was deleted just fine.');
   }
 
   /**
@@ -106,7 +98,7 @@ class GroupDeleteTest extends SubgroupKernelTestBase {
   public function testNoLeafDelete() {
     $group = $this->createGroup(['type' => 'foo']);
     $group->delete();
-    $this->assertNull($this->storage->load($group->id()), 'Group was deleted just fine.');
+    $this->assertNull($this->groupStorage->load($group->id()), 'Group was deleted just fine.');
   }
 
   /**
@@ -116,7 +108,7 @@ class GroupDeleteTest extends SubgroupKernelTestBase {
     $group = $this->createGroup(['type' => 'foo']);
     $this->subgroupHandler->initTree($group);
     $group->delete();
-    $this->assertNull($this->storage->load($group->id()), 'Group was deleted just fine.');
+    $this->assertNull($this->groupStorage->load($group->id()), 'Group was deleted just fine.');
   }
 
   /**
@@ -125,6 +117,10 @@ class GroupDeleteTest extends SubgroupKernelTestBase {
   public function testLeafWithDescendantsDelete() {
     $parent = $this->createGroup(['type' => 'foo']);
     $child = $this->createGroup(['type' => 'bar']);
+
+    // We deliberately do not use $parent->addContent() here because that would
+    // create a GroupContent entity for the relation and we want to test that
+    // the handler also has protection against deleting leaves with descendants.
     $this->subgroupHandler->initTree($parent);
     $this->subgroupHandler->addLeaf($parent, $child);
 

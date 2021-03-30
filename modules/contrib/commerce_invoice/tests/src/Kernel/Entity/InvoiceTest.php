@@ -7,6 +7,7 @@ use Drupal\commerce_order\Adjustment;
 use Drupal\commerce_invoice\Entity\InvoiceItem;
 use Drupal\commerce_order\Entity\Order;
 use Drupal\commerce_price\Price;
+use Drupal\file\Entity\File;
 use Drupal\profile\Entity\Profile;
 use Drupal\Tests\commerce_invoice\Kernel\InvoiceKernelTestBase;
 use Drupal\user\UserInterface;
@@ -89,6 +90,8 @@ class InvoiceTest extends InvoiceKernelTestBase {
    * @covers ::setInvoiceDateTime
    * @covers ::getDueDateTime
    * @covers ::setDueDateTime
+   * @covers ::getFile
+   * @covers ::setFile
    */
   public function testInvoice() {
     /** @var \Drupal\profile\Entity\ProfileInterface $profile */
@@ -262,6 +265,16 @@ class InvoiceTest extends InvoiceKernelTestBase {
 
     $invoice->setDueDateTime(635879950);
     $this->assertEquals(635879950, $invoice->getDueDateTime());
+
+    $this->assertNull($invoice->getFile());
+    $file = File::create([
+      'uri' => 'public://invoice.pdf',
+      'filename' => 'invoice.pdf',
+    ]);
+    $file->save();
+    $file = $this->reloadEntity($file);
+    $invoice->setFile($file);
+    $this->assertEquals($invoice->getFile(), $file);
   }
 
   /**

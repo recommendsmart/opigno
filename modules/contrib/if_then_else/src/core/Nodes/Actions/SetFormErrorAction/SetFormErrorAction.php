@@ -45,7 +45,7 @@ class SetFormErrorAction extends Action {
   public function registerNode(NodeSubscriptionEvent $event) {
     // Fetch all fields for config entity bundles.
     $form_entity_info = $this->ifthenelseUtilities->getContentEntitiesAndBundles();
-    $form_fields = $this->ifthenelseUtilities->getFieldsByEntityBundleId($form_entity_info);
+    $form_fields = $this->ifthenelseUtilities->getFieldsByEntityBundleId($form_entity_info ,'all');
 
     $event->nodes[static::getName()] = [
       'label' => $this->t('Set Form Error'),

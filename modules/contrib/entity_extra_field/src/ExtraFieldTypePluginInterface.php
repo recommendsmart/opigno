@@ -2,7 +2,8 @@
 
 namespace Drupal\entity_extra_field;
 
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Plugin\ConfigurableInterface;
+use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -11,7 +12,7 @@ use Drupal\Core\Plugin\PluginFormInterface;
 /**
  * Define extra field type plugin interface.
  */
-interface ExtraFieldTypePluginInterface extends PluginFormInterface, ContainerFactoryPluginInterface, ConfigurablePluginInterface {
+interface ExtraFieldTypePluginInterface extends PluginFormInterface, ContainerFactoryPluginInterface, ConfigurableInterface, DependentPluginInterface {
 
   /**
    * Display the extra field plugin label.

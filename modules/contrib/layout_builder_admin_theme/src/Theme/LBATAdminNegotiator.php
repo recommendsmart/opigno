@@ -5,6 +5,8 @@ namespace Drupal\layout_builder_admin_theme\Theme;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Theme\ThemeNegotiatorInterface;
+use Drupal\layout_builder\Form\RevertOverridesForm;
+use Drupal\layout_builder\Form\DiscardLayoutChangesForm;
 
 /**
  * Forces the admin theme when using layout builder.
@@ -45,9 +47,20 @@ class LBATAdminNegotiator implements ThemeNegotiatorInterface {
     }
 
     // Get and check the form.
-    $form = $route->getDefault('_entity_form');
+    $form = $route->getDefault('_entity_form') ?? $route->getDefault('_form');
     if (empty($form)) {
       return FALSE;
+    }
+
+    $form_class = ltrim($form, '\\');
+    // If this is the Layout Builder revert changes form, apply the admin theme.
+    if ($form_class === RevertOverridesForm::class) {
+      return TRUE;
+    }
+    // If this is the Layout Builder discard changes form, apply the admin
+    // theme.
+    if ($form_class === DiscardLayoutChangesForm::class) {
+      return TRUE;
     }
 
     // If form ends with ".layout_builder" apply the admin theme.

@@ -17,6 +17,11 @@ class ViewsFilterPluginIdMultiValueBaseFieldTest extends BrowserTestBase {
   public static $modules = ['plugin', 'plugin_test_helper', 'plugin_test_mvpbf', 'system', 'views'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the integration.
    */
   public function testIntegration() {

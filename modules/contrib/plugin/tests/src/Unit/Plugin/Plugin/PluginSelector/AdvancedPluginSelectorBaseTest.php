@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\plugin\Plugin\Plugin\PluginSelector\AdvancedPluginSelectorBase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -37,7 +38,7 @@ class AdvancedPluginSelectorBaseTest extends PluginSelectorBaseTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->stringTranslation = $this->getStringTranslationStub();
@@ -216,14 +217,14 @@ class AdvancedPluginSelectorBaseTest extends PluginSelectorBaseTestBase {
   /**
    * Configures a CacheableDependencyInterface mock.
    *
-   * @param \PHPUnit_Framework_MockObject_MockObject $mock
+   * @param \PHPUnit\Framework\MockObject\MockObject $mock
    *   The mock to configure. It must also implement
    *   \Drupal\Core\Cache\CacheableDependencyInterface.
    * @param string[] $contexts
    * @param int $max_age
    * @Param string[] $tags
    */
-  protected function configureMockCacheableDependency(\PHPUnit_Framework_MockObject_MockObject $mock, array $contexts, $max_age, array $tags) {
+  protected function configureMockCacheableDependency(MockObject $mock, array $contexts, $max_age, array $tags) {
     $mock->expects($this->atLeastOnce())
       ->method('getCacheContexts')
       ->willReturn($contexts);
@@ -674,7 +675,8 @@ class AdvancedPluginSelectorBaseTest extends PluginSelectorBaseTestBase {
    * @covers ::defaultConfiguration
    */
   public function testDefaultConfiguration() {
-    $this->assertInternalType('array', $this->sut->defaultConfiguration());
+    $this->assertIsArray($this->sut->defaultConfiguration());
+    $this->assertIsArray($this->sut->defaultConfiguration());
   }
 
   /**
@@ -687,7 +689,7 @@ class AdvancedPluginSelectorBaseTest extends PluginSelectorBaseTestBase {
     $form_state = new FormState();
     $configuration_form = $form['plugin'];
     $configuration_form_state = SubformState::createForSubform($configuration_form, $form, $form_state);
-    $this->assertInternalType('array', $this->sut->buildConfigurationForm($configuration_form, $configuration_form_state));
+    $this->assertIsArray($this->sut->buildConfigurationForm($configuration_form, $configuration_form_state));
   }
 
   /**

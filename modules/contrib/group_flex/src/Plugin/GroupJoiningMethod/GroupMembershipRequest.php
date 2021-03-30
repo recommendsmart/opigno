@@ -24,7 +24,7 @@ class GroupMembershipRequest extends GroupJoiningMethodBase {
   /**
    * {@inheritdoc}
    */
-  public function enableGroupType(GroupTypeInterface $groupType): void {
+  public function enableGroupType(GroupTypeInterface $groupType) {
     // Only enable plugin when it doesn't exist yet.
     $contentEnablers = $this->groupContentEnabler->getInstalledIds($groupType);
     if (!in_array('group_membership_request', $contentEnablers)) {
@@ -43,7 +43,7 @@ class GroupMembershipRequest extends GroupJoiningMethodBase {
   /**
    * {@inheritdoc}
    */
-  public function disableGroupType(GroupTypeInterface $groupType): void {
+  public function disableGroupType(GroupTypeInterface $groupType) {
     $mappedPerm = [$groupType->getOutsiderRoleId() => ['request group membership' => FALSE]];
     $this->saveMappedPerm($mappedPerm, $groupType);
   }

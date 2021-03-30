@@ -2,21 +2,23 @@
 
 namespace Drupal\commerce_funds\Form;
 
-use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\user\UserDataInterface;
 use Drupal\commerce_funds\Entity\Transaction;
+use Drupal\commerce_funds\FeesManagerInterface;
+use Drupal\commerce_funds\TransactionManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Form to withdraw mmoney on user account.
  */
-class FundsWithdraw extends ConfigFormBase {
+class FundsWithdraw extends FormBase {
 
   /**
    * The current account.
@@ -47,13 +49,29 @@ class FundsWithdraw extends ConfigFormBase {
   protected $messenger;
 
   /**
+   * The fees manager.
+   *
+   * @var \Drupal\commerce_funds\FeesManagerInterface
+   */
+  protected $feesManager;
+
+  /**
+   * The transaction manager.
+   *
+   * @var \Drupal\commerce_funds\TransactionManagerInterface
+   */
+  protected $transactionManager;
+
+  /**
    * Class constructor.
    */
-  public function __construct(AccountProxy $current_user, EntityTypeManagerInterface $entity_type_manager, UserDataInterface $user_data, MessengerInterface $messenger) {
+  public function __construct(AccountProxy $current_user, EntityTypeManagerInterface $entity_type_manager, UserDataInterface $user_data, MessengerInterface $messenger, FeesManagerInterface $fees_manager, TransactionManagerInterface $transaction_manager) {
     $this->currentUser = $current_user;
     $this->entityTypeManager = $entity_type_manager;
     $this->userData = $user_data;
     $this->messenger = $messenger;
+    $this->feesManager = $fees_manager;
+    $this->transactionManager = $transaction_manager;
   }
 
   /**
@@ -64,7 +82,9 @@ class FundsWithdraw extends ConfigFormBase {
       $container->get('current_user'),
       $container->get('entity_type.manager'),
       $container->get('user.data'),
-      $container->get('messenger')
+      $container->get('messenger'),
+      $container->get('commerce_funds.fees_manager'),
+      $container->get('commerce_funds.transaction_manager')
     );
   }
 
@@ -90,15 +110,13 @@ class FundsWithdraw extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $methods = $this->config('commerce_funds.settings')->get('withdrawal_methods');
+    $methods = array_filter($this->config('commerce_funds.settings')->get('withdrawal_methods'));
     if (!$methods) {
       throw new NotFoundHttpException();
     }
-    foreach ($methods['methods'] as $key => $method) {
-      if (!is_numeric($method)) {
-        $fee = \Drupal::service('commerce_funds.fees_manager')->printPaymentGatewayFees($key, $this->t('unit(s)'), 'withdraw')?:'';
-        $enabled_method['methods'][$key] = $method . ' ' . $fee;
-      }
+    foreach ($methods as $key => $method) {
+      $fee = $this->feesManager->printPaymentGatewayFees($key, $this->t('unit(s)'), 'withdraw') ?: '';
+      $enabled_method['methods'][$key] = ucfirst($method) . ' ' . $fee;
     }
 
     $currencies = $this->entityTypeManager->getStorage('commerce_currency')->loadMultiple();
@@ -110,10 +128,11 @@ class FundsWithdraw extends ConfigFormBase {
 
     $form['amount'] = [
       '#type' => 'number',
-      '#min' => 0,
+      '#min' => 0.0,
       '#title' => $this->t('Amount to withdraw'),
       '#description' => $this->t('Enter the amount you want to withdraw.'),
       '#default_value' => 0,
+      '#step' => 0.01,
       '#size' => 30,
       '#maxlength' => 128,
       '#required' => TRUE,
@@ -128,7 +147,7 @@ class FundsWithdraw extends ConfigFormBase {
 
     $form['methods'] = [
       '#type' => 'radios',
-      '#options' => $enabled_method['methods'],
+      '#options' => str_replace('-', ' ', $enabled_method['methods']),
       '#title' => $this->t('Select your preferred withdrawal method.'),
       '#required' => TRUE,
     ];
@@ -146,13 +165,13 @@ class FundsWithdraw extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $method = $form_state->getValue('methods');
+    $method = str_replace('-', '_', $form_state->getValue('methods'));
     $amount = $form_state->getValue('amount');
     $currency = $form_state->getValue('currency');
-    $fee_applied = \Drupal::service('commerce_funds.fees_manager')->calculateTransactionFee($amount, $currency, 'withdraw');
+    $fee_applied = $this->feesManager->calculateTransactionFee($amount, $currency, 'withdraw');
 
     $issuer = $this->currentUser;
-    $issuer_balance = \Drupal::service('commerce_funds.transaction_manager')->loadAccountBalance($issuer->getAccount(), $currency);
+    $issuer_balance = $this->transactionManager->loadAccountBalance($issuer->getAccount(), $currency);
     $currency_balance = isset($issuer_balance[$currency]) ? $issuer_balance[$currency] : 0;
     $issuer_data = $this->userData->get('commerce_funds', $issuer->id(), $method);
 
@@ -170,10 +189,16 @@ class FundsWithdraw extends ConfigFormBase {
         '@fee' => $fee_applied['fee'] / 100,
       ]));
     }
-
     if (!$issuer_data) {
       $form_state->setErrorByName('methods', $this->t('Please <a href="@enter_details_link">enter your details</a> for this withdrawal method first.', [
-        '@enter_details_link' => Url::fromRoute('commerce_funds.withdrawal_methods')->toString() . '/' . $method,
+        '@enter_details_link' => Url::fromRoute('commerce_funds.withdrawal_methods.edit', [
+          'user' => $this->currentUser->id(),
+          'method' => $method,
+        ], [
+          'query' => [
+            'destination' => $this->getRequest()->getRequestUri(),
+          ],
+        ])->toString(),
       ]));
     }
 
@@ -187,7 +212,7 @@ class FundsWithdraw extends ConfigFormBase {
     $method = $form_state->getValue('methods');
     $amount = $form_state->getValue('amount');
     $currency = $form_state->getValue('currency');
-    $fee_applied = \Drupal::service('commerce_funds.fees_manager')->calculateTransactionFee($amount, $currency, 'withdraw_' . $method);
+    $fee_applied = $this->feesManager->calculateTransactionFee($amount, $currency, 'withdraw_' . $method);
 
     $transaction = Transaction::create([
       'issuer' => $issuer->id(),
@@ -203,7 +228,7 @@ class FundsWithdraw extends ConfigFormBase {
     $transaction->save();
 
     // Set a confirmation message to user.
-    $confirmation_msg = $this->t('Your Withdrawal Request has been sent and will be processed in due order.');
+    $confirmation_msg = $this->t('Your Withdrawal Request has been sent and will be processed in due time.');
     $this->messenger->addMessage($confirmation_msg, 'status');
     if ($fee_applied['fee']) {
       $fee_msg = $this->t('An extra commission of @fee @currency will be apllied to your withraw.', [

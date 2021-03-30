@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @FieldFormatter(
  *   id = "commerce_invoice_item_table",
- *   label = @Translation("Order item table"),
+ *   label = @Translation("Invoice item table"),
  *   field_types = {
  *     "entity_reference",
  *   },
@@ -74,7 +74,7 @@ class InvoiceItemTable extends FormatterBase implements ContainerFactoryPluginIn
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    /** @var \Drupal\commerce_invoice\Entity\InvoiceInterface $order */
+    /** @var \Drupal\commerce_invoice\Entity\InvoiceInterface $invoice */
     $invoice = $items->getEntity();
     $invoice = $this->entityRepository->getTranslationFromContext($invoice, $langcode);
     $elements = [];

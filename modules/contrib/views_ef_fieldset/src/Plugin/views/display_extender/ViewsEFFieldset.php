@@ -7,6 +7,9 @@ namespace Drupal\views_ef_fieldset\Plugin\views\display_extender;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\display_extender\DefaultDisplayExtender;
 use Drupal\views_ef_fieldset\ViewsEFFieldsetData;
+use Drupal\Core\Render\Renderer;
+use Drupal\Core\Render\RendererInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Views EF Fieldset display extender plugin.
@@ -23,7 +26,43 @@ use Drupal\views_ef_fieldset\ViewsEFFieldsetData;
 class ViewsEFFieldset extends DefaultDisplayExtender {
 
   /**
-   * {@inheritdoc}
+   * The render object.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
+   * The constructor.
+   *
+   * @param array $configuration
+   *   Site configuration.
+   * @param string $plugin_id
+   *   Plugin id.
+   * @param mixed $plugin_definition
+   *   Plugin definition.
+   * @param \Drupal\Core\Render\RendererInterface $render
+   *   The render.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RendererInterface $render) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->renderer = $render;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('renderer')
+    );
+  }
+
+  /**
+   * {@inheritDoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
@@ -227,7 +266,7 @@ class ViewsEFFieldset extends DefaultDisplayExtender {
       $table[$item['id']] = [
         '#item' => $item,
         'item' => [
-          '#prefix' => !empty($indentation) ? drupal_render($indentation) : '',
+          '#prefix' => !empty($indentation) ? $this->renderer->render($indentation) : '',
           '#markup' => $title,
           '#wrapper_attributes' => [
             'colspan' => ($item['type'] === 'container') ? '' : ['colspan' => 5],

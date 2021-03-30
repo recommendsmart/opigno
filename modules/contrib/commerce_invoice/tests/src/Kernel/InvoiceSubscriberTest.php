@@ -6,7 +6,6 @@ use Drupal\commerce_invoice\Entity\Invoice;
 use Drupal\commerce_invoice\Entity\InvoiceItem;
 use Drupal\commerce_order\Entity\Order;
 use Drupal\commerce_order\Entity\OrderItem;
-use Drupal\commerce_order\Entity\OrderItemType;
 use Drupal\commerce_price\Price;
 
 /**
@@ -49,12 +48,6 @@ class InvoiceSubscriberTest extends InvoiceKernelTestBase {
     $this->installEntitySchema('commerce_order');
     $user = $this->createUser();
     $this->user = $this->reloadEntity($user);
-
-    OrderItemType::create([
-      'id' => 'test',
-      'label' => 'Test',
-      'orderType' => 'default',
-    ])->save();
 
     $order_item = OrderItem::create([
       'type' => 'test',

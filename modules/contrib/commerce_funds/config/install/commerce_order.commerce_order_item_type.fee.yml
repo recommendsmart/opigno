@@ -12,4 +12,3 @@ purchasableEntityType: commerce_product_variation
 orderType: deposit
 traits: {  }
 locked: true
-

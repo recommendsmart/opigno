@@ -24,7 +24,7 @@ class JoinButton extends GroupJoiningMethodBase {
   /**
    * {@inheritdoc}
    */
-  public function enableGroupType(GroupTypeInterface $groupType): void {
+  public function enableGroupType(GroupTypeInterface $groupType) {
     $mappedPerm = [$groupType->getOutsiderRoleId() => ['join group' => TRUE]];
     $this->saveMappedPerm($mappedPerm, $groupType);
   }
@@ -32,7 +32,7 @@ class JoinButton extends GroupJoiningMethodBase {
   /**
    * {@inheritdoc}
    */
-  public function disableGroupType(GroupTypeInterface $groupType): void {
+  public function disableGroupType(GroupTypeInterface $groupType) {
     $mappedPerm = [$groupType->getOutsiderRoleId() => ['join group' => FALSE]];
     $this->saveMappedPerm($mappedPerm, $groupType);
   }

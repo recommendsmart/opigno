@@ -3,8 +3,8 @@
 namespace Drupal\Tests\commerce_shipping\Kernel\Entity;
 
 use Drupal\commerce_order\Adjustment;
-use Drupal\commerce_price\Price;
 use Drupal\commerce_order\Entity\Order;
+use Drupal\commerce_price\Price;
 use Drupal\commerce_shipping\Entity\Shipment;
 use Drupal\commerce_shipping\Entity\ShipmentType;
 use Drupal\commerce_shipping\Entity\ShippingMethod;
@@ -26,15 +26,6 @@ use Drupal\Tests\commerce_shipping\Kernel\ShippingKernelTestBase;
 class ShipmentTest extends ShippingKernelTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-
-    $this->installEntitySchema('commerce_shipping_method');
-  }
-
-  /**
    * @covers ::getOrder
    * @covers ::getOrderId
    * @covers ::getPackageType
@@ -53,11 +44,19 @@ class ShipmentTest extends ShippingKernelTestBase {
    * @covers ::hasItems
    * @covers ::addItem
    * @covers ::removeItem
+   * @covers ::getTotalQuantity
    * @covers ::getTotalDeclaredValue
    * @covers ::getWeight
    * @covers ::setWeight
+   * @covers ::getOriginalAmount
+   * @covers ::setOriginalAmount
    * @covers ::getAmount
    * @covers ::setAmount
+   * @covers ::getAdjustments
+   * @covers ::setAdjustments
+   * @covers ::addAdjustment
+   * @covers ::removeAdjustment
+   * @covers ::getAdjustedAmount
    * @covers ::getTrackingCode
    * @covers ::setTrackingCode
    * @covers ::getState
@@ -153,6 +152,7 @@ class ShipmentTest extends ShippingKernelTestBase {
     $shipment->setItems($items);
     $this->assertEquals($items, $shipment->getItems());
 
+    $this->assertEquals('4.00', $shipment->getTotalQuantity());
     $this->assertEquals(new Price('60', 'USD'), $shipment->getTotalDeclaredValue());
 
     $calculated_weight = new Weight('70', 'kg');
@@ -161,9 +161,35 @@ class ShipmentTest extends ShippingKernelTestBase {
     $shipment->setWeight($new_weight);
     $this->assertEquals($new_weight, $shipment->getWeight());
 
+    $original_amount = new Price('15.00', 'USD');
+    $shipment->setOriginalAmount($original_amount);
+    $this->assertEquals($original_amount, $shipment->getOriginalAmount());
+
     $amount = new Price('10.00', 'USD');
     $shipment->setAmount($amount);
     $this->assertEquals($amount, $shipment->getAmount());
+
+    $adjustments = [];
+    $adjustments[] = new Adjustment([
+      'type' => 'custom',
+      'label' => '10% off',
+      'amount' => new Price('-1.00', 'USD'),
+    ]);
+    $adjustments[] = new Adjustment([
+      'type' => 'fee',
+      'label' => 'Random fee',
+      'amount' => new Price('2.00', 'USD'),
+    ]);
+    $shipment->addAdjustment($adjustments[0]);
+    $shipment->addAdjustment($adjustments[1]);
+    $this->assertEquals($adjustments, $shipment->getAdjustments());
+    $shipment->removeAdjustment($adjustments[0]);
+    $this->assertEquals([$adjustments[1]], $shipment->getAdjustments());
+    $shipment->setAdjustments($adjustments);
+    $this->assertEquals($adjustments, $shipment->getAdjustments());
+    $this->assertEquals(new Price('11.00', 'USD'), $shipment->getAdjustedAmount());
+    $this->assertEquals(new Price('9.00', 'USD'), $shipment->getAdjustedAmount(['custom']));
+    $this->assertEquals(new Price('12.00', 'USD'), $shipment->getAdjustedAmount(['fee']));
 
     $tracking_code = $this->randomString();
     $shipment->setTrackingCode($tracking_code);
@@ -313,8 +339,50 @@ class ShipmentTest extends ShippingKernelTestBase {
       'type' => 'default',
       'title' => 'Shipment',
     ]);
-    $this->setExpectedException(EntityStorageException::class, 'Required shipment field "order_id" is empty.');
+    $this->expectException(EntityStorageException::class);
+    $this->expectExceptionMessage('Required shipment field "order_id" is empty.');
     $shipment->save();
+  }
+
+  /**
+   * @covers ::clearRate
+   */
+  public function testClearRate() {
+    $fields = ['amount', 'original_amount', 'shipping_method', 'shipping_service'];
+    $user = $this->createUser(['mail' => $this->randomString() . '@example.com']);
+    /** @var \Drupal\commerce_order\Entity\OrderInterface $order */
+    $order = Order::create([
+      'type' => 'default',
+      'state' => 'draft',
+      'mail' => $user->getEmail(),
+      'uid' => $user->id(),
+      'store_id' => $this->store->id(),
+    ]);
+    $order->setRefreshState(Order::REFRESH_SKIP);
+    $order->save();
+    $order = $this->reloadEntity($order);
+    /** @var \Drupal\commerce_shipping\Entity\ShippingMethodInterface $shipping_method */
+    $shipping_method = ShippingMethod::create([
+      'name' => $this->randomString(),
+      'status' => 1,
+    ]);
+    $shipping_method->save();
+    $shipping_method = $this->reloadEntity($shipping_method);
+    $shipment = Shipment::create([
+      'amount' => new Price('0', 'USD'),
+      'original_amount' => new Price('0', 'USD'),
+      'shipping_service' => $this->randomString(),
+      'order_id' => $order->id(),
+      'type' => 'default',
+    ]);
+    $shipment->setShippingMethod($shipping_method);
+    foreach ($fields as $field) {
+      $this->assertFalse($shipment->get($field)->isEmpty());
+    }
+    $shipment->clearRate();
+    foreach ($fields as $field) {
+      $this->assertTrue($shipment->get($field)->isEmpty());
+    }
   }
 
 }

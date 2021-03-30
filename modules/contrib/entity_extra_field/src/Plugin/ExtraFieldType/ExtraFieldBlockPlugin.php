@@ -4,6 +4,7 @@ namespace Drupal\entity_extra_field\Plugin\ExtraFieldType;
 
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Block\BlockManagerInterface;
+use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -11,6 +12,8 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
+use Drupal\Core\Plugin\Context\ContextHandlerInterface;
+use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Utility\Token;
@@ -35,6 +38,16 @@ class ExtraFieldBlockPlugin extends ExtraFieldTypePluginBase {
   protected $blockManager;
 
   /**
+   * @var \Drupal\Core\Plugin\Context\ContextHandlerInterface
+   */
+  protected $contextHandler;
+
+  /**
+   * @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface
+   */
+  protected $contextRepository;
+
+  /**
    * Extra field block plugin constructor.
    *
    * @param array $configuration
@@ -55,6 +68,10 @@ class ExtraFieldBlockPlugin extends ExtraFieldTypePluginBase {
    *   The entity field manager service.
    * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
    *   The block manager service.
+   * @param \Drupal\Core\Plugin\Context\ContextHandlerInterface $context_handler
+   *   The context handler service.
+   * @param \Drupal\Core\Plugin\Context\ContextRepositoryInterface $context_repository
+   *   The context repository service.
    */
   public function __construct(
     array $configuration,
@@ -65,7 +82,9 @@ class ExtraFieldBlockPlugin extends ExtraFieldTypePluginBase {
     RouteMatchInterface $current_route_match,
     EntityTypeManagerInterface $entity_type_manager,
     EntityFieldManagerInterface $entity_field_manager,
-    BlockManagerInterface $block_manager
+    BlockManagerInterface $block_manager,
+    ContextHandlerInterface $context_handler,
+    ContextRepositoryInterface $context_repository
   ) {
     parent::__construct(
       $configuration,
@@ -78,6 +97,8 @@ class ExtraFieldBlockPlugin extends ExtraFieldTypePluginBase {
       $entity_field_manager
     );
     $this->blockManager = $block_manager;
+    $this->contextHandler = $context_handler;
+    $this->contextRepository = $context_repository;
   }
 
   /**
@@ -98,7 +119,9 @@ class ExtraFieldBlockPlugin extends ExtraFieldTypePluginBase {
       $container->get('current_route_match'),
       $container->get('entity_type.manager'),
       $container->get('entity_field.manager'),
-      $container->get('plugin.manager.block')
+      $container->get('plugin.manager.block'),
+      $container->get('context.handler'),
+      $container->get('context.repository')
     );
   }
 
@@ -118,6 +141,10 @@ class ExtraFieldBlockPlugin extends ExtraFieldTypePluginBase {
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
 
+    $form_state->setTemporaryValue(
+      'gathered_contexts',
+      $this->contextRepository->getAvailableContexts()
+    );
     $block_type = $this->getPluginFormStateValue('block_type', $form_state);
 
     $form['block_type'] = [
@@ -212,7 +239,26 @@ class ExtraFieldBlockPlugin extends ExtraFieldTypePluginBase {
    * {@inheritdoc}
    */
   public function build(EntityInterface $entity, EntityDisplayInterface $display) {
-    return $this->getBlockTypeInstance()->build();
+    $block = $this->getBlockTypeInstance();
+
+    if (FALSE === $block) {
+      return [];
+    }
+
+    if ($block instanceof ContextAwarePluginInterface) {
+      try {
+        if ($context_mapping = $block->getContextMapping()) {
+          $contexts = $this->contextRepository->getRuntimeContexts(
+            array_values($context_mapping)
+          );
+          $this->contextHandler->applyContextMapping($block, $contexts);
+        }
+      } catch (\Exception $exception) {
+        watchdog_exception('entity_extra_field', $exception);
+      }
+    }
+
+    return $block->build();
   }
 
   /**
@@ -246,7 +292,7 @@ class ExtraFieldBlockPlugin extends ExtraFieldTypePluginBase {
       $config['block_config']
     );
   }
-
+  
   /**
    * Get block type options.
    *

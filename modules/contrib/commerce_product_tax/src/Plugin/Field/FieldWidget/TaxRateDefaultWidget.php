@@ -2,6 +2,7 @@
 
 namespace Drupal\commerce_product_tax\Plugin\Field\FieldWidget;
 
+use Drupal\commerce_price\Calculator;
 use Drupal\commerce_tax\Entity\TaxType;
 use Drupal\commerce_tax\Entity\TaxTypeInterface;
 use Drupal\commerce_tax\Resolver\TaxRateResolverInterface;
@@ -62,7 +63,14 @@ class TaxRateDefaultWidget extends OptionsSelectWidget {
       $this->options[$label] = [$zone->getId() . '|' . $no_applicable_tax => $no_applicable_tax_label];
 
       foreach ($zone->getRates() as $rate) {
-        $this->options[$label][$zone->getId() . '|' . $rate->getId()] = $rate->getLabel();
+        $rate_label = $this->t('@label', ['@label' => $rate->getLabel()]);
+        if ($percentage = $rate->getPercentage()) {
+          $rate_label = $this->t('@label (@percentage%)', [
+            '@label' => $rate->getLabel(),
+            '@percentage' => Calculator::multiply($percentage->getNumber(), '100'),
+          ]);
+        }
+        $this->options[$label][$zone->getId() . '|' . $rate->getId()] = $rate_label;
       }
     }
 

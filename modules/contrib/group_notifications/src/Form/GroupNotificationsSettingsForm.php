@@ -113,7 +113,7 @@ class GroupNotificationsSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state): void {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('group_notifications.mail')
       ->set('membership_added.enabled', $form_state->getValue('membership_added_enabled'))
       ->set('membership_added.mail.subject', $form_state->getValue('membership_added_subject'))

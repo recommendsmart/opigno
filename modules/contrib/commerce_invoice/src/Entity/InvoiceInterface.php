@@ -7,14 +7,14 @@ use Drupal\commerce_price\Price;
 use Drupal\commerce_store\Entity\EntityStoreInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
+use Drupal\file\FileInterface;
 use Drupal\profile\Entity\ProfileInterface;
-use Drupal\user\EntityOwnerInterface;
 use Drupal\user\UserInterface;
 
 /**
  * Defines the interface for invoices.
  */
-interface InvoiceInterface extends ContentEntityInterface, EntityAdjustableInterface, EntityChangedInterface, EntityOwnerInterface, EntityStoreInterface {
+interface InvoiceInterface extends ContentEntityInterface, EntityAdjustableInterface, EntityChangedInterface, EntityStoreInterface {
 
   /**
    * Gets the invoice number.
@@ -374,5 +374,23 @@ interface InvoiceInterface extends ContentEntityInterface, EntityAdjustableInter
    * @return $this
    */
   public function setDueDateTime($timestamp);
+
+  /**
+   * Gets the invoice file.
+   *
+   * @return \Drupal\file\FileInterface|null
+   *   The invoice file, NULL if empty.
+   */
+  public function getFile();
+
+  /**
+   * Sets the invoice file (i.e the reference to the generated PDF file).
+   *
+   * @param \Drupal\file\FileInterface $file
+   *   The invoice file.
+   *
+   * @return $this
+   */
+  public function setFile(FileInterface $file);
 
 }

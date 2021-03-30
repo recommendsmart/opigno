@@ -2,10 +2,10 @@
 
 namespace Drupal\commerce_funds\PluginForm\Funds;
 
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\commerce_payment\Exception\DeclineException;
 use Drupal\commerce_payment\Exception\PaymentGatewayException;
 use Drupal\commerce_payment\PluginForm\PaymentGatewayFormBase;
+use Drupal\commerce_funds\TransactionManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -20,8 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Defines Balance payment Method add form.
  */
 class BalanceMethodAddForm extends PaymentGatewayFormBase implements ContainerInjectionInterface {
-
-  use StringTranslationTrait;
 
   /**
    * The route.
@@ -52,13 +50,21 @@ class BalanceMethodAddForm extends PaymentGatewayFormBase implements ContainerIn
   protected $account;
 
   /**
+   * The current account.
+   *
+   * @var \Drupal\commerce_funds\TransactionManagerInterface
+   */
+  protected $transactionManager;
+
+  /**
    * Constructs a new PaymentMethodAddForm.
    */
-  public function __construct(RouteMatchInterface $route_match, LoggerInterface $logger, EntityTypeManagerInterface $entity_type_manager, AccountProxyInterface $account) {
+  public function __construct(RouteMatchInterface $route_match, LoggerInterface $logger, EntityTypeManagerInterface $entity_type_manager, AccountProxyInterface $account, TransactionManagerInterface $transaction_manager) {
     $this->routeMatch = $route_match;
     $this->logger = $logger;
     $this->entityTypeManager = $entity_type_manager;
     $this->account = $account;
+    $this->transactionManager = $transaction_manager;
   }
 
   /**
@@ -69,7 +75,8 @@ class BalanceMethodAddForm extends PaymentGatewayFormBase implements ContainerIn
       $container->get('current_route_match'),
       $container->get('logger.factory')->get('commerce_payment'),
       $container->get('entity_type.manager'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('commerce_funds.transaction_manager')
     );
   }
 
@@ -102,7 +109,7 @@ class BalanceMethodAddForm extends PaymentGatewayFormBase implements ContainerIn
       $form['#attached']['library'][] = 'commerce_payment/payment_method_form';
       $form['#tree'] = TRUE;
 
-      $balance = \Drupal::service('commerce_funds.transaction_manager')->loadAccountBalance($payment_method->getOwner());
+      $balance = $this->transactionManager->loadAccountBalance($payment_method->getOwner());
       $balance_currency = isset($balance[$order->getTotalPrice()->getCurrencyCode()]) ? $balance[$order->getTotalPrice()->getCurrencyCode()] : NULL;
 
       $funds = $this->t('Selecting this method will create a new virtual wallet for @currency currency.', [
@@ -145,7 +152,7 @@ class BalanceMethodAddForm extends PaymentGatewayFormBase implements ContainerIn
     }
 
     if ($payment_method && $currency == $payment_method->get('currency')->getValue()[0]['target_id']) {
-      $form_state->setError($field, t('You already have a virtual wallet for this currency.'));
+      $form_state->setError($field, $this->t('You already have a virtual wallet for this currency.'));
     }
   }
 
@@ -189,11 +196,11 @@ class BalanceMethodAddForm extends PaymentGatewayFormBase implements ContainerIn
     }
     catch (DeclineException $e) {
       $this->logger->warning($e->getMessage());
-      throw new DeclineException(t('We encountered an error processing your payment method. Please verify your details and try again.'));
+      throw new DeclineException($this->t('We encountered an error processing your payment method. Please verify your details and try again.'));
     }
     catch (PaymentGatewayException $e) {
       $this->logger->error($e->getMessage());
-      throw new PaymentGatewayException(t('We encountered an unexpected error processing your payment method. Please try again later.'));
+      throw new PaymentGatewayException($this->t('We encountered an unexpected error processing your payment method. Please try again later.'));
     }
   }
 

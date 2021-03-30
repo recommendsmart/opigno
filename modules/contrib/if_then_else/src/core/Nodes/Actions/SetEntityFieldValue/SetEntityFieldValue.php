@@ -45,7 +45,6 @@ class SetEntityFieldValue extends Action {
     // Fetch all fields for config entity bundles.
     $form_entity_info = $this->ifthenelseUtilities->getContentEntitiesAndBundles();
     $form_fields = $this->ifthenelseUtilities->getFieldsByEntityBundleId($form_entity_info);
-    $field_entity = $this->ifthenelseUtilities->getEntityByFieldName($form_fields);
     $fields_type = $this->ifthenelseUtilities->getFieldsByEntityBundleId($form_entity_info, 'field_type');
 
     $event->nodes[static::getName()] = [
@@ -56,9 +55,9 @@ class SetEntityFieldValue extends Action {
       'classArg' => ['ifthenelse.utilities'],
       'library' => 'if_then_else/SetEntityFieldValue',
       'control_class_name' => 'SetEntityFieldValueControl',
+      'entity_info' => $form_entity_info,
       'form_fields' => $form_fields,
       'form_fields_type' => $fields_type,
-      'field_entity_bundle' => $field_entity,
       'component_class_name' => 'SetEntityFieldValueActionComponent',
       'inputs' => [
         'field_value' => [

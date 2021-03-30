@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains kpi_analytics.module..
+ * The KPI Analytics module.
  */
 
 use Drupal\Core\Block\BlockPluginInterface;
@@ -62,11 +62,10 @@ function kpi_analytics_preprocess_block(&$variables) {
   if (
     isset($variables['content']['#block_content']) &&
     $variables['base_plugin_id'] === 'block_content' &&
-    $variables['content']['#block_content']->bundle() === 'kpi_analytics' &&
-    isset($variables['elements']['kpi_analytics'])
+    $variables['content']['#block_content']->bundle() === 'kpi_analytics'
   ) {
 
-    // TODO: work on caching and preferable use the hook below to render the output.
+    // TODO: Work on caching and preferable use the hook below for render.
     // TODO: See how we can render this in the template without moving this.
     if (isset($variables['elements']['kpi_analytics']) && !isset($variables['content']['kpi_analytics'])) {
       $variables['content']['kpi_analytics'] = $variables['elements']['kpi_analytics'];
@@ -128,6 +127,18 @@ function kpi_analytics_theme($existing, $type, $theme, $path) {
         'uuid' => NULL,
         'labels' => [],
         'colors' => [],
+      ],
+    ],
+    'kpi_analytics_morris_tag_follow_chart' => [
+      'base hook' => 'kpi_analytics_morris_chart',
+      'template' => 'morris-chart--tag-follow',
+      'variables' => [
+        'type' => NULL,
+        'uuid' => NULL,
+        'labels' => [],
+        'colors' => [],
+        'followers' => NULL,
+        'difference' => NULL,
       ],
     ],
   ];

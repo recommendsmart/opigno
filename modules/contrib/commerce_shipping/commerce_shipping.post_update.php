@@ -5,6 +5,8 @@
  * Post update functions for Shipping.
  */
 
+use Drupal\Core\Entity\Entity\EntityFormMode;
+
 /**
  * Re-save shipping methods to populate the condition operator field.
  */
@@ -95,11 +97,33 @@ function commerce_shipping_post_update_2(&$sandbox = NULL) {
  * Create the 'checkout' form/view mode and displays for the shipment entity.
  */
 function commerce_shipping_post_update_3() {
+  /** @var \Drupal\commerce\Config\ConfigUpdaterInterface $config_updater */
   $config_updater = \Drupal::service('commerce.config_updater');
-  $config_updater->import([
+  $result = $config_updater->import([
     'core.entity_form_mode.commerce_shipment.checkout',
     'core.entity_form_display.commerce_shipment.default.checkout',
     'core.entity_view_mode.commerce_shipment.checkout',
-    'core.entity_view_display.commerce_shipment.default.checkout'
+    'core.entity_view_display.commerce_shipment.default.checkout',
   ]);
+  $message = implode('<br>', $result->getFailed());
+
+  return $message;
+}
+
+/**
+ * Create the "shipping" form mode for profiles.
+ */
+function commerce_shipping_post_update_4() {
+  if (EntityFormMode::load('profile.shipping')) {
+    return '';
+  }
+
+  /** @var \Drupal\commerce\Config\ConfigUpdaterInterface $config_updater */
+  $config_updater = \Drupal::service('commerce.config_updater');
+  $result = $config_updater->import([
+    'core.entity_form_mode.profile.shipping',
+  ]);
+  $message = implode('<br>', $result->getFailed());
+
+  return $message;
 }

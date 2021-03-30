@@ -20,20 +20,12 @@ class GroupTypeDeleteTest extends SubgroupKernelTestBase {
   protected $subgroupHandler;
 
   /**
-   * The group type storage to use in testing.
-   *
-   * @var \Drupal\Core\Entity\ContentEntityStorageInterface
-   */
-  protected $storage;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
 
     $this->subgroupHandler = $this->entityTypeManager->getHandler('group_type', 'subgroup');
-    $this->storage = $this->entityTypeManager->getStorage('group_type');
 
     // Grant delete access for the current user.
     $this->setCurrentUser($this->createUser([], ['administer group']));
@@ -77,7 +69,7 @@ class GroupTypeDeleteTest extends SubgroupKernelTestBase {
   public function testRegularDelete() {
     $group_type = $this->createGroupType();
     $group_type->delete();
-    $this->assertNull($this->storage->load($group_type->id()), 'Group type was deleted just fine.');
+    $this->assertNull($this->groupTypeStorage->load($group_type->id()), 'Group type was deleted just fine.');
   }
 
   /**
@@ -87,7 +79,7 @@ class GroupTypeDeleteTest extends SubgroupKernelTestBase {
     $group_type = $this->createGroupType();
     $this->subgroupHandler->initTree($group_type);
     $group_type->delete();
-    $this->assertNull($this->storage->load($group_type->id()), 'Group type was deleted just fine.');
+    $this->assertNull($this->groupTypeStorage->load($group_type->id()), 'Group type was deleted just fine.');
   }
 
   /**

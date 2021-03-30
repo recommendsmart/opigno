@@ -18,7 +18,7 @@
   <rule ref="Drupal.Files.LineLength.TooLong">
     <severity>0</severity>
   </rule>
-  <rule ref="Drupal.Array.Array.LongLineDeclaration">
+  <rule ref="Drupal.Arrays.Array.LongLineDeclaration">
     <severity>0</severity>
   </rule>
   <rule ref="Drupal.Commenting.VariableComment.VarOrder">
@@ -34,6 +34,9 @@
   </rule>
   <!-- Complains a lot about tests which don't need short descriptions. -->
   <rule ref="Drupal.Commenting.DocComment.MissingShort">
+    <severity>0</severity>
+  </rule>
+  <rule ref="Drupal.Commenting.Deprecated.DeprecatedMissingSeeTag">
     <severity>0</severity>
   </rule>
   <rule ref="Drupal.Commenting.DocComment.ShortSingleLine">

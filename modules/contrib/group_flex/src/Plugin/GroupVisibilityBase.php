@@ -3,6 +3,7 @@
 namespace Drupal\group_flex\Plugin;
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
 
@@ -10,6 +11,8 @@ use Drupal\group\Entity\GroupTypeInterface;
  * Base class for Group visibility plugins.
  */
 abstract class GroupVisibilityBase extends PluginBase implements GroupVisibilityInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The entity type manager.
@@ -67,7 +70,7 @@ abstract class GroupVisibilityBase extends PluginBase implements GroupVisibility
   /**
    * {@inheritdoc}
    */
-  public function saveMappedPerm(array $mappedPerm, GroupTypeInterface $groupType): void {
+  public function saveMappedPerm(array $mappedPerm, GroupTypeInterface $groupType) {
     foreach ($mappedPerm as $roleName => $permissions) {
       $groupRoleStorage = $this->entityTypeManager->getStorage('group_role');
       /** @var \Drupal\group\Entity\GroupRoleInterface $groupRole */

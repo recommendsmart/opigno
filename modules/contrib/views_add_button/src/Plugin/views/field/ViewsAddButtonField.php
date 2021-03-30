@@ -2,14 +2,13 @@
 
 namespace Drupal\views_add_button\Plugin\views\field;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
+use Drupal\views_add_button\Plugin\views\ViewsAddButtonTrait;
 use Drupal\views_add_button\Plugin\views_add_button\ViewsAddButtonDefault;
 use Drupal\views_add_button\ViewsAddButtonUtilities;
-use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Link;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 
 /**
@@ -20,6 +19,8 @@ use Drupal\Core\Url;
  * @ViewsField("views_add_button_field")
  */
 class ViewsAddButtonField extends FieldPluginBase {
+
+  use ViewsAddButtonTrait;
 
   /**
    * {@inheritdoc}
@@ -49,6 +50,7 @@ class ViewsAddButtonField extends FieldPluginBase {
     $options['query_string'] = ['default' => ''];
     $options['destination'] = ['default' => TRUE];
     $options['tokenize'] = ['default' => FALSE, 'bool' => TRUE];
+    $options['preserve_tags'] = ['default' => ''];
     return $options;
   }
 
@@ -161,6 +163,11 @@ class ViewsAddButtonField extends FieldPluginBase {
     $form['tokenize'] = $form['alter']['alter_text'];
     $form['tokenize']['#title'] = $this->t('Use tokens');
     $form['tokenize']['#description'] = $this->t('Use tokens from the current row for button/property values. See the "Replacement Patterns" below for options.');
+    $form['tokenize']['#default_value'] = $this->options['tokenize'];
+    $form['preserve_tags'] = ['#type' => 'textfield'];
+    $form['preserve_tags']['#title'] = $this->t('Preserve Tags');
+    $form['preserve_tags']['#description'] = $this->t('Preserve these HTML tags during tokenization. Separate with spaces, i.e "h1 h2 p"');
+    $form['preserve_tags']['#default_value'] = $this->options['preserve_tags'];
     $form['tokens'] = $form['alter']['help'];
     $form['tokens']['#states'] = NULL;
     $form['style_settings']['#attributes']['style'] = 'display:none;';
@@ -255,7 +262,6 @@ class ViewsAddButtonField extends FieldPluginBase {
       }
     }
 
-
     if ($this->checkButtonAccess($plugin_definitions, $plugin_class, $entity_type, $bundle)) {
       // Build URL Options.
       $opts = [];
@@ -279,16 +285,7 @@ class ViewsAddButtonField extends FieldPluginBase {
       }
       // Build query string.
       if ($this->options['query_string']) {
-        $q = $this->options['tokenize'] ? $this->tokenizeValue($this->options['query_string'],$values->index) : $this->options['query_string'];
-        if ($q) {
-          $qparts = explode('&', $q);
-          foreach ($qparts as $part) {
-            $p = explode('=', $part);
-            if (is_array($p) && count($p) > 1) {
-              $opts['query'][$p[0]] = $p[1];
-            }
-          }
-        }
+        $opts['query'] = $this->getQueryString($values);
       }
 
       // Get the url from the plugin and build the link.
@@ -340,6 +337,55 @@ class ViewsAddButtonField extends FieldPluginBase {
         return ['#markup' => ''];
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function tokenizeValue($value, $row_index = NULL) {
+    if (strpos($value, '{{') !== FALSE) {
+      $fake_item = [
+        'alter_text' => TRUE,
+        'text' => $value,
+      ];
+
+      // Use isset() because empty() will trigger on 0 and 0 is
+      // the first row.
+      if (isset($row_index) && isset($this->view->style_plugin->render_tokens[$row_index])) {
+        $tokens = $this->view->style_plugin->render_tokens[$row_index];
+      }
+      elseif (!empty($tokens = $this->getRenderTokens($value))) {
+        // We defined $tokens in the if statement.
+      }
+      else {
+        // Get tokens from the last field.
+        $last_field = end($this->view->field);
+        if (isset($last_field->last_tokens)) {
+          $tokens = $last_field->last_tokens;
+        }
+        else {
+          $tokens = $last_field->getRenderTokens($fake_item);
+        }
+      }
+
+      if (empty($this->options['preserve_tags'])) {
+        $value = strip_tags($this->renderAltered($fake_item, $tokens));
+      }
+      else {
+        $ts = explode(' ', $this->options['preserve_tags']);
+        $tags = [];
+        foreach ($ts as $t) {
+          $tags[] = trim($t);
+        }
+        $value = Xss::filter($this->renderAltered($fake_item, $tokens), $tags);
+      }
+
+      if (!empty($this->options['alter']['trim_whitespace'])) {
+        $value = trim($value);
+      }
+    }
+
+    return $value;
   }
 
 }

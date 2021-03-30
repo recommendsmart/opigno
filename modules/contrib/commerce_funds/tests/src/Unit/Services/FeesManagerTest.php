@@ -9,20 +9,13 @@ use Drupal\commerce_order\Entity\OrderItemInterface;
 use Drupal\Core\Field\EntityReferenceFieldItemList;
 use Drupal\commerce_price\Price;
 use Drupal\commerce_payment\PaymentOption;
-use Drupal\commerce_funds\Services\FeesManager;
+use Drupal\commerce_funds\FeesManager;
 
 /**
- * @coversDefaultClass \Drupal\commerce_funds\Services\FeesManager
+ * @coversDefaultClass \Drupal\commerce_funds\FeesManager
  * @group commerce_funds
  */
 class FeesManagerTest extends UnitTestCase {
-
-  /**
-   * The fee manager.
-   *
-   * @var \Drupal\commerce_funds\Services\FeeManager
-   */
-  protected $feeManager;
 
   /**
    * {@inheritdoc}
@@ -56,24 +49,21 @@ class FeesManagerTest extends UnitTestCase {
     $paymentOptionsBuilder = $this->getMockBuilder('Drupal\commerce_payment\PaymentOptionsBuilderInterface')
       ->disableOriginalConstructor()
       ->getMock();
-    $order = $this->getMockBuilder('Drupal\commerce_order\Entity\OrderInterface')
-      ->disableOriginalConstructor()
-      ->getMock();
     $options = new PaymentOption(['id' => 'manual', 'label' => 'Manual', 'payment_gateway_id' => 'manual']);
     $paymentOptionsBuilder->method('buildOptions')
       ->willReturn((array) $options);
     $paymentOptionsBuilder->method('selectDefaultOption')
       ->willReturn($options);
 
-    $productManager = $this->getMockBuilder('Drupal\commerce_funds\Services\ProductManager')
+    $productManager = $this->getMockBuilder('Drupal\commerce_funds\ProductManager')
       ->disableOriginalConstructor()
       ->getMock();
 
-    $account = $this->getMockBuilder('Drupal\Core\Session\AccountInterface')
+    $account = $this->getMockBuilder('Drupal\Core\Session\AccountProxyInterface')
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->feeManager = new FeesManager($configFactory, $entityTypeManager, $paymentOptionsBuilder, $productManager, $account);
+    $this->feesManager = new FeesManager($configFactory, $entityTypeManager, $paymentOptionsBuilder, $productManager, $account);
   }
 
   /**
@@ -90,7 +80,7 @@ class FeesManagerTest extends UnitTestCase {
     $order->get('payment_method')->willReturn($payment_method);
     $order->getItems()->willReturn([$item]);
     $order = $order->reveal();
-    $this->assertEquals('10', $this->feeManager->calculateOrderFee($order));
+    $this->assertEquals('10', $this->feesManager->calculateOrderFee($order));
   }
 
   /**
@@ -102,20 +92,20 @@ class FeesManagerTest extends UnitTestCase {
     // Fee rate > fixed fee.
     $brut_amount = 100;
     foreach ($existing_types as $type) {
-      $this->assertEquals(110, $this->feeManager->calculateTransactionFee($brut_amount, $currency_code, $type)['net_amount']);
-      $this->assertEquals(10, $this->feeManager->calculateTransactionFee($brut_amount, $currency_code, $type)['fee']);
+      $this->assertEquals(110, $this->feesManager->calculateTransactionFee($brut_amount, $currency_code, $type)['net_amount']);
+      $this->assertEquals(10, $this->feesManager->calculateTransactionFee($brut_amount, $currency_code, $type)['fee']);
     }
     // Fixed fee > fee rate.
     $brut_amount = 10;
     foreach ($existing_types as $type) {
-      $this->assertEquals(15, $this->feeManager->calculateTransactionFee($brut_amount, $currency_code, $type)['net_amount']);
-      $this->assertEquals(5, $this->feeManager->calculateTransactionFee($brut_amount, $currency_code, $type)['fee']);
+      $this->assertEquals(15, $this->feesManager->calculateTransactionFee($brut_amount, $currency_code, $type)['net_amount']);
+      $this->assertEquals(5, $this->feesManager->calculateTransactionFee($brut_amount, $currency_code, $type)['fee']);
     }
     // No fee set.
     $non_existing_types = ['withdrawal_request', 'payment', 'conversion'];
     foreach ($non_existing_types as $type) {
-      $this->assertEquals(10, $this->feeManager->calculateTransactionFee($brut_amount, $currency_code, $type)['net_amount']);
-      $this->assertEquals(0, $this->feeManager->calculateTransactionFee($brut_amount, $currency_code, $type)['fee']);
+      $this->assertEquals(10, $this->feesManager->calculateTransactionFee($brut_amount, $currency_code, $type)['net_amount']);
+      $this->assertEquals(0, $this->feesManager->calculateTransactionFee($brut_amount, $currency_code, $type)['fee']);
     }
   }
 
@@ -123,10 +113,10 @@ class FeesManagerTest extends UnitTestCase {
    * ::covers convertCurrencyAmount.
    */
   public function testConvertCurrencyAmount() {
-    $this->assertEquals(120, $this->feeManager->convertCurrencyAmount(100, 'USD', 'EUR')['new_amount']);
-    $this->assertEquals('1.2', $this->feeManager->convertCurrencyAmount('1.2', 'USD', 'EUR')['rate']);
-    $this->assertEquals(80, $this->feeManager->convertCurrencyAmount(100, 'EUR', 'USD')['new_amount']);
-    $this->assertEquals('0.8', $this->feeManager->convertCurrencyAmount('0.8', 'EUR', 'USD')['rate']);
+    $this->assertEquals(120, $this->feesManager->convertCurrencyAmount(100, 'USD', 'EUR')['new_amount']);
+    $this->assertEquals('1.2', $this->feesManager->convertCurrencyAmount('1.2', 'USD', 'EUR')['rate']);
+    $this->assertEquals(80, $this->feesManager->convertCurrencyAmount(100, 'EUR', 'USD')['new_amount']);
+    $this->assertEquals('0.8', $this->feesManager->convertCurrencyAmount('0.8', 'EUR', 'USD')['rate']);
   }
 
 }

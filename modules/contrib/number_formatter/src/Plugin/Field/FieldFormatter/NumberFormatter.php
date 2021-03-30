@@ -122,7 +122,14 @@ class NumberFormatter extends FormatterBase implements ContainerFactoryPluginInt
         $element[$delta] = ['#markup' => $numberFormatter->formatCurrency($item->value, $this->settings['currency'])];
       }
       else {
-        $element[$delta] = ['#markup' => $numberFormatter->format($item->value)];
+        $settings = $this->getFieldSettings();
+
+        $prefixes = isset($settings['prefix']) ? array_map(['Drupal\Core\Field\FieldFilteredMarkup', 'create'], explode('|', $settings['prefix'])) : [''];
+        $suffixes = isset($settings['suffix']) ? array_map(['Drupal\Core\Field\FieldFilteredMarkup', 'create'], explode('|', $settings['suffix'])) : [''];
+        $prefix = (count($prefixes) > 1) ? $this->formatPlural($item->value, $prefixes[0], $prefixes[1]) : $prefixes[0];
+        $suffix = (count($suffixes) > 1) ? $this->formatPlural($item->value, $suffixes[0], $suffixes[1]) : $suffixes[0];
+
+        $element[$delta] = ['#markup' => $prefix . $numberFormatter->format($item->value) . $suffix];
       }
     }
 

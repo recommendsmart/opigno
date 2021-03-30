@@ -76,19 +76,22 @@ abstract class EntityControllerBase extends ControllerBase {
    *
    * Declared static because it must be callable from a batch.
    *
-   * @param string $message
+   * @param string|\Drupal\Core\StringTranslation\TranslatableMarkup $message
    *   The message to be written.
    * @param string $level
    *   The severity level. Defaults to 'notice'.
    * @param array $context
    *   Any context. Useful when running in a batch context.
    */
-  public static function logMessage(string $message, string $level = 'notice', array $context = []): void {
-    $log = \Drupal::configFactory()->get('content_as_config.config')->get('log');
-    if (isset($log) && $log === FALSE) {
+  public static function logMessage($message, string $level = 'notice', array $context = []): void {
+    static $log;
+    if (!isset($log)) {
+      $log = \Drupal::configFactory()->get('content_as_config.config')->get('log') ?? TRUE;
+    }
+    if (!$log) {
       return;
     }
-    \Drupal::logger('content_as_config')->log($level, $message, $context);
+    \Drupal::logger('content_as_config')->log($level, (string) $message, $context);
   }
 
   /**
@@ -143,9 +146,12 @@ abstract class EntityControllerBase extends ControllerBase {
    *   The form that is being submitted.
    * @param \Drupal\Core\Form\FormStateInterface|null $form_state
    *   The state of the form that is being submitted.
+   *
+   * @return int
+   *   The number of entities that were exported.
    */
-  public function export(array $form = [], FormStateInterface $form_state = NULL): void {
-    static::logMessage(static::ENTITY_TYPE . ' export started');
+  public function export(array $form = [], FormStateInterface $form_state = NULL): int {
+    static::logMessage($this->t('@et export started.', ['@et' => static::ENTITY_TYPE]));
 
     if ($form_state instanceof FormStateInterface && $form_state->hasValue('export_list')) {
       $export_list = $form_state->getValue('export_list');
@@ -173,8 +179,10 @@ abstract class EntityControllerBase extends ControllerBase {
       }
       $this->entityConfig->set($entity->uuid(), $entity_info);
 
-      $message = 'Exported ' . static::ENTITY_TYPE . ' "' . $entity->label() . '"';
-      static::logMessage($message);
+      static::logMessage($this->t('Exported @et %label.', [
+        '@et' => static::ENTITY_TYPE,
+        '%label' => $entity->label(),
+      ]));
     }
     $this->entityConfig->save();
 
@@ -190,7 +198,8 @@ abstract class EntityControllerBase extends ControllerBase {
     );
 
     $this->messenger->addStatus($status_message);
-    static::logMessage(static::ENTITY_TYPE . ' export completed');
+    static::logMessage($this->t('@et export completed.', ['@et' => static::ENTITY_TYPE]));
+    return count($entities);
   }
 
   /**
@@ -200,9 +209,12 @@ abstract class EntityControllerBase extends ControllerBase {
    *   The form whose data is being submitted.
    * @param \Drupal\Core\Form\FormStateInterface|null $form_state
    *   The state of the form that is being submitted.
+   *
+   * @return int
+   *   The number of items imported.
    */
-  public function import(array $form = [], FormStateInterface $form_state = NULL) {
-    static::logMessage(static::ENTITY_TYPE . ' import started');
+  public function import(array $form = [], FormStateInterface $form_state = NULL): int {
+    static::logMessage($this->t('@et import started.', ['@et' => static::ENTITY_TYPE]));
 
     if ($form_state instanceof FormStateInterface && $form_state->hasValue('import_list')) {
       $import_list = $form_state->getValue('import_list');
@@ -212,10 +224,15 @@ abstract class EntityControllerBase extends ControllerBase {
       $style = $form['style'];
     }
     else {
-      static::logMessage('No style defined on ' . static::ENTITY_TYPE . ' import', 'error');
-      return;
+      static::logMessage(
+        $this->t('No style defined on @et import', ['@et' => static::ENTITY_TYPE]),
+        'error'
+      );
+      return 0;
     }
-    static::logMessage('Using "' . $style . '" style for ' . static::ENTITY_TYPE . ' import');
+    static::logMessage($this->t('Using style %style for @et import',
+      ['%style' => $style, '@et' => static::ENTITY_TYPE]
+    ));
 
     $configured_items = $this->entityConfig->get();
 
@@ -228,7 +245,7 @@ abstract class EntityControllerBase extends ControllerBase {
 
     if (empty($items)) {
       $this->messenger->addWarning($this->t('No entities are available for import.'));
-      return;
+      return 0;
     }
 
     if (array_key_exists('drush', $form) && $form['drush'] === TRUE) {
@@ -240,7 +257,7 @@ abstract class EntityControllerBase extends ControllerBase {
           break;
 
         case 'force':
-          static::deleteItems();
+          static::deleteItems($context);
           static::importForce($items, $context);
           break;
 
@@ -250,10 +267,10 @@ abstract class EntityControllerBase extends ControllerBase {
 
       }
       $this->importFinishedCallback();
-      return;
+      return count($items);
     }
 
-    $batch = ['title' => 'Importing ' . static::ENTITY_TYPE . 's...'];
+    $batch = ['title' => $this->t('Importing @et entities...', ['@et' => static::ENTITY_TYPE])];
     $prefix = '\\' . static::class . '::';
     switch ($style) {
       case 'full':
@@ -293,6 +310,7 @@ abstract class EntityControllerBase extends ControllerBase {
     }
     $batch['finished'] = $prefix . 'importFinishedCallback';
     batch_set($batch);
+    return count($items);
   }
 
   /**
@@ -321,8 +339,12 @@ abstract class EntityControllerBase extends ControllerBase {
       $storage->delete($entities);
     }
     if ($count > 0) {
-      $message = 'Deleted ' . $count . ' ' . static::ENTITY_TYPE . '(s) that were not in config.';
-      static::logMessage($message);
+      static::logMessage(\Drupal::translation()->formatPlural(
+        $count,
+        'Deleted 1 @et entity that was not in config.',
+        'Deleted @ct @et entities that were not in config.',
+        ['@ct' => $count, '@et' => static::ENTITY_TYPE]
+      ));
     }
   }
 
@@ -359,13 +381,24 @@ abstract class EntityControllerBase extends ControllerBase {
 
       if (empty($ids)) {
         $entity = static::arrayToEntity($item);
-        static::logMessage('Imported ' . static::ENTITY_TYPE . ' "' . $entity->label() . '"', 'notice', $context);
+        static::logMessage(
+          t('Imported @et %label',
+            ['@et' => static::ENTITY_TYPE, '%label' => $entity->label()]),
+          'notice',
+          $context
+        );
       }
       else {
         foreach ($entities as $entity) {
           if ($item['uuid'] === $entity->uuid()) {
             $entity = static::arrayToEntity($item, $entity);
-            static::logMessage('Updated ' . static::ENTITY_TYPE . ' "' . $entity->label() . '"', 'notice', $context);
+            static::logMessage(
+              t('Updated @et %label',
+                ['@et' => static::ENTITY_TYPE, '%label' => $entity->label()]
+              ),
+              'notice',
+              $context
+            );
             break;
           }
         }
@@ -415,7 +448,14 @@ abstract class EntityControllerBase extends ControllerBase {
   public static function importForce(array $items, array &$context): void {
     foreach ($items as $item) {
       $entity = self::arrayToEntity($item);
-      static::logMessage('Imported ' . static::ENTITY_TYPE . ' entity "' . $entity->label() . '"');
+      static::logMessage(t('Imported @et %label',
+        [
+          '@et' => static::ENTITY_TYPE,
+          '%label' => $entity->label(),
+        ]),
+        'notice',
+        $context
+      );
     }
   }
 
@@ -424,12 +464,16 @@ abstract class EntityControllerBase extends ControllerBase {
    *
    * Declared static because it must be callable from a batch.
    */
-  public static function deleteItems(): void {
+  public static function deleteItems(array &$context): void {
     $storage = \Drupal::entityTypeManager()->getStorage(static::ENTITY_TYPE);
     $entities = $storage->loadMultiple();
     $storage->delete($entities);
 
-    static::logMessage('Deleted all ' . static::ENTITY_TYPE . ' entities.');
+    static::logMessage(
+      t('Deleted all @et entities.', ['@et' => static::ENTITY_TYPE]),
+      'notice',
+      $context
+    );
   }
 
   /**
@@ -438,10 +482,16 @@ abstract class EntityControllerBase extends ControllerBase {
    * Declared static because it must be callable from a batch.
    */
   protected static function importFinishedCallback(): void {
-    static::logMessage('Flushing all caches');
+    static::logMessage(t('Flushing all caches'));
     drupal_flush_all_caches();
-    static::logMessage('Successfully flushed caches and imported ' . static::ENTITY_TYPE . ' entities.');
-    \Drupal::messenger()->addStatus(t('Successfully imported feeds'));
+    static::logMessage(t(
+      'Successfully flushed caches and imported @et entities.',
+      ['@et' => static::ENTITY_TYPE]
+    ));
+    \Drupal::messenger()->addStatus(t(
+      'Successfully imported @et entities.',
+      ['@et' => static::ENTITY_TYPE]
+    ));
   }
 
   /**

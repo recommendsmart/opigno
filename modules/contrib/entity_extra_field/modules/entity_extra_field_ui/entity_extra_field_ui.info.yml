@@ -1,0 +1,13 @@
+type: module
+name: Entity Extra Field UI
+description: Provide the UI to manage the entity extra fields.
+core: 8.x
+package: Field
+dependencies:
+  - entity_extra_field:entity_extra_field
+  - drupal:field_ui
+
+# Information added by Drupal.org packaging script on 2020-07-29
+version: '8.x-1.0-alpha5'
+project: 'entity_extra_field'
+datestamp: 1596046671

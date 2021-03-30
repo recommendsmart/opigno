@@ -160,7 +160,7 @@ class DepthUpdateForm extends FormBase {
         taxonomy_term_depth_queue_manager($options['vids'])->queueBatchMissing();
         break;
       default:
-        drupal_set_message($this->t('Wrong operation selected'));
+        $this->messenger()->addMessage($this->t('Wrong operation selected'));
     }
   }
 }

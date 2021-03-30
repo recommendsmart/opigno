@@ -9,6 +9,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\group_flex\GroupFlexGroupType;
 use Drupal\group_flex\GroupFlexGroupTypeSaver;
+use Drupal\group_flex\Plugin\GroupVisibilityInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -89,7 +90,7 @@ class GroupTypeForm extends GroupTypeFormBase {
       '#type' => 'radios',
       '#options' => $visibilityOptions,
       '#description' => $this->t('When the visibility is "public", roles that can actually view "Groups" of this type can be defined through the group type permissions page.'),
-      '#default_value' => $defaultVisibility ?? GROUP_FLEX_TYPE_VIS_PUBLIC,
+      '#default_value' => $defaultVisibility ?? GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC,
     ];
 
     $joiningMethods = $this->getOptionsFromPlugin('group_type_joining_method');
@@ -132,7 +133,7 @@ class GroupTypeForm extends GroupTypeFormBase {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, FormStateInterface $form_state): void {
+  public function save(array $form, FormStateInterface $form_state) {
     /** @var \Drupal\group\Entity\GroupTypeInterface $type */
     parent::save($form, $form_state);
     $type = $this->entity;

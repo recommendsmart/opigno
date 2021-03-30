@@ -104,6 +104,33 @@ class InvoiceTypeForm extends CommerceBundleEntityFormBase {
       $form['logo_file']['#default_value'] = ['target_id' => $file->id()];
     }
 
+    $form['emails'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Emails'),
+      '#weight' => 5,
+      '#open' => TRUE,
+      '#collapsible' => TRUE,
+      '#tree' => FALSE,
+    ];
+    $form['emails']['notice'] = [
+      '#markup' => '<p>' . $this->t('Emails are sent in the HTML format. You will need a module such as <a href="https://www.drupal.org/project/swiftmailer">Swiftmailer</a> to send HTML emails.') . '</p>',
+    ];
+    $form['emails']['sendConfirmation'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Email the customer a confirmation when an invoice is "confirmed" or paid'),
+      '#default_value' => ($invoice_type->isNew()) ? TRUE : $invoice_type->shouldSendConfirmation(),
+    ];
+    $form['emails']['confirmationBcc'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Send a copy of the confirmation to this email:'),
+      '#default_value' => ($invoice_type->isNew()) ? '' : $invoice_type->getConfirmationBcc(),
+      '#states' => [
+        'visible' => [
+          ':input[name="sendConfirmation"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+
     $token_types = ['commerce_invoice'];
     $form['payment-terms'] = [
       '#type' => 'details',
@@ -181,7 +208,10 @@ class InvoiceTypeForm extends CommerceBundleEntityFormBase {
     $invoice_type = $this->entity;
 
     $logo_file = $form_state->getValue(['logo_file', '0']);
+    /** @var \Drupal\file\Entity\File $file */
     if (!empty($logo_file) && $file = $this->entityTypeManager->getStorage('file')->load($logo_file)) {
+      $file->setPermanent();
+      $file->save();
       $invoice_type->setLogo($file->uuid());
     }
     else {

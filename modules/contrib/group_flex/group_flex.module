@@ -14,10 +14,6 @@ use Drupal\group_flex\Entity\Form\GroupForm;
 use Drupal\group_flex\Entity\Form\GroupTypeForm;
 use Drupal\Core\Form\FormStateInterface;
 
-const GROUP_FLEX_TYPE_VIS_PUBLIC = 'public';
-const GROUP_FLEX_TYPE_VIS_PRIVATE = 'private';
-const GROUP_FLEX_TYPE_VIS_FLEX = 'flex';
-
 /**
  * Implements hook_entity_type_alter().
  *

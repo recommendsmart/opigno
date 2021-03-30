@@ -39,7 +39,7 @@ function template_preprocess_block_content(&$variables) {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
   $variables['content'] = [];
 
-  if (isset($variables['elements']['_layout_builder'])) {
+  if (isset($variables['elements']['_layout_builder'][0])) {
     $variables['content'][] = $variables['elements']['_layout_builder'];
   }
   else {

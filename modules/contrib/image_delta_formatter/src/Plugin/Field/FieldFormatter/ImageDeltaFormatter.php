@@ -2,7 +2,6 @@
 
 namespace Drupal\image_delta_formatter\Plugin\Field\FieldFormatter;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatter;
@@ -20,6 +19,7 @@ use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatter;
  * )
  */
 class ImageDeltaFormatter extends ImageFormatter {
+
   /**
    * {@inheritdoc}
    */
@@ -27,7 +27,7 @@ class ImageDeltaFormatter extends ImageFormatter {
     return [
       'deltas' => 0,
       'deltas_reversed' => FALSE,
-      ] + parent::defaultSettings();
+    ] + parent::defaultSettings();
   }
 
   /**
@@ -79,7 +79,7 @@ class ImageDeltaFormatter extends ImageFormatter {
   protected function getEntitiesToView(EntityReferenceFieldItemListInterface $items, $langcode) {
     $files = parent::getEntitiesToView($items, $langcode);
     // Prepare an array of selected deltas from the entered string.
-    if (Unicode::strpos($this->getSetting('deltas'), ',')) {
+    if (mb_strpos($this->getSetting('deltas'), ',')) {
       $deltas = explode(',', $this->getSetting('deltas'));
       $deltas = array_map('trim', $deltas);
     }
@@ -102,6 +102,5 @@ class ImageDeltaFormatter extends ImageFormatter {
     return $files;
 
   }
-
 
 }

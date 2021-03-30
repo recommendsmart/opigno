@@ -239,6 +239,20 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
   }
 
   /**
+   * Get target entity type definition.
+   *
+   * @return \Drupal\Core\Entity\EntityTypeInterface
+   *    The target entity type definition
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  protected function getTargetEntityTypeDefinition() {
+    return $this->entityTypeManager->getDefinition(
+      $this->getTargetEntityTypeId()
+    );
+  }
+
+  /**
    * Process the entity token text.
    *
    * @param $text

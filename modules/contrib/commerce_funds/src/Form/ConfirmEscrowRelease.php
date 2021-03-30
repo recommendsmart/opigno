@@ -4,15 +4,15 @@ namespace Drupal\commerce_funds\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Utility\Token;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\commerce_price\Calculator;
 use Drupal\commerce_funds\Entity\Transaction;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a confirmation form to release an escrow payment.
@@ -70,24 +70,17 @@ class ConfirmEscrowRelease extends ConfirmFormBase {
   }
 
   /**
-   * {@inheritdoc}
+   * The transaction.
+   *
+   * @var \Drupal\commerce_funds\Entity\Transaction
    */
-  public function getFormId() : string {
-    return "confirm_escrow_release";
-  }
+  protected $transaction;
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
-    // Check if the user is allowed to perform the operation.
-    $transaction = Transaction::load(\Drupal::request()->get('transaction_id'));
-    if ($this->isUserAllowed($transaction)) {
-      return parent::buildForm($form, $form_state);
-    }
-    else {
-      throw new AccessDeniedHttpException();
-    }
+  public function getFormId() : string {
+    return "confirm_escrow_release";
   }
 
   /**
@@ -101,7 +94,7 @@ class ConfirmEscrowRelease extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return t('Are you sure you want to release that escrow payment?');
+    return $this->t('Are you sure you want to release that escrow payment?');
   }
 
   /**
@@ -134,11 +127,26 @@ class ConfirmEscrowRelease extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  public function buildForm(array $form, FormStateInterface $form_state, string $transaction_hash = NULL) {
+    $transaction = $this->transaction = \Drupal::service('commerce_funds.transaction_manager')->loadTransactionByHash($transaction_hash);
+    // Check if the user is allowed to perform the operation.
+    if (!empty($transaction) && $this->isUserAllowed($transaction)) {
+      return parent::buildForm($form, $form_state);
+    }
+    else {
+      throw new NotFoundHttpException();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $transaction = Transaction::load(\Drupal::request()->get('transaction_id'));
+    $transaction = $this->transaction;
     $currency_code = $transaction->getCurrency()->getCurrencycode();
     $symbol = $transaction->getCurrency()->getSymbol();
-    $fee = $transaction->getFee();
+    // Make sure we just have two decimal.
+    $fee = substr($transaction->getFee(), 0, -1);
     $config = $this->config('commerce_funds.settings');
 
     $issuer = $transaction->getIssuer();

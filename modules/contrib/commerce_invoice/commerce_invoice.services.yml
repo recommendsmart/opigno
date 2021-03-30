@@ -37,9 +37,24 @@ services:
 
   commerce_invoice.print_builder:
     class: Drupal\commerce_invoice\InvoicePrintBuilder
-    arguments: ['@config.factory', '@entity_type.manager', '@entity_print.print_builder', '@entity_print.filename_generator', '@current_user']
+    arguments: ['@config.factory', '@entity_type.manager', '@entity_print.print_builder', '@entity_print.filename_generator', '@event_dispatcher', '@current_user']
 
   commerce_invoice.route_subscriber:
     class: Drupal\commerce_invoice\EventSubscriber\RouteSubscriber
     tags:
       - { name: event_subscriber }
+
+  commerce_invoice.invoice_file_manager:
+    class: Drupal\commerce_invoice\InvoiceFileManager
+    arguments: ['@entity_type.manager', '@plugin.manager.entity_print.print_engine', '@commerce_invoice.print_builder']
+
+  commerce_invoice.invoice_confirmation_subscriber:
+    class: Drupal\commerce_invoice\EventSubscriber\InvoiceConfirmationSubscriber
+    arguments: ['@entity_type.manager', '@commerce_invoice.invoice_confirmation_mail']
+    tags:
+      - { name: event_subscriber }
+      - { name: needs_destruction }
+
+  commerce_invoice.invoice_confirmation_mail:
+    class: Drupal\commerce_invoice\Mail\InvoiceConfirmationMail
+    arguments: ['@entity_type.manager', '@commerce.mail_handler', '@commerce_invoice.invoice_total_summary', '@commerce_invoice.invoice_file_manager']

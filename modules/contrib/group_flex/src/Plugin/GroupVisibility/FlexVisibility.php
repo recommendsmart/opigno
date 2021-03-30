@@ -19,7 +19,7 @@ class FlexVisibility extends GroupVisibilityBase {
   /**
    * {@inheritdoc}
    */
-  public function enableGroupType(GroupTypeInterface $groupType): void {
+  public function enableGroupType(GroupTypeInterface $groupType) {
     $mappedPerm = [
       $groupType->getOutsiderRoleId() => [
         'view group' => FALSE,
@@ -34,7 +34,7 @@ class FlexVisibility extends GroupVisibilityBase {
   /**
    * {@inheritdoc}
    */
-  public function disableGroupType(GroupTypeInterface $groupType): void {
+  public function disableGroupType(GroupTypeInterface $groupType) {
     $mappedPerm = [
       $groupType->getOutsiderRoleId() => [
         'view group' => FALSE,

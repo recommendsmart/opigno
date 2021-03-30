@@ -2,6 +2,7 @@ name: Layout Components
 type: module
 description: Blocks for placing into layout builder.
 core_version_requirement: ^8.8 || ^9
+configure: layoutcomponents.settings_general
 package: LayoutComponents
 dependencies:
   - ctools:ctools
@@ -29,7 +30,7 @@ dependencies:
   - drupal:jquery_ui_tooltip
   - sliderwidget
 
-# Information added by Drupal.org packaging script on 2020-07-17
-version: '8.x-1.0-beta1'
+# Information added by Drupal.org packaging script on 2021-03-26
+version: '8.x-1.23-beta2'
 project: 'layoutcomponents'
-datestamp: 1594976968
+datestamp: 1616765573

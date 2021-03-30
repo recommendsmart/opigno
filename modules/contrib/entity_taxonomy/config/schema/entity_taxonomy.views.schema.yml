@@ -150,7 +150,7 @@ views.filter.entity_taxonomy_index_tid_depth:
       type: integer
       label: 'Depth'
 
-views.relationship.node_term_data:
+views.relationship.entity_term_data:
   type: views_relationship
   label: 'entity_taxonomy term'
   mapping:

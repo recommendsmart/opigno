@@ -1,13 +1,12 @@
 /**
- * Views exposed filter autosubmit js for drupal 8:
- *
+ * Views exposed filter autosubmit js for Drupal 8.
  */
 
 (function ($, drupalSettings) {
 
 Drupal.behaviors.ViewsAutoSubmit = {
   attach: function(context) {
-    // 'this' references the form element
+    // 'this' references the form element.
     function triggerSubmit (e) {
       var $this = $(this);
       if (!$this.hasClass('views-ajaxing')) {
@@ -21,7 +20,7 @@ Drupal.behaviors.ViewsAutoSubmit = {
       .filter('form, select, input:not(:text, :submit)')
       .once('views-auto-submit')
       .change(function (e) {
-        // don't trigger on text change for full-form
+        // don't trigger on text change for full-form.
         if ($(e.target).is(':not(:text, :submit)')) {
           triggerSubmit.call(e.target.form);
         }
@@ -45,10 +44,10 @@ Drupal.behaviors.ViewsAutoSubmit = {
       13, // enter
       27  // esc
     ];
-    // Don't wait for change event on textfields
+    // Don't wait for change event on textfields.
     $('.views-auto-submit-full-form input:text, input:text.views-auto-submit', context)
-      .once('views-auto-submit', function () {
-        // each textinput element has his own timeout
+      .once('views-auto-submit').each(function() {
+        // Each text input element has his own timeout.
         var timeoutID = 0;
         $(this)
           .bind('keydown keyup', function (e) {

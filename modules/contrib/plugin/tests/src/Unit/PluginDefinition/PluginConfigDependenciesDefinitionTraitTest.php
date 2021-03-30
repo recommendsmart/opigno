@@ -22,7 +22,7 @@ class PluginConfigDependenciesDefinitionTraitTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->sut = $this->getMockForTrait(PluginConfigDependenciesDefinitionTrait::class);

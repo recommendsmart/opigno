@@ -8,6 +8,9 @@ entity_extra_field.extra_field.*.*.*:
     label:
       type: string
       label: Entity extra field label
+    display_label:
+      type: boolean
+      label: Display extra field label
     name:
       type: string
       label: Entity extra field machine name
@@ -26,6 +29,12 @@ entity_extra_field.extra_field.*.*.*:
     field_type_config:
       type: entity_extra_field.plugin.[%parent.field_type_id]
       label: Extra field type plugin configuration
+    field_type_condition:
+      type: sequence
+      label: Extra field type condition information
+      sequence:
+        type: condition.plugin.[id]
+        label: 'Condition plugin'
     display:
       type: mapping
       label: Extra field display information
@@ -42,7 +51,7 @@ entity_extra_field.plugin.block:
       type: string
       label: Block identifier
     block_config:
-      type: mapping
+      type: block.settings.[%parent.block_type]
       label: Block configuration
 
 entity_extra_field.plugin.views:
@@ -67,7 +76,7 @@ entity_extra_field.plugin.token:
       type: string
       label: Token text field type
     token:
-      type: entity_extra_field.plugin.token.[type]
+      type: entity_extra_field.plugin.token.[%parent.type]
 
 entity_extra_field.plugin.token.textfield:
   type: string

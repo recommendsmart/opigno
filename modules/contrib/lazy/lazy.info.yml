@@ -1,14 +1,14 @@
 name: 'Lazy-load'
 type: module
-description: 'This module integrates bLazy script to lazy load inline images and/or iframes via input-filters.'
-# core: 8.x
+description: 'This module enables lazy-loading images and iframes via text-filters and image-fields. Requires lazysizes library.'
+core_version_requirement: ^8.8 || ^9
 package: 'Input filters'
 configure: lazy.config_form
 dependencies:
   - drupal:filter
+  - drupal:system (>=8.8)
 
-# Information added by Drupal.org packaging script on 2019-04-22
-version: '8.x-2.0'
-core: '8.x'
+# Information added by Drupal.org packaging script on 2020-10-23
+version: '8.x-3.6'
 project: 'lazy'
-datestamp: 1555907896
+datestamp: 1603427242

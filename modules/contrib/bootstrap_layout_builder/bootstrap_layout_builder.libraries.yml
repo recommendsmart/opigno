@@ -1,14 +1,7 @@
 # Bootstrap Layout Builder base styles.
-base:
+layout_builder_form_style:
   css:
     theme:
-      css/base.css: { }
+      css/layout-tab-styles.css: { }
   js:
-    js/base.js: { }
-
-background-media-local-video:
-  css:
-    theme:
-      css/background_media_local_video.css: { }
-  js:
-    js/background_media_local_video.js: { }
+    js/layout-tab-scripts.js: { }

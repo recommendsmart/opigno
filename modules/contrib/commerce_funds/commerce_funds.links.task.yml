@@ -18,3 +18,7 @@ commerce_funds.settings_mails:
   title: 'Mails'
   base_route: commerce_funds
   weight: 3
+commerce_funds.user_withdrawal_methods:
+  route_name: commerce_funds.withdrawal_methods
+  base_route: entity.user.canonical
+  title: 'Withdrawal methods'

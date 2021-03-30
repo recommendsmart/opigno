@@ -5,12 +5,12 @@ namespace Drupal\commerce_funds\Plugin\Validation\Constraint;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
- /**
-  * Validates the NetAmountBelowBalance Constraint
-  *
-  * @package Drupal\commerce_funds\Plugin\Validation\Constraint
-  */
- class NetAmountBelowBalanceConstraintValidator extends ConstraintValidator {
+/**
+ * Validates the NetAmountBelowBalance Constraint.
+ *
+ * @package Drupal\commerce_funds\Plugin\Validation\Constraint
+ */
+class NetAmountBelowBalanceConstraintValidator extends ConstraintValidator {
 
   /**
    * {@inheritdoc}
@@ -29,11 +29,12 @@ use Symfony\Component\Validator\ConstraintValidator;
         $this->context->addViolation($constraint->message);
       }
       if ($fee_applied['fee']) {
-        $this->context->addViolation($constraint->message_with_fee, [
+        $this->context->addViolation($constraint->messageWithFee, [
           '%commission' => $fee_applied['fee'],
           '@currency' => $currency,
         ]);
       }
     }
   }
+
 }

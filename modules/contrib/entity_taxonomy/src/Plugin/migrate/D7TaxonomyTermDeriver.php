@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Deriver for Drupal 7 entity_taxonomy term migrations based on vocabularies.
  */
-class D7entity_taxonomyTermDeriver extends DeriverBase implements ContainerDeriverInterface {
+class D7TaxonomyTermDeriver extends DeriverBase implements ContainerDeriverInterface {
   use MigrationDeriverTrait;
 
   /**
@@ -31,7 +31,7 @@ class D7entity_taxonomyTermDeriver extends DeriverBase implements ContainerDeriv
   protected $fieldDiscovery;
 
   /**
-   * D7entity_taxonomyTermDeriver constructor.
+   * D7TaxonomyTermDeriver constructor.
    *
    * @param string $base_plugin_id
    *   The base plugin ID for the plugin ID.

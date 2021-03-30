@@ -58,7 +58,8 @@ class FragmentListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /* @var $entity \Drupal\fragments\Entity\Fragment */
+    /** @var \Drupal\fragments\Entity\Fragment $entity */
+
     $row['title'] = Link::createFromRoute(
       $entity->label(),
       'entity.fragment.edit_form',

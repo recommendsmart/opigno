@@ -4,8 +4,8 @@ namespace Drupal\commerce_funds\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\commerce_funds\WithdrawalMethodManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\commerce_funds\WithdrawalMethodManager;
 
 /**
  * Form to configure the withdrawals methods allowed.
@@ -22,7 +22,7 @@ class ConfigureWithdrawals extends ConfigFormBase {
   /**
    * Class constructor.
    */
-  public function __construct(WithdrawalMethodManager $withdrawal_manager) {
+  public function __construct(WithdrawalMethodManagerInterface $withdrawal_manager) {
     $this->withdrawalManager = $withdrawal_manager;
   }
 
@@ -44,8 +44,6 @@ class ConfigureWithdrawals extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
-   *
-   * Https://www.drupal.org/docs/8/api/form-api/configformbase-with-simple-configuration-api.
    */
   protected function getEditableConfigNames() {
     return [
@@ -62,12 +60,11 @@ class ConfigureWithdrawals extends ConfigFormBase {
     foreach ($methods as $key => $method) {
       $readable_methods[$key] = $method['name']->render();
     }
-    $values = $config->get('withdrawal_methods');
 
     $form['methods'] = [
       '#type' => 'checkboxes',
       '#options' => $readable_methods,
-      '#default_value' => $values ? $values['methods'] : [],
+      '#default_value' => $config->get('withdrawal_methods'),
       '#title' => $this->t('Choose Payment methods allowed for withdrawals'),
     ];
 
@@ -80,7 +77,7 @@ class ConfigureWithdrawals extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->cleanValues()->getValues();
     $this->config('commerce_funds.settings')
-      ->set('withdrawal_methods', $values)
+      ->set('withdrawal_methods', $values['methods'])
       ->save();
 
     parent::submitForm($form, $form_state);

@@ -11,6 +11,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\plugin\PluginType\PluginTypeInterface;
 use Drupal\plugin\PluginType\PluginTypeManager;
 use Drupal\Tests\UnitTestCase;
+use InvalidArgumentException;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamWrapper;
@@ -84,7 +85,7 @@ EOT;
 
   }
 
-  public function setUp() {
+  protected function setUp(): void {
     FileCacheFactory::setPrefix($this->randomMachineName());
 
     $plugin_type_id_a = 'foo';
@@ -246,10 +247,10 @@ EOT;
 
   /**
    * @covers ::getPluginType
-   *
-   * @expectedException \InvalidArgumentException
    */
   public function testGetPluginTypeWithInvalidPluginTypeId() {
+    $this->expectException(InvalidArgumentException::class);
+
     $this->moduleHandler->expects($this->any())
       ->method('getModuleList')
       ->willReturn([]);

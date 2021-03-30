@@ -192,12 +192,11 @@ class GroupSubgroupHandlerTest extends SubgroupKernelTestBase {
     $this->subgroupHandler->addLeaf($this->groupChildMiddle, $group);
     $child = $this->subgroupHandler->wrapLeaf($group);
 
-    $group_storage = $this->entityTypeManager->getStorage('group');
-    $grandparent_reloaded = $this->subgroupHandler->wrapLeaf($group_storage->load($this->groupRoot->id()));
-    $left_uncle_reloaded = $this->subgroupHandler->wrapLeaf($group_storage->load($this->groupChildLeft->id()));
-    $left_cousin_reloaded = $this->subgroupHandler->wrapLeaf($group_storage->load($this->groupGrandchildLeft->id()));
-    $right_uncle_reloaded = $this->subgroupHandler->wrapLeaf($group_storage->load($this->groupChildRight->id()));
-    $right_cousin_reloaded = $this->subgroupHandler->wrapLeaf($group_storage->load($this->groupGrandchildRight->id()));
+    $grandparent_reloaded = $this->subgroupHandler->wrapLeaf($this->groupStorage->load($this->groupRoot->id()));
+    $left_uncle_reloaded = $this->subgroupHandler->wrapLeaf($this->groupStorage->load($this->groupChildLeft->id()));
+    $left_cousin_reloaded = $this->subgroupHandler->wrapLeaf($this->groupStorage->load($this->groupGrandchildLeft->id()));
+    $right_uncle_reloaded = $this->subgroupHandler->wrapLeaf($this->groupStorage->load($this->groupChildRight->id()));
+    $right_cousin_reloaded = $this->subgroupHandler->wrapLeaf($this->groupStorage->load($this->groupGrandchildRight->id()));
 
     $this->assertEquals($grandparent->getDepth(), $grandparent_reloaded->getDepth(), 'Grandparent depth remained untouched.');
     $this->assertEquals($grandparent->getLeft(), $grandparent_reloaded->getLeft(), 'Grandparent left bound remained untouched.');
@@ -257,27 +256,26 @@ class GroupSubgroupHandlerTest extends SubgroupKernelTestBase {
     $group = $this->createGroup(['type' => $this->groupTypeGrandchild->id()]);
     $this->subgroupHandler->addLeaf($this->groupChildMiddle, $group);
 
-    $group_storage = $this->entityTypeManager->getStorage('group');
-    $grandparent = $this->subgroupHandler->wrapLeaf($group_storage->load($this->groupRoot->id()));
-    $left_uncle = $this->subgroupHandler->wrapLeaf($group_storage->load($this->groupChildLeft->id()));
-    $left_cousin = $this->subgroupHandler->wrapLeaf($group_storage->load($this->groupGrandchildLeft->id()));
-    $parent = $this->subgroupHandler->wrapLeaf($group_storage->load($this->groupChildMiddle->id()));
-    $right_uncle = $this->subgroupHandler->wrapLeaf($group_storage->load($this->groupChildRight->id()));
-    $right_cousin = $this->subgroupHandler->wrapLeaf($group_storage->load($this->groupGrandchildRight->id()));
+    $grandparent = $this->subgroupHandler->wrapLeaf($this->groupStorage->load($this->groupRoot->id()));
+    $left_uncle = $this->subgroupHandler->wrapLeaf($this->groupStorage->load($this->groupChildLeft->id()));
+    $left_cousin = $this->subgroupHandler->wrapLeaf($this->groupStorage->load($this->groupGrandchildLeft->id()));
+    $parent = $this->subgroupHandler->wrapLeaf($this->groupStorage->load($this->groupChildMiddle->id()));
+    $right_uncle = $this->subgroupHandler->wrapLeaf($this->groupStorage->load($this->groupChildRight->id()));
+    $right_cousin = $this->subgroupHandler->wrapLeaf($this->groupStorage->load($this->groupGrandchildRight->id()));
 
     // Reset the cache so that the entity pointers are different from the ones
     // being manipulated in removeLeaf(). This will greatly facilitate checking
     // the before vs after values.
-    $group_storage->resetCache();
+    $this->groupStorage->resetCache();
 
     $this->subgroupHandler->removeLeaf($group, FALSE);
 
-    $grandparent_reloaded = $this->subgroupHandler->wrapLeaf($group_storage->load($this->groupRoot->id()));
-    $left_uncle_reloaded = $this->subgroupHandler->wrapLeaf($group_storage->load($this->groupChildLeft->id()));
-    $left_cousin_reloaded = $this->subgroupHandler->wrapLeaf($group_storage->load($this->groupGrandchildLeft->id()));
-    $parent_reloaded = $this->subgroupHandler->wrapLeaf($group_storage->load($this->groupChildMiddle->id()));
-    $right_uncle_reloaded = $this->subgroupHandler->wrapLeaf($group_storage->load($this->groupChildRight->id()));
-    $right_cousin_reloaded = $this->subgroupHandler->wrapLeaf($group_storage->load($this->groupGrandchildRight->id()));
+    $grandparent_reloaded = $this->subgroupHandler->wrapLeaf($this->groupStorage->load($this->groupRoot->id()));
+    $left_uncle_reloaded = $this->subgroupHandler->wrapLeaf($this->groupStorage->load($this->groupChildLeft->id()));
+    $left_cousin_reloaded = $this->subgroupHandler->wrapLeaf($this->groupStorage->load($this->groupGrandchildLeft->id()));
+    $parent_reloaded = $this->subgroupHandler->wrapLeaf($this->groupStorage->load($this->groupChildMiddle->id()));
+    $right_uncle_reloaded = $this->subgroupHandler->wrapLeaf($this->groupStorage->load($this->groupChildRight->id()));
+    $right_cousin_reloaded = $this->subgroupHandler->wrapLeaf($this->groupStorage->load($this->groupGrandchildRight->id()));
 
     $this->assertEquals($grandparent->getDepth(), $grandparent_reloaded->getDepth(), 'Grandparent depth remained untouched.');
     $this->assertEquals($grandparent->getLeft(), $grandparent_reloaded->getLeft(), 'Grandparent left bound remained untouched.');
@@ -330,11 +328,11 @@ class GroupSubgroupHandlerTest extends SubgroupKernelTestBase {
     $this->subgroupHandler->addLeaf($root, $cousin);
 
     $this->subgroupHandler->removeLeaf($cousin);
-    $root = $this->entityTypeManager->getStorage('group')->load($root->id());
+    $root = $this->groupStorage->load($root->id());
     $this->assertTrue($this->subgroupHandler->isLeaf($root));
 
     $this->subgroupHandler->removeLeaf($child);
-    $root = $this->entityTypeManager->getStorage('group')->load($root->id());
+    $root = $this->groupStorage->load($root->id());
     $this->assertFalse($this->subgroupHandler->isLeaf($root));
   }
 

@@ -6,7 +6,6 @@ use Drupal\commerce_invoice\Entity\InvoiceType;
 use Drupal\commerce_order\Adjustment;
 use Drupal\commerce_order\Entity\Order;
 use Drupal\commerce_order\Entity\OrderItem;
-use Drupal\commerce_order\Entity\OrderItemType;
 use Drupal\commerce_price\Price;
 use Drupal\commerce_product\Entity\ProductVariation;
 use Drupal\commerce_product\Entity\ProductVariationType;
@@ -71,11 +70,6 @@ class InvoiceGeneratorTest extends InvoiceKernelTestBase {
     $this->container->get('content_translation.manager')
       ->setEnabled('commerce_product_variation', 'default', TRUE);
 
-    OrderItemType::create([
-      'id' => 'test',
-      'label' => 'Test',
-      'orderType' => 'default',
-    ])->save();
     $this->invoiceGenerator = $this->container->get('commerce_invoice.invoice_generator');
     $user = $this->createUser();
     $this->user = $this->reloadEntity($user);

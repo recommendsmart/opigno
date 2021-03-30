@@ -1,4 +1,5 @@
 hide_section_settings: 0
+one_col_layout_class: 'col-12'
 background_colors: ""
 background_image:
   bundle: 'image'

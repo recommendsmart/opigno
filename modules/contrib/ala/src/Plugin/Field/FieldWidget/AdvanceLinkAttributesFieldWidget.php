@@ -1,37 +1,69 @@
 <?php
 
-namespace Drupal\advance_link_attributes\Plugin\Field\FieldWidget;
+namespace Drupal\ala\Plugin\Field\FieldWidget;
 
 use Drupal;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\link\Plugin\Field\FieldWidget\LinkWidget;
-use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Plugin implementation of the 'advance_link_attributes_field_widget' widget.
+ * Plugin implementation of the 'ala_field_widget' widget.
  *
  * @FieldWidget(
- *   id = "advance_link_attributes_field_widget",
+ *   id = "ala_field_widget",
  *   label = @Translation("Advance Link Attributes"),
  *   field_types = {
  *     "link"
  *   }
  * )
  */
-class AdvanceLinkAttributesFieldWidget extends LinkWidget {
+class AdvanceLinkAttributesFieldWidget extends LinkWidget implements ContainerFactoryPluginInterface {
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, EntityTypeManagerInterface $entity_type_manager) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
+    $this->entityTypeManager = $entity_type_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $plugin_id,
+      $plugin_definition,
+      $configuration['field_definition'],
+      $configuration['settings'],
+      $configuration['third_party_settings'],
+      $container->get('entity_type.manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
    */
   public static function defaultSettings() {
     return [
-      'ala_link_class_settings' => '',
-      'ala_link_class' => '',
-      'ala_link_icon' => '',
-      'ala_link_roles' => 'all',
-    ] + parent::defaultSettings();
+        'ala_link_class_settings' => '',
+        'ala_link_class' => '',
+        'ala_link_icon' => '',
+        'ala_link_roles' => 'all',
+      ] + parent::defaultSettings();
   }
 
   /**
@@ -48,8 +80,8 @@ class AdvanceLinkAttributesFieldWidget extends LinkWidget {
     $targets_available = [
       '_self' => 'Current window (_self)',
       '_blank' => 'New window (_blank)',
-      'parent' => 'Parent window (_parent)',
-      'top' => 'Topmost window (_top)',
+      '_parent' => 'Parent window (_parent)',
+      '_top' => 'Topmost window (_top)',
     ];
     $default_value = !empty($options['attributes']['target']) ? $options['attributes']['target'] : '';
     $element['options']['attributes']['target'] = [
@@ -71,7 +103,7 @@ class AdvanceLinkAttributesFieldWidget extends LinkWidget {
     }
 
     if ($this->getSetting('ala_link_roles')) {
-      $roles = Role::loadMultiple();
+      $roles = $this->entityTypeManager->getStorage('user_role')->loadMultiple();
       $system_roles = array_map(
         function (RoleInterface $a) {
           return $a->label();
@@ -83,9 +115,9 @@ class AdvanceLinkAttributesFieldWidget extends LinkWidget {
         '#multiple' => TRUE,
         '#title' => $this->t('Visible for'),
         '#options' => [
-          'all' => $this->t('- Everyone -'),
-          'authenticated' => $this->t('- Logged -'),
-        ] + $system_roles,
+            'all' => $this->t('- Everyone -'),
+            'authenticated' => $this->t('- Logged -'),
+          ] + $system_roles,
         '#default_value' => $default_value,
       ];
     }
@@ -95,7 +127,7 @@ class AdvanceLinkAttributesFieldWidget extends LinkWidget {
 
       switch ($class_settings) {
         case 'global':
-          $config = Drupal::config('advance_link_attributes.settings');
+          $config = Drupal::config('ala.settings');
           $classes_available = $this->getSelectOptions($config->get('ala_default_classes'));
           break;
 
@@ -188,12 +220,10 @@ class AdvanceLinkAttributesFieldWidget extends LinkWidget {
    * Return the description for the class select mode.
    */
   protected function selectClassDescription() {
-    $description = '<p>' . $this->t('The possible classes this link can have. Enter one value per line, in the format key|label.');
-    $description .= '<br/>' . $this->t('The key is the string which will be used as a class on a link. The label will be used on edit forms.');
-    $description .= '<br/>' . $this->t('If the key contains several classes, each class must be separated by a <strong>space</strong>.');
-    $description .= '<br/>' . $this->t('The label is optional: if a line contains a single string, it will be used as key and label.');
-    $description .= '</p>';
-    return $description;
+    return $this->t('<p>The possible classes this link can have. Enter one value per line, in the format key|label.
+    <br/>The key is the string which will be used as a class on a link. The label will be used on edit forms.
+    <br/>If the key contains several classes, each class must be separated by a <strong>space</strong>.
+    <br/>The label is optional: if a line contains a single string, it will be used as key and label.</p>');
   }
 
   /**

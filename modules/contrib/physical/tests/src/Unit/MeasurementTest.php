@@ -30,10 +30,10 @@ class MeasurementTest extends UnitTestCase {
   }
 
   /**
-   * ::covers __construct
+   * ::covers __construct.
    */
   public function testInvalidNumber() {
-    $this->setExpectedException(\InvalidArgumentException::class);
+    $this->expectException(\InvalidArgumentException::class);
     $measurement = new Length('INVALID', 'm');
   }
 
@@ -43,7 +43,7 @@ class MeasurementTest extends UnitTestCase {
    * ::covers getNumber
    * ::covers getUnit
    * ::covers __toString
-   * ::covers toArray
+   * ::covers toArray.
    */
   public function testGetters() {
     $this->assertEquals('10', $this->measurement->getNumber());
@@ -58,7 +58,7 @@ class MeasurementTest extends UnitTestCase {
    * ::covers add
    * ::covers subtract
    * ::covers multiply
-   * ::covers divide
+   * ::covers divide.
    */
   public function testArithmetic() {
     $result = $this->measurement->add(new Length('5', 'm'));
@@ -90,7 +90,7 @@ class MeasurementTest extends UnitTestCase {
    * ::covers greaterThanOrEqual
    * ::covers lessThan
    * ::covers lessThanOrEqual
-   * ::covers compareTo
+   * ::covers compareTo.
    */
   public function testComparison() {
     $this->assertFalse($this->measurement->isZero());

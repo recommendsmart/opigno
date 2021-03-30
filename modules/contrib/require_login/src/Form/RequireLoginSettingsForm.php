@@ -60,27 +60,27 @@ class RequireLoginSettingsForm extends ConfigFormBase {
     $config = $this->config('require_login.config');
 
     // Basic settings.
-    $form['require_login_auth_path'] = [
+    $form['auth_path'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Login form path'),
-      '#description' => $this->t('Path to the user login form. Default is /user/login.'),
-      '#default_value' => $config->get('auth_path') ? $config->get('auth_path') : 'user/login',
+      '#title' => $this->t('Login path'),
+      '#description' => $this->t('Path to the user login page. Default: /user/login'),
+      '#default_value' => $config->get('auth_path') ? $config->get('auth_path') : '/user/login',
     ];
-    $form['require_login_destination_path'] = [
+    $form['destination_path'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Login destination path'),
-      '#description' => $this->t('Destination user is redirected to after login. Leave blank to use default referer path.'),
+      '#title' => $this->t('Login destination'),
+      '#description' => $this->t('Predetermined post-login destination path. Leave blank for the default behavior.'),
       '#default_value' => $config->get('destination_path'),
     ];
-    $form['require_login_deny_message'] = [
+    $form['deny_message'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Access denied message'),
-      '#description' => $this->t('Message shown to anonymous visitors attempting to access a protected page. Leave blank to disable.'),
+      '#description' => $this->t('Show message to user attempting to access a restricted page. Leave blank to disable.'),
       '#default_value' => $config->get('deny_message'),
     ];
     $items = [
       '#theme' => 'item_list',
-      '#prefix' => $this->t('Disable user login enforcement on page paths. <strong>Limit one path per line.</strong>'),
+      '#prefix' => $this->t('Exclude authentication checks on specific paths. <strong>Limit one path per line.</strong>'),
       '#items' => [
         $this->t('Use &lt;front&gt; to exclude the front page.'),
         $this->t('Use internal paths to exclude site pages. <em>I.E. /about/contact</em>'),
@@ -88,19 +88,20 @@ class RequireLoginSettingsForm extends ConfigFormBase {
         $this->t('Use wildcards (*) to match any part of a path. <em>I.E. /shop/*/orders</em>'),
       ],
     ];
-    $form['require_login_excluded_paths'] = [
+    $form['excluded_paths'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Excluded paths'),
       '#description' => render($items),
       '#default_value' => $config->get('excluded_paths'),
     ];
-    $form['require_login_excluded_node_types'] = [
+    $node_types = $config->get('excluded_node_types');
+    $form['excluded_node_types'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Excluded content types'),
-      '#description' => $this->t('Disable user login enforcement on all pages of a specific content type.'),
+      '#description' => $this->t('Exclude authentication checks on all pages of a specific content type.'),
       '#options' => node_type_get_names(),
       '#multiple' => TRUE,
-      '#default_value' => $config->get('excluded_node_types'),
+      '#default_value' => $node_types ? $node_types : [],
     ];
 
     // Additional settings.
@@ -111,19 +112,19 @@ class RequireLoginSettingsForm extends ConfigFormBase {
     $form['advanced']['excluded_403'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Exclude 403 (access denied) page'),
-      '#description' => $this->t('Allow anonymous visitors to view the 403 (access denied) page.'),
+      '#description' => $this->t('Allow unauthenticated access to the 403 (access denied) page.'),
       '#default_value' => $config->get('excluded_403'),
     ];
     $form['advanced']['excluded_404'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Exclude 404 (not found) page'),
-      '#description' => $this->t('Allow anonymous visitors to view the 404 (not found) page.'),
+      '#description' => $this->t('Allow unauthenticated access to the 404 (not found) page.'),
       '#default_value' => $config->get('excluded_404'),
     ];
-    $form['advanced']['require_login_excluded_routes'] = [
+    $form['advanced']['excluded_routes'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Excluded route names'),
-      '#description' => $this->t('Disable user login enforcement on route names. <strong>Limit one path per line.</strong>'),
+      '#description' => $this->t('Exclude authentication checks on specific route names. <strong>Limit one path per line.</strong>'),
       '#default_value' => $config->get('excluded_routes'),
     ];
 
@@ -225,14 +226,14 @@ class RequireLoginSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('require_login.config')
-      ->set('auth_path', $form_state->getValue('require_login_auth_path'))
-      ->set('destination_path', $form_state->getValue('require_login_destination_path'))
-      ->set('deny_message', $form_state->getValue('require_login_deny_message'))
+      ->set('auth_path', $form_state->getValue('auth_path'))
+      ->set('destination_path', $form_state->getValue('destination_path'))
+      ->set('deny_message', $form_state->getValue('deny_message'))
       ->set('excluded_403', $form_state->getValue('excluded_403'))
       ->set('excluded_404', $form_state->getValue('excluded_404'))
-      ->set('excluded_paths', $form_state->getValue('require_login_excluded_paths'))
-      ->set('excluded_node_types', $form_state->getValue('require_login_excluded_node_types'))
-      ->set('excluded_routes', $form_state->getValue('require_login_excluded_routes'))
+      ->set('excluded_paths', $form_state->getValue('excluded_paths'))
+      ->set('excluded_node_types', $form_state->getValue('excluded_node_types'))
+      ->set('excluded_routes', $form_state->getValue('excluded_routes'))
       ->save();
 
     // Flush caches so changes take immediate effect.

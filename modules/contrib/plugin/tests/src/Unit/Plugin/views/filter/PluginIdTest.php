@@ -39,7 +39,7 @@ class PluginIdTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $plugin_type_id = 'foo_bar';
@@ -103,7 +103,7 @@ class PluginIdTest extends UnitTestCase {
     // \Drupal::service(). See https://www.drupal.org/node/2720947.
     assert_options(ASSERT_ACTIVE, FALSE);
     $cache_contexts = $this->sut->getCacheContexts();
-    $this->assertInternalType('array', $cache_contexts);
+    $this->assertIsArray($cache_contexts);
     foreach ($plugin_manager_cache_contexts as $plugin_manager_cache_context) {
       $this->assertTrue(in_array($plugin_manager_cache_context, $cache_contexts));
     }
@@ -124,7 +124,7 @@ class PluginIdTest extends UnitTestCase {
 
     $this->pluginType->getPluginManager()->willReturn($plugin_manager->reveal());
 
-    $this->assertArraySubset($plugin_manager_cache_tags, $this->sut->getCacheTags());
+    $this->assertEquals($plugin_manager_cache_tags, $this->sut->getCacheTags());
   }
 
   /**

@@ -8,7 +8,7 @@ dependencies:
   - layout_builder
   - select2:select2
 
-# Information added by Drupal.org packaging script on 2020-11-06
-version: '8.x-1.0-alpha5'
+# Information added by Drupal.org packaging script on 2021-02-24
+version: '8.x-1.0-alpha6'
 project: 'kpi_analytics'
-datestamp: 1604654679
+datestamp: 1614185109

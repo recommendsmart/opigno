@@ -59,11 +59,10 @@ class EntityTaxonomyIndexTid extends PrerenderList {
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
-    echo "Hi <br>";
     // @todo: Wouldn't it be possible to use $this->base_table and no if here?
     $this->additional_fields['entity_id'] = [
       'table' => $view->storage->get('base_table'),
-      'field' => 'nid'
+      'field' => $view->storage->get('base_field')
     ];
   }
 
@@ -85,6 +84,20 @@ class EntityTaxonomyIndexTid extends PrerenderList {
       '#title' => $this->t('Link this field to its term page'),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['link_to_entity_taxonomy']),
+    ];
+
+    $entity_list_def = \Drupal::entityTypeManager()->getDefinitions();
+    $entity_list = array_keys($entity_list_def);
+    $not_categorized = [
+      'entity_taxonomy', 'taxonomy', 'block_content_type', 'comment_type', 'editor', 'entity_taxonomy_vocabulary', 'field_config', 'field_storage_config', 'filter_format', 'image_style', 'menu_link_content', 'node_type', 'path_alias', 'rdf_mapping', 'search_page', 'shortcut_set', 'shortcut', 'menu', 'action', 'tour', 'user_role', 'view', 'entity_view_mode', 'entity_view_display', 'entity_form_mode', 'entity_form_display', 'base_field_override', 'date_format',
+    ];
+    $entities = array_diff($entity_list, $not_categorized);
+
+    $form['entity'] = [
+      '#type' => 'entity',
+      '#title' => $this->t('Select entityType'),
+      '#options' => $entities,
+      '#default_value' => $this->options['entity'],
     ];
 
     $form['limit'] = [
@@ -125,19 +138,19 @@ class EntityTaxonomyIndexTid extends PrerenderList {
   public function preRender(&$values) {
     $vocabularies = $this->vocabularyStorage->loadMultiple();
     $this->field_alias = $this->aliases['entity_id'];
-    $nids = [];
+    $entity_ids = [];
     foreach ($values as $result) {
       if (!empty($result->{$this->aliases['entity_id']})) {
-        $nids[] = $result->{$this->aliases['entity_id']};
+        $entity_ids[] = $result->{$this->aliases['entity_id']};
       }
     }
 
-    if ($nids) {
+    if ($entity_ids) {
       $vocabs = array_filter($this->options['vids']);
       if (empty($this->options['limit'])) {
         $vocabs = [];
       }
-      $result = \Drupal::entityTypeManager()->getStorage('entity_taxonomy_term')->getNodeTerms($nids, $vocabs);
+      $result = \Drupal::entityTypeManager()->getStorage('entity_taxonomy_term')->entity_type_id($this->options['entity'],$entity_ids, $vocabs);
 
       foreach ($result as $node_nid => $data) {
         foreach ($data as $tid => $term) {

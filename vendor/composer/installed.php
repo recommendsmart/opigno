@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '4436f0efdb0191a8045c48c600eb6a77e938b3d8',
+    'reference' => 'c94869e93ef0279051479eb6a556e19d5fb13dc3',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -1760,7 +1760,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '4436f0efdb0191a8045c48c600eb6a77e938b3d8',
+      'reference' => 'c94869e93ef0279051479eb6a556e19d5fb13dc3',
     ),
     'guzzlehttp/guzzle' => 
     array (

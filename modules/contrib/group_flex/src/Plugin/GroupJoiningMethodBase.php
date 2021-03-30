@@ -68,7 +68,7 @@ abstract class GroupJoiningMethodBase extends PluginBase implements GroupJoining
   /**
    * {@inheritdoc}
    */
-  public function saveMappedPerm(array $mappedPerm, GroupTypeInterface $groupType): void {
+  public function saveMappedPerm(array $mappedPerm, GroupTypeInterface $groupType) {
     foreach ($mappedPerm as $roleName => $permissions) {
       $groupRoleStorage = $this->entityTypeManager->getStorage('group_role');
       /** @var \Drupal\group\Entity\GroupRoleInterface $groupRole */

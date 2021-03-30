@@ -91,7 +91,7 @@ class Number extends FormElement {
    * @return array
    *   The built physical_number form element.
    */
-  public static function processElement(array $element, FormStateInterface $form_state, &$complete_form) {
+  public static function processElement(array $element, FormStateInterface $form_state, array &$complete_form) {
     // Provide an example to the end user so that they know which decimal
     // separator to use. This is the same pattern Drupal core uses.
     $number_formatter = \Drupal::service('physical.number_formatter');

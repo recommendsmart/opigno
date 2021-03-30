@@ -59,6 +59,9 @@ class InheritedGroupPermissionCalculator extends GroupPermissionCalculatorBase {
     // added to or removed from a group.
     $calculated_permissions->addCacheTags(['group_content_list:plugin:group_membership:entity:' . $account->id()]);
 
+    /** @var \Drupal\group\Entity\GroupTypeInterface[] $group_types */
+    $group_types = $this->entityTypeManager->getStorage('group_type')->loadMultiple();
+
     /** @var \Drupal\subgroup\Entity\SubgroupHandlerInterface $group_handler */
     $group_handler = $this->entityTypeManager->getHandler('group', 'subgroup');
 
@@ -74,6 +77,7 @@ class InheritedGroupPermissionCalculator extends GroupPermissionCalculatorBase {
     $group_storage = $this->entityTypeManager->getStorage('group');
     foreach ($this->membershipLoader->loadByUser($account) as $group_membership) {
       $group = $group_membership->getGroup();
+      $group_type_id = $group->bundle();
 
       // If the group is not a leaf, there can be no inheritance.
       if (!$group_handler->isLeaf($group)) {
@@ -86,8 +90,8 @@ class InheritedGroupPermissionCalculator extends GroupPermissionCalculatorBase {
 
       // Wrap the leaf and figure out what tree its group type belongs to.
       $leaf = $group_handler->wrapLeaf($group);
-      if (!isset($tree_per_group_type[$group->bundle()])) {
-        $tree_per_group_type[$group->bundle()] = $group_type_handler->wrapLeaf($group->getGroupType())->getTree();
+      if (!isset($tree_per_group_type[$group_type_id])) {
+        $tree_per_group_type[$group_type_id] = $group_type_handler->wrapLeaf($group_types[$group_type_id])->getTree();
       }
 
       // From this point on, any changes in the membership's roles might change
@@ -97,7 +101,7 @@ class InheritedGroupPermissionCalculator extends GroupPermissionCalculatorBase {
       // To speed things up, we get the role IDs directly rather than call the
       // getRoles() method on the membership. This is because we do not wish
       // to load the roles but only get the role IDs.
-      $role_ids = [$group_membership->getGroup()->getGroupType()->getMemberRoleId()];
+      $role_ids = [$group_types[$group_type_id]->getMemberRoleId()];
       foreach ($group_membership->getGroupContent()->group_roles as $group_role_ref) {
         $role_ids[] = $group_role_ref->target_id;
       }
@@ -105,7 +109,7 @@ class InheritedGroupPermissionCalculator extends GroupPermissionCalculatorBase {
       // The inherited permissions need to be recalculated whenever a new role
       // inheritance is set up for this tree or one is removed from it.
       $calculated_permissions->addCacheTags([
-        'subgroup_role_inheritance_list:tree:' . $tree_per_group_type[$group->bundle()],
+        'subgroup_role_inheritance_list:tree:' . $tree_per_group_type[$group_type_id],
       ]);
 
       // If there are no inheritance entities set up, we can bail here.
@@ -130,26 +134,34 @@ class InheritedGroupPermissionCalculator extends GroupPermissionCalculatorBase {
         // Inheritance entities cannot be updated, so no need to add them as
         // dependencies because adding or removing them already triggers the
         // custom list cache tag added above.
-        $group_role = $inheritance->getTarget();
-        $group_type_id = $group_role->getGroupTypeId();
+        $target_group_role = $inheritance->getTarget();
+        $target_group_type_id = $target_group_role->getGroupTypeId();
+        $target_group_type_depth = $group_type_handler->wrapLeaf($group_types[$target_group_type_id])->getDepth();
 
-        if (!isset($group_ids[$group_type_id])) {
-          $group_ids[$group_type_id] = $group_storage
+        // Figure out whether we need to go up or down the tree.
+        $source_group_type_depth = $group_type_handler->wrapLeaf($group_types[$group_type_id])->getDepth();
+        $search_upwards = $target_group_type_depth < $source_group_type_depth;
+
+        if (!isset($group_ids[$target_group_type_id])) {
+          $group_ids[$target_group_type_id] = $group_storage
             ->getQuery()
-            ->condition('type', $group_type_id)
+            ->condition('type', $target_group_type_id)
             ->condition(SUBGROUP_TREE_FIELD, $leaf->getTree())
+            ->condition(SUBGROUP_LEFT_FIELD, $leaf->getLeft(), $search_upwards ? '<' : '>')
+            ->condition(SUBGROUP_RIGHT_FIELD, $leaf->getRight(), $search_upwards ? '>' : '<')
+            ->condition(SUBGROUP_DEPTH_FIELD, $target_group_type_depth)
             ->accessCheck(FALSE)
             ->execute();
         }
 
-        if (!empty($group_ids[$group_type_id])) {
+        if (!empty($group_ids[$target_group_type_id])) {
           // Add the permissions to the list of permission sets for the targets.
-          foreach ($group_ids[$group_type_id] as $affected_group_id) {
-            $group_permission_sets[$affected_group_id][] = $group_role->getPermissions();
+          foreach ($group_ids[$target_group_type_id] as $affected_group_id) {
+            $group_permission_sets[$affected_group_id][] = $target_group_role->getPermissions();
           }
 
           // Because we used the role's permissions, it is now a dependency.
-          $calculated_permissions->addCacheableDependency($group_role);
+          $calculated_permissions->addCacheableDependency($target_group_role);
         }
       }
 
@@ -157,11 +169,7 @@ class InheritedGroupPermissionCalculator extends GroupPermissionCalculatorBase {
         $permissions = $permission_sets ? array_merge(...$permission_sets) : [];
         $item = new CalculatedGroupPermissionsItem(
           CalculatedGroupPermissionsItemInterface::SCOPE_GROUP,
-          // @todo This needs to be fixed in RefinableCalculatedGroupPermissions
-          // so it no longer does a type safe identifier comparison, but I'm not
-          // tagging a new Group release just for that, so let's fix it here for
-          // now and remove it when Group 1.1 is out.
-          (string) $group_id,
+          $group_id,
           $permissions
         );
         $calculated_permissions->addItem($item);

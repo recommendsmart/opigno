@@ -2,6 +2,7 @@
 
 namespace Drupal\paragraph_view_mode;
 
+use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -127,6 +128,17 @@ class StorageManager implements StorageManagerInterface {
   /**
    * {@inheritdoc}
    */
+  public function setFieldLabel(string $bundle, string $label): void {
+    $field = $this->getField($bundle);
+    if ($field) {
+      $field->set('label', $label);
+      $field->save();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function addToFormDisplay(string $bundle, string $form_mode = 'default'): void {
     $form_display_id = implode('.', [
       StorageManagerInterface::ENTITY_TYPE,
@@ -136,20 +148,24 @@ class StorageManager implements StorageManagerInterface {
 
     try {
       $form_display = $this->formDisplay->load($form_display_id);
+      if ($form_display instanceof EntityDisplayInterface) {
+        $form_display
+          ->setComponent(StorageManagerInterface::FIELD_NAME, [
+            'type' => StorageManagerInterface::FIELD_TYPE,
+            'weight' => -100,
+            'settings' => ParagraphViewModeWidget::defaultSettings(),
+          ])
+          ->save();
 
-      $form_display
-        ->setComponent(StorageManagerInterface::FIELD_NAME, [
-          'type' => StorageManagerInterface::FIELD_TYPE,
-          'weight' => -100,
-          'settings' => ParagraphViewModeWidget::defaultSettings(),
-        ])
-        ->save();
-
-      $this->logger->info('%label field has been placed on the %bundle form display %mode', [
-        '%label' => StorageManagerInterface::FIELD_LABEL,
-        '%bundle' => $bundle,
-        '%mode' => $form_mode,
-      ]);
+        $this->logger->info('%label field has been placed on the %bundle form display %mode', [
+          '%label' => StorageManagerInterface::FIELD_LABEL,
+          '%bundle' => $bundle,
+          '%mode' => $form_mode,
+        ]);
+      }
+      else {
+        throw new EntityStorageException();
+      }
     }
     catch (EntityStorageException $exception) {
       $this->messenger()->addMessage($this->t('Unable to place %label field on the %bundle form display %mode, please place it manually.', [

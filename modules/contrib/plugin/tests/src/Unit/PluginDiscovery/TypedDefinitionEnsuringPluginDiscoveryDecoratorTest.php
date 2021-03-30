@@ -39,7 +39,7 @@ class TypedDefinitionEnsuringPluginDiscoveryDecoratorTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     $this->pluginManager = $this->createMock(PluginManagerInterface::class);
 
     $this->pluginType = $this->createMock(PluginTypeInterface::class);

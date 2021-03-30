@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\commerce_price\Entity\Currency;
-use Drupal\commerce_funds\Services\TransactionManager;
+use Drupal\commerce_funds\TransactionManagerInterface;
 
 /**
  * Provides an admin block for user balances.
@@ -39,14 +39,14 @@ class FundsAdminUserBalances extends BlockBase implements ContainerFactoryPlugin
   /**
    * The transaction manager.
    *
-   * @var \Drupal\commerce_funds\Services\TransactionManager
+   * @var \Drupal\commerce_funds\TransactionManagerInterface
    */
   protected $transactionManager;
 
   /**
    * Class constructor.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, CurrentPathStack $path, RouteMatchInterface $route_match, TransactionManager $transaction_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, CurrentPathStack $path, RouteMatchInterface $route_match, TransactionManagerInterface $transaction_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->path = $path;
     $this->routeMatch = $route_match;

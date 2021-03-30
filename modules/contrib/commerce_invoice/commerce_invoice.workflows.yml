@@ -16,6 +16,10 @@ invoice_default:
     canceled:
       label: Canceled
   transitions:
+    confirm:
+      label: 'Confirm invoice'
+      from: [draft]
+      to: pending
     pay:
       label: 'Pay invoice'
       from: [draft, pending]

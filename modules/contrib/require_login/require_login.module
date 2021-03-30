@@ -13,20 +13,21 @@ use Drupal\Core\Routing\RouteMatchInterface;
 function require_login_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.require_login':
-      $output = '<p>' . t('Require login authentication to view pages regardless of user role permissions.') . '</p>';
+      $output = '<p>' . t('Provides catch-all solution to require user authentication on pages.') . '</p>';
       $output .= '<h3>' . t('Features') . '</h3>';
       $output .= '<dl>';
-      $output .= '  <dt>' . t('Enforce login authentication for every page.') . '</dt>';
-      $output .= '  <dt>' . t('Configure the login page path (default is /user/login).') . '</dt>';
-      $output .= '  <dt>' . t('Exclude certain pages from login authentication requirement.') . '</dt>';
-      $output .= '  <dt>' . t('Allow or deny access to the 403/404 status pages.') . '</dt>';
-      $output .= '  <dt>' . t('Configure access denied message for anonymous visitors.') . '</dt>';
+      $output .= '  <dt>' . t('Enforce user authentication for any or all pages.') . '</dt>';
+      $output .= '  <dt>' . t('Change the default user login path (/user/login).') . '</dt>';
+      $output .= '  <dt>' . t('Exclude content types, paths, or router names as needed.') . '</dt>';
+      $output .= '  <dt>' . t('Configure access to 403 (access denied) and (404) not found pages.') . '</dt>';
+      $output .= '  <dt>' . t('Translatable access denied message seen by anonymous users.') . '</dt>';
+      $output .= '  <dt>' . t('Fully translatable configuration for per-language exclusions.') . '</dt>';
       $output .= '</dl>';
-      $output .= '<h3>' . t('Installation') . '</h3>';
+      $output .= '<h3>' . t('Usage') . '</h3>';
       $output .= '<dl>';
-      $output .= '  <dt>' . t('Download and install the module.') . '</dt>';
-      $output .= '  <dt>' . t('Set "Administer user authentication requirements" permission on user roles.') . '</dt>';
-      $output .= '  <dt>' . t('Configure additional settings: Admin > Config > People > Require Login') . '</dt>';
+      $output .= '  <dt>' . t('Install the module.') . '</dt>';
+      $output .= '  <dt>' . t('Set permissions: /admin/people/permissions#module-require_login') . '</dt>';
+      $output .= '  <dt>' . t('Configure settings: /admin/config/people/require-login') . '</dt>';
       $output .= '</dl>';
       return $output;
   }

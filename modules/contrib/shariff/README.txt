@@ -23,21 +23,24 @@ display the buttons as a block and a pseudo field.
 
 -- REQUIREMENTS --
 
-* Shariff Library (at least v1.4.6)
+* Shariff Library (at least v2.0.1)
   https://github.com/heiseonline/shariff
 
--- INSTALLATION Standard --
+-- INSTALLATION manually --
 
 1) Download the Drupal shariff module and place it in your modules folder.
 
 2) Download the library from https://github.com/heiseonline/shariff and place
 it in the Drupal root libraries folder.
 So the JavaScript and the CSS files should be available under
-"DRUPAL_ROOT/libraries/shariff/shariff.min.js",
+"DRUPAL_ROOT/libraries/shariff/shariff.complete.js",
 "DRUPAL_ROOT/libraries/shariff/shariff.min.css" and
 "DRUPAL_ROOT/libraries/shariff/shariff.complete.css".
 
-You only need the build folder and at least v1.4.6 of the library.
+When you use the Complete CSS variant, you also need the fontawesome font files (fa-*), that are included in the
+library.
+
+You only need those files and at least v2.0.1 of the library.
 
 -- INSTALLATION using Composer --
 
@@ -91,21 +94,6 @@ the second adds the Drupal module.
 
 Note: the requirement on the library is not in the module's composer.json
 because that would cause problems with automated testing.
-
--- INSTALLATION using Drush --
-
-Prerequisite: Drush is installed.
-
-$ drush dl shariff
-$ drush en shariff
-
-Downloading the shariff library
-$ drush shariff-library [PATH]
-
-[PATH] Optional. A path where to install the shariff library.
-Default is the "DRUPAL_ROOT/libraries" folder.
-
-Alias for "shariff-library" => "shariff-lib"
 
 -- CONFIGURATION --
 

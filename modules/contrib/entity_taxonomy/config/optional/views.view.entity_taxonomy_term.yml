@@ -64,32 +64,6 @@ display:
           tags:
             previous: ‹‹
             next: ››
-      sorts:
-        sticky:
-          id: sticky
-          table: entity_taxonomy_index
-          field: sticky
-          order: DESC
-          plugin_id: standard
-          relationship: none
-          group_type: group
-          admin_label: ''
-          exposed: false
-          expose:
-            label: ''
-        created:
-          id: created
-          table: entity_taxonomy_index
-          field: created
-          order: DESC
-          plugin_id: date
-          relationship: none
-          group_type: group
-          admin_label: ''
-          exposed: false
-          expose:
-            label: ''
-          granularity: second
       arguments:
         tid:
           id: tid
@@ -175,44 +149,6 @@ display:
           plugin_id: language
           entity_type: node
           entity_field: langcode
-        status:
-          id: status
-          table: entity_taxonomy_index
-          field: status
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: '='
-          value: '1'
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-            operator_limit_selection: false
-            operator_list: {  }
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          plugin_id: boolean
       style:
         type: default
         options:

@@ -9,7 +9,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 /**
  * Withdrawal method plugin manager.
  */
-class WithdrawalMethodManager extends DefaultPluginManager {
+class WithdrawalMethodManager extends DefaultPluginManager implements WithdrawalMethodManagerInterface {
 
   /**
    * {@inheritdoc}

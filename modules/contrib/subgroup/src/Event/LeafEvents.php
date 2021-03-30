@@ -35,6 +35,15 @@ final class LeafEvents {
   const GROUP_TYPE_LEAF_ADD = 'subgroup.group_type_leaf.add';
 
   /**
+   * Name of the event fired when importing a group type that is a leaf.
+   *
+   * @Event
+   *
+   * @see \Drupal\subgroup\Event\GroupTypeLeafEvent
+   */
+  const GROUP_TYPE_LEAF_IMPORT = 'subgroup.group_type_leaf.import';
+
+  /**
    * Name of the event fired when updating a group type to stop being a leaf.
    *
    * @Event

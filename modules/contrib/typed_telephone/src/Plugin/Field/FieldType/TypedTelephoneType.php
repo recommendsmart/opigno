@@ -9,8 +9,6 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'typed_telephone' field type.
@@ -59,7 +57,7 @@ class TypedTelephoneType extends FieldItemBase {
       'columns' => [
         'teltype' => [
           'type' => 'varchar',
-          'length' => 30
+          'length' => 30,
         ],
         'value' => [
           'type' => 'varchar',
@@ -83,7 +81,7 @@ class TypedTelephoneType extends FieldItemBase {
         'teltype' => [
           'Length' => [
             'max' => 30,
-            'maxMessage' => t('%name: type may not be longer than 30 characters.', [
+            'maxMessage' => $this->t('%name: type may not be longer than 30 characters.', [
               '%name' => $this->getFieldDefinition()->getLabel(),
             ]),
           ],
@@ -91,9 +89,9 @@ class TypedTelephoneType extends FieldItemBase {
         'value' => [
           'Length' => [
             'max' => $max_length,
-            'maxMessage' => t('%name: telephone may not be longer than @max characters.', [
+            'maxMessage' => $this->t('%name: telephone may not be longer than @max characters.', [
               '%name' => $this->getFieldDefinition()->getLabel(),
-              '@max' => $max_length
+              '@max' => $max_length,
             ]),
           ],
         ],
@@ -122,20 +120,20 @@ class TypedTelephoneType extends FieldItemBase {
 
     $elements['allowed_types'] = [
       '#type' => 'checkboxes',
-      '#title' => t('Allowed telephone types'),
-      '#default_value' => $this->getSetting('allowed_types'),
+      '#title' => $this->t('Allowed telephone types'),
+      '#default_value' => $this->getSetting('allowed_types')??$config_helper->getTypesAsOptions(),
       '#required' => TRUE,
-      '#description' => t('The allowed telephone types for this field.'),
+      '#description' => $this->t('The allowed telephone types for this field.'),
       '#options' => $config_helper->getTypesAsOptions(),
-      '#disabled' => $has_data
+      '#disabled' => $has_data,
     ];
 
     $elements['max_length'] = [
       '#type' => 'number',
-      '#title' => t('Maximum length'),
+      '#title' => $this->t('Maximum length'),
       '#default_value' => $this->getSetting('max_length'),
       '#required' => TRUE,
-      '#description' => t('The maximum length of the field in characters.'),
+      '#description' => $this->t('The maximum length of the field in characters.'),
       '#min' => 1,
       '#disabled' => $has_data,
     ];

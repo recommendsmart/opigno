@@ -11,7 +11,7 @@ services:
 
   commerce_stock.local_stock_updater:
     class: Drupal\commerce_stock_local\LocalStockUpdater
-    arguments: ['@database', '@commerce_stock.local_stock_checker']
+    arguments: ['@database', '@commerce_stock.local_stock_checker', '@event_dispatcher', '@entity_type.manager']
 
   commerce_stock.local_stock_service_config:
     class: Drupal\commerce_stock_local\LocalStockServiceConfig
@@ -21,4 +21,10 @@ services:
       class: Drupal\commerce_stock_local\LocalStockUninstallValidator
       tags:
         - { name: module_install.uninstall_validator }
-      arguments: ['@entity_type.manager', '@string_translation']
+      arguments: ['@entity_type.manager', '@string_translation', '@entity_field.manager']
+
+  commerce_stock_local.transaction_subscriber:
+    class: Drupal\commerce_stock_local\EventSubscriber\CommerceLocalStockTransactionSubscriber
+    arguments: ['@cache_tags.invalidator']
+    tags:
+      - { name: event_subscriber }

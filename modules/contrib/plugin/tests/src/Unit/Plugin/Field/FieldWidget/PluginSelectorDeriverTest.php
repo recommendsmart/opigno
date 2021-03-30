@@ -28,7 +28,7 @@ class PluginSelectorDeriverTest extends UnitTestCase {
    */
   protected $sut;
 
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->pluginSelectorManager = $this->createMock(PluginSelectorManagerInterface::class);

@@ -30,17 +30,17 @@ class VolumeTest extends UnitTestCase {
   }
 
   /**
-   * ::covers __construct
+   * ::covers __construct.
    */
   public function testInvalidUnit() {
-    $this->setExpectedException(\InvalidArgumentException::class);
+    $this->expectException(\InvalidArgumentException::class);
     $volume = new Volume('1', 'kg');
   }
 
   /**
    * Tests unit conversion.
    *
-   * ::covers convert
+   * ::covers convert.
    */
   public function testConvert() {
     $this->assertEquals(new Volume('4000000', 'ml'), $this->volume->convert('ml')->round());

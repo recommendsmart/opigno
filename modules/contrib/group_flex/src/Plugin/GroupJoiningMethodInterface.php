@@ -49,7 +49,7 @@ interface GroupJoiningMethodInterface extends PluginInspectionInterface {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function saveMappedPerm(array $mappedPerm, GroupTypeInterface $groupType): void;
+  public function saveMappedPerm(array $mappedPerm, GroupTypeInterface $groupType);
 
   /**
    * Enable the joining method on the group type.
@@ -59,7 +59,7 @@ interface GroupJoiningMethodInterface extends PluginInspectionInterface {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function enableGroupType(GroupTypeInterface $groupType): void;
+  public function enableGroupType(GroupTypeInterface $groupType);
 
   /**
    * Disable the joining method on the group type.
@@ -69,7 +69,7 @@ interface GroupJoiningMethodInterface extends PluginInspectionInterface {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function disableGroupType(GroupTypeInterface $groupType): void;
+  public function disableGroupType(GroupTypeInterface $groupType);
 
   /**
    * Get all the group permissions for the joining method.

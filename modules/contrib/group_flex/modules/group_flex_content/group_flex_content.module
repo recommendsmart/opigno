@@ -5,6 +5,7 @@
  * Group flex content module file.
  */
 
+use Drupal\group_flex\Plugin\GroupVisibilityInterface;
 use Drupal\group_flex_content\Plugin\GroupContentAccessControlHandler;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Database\Query\SelectInterface;
@@ -143,7 +144,7 @@ function _group_flex_content_form_alter(&$form, $form_state) {
     ];
 
     // When the group visibility is private disable this element.
-    if ($group_flex_type->getGroupTypeVisibility($group_type) === GROUP_FLEX_TYPE_VIS_PRIVATE) {
+    if ($group_flex_type->getGroupTypeVisibility($group_type) === GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PRIVATE) {
       $form['group_content_visibility']['#disabled'] = TRUE;
       $form['group_content_visibility']['#description'] = t('Important: The group visibility is forced to "private", therefore the content visibility is forced to private in order to be consistent.');
       return;
@@ -294,7 +295,7 @@ function group_flex_content_form_alter(&$form, FormStateInterface $form_state, $
     // Show the field when group content visibility for plugin is flexible and
     // the group visibility is not private.
     if (isset($pluginConfig['group_content_visibility']) && $pluginConfig['group_content_visibility'] === 'flexible') {
-      if ($group_flex_group->getGroupVisibility($group) !== GROUP_FLEX_TYPE_VIS_PRIVATE) {
+      if ($group_flex_group->getGroupVisibility($group) !== GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PRIVATE) {
         $hide_field = FALSE;
       }
     }
@@ -326,7 +327,7 @@ function group_flex_content_form_alter(&$form, FormStateInterface $form_state, $
           // and the group visibility is not private.
           if (isset($plugin_config['group_content_visibility']) && $plugin_config['group_content_visibility'] === 'flexible') {
             $group = $group_content->getGroup();
-            if ($group_flex_group->getGroupVisibility($group) !== GROUP_FLEX_TYPE_VIS_PRIVATE) {
+            if ($group_flex_group->getGroupVisibility($group) !== GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PRIVATE) {
               $first_value = $group_content->get('content_visibility')->first();
               $default_value = ($first_value !== NULL) ? $first_value->getString() : group_flex_content_get_default_content_visibility();
               $hide_field = FALSE;

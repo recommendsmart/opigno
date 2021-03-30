@@ -22,6 +22,10 @@ class TaxRateResolver implements TaxRateResolverInterface, TaxTypeAwareInterface
    */
   public function resolve(TaxZone $zone, OrderItemInterface $order_item, ProfileInterface $customer_profile) {
     $purchased_entity = $order_item->getPurchasedEntity();
+    if (!$purchased_entity) {
+      return NULL;
+    }
+
     $tax_field_names = $this->getTaxFieldNames($purchased_entity);
 
     foreach ($tax_field_names as $field_name) {

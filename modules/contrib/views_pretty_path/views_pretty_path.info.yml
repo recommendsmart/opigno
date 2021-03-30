@@ -3,7 +3,7 @@ description: Rewrites URL query parameters into clean URL components for specifi
 core: 8.x
 type: module
 
-# Information added by Drupal.org packaging script on 2019-12-11
-version: '8.x-1.1'
+# Information added by Drupal.org packaging script on 2020-05-05
+version: '8.x-1.4'
 project: 'views_pretty_path'
-datestamp: 1576094891
+datestamp: 1588692947

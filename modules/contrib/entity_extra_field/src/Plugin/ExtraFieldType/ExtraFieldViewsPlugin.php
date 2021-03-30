@@ -67,8 +67,8 @@ class ExtraFieldViewsPlugin extends ExtraFieldTypePluginBase {
       $form['arguments'] = [
         '#type' => 'textfield',
         '#title' => $this->t('Arguments'),
-        '#description' => $this->t('Input the views display arguments. If there 
-          are multiple, use a comma delimiter. <br/> <strong>Note:</strong> 
+        '#description' => $this->t('Input the views display arguments. If there
+          are multiple, use a comma delimiter. <br/> <strong>Note:</strong>
           Tokens are supported.'),
         '#default_value' => $this->getPluginFormStateValue('arguments', $form_state)
       ];
@@ -115,25 +115,20 @@ class ExtraFieldViewsPlugin extends ExtraFieldTypePluginBase {
    * @return array|null
    *   An renderable array of the view.
    *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function renderView(EntityInterface $entity) {
-    /** @var \Drupal\views\Entity\View $entity_view */
-    $entity_view = $this->getView();
+    $view_name = $this->getViewName();
 
-    if ($entity_view === FALSE) {
+    if (!isset($view_name)) {
       return [];
     }
-    $view = $entity_view->getExecutable();
+    $view_arguments = $this->getViewArguments($entity);
 
-    $view->initHandlers();
-    $view->preExecute();
-    $view->execute();
-
-    return $view->buildRenderable(
+    return views_embed_view(
+      $view_name,
       $this->getViewDisplay(),
-      $this->getViewArguments($entity)
+      ...$view_arguments
     );
   }
 
@@ -147,11 +142,23 @@ class ExtraFieldViewsPlugin extends ExtraFieldTypePluginBase {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function getView() {
-    $configuration = $this->getConfiguration();
+    $view_name = $this->getViewName();
 
-    return isset($configuration['view_name'])
-      ? $this->loadView($configuration['view_name'])
-      : FALSE;
+    if (!isset($view_name)) {
+      return FALSE;
+    }
+
+    return $this->loadView($view_name);
+  }
+
+  /**
+   * Get the view name.
+   *
+   * @return string|null
+   *   The view name; otherwise NULL.
+   */
+  protected function getViewName() {
+    return $this->getConfiguration()['view_name'] ?? NULL;
   }
 
   /**

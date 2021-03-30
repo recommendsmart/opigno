@@ -70,7 +70,7 @@ class Measurement extends FormElement {
    *
    * @throws \InvalidArgumentException.
    */
-  public static function processElement(array $element, FormStateInterface $form_state, &$complete_form) {
+  public static function processElement(array $element, FormStateInterface $form_state, array &$complete_form) {
     if (empty($element['#measurement_type'])) {
       throw new \InvalidArgumentException('The #measurement_type must be defined for a physical_measurement element.');
     }

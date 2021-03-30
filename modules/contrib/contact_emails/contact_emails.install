@@ -310,7 +310,7 @@ function contact_emails_update_8006(&$sandbox) {
 
           // The format and value were previously stored in a serialized array
           // in the single column.
-          $unserialised_body = unserialize($fields->body);
+          $unserialised_body = unserialize($fields->body, ['allowed_classes' => FALSE]);
           if (isset($unserialised_body['format'], $unserialised_body['value'])) {
             $message = [
               'value' => $unserialised_body['value'],
@@ -328,7 +328,7 @@ function contact_emails_update_8006(&$sandbox) {
           ->execute()
           ->fetchObject();
         if ($fields && !empty($fields->message__value)) {
-          $unserialised_body = unserialize($fields->message__value);
+          $unserialised_body = unserialize($fields->message__value, ['allowed_classes' => FALSE]);
           if (isset($unserialised_body['format']) && isset($unserialised_body['value'])) {
             $message = [
               'value' => $unserialised_body['value'],

@@ -5,7 +5,6 @@ shariff-min:
       /libraries/shariff/shariff.min.css: {}
   js:
     /libraries/shariff/shariff.complete.js: { scope: footer }
-    js/shariff.js: { scope: footer }
   dependencies:
     - core/drupal
 shariff-complete:
@@ -15,13 +14,11 @@ shariff-complete:
       /libraries/shariff/shariff.complete.css: {}
   js:
     /libraries/shariff/shariff.complete.js: { scope: footer }
-    js/shariff.js: { scope: footer }
   dependencies:
     - core/drupal
 shariff-naked:
   version: VERSION
   js:
     /libraries/shariff/shariff.complete.js: { scope: footer }
-    js/shariff.js: { scope: footer }
   dependencies:
     - core/drupal

@@ -3,7 +3,6 @@
 namespace Drupal\content_as_config\Form;
 
 use Drupal\content_as_config\Controller\EntityControllerBase;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -29,14 +28,6 @@ interface ContentImportExportInterface {
    *   The machine name of the entity type.
    */
   public function getEntityType(): string;
-
-  /**
-   * Returns pluralized translatable human-readable name of the entity type.
-   *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
-   *   The plural human-readable name of the entity type.
-   */
-  public function getEntityNamePlural(): TranslatableMarkup;
 
   /**
    * Gets the label for an entity from its stored configuration.

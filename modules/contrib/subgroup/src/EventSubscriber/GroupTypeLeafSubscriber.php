@@ -64,6 +64,7 @@ class GroupTypeLeafSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     $events[LeafEvents::GROUP_TYPE_LEAF_ADD] = 'onAddLeaf';
+    $events[LeafEvents::GROUP_TYPE_LEAF_IMPORT] = 'onImportLeaf';
     $events[LeafEvents::GROUP_TYPE_LEAF_REMOVE] = 'onRemoveLeaf';
     return $events;
   }
@@ -87,6 +88,15 @@ class GroupTypeLeafSubscriber implements EventSubscriberInterface {
       $storage = $this->entityTypeManager->getStorage('group_content_type');
       $storage->save($storage->createFromPlugin($parent, 'subgroup:' . $group_type->id()));
     }
+  }
+
+  /**
+   * Handles the import leaf event.
+   *
+   * @param \Drupal\subgroup\Event\GroupTypeLeafEvent $event
+   */
+  public function onImportLeaf(GroupTypeLeafEvent $event) {
+    $this->pluginManager->clearCachedDefinitions();
   }
 
   /**

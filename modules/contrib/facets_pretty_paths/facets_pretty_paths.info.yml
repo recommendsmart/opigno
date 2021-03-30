@@ -2,12 +2,13 @@ name: 'Facets Pretty Paths'
 type: module
 description: 'Pretty paths for Facets.'
 core: 8.x
+core_version_requirement: ^8 || ^9
 package: Search
 dependencies:
   - facets:facets
   - pathauto:pathauto
 
-# Information added by Drupal.org packaging script on 2019-09-10
-version: '8.x-1.0'
+# Information added by Drupal.org packaging script on 2021-02-17
+version: '8.x-1.1'
 project: 'facets_pretty_paths'
-datestamp: 1568102886
+datestamp: 1613565142

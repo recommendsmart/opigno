@@ -319,9 +319,10 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    */
   public function nodeCount($vid) {
     $query = $this->database->select('entity_taxonomy_index', 'ti');
-    $query->addExpression('COUNT(DISTINCT ti.nid)');
+    $query->addExpression('COUNT(DISTINCT ti.entity_id)');
     $query->leftJoin($this->getBaseTable(), 'td', 'ti.tid = td.tid');
     $query->condition('td.vid', $vid);
+    $query->condition('ti.entity_type_id', 'node');
     $query->addTag('vocabulary_node_count');
     return $query->execute()->fetchField();
   }
@@ -339,14 +340,15 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
   /**
    * {@inheritdoc}
    */
-  public function getNodeTerms(array $nids, array $vocabs = [], $langcode = NULL) {
+  public function getEntityTerms(array $entity_ids, $entity_type_id, array $vocabs = [], $langcode = NULL) {
     $query = $this->database->select($this->getDataTable(), 'td');
     $query->innerJoin('entity_taxonomy_index', 'tn', 'td.tid = tn.tid');
     $query->fields('td', ['tid']);
     $query->addField('tn', 'entity_id', 'node_nid');
     $query->orderby('td.weight');
     $query->orderby('td.name');
-    $query->condition('tn.nid', $nids, 'IN');
+    $query->condition('tn.entity_id', $entity_ids, 'IN');
+    $query->condition('tn.entity_type_id', $entity_type_id);
     $query->addTag('entity_taxonomy_term_access');
     if (!empty($vocabs)) {
       $query->condition('td.vid', $vocabs, 'IN');

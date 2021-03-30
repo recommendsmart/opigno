@@ -8,7 +8,7 @@ dependencies:
   - drupal:text
 configure: entity.entity_taxonomy_vocabulary.collection
 
-# Information added by Drupal.org packaging script on 2021-02-22
-version: '1.0.0'
+# Information added by Drupal.org packaging script on 2021-03-10
+version: '1.0.2'
 project: 'entity_taxonomy'
-datestamp: 1614020606
+datestamp: 1615395863

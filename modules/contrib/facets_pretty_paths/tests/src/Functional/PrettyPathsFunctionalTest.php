@@ -16,6 +16,11 @@ class PrettyPathsFunctionalTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'node',
     'views',

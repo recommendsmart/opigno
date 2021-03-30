@@ -5,8 +5,8 @@ namespace Drupal\Tests\commerce_stock_field\Functional;
 use Behat\Mink\Exception\ExpectationException;
 use Drupal\commerce\EntityHelper;
 use Drupal\commerce_product\Entity\Product;
-use Drupal\Tests\commerce_stock\Kernel\StockLevelFieldCreationTrait;
-use Drupal\Tests\commerce_stock\Kernel\StockTransactionQueryTrait;
+use Drupal\Tests\commerce_stock_field\Kernel\StockLevelFieldCreationTrait;
+use Drupal\Tests\commerce_stock_local\Kernel\StockTransactionQueryTrait;
 
 /**
  * Provides tests for the stock level widget.
@@ -67,8 +67,10 @@ class StockLevelWidgetsTest extends StockLevelFieldTestBase {
     $this->assertSession()->buttonExists('Save');
 
     $variation_sku = $this->randomMachineName();
+    $title = $this->randomString();
     $this->getSession()->getPage()->fillField('sku[0][value]', $variation_sku);
     $this->getSession()->getPage()->fillField('price[0][number]', '9.99');
+    $this->getSession()->getPage()->fillField('title[0][value]', $title);
     $adjustment = 2;
     $this->getSession()
       ->getPage()
@@ -76,9 +78,7 @@ class StockLevelWidgetsTest extends StockLevelFieldTestBase {
     $this->submitForm([], t('Save'));
     $this->assertSession()->statusCodeEquals(200);
 
-    $variation_in_table = $this->getSession()
-      ->getPage()
-      ->find('xpath', '//table/tbody/tr/td[text()="' . $variation_sku . '"]');
+    $variation_in_table = $this->getSession()->getPage()->find('xpath', '//table/tbody/tr/td[text()="' . $variation_sku . '"]');
     $this->assertNotEmpty($variation_in_table);
     /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
     $storage = \Drupal::entityTypeManager()->getStorage('commerce_product_variation');
@@ -114,7 +114,7 @@ class StockLevelWidgetsTest extends StockLevelFieldTestBase {
     $data = unserialize($transaction->data);
     $this->assertEquals($adjustment, $transaction->qty);
     $this->assertEquals($this->adminUser->id(), $transaction->related_uid);
-    $this->assertTrue($default_note, $data['message']);
+    $this->assertEquals($default_note, $data['message']);
 
     $widget_settings = [
       'custom_transaction_note' => TRUE,
@@ -127,7 +127,7 @@ class StockLevelWidgetsTest extends StockLevelFieldTestBase {
     $this->assertSession()->fieldExists($this->fieldName . '[0][adjustment]');
     $this->assertSession()
       ->fieldExists($this->fieldName . '[0][stock_transaction_note]');
-    self::setExpectedException(ExpectationException::class);
+    self::expectException(ExpectationException::class);
     $this->assertSession()
       ->fieldDisabled($this->fieldName . '[0][stock_transaction_note]');
     $this->assertSession()
@@ -145,7 +145,7 @@ class StockLevelWidgetsTest extends StockLevelFieldTestBase {
     $data = unserialize($transaction->data);
     $this->assertEquals($adjustment, $transaction->qty);
     $this->assertEquals($this->adminUser->id(), $transaction->related_uid);
-    $this->assertTrue('CustomNote', $data['message']);
+    $this->assertEquals('CustomNote', $data['message']);
 
   }
 
@@ -188,9 +188,12 @@ class StockLevelWidgetsTest extends StockLevelFieldTestBase {
       'stores[target_id][value][' . $store_id . ']' => $store_id,
       'variations[entity][sku][0][value]' => $sku,
       'variations[entity][price][0][number]' => '99.99',
+      'variations[entity][title][0][value]' => $title . '_testvariation',
     ];
+
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
+    $this->saveHtmlOutput();
     // Check if product was created. Remember we created
     // product 1 in test setup.
     $product = Product::load(2);
@@ -215,9 +218,11 @@ class StockLevelWidgetsTest extends StockLevelFieldTestBase {
       'title[0][value]' => 'New title',
       'variations[entity][price][0][number]' => '199.99',
       'variations[entity][' . $this->fieldName . '][0][adjustment]' => $adjustment,
+      'variations[entity][title][0][value]' => $title . '_testvariation',
     ];
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
+    $this->saveHtmlOutput();
 
     \Drupal::entityTypeManager()->getStorage('commerce_product')->resetCache([2]);
     \Drupal::entityTypeManager()->getStorage('commerce_product_variation')->resetCache([1]);
@@ -274,7 +279,7 @@ class StockLevelWidgetsTest extends StockLevelFieldTestBase {
     // absolute level to 15 should result in a transaction with 5.
     $this->assertEquals(5, $transaction->qty);
     $this->assertEquals($this->adminUser->id(), $transaction->related_uid);
-    $this->assertTrue($default_note, $data['message']);
+    $this->assertEquals($default_note, $data['message']);
 
     // If the absolute stock level is the same as before, it shouldn't trigger
     // any transaction.
@@ -314,7 +319,7 @@ class StockLevelWidgetsTest extends StockLevelFieldTestBase {
       ->fieldNotExists($this->fieldName . '[0][adjustment]');
     $this->assertSession()
       ->fieldExists($this->fieldName . '[0][stock_transaction_note]');
-    self::setExpectedException(ExpectationException::class);
+    self::expectException(ExpectationException::class);
     $this->assertSession()
       ->fieldDisabled($this->fieldName . '[0][stock_transaction_note]');
     $this->assertSession()
@@ -331,7 +336,7 @@ class StockLevelWidgetsTest extends StockLevelFieldTestBase {
     $data = unserialize($transaction->data);
     $this->assertEquals(-10, $transaction->qty);
     $this->assertEquals($this->adminUser->id(), $transaction->related_uid);
-    $this->assertTrue('CustumNote', $data['message']);
+    $this->assertEquals('CustumNote', $data['message']);
 
     // Testing that zero value, results in a transaction.
     $this->drupalGet($this->variation->toUrl('edit-form'));
@@ -387,6 +392,7 @@ class StockLevelWidgetsTest extends StockLevelFieldTestBase {
       'stores[target_id][value][' . $store_id . ']' => $store_id,
       'variations[entity][sku][0][value]' => $sku,
       'variations[entity][price][0][number]' => '99.99',
+      'variations[entity][title][0][value]' => $title . '_testvariation',
     ];
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
@@ -451,10 +457,9 @@ class StockLevelWidgetsTest extends StockLevelFieldTestBase {
 
     $this->configureFormDisplay($widget_id, $widget_settings, $entity_type, $bundle);
     $this->drupalGet($this->variation->toUrl('edit-form'));
-    $this->assertSession()->statusCodeEquals(200);
+
     $this->assertSession()->linkExists(t('transaction form'));
     $this->clickLink(t('transaction form'));
-    $this->assertSession()->statusCodeEquals(200);
     $path = '/admin/commerce/config/stock/transactions2';
     $this->assertSession()->addressEquals($path);
   }
@@ -473,7 +478,6 @@ class StockLevelWidgetsTest extends StockLevelFieldTestBase {
     ];
     $this->configureFormDisplay($widget_id, $widget_settings, $entity_type, $bundle);
     $this->drupalGet($this->variation->toUrl('edit-form'));
-    $this->assertSession()->statusCodeEquals(200);
 
     // Ensure the stock part of the form is healty.
     $this->assertSession()
@@ -489,7 +493,6 @@ class StockLevelWidgetsTest extends StockLevelFieldTestBase {
       $this->fieldName . '[0][adjustment]' => $adjustment,
     ];
     $this->submitForm($variations_edit, 'Save');
-    $this->assertSession()->statusCodeEquals(200);
     $transaction = $this->getLastEntityTransaction($this->variation->id());
     $this->assertEquals($adjustment, $transaction->qty);
     $this->assertEquals($this->adminUser->id(), $transaction->related_uid);
@@ -501,7 +504,6 @@ class StockLevelWidgetsTest extends StockLevelFieldTestBase {
     ];
     $this->configureFormDisplay($widget_id, $widget_settings, $entity_type, $bundle);
     $this->drupalGet($this->variation->toUrl('edit-form'));
-    $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->fieldExists($this->fieldName . '[0][stock_level]');
 
     $stock_level = 20;
@@ -509,7 +511,6 @@ class StockLevelWidgetsTest extends StockLevelFieldTestBase {
       $this->fieldName . '[0][stock_level]' => $stock_level,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->statusCodeEquals(200);
 
     $transaction = $this->getLastEntityTransaction($this->variation->id());
     // We setup our variation with an initial stock of 15. So setting the
@@ -524,7 +525,6 @@ class StockLevelWidgetsTest extends StockLevelFieldTestBase {
     ];
     $this->configureFormDisplay($widget_id, $widget_settings, $entity_type, $bundle);
     $this->drupalGet($this->variation->toUrl('edit-form'));
-    $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->linkExists('New transaction');
   }
 

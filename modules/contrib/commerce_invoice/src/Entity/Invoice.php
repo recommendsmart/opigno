@@ -12,9 +12,9 @@ use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\file\FileInterface;
 use Drupal\profile\Entity\ProfileInterface;
 use Drupal\user\Entity\User;
-use Drupal\user\EntityOwnerTrait;
 use Drupal\user\UserInterface;
 
 /**
@@ -77,7 +77,6 @@ use Drupal\user\UserInterface;
 class Invoice extends CommerceContentEntityBase implements InvoiceInterface {
 
   use EntityChangedTrait;
-  use EntityOwnerTrait;
 
   /**
    * {@inheritdoc}
@@ -533,6 +532,21 @@ class Invoice extends CommerceContentEntityBase implements InvoiceInterface {
   /**
    * {@inheritdoc}
    */
+  public function getFile() {
+    return $this->get('invoice_file')->entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setFile(FileInterface $file) {
+    $this->set('invoice_file', $file->id());
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
@@ -598,6 +612,15 @@ class Invoice extends CommerceContentEntityBase implements InvoiceInterface {
       $due_date = $invoice_date->modify("+{$invoice_type->getDueDays()} days");
       $this->setDueDateTime($due_date->getTimestamp());
     }
+
+    // When the invoice state is updated, clear the invoice file reference.
+    // (A "paid" invoice probably looks different than a "pending" invoice).
+    // That'll force the invoice file manager to regenerate an invoice PDF
+    // the next time it's called.
+    $original_state = isset($this->original) ? $this->original->getState()->getId() : '';
+    if (($original_state && $original_state !== $this->getState()->getId()) && !empty($this->getFile())) {
+      $this->set('invoice_file', NULL);
+    }
   }
 
   /**
@@ -641,14 +664,14 @@ class Invoice extends CommerceContentEntityBase implements InvoiceInterface {
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
-    $fields += static::ownerBaseFieldDefinitions($entity_type);
 
     $fields['invoice_number'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Invoice number'))
       ->setDescription(t('The invoice number.'))
       ->setRequired(TRUE)
       ->setDefaultValue('')
-      ->setSetting('max_length', 255);
+      ->setSetting('max_length', 255)
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['store_id'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Store'))
@@ -656,17 +679,22 @@ class Invoice extends CommerceContentEntityBase implements InvoiceInterface {
       ->setCardinality(1)
       ->setRequired(TRUE)
       ->setSetting('target_type', 'commerce_store')
-      ->setSetting('handler', 'default');
+      ->setSetting('handler', 'default')
+      ->setDisplayConfigurable('view', TRUE);
 
-    $fields['uid']
+    $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Customer'))
       ->setDescription(t('The customer.'))
+      ->setSetting('target_type', 'user')
+      ->setSetting('handler', 'default')
+      ->setDefaultValueCallback('Drupal\commerce_invoice\Entity\Invoice::getCurrentUserId')
       ->setTranslatable(FALSE)
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'author',
         'weight' => 0,
-      ]);
+      ])
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['mail'] = BaseFieldDefinition::create('email')
       ->setLabel(t('Contact email'))
@@ -685,7 +713,8 @@ class Invoice extends CommerceContentEntityBase implements InvoiceInterface {
       ->setDescription(t('Billing profile'))
       ->setSetting('target_type', 'profile')
       ->setSetting('handler', 'default')
-      ->setSetting('handler_settings', ['target_bundles' => ['customer']]);
+      ->setSetting('handler_settings', ['target_bundles' => ['customer']])
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['orders'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Orders'))
@@ -693,7 +722,8 @@ class Invoice extends CommerceContentEntityBase implements InvoiceInterface {
       ->setRequired(TRUE)
       ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
       ->setSetting('target_type', 'commerce_order')
-      ->setSetting('handler', 'default');
+      ->setSetting('handler', 'default')
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['invoice_items'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Invoice items'))
@@ -706,7 +736,8 @@ class Invoice extends CommerceContentEntityBase implements InvoiceInterface {
         'label' => 'hidden',
         'type' => 'commerce_invoice_item_table',
         'weight' => 0,
-      ]);
+      ])
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['adjustments'] = BaseFieldDefinition::create('commerce_adjustment')
       ->setLabel(t('Adjustments'))
@@ -732,7 +763,8 @@ class Invoice extends CommerceContentEntityBase implements InvoiceInterface {
 
     $fields['total_paid'] = BaseFieldDefinition::create('commerce_price')
       ->setLabel(t('Total paid'))
-      ->setDescription(t('The total paid price of the invoice.'));
+      ->setDescription(t('The total paid price of the invoice.'))
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['state'] = BaseFieldDefinition::create('state')
       ->setLabel(t('State'))
@@ -781,7 +813,25 @@ class Invoice extends CommerceContentEntityBase implements InvoiceInterface {
       ])
       ->setDisplayConfigurable('view', TRUE);
 
+    $fields['invoice_file'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Invoice PDF'))
+      ->setDescription(t('The invoice PDF file.'))
+      ->setSetting('target_type', 'file')
+      ->setDisplayConfigurable('view', TRUE);
+
     return $fields;
+  }
+
+  /**
+   * Default value callback for 'uid' base field definition.
+   *
+   * @see ::baseFieldDefinitions()
+   *
+   * @return array
+   *   An array of default values.
+   */
+  public static function getCurrentUserId() {
+    return [\Drupal::currentUser()->id()];
   }
 
   /**
@@ -794,8 +844,7 @@ class Invoice extends CommerceContentEntityBase implements InvoiceInterface {
    *   The workflow ID.
    */
   public static function getWorkflowId(InvoiceInterface $invoice) {
-    $workflow = InvoiceType::load($invoice->bundle())->getWorkflowId();
-    return $workflow;
+    return InvoiceType::load($invoice->bundle())->getWorkflowId();
   }
 
 }

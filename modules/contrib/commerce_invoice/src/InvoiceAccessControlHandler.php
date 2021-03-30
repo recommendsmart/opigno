@@ -22,7 +22,7 @@ class InvoiceAccessControlHandler extends EntityAccessControlHandler {
     $result = parent::checkAccess($entity, $operation, $account);
 
     /** @var \Drupal\commerce_invoice\Entity\InvoiceInterface $entity */
-    if ($result->isNeutral() && $operation == 'view') {
+    if ($result->isNeutral() && $operation === 'view') {
       if ($account->id() == $entity->getCustomerId()) {
         $result = AccessResult::allowedIfHasPermissions($account, ['view own commerce_invoice']);
         $result = $result->cachePerUser()->addCacheableDependency($entity);

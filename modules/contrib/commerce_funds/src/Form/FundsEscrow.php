@@ -2,20 +2,22 @@
 
 namespace Drupal\commerce_funds\Form;
 
-use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Utility\Token;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\commerce_funds\Entity\Transaction;
+use Drupal\commerce_funds\FeesManagerInterface;
+use Drupal\commerce_funds\TransactionManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form to transfer create an escrow to another user account.
  */
-class FundsEscrow extends ConfigFormBase {
+class FundsEscrow extends FormBase {
 
   /**
    * The current account.
@@ -53,14 +55,30 @@ class FundsEscrow extends ConfigFormBase {
   protected $messenger;
 
   /**
+   * The fees manager.
+   *
+   * @var \Drupal\commerce_funds\FeesManagerInterface
+   */
+  protected $feesManager;
+
+  /**
+   * The transaction manager.
+   *
+   * @var \Drupal\commerce_funds\TransactionManagerInterface
+   */
+  protected $transactionManager;
+
+  /**
    * Class constructor.
    */
-  public function __construct(AccountProxy $current_user, EntityTypeManagerInterface $entity_type_manager, MailManagerInterface $mail_manager, Token $token, MessengerInterface $messenger) {
+  public function __construct(AccountProxy $current_user, EntityTypeManagerInterface $entity_type_manager, MailManagerInterface $mail_manager, Token $token, MessengerInterface $messenger, FeesManagerInterface $fees_manager, TransactionManagerInterface $transaction_manager) {
     $this->currentUser = $current_user;
     $this->entityTypeManager = $entity_type_manager;
     $this->mailManager = $mail_manager;
     $this->token = $token;
     $this->messenger = $messenger;
+    $this->feesManager = $fees_manager;
+    $this->transactionManager = $transaction_manager;
   }
 
   /**
@@ -72,7 +90,9 @@ class FundsEscrow extends ConfigFormBase {
       $container->get('entity_type.manager'),
       $container->get('plugin.manager.mail'),
       $container->get('token'),
-      $container->get('messenger')
+      $container->get('messenger'),
+      $container->get('commerce_funds.fees_manager'),
+      $container->get('commerce_funds.transaction_manager')
     );
   }
 
@@ -104,7 +124,7 @@ class FundsEscrow extends ConfigFormBase {
       $currency_code = $currency->getCurrencyCode();
       $currencyCodes[$currency_code] = $currency_code;
     }
-    $fees_description = \Drupal::service('commerce_funds.fees_manager')->printTransactionFees('transfer');
+    $fees_description = $this->feesManager->printTransactionFees('transfer');
 
     $form['amount'] = [
       '#type' => 'number',
@@ -160,10 +180,10 @@ class FundsEscrow extends ConfigFormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $amount = $form_state->getValue('amount');
     $currency = $form_state->getValue('currency');
-    $fee_applied = \Drupal::service('commerce_funds.fees_manager')->calculateTransactionFee($amount, $currency, 'escrow');
+    $fee_applied = $this->feesManager->calculateTransactionFee($amount, $currency, 'escrow');
 
     $issuer = $this->currentUser;
-    $issuer_balance = \Drupal::service('commerce_funds.transaction_manager')->loadAccountBalance($issuer->getAccount(), $currency);
+    $issuer_balance = $this->transactionManager->loadAccountBalance($issuer->getAccount(), $currency);
     $currency_balance = isset($issuer_balance[$currency]) ? $issuer_balance[$currency] : 0;
     // Error if the user doesn't have enought money to cover the escrow + fee.
     if ($currency_balance < $fee_applied['net_amount']) {
@@ -192,7 +212,7 @@ class FundsEscrow extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $amount = $form_state->getValue('amount');
     $currency = $form_state->getValue('currency');
-    $fee_applied = \Drupal::service('commerce_funds.fees_manager')->calculateTransactionFee($amount, $currency, 'escrow');
+    $fee_applied = $this->feesManager->calculateTransactionFee($amount, $currency, 'escrow');
     $config = $this->config('commerce_funds.settings');
 
     $issuer = $this->currentUser;
@@ -215,7 +235,7 @@ class FundsEscrow extends ConfigFormBase {
     ]);
     $transaction->save();
 
-    \Drupal::service('commerce_funds.transaction_manager')->performTransaction($transaction);
+    $this->transactionManager->performTransaction($transaction);
 
     // Load necessary parameters for email.
     $mailManager = $this->mailManager;
@@ -224,7 +244,7 @@ class FundsEscrow extends ConfigFormBase {
 
     // To recipient.
     if ($config->get('mail_escrow_created_recipient')['activated']) {
-      $balance = \Drupal::service('commerce_funds.transaction_manager')->loadAccountBalance($recipient);
+      $balance = $this->transactionManager->loadAccountBalance($recipient);
       $params = [
         'id' => 'escrow_created_recipient',
         'subject' => $token->replace($config->get('mail_escrow_created_recipient')['subject'], ['commerce_funds_transaction' => $transaction]),
@@ -239,7 +259,7 @@ class FundsEscrow extends ConfigFormBase {
 
     // To issuer.
     if ($config->get('mail_escrow_created_issuer')['activated']) {
-      $balance = \Drupal::service('commerce_funds.transaction_manager')->loadAccountBalance($issuer);
+      $balance = $this->transactionManager->loadAccountBalance($issuer);
       $params = [
         'id' => 'escrow_created_issuer',
         'subject' => $token->replace($config->get('mail_escrow_created_issuer')['subject'], ['commerce_funds_transaction' => $transaction]),

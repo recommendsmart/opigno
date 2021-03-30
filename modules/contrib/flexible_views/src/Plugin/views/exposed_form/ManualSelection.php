@@ -134,7 +134,7 @@ class ManualSelection extends ExposedFormPluginBase implements ContainerFactoryP
     foreach ($checkboxes as $checkbox) {
       $filter_name = str_replace('_check_deactivate', '', $checkbox);
 
-      if ($form['#info']['filter-' . $filter_name]['operator'] !== "" && isset($form[$form['#info']['filter-' . $filter_name]['operator']])) {
+      if (isset($form['#info']['filter-' . $filter_name]['operator']) &&$form['#info']['filter-' . $filter_name]['operator'] !== "" && isset($form[$form['#info']['filter-' . $filter_name]['operator']])) {
         $weight = $form[$form['#info']['filter-' . $filter_name]['operator']]['#weight'];
       }
       else {
@@ -179,6 +179,7 @@ class ManualSelection extends ExposedFormPluginBase implements ContainerFactoryP
     $form['#attributes']['class'][] = 'manual-selection-form';
 
     $filters = array_keys($form['#info']);
+    // TODO: Dependency injection.
     $query = TableSort::getQueryParameters(\Drupal::request());
     $filter_always_visible = isset($this->options['filter_always_visible']) ? array_filter($this->options['filter_always_visible']) : [];
     $manual_select_filter_options = [];
@@ -191,8 +192,14 @@ class ManualSelection extends ExposedFormPluginBase implements ContainerFactoryP
     ];
 
     // Remove the column_selector filter from the elements we want to process.
+    // Unset the column selector if it is in the filters array.
     if ($column_selector_index = array_search('filter-column_selector', $filters)) {
       unset($filters[$column_selector_index]);
+    }
+    // The above query does not trigger if the column selector filter is
+    // the first filter in the array (or if it is the only exposed filter).
+    elseif ($filters[0] === 'filter-column_selector') {
+      unset($filters[0]);
     }
 
     // Add the details element if the wrap_with_details option is enabled.
@@ -223,7 +230,8 @@ class ManualSelection extends ExposedFormPluginBase implements ContainerFactoryP
           '#type' => 'checkbox',
           '#title' => $form['#info'][$filter]['label'],
           '#checked' => array_key_exists($filter_name, $query) ? TRUE : FALSE,
-          '#prefix' => "<div class='filter-wrap'>",
+          '#value' => array_key_exists($filter_name, $query) ? TRUE : FALSE,
+          '#prefix' => array_key_exists($filter_name, $query) ? "<div class='filter-wrap active'>" : "<div class='filter-wrap'>",
           '#states' => [
             'visible' => [
               ":input[name='{$filter_name}_check_deactivate']" => ['checked' => TRUE],
@@ -232,7 +240,7 @@ class ManualSelection extends ExposedFormPluginBase implements ContainerFactoryP
         ];
 
         // Hide the labels and hide the filters if the checkbox is set to false.
-        if ($form['#info'][$filter]['operator'] !== "" && isset($form[$form['#info'][$filter]['operator']])) {
+        if (isset($form['#info'][$filter]['operator']) && $form['#info'][$filter]['operator'] !== "" && isset($form[$form['#info'][$filter]['operator']])) {
           $form[$form['#info'][$filter]['operator']]['#title_display'] = 'invisible';
           $form[$form['#info'][$filter]['operator']]['#states']['enabled'] = [
             ":input[name='{$filter_name}_check_deactivate']" => ['checked' => TRUE],
@@ -287,6 +295,8 @@ class ManualSelection extends ExposedFormPluginBase implements ContainerFactoryP
         if ($form['#info'][$filter]['operator'] !== "" && isset($form[$form['#info'][$filter]['operator']])) {
           $form[$form['#info'][$filter]['operator']]['#title_display'] = 'invisible';
           $form[$form['#info'][$filter]['operator']]['#prefix'] = "<div class='filter-wrap always-visible'><span class='label'>{$form['#info'][$filter]['label']}</span>";
+          // Disable chosen.
+          $form[$form['#info'][$filter]['operator']]['#chosen'] = FALSE;
         }
         else {
           $form[$filter_name]['#prefix'] = "<div class='filter-wrap always-visible'><span class='label'>{$form['#info'][$filter]['label']}</span>";
@@ -298,6 +308,8 @@ class ManualSelection extends ExposedFormPluginBase implements ContainerFactoryP
         }
         $form[$filter_name]['#title_display'] = 'invisible';
 
+        // Disable chosen.
+        $form[$filter_name]['#chosen'] = FALSE;
         $form[$filter_name]['#suffix'] = '</div>';
       }
     }
@@ -313,6 +325,11 @@ class ManualSelection extends ExposedFormPluginBase implements ContainerFactoryP
       '#weight' => -99,
       '#chosen' => FALSE,
     ];
+
+    if (count($manual_select_filter_options) === 0) {
+      $form['manual_select_filter']['#prefix'] = '<div class="hidden">';
+      $form['manual_select_filter']['#suffix'] = '</div>';
+    }
 
     if ($this->options['wrap_with_details']) {
       $form['manual_selection_filter_details']['manual_select_filter'] = $form['manual_select_filter'];

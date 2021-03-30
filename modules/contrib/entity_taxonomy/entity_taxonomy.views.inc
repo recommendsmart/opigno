@@ -13,7 +13,6 @@ use Drupal\field\FieldStorageConfigInterface;
 function entity_taxonomy_views_data_alter(&$data) {
   $entity_list_def = \Drupal::entityTypeManager()->getDefinitions();
   $entity_list = array_keys($entity_list_def);
-  unset($entity_list_def['node']);  
   $not_categorized = [
     'entity_taxonomy',
     'taxonomy',
@@ -121,68 +120,30 @@ function entity_taxonomy_views_data_alter(&$data) {
           'relationship' => $data_table.':term_'.$entity_type_id.'_tid',
         ],
       ];
-
   }
-  $data['node_field_data']['term_node_tid'] = [
-    'title' => t('entity_taxonomy terms on node'),
-    'help' => t('Relate nodes to entity_taxonomy terms, specifying which vocabulary or vocabularies to use. This relationship will cause duplicated records if there are multiple terms.'),
-    'relationship' => [
-      'id' => 'node_term_data',
-      'label' => t('term'),
-      'base' => 'entity_taxonomy_term_field_data',
-    ],
-    'field' => [
-      'title' => t('All entity_taxonomy terms'),
-      'help' => t('Display all entity_taxonomy terms associated with a node from specified vocabularies.'),
-      'id' => 'entity_taxonomy_index_tid',
-      'no group by' => TRUE,
-      'click sortable' => FALSE,
-    ],
-  ];
 
-  $data['node_field_data']['term_node_tid_depth'] = [
-    'help' => t('Display content if it has the selected entity_taxonomy terms, or children of the selected terms. Due to additional complexity, this has fewer options than the versions without depth.'),
-    'real field' => 'nid',
+  $data['entity_taxonomy_index']['tid'] = [
+    'group' => t('Global'),
+    'title' => t('Has entity_taxonomy term ID'),
+    'help' => t('Display entity if it has the selected entity_taxonomy terms.'),
     'argument' => [
-      'title' => t('Has entity_taxonomy term ID (with depth)'),
-      'id' => 'entity_taxonomy_index_tid_depth',
-      'accept depth modifier' => TRUE,
+      'id' => 'entity_taxonomy_index_tid',
+      'name table' => 'entity_taxonomy_term_field_data',
+      'name field' => 'name',
+      'empty field name' => t('Uncategorized'),
+      'numeric' => TRUE,
+      'skip base' => 'entity_taxonomy_term_field_data',
     ],
     'filter' => [
-      'title' => t('Has entity_taxonomy terms (with depth)'),
-      'id' => 'entity_taxonomy_index_tid_depth',
+      'title' => t('Has entity_taxonomy term'),
+      'id' => 'entity_taxonomy_index_tid',
+      'hierarchy table' => 'entity_taxonomy_term__parent',
+      'numeric' => TRUE,
+      'skip base' => 'entity_taxonomy_term_field_data',
+      'allow empty' => TRUE,
     ],
   ];
 
-  $data['node_field_data']['term_node_tid_depth_modifier'] = [
-    'title' => t('Has entity_taxonomy term ID depth modifier'),
-    'help' => t('Allows the "depth" for entity_taxonomy: Term ID (with depth) to be modified via an additional contextual filter value.'),
-    'argument' => [
-      'id' => 'entity_taxonomy_index_tid_depth_modifier',
-    ],
-  ];
-
-    $data['entity_taxonomy_index']['tid'] = [
-      'group' => t('Global'),
-      'title' => t('Has entity_taxonomy term ID in '.$entity_type_id),
-      'help' => t('Display content if it has the selected entity_taxonomy terms.'),
-      'argument' => [
-        'id' => 'entity_taxonomy_index_tid',
-        'name table' => 'entity_taxonomy_term_field_data',
-        'name field' => 'name',
-        'empty field name' => t('Uncategorized'),
-        'numeric' => TRUE,
-        'skip base' => 'entity_taxonomy_term_field_data',
-      ],
-      'filter' => [
-        'title' => t('Has entity_taxonomy term'),
-        'id' => 'entity_taxonomy_index_tid',
-        'hierarchy table' => 'entity_taxonomy_term__parent',
-        'numeric' => TRUE,
-        'skip base' => 'entity_taxonomy_term_field_data',
-        'allow empty' => TRUE,
-      ],
-    ];
 }
 
 /**

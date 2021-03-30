@@ -26,3 +26,9 @@ entity.fragment.collection:
   route_name: entity.fragment.collection
   base_route: system.admin_content
   weight: 100
+
+# Fragment type edit
+entity.fragment_type.edit_form:
+  route_name: entity.fragment_type.edit_form
+  base_route: entity.fragment_type.canonical
+  title: 'Edit'

@@ -5,12 +5,12 @@ namespace Drupal\commerce_funds\Plugin\Validation\Constraint;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
- /**
-  * Validates the IssuerEqualsCurrentUser Constraint
-  *
-  * @package Drupal\commerce_funds\Plugin\Validation\Constraint
-  */
- class IssuerEqualsCurrentUserConstraintValidator extends ConstraintValidator {
+/**
+ * Validates the IssuerEqualsCurrentUser Constraint.
+ *
+ * @package Drupal\commerce_funds\Plugin\Validation\Constraint
+ */
+class IssuerEqualsCurrentUserConstraintValidator extends ConstraintValidator {
 
   /**
    * {@inheritdoc}
@@ -23,4 +23,5 @@ use Symfony\Component\Validator\ConstraintValidator;
       $this->context->addViolation($constraint->message);
     }
   }
+
 }

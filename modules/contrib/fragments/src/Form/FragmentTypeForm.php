@@ -9,6 +9,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Class FragmentTypeForm.
+ *
+ * The form to create and edit a Fragment type.
  */
 class FragmentTypeForm extends EntityForm {
 

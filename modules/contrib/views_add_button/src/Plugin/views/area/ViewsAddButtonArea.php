@@ -2,12 +2,14 @@
 
 namespace Drupal\views_add_button\Plugin\views\area;
 
+use Drupal\Component\Utility\Html;
 use Drupal\views\Plugin\views\area\TokenizeAreaPluginBase;
 use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\views_add_button\Plugin\views\ViewsAddButtonTrait;
 use Drupal\views_add_button\Plugin\views_add_button\ViewsAddButtonDefault;
 
 /**
@@ -18,6 +20,8 @@ use Drupal\views_add_button\Plugin\views_add_button\ViewsAddButtonDefault;
  * @ViewsArea("views_add_button_area")
  */
 class ViewsAddButtonArea extends TokenizeAreaPluginBase {
+
+  use ViewsAddButtonTrait;
 
   /**
    * {@inheritdoc}
@@ -124,8 +128,8 @@ class ViewsAddButtonArea extends TokenizeAreaPluginBase {
     $form['render_plugin'] = [
       '#type' => 'select',
       '#title' => t('Custom Rendering Plugin'),
-      '#description' => t('If you would like to specify a plugin to use for rendering, set it here. 
-        Leave unset to use the entity default plugin (recommended).'),
+      '#description' => t('If you would like to specify a plugin to use for generating the URL and creating the 
+        link, set it here. Leave unset to use the entity default plugin (recommended).'),
       '#options' => $this->createPluginList(),
       '#empty_option' => '- Select -',
       '#default_value' => $this->options['render_plugin'],
@@ -310,16 +314,7 @@ class ViewsAddButtonArea extends TokenizeAreaPluginBase {
 
       // Build query string.
       if ($this->options['query_string']) {
-        $q = $this->options['tokenize'] ? $this->tokenizeValue($this->options['query_string']) : $this->options['query_string'];
-        if ($q) {
-          $qparts = explode('&', $q);
-          foreach ($qparts as $part) {
-            $p = explode('=', $part);
-            if (is_array($p) && count($p) > 1) {
-              $opts['query'][$p[0]] = $p[1];
-            }
-          }
-        }
+        $opts['query'] = $this->getQueryString();
       }
 
       // Get the url from the plugin and build the link.
@@ -336,6 +331,7 @@ class ViewsAddButtonArea extends TokenizeAreaPluginBase {
 
       // Generate the link.
       $l = NULL;
+      /* @var $l \Drupal\Core\Link */
       if (method_exists($plugin_class, 'generateLink')) {
         $l = $plugin_class::generateLink($text, $url, $this->options);
       }
@@ -356,6 +352,7 @@ class ViewsAddButtonArea extends TokenizeAreaPluginBase {
           $suffix = $this->options['tokenize'] ? $this->tokenizeValue($suffix) : $suffix;
           $l['#suffix'] = $suffix;
         }
+
         return $l;
       }
 

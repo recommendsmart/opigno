@@ -8,6 +8,7 @@ use Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator;
 use Drupal\plugin\PluginDefinition\PluginDefinitionInterface;
 use Drupal\plugin\PluginOperationsProviderInterface;
 use Drupal\Tests\UnitTestCase;
+use InvalidArgumentException;
 
 /**
  * @coversDefaultClass \Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator
@@ -33,7 +34,7 @@ class ArrayPluginDefinitionDecoratorTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->arrayDefinition = [
@@ -301,10 +302,9 @@ class ArrayPluginDefinitionDecoratorTest extends UnitTestCase {
    * @covers ::offsetSet
    *
    * @depends testGetContextDefinitions
-   *
-   * @expectedException \InvalidArgumentException
    */
   public function testSetContextDefinitionsWithInvalidDefinition() {
+    $this->expectException(InvalidArgumentException::class);
     $context_definitions = [
       $this->randomMachineName() => new \stdClass(),
     ];
@@ -331,10 +331,9 @@ class ArrayPluginDefinitionDecoratorTest extends UnitTestCase {
    * @covers ::hasContextDefinition
    *
    * @depends testGetContextDefinition
-   *
-   * @expectedException \InvalidArgumentException
    */
   public function testGetContextDefinitionWithNonExistentDefinition() {
+    $this->expectException(InvalidArgumentException::class);
     $name = $this->randomMachineName();
 
     $this->assertFalse($this->sut->hasContextDefinition($name));
@@ -379,10 +378,9 @@ class ArrayPluginDefinitionDecoratorTest extends UnitTestCase {
    * @covers ::isDefinitionCompatible
    *
    * @depends testMergeDefaultDefinition
-   *
-   * @expectedException \InvalidArgumentException
    */
   public function testMergeDefaultDefinitionWithInvalidOtherDefinition() {
+    $this->expectException(InvalidArgumentException::class);
     $other_definition = $this->createMock(PluginDefinitionInterface::class);
 
     $this->sut->mergeDefaultDefinition($other_definition);
@@ -426,10 +424,9 @@ class ArrayPluginDefinitionDecoratorTest extends UnitTestCase {
    * @covers ::isDefinitionCompatible
    *
    * @depends testMergeOverrideDefinition
-   *
-   * @expectedException \InvalidArgumentException
    */
   public function testMergeOverrideDefinitionWithInvalidOtherDefinition() {
+    $this->expectException(InvalidArgumentException::class);
     $other_definition = $this->createMock(PluginDefinitionInterface::class);
 
     $this->sut->mergeOverrideDefinition($other_definition);
@@ -606,10 +603,9 @@ class ArrayPluginDefinitionDecoratorTest extends UnitTestCase {
    * @covers ::createFromDecoratedDefinition
    *
    * @dataProvider providerCreateFromDecoratedDefinitionWithInvalidDecoratedDefinition
-   *
-   * @expectedException \InvalidArgumentException
    */
   public function testCreateFromDecoratedDefinitionWithInvalidDecoratedDefinition($decorated_definition) {
+    $this->expectException(InvalidArgumentException::class);
     $this->assertInstanceOf(ArrayPluginDefinitionDecorator::class, ArrayPluginDefinitionDecorator::createFromDecoratedDefinition($decorated_definition));
   }
 

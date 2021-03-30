@@ -33,12 +33,12 @@ class ShippingMethodTest extends CommerceWebDriverTestBase {
    * Tests creating a shipping method.
    */
   public function testShippingMethodCreation() {
-    $this->drupalGet('admin/commerce/config/shipping-methods');
+    $this->drupalGet('admin/commerce/shipping-methods');
     $this->getSession()->getPage()->clickLink('Add shipping method');
-    $this->assertSession()->addressEquals('admin/commerce/config/shipping-methods/add');
+    $this->assertSession()->addressEquals('admin/commerce/shipping-methods/add');
     $this->assertSession()->fieldExists('name[0][value]');
     $this->getSession()->getPage()->fillField('plugin[0][target_plugin_id]', 'flat_rate');
-    $this->waitForAjaxToFinish();
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
     $name = $this->randomMachineName(8);
     $edit = [
@@ -48,10 +48,8 @@ class ShippingMethodTest extends CommerceWebDriverTestBase {
     ];
 
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->addressEquals('admin/commerce/config/shipping-methods');
+    $this->assertSession()->addressEquals('admin/commerce/shipping-methods');
     $this->assertSession()->pageTextContains("Saved the $name shipping method.");
-    $shipping_method_count = $this->getSession()->getPage()->find('xpath', '//table/tbody/tr/td[text()="' . $name . '"]');
-    $this->assertEquals(count($shipping_method_count), 1, 'shipping method exists in the table.');
 
     $shipping_method = ShippingMethod::load(1);
     $plugin = $shipping_method->getPlugin();

@@ -29,7 +29,7 @@ class FilterPluginDefinitionDecoratorTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->arrayDefinition = [

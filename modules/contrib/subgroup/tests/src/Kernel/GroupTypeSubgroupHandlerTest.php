@@ -137,12 +137,11 @@ class GroupTypeSubgroupHandlerTest extends SubgroupKernelTestBase {
     $this->subgroupHandler->addLeaf($this->groupTypeChildMiddle, $group_type);
     $child = $this->subgroupHandler->wrapLeaf($group_type);
 
-    $group_type_storage = $this->entityTypeManager->getStorage('group_type');
-    $grandparent_reloaded = $this->subgroupHandler->wrapLeaf($group_type_storage->load($this->groupTypeRoot->id()));
-    $left_uncle_reloaded = $this->subgroupHandler->wrapLeaf($group_type_storage->load($this->groupTypeChildLeft->id()));
-    $left_cousin_reloaded = $this->subgroupHandler->wrapLeaf($group_type_storage->load($this->groupTypeGrandchildLeft->id()));
-    $right_uncle_reloaded = $this->subgroupHandler->wrapLeaf($group_type_storage->load($this->groupTypeChildRight->id()));
-    $right_cousin_reloaded = $this->subgroupHandler->wrapLeaf($group_type_storage->load($this->groupTypeGrandchildRight->id()));
+    $grandparent_reloaded = $this->subgroupHandler->wrapLeaf($this->groupTypeStorage->load($this->groupTypeRoot->id()));
+    $left_uncle_reloaded = $this->subgroupHandler->wrapLeaf($this->groupTypeStorage->load($this->groupTypeChildLeft->id()));
+    $left_cousin_reloaded = $this->subgroupHandler->wrapLeaf($this->groupTypeStorage->load($this->groupTypeGrandchildLeft->id()));
+    $right_uncle_reloaded = $this->subgroupHandler->wrapLeaf($this->groupTypeStorage->load($this->groupTypeChildRight->id()));
+    $right_cousin_reloaded = $this->subgroupHandler->wrapLeaf($this->groupTypeStorage->load($this->groupTypeGrandchildRight->id()));
 
     $this->assertEquals($grandparent->getDepth(), $grandparent_reloaded->getDepth(), 'Grandparent depth remained untouched.');
     $this->assertEquals($grandparent->getLeft(), $grandparent_reloaded->getLeft(), 'Grandparent left bound remained untouched.');
@@ -233,27 +232,26 @@ class GroupTypeSubgroupHandlerTest extends SubgroupKernelTestBase {
     $group_type = $this->createGroupType(['id' => 'grandchild_middle']);
     $this->subgroupHandler->addLeaf($this->groupTypeChildMiddle, $group_type);
 
-    $group_type_storage = $this->entityTypeManager->getStorage('group_type');
-    $grandparent = $this->subgroupHandler->wrapLeaf($group_type_storage->load($this->groupTypeRoot->id()));
-    $left_uncle = $this->subgroupHandler->wrapLeaf($group_type_storage->load($this->groupTypeChildLeft->id()));
-    $left_cousin = $this->subgroupHandler->wrapLeaf($group_type_storage->load($this->groupTypeGrandchildLeft->id()));
-    $parent = $this->subgroupHandler->wrapLeaf($group_type_storage->load($this->groupTypeChildMiddle->id()));
-    $right_uncle = $this->subgroupHandler->wrapLeaf($group_type_storage->load($this->groupTypeChildRight->id()));
-    $right_cousin = $this->subgroupHandler->wrapLeaf($group_type_storage->load($this->groupTypeGrandchildRight->id()));
+    $grandparent = $this->subgroupHandler->wrapLeaf($this->groupTypeStorage->load($this->groupTypeRoot->id()));
+    $left_uncle = $this->subgroupHandler->wrapLeaf($this->groupTypeStorage->load($this->groupTypeChildLeft->id()));
+    $left_cousin = $this->subgroupHandler->wrapLeaf($this->groupTypeStorage->load($this->groupTypeGrandchildLeft->id()));
+    $parent = $this->subgroupHandler->wrapLeaf($this->groupTypeStorage->load($this->groupTypeChildMiddle->id()));
+    $right_uncle = $this->subgroupHandler->wrapLeaf($this->groupTypeStorage->load($this->groupTypeChildRight->id()));
+    $right_cousin = $this->subgroupHandler->wrapLeaf($this->groupTypeStorage->load($this->groupTypeGrandchildRight->id()));
 
     // Reset the cache so that the entity pointers are different from the ones
     // being manipulated in removeLeaf(). This will greatly facilitate checking
     // the before vs after values.
-    $group_type_storage->resetCache();
+    $this->groupTypeStorage->resetCache();
 
     $this->subgroupHandler->removeLeaf($group_type, FALSE);
 
-    $grandparent_reloaded = $this->subgroupHandler->wrapLeaf($group_type_storage->load($this->groupTypeRoot->id()));
-    $left_uncle_reloaded = $this->subgroupHandler->wrapLeaf($group_type_storage->load($this->groupTypeChildLeft->id()));
-    $left_cousin_reloaded = $this->subgroupHandler->wrapLeaf($group_type_storage->load($this->groupTypeGrandchildLeft->id()));
-    $parent_reloaded = $this->subgroupHandler->wrapLeaf($group_type_storage->load($this->groupTypeChildMiddle->id()));
-    $right_uncle_reloaded = $this->subgroupHandler->wrapLeaf($group_type_storage->load($this->groupTypeChildRight->id()));
-    $right_cousin_reloaded = $this->subgroupHandler->wrapLeaf($group_type_storage->load($this->groupTypeGrandchildRight->id()));
+    $grandparent_reloaded = $this->subgroupHandler->wrapLeaf($this->groupTypeStorage->load($this->groupTypeRoot->id()));
+    $left_uncle_reloaded = $this->subgroupHandler->wrapLeaf($this->groupTypeStorage->load($this->groupTypeChildLeft->id()));
+    $left_cousin_reloaded = $this->subgroupHandler->wrapLeaf($this->groupTypeStorage->load($this->groupTypeGrandchildLeft->id()));
+    $parent_reloaded = $this->subgroupHandler->wrapLeaf($this->groupTypeStorage->load($this->groupTypeChildMiddle->id()));
+    $right_uncle_reloaded = $this->subgroupHandler->wrapLeaf($this->groupTypeStorage->load($this->groupTypeChildRight->id()));
+    $right_cousin_reloaded = $this->subgroupHandler->wrapLeaf($this->groupTypeStorage->load($this->groupTypeGrandchildRight->id()));
 
     $this->assertEquals($grandparent->getDepth(), $grandparent_reloaded->getDepth(), 'Grandparent depth remained untouched.');
     $this->assertEquals($grandparent->getLeft(), $grandparent_reloaded->getLeft(), 'Grandparent left bound remained untouched.');
@@ -334,11 +332,11 @@ class GroupTypeSubgroupHandlerTest extends SubgroupKernelTestBase {
     $this->subgroupHandler->addLeaf($root, $cousin);
 
     $this->subgroupHandler->removeLeaf($cousin);
-    $root = $this->entityTypeManager->getStorage('group_type')->load('cat');
+    $root = $this->groupTypeStorage->load('cat');
     $this->assertTrue($this->subgroupHandler->isLeaf($root));
 
     $this->subgroupHandler->removeLeaf($child);
-    $root = $this->entityTypeManager->getStorage('group_type')->load('cat');
+    $root = $this->groupTypeStorage->load('cat');
     $this->assertFalse($this->subgroupHandler->isLeaf($root));
   }
 
@@ -366,7 +364,7 @@ class GroupTypeSubgroupHandlerTest extends SubgroupKernelTestBase {
     $this->subgroupHandler->initTree($root);
     $this->subgroupHandler->removeLeaf($root);
 
-    $root = $this->entityTypeManager->getStorage('group_type')->load('cat');
+    $root = $this->groupTypeStorage->load('cat');
     $this->assertFalse($this->subgroupHandler->isLeaf($root));
   }
 

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\commerce_shipping\FunctionalJavascript;
 
+use Behat\Mink\Element\NodeElement;
 use Drupal\commerce_order\Entity\Order;
 use Drupal\commerce_order\Entity\OrderType;
 use Drupal\commerce_price\Price;
@@ -10,6 +11,7 @@ use Drupal\commerce_shipping\Entity\PackageType;
 use Drupal\commerce_shipping\Entity\Shipment;
 use Drupal\commerce_shipping\Entity\ShipmentType;
 use Drupal\commerce_shipping\ShipmentItem;
+use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -25,6 +27,8 @@ use Drupal\views\Entity\View;
  * @group commerce_shipping
  */
 class ShipmentAdminTest extends CommerceWebDriverTestBase {
+
+  use AssertMailTrait;
 
   /**
    * The default profile's address.
@@ -77,6 +81,7 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
     return array_merge([
       'administer commerce_order',
       'administer commerce_shipment',
+      'administer commerce_shipment_type',
       'access commerce_order overview',
     ], parent::getAdministratorPermissions());
   }
@@ -129,6 +134,7 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
       'state' => 'completed',
       'order_items' => [$order_item],
       'store_id' => $this->store,
+      'mail' => $this->loggedInUser->getEmail(),
     ]);
     $this->shipmentUri = Url::fromRoute('entity.commerce_shipment.collection', [
       'commerce_order' => $this->order->id(),
@@ -160,6 +166,7 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
         'target_plugin_configuration' => [
           'default_package_type' => 'commerce_package_type:' . $package_type->get('uuid'),
           'rate_label' => 'Overnight shipping',
+          'rate_description' => 'At your door tomorrow morning',
           'rate_amount' => [
             'number' => '19.99',
             'currency_code' => 'USD',
@@ -306,10 +313,8 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
     $this->assertSession()->optionExists('package_type', 'Package Type A');
     $this->assertTrue($page->hasButton('Recalculate shipping'));
     $this->assertSession()->pageTextContains('Shipment items');
-    $page->fillField('title[0][value]', 'Test shipment');
     list($order_item) = $this->order->getItems();
     $this->assertSession()->pageTextContains($order_item->label());
-    $page->checkField('shipment_items[1]');
 
     $this->assertRenderedAddress($this->defaultAddress, 'shipping_profile[0][profile]');
     $this->assertSession()->pageTextContains('202-555-0108');
@@ -318,10 +323,16 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
     $second_radio_button = $page->findField('Overnight shipping: $19.99');
     $this->assertNotNull($first_radio_button);
     $this->assertNotNull($second_radio_button);
-    $this->assertTrue($first_radio_button->getAttribute('checked'));
+    $this->assertNotEmpty($first_radio_button->getAttribute('checked'));
+    // Confirm that the description for overnight shipping is shown.
+    $this->assertSession()->pageTextContains('At your door tomorrow morning');
+
     $page->findButton('Recalculate shipping')->click();
-    $this->waitForAjaxToFinish();
-    $this->submitForm([], 'Save');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->submitForm([
+      'shipment_items[1]' => TRUE,
+      'title[0][value]' => 'Test shipment',
+    ], 'Save');
     $this->assertSession()->addressEquals($this->shipmentUri);
     $this->assertSession()->pageTextContains(t('Shipment for order @order created.', ['@order' => $this->order->getOrderNumber()]));
 
@@ -358,8 +369,60 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
         'target_plugin_configuration' => [
           'rate_label' => 'The best shipping',
           'rate_amount' => [
-            'number' => '9.99',
+            'number' => '7.99',
             'currency_code' => 'USD',
+          ],
+        ],
+      ],
+    ]);
+    $this->createEntity('commerce_shipping_method', [
+      'name' => 'Wisconsin Express',
+      'stores' => [$this->store->id()],
+      'plugin' => [
+        'target_plugin_id' => 'flat_rate',
+        'target_plugin_configuration' => [
+          'rate_label' => 'Wisconsin Express',
+          'rate_amount' => [
+            'number' => '2.99',
+            'currency_code' => 'USD',
+          ],
+        ],
+      ],
+      'conditions' => [
+        [
+          'target_plugin_id' => 'shipment_address',
+          'target_plugin_configuration' => [
+            'zone' => [
+              'territories' => [
+                ['country_code' => 'US', 'administrative_area' => 'WI'],
+              ],
+            ],
+          ],
+        ],
+      ],
+    ]);
+    $this->createEntity('commerce_shipping_method', [
+      'name' => 'Carolina Special',
+      'stores' => [$this->store->id()],
+      'plugin' => [
+        'target_plugin_id' => 'flat_rate',
+        'target_plugin_configuration' => [
+          'rate_label' => 'Carolina Special',
+          'rate_amount' => [
+            'number' => '2.99',
+            'currency_code' => 'USD',
+          ],
+        ],
+      ],
+      'conditions' => [
+        [
+          'target_plugin_id' => 'shipment_address',
+          'target_plugin_configuration' => [
+            'zone' => [
+              'territories' => [
+                ['country_code' => 'US', 'administrative_area' => 'SC'],
+              ],
+            ],
           ],
         ],
       ],
@@ -406,25 +469,48 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
       ->setShippingMethod($shipping_method)
       ->setShippingService(key($shipping_services))
       ->save();
-    $this->assertTrue($shipment->getAmount()->compareTo(new Price('9.99', 'USD')));
+    $this->assertEquals(new Price('10', 'USD'), $shipment->getAmount());
 
     // Edit the shipment.
-    $this->drupalGet($this->shipmentUri);
-    $session = $this->assertSession();
-    $page = $this->getSession()->getPage();
-    $page->clickLink('Edit');
-    $session->addressEquals($this->shipmentUri . '/' . $shipment->id() . '/edit');
-    $session->fieldValueEquals('title[0][value]', $shipment->label());
-    $this->assertTrue($page->hasField($shipment->getItems()[0]->getTitle()));
+    $this->assertSession()->linkExists('Edit');
+    $this->drupalGet($shipment->toUrl('edit-form'));
+
+    $this->assertSession()->fieldValueEquals('title[0][value]', $shipment->label());
+    $shipment_item_title = $shipment->getItems()[0]->getTitle();
+    $this->assertSession()->fieldExists($shipment_item_title);
+    // Assert shipping rates available on load and not lost when recalculated.
+    $this->assertNotEmpty(
+      $this->getSession()->getPage()->findField('The best shipping: $7.99')->getAttribute('checked')
+    );
+    $this->assertSession()->fieldExists('Overnight shipping: $19.99');
+    $this->assertSession()->fieldExists('Standard shipping: $9.99');
+    $this->assertSession()->fieldExists('The best shipping: $7.99');
+    $this->assertSession()->fieldNotExists('Carolina Special: $2.99');
+    $this->assertSession()->fieldExists('Wisconsin Express: $2.99');
+    $this->getSession()->getPage()->pressButton('Recalculate shipping');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty(
+      $this->getSession()->getPage()->findField('The best shipping: $7.99')->getAttribute('checked')
+    );
+    $this->assertSession()->fieldExists('Overnight shipping: $19.99');
+    $this->assertSession()->fieldExists('Standard shipping: $9.99');
+    $this->assertSession()->fieldExists('The best shipping: $7.99');
+    $this->assertSession()->fieldNotExists('Carolina Special: $2.99');
+    $this->assertSession()->fieldExists('Wisconsin Express: $2.99');
+    $wi_express = $this->getSession()->getPage()->findField('Wisconsin Express: $2.99');
+    $this->getSession()->getPage()->selectFieldOption(
+      $wi_express->getAttribute('id'),
+      $wi_express->getAttribute('value')
+    );
 
     $this->assertRenderedAddress($address, 'shipping_profile[0][profile]');
     // Select the default profile instead.
     $this->getSession()->getPage()->fillField('shipping_profile[0][profile][select_address]', $this->defaultProfile->id());
-    $this->waitForAjaxToFinish();
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertRenderedAddress($this->defaultAddress, 'shipping_profile[0][profile]');
     // Edit the default profile and change the street.
     $this->getSession()->getPage()->pressButton('shipping_edit');
-    $this->waitForAjaxToFinish();
+    $this->assertSession()->assertWaitOnAjaxRequest();
     foreach ($this->defaultAddress as $property => $value) {
       $prefix = 'shipping_profile[0][profile][address][0][address]';
       $this->assertSession()->fieldValueEquals($prefix . '[' . $property . ']', $value);
@@ -435,16 +521,25 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
 
     // Change the package type.
     $package_type = PackageType::load('package_type_a');
-    $page->fillField('package_type', 'commerce_package_type:' . $package_type->uuid());
-    $page->pressButton('Recalculate shipping');
-    $this->waitForAjaxToFinish();
+    $this->getSession()->getPage()->fillField('package_type', 'commerce_package_type:' . $package_type->uuid());
+    $this->getSession()->getPage()->pressButton('Recalculate shipping');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->fieldExists('Overnight shipping: $19.99');
+    $this->assertSession()->fieldExists('Standard shipping: $9.99');
+    $this->assertSession()->fieldExists('The best shipping: $159.80');
+    $this->assertSession()->fieldExists('Carolina Special: $2.99');
+    $this->assertSession()->fieldNotExists('Wisconsin Express: $2.99');
+    $this->createScreenshot('../shipment_default_method.png');
+    $this->assertNotEmpty(
+      $this->getSession()->getPage()->findField('The best shipping: $159.80')->getAttribute('checked')
+    );
     $this->submitForm([], 'Save');
 
     // Ensure the shipment has been updated.
     $shipment = $this->reloadEntity($shipment);
     $this->assertEquals('commerce_package_type:' . $package_type->uuid(), $shipment->getPackageType()->getId());
     $this->assertFalse($shipment->getData('owned_by_packer', TRUE));
-    $this->assertSame(0, $shipment->getAmount()->compareTo(new Price('199.80', 'USD')));
+    $this->assertEquals(new Price('159.80', 'USD'), $shipment->getAmount());
 
     $shipping_profile = $this->reloadEntity($shipping_profile);
     $this->assertEquals('customer_shipping', $shipping_profile->bundle());
@@ -516,10 +611,12 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
           'declared_value' => new Price('1', 'USD'),
         ]),
       ],
+      'tracking_code' => 'CODE',
     ]);
     $this->getSession()->reload();
     $this->assertSession()->pageTextNotContains('There are no shipments yet.');
     $this->assertSession()->pageTextContains($shipment->label());
+    $this->assertSession()->pageTextContains($shipment->getTrackingCode());
 
     // Ensure the listing works without the view.
     View::load('order_shipments')->delete();
@@ -530,6 +627,164 @@ class ShipmentAdminTest extends CommerceWebDriverTestBase {
     $shipment->delete();
     $this->getSession()->reload();
     $this->assertSession()->pageTextContains('There are no shipments yet.');
+  }
+
+  /**
+   * Tests using inline_entity_form to manage an order's shipments.
+   *
+   * @requires module inline_entity_form
+   */
+  public function testInlineEntityFormIntegration() {
+    // Create a default billing profile to simplify testing.
+    $this->createEntity('profile', [
+      'type' => 'customer',
+      'uid' => $this->adminUser->id(),
+      'address' => $this->defaultAddress,
+      'field_phone' => '202-555-0108',
+    ]);
+    $address = [
+      'country_code' => 'US',
+      'administrative_area' => 'WI',
+      'locality' => 'Milwaukee',
+      'postal_code' => '53177',
+      'address_line1' => 'Pabst Blue Ribbon Dr',
+      'given_name' => 'Frederick',
+      'family_name' => 'Pabst',
+    ];
+    $shipping_profile = $this->createEntity('profile', [
+      'type' => 'customer_shipping',
+      'uid' => $this->adminUser->id(),
+      'address' => $address,
+      'field_phone' => '202-555-0108',
+    ]);
+
+    $form_display = commerce_get_entity_display('commerce_order', 'default', 'form');
+    $form_display->setComponent('shipments', [
+      'type' => 'inline_entity_form_complex',
+    ]);
+    $form_display->save();
+
+    $this->drupalGet($this->order->toUrl('edit-form'));
+    $this->getSession()->getPage()->pressButton('Add new shipment');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+
+    $ief = $this->getSession()->getPage()->find('css', '[data-drupal-selector="edit-shipments-wrapper"]');
+    $this->assertNotNull($ief);
+    $ief->fillField('shipments[form][0][title][0][value]', 'Shipment #1');
+    $ief->fillField('shipments[form][0][shipping_profile][0][profile][select_address]', $shipping_profile->id());
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $ief->pressButton('Create shipment');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->getSession()->getPage()->pressButton('Save');
+
+    // Verify the address when viewing the order.
+    $rendered_shipping_information = $this->getSession()->getPage()->find('xpath', '//details//summary[contains(text(), "Shipping information")]');
+    $rendered_shipping_information->getParent();
+    $this->assertRenderedAddressInRegion($address, $rendered_shipping_information->getParent());
+
+    $this->drupalGet($this->order->toUrl('edit-form'));
+    $edit_shipment_button = $this->xpath('//input[@id="edit-shipments-entities-0-actions-ief-entity-edit"]')[0];
+    $edit_shipment_button->press();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->getSession()->getPage()->fillField('shipments[form][inline_entity_form][entities][0][form][tracking_code][0][value]', 'CODE');
+    $this->getSession()->getPage()->fillField('shipments[form][inline_entity_form][entities][0][form][shipping_profile][0][profile][select_address]', $this->defaultProfile->id());
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->submitForm([], 'Save', 'commerce-order-default-edit-form');
+    $this->assertSession()->pageTextContains("The order {$this->order->getOrderNumber()} has been successfully saved.");
+
+    $rendered_shipping_information = $this->getSession()->getPage()->find('xpath', '//details//summary[contains(text(), "Shipping information")]');
+    $rendered_shipping_information->getParent();
+    $this->assertRenderedAddressInRegion($this->defaultAddress, $rendered_shipping_information->getParent());
+
+    // Try updating the shipping profile again, this time by clicking on the
+    // "Update shipment" button prior to saving the main form.
+    // @note part of this is commented out due to incompatibilities.
+    $this->drupalGet($this->order->toUrl('edit-form'));
+    $edit_shipment_button = $this->xpath('//input[@id="edit-shipments-entities-0-actions-ief-entity-edit"]')[0];
+    $edit_shipment_button->press();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $ief = $this->getSession()->getPage()->find('css', '[data-drupal-selector="edit-shipments-form-inline-entity-form-entities-0-form"]');
+    $this->assertRenderedAddressInRegion($this->defaultAddress, $ief);
+    $this->assertSession()->fieldValueEquals('shipments[form][inline_entity_form][entities][0][form][tracking_code][0][value]', 'CODE');
+    $this->getSession()->getPage()->fillField('shipments[form][inline_entity_form][entities][0][form][shipping_profile][0][profile][select_address]', $shipping_profile->id());
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertRenderedAddressInRegion($address, $ief);
+    // @todo test when IEF + InlineForms are compatible.
+    // $ief->pressButton('Update shipment');
+    // $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->submitForm([], 'Save', 'commerce-order-default-edit-form');
+    $this->assertSession()->pageTextContains("The order {$this->order->getOrderNumber()} has been successfully saved.");
+
+    $rendered_shipping_information = $this->getSession()->getPage()->find('xpath', '//details//summary[contains(text(), "Shipping information")]');
+    $rendered_shipping_information->getParent();
+    $this->assertRenderedAddressInRegion($address, $rendered_shipping_information->getParent());
+  }
+
+  /**
+   * Asserts that the given address is rendered on the page.
+   *
+   * @param array $address
+   *   The address.
+   * @param \Behat\Mink\Element\NodeElement $element
+   *   The parent element holding the address.
+   *
+   * @todo use assertRenderedAddress after https://www.drupal.org/project/commerce/issues/3117251
+   */
+  protected function assertRenderedAddressInRegion(array $address, NodeElement $element) {
+    $address_text = $element->find('css', 'p.address')->getText();
+    foreach ($address as $property => $value) {
+      if ($property === 'country_code') {
+        $value = $this->countryList[$value];
+      }
+      $this->assertContains($value, $address_text);
+    }
+  }
+
+  /**
+   * Tests shipment confirmation email.
+   *
+   * @group debug
+   */
+  public function testShipmentConfirmationEmail() {
+    // Enable email confirmation and set bcc address.
+    $this->drupalGet('/admin/commerce/config/shipment-types/default/edit');
+    $edit = [
+      'sendConfirmation' => 1,
+      'confirmationBcc' => 'testBcc@shipping.com',
+    ];
+    $this->submitForm($edit, 'Save');
+
+    // Add Shipment.
+    $this->drupalGet($this->shipmentUri);
+    $page = $this->getSession()->getPage();
+    $page->clickLink('Add shipment');
+    $page->fillField('title[0][value]', 'Test shipment');
+    $page->hasField('shipment_items[1]');
+    $page->checkField('shipment_items[1]');
+    $page->hasCheckedField('shipment_items[1]');
+
+    $this->assertRenderedAddress($this->defaultAddress, 'shipping_profile[0][profile]');
+
+    $page->pressButton('Recalculate shipping');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+
+    $page->fillField('tracking_code[0][value]', 'A1234567890');
+    $page->pressButton('Save');
+
+    // Email is triggered at Send shipment step.
+    $this->getSession()->getPage()->pressButton('Finalize shipment');
+    $this->getSession()->getPage()->pressButton('Send shipment');
+
+    // Test email content.
+    $email = current($this->getMails());
+    $this->assertEquals('testBcc@shipping.com', $email['headers']['Bcc']);
+    $this->assertEquals("An item for order #{$this->order->getOrderNumber()} shipped!", $email['subject']);
+    $this->assertContains('Bryan Centarro', $email['body']);
+    $this->assertContains('9 Drupal Ave', $email['body']);
+    $this->assertContains('Greenville, SC', $email['body']);
+    $this->assertContains('29616', $email['body']);
+    $this->assertContains('Tracking information:', $email['body']);
+    $this->assertContains('A1234567890', $email['body']);
   }
 
 }

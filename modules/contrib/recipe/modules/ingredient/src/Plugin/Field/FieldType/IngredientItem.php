@@ -8,7 +8,6 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\ingredient\IngredientUnitTrait;
 
 /**
  * Plugin implementation of the 'ingredient' field type.
@@ -24,8 +23,6 @@ use Drupal\ingredient\IngredientUnitTrait;
  * )
  */
 class IngredientItem extends EntityReferenceItem {
-
-  use IngredientUnitTrait;
 
   /**
    * {@inheritdoc}
@@ -118,7 +115,7 @@ class IngredientItem extends EntityReferenceItem {
       '#type' => 'checkboxes',
       '#title' => $this->t('Enable sets of units'),
       '#default_value' => $this->getSetting('unit_sets'),
-      '#options' => $this->getUnitSetOptions(),
+      '#options' => \Drupal::service('ingredient.unit')->getUnitSetOptions(),
       '#description' => $this->t('Units in enabled sets will appear in the field widget.  If no sets are selected then all units will appear by default.'),
       '#ajax' => [
         'callback' => [$this, 'setChangeAjaxCallback'],
@@ -144,9 +141,10 @@ class IngredientItem extends EntityReferenceItem {
   public function processDefaultUnit($element, FormStateInterface $form_state, $form) {
     $unit_sets = $form_state->getValue(['settings', 'unit_sets']);
 
-    $units = $this->getConfiguredUnits($unit_sets);
-    $units = $this->sortUnitsByName($units);
-    $element['#options'] = $this->createUnitSelectOptions($units);
+    $ingredient_unit_utility = \Drupal::service('ingredient.unit');
+    $units = $ingredient_unit_utility->getConfiguredUnits($unit_sets);
+    $units = $ingredient_unit_utility->sortUnitsByName($units);
+    $element['#options'] = $ingredient_unit_utility->createUnitSelectOptions($units);
 
     // If the #default_value is not in the current list of units due to an AJAX
     // reload, unset it to prevent a validation error when reloading.
@@ -171,7 +169,7 @@ class IngredientItem extends EntityReferenceItem {
     $random = new Random();
 
     // Get the ingredient unit keys.
-    $unit_keys = array_keys($this->getConfiguredUnits());
+    $unit_keys = array_keys(\Drupal::service('ingredient.unit')->getConfiguredUnits());
     $random_unit_key = mt_rand(0, count($unit_keys) - 1);
 
     // Generate an ingredient entity.

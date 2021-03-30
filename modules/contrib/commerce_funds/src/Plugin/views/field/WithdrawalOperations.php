@@ -2,9 +2,12 @@
 
 namespace Drupal\commerce_funds\Plugin\views\field;
 
+use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\Core\Url;
 use Drupal\views\ResultRow;
 use Drupal\views\Plugin\views\field\Custom;
-use Drupal\Core\Url;
+use Drupal\commerce_funds\Entity\Transaction;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * A handler to provide withdrawal operations for admins.
@@ -14,6 +17,33 @@ use Drupal\Core\Url;
  * @ViewsField("commerce_funds_withdrawal_operations")
  */
 class WithdrawalOperations extends Custom {
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+  /**
+   * Class constructor.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, AccountProxyInterface $current_user) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->currentUser = $current_user;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('current_user')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -28,10 +58,8 @@ class WithdrawalOperations extends Custom {
   protected function defineOptions() {
     $options = parent::defineOptions();
     // Override options.
-    $options['alter']['contains'] = [
-      'alter_text' => FALSE,
-    ];
-    $options['hide_alter_empty'] = TRUE;
+    $options['alter']['contains']['alter_text']['default'] = FALSE;
+    $options['hide_alter_empty']['default'] = TRUE;
 
     return $options;
   }
@@ -53,28 +81,24 @@ class WithdrawalOperations extends Custom {
    *   Renderable dropbutton.
    */
   protected function renderWithdrawalOperations(ResultRow $values) {
-    $request_id = $values->transaction_id;
+    $request_hash = Transaction::load($values->transaction_id)->getHash();
     $status = $values->_entity->getStatus();
     $links = [];
-    $args = ['request_id' => $request_id];
+    $args = ['request_hash' => $request_hash];
 
-    if (\Drupal::currentUser()->hasPermission(['administer withdraw requests'])) {
+    if ($this->currentUser->hasPermission(['administer withdraw requests'])) {
       if ($status == 'Pending') {
         $links['approve'] = [
-          'title' => t('Approve'),
+          'title' => $this->t('Approve'),
           'url' => Url::fromRoute('commerce_funds.admin.withdrawal_requests.approve', $args),
         ];
-        $args = [
-          'action' => 'decline',
-          'request_id' => $request_id,
-        ];
         $links['decline'] = [
-          'title' => t('Decline'),
+          'title' => $this->t('Decline'),
           'url' => Url::fromRoute('commerce_funds.admin.withdrawal_requests.decline', $args),
         ];
       }
       else {
-        return t('None');
+        return $this->t('None');
       }
     }
 

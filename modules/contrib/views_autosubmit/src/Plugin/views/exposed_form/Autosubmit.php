@@ -1,16 +1,9 @@
 <?php
 
-/**
- * @file
- * @author Er. Sandeep Jangra
- * Contains Drupal\views_autosubmit\Plugin\views\exposed_form\Autosubmit.
- */
-
 namespace Drupal\views_autosubmit\Plugin\views\exposed_form;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\exposed_form\ExposedFormPluginBase;
-use Drupal\views\Views;
 
 /**
  * Extends the exposed form to provide an autosubmit functionality.
@@ -24,13 +17,14 @@ use Drupal\views\Views;
  * )
  */
 class Autosubmit extends ExposedFormPluginBase {
+
   /**
    * {@inheritdoc}.
    */
   protected function defineOptions() {
-    parent::defineOptions();
+    $options = parent::defineOptions();
 
-    $options['autosubmit_hide'] = array('default' => TRUE);
+    $options['autosubmit_hide'] = ['default' => TRUE];
 
     return $options;
   }
@@ -41,12 +35,12 @@ class Autosubmit extends ExposedFormPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $form['autosubmit_hide'] = array(
+    $form['autosubmit_hide'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Hide submit button'),
       '#description' => $this->t('Hide submit button if javascript is enabled.'),
       '#default_value' => $this->options['autosubmit_hide'],
-    );
+    ];
   }
 
   /**
@@ -56,7 +50,7 @@ class Autosubmit extends ExposedFormPluginBase {
     parent::exposedFormAlter($form, $form_state);
 
     // Apply autosubmit values.
-    $form = array_merge_recursive($form, array('#attributes' => array('class' => array('views-auto-submit-full-form'))));
+    $form = array_merge_recursive($form, ['#attributes' => ['class' => ['views-auto-submit-full-form']]]);
     $form['actions']['submit']['#attributes']['class'][] = 'views-use-ajax';
     $form['actions']['submit']['#attributes']['class'][] = 'views-auto-submit-click';
     $form['#attached']['library'][] = 'views_autosubmit/autosubmit';

@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\taxonomy\VocabularyInterface;
@@ -139,7 +140,7 @@ function taxonomy_menu_ui_form_taxonomy_term_form_alter(&$form, FormStateInterfa
   $term = $form_state->getFormObject()->getEntity();
   $defaults = taxonomy_menu_ui_get_menu_link_defaults($term);
   /** @var \Drupal\taxonomy\VocabularyInterface $vocabulary */
-  $vid = $term->getVocabularyId();;
+  $vid = $term->bundle();
   $vocabulary = Vocabulary::load($vid);
   /** @var \Drupal\Core\Menu\MenuParentFormSelectorInterface $menu_parent_selector */
   $menu_parent_selector = \Drupal::service('menu.parent_form_selector');
@@ -373,4 +374,20 @@ function taxonomy_menu_ui_entity_extra_field_info() {
   }
 
   return $extra;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_delete().
+ *
+ * Remove translation from the menu.
+ */
+function taxonomy_menu_ui_taxonomy_term_translation_delete(EntityInterface $entity) {
+  $language_id = $entity->language()->getId();
+  $menus = \Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties(['link__uri' => 'internal:/taxonomy/term/' . $entity->id()]);
+  foreach ($menus as $menu) {
+    if ($menu->hasTranslation($language_id)) {
+      $menu->removeTranslation($language_id);
+      $menu->save();
+    }
+  }
 }

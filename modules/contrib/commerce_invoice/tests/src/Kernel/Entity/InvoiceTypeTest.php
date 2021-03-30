@@ -17,37 +17,6 @@ use Drupal\Tests\commerce_invoice\Kernel\InvoiceKernelTestBase;
 class InvoiceTypeTest extends InvoiceKernelTestBase {
 
   /**
-   * A test file.
-   *
-   * @var \Drupal\file\FileInterface
-   */
-  protected $file;
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = ['file'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-    $this->installEntitySchema('file');
-    $file = File::create([
-      'fid' => 1,
-      'filename' => 'test.png',
-      'filesize' => 100,
-      'uri' => 'public://images/test.png',
-      'filemime' => 'image/png',
-    ]);
-    $file->save();
-    $this->file = $this->reloadEntity($file);
-  }
-
-  /**
    * @covers ::id
    * @covers ::label
    * @covers ::getNumberPattern
@@ -64,13 +33,22 @@ class InvoiceTypeTest extends InvoiceKernelTestBase {
    * @covers ::setPaymentTerms
    */
   public function testInvoiceType() {
+    $file = File::create([
+      'fid' => 1,
+      'filename' => 'test.png',
+      'filesize' => 100,
+      'uri' => 'public://images/test.png',
+      'filemime' => 'image/png',
+    ]);
+    $file->save();
+    $file = $this->reloadEntity($file);
     $values = [
       'id' => 'test_id',
       'label' => 'Test label',
       'footerText' => $this->randomString(),
       'paymentTerms' => $this->randomString(),
       'numberPattern' => 'invoice_default',
-      'logo' => $this->file->uuid(),
+      'logo' => $file->uuid(),
       'dueDays' => 10,
       'workflow' => 'invoice_default',
     ];
@@ -84,8 +62,8 @@ class InvoiceTypeTest extends InvoiceKernelTestBase {
     $invoice_type->setNumberPatternId('test');
     $this->assertEquals('test', $invoice_type->getNumberPatternId());
 
-    $this->assertEquals($this->file->createFileUrl(FALSE), $invoice_type->getLogoUrl());
-    $this->assertEquals($this->file, $invoice_type->getLogoFile());
+    $this->assertEquals($file->createFileUrl(FALSE), $invoice_type->getLogoUrl());
+    $this->assertEquals($file, $invoice_type->getLogoFile());
 
     $this->assertEquals($values['footerText'], $invoice_type->getFooterText());
     $invoice_type->setFooterText('Footer text (modified)');

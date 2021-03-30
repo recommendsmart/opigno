@@ -2,11 +2,11 @@ name: Group Behavior
 type: module
 description: Provides the option to have group content automatically create a group, therefore acting as group proxy.
 package: Group
-core: 8.x
+core_version_requirement: ^8.7.7 || ^9
 dependencies:
-  - group
+  - group:group
 
-# Information added by Drupal.org packaging script on 2019-10-12
-version: '8.x-1.0-alpha7'
+# Information added by Drupal.org packaging script on 2020-11-16
+version: '8.x-1.0-alpha8'
 project: 'group_behavior'
-datestamp: 1570891386
+datestamp: 1605552284

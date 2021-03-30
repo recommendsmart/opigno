@@ -30,17 +30,17 @@ class WeightTest extends UnitTestCase {
   }
 
   /**
-   * ::covers __construct
+   * ::covers __construct.
    */
   public function testInvalidUnit() {
-    $this->setExpectedException(\InvalidArgumentException::class);
+    $this->expectException(\InvalidArgumentException::class);
     $weight = new Weight('1', 'm');
   }
 
   /**
    * Tests unit conversion.
    *
-   * ::covers convert
+   * ::covers convert.
    */
   public function testConvert() {
     $this->assertEquals(new Weight('5000000', 'mg'), $this->weight->convert('mg')->round());

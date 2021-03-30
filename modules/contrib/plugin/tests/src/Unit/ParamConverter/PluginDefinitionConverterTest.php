@@ -35,7 +35,7 @@ class PluginDefinitionConverterTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->pluginTypeManager = $this->prophesize(PluginTypeManagerInterface::class);

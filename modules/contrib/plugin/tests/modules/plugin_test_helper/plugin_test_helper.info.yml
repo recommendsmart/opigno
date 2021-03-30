@@ -6,7 +6,7 @@ dependencies:
   - plugin:plugin
 hidden: true
 
-# Information added by Drupal.org packaging script on 2019-11-12
-version: '8.x-2.7'
+# Information added by Drupal.org packaging script on 2020-07-21
+version: '8.x-2.8'
 project: 'plugin'
-datestamp: 1573598284
+datestamp: 1595360849

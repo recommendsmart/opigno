@@ -129,7 +129,14 @@ class LayoutOptionForm extends EntityForm implements ContainerInjectionInterface
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $layout = $this->entity->getLayout();
+    $layout_id = $this->routeMatch->getParameter('blb_layout');
+    if ($layout_id) {
+      $layout = $this->entity->getLayoutById($layout_id);
+    }
+    else {
+      $layout = $this->entity->getLayout();
+    }
+
     $structure = $form_state->getValue('structure');
     $structure = explode(' ', $structure);
     $invalid_structure = FALSE;
@@ -141,9 +148,8 @@ class LayoutOptionForm extends EntityForm implements ContainerInjectionInterface
       }
     }
 
-    // Check the number of colmuns and the sum of the structure.
+    // Check the number of columns and the sum of the structure.
     if (
-      count($structure) != $layout->getNumberOfColumns() ||
       array_sum($structure) != 12
     ) {
       $invalid_structure = TRUE;
@@ -152,7 +158,7 @@ class LayoutOptionForm extends EntityForm implements ContainerInjectionInterface
     if ($invalid_structure) {
       $form_state->setErrorByName(
         'structure',
-        $this->t('Structure must be @cols numbers seperated by space and the sum of these numbers must equal 12!', ['@cols' => $layout->getNumberOfColumns()])
+        $this->t('Structure must be @cols numbers separated by space and the sum of these numbers must equal 12!', ['@cols' => $layout->getNumberOfColumns()])
       );
     }
   }

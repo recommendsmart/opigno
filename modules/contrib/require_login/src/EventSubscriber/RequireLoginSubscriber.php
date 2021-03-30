@@ -20,6 +20,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Routing\Route;
 
 /**
  * Login requirement.
@@ -168,7 +169,7 @@ class RequireLoginSubscriber implements EventSubscriberInterface {
     $route = $request->get('_route_object');
 
     // Default authentication exclusions.
-    if ($route->hasRequirement('_user_is_logged_in') && $route->getRequirement('_user_is_logged_in') === 'FALSE') {
+    if ($route instanceof Route && $route->hasRequirement('_user_is_logged_in') && $route->getRequirement('_user_is_logged_in') === 'FALSE') {
       return FALSE;
     }
     $route_name = $request->get('_route');

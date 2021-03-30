@@ -2,15 +2,16 @@
 
 namespace Drupal\Tests\flexible_views\Functional;
 
+use Drupal\Component\Serialization\Json;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\views\Tests\ViewTestData;
-use Drupal\Tests\views\Functional\ViewTestBase;
 
 /**
  * Simple test to ensure that main page loads with module enabled.
  *
  * @group flexible_views
  */
-class FlexibleViewsTest extends ViewTestBase {
+class FlexibleViewsTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -38,11 +39,9 @@ class FlexibleViewsTest extends ViewTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Create base class for this and extend from there.
    */
-  protected function setUp($import_test_views = TRUE) {
-    parent::setUp($import_test_views);
+  protected function setUp() {
+    parent::setUp();
 
     $account = $this->drupalCreateUser([
       'access content',
@@ -186,6 +185,27 @@ class FlexibleViewsTest extends ViewTestBase {
     $this->assertSession()->elementExists('xpath', "//div[@class='form-item move-buttons']/div[@class='move-left']");
     $this->assertSession()->elementExists('xpath', "//div[@class='form-item move-buttons']/div[@class='move-top']");
     $this->assertSession()->elementExists('xpath', "//div[@class='form-item move-buttons']/div[@class='move-down']");
+  }
+
+  /**
+   * Tests column selector form submit via parameters.
+   *
+   * @throws \Behat\Mink\Exception\ResponseTextException
+   */
+  public function testColumnSelectorFormSubmit() {
+    // Load the linked page display.
+    $this->drupalGet('admin/test-flexible-views');
+
+    $this->assertSession()->pageTextContains(t('Node Content 4'));
+    $this->assertSession()->pageTextNotContains(t('Node Content Body 4'));
+
+    // Submit the form (add the body column to the selected columns).
+    $this->submitForm([
+      "selected_columns_submit_order" => Json::encode(["body", "type"]),
+    ], 'Apply');
+
+    $this->assertSession()->pageTextNotContains(t('Node Content 4'));
+    $this->assertSession()->pageTextContains(t('Node Content Body 4'));
   }
 
   /**

@@ -26,6 +26,8 @@ class EntityTermData extends RelationshipPluginBase {
    */
   protected $vocabularyStorage;
 
+  protected $base_field;
+
   /**
    * Constructs a NodeTermData object.
    *
@@ -60,7 +62,7 @@ class EntityTermData extends RelationshipPluginBase {
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
-
+    $this->base_field = $view->storage->get('base_field');
     // @todo Remove the legacy code.
     // Convert legacy vids option to machine name vocabularies.
     if (!empty($this->options['vids'])) {
@@ -129,8 +131,8 @@ class EntityTermData extends RelationshipPluginBase {
     else {
       // If vocabularies are supplied join a subselect instead
       $def['left_table'] = $this->tableAlias;
-      $def['left_field'] = 'nid';
-      $def['field'] = 'nid';
+      $def['left_field'] = $this->base_field;
+      $def['field'] = $this->base_field;
       $def['type'] = empty($this->options['required']) ? 'LEFT' : 'INNER';
       $def['adjusted'] = TRUE;
 

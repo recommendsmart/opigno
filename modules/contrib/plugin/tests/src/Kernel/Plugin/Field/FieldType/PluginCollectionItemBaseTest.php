@@ -29,7 +29,7 @@ class PluginCollectionItemBaseTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $field_definition = BaseFieldDefinition::create('plugin:plugin_test_helper_mock');

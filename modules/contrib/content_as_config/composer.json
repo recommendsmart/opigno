@@ -26,13 +26,10 @@
     },
     "require": {
         "php": "^7.4",
-        "drupal/core": "^8.8"
+        "drupal/core": "^8.8 || ^9.0"
     },
     "require-dev": {
         "drush/drush": "^9 || ^10"
-    },
-    "suggest": {
-        "drupal/feeds": "To persist feed content as configuration."
     },
     "conflict": {
         "drupal/structure_sync": "*"

@@ -4,7 +4,6 @@ namespace Drupal\content_as_config\Form;
 
 use Drupal\content_as_config\Controller\EntityControllerBase;
 use Drupal\content_as_config\Controller\TaxonomiesController;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -24,13 +23,6 @@ trait TaxonomiesImportExportTrait {
    */
   public function getEntityType(): string {
     return 'taxonomy_term';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getEntityNamePlural(): TranslatableMarkup {
-    return $this->t('terms');
   }
 
   /**

@@ -300,7 +300,6 @@ function entity_taxonomy_term_title(Term $term) {
  * sorted by creation date. To avoid slow queries due to joining across
  * multiple node and field tables with various conditions and order by criteria,
  * we maintain a denormalized table with all relationships between terms,
- * published nodes and common sort criteria such as status, sticky and created.
  * When using other field storage engines or alternative methods of
  * denormalizing this data you should set the
  * entity_taxonomy.settings:maintain_index_table to '0' to avoid unnecessary writes in
@@ -336,10 +335,7 @@ function entity_taxonomy_build_entity_index($entity) {
     return;
   }
 
-  $status = $entity->isPublished();
-  $sticky = (int) $entity->isSticky();
-  // We only maintain the entity_taxonomy index for published nodes.
-  if ($status && $entity->isDefaultRevision()) {
+  if ($entity->isDefaultRevision()) {
     // Collect a unique list of all the term IDs from all node fields.
     $tid_all = [];
     $entity_reference_class = 'Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem';
@@ -365,11 +361,8 @@ function entity_taxonomy_build_entity_index($entity) {
           ->key([
             'entity_id' => $entity->id(),
             'entity_type_id' => $entity->getEntityTypeId(),
-            'tid' => $tid,
-            'status' => $entity->isPublished()
-          ])
-          ->fields(['sticky' => $sticky, 'created' => $entity->getCreatedTime()])
-          ->execute();
+            'tid' => $tid
+          ])->execute();
       }
     }
   }

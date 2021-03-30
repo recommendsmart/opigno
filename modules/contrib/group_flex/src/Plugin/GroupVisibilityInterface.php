@@ -12,6 +12,21 @@ use Drupal\group\Entity\GroupTypeInterface;
 interface GroupVisibilityInterface extends PluginInspectionInterface {
 
   /**
+   * The string to use for group flex type 'public' visibility.
+   */
+  const GROUP_FLEX_TYPE_VIS_PUBLIC = 'public';
+
+  /**
+   * The string to use for group flex type 'private' visibility.
+   */
+  const GROUP_FLEX_TYPE_VIS_PRIVATE = 'private';
+
+  /**
+   * The string to use for group flex type 'flexible' visibility.
+   */
+  const GROUP_FLEX_TYPE_VIS_FLEX = 'flex';
+
+  /**
    * The label of the group visibility.
    *
    * @return string
@@ -63,7 +78,7 @@ interface GroupVisibilityInterface extends PluginInspectionInterface {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function enableGroupType(GroupTypeInterface $groupType): void;
+  public function enableGroupType(GroupTypeInterface $groupType);
 
   /**
    * Disable the visibility on the group type.
@@ -73,7 +88,7 @@ interface GroupVisibilityInterface extends PluginInspectionInterface {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function disableGroupType(GroupTypeInterface $groupType): void;
+  public function disableGroupType(GroupTypeInterface $groupType);
 
   /**
    * Save the mapped permissions.

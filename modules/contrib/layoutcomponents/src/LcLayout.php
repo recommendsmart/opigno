@@ -57,7 +57,7 @@ class LcLayout {
       'default' => $default,
     ];
     $this->original = $this->data;
-    $this->delta = mt_rand(1, 100);
+    $this->delta = mt_rand(1, 1000);
   }
 
   /**
@@ -288,13 +288,19 @@ class LcLayout {
 
     // Add a layout wrapper and its attributes.
     $attributes = new Attribute($this->data['default']);
-    $attributes->addClass('lc-section');
+    $attributes->addClass(['lc-section', 'lc-section-' . $this->getDelta()]);
     $attributes->addClass(Html::cleanCssIdentifier($this->getId()));
 
     $component_container_attributes = new Attribute();
     $component_container_attributes->addClass('lc-inline_container-section-edit');
     $component_container_title_attributes = new Attribute();
     $component_container_title_attributes->addClass('lc-inline_container-title-edit');
+
+    // Hidde the container if the title is empty.
+    $title = $this->getSetting('title.general.title', '');
+    if (empty($title)) {
+      $component_container_title_attributes->addClass('hidden');
+    }
 
     // Set wrapper full width.
     $full_width = $this->getSetting('section.styles.sizing.full_width', '');
@@ -430,6 +436,67 @@ class LcLayout {
       $cont++;
     }
 
+    // Carousel control.
+    $section_carousel = $this->getSetting('section.general.structure.section_carousel');
+    $section_carousel_slick = $this->getSetting('section.general.structure.section_carousel_slick');
+
+    if (boolval($section_carousel) && $section_carousel_slick !== 'none') {
+      /** @var \Drupal\slick\SlickManager $slick */
+      $slick = \Drupal::service('slick.manager');
+
+      $items = [];
+      foreach ($this->getSetting('regions') as $name => $column) {
+        $path = 'regions.' . $name;
+
+        $item = $this->getSetting($path);
+        unset($item['layout_builder-configuration']);
+        $item['#title'] = $item['title'];
+        $items[] = [
+          'slide' => [
+            '#type' => 'container',
+            '#theme' => 'layoutcomponents_slick_region',
+            '#content' => $item,
+            '#attributes' => [
+              'class' => ['lc-slick-column-wrapper'],
+            ],
+          ],
+        ];
+      }
+
+      if (!empty($items)) {
+        $skin = \Drupal::entityTypeManager()->getStorage('slick')->load($section_carousel_slick);
+        if (!empty($skin)) {
+          $class = 'lc-slick-section-' . $this->getDelta();
+
+          $build = [
+            'items' => $items,
+            'options' => $skin->getSettings(),
+            'attributes' => [
+              'class' => [$class, 'w-100'],
+            ],
+          ];
+
+          // Get responsive options.
+          $options = $skin->getResponsiveOptions();
+          if (!empty($options)) {
+            // Prepare the array for JS.
+            $responsive_options = [
+              'parent' => 'lc-section-' . $this->getDelta(),
+              'options' => $options,
+            ];
+            // Normal array.
+            foreach ($options as $option) {
+              $build['options']['responsive'][] = $option;
+            }
+            // Store JS options.
+            $this->setSetting('js.responsive.' . $class, $responsive_options);
+          }
+          $element = $slick->build($build);
+          $this->setSetting('regions.slick', $element);
+        }
+      }
+    }
+
     // Store data.
     $output['output'] = $this->getSettings();
 
@@ -446,7 +513,9 @@ class LcLayout {
    */
   public function setColumn($name, $delta) {
     $path = 'regions.' . $name;
+    $column_size_sm = explode('/', $this->getSetting('section.general.structure.section_structure_sm', 1));
     $column_size = explode('/', $this->getSetting('section.general.structure.section_structure', 1));
+    $column_size_lg = explode('/', $this->getSetting('section.general.structure.section_structure_lg', 1));
     $border = ($this->getSetting($path . '.styles.border.border', '') == 'all') ? '' : '-' . $this->getSetting($path . '.styles.border.border', '');
     $border_size = $this->getSetting($path . '.styles.border.size');
     $border_color = $this->getSetting($path . '.styles.border.color.settings.color');
@@ -456,9 +525,9 @@ class LcLayout {
     $border_radius_bottom_right = $this->getSetting($path . '.styles.border.radius_bottom_right');
     $background_color = $this->getSetting($path . '.styles.background.color.settings.color');
     $background_opacity = $this->getSetting($path . '.styles.background.color.settings.opacity');
-    $remove_paddings = $this->getSetting($path . '.styles.spacing.remove_paddings');
-    $remove_padding_left = $this->getSetting($path . '.styles.spacing.remove_padding_left');
-    $remove_padding_right = $this->getSetting($path . '.styles.spacing.remove_padding_right');
+    $remove_paddings = $this->getSetting($path . '.styles.spacing.paddings');
+    $remove_padding_left = $this->getSetting($path . '.styles.spacing.paddings_left');
+    $remove_padding_right = $this->getSetting($path . '.styles.spacing.paddings_right');
     $extra_classes = $this->getSetting($path . '.styles.misc.extra_class');
 
     $column_classes = new Attribute();
@@ -467,18 +536,23 @@ class LcLayout {
     // Column default classes.
     $column_classes->addClass('lc-inline_column_' . $name . '-edit');
     $column_classes->addClass('layoutcomponent-column');
-    $column_classes->addClass('col-sm-12');
 
     // Column size.
     if (is_numeric($delta)) {
+      if (isset($column_size_sm[$delta]) && !empty($column_size_sm[$delta])) {
+        $column_classes->addClass('col-sm-' . $column_size_sm[$delta]);
+      }
       if (isset($column_size[$delta]) && !empty($column_size[$delta])) {
         $column_classes->addClass('col-md-' . $column_size[$delta]);
+      }
+      if (isset($column_size_lg[$delta]) && !empty($column_size_lg[$delta])) {
+        $column_classes->addClass('col-lg-' . $column_size_lg[$delta]);
       }
     }
 
     // Column border.
-    if ($border !== 'none') {
-      if (!empty($border_size) && $border !== 'none') {
+    if ($border !== '-none') {
+      if (!empty($border_size)) {
         $column_styles[] = 'border' . $border . ': ' . $border_size . 'px solid';
         if (!empty($border_color)) {
           $column_styles[] = 'border-color: ' . $border_color;
@@ -496,6 +570,9 @@ class LcLayout {
         if (!empty($border_radius_bottom_right)) {
           $column_styles[] = 'border-bottom-right-radius: ' . $border_radius_bottom_right . '%';
         }
+      }
+      else {
+        $column_styles[] = 'border: none';
       }
     }
 
@@ -560,7 +637,8 @@ class LcLayout {
    */
   public function setColumnTitle($name) {
     $path = 'regions.' . $name;
-    $title_type = $this->getSetting($path . '.styles.title.type', 'h3');
+    $title = $this->getSetting($path . '.general.title', '');
+    $title_type = $this->getSetting($path . '.styles.title.type', 'h2');
     $title_size = $this->getSetting($path . '.styles.title.size');
     $title_color = $this->getSetting($path . '.styles.title.color.settings.color');
     $title_opacity = $this->getSetting($path . '.styles.title.color.settings.opacity');
@@ -589,6 +667,11 @@ class LcLayout {
     // Title.
     $title_classes = new Attribute();
     $title_styles = [];
+
+    // Hide the title if empty.
+    if (empty($title)) {
+      $title_styles[] = 'display: none;';
+    }
 
     // Title inline.
     $title_classes->addClass('lc-inline_column_' . $name . '-title-edit');
@@ -619,6 +702,7 @@ class LcLayout {
   public function setSectionTitle() {
     // Data.
     $title = $this->getSetting('title.general.title', '');
+    $description = $this->getSetting('title.general.description', '');
     $title_color = $this->getSetting('title.styles.design.title_color.settings.color', []);
     $title_opacity = $this->getSetting('title.styles.design.title_color.settings.opacity', []);
     $title_size = $this->getSetting('title.styles.sizing.title_size', []);
@@ -627,6 +711,8 @@ class LcLayout {
     $title_border_color = $this->getSetting('title.styles.border.title_border_color.settings.color');
     $title_margin_top = ($this->getSetting('title.styles.spacing.title_margin_top') == 0) ? '' : $this->getSetting('title.styles.spacing.title_margin_top') . 'px';
     $title_margin_bottom = ($this->getSetting('title.styles.spacing.title_margin_bottom') == 0) ? '' : $this->getSetting('title.styles.spacing.title_margin_bottom') . 'px';
+    $title_extra_class = $this->getSetting('title.styles.misc.title_extra_class', '');
+    $description_extra_class = $this->getSetting('title.styles.misc.description_extra_class', '');
 
     // Title container classes.
     $container_classes = new Attribute();
@@ -658,7 +744,30 @@ class LcLayout {
     $title_classes->addClass('lc-inline_title-edit');
     $title_classes->addClass('border-type' . $title_border);
     $title_classes->addClass($this->getSetting('title.styles.design.title_align'));
+
+    // Title extra class.
+    if (!empty($title_extra_class)) {
+      foreach (explode(',', $title_extra_class) as $class) {
+        $class = str_replace(' ', '', $class);
+        $title_classes->addClass(preg_replace('/[^A-Za-z0-9\-]/', '', $class));
+      }
+    }
+
     $this->setSetting('title.styles.attr_class.title', $title_classes);
+
+    // Description classes.
+    $description_classes = new Attribute();
+    $description_classes->addClass('lc-inline_description-edit');
+
+    // Description extra class.
+    if (!empty($description_extra_class)) {
+      foreach (explode(',', $description_extra_class) as $class) {
+        $class = str_replace(' ', '', $class);
+        $description_classes->addClass(preg_replace('/[^A-Za-z0-9\-]/', '', $class));
+      }
+    }
+
+    $this->setSetting('title.styles.attr_class.description', $description_classes);
 
     // Title styles.
     $title_styles = [];
@@ -689,6 +798,16 @@ class LcLayout {
     $styles = new Attribute();
     $styles->setAttribute('style', implode(';', $title_styles));
     $this->setSetting('title.styles.attr_styles.title', $styles);
+  }
+
+  /**
+   * Get the JS settings.
+   *
+   * @return array
+   *   The JS settings.
+   */
+  public function getJsSettings() {
+    return $this->getSetting('js', []);
   }
 
   /**

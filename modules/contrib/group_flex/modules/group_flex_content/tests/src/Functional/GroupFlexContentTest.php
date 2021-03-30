@@ -3,6 +3,7 @@
 namespace Drupal\Tests\group_flex_content\Functional;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\group_flex\Plugin\GroupVisibilityInterface;
 use Drupal\Tests\group\Functional\GroupBrowserTestBase;
 
 /**
@@ -75,7 +76,7 @@ class GroupFlexContentTest extends GroupBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
     $this->account = $this->createUser($this->getGlobalPermissions());
     $this->group = $this->createGroup(['uid' => $this->account->id()]);
@@ -92,14 +93,14 @@ class GroupFlexContentTest extends GroupBrowserTestBase {
   /**
    * Tests group flex content type configuration.
    */
-  public function testGroupFlexContentType(): void {
+  public function testGroupFlexContentType() {
     $this->drupalLogin($this->account);
 
     // Now change the settings to enabled and public.
     $this->drupalGet('/admin/group/types/manage/default');
     $page = $this->getSession()->getPage();
     $page->selectFieldOption('group_flex_enabler', TRUE);
-    $page->selectFieldOption('group_type_visibility', GROUP_FLEX_TYPE_VIS_PRIVATE);
+    $page->selectFieldOption('group_type_visibility', GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PRIVATE);
     $this->submitForm([], 'Save group type');
     $this->assertSession()->statusCodeEquals(200);
 
@@ -110,7 +111,7 @@ class GroupFlexContentTest extends GroupBrowserTestBase {
     // Now change the group visibility to public.
     $this->drupalGet('/admin/group/types/manage/default');
     $page = $this->getSession()->getPage();
-    $page->selectFieldOption('group_type_visibility', GROUP_FLEX_TYPE_VIS_PUBLIC);
+    $page->selectFieldOption('group_type_visibility', GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC);
     $this->submitForm([], 'Save group type');
     $this->assertSession()->statusCodeEquals(200);
 

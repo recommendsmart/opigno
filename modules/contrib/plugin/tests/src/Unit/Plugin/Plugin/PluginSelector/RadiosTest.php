@@ -40,7 +40,7 @@ class RadiosTest extends PluginSelectorBaseTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->responsePolicy = $this->getMockBuilder(KillSwitch::class)

@@ -117,6 +117,36 @@ class ViewsPrettyPathProcessor implements InBoundPathProcessorInterface, Outboun
    */
   protected $filterSubpath;
 
+  /**
+   * Query parameters
+   *
+   * @var array
+   */
+  protected $queryParameters;
+
+  /**
+   * Original system path
+   *
+   * @var string
+   */
+  protected $originalSystemPath;
+
+  /**
+   * This was a 404
+   *
+   * @var boolean
+   */
+  protected $notFound;
+
+  /**
+   * Constructs ViewsPrettyPathProcessor
+   *
+   * @param AliasManagerInterface $AliasManager
+   * @param EntityTypeManagerInterface $EntityTypeManager
+   * @param Connection $Connection
+   * @param RequestStack $RequestStack
+   * @param ConfigFactoryInterface $ConfigFactory
+   */
   public function __construct(AliasManagerInterface $AliasManager, EntityTypeManagerInterface $EntityTypeManager, Connection $Connection, RequestStack $RequestStack, ConfigFactoryInterface $ConfigFactory) {
     $this->aliasManager = $AliasManager;
     $this->entityTypeManager = $EntityTypeManager;
@@ -125,6 +155,7 @@ class ViewsPrettyPathProcessor implements InBoundPathProcessorInterface, Outboun
     $this->changedInboundOnce = FALSE;
     $this->currentRequest = $RequestStack->getCurrentRequest();
     $this->config = $ConfigFactory->get('views_pretty_path.config');
+    $this->sysConfig = $ConfigFactory->get('system.site');
     $this->filterSubpath = '/' . ltrim($this->config->get('filter_subpath') ? $this->config->get('filter_subpath') : self::DEFAULT_FILTER_SUBPATH, '/');
     $this->pathsViewsToRewrite = $this->loadPathsViewsToRewrite();
   }
@@ -158,6 +189,7 @@ class ViewsPrettyPathProcessor implements InBoundPathProcessorInterface, Outboun
       if (!$this->changedInboundOnce) {
         $this->changedInboundOnce = TRUE;
         $this->originalRewrittenInboundPath = $path;
+        $this->originalSystemPath = $system_path_of_alias;
         $this->replaceQueryParameters($alias, $request);
         $new_path = $system_path_of_alias;
       }
@@ -166,6 +198,7 @@ class ViewsPrettyPathProcessor implements InBoundPathProcessorInterface, Outboun
         $new_path = $system_path_of_alias;
       }
     }
+    $this->handle404($new_path, $request);
     return $new_path;
   }
 
@@ -179,6 +212,23 @@ class ViewsPrettyPathProcessor implements InBoundPathProcessorInterface, Outboun
       return $this->sanitizeOutboundPath($request);
     }
     return $path;
+  }
+
+  /**
+   * Handle the minority of cases in which the request 404s
+   *
+   * @param string $path
+   * @param Request $request
+   * @return void
+   */
+  protected function handle404(&$path, $request) {
+    if (isset($this->originalSystemPath) && in_array($path, [$this->sysConfig->get('page')[404], '/system/404'])) {
+      $path = $this->originalSystemPath;
+      $this->notFound = TRUE;
+    }
+    if ($this->notFound) {
+      $this->replaceQueryParameters('', $request);
+    }
   }
 
   /**

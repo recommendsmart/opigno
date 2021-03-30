@@ -1,41 +1,56 @@
-content_as_config.general:
-  route_name: content_as_config.general.form
-  title: General settings
+content_as_config.config:
+  route_name: content_as_config.config
+  title: Basic settings
   base_route: content_as_config
-  weight: 1
+  weight: 0
+
+content_as_config.taxonomies:
+  route_name: content_as_config.taxonomies.export
+  title: Taxonomies
+  base_route: content_as_config
+  weight: 10
 
 content_as_config.taxonomies.export:
+  title: Export
   route_name: content_as_config.taxonomies.export
-  title: Export taxonomies
-  base_route: content_as_config
-  weight: 2
+  parent_id: content_as_config.taxonomies
 
 content_as_config.taxonomies.import:
+  title: Import
   route_name: content_as_config.taxonomies.import
-  title: Import taxonomies
+  parent_id: content_as_config.taxonomies
+  weight: 1
+
+content_as_config.blocks:
+  route_name: content_as_config.blocks.export
+  title: Custom blocks
   base_route: content_as_config
-  weight: 3
+  weight: 20
 
 content_as_config.blocks.export:
+  title: Export
   route_name: content_as_config.blocks.export
-  title: Export custom blocks
-  base_route: content_as_config
-  weight: 4
+  parent_id: content_as_config.blocks
 
 content_as_config.blocks.import:
+  title: Import
   route_name: content_as_config.blocks.import
-  title: Import custom blocks
+  parent_id: content_as_config.blocks
+  weight: 1
+
+content_as_config.menu:
+  route_name: content_as_config.menu.export
+  title: Menu links
   base_route: content_as_config
-  weight: 5
+  weight: 30
 
 content_as_config.menu.export:
+  title: Export
   route_name: content_as_config.menu.export
-  title: Export menu links
-  base_route: content_as_config
-  weight: 6
+  parent_id: content_as_config.menu
 
 content_as_config.menu.import:
+  title: Import
   route_name: content_as_config.menu.import
-  title: Export menu links
-  base_route: content_as_config
-  weight: 7
+  parent_id: content_as_config.menu
+  weight: 1

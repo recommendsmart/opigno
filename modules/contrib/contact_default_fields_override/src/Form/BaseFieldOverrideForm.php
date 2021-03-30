@@ -2,7 +2,6 @@
 
 namespace Drupal\contact_default_fields_override\Form;
 
-use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -12,6 +11,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class BaseFieldOverrideForm.
+ *
+ * The contact_default_fields_override form.
  *
  * @package Drupal\contact_default_fields_override\Form
  */
@@ -46,9 +47,18 @@ class BaseFieldOverrideForm extends FormBase {
   protected $fieldDefinition;
 
   /**
+   * Language manager.
+   *
    * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
+
+  /**
+   * Contact form entity storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $contactFormStorage;
 
   /**
    * BaseFieldOverrideForm constructor.
@@ -59,19 +69,27 @@ class BaseFieldOverrideForm extends FormBase {
   public function __construct(ContainerInterface $container) {
     $this->messenger = $container->get('messenger');
     $routeMatch = $this->getRouteMatch();
-    $this->contactForm = ContactForm::load($routeMatch->getParameter('contact_form'));
 
     $field_name = $routeMatch->getParameter('field_name');
 
-    /* @var \Drupal\Core\Entity\EntityFieldManager $entityFieldManager */
-    $entityFieldManager = $container->get('entity_field.manager');
-
-    if (!$this->contactForm || empty($field_name)) {
+    if (empty($field_name)) {
       throw new NotFoundHttpException();
     }
 
+    /** @var \Drupal\Core\Entity\EntityFieldManager $entityFieldManager */
+    $entityFieldManager = $container->get('entity_field.manager');
+
     $baseFieldDefinitions = $entityFieldManager->getBaseFieldDefinitions('contact_message');
     $this->baseFieldDefinition = $baseFieldDefinitions[$field_name];
+
+    $this->contactFormStorage = $container->get('entity_type.manager')
+      ->getStorage('contact_form');
+
+    $this->contactForm = $this->contactFormStorage->load($routeMatch->getParameter('contact_form'));
+
+    if (!$this->contactForm) {
+      throw new NotFoundHttpException();
+    }
 
     $fieldDefinitions = $entityFieldManager->getFieldDefinitions('contact_message', $this->contactForm->id());
     $this->fieldDefinition = $fieldDefinitions[$field_name];
@@ -116,16 +134,19 @@ class BaseFieldOverrideForm extends FormBase {
     foreach ($this->languageManager->getLanguages() as $language) {
 
       $label = $this->contactForm->getThirdPartySetting('contact_default_fields_override', $field_name . '_label_' . $language->getId());
-      $description = $this->contactForm->getThirdPartySetting('contact_default_fields_override', $field_name . '_description_' . $language->getId());;
+      $description = $this->contactForm->getThirdPartySetting('contact_default_fields_override', $field_name . '_description_' . $language->getId());
+      ;
 
       if ($field_name === 'name' && empty($label)) {
-        // Not overidden yet. Use default values from \Drupal\contact\MessageForm.
+        // Not overidden yet. Use default values from
+        // \Drupal\contact\MessageForm.
         $label = $this->t('Your name');
         $description = '';
       }
 
       if ($field_name === 'mail' && empty($label)) {
-        // Not overidden yet. Use default values from \Drupal\contact\MessageForm.
+        // Not overidden yet. Use default values from
+        // \Drupal\contact\MessageForm.
         $label = $this->t('Your email address');
         $description = '';
       }
@@ -152,7 +173,6 @@ class BaseFieldOverrideForm extends FormBase {
         '#weight' => -10,
       ];
     }
-
 
     $form['actions'] = [
       '#type' => 'actions',
@@ -198,7 +218,7 @@ class BaseFieldOverrideForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container
+       $container
     );
   }
 

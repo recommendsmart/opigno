@@ -21,14 +21,18 @@ class DynamicRate extends FlatRate {
    * {@inheritdoc}
    */
   public function calculateRates(ShipmentInterface $shipment) {
-    // Rate IDs aren't used in a flat rate scenario because there's always a
-    // single rate per plugin, and there's no support for purchasing rates.
-    $rate_id = 0;
-    $amount = $this->configuration['rate_amount'];
-    $weight = $shipment->getPackageType()->getWeight()->convert('g')->getNumber() ?: 1;
-    $amount = (new Price($amount['number'], $amount['currency_code']))->multiply($weight);
     $rates = [];
-    $rates[] = new ShippingRate($rate_id, $this->services['default'], $amount);
+    $amount = Price::fromArray($this->configuration['rate_amount']);
+    $package_type = $shipment->getPackageType();
+    if ($package_type === NULL) {
+      return $rates;
+    }
+    $weight = $package_type->getWeight()->convert('g')->getNumber() ?: 1;
+    $rates[] = new ShippingRate([
+      'shipping_method_id' => $this->parentEntity->id(),
+      'service' => $this->services['default'],
+      'amount' => $amount->multiply($weight),
+    ]);
 
     return $rates;
   }

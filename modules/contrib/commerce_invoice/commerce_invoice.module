@@ -176,6 +176,12 @@ function commerce_invoice_theme() {
         'totals' => NULL,
       ],
     ],
+    'commerce_invoice_confirmation' => [
+      'variables' => [
+        'invoice_entity' => NULL,
+        'totals' => NULL,
+      ],
+    ],
   ];
 }
 
@@ -184,6 +190,18 @@ function commerce_invoice_theme() {
  */
 function commerce_invoice_theme_suggestions_commerce_invoice(array $variables) {
   return _commerce_entity_theme_suggestions('commerce_invoice', $variables);
+}
+
+/**
+ * Implements hook_theme_suggestions_commerce_invoice_confirmation().
+ */
+function commerce_invoice_theme_suggestions_commerce_invoice_confirmation(array $variables) {
+  $suggestions = [];
+  if (isset($variables['invoice_entity'])) {
+    $invoice = $variables['invoice_entity'];
+    $suggestions[] = $variables['theme_hook_original'] . '__' . $invoice->bundle();
+  }
+  return $suggestions;
 }
 
 /**

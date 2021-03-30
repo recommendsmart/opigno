@@ -55,9 +55,19 @@ abstract class ExportBase extends FormBase implements ContentImportExportInterfa
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $entity_type_label = $this->entityTypeManager->getDefinition($this->getEntityType())->getPluralLabel();
     $entity_list = $this->getListElements();
+
+    if (empty($entity_list)) {
+      $form['no_items_found'] = [
+        '#type' => 'markup',
+        '#markup' => $this->t('No %et were found.', ['%et' => $entity_type_label]),
+      ];
+      return $form;
+    }
+
     $form['export_list'] = [
-      '#title' => $this->t('Export these @type:', ['@type' => $this->getEntityNamePlural()]),
+      '#title' => $this->t('Export these @type:', ['@type' => $entity_type_label]),
       '#type' => 'checkboxes',
       '#options' => $entity_list,
       '#default_value' => array_keys($entity_list),

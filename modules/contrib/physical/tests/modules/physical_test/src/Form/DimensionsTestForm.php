@@ -27,7 +27,7 @@ class DimensionsTestForm extends FormBase {
         'length' => '1.92',
         'width' => '2.5',
         'height' => '2.1',
-        'unit' => LengthUnit::METER
+        'unit' => LengthUnit::METER,
       ],
       '#required' => TRUE,
     ];
@@ -51,7 +51,8 @@ class DimensionsTestForm extends FormBase {
     $length = new Length($value['length'], $value['unit']);
     $width = new Length($value['width'], $value['unit']);
     $height = new Length($value['height'], $value['unit']);
-    drupal_set_message(t('Length: "@length", width: "@width", height: "@height", unit: "@unit".', [
+
+    $this->messenger()->addStatus($this->t('Length: "@length", width: "@width", height: "@height", unit: "@unit".', [
       '@length' => $length->getNumber(),
       '@width' => $width->getNumber(),
       '@height' => $height->getNumber(),

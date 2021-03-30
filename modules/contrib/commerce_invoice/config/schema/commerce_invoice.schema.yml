@@ -20,6 +20,12 @@ commerce_invoice.commerce_invoice_type.*:
     workflow:
       type: string
       label: 'Workflow'
+    sendConfirmation:
+      type: boolean
+      label: 'Email the customer a confirmation when an invoice is generated'
+    confirmationBcc:
+      type: string
+      label: 'The confirmation BCC email'
 
 commerce_order.commerce_order_type.*.third_party.commerce_invoice:
   type: mapping

@@ -85,6 +85,7 @@ class ShariffBlock extends BlockBase {
         'threema' => $this->t('Threema'),
         'mail' => $this->t('E-Mail'),
         'info' => $this->t('Info Button'),
+        'buffer' => $this->t('Buffer'),
       ],
       '#default_value' => isset($config['shariff_services']) ? $config['shariff_services'] : \Drupal::config('shariff.settings')->get('shariff_services'),
       '#states' => [
@@ -394,7 +395,7 @@ class ShariffBlock extends BlockBase {
 
     $backend_url = $form_state->getValue('shariff_backend_url');
     if ($backend_url && !(UrlHelper::isValid($backend_url, TRUE))) {
-      drupal_set_message('Please enter a valid Backend URL.', 'error');
+      $this->messenger()->addError('Please enter a valid Backend URL.');
       // TODO: Get rid of drupal_set_message() when
       // https://www.drupal.org/node/2537732 is fixed.
       // setErrorByName is not working for now.

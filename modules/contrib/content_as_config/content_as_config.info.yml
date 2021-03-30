@@ -9,7 +9,7 @@ dependencies:
   - drupal:menu_link_content
   - drupal:taxonomy
 
-# Information added by Drupal.org packaging script on 2021-02-16
-version: '1.0.0'
+# Information added by Drupal.org packaging script on 2021-03-08
+version: '1.0.1'
 project: 'content_as_config'
-datestamp: 1613485639
+datestamp: 1615215018

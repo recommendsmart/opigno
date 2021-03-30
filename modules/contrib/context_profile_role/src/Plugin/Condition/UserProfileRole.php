@@ -3,7 +3,7 @@
 namespace Drupal\context_profile_role\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;
-use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @Condition(
  *   id = "user_profile_role",
  *   label = @Translation("User Profile Role"),
- *   context = {
+ *   context_definitions = {
  *     "user_profile" = @ContextDefinition("entity:user", label = @Translation("User Profile Role"))
  *   },
  * );
@@ -22,17 +22,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class UserProfileRole extends ConditionPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The entity storage.
+   * The user storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\user\RoleStorageInterface
    */
-  protected $entityStorage;
+  protected $roleStorage;
 
   /**
    * Creates a new UserRole instance.
    *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $entity_storage
-   *   The entity storage.
    * @param array $configuration
    *   The plugin configuration, i.e. an array with configuration values keyed
    *   by configuration option name. The special key 'context' may be used to
@@ -42,10 +40,17 @@ class UserProfileRole extends ConditionPluginBase implements ContainerFactoryPlu
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(EntityStorageInterface $entity_storage, array $configuration, $plugin_id, $plugin_definition) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    EntityTypeManagerInterface $entity_type_manager
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->entityStorage = $entity_storage;
+    $this->roleStorage = $entity_type_manager->getStorage('user_role');
   }
 
   /**
@@ -53,10 +58,10 @@ class UserProfileRole extends ConditionPluginBase implements ContainerFactoryPlu
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-      $container->get('entity.manager')->getStorage('user_role'),
       $configuration,
       $plugin_id,
-      $plugin_definition
+      $plugin_definition,
+      $container->get('entity_type.manager')
     );
   }
 
@@ -65,7 +70,7 @@ class UserProfileRole extends ConditionPluginBase implements ContainerFactoryPlu
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $options = [];
-    $user_roles = $this->entityStorage->loadMultiple();
+    $user_roles = $this->roleStorage->loadMultiple();
     foreach ($user_roles as $role) {
       $options[$role->id()] = $role->label();
     }

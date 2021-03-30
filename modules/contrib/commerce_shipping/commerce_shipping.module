@@ -5,13 +5,14 @@
  * Provides core shipping functionality.
  */
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\commerce\PurchasableEntityInterface;
 use Drupal\commerce_order\Entity\OrderInterface;
 use Drupal\commerce_order\Entity\OrderType;
 use Drupal\commerce_shipping\Entity\ShipmentType;
 use Drupal\entity\BundleFieldDefinition;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
@@ -88,10 +89,18 @@ function commerce_shipping_entity_bundle_info_alter(&$bundles) {
 }
 
 /**
- * Implements hook_views_data_alter().
+ * Implements hook_entity_form_display_alter().
  */
-function commerce_shipping_views_data_alter(array &$data) {
-  $data['commerce_shipment']['state']['filter']['id'] = 'state_machine_state';
+function commerce_shipping_entity_form_display_alter(EntityFormDisplayInterface $form_display, array $context) {
+  if ($context['entity_type'] != 'profile') {
+    return;
+  }
+
+  // The "shipping" form mode doesn't have a form display yet.
+  // Default to hiding the tax_number field, it is only needed for billing.
+  if ($context['form_mode'] == 'shipping' && $context['form_mode'] != $form_display->getMode()) {
+    $form_display->removeComponent('tax_number');
+  }
 }
 
 /**
@@ -113,9 +122,22 @@ function commerce_shipping_field_widget_form_alter(&$element, FormStateInterface
  * Implements hook_ENTITY_TYPE_delete().
  */
 function commerce_shipping_commerce_order_delete(OrderInterface $order) {
-  if ($order->hasField('shipments') && !$order->get('shipments')->isEmpty()) {
+  /** @var \Drupal\commerce_shipping\ShippingOrderManagerInterface $shipping_order_manager */
+  $shipping_order_manager = \Drupal::service('commerce_shipping.order_manager');
+  if ($shipping_order_manager->hasShipments($order)) {
     $shipment_storage = \Drupal::entityTypeManager()->getStorage('commerce_shipment');
     $shipment_storage->delete($order->get('shipments')->referencedEntities());
+  }
+}
+
+/**
+ * Implements hook_commerce_inline_form_PLUGIN_ID_alter().
+ */
+function commerce_shipping_commerce_inline_form_customer_profile_alter(array &$inline_form, FormStateInterface $form_state, array &$complete_form) {
+  // Attach the "Billing same as shipping" element.
+  $profile_field_copy = \Drupal::service('commerce_shipping.profile_field_copy');
+  if ($profile_field_copy->supportsForm($inline_form, $form_state)) {
+    $profile_field_copy->alterForm($inline_form, $form_state);
   }
 }
 
@@ -260,8 +282,8 @@ function commerce_shipping_entity_operation(EntityInterface $entity) {
   if ($entity->hasField('cart') && $entity->get('cart')->value) {
     return;
   }
-  // Only show if the user has the "administer commerce_shipment" permission.
-  if (!\Drupal::currentUser()->hasPermission('administer commerce_shipment')) {
+  // Only show if the user can create shipments.
+  if (!$entity->access('create')) {
     return;
   }
   $operations = [];
@@ -282,6 +304,14 @@ function commerce_shipping_theme() {
   return [
     'commerce_shipment' => [
       'render element' => 'elements',
+    ],
+    'commerce_shipment_confirmation' => [
+      'variables' => [
+        'order_entity' => NULL,
+        'shipment_entity' => NULL,
+        'shipping_profile' => NULL,
+        'tracking_code' => NULL,
+      ],
     ],
   ];
 }

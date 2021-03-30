@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Contact_default_fields_override install file.
+ */
+
+/**
  * Multilanguage support.
  */
 function contact_default_fields_override_update_8001() {

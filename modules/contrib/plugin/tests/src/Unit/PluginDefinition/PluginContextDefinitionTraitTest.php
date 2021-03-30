@@ -5,6 +5,7 @@ namespace Drupal\Tests\plugin\Unit\PluginDefinition;
 use Drupal\Core\Plugin\Context\ContextDefinitionInterface;
 use Drupal\plugin\PluginDefinition\PluginContextDefinitionTrait;
 use Drupal\Tests\UnitTestCase;
+use InvalidArgumentException;
 
 /**
  * @coversDefaultClass \Drupal\plugin\PluginDefinition\PluginContextDefinitionTrait
@@ -23,7 +24,7 @@ class PluginContextDefinitionTraitTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->sut = $this->getMockForTrait(PluginContextDefinitionTrait::class);
@@ -52,10 +53,9 @@ class PluginContextDefinitionTraitTest extends UnitTestCase {
    * @covers ::setContextDefinitions
    *
    * @depends testGetContextDefinitions
-   *
-   * @expectedException \InvalidArgumentException
    */
   public function testSetContextDefinitionsWithInvalidDefinition() {
+    $this->expectException(InvalidArgumentException::class);
     $context_definitions = [
       $this->randomMachineName() => new \stdClass(),
     ];
@@ -82,10 +82,9 @@ class PluginContextDefinitionTraitTest extends UnitTestCase {
    * @covers ::hasContextDefinition
    *
    * @depends testGetContextDefinition
-   *
-   * @expectedException \InvalidArgumentException
    */
   public function testGetContextDefinitionWithNonExistentDefinition() {
+    $this->expectException(InvalidArgumentException::class);
     $name = $this->randomMachineName();
 
     $this->assertFalse($this->sut->hasContextDefinition($name));

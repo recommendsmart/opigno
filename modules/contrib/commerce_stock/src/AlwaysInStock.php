@@ -20,9 +20,11 @@ class AlwaysInStock implements StockCheckInterface, StockUpdateInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTotalStockLevel(PurchasableEntityInterface $entity, array $locations) {
-    // @todo this can be configurable?
-    return 999;
+  public function getTotalStockLevel(
+    PurchasableEntityInterface $entity,
+    array $locations
+  ) {
+    return PHP_INT_MAX;
   }
 
   /**
@@ -37,24 +39,6 @@ class AlwaysInStock implements StockCheckInterface, StockUpdateInterface {
    */
   public function getIsAlwaysInStock(PurchasableEntityInterface $entity) {
     return TRUE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getIsStockManaged(PurchasableEntityInterface $entity) {
-    // @todo - Not sure about this one. The result will be the same for:
-    // TRUE - managed by this and will always be available.
-    // FALSE - not managed so will be available.
-    return TRUE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getLocationList($return_active_only = TRUE) {
-    // We don't have locations, so return an empty array.
-    return [];
   }
 
 }

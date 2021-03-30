@@ -20,9 +20,11 @@ class TaxonomyTermCoderTest extends KernelTestBase {
     'token',
     'text',
     'taxonomy',
+    'path_alias',
     'pathauto',
     'facets',
     'facets_pretty_paths',
+    'user',
   ];
 
   /**

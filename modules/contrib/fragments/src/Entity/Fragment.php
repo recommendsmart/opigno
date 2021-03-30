@@ -5,7 +5,6 @@ namespace Drupal\fragments\Entity;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
-use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\user\UserInterface;
@@ -61,6 +60,11 @@ use Drupal\user\UserInterface;
  *     "langcode" = "langcode",
  *     "status" = "status",
  *   },
+ *   revision_metadata_keys = {
+ *     "revision_user" = "revision_user",
+ *     "revision_created" = "revision_created",
+ *     "revision_log_message" = "revision_log_message",
+ *   },
  *   links = {
  *     "canonical" = "/fragment/{fragment}",
  *     "add-page" = "/fragment/add",
@@ -75,7 +79,8 @@ use Drupal\user\UserInterface;
  *     "collection" = "/admin/content/fragments",
  *   },
  *   bundle_entity_type = "fragment_type",
- *   field_ui_base_route = "entity.fragment_type.edit_form"
+ *   field_ui_base_route = "entity.fragment_type.canonical",
+ *   common_reference_target = TRUE,
  * )
  */
 class Fragment extends RevisionableContentEntityBase implements FragmentInterface {
@@ -98,10 +103,10 @@ class Fragment extends RevisionableContentEntityBase implements FragmentInterfac
   protected function urlRouteParameters($rel) {
     $uri_route_parameters = parent::urlRouteParameters($rel);
 
-    if ($rel === 'revision_revert' && $this instanceof RevisionableInterface) {
+    if ($rel === 'revision_revert') {
       $uri_route_parameters[$this->getEntityTypeId() . '_revision'] = $this->getRevisionId();
     }
-    elseif ($rel === 'revision_delete' && $this instanceof RevisionableInterface) {
+    elseif ($rel === 'revision_delete') {
       $uri_route_parameters[$this->getEntityTypeId() . '_revision'] = $this->getRevisionId();
     }
 

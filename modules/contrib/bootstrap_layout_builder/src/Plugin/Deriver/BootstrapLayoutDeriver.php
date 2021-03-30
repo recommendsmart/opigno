@@ -57,7 +57,7 @@ class BootstrapLayoutDeriver extends DeriverBase implements ContainerDeriverInte
           'id' => $layout->id(),
           'category' => 'Bootstrap',
           'regions' => $this->getRegions($layout->getNumberOfColumns()),
-          'theme_hook' => 'row_columns',
+          'theme_hook' => 'blb_section',
           'icon_map' => $this->getIconMap($layout->getNumberOfColumns()),
         ]);
       }

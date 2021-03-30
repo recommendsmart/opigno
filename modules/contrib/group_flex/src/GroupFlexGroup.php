@@ -4,6 +4,7 @@ namespace Drupal\group_flex;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\group_flex\Plugin\GroupVisibilityInterface;
 use Drupal\group_permissions\GroupPermissionsManager;
 
 /**
@@ -62,10 +63,10 @@ class GroupFlexGroup {
   public function getGroupVisibility(GroupInterface $group): string {
     // Retrieve the default group type permission.
     $groupType = $group->getGroupType();
-    $defaultVisibility = GROUP_FLEX_TYPE_VIS_PUBLIC;
+    $defaultVisibility = GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC;
     if (!$this->flexGroupType->hasFlexibleGroupTypeVisibility($groupType)) {
       $groupTypePermissions = $groupType->getOutsiderRole()->getPermissions();
-      $defaultVisibility = in_array('view group', $groupTypePermissions, TRUE) ? GROUP_FLEX_TYPE_VIS_PUBLIC : GROUP_FLEX_TYPE_VIS_PRIVATE;
+      $defaultVisibility = in_array('view group', $groupTypePermissions, TRUE) ? GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC : GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PRIVATE;
     }
 
     if (!$group->id()) {
@@ -76,7 +77,7 @@ class GroupFlexGroup {
     $groupPermissions = $this->groupPermManager->getCustomPermissions($group);
     if (array_key_exists($group->getGroupType()->getOutsiderRoleId(), $groupPermissions) &&
       !in_array('view group', $groupPermissions[$group->getGroupType()->getOutsiderRoleId()], TRUE)) {
-      return GROUP_FLEX_TYPE_VIS_PRIVATE;
+      return GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PRIVATE;
     }
 
     return $defaultVisibility;

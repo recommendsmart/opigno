@@ -13,7 +13,6 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\field_inheritance\FieldInheritancePluginManager;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
-use Drupal\Core\Url;
 
 /**
  * Class FieldInheritanceForm.
@@ -113,11 +112,22 @@ class FieldInheritanceForm extends EntityForm {
       '#required' => TRUE,
     ];
 
+    $machine_name_prefix = '';
+    if ($field_inheritance->isNew()) {
+      if (!empty($this->entity->destination_entity_type) && !empty($this->entity->destination_entity_bundle)) {
+        $machine_name_prefix = $this->entity->destination_entity_type . '_' . $this->entity->destination_entity_bundle . '_';
+      }
+      else {
+        $machine_name_prefix = '[entity-type]_[bundle]_';
+      }
+    }
+
     $form['id'] = [
       '#type' => 'machine_name',
       '#default_value' => $field_inheritance->id(),
+      '#field_prefix' => $machine_name_prefix,
       '#machine_name' => [
-        'exists' => '\Drupal\field_inheritance\Entity\FieldInheritance::load',
+        'exists' => [$this, 'exists'],
       ],
       '#disabled' => !$field_inheritance->isNew(),
     ];
@@ -349,20 +359,42 @@ class FieldInheritanceForm extends EntityForm {
       ],
     ];
 
-    foreach($this->fieldInheritance->getDefinitions() as $plugin_id => $plugin) {
+    foreach ($this->fieldInheritance->getDefinitions() as $plugin_id => $plugin) {
       $plugins[$plugin_id] = $plugin['name']->__toString();
     }
+
+    $global_plugins = [];
 
     // If a source field is set, then hide plugins not applicable to that field
     // type.
     if (!empty($field_values['source_field'])) {
       $source_definitions = $this->entityFieldManager->getFieldDefinitions($field_values['source_entity_type'], $field_values['source_entity_bundle']);
       foreach ($plugins as $key => $plugin) {
+        if ($key === '') {
+          continue;
+        }
         $plugin_definition = $this->fieldInheritance->getDefinition($key);
         $field_types = $plugin_definition['types'];
-        if (!in_array($source_definitions[$field_values['source_field']]->getType(), $field_types)) {
+        if (!in_array('any', $field_types)) {
+          if (!in_array($source_definitions[$field_values['source_field']]->getType(), $field_types)) {
+            unset($plugins[$key]);
+          }
+        }
+        // Global plugins should not take precedent over more specific plugins.
+        if (in_array('any', $field_types)) {
+          $global_plugins[$key] = $plugins[$key];
           unset($plugins[$key]);
         }
+      }
+
+      // If we have some global plugins, place them at the end of the list.
+      if (!empty($global_plugins)) {
+        $plugins = array_merge($plugins, $global_plugins);
+      }
+
+      $default_plugins = ['' => $this->t('- Select -')];
+      if (empty($plugins)) {
+        $plugins = $default_plugins;
       }
     }
 
@@ -412,7 +444,7 @@ class FieldInheritanceForm extends EntityForm {
         $plugin_definition = $this->fieldInheritance->getDefinition($values['plugin']);
         $field_types = $plugin_definition['types'];
 
-        if (!in_array($source_definitions[$values['source_field']]->getType(), $field_types)) {
+        if (!in_array('any', $field_types) && !in_array($source_definitions[$values['source_field']]->getType(), $field_types)) {
           $message = $this->t('The selected plugin @plugin does not support @source_type fields. The supported field types are: @field_types', [
             '@plugin' => $values['plugin'],
             '@source_type' => $source_definitions[$values['source_field']]->getType(),
@@ -470,6 +502,29 @@ class FieldInheritanceForm extends EntityForm {
     $response = new AjaxResponse();
     $response->addCommand(new HtmlCommand('#field-inheritance-add-form--wrapper', $form));
     return $response;
+  }
+
+  /**
+   * Determines if the field inheritance already exists.
+   *
+   * @param string|int $entity_id
+   *   The entity ID.
+   * @param array $element
+   *   The form element.
+   *
+   * @return bool
+   *   TRUE if the display mode exists, FALSE otherwise.
+   */
+  public function exists($entity_id, array $element) {
+    if (!empty($this->entity->destination_entity_type) && !empty($this->entity->destination_entity_bundle)) {
+      $id = $this->entity->destination_entity_type . '_' . $this->entity->destination_entity_bundle . '_' . $entity_id;
+      $return = (bool) $this->entityTypeManager
+        ->getStorage($this->entity->getEntityTypeId())
+        ->getQuery()
+        ->condition('id', $id)
+        ->execute();
+      return $return;
+    }
   }
 
 }

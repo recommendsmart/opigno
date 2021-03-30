@@ -8,7 +8,7 @@
  *  - autoupdate_title
  *  - autodelete
  * and reduce this (depending on 'autocreate') to
- *  - enabled
+ *  - enabled.
  */
 function group_behavior_update_8001(&$sandbox) {
   $storage = \Drupal::entityTypeManager()->getStorage('group_content_type');

@@ -6,6 +6,7 @@ use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\Entity\ConfigDependencyDeleteFormTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -66,11 +67,12 @@ class PurgeConfigurationsConfirmForm extends ConfirmFormBase {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_manager
    *   The entity manager.
    */
-  public function __construct(ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable, ConfigManagerInterface $config_manager, EntityTypeManagerInterface $entity_manager) {
+  public function __construct(ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable, ConfigManagerInterface $config_manager, EntityTypeManagerInterface $entity_manager, FileSystemInterface $file_system) {
     $this->moduleInstaller = $module_installer;
     $this->keyValueExpirable = $key_value_expirable;
     $this->configManager = $config_manager;
     $this->entityTypeManager = $entity_manager;
+    $this->fileSystem = $file_system;
   }
 
   /**
@@ -81,7 +83,8 @@ class PurgeConfigurationsConfirmForm extends ConfirmFormBase {
       $container->get('module_installer'),
       $container->get('keyvalue.expirable')->get('easy_install_purgeconfigs'),
       $container->get('config.manager'),
-      $container->get('entity.manager')
+      $container->get('entity.manager'),
+       $container->get('file_system')
     );
   }
 
@@ -129,7 +132,7 @@ class PurgeConfigurationsConfirmForm extends ConfirmFormBase {
     $this->modules = $this->keyValueExpirable->get($account);
     // Prevent this page from showing when the module list is empty.
     if (empty($this->modules['install'])) {
-      drupal_set_message($this->t('The selected modules could not be Purged, either due to a website problem or due to the uninstall confirmation form timing out. Please try again.'), 'error');
+      $this->messenger()->addError($this->t('The selected modules could not be Purged, either due to a website problem or due to the uninstall confirmation form timing out. Please try again.'));
       return $this->redirect('easy_install.purge_configurations');
     }
 
@@ -141,17 +144,21 @@ class PurgeConfigurationsConfirmForm extends ConfirmFormBase {
     foreach ($this->modules['install'] as $module => $module_name) {
       $install_dir = drupal_get_path('module', $module) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
       $optional_dir = drupal_get_path('module', $module) . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY;
-      $install_details = file_scan_directory($install_dir, "/\.(yml)$/");
+      if(file_exists($install_dir)) { 
+          $install_details =  $this->fileSystem->scanDirectory($install_dir, "/\.(yml)$/");
+      }
       if (!empty($install_details)) {
         $form['modules_config'][$module] = [
           '#type' => 'details',
-          '#title' => t('@name', ['@name' => $module]),
-          '#description' => t('We found that @description module have configurations with it, if you like to delete it Please select the checkbox', ['@description' => $module]),
+          '#title' => $this->t('@name', ['@name' => $module]),
+          '#description' => $this->t('We found that @description module have configurations with it, if you like to delete it Please select the checkbox', ['@description' => $module]),
           '#weight' => 0,
           '#validated' => TRUE,
           '#open' => TRUE,
         ];
-        $install_details = file_scan_directory($install_dir, "/\.(yml)$/");
+        if(file_exists($install_dir)) { 
+            $install_details =  $this->fileSystem->scanDirectory($install_dir, "/\.(yml)$/");
+        }    
         $ins_options = [];
         foreach ($install_details as $config_value) {
           $ins_options[$config_value->name] = $config_value->name;
@@ -165,10 +172,12 @@ class PurgeConfigurationsConfirmForm extends ConfirmFormBase {
             '#validated' => TRUE,
           ];
         }
-        $optional_details = file_scan_directory($optional_dir, "/\.(yml)$/");
-        $opt_options = [];
-        foreach ($optional_details as $config_value) {
-          $opt_options[$config_value->name] = $config_value->name;
+        if(file_exists($optional_dir)) {
+          $optional_details =  $this->fileSystem->scanDirectory($optional_dir, "/\.(yml)$/");
+          $opt_options = [];
+          foreach ($optional_details as $config_value) {
+            $opt_options[$config_value->name] = $config_value->name;
+          }
         }
         if (!empty($opt_options)) {
           $form['modules_config'][$module]['opt_details'] = [
@@ -247,7 +256,7 @@ class PurgeConfigurationsConfirmForm extends ConfirmFormBase {
     // Delete the keyvalue of current user.
     $this->keyValueExpirable->delete($account);
 
-    drupal_set_message($this->t('The selected configurations have
+    $this->messenger()->addMessage($this->t('The selected configurations have
       been deleted.'));
     $form_state->setRedirectUrl($this->getCancelUrl());
   }

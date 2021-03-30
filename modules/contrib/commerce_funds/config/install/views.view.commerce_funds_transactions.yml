@@ -13,12 +13,11 @@ dependencies:
     module:
       - commerce_funds
   module:
-    - commerce
     - commerce_funds
     - text
     - user
 _core:
-  default_config_hash: 7fSm3ME2TKslcdFSJq97ncT-m4xOuulGVFtTB8B4a38
+  default_config_hash: 38x1NAvZ3WJ3Smo20yKf_fIu-jzAEQ9QVybMfy93Q2I
 id: commerce_funds_transactions
 label: Transactions
 module: views
@@ -26,7 +25,6 @@ description: 'View all transactions.'
 tag: 'Commerce funds'
 base_table: commerce_funds_transactions
 base_field: transaction_id
-core: 8.x
 display:
   default:
     display_plugin: default
@@ -90,32 +88,16 @@ display:
           description: ''
           columns:
             transaction_id: transaction_id
-            type: type
-            created: created
             name_1: name_1
-            name: name
-            notes: notes
-            from_currency: from_currency
+            created: created
+            from_currency: brut_amount
             brut_amount: from_currency
             currency: currency
-            net_amount: currency
+            net_amount: brut_amount
             fee: fee
+            notes__value: notes__value
           info:
             transaction_id:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            type:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            created:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -129,14 +111,7 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            name:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            notes:
+            created:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -172,6 +147,13 @@ display:
               empty_column: false
               responsive: ''
             fee:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            notes__value:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -507,6 +489,8 @@ display:
             placeholder: ''
             min_placeholder: ''
             max_placeholder: ''
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -544,6 +528,8 @@ display:
             remember_roles:
               authenticated: authenticated
             placeholder: null
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: true
           group_info:
             label: Status
@@ -599,6 +585,8 @@ display:
               administrator: '0'
             reduce: true
             hide_single_bundle: true
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -640,6 +628,8 @@ display:
               anonymous: '0'
               administrator: '0'
             reduce: false
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -681,6 +671,8 @@ display:
               anonymous: '0'
               administrator: '0'
             reduce: false
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -798,6 +790,8 @@ display:
             placeholder: ''
             min_placeholder: ''
             max_placeholder: ''
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -835,6 +829,8 @@ display:
             remember_roles:
               authenticated: authenticated
             placeholder: null
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: true
           group_info:
             label: Status
@@ -888,6 +884,8 @@ display:
               administrator: '0'
             reduce: true
             hide_single_bundle: true
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -929,6 +927,8 @@ display:
               anonymous: '0'
               administrator: '0'
             reduce: false
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -970,6 +970,8 @@ display:
               anonymous: '0'
               administrator: '0'
             reduce: false
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -1065,10 +1067,10 @@ display:
           table: commerce_funds_transactions
           field: created
           plugin_id: date
-        from_currency:
-          id: from_currency
+        brut_amount:
+          id: brut_amount
           table: commerce_funds_transactions
-          field: from_currency
+          field: brut_amount
           relationship: none
           group_type: group
           admin_label: ''
@@ -1113,33 +1115,19 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          click_sort_column: target_id
-          type: entity_reference_label
-          settings:
-            link: true
-          group_column: target_id
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          entity_type: commerce_funds_transaction
-          entity_field: from_currency
-          plugin_id: field
-        brut_amount:
-          id: brut_amount
-          table: commerce_funds_transactions
-          field: brut_amount
+          set_precision: false
+          precision: 0
+          decimal: .
+          separator: ','
+          format_plural: 0
+          format_plural_string: !!binary MQNAY291bnQ=
+          prefix: ''
+          suffix: ''
           plugin_id: commerce_funds_amount
-          exclude: false
-        currency:
-          id: currency
+        net_amount:
+          id: net_amount
           table: commerce_funds_transactions
-          field: currency
+          field: net_amount
           relationship: none
           group_type: group
           admin_label: ''
@@ -1184,29 +1172,15 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          click_sort_column: target_id
-          type: entity_reference_label
-          settings:
-            link: true
-          group_column: target_id
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          entity_type: commerce_funds_transaction
-          entity_field: currency
-          plugin_id: field
-        net_amount:
-          id: net_amount
-          table: commerce_funds_transactions
-          field: net_amount
+          set_precision: false
+          precision: 0
+          decimal: .
+          separator: ','
+          format_plural: 0
+          format_plural_string: !!binary MQNAY291bnQ=
+          prefix: ''
+          suffix: ''
           plugin_id: commerce_funds_amount
-          exclude: false
         fee:
           id: fee
           table: commerce_funds_transactions
@@ -1357,7 +1331,7 @@ display:
       path: admin/commerce/funds/view-transactions
       menu:
         type: normal
-        title: 'Transactions'
+        title: Transactions
         description: 'View all users transactions'
         expanded: false
         parent: commerce_funds.admin
@@ -1397,6 +1371,8 @@ display:
             placeholder: ''
             min_placeholder: ''
             max_placeholder: ''
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -1434,6 +1410,8 @@ display:
             remember_roles:
               authenticated: authenticated
             placeholder: null
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: true
           group_info:
             label: Status
@@ -1489,6 +1467,8 @@ display:
               administrator: '0'
             reduce: true
             hide_single_bundle: true
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -1530,6 +1510,8 @@ display:
               anonymous: '0'
               administrator: '0'
             reduce: false
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -1571,6 +1553,8 @@ display:
               anonymous: '0'
               administrator: '0'
             reduce: false
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -1615,6 +1599,8 @@ display:
               authenticated: authenticated
             reduce: false
             hide_single_bundle: true
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -1695,6 +1681,8 @@ display:
             placeholder: ''
             min_placeholder: ''
             max_placeholder: ''
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -1732,6 +1720,8 @@ display:
             remember_roles:
               authenticated: authenticated
             placeholder: null
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: true
           group_info:
             label: Status
@@ -1785,6 +1775,8 @@ display:
               administrator: '0'
             reduce: false
             hide_single_bundle: true
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -1826,6 +1818,8 @@ display:
               anonymous: '0'
               administrator: '0'
             reduce: false
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''

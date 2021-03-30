@@ -20,7 +20,7 @@ class PublicVisibility extends GroupVisibilityBase {
   /**
    * {@inheritdoc}
    */
-  public function enableGroupType(GroupTypeInterface $groupType): void {
+  public function enableGroupType(GroupTypeInterface $groupType) {
     $mappedPerm = [
       $groupType->getOutsiderRoleId() => [
         'view group' => TRUE,
@@ -35,7 +35,7 @@ class PublicVisibility extends GroupVisibilityBase {
   /**
    * {@inheritdoc}
    */
-  public function disableGroupType(GroupTypeInterface $groupType): void {
+  public function disableGroupType(GroupTypeInterface $groupType) {
     $mappedPerm = [
       $groupType->getOutsiderRoleId() => [
         'view group' => FALSE,
@@ -51,24 +51,31 @@ class PublicVisibility extends GroupVisibilityBase {
    * {@inheritdoc}
    */
   public function getGroupPermissions(GroupInterface $group): array {
-    return [
-      $group->getGroupType()->getOutsiderRoleId() => ['view group'],
-      $group->getGroupType()->getMemberRoleId() => ['view group'],
-    ];
+    $groupType = $group->getGroupType();
+
+    // Add perm when anonymous role has permission to view group on group type.
+    $anonymousPermissions = [];
+    if ($groupType->getAnonymousRole()->hasPermission('view group')) {
+      $anonymousPermissions = [$groupType->getAnonymousRoleId() => ['view group']];
+    }
+    return array_merge($anonymousPermissions, [
+      $groupType->getOutsiderRoleId() => ['view group'],
+      $groupType->getMemberRoleId() => ['view group'],
+    ]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getGroupLabel(GroupTypeInterface $groupType): string {
-    return t('Public (The @group_type_name will be viewed by non-members of the group)', ['@group_type_name' => $groupType->label()]);
+    return $this->t('Public (The @group_type_name will be viewed by non-members of the group)', ['@group_type_name' => $groupType->label()]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getValueDescription(GroupTypeInterface $groupType): string {
-    return t('The @group_type_name will be viewed by non-members of the group', ['@group_type_name' => $groupType->label()]);
+    return $this->t('The @group_type_name will be viewed by non-members of the group', ['@group_type_name' => $groupType->label()]);
   }
 
 }

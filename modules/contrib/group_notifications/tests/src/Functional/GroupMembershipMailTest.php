@@ -51,7 +51,7 @@ class GroupMembershipMailTest extends GroupBrowserTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
     $permissions = $this->getGlobalPermissions();
     $permissions[] = 'administer group';
@@ -67,7 +67,7 @@ class GroupMembershipMailTest extends GroupBrowserTestBase {
   /**
    * Tests that a group member gets email when membership is removed/added.
    */
-  public function testMembershipEmailNotification(): void {
+  public function testMembershipEmailNotification() {
 
     $this->group->addMember($this->member);
     $this->group->removeMember($this->member);

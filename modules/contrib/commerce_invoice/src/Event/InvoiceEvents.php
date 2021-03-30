@@ -134,4 +134,13 @@ final class InvoiceEvents {
    */
   const INVOICE_ITEM_DELETE = 'commerce_invoice.commerce_invoice_item.delete';
 
+  /**
+   * Name of the event fired when generating an invoice filename.
+   *
+   * @Event
+   *
+   * @see \Drupal\commerce_invoice\Event\InvoiceFilenameEvent
+   */
+  const INVOICE_FILENAME = 'commerce_invoice.filename';
+
 }

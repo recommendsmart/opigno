@@ -90,4 +90,23 @@ interface LayoutOptionInterface extends ConfigEntityInterface {
    */
   public function getBreakpointsLabels();
 
+  /**
+   * Returns parent layout entity.
+   *
+   * @return object
+   *   The parent layout entity.
+   */
+  public function getLayout();
+
+  /**
+   * Get layout entity by Id.
+   *
+   * @param string $layout_id
+   *   The layout id.
+   *
+   * @return object
+   *   The layout entity.
+   */
+  public function getLayoutById($layout_id);
+
 }

@@ -69,7 +69,7 @@ class ListPluginsTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->container = $this->prophesize(ContainerInterface::class);
@@ -125,7 +125,7 @@ class ListPluginsTest extends UnitTestCase {
     $plugin_type = new PluginType($plugin_type_definition, $this->container->reveal(), $this->stringTranslation, $class_resolver, $typed_config_manager);
 
     $title = $this->sut->title($plugin_type);
-    $this->assertContains($plugin_type_label, (string) $title);
+    $this->assertStringContainsString($plugin_type_label, (string) $title);
   }
 
   /**

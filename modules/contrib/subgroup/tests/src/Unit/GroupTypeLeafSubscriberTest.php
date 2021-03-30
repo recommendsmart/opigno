@@ -85,7 +85,7 @@ class GroupTypeLeafSubscriberTest extends UnitTestCase {
    */
   public function testGetSubscribedEvents() {
     $subscribed = GroupTypeLeafSubscriber::getSubscribedEvents();
-    $this->assertCount(2, $subscribed);
+    $this->assertCount(3, $subscribed);
     $this->assertArrayHasKey(LeafEvents::GROUP_TYPE_LEAF_ADD, $subscribed);
     $this->assertArrayHasKey(LeafEvents::GROUP_TYPE_LEAF_REMOVE, $subscribed);
   }

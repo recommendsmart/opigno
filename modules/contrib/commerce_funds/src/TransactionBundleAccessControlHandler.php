@@ -34,6 +34,8 @@ class TransactionBundleAccessControlHandler extends EntityAccessControlHandler {
     if ($operation == 'view' && $entity instanceof TransactionType) {
       return AccessResult::allowed();
     }
+
+    return AccessResult::forbiden();
   }
 
 }

@@ -6,11 +6,9 @@ core_version_requirement: ^8 || ^9
 configure: bootstrap_layout_builder.settings
 package: 'Layout Builder'
 dependencies:
-  - drupal:layout_builder
-  - media_library_form_element
-  - media_library_theme_reset
+  - bootstrap_styles:bootstrap_styles
 
-# Information added by Drupal.org packaging script on 2020-07-01
-version: '1.2.0'
+# Information added by Drupal.org packaging script on 2021-01-14
+version: '2.0.1'
 project: 'bootstrap_layout_builder'
-datestamp: 1593583568
+datestamp: 1610601330

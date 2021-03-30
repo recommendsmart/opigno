@@ -18,6 +18,14 @@ interface FieldInheritanceInterface extends ConfigEntityInterface {
   public function type();
 
   /**
+   * Get the inheritance ID without the type and bundle.
+   *
+   * @return string
+   *   The inheritance ID without the type and bundle.
+   */
+  public function idWithoutTypeAndBundle();
+
+  /**
    * Get the inheritance source entity type.
    *
    * @return string

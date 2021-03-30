@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\advance_link_attributes\Plugin\Field\FieldFormatter;
+namespace Drupal\ala\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -9,10 +9,10 @@ use Drupal\Core\Render\Markup;
 use Drupal\link\Plugin\Field\FieldFormatter\LinkFormatter;
 
 /**
- * Plugin implementation of the 'link_advance_attributes' formatter.
+ * Plugin implementation of the 'AdvanceLinkFormatter' formatter.
  *
  * @FieldFormatter(
- *   id = "link_advance_attributes",
+ *   id = "ala",
  *   label = @Translation("Advance Link Attributes"),
  *   field_types = {
  *     "link"

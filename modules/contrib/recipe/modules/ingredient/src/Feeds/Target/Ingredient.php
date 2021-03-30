@@ -12,7 +12,7 @@ use Drupal\feeds\Feeds\Target\EntityReference;
  * @FeedsTarget(
  *   id = "ingredient",
  *   field_types = {"ingredient"},
- *   arguments = {"@entity.manager", "@entity.query"}
+ *   arguments = {"@entity_type.manager", "@entity.query"}
  * )
  */
 class Ingredient extends EntityReference {

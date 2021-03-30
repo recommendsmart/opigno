@@ -2,7 +2,7 @@ name: Commerce Funds
 type: module
 description: 'Provides a funds management system.'
 package: Commerce (contrib)
-core: 8.x
+core_version_requirement: ^8.8.3 || ^9
 dependencies:
   - Commerce:commerce
   - Commerce:commerce_checkout
@@ -12,7 +12,7 @@ dependencies:
   - Commerce:commerce_store
 configure: commerce_funds.settings
 
-# Information added by Drupal.org packaging script on 2019-12-25
-version: '8.x-1.1'
+# Information added by Drupal.org packaging script on 2021-01-31
+version: '2.0.4'
 project: 'commerce_funds'
-datestamp: 1577299687
+datestamp: 1612118769

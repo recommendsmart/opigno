@@ -97,7 +97,13 @@ class FragmentController extends ControllerBase implements ContainerInjectionInt
   public function revisionPageTitle($fragment_revision) {
     /** @var \Drupal\fragments\Entity\FragmentInterface $fragment */
     $fragment = $this->entityTypeManager()->getStorage('fragment')->loadRevision($fragment_revision);
-    return $this->t('Revision of %title from %date', ['%title' => $fragment->label(), '%date' => $this->dateFormatter->format($fragment->getRevisionCreationTime())]);
+    return $this->t(
+      'Revision of %title from %date',
+      [
+        '%title' => $fragment->label(),
+        '%date' => $this->dateFormatter->format($fragment->getRevisionCreationTime()),
+      ]
+    );
   }
 
   /**
@@ -125,7 +131,16 @@ class FragmentController extends ControllerBase implements ContainerInjectionInt
     /** @var \Drupal\fragments\FragmentStorageInterface $fragmentsItemStorage */
     $fragmentsItemStorage = $this->entityTypeManager()->getStorage('fragment');
 
-    $build['#title'] = $hasTranslations ? $this->t('@langname revisions for %title', ['@langname' => $langname, '%title' => $fragment->label()]) : $this->t('Revisions for %title', ['%title' => $fragment->label()]);
+    $build['#title'] = $hasTranslations ?
+      $this->t(
+        '@langname revisions for %title',
+        [
+          '@langname' => $langname,
+          '%title' => $fragment->label(),
+        ]
+      ) :
+      $this->t('Revisions for %title', ['%title' => $fragment->label()]);
+
     $header = [$this->t('Revision'), $this->t('Operations')];
 
     $mayRevert = (($account->hasPermission('revert all fragment revisions') || $account->hasPermission('administer fragment entities')));
@@ -212,7 +227,10 @@ class FragmentController extends ControllerBase implements ContainerInjectionInt
     // Use revision link to link to revisions that are not active.
     $vid = $revision->getRevisionId();
     if ($vid != $fragment->getRevisionId()) {
-      $link = new Link($date, new Url('entity.fragment.revision', ['fragment' => $fragment->id(), 'fragment_revision' => $vid]));
+      $link = new Link($date, new Url(
+        'entity.fragment.revision',
+        ['fragment' => $fragment->id(), 'fragment_revision' => $vid]
+      ));
     }
     else {
       $link = $fragment->toLink($date);
@@ -226,7 +244,10 @@ class FragmentController extends ControllerBase implements ContainerInjectionInt
         '#context' => [
           'date' => $this->renderer->renderPlain($renderableLink),
           'username' => $this->renderer->renderPlain($username),
-          'message' => ['#markup' => $revision->getRevisionLogMessage(), '#allowed_tags' => Xss::getHtmlTagList()],
+          'message' => [
+            '#markup' => $revision->getRevisionLogMessage(),
+            '#allowed_tags' => Xss::getHtmlTagList(),
+          ],
         ],
       ],
     ];
@@ -279,7 +300,10 @@ class FragmentController extends ControllerBase implements ContainerInjectionInt
     if ($mayDelete) {
       $links['delete'] = [
         'title' => $this->t('Delete'),
-        'url' => Url::fromRoute('entity.fragment.revision_delete', ['fragment' => $fragment->id(), 'fragment_revision' => $vid]),
+        'url' => Url::fromRoute(
+          'entity.fragment.revision_delete',
+          ['fragment' => $fragment->id(), 'fragment_revision' => $vid]
+        ),
       ];
     }
 

@@ -7,7 +7,7 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\commerce_funds\Services\TransactionManager;
+use Drupal\commerce_funds\TransactionManagerInterface;
 use Drupal\commerce_price\Entity\Currency;
 
 /**
@@ -23,14 +23,14 @@ class FundsAdminSiteBalance extends BlockBase implements ContainerFactoryPluginI
   /**
    * The transaction manager.
    *
-   * @var \Drupal\commerce_funds\Services\TransactionManager
+   * @var \Drupal\commerce_funds\TransactionManagerInterface
    */
   protected $transactionManager;
 
   /**
    * Class constructor.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, TransactionManager $transaction_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, TransactionManagerInterface $transaction_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->transactionManager = $transaction_manager;
   }

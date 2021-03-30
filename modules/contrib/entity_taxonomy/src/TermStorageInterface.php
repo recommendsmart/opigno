@@ -124,7 +124,7 @@ interface TermStorageInterface extends ContentEntityStorageInterface {
    * @return array
    *   An array of nids and the term entities they were tagged with.
    */
-  public function getNodeTerms(array $nids, array $vocabs = [], $langcode = NULL);
+  public function getEntityTerms(array $entity_ids, $entity_type_id, array $vocabs = [], $langcode = NULL);
 
   /**
    * Returns the hierarchy type for a specific vocabulary ID.

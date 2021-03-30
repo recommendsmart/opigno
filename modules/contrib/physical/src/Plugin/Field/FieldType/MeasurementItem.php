@@ -69,9 +69,9 @@ class MeasurementItem extends FieldItemBase implements PreconfiguredFieldUiOptio
    * {@inheritdoc}
    */
   public function getConstraints() {
-    $manager = \Drupal::typedDataManager()->getValidationConstraintManager();
+    $constraint_manager = $this->getTypedDataManager()->getValidationConstraintManager();
     $constraints = parent::getConstraints();
-    $constraints[] = $manager->create('ComplexData', [
+    $constraints[] = $constraint_manager->create('ComplexData', [
       'number' => [
         'Regex' => [
           'pattern' => '/^[+-]?((\d+(\.\d*)?)|(\.\d+))$/i',

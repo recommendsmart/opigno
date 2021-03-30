@@ -75,7 +75,7 @@ class Dimensions extends FormElement {
    *
    * @throws \InvalidArgumentException.
    */
-  public static function processElement(array $element, FormStateInterface $form_state, &$complete_form) {
+  public static function processElement(array $element, FormStateInterface $form_state, array &$complete_form) {
     if (!is_array($element['#available_units'])) {
       throw new \InvalidArgumentException('The #available_units key must be an array.');
     }

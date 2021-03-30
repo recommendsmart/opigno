@@ -14,7 +14,6 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
-use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Url;
 use Drupal\Component\Serialization\Json;
 
@@ -45,6 +44,7 @@ function field_inheritance_entity_bundle_field_info_alter(&$fields, EntityTypeIn
   if (!empty($inherited_field_ids)) {
     $inherited_fields = \Drupal::entityTypeManager()->getStorage('field_inheritance')->loadMultiple($inherited_field_ids);
     if (!empty($inherited_fields)) {
+      $x = 0;
       foreach ($inherited_fields as $field) {
         // We are only interested in adding computed fields to the destination
         // entity type.
@@ -61,7 +61,7 @@ function field_inheritance_entity_bundle_field_info_alter(&$fields, EntityTypeIn
         // Configure the settings array with all the values from the config
         // entity.
         $settings = [
-          'id' => $field->id(),
+          'id' => $field->idWithoutTypeAndBundle(),
           'source entity type' => $field->sourceEntityType(),
           'source entity bundle' => $field->sourceEntityBundle(),
           'source field' => $field->sourceField(),
@@ -105,9 +105,9 @@ function field_inheritance_entity_bundle_field_info_alter(&$fields, EntityTypeIn
 
         // Add a computed field for the inherited field to the appropriate
         // destination entity type and bundle.
-        $fields[$field->id()] = FieldStorageDefinition::create($type)
+        $fields[$field->idWithoutTypeAndBundle()] = FieldStorageDefinition::create($type)
           ->setLabel(t('@label', ['@label' => $field->label()]))
-          ->setName($field->id())
+          ->setName($field->idWithoutTypeAndBundle())
           ->setDescription(t('The inherited field: @field', ['@field' => $field->label()]))
           ->setComputed(TRUE)
           ->setClass($class)
@@ -117,7 +117,12 @@ function field_inheritance_entity_bundle_field_info_alter(&$fields, EntityTypeIn
           ->setTranslatable(FALSE)
           ->setRevisionable(FALSE)
           ->setReadOnly(TRUE)
-          ->setDisplayConfigurable('view', TRUE);
+          ->setDisplayConfigurable('view', TRUE)
+          ->setDisplayOptions('view', [
+            'label' => 'visible',
+            'weight' => (50 + $x),
+          ]);
+        $x++;
       }
     }
   }
@@ -171,7 +176,7 @@ function field_inheritance_form_alter(&$form, FormStateInterface $form_state, $f
         '#type' => 'checkbox',
         '#title' => t('Enable inheritance for this entity?'),
         '#description' => t('Enabling inheritance will allow data to be pulled in from a source entity into this entity.'),
-        '#default_value' => $state_values['enabled'] ?? FALSE,
+        '#default_value' => $state_values['enabled'] ?? NULL,
       ];
 
       $form['field_inheritance']['fields'] = [
@@ -194,7 +199,7 @@ function field_inheritance_form_alter(&$form, FormStateInterface $form_state, $f
 
         if (!empty($inherited_fields)) {
           foreach ($inherited_fields as $field) {
-            $form['field_inheritance']['fields']['field_inheritance_' . $field->id()] = [
+            $form['field_inheritance']['fields']['field_inheritance_' . $field->idWithoutTypeAndBundle()] = [
               '#type' => 'details',
               '#open' => TRUE,
               '#title' => t('Entity Mapping for @label [@entity: @bundle - @field]', [
@@ -203,13 +208,13 @@ function field_inheritance_form_alter(&$form, FormStateInterface $form_state, $f
                 '@bundle' => $field->sourceEntityBundle(),
                 '@field' => $field->sourceField(),
               ]),
-              'field_inheritance_field_skip_' . $field->id() => [
+              'field_inheritance_field_skip_' . $field->idWithoutTypeAndBundle() => [
                 '#type' => 'checkbox',
                 '#title' => t('Do not inherit this field'),
                 '#description' => t('Checking this box will prevent data from being inherited for this field on this entity.'),
-                '#default_value' => $state_values[$field->id()]['skip'] ?? FALSE,
+                '#default_value' => $state_values[$field->idWithoutTypeAndBundle()]['skip'] ?? FALSE,
               ],
-              'field_inheritance_field_entity_' . $field->id() => [
+              'field_inheritance_field_entity_' . $field->idWithoutTypeAndBundle() => [
                 '#type' => 'entity_autocomplete',
                 '#title' => t('Source Entity'),
                 '#description' => t('Enter the name of the %bundle from which to inherit data.', [
@@ -217,10 +222,10 @@ function field_inheritance_form_alter(&$form, FormStateInterface $form_state, $f
                 ]),
                 '#target_type' => $field->sourceEntityType(),
                 '#selection_settings' => ['target_bundles' => [$field->sourceEntityBundle()]],
-                '#default_value' => !empty($state_values[$field->id()]['entity']) ? \Drupal::entityTypeManager()->getStorage($field->sourceEntityType())->load($state_values[$field->id()]['entity']) : FALSE,
+                '#default_value' => !empty($state_values[$field->idWithoutTypeAndBundle()]['entity']) ? \Drupal::entityTypeManager()->getStorage($field->sourceEntityType())->load($state_values[$field->idWithoutTypeAndBundle()]['entity']) : FALSE,
                 '#states' => [
                   'invisible' => [
-                    'input[name="field_inheritance_field_skip_' . $field->id() . '"]' => ['checked' => TRUE]
+                    'input[name="field_inheritance_field_skip_' . $field->idWithoutTypeAndBundle() . '"]' => ['checked' => TRUE],
                   ],
                 ],
               ],
@@ -231,7 +236,7 @@ function field_inheritance_form_alter(&$form, FormStateInterface $form_state, $f
 
       $form['field_inheritance']['fields']['message'] = [
         '#type' => 'markup',
-        '#markup' => '<div id="field-inheritance-ajax-message"></div>'
+        '#markup' => '<div id="field-inheritance-ajax-message"></div>',
       ];
 
       $form['field_inheritance']['fields']['ajax_container'] = [
@@ -275,7 +280,7 @@ function field_inheritance_entity_form_submit(&$form, FormStateInterface $form_s
   $state = \Drupal::keyValue('field_inheritance');
   $entity = $form_state->getFormObject()->getEntity();
   $values = $form_state->getValues();
-  
+
   $state_key = $entity->getEntityTypeId() . ':' . $entity->uuid();
   $state_value = [];
 

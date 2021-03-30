@@ -45,9 +45,9 @@ class AbsoluteStockLevelWidget extends StockLevelWidgetBase {
     }
 
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
-    // If we get an empty element from widgetBase or have no valid context bailout.
+    // If we get an empty element from widgetBase or have no valid context we bailout.
     $entity = $items->getEntity();
-    if (empty($element) || !$this->stockServiceManager->isValidContext($entity)) {
+    if (empty($element) || !$this->isValidContext($entity)) {
       return $element;
     }
 

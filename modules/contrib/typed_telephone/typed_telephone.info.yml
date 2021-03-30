@@ -6,7 +6,7 @@ core_version_requirement: ^8 || ^9
 package: 'Field types'
 configure: entity.telephone_type.collection
 
-# Information added by Drupal.org packaging script on 2021-03-12
-version: '1.0.0-alpha1'
+# Information added by Drupal.org packaging script on 2021-03-16
+version: '1.0.0-alpha2'
 project: 'typed_telephone'
-datestamp: 1615588125
+datestamp: 1615895251

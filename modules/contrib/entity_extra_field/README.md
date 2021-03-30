@@ -11,6 +11,10 @@ Installation
 * Normal module installation procedure. See
   https://www.drupal.org/documentation/install/modules-themes/modules-8
   
+* Install the Entity Extra Field UI module, which has been separated into a submodule named `entity_extra_field_ui`. The UI module is required to add new extra fields to an entity. 
+
+	The UI module can be safely disabled after the extra fields have been attached to an entity. As there are use cases on where field_ui should be disabled in production.
+	
 Initial Setup
 ------------
 

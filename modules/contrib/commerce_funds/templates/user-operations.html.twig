@@ -29,9 +29,6 @@
     <li><a href="{{ path('view.commerce_funds_user_transactions.incoming_escrow_payments') }}" class="operation-link">{{ 'Manage escrow payments'|t }}</a></li>
   {% endif %}
   {% if user.hasPermission('withdraw funds') and withdrawal_methods %}
-    <li><a href="{{ path('commerce_funds.withdrawal_methods') }}" class="operation-link">{{ 'Configure withdrawal methods'|t }}</a></li>
-  {% endif %}
-  {% if user.hasPermission('withdraw funds') and withdrawal_methods %}
     <li><a href="{{ path('view.commerce_funds_withdrawal_requests.pending_requests') }}" class="operation-link">{{ 'View withdrawal requests'|t }}</a></li>
   {% endif %}
   {% if user.hasPermission('view own transactions') %}

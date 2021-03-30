@@ -78,8 +78,8 @@ class GroupVisibilityManager extends DefaultPluginManager {
       $plugins[$id] = $pluginInstance;
     }
     // We only need the flex visibility type on the groupType form.
-    if (isset($plugins[GROUP_FLEX_TYPE_VIS_FLEX])) {
-      unset($plugins[GROUP_FLEX_TYPE_VIS_FLEX]);
+    if (isset($plugins[GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_FLEX])) {
+      unset($plugins[GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_FLEX]);
     }
     return $plugins;
   }

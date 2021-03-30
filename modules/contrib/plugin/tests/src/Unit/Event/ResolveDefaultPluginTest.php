@@ -31,7 +31,7 @@ class ResolveDefaultPluginTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     $this->pluginType = $this->createMock(PluginTypeInterface::class);
 
     $this->sut = new ResolveDefaultPlugin($this->pluginType);

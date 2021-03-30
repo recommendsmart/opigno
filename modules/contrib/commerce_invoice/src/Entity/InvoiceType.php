@@ -52,6 +52,8 @@ use Drupal\commerce_number_pattern\Entity\NumberPattern;
  *     "footerText",
  *     "traits",
  *     "workflow",
+ *     "sendConfirmation",
+ *     "confirmationBcc"
  *   },
  *   links = {
  *     "add-form" = "/admin/commerce/config/invoice-types/add",
@@ -105,6 +107,20 @@ class InvoiceType extends CommerceBundleEntityBase implements InvoiceTypeInterfa
    * @var string
    */
   protected $workflow;
+
+  /**
+   * Whether to email the customer a confirmation when an invoice is generated.
+   *
+   * @var bool
+   */
+  protected $sendConfirmation;
+
+  /**
+   * The confirmation BCC email.
+   *
+   * @var bool
+   */
+  protected $confirmationBcc;
 
   /**
    * {@inheritdoc}
@@ -219,6 +235,36 @@ class InvoiceType extends CommerceBundleEntityBase implements InvoiceTypeInterfa
    */
   public function setWorkflowId($workflow_id) {
     $this->workflow = $workflow_id;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function shouldSendConfirmation() {
+    return $this->sendConfirmation;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setSendConfirmation($send_confirmation) {
+    $this->sendConfirmation = (bool) $send_confirmation;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfirmationBcc() {
+    return $this->confirmationBcc;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setConfirmationBcc($confirmation_bcc) {
+    $this->confirmationBcc = $confirmation_bcc;
     return $this;
   }
 

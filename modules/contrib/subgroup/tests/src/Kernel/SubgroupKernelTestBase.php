@@ -17,6 +17,20 @@ abstract class SubgroupKernelTestBase extends EntityKernelTestBase {
   public static $modules = ['subgroup', 'group', 'options', 'entity', 'variationcache'];
 
   /**
+   * The group storage to use in testing.
+   *
+   * @var \Drupal\Core\Entity\ContentEntityStorageInterface
+   */
+  protected $groupStorage;
+
+  /**
+   * The group type storage to use in testing.
+   *
+   * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface
+   */
+  protected $groupTypeStorage;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -26,9 +40,22 @@ abstract class SubgroupKernelTestBase extends EntityKernelTestBase {
     $this->installEntitySchema('group_content');
     $this->installConfig(['group', 'subgroup']);
 
+    $this->groupStorage = $this->entityTypeManager->getStorage('group');
+    $this->groupTypeStorage = $this->entityTypeManager->getStorage('group_type');
+
     // Make sure we do not use user 1.
     $this->createUser();
     $this->setCurrentUser($this->createUser());
+  }
+
+  /**
+   * Gets the current user so you can run some checks against them.
+   *
+   * @return \Drupal\Core\Session\AccountInterface
+   *   The current user.
+   */
+  protected function getCurrentUser() {
+    return $this->container->get('current_user')->getAccount();
   }
 
   /**
@@ -41,13 +68,12 @@ abstract class SubgroupKernelTestBase extends EntityKernelTestBase {
    *   The created group entity.
    */
   protected function createGroup(array $values = []) {
-    $storage = $this->entityTypeManager->getStorage('group');
-    $group = $storage->create($values + [
+    $group = $this->groupStorage->create($values + [
       'type' => 'default',
       'label' => $this->randomString(),
     ]);
     $group->enforceIsNew();
-    $storage->save($group);
+    $this->groupStorage->save($group);
     return $group;
   }
 
@@ -61,12 +87,11 @@ abstract class SubgroupKernelTestBase extends EntityKernelTestBase {
    *   The created group type entity.
    */
   protected function createGroupType(array $values = []) {
-    $storage = $this->entityTypeManager->getStorage('group_type');
-    $group_type = $storage->create($values + [
+    $group_type = $this->groupTypeStorage->create($values + [
       'id' => $this->randomMachineName(),
       'label' => $this->randomString(),
     ]);
-    $storage->save($group_type);
+    $this->groupTypeStorage->save($group_type);
     return $group_type;
   }
 

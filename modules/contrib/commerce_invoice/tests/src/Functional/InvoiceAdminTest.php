@@ -45,10 +45,12 @@ class InvoiceAdminTest extends InvoiceBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
-    'commerce_cart',
-    'commerce_product',
-  ];
+  protected function getAdministratorPermissions() {
+    return array_merge([
+      'administer commerce_order',
+      'access commerce_order overview',
+    ], parent::getAdministratorPermissions());
+  }
 
   /**
    * {@inheritdoc}
@@ -96,16 +98,6 @@ class InvoiceAdminTest extends InvoiceBrowserTestBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  protected function getAdministratorPermissions() {
-    return array_merge([
-      'administer commerce_order',
-      'access commerce_order overview',
-    ], parent::getAdministratorPermissions());
-  }
-
-  /**
    * Tests access to the order invoices tab.
    */
   public function testOrderInvoicesAccess() {
@@ -147,10 +139,28 @@ class InvoiceAdminTest extends InvoiceBrowserTestBase {
     $this->assertSession()->buttonExists('Generate');
     $this->assertSession()->linkExists('Cancel');
     $page->pressButton('Generate');
+    $this->assertSession()->pageTextContains('Invoice 1 successfully generated.');
     $this->assertSession()->pageTextNotContains('There are no invoices yet.');
     $this->assertSession()->linkExists('Download');
     $this->assertSession()->pageTextContains('Invoice number');
     $this->assertSession()->linkByHrefNotExists($this->orderInvoiceGenerateUrl);
+
+    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $invoice_storage */
+    $invoice_storage = $this->container->get('entity_type.manager')->getStorage('commerce_invoice');
+    /** @var \Drupal\commerce_invoice\Entity\InvoiceInterface $invoice */
+    $invoice = $invoice_storage->load(1);
+    $this->drupalGet($invoice->toUrl('download')->toString());
+    $invoice = $this->reloadEntity($invoice);
+    $file = $invoice->getFile();
+    $this->assertNotNull($file);
+
+    // Assert that re-downloading the invoice doesn't generate a new file.
+    $this->drupalGet($invoice->toUrl('download')->toString());
+    $invoice = $this->reloadEntity($invoice);
+    $this->assertEquals($file->id(), $invoice->getFile()->id());
+    /** @var \Drupal\file\FileStorageInterface $file_storage */
+    $file_storage = $this->container->get('entity_type.manager')->getStorage('file');
+    $this->assertNull($file_storage->load(2));
   }
 
   /**

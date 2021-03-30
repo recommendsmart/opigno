@@ -73,7 +73,6 @@ class FragmentForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    /* @var $entity \Drupal\fragments\Entity\Fragment */
     $form = parent::buildForm($form, $form_state);
 
     // Start a new revision by default.

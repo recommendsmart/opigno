@@ -2,20 +2,22 @@
 
 namespace Drupal\commerce_funds\Form;
 
-use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\commerce_funds\Entity\Transaction;
+use Drupal\commerce_funds\FeesManagerInterface;
+use Drupal\commerce_funds\TransactionManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form to convert currencies.
  */
-class FundsConverter extends ConfigFormBase {
+class FundsConverter extends FormBase {
 
   /**
    * The current account.
@@ -46,13 +48,29 @@ class FundsConverter extends ConfigFormBase {
   protected $messenger;
 
   /**
+   * The fees manager.
+   *
+   * @var \Drupal\commerce_funds\FeesManagerInterface
+   */
+  protected $feesManager;
+
+  /**
+   * The transaction manager.
+   *
+   * @var \Drupal\commerce_funds\TransactionManagerInterface
+   */
+  protected $transactionManager;
+
+  /**
    * Class constructor.
    */
-  public function __construct(AccountProxy $current_user, EntityTypeManagerInterface $entity_type_manager, ConfigFactory $config, MessengerInterface $messenger) {
+  public function __construct(AccountProxy $current_user, EntityTypeManagerInterface $entity_type_manager, ConfigFactory $config, MessengerInterface $messenger, FeesManagerInterface $fees_manager, TransactionManagerInterface $transaction_manager) {
     $this->currentUser = $current_user;
     $this->entityTypeManager = $entity_type_manager;
     $this->config = $config;
     $this->messenger = $messenger;
+    $this->feesManager = $fees_manager;
+    $this->transactionManager = $transaction_manager;
   }
 
   /**
@@ -63,7 +81,9 @@ class FundsConverter extends ConfigFormBase {
     $container->get('current_user'),
     $container->get('entity_type.manager'),
     $container->get('config.factory'),
-    $container->get('messenger')
+    $container->get('messenger'),
+    $container->get('commerce_funds.fees_manager'),
+    $container->get('commerce_funds.transaction_manager')
     );
   }
 
@@ -90,7 +110,7 @@ class FundsConverter extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form_state->setCached(FALSE);
-    $exchange_rates = \Drupal::config('commerce_funds.settings')->get('exchange_rates');
+    $exchange_rates = $this->config('commerce_funds.settings')->get('exchange_rates');
     $currencies = $this->entityTypeManager->getStorage('commerce_currency')->loadMultiple();
     $currencyCodes = [];
     foreach ($currencies as $currency) {
@@ -109,7 +129,7 @@ class FundsConverter extends ConfigFormBase {
         'wrapper' => 'exchange-rate',
         'progress' => [
           'type' => 'throbber',
-          'message' => t('Calculating rate...'),
+          'message' => $this->t('Calculating rate...'),
         ],
       ],
     ];
@@ -130,7 +150,7 @@ class FundsConverter extends ConfigFormBase {
         'wrapper' => 'exchange-rate',
         'progress' => [
           'type' => 'throbber',
-          'message' => t('Calculating rate...'),
+          'message' => $this->t('Calculating rate...'),
         ],
       ],
       '#attributes' => [
@@ -152,7 +172,7 @@ class FundsConverter extends ConfigFormBase {
         'wrapper' => 'exchange-rate',
         'progress' => [
           'type' => 'throbber',
-          'message' => t('Calculating rate...'),
+          'message' => $this->t('Calculating rate...'),
         ],
       ],
     ];
@@ -166,16 +186,16 @@ class FundsConverter extends ConfigFormBase {
 
     if (!empty($form_state->getUserInput())) {
       if ($form_state->getUserInput()['currency_left'] != $form_state->getUserInput()['currency_right']) {
-        $new_amount = \Drupal::service('commerce_funds.fees_manager')->printConvertedAmount($form_state->getUserInput()['amount'], $form_state->getUserInput()['currency_left'], $form_state->getUserInput()['currency_right']);
+        $new_amount = $this->feesManager->printConvertedAmount($form_state->getUserInput()['amount'], $form_state->getUserInput()['currency_left'], $form_state->getUserInput()['currency_right']);
         $rate_description = $this->t('Conversion rate applied: @exchange-rate% <br> Amount after conversion: @new_amount', [
-          '@exchange-rate' => $exchange_rates[$form_state->getUserInput()['currency_left'] . '_' . $form_state->getUserInput()['currency_right']]?:'1',
+          '@exchange-rate' => $exchange_rates[$form_state->getUserInput()['currency_left'] . '_' . $form_state->getUserInput()['currency_right']] ?: '1',
           '@new_amount' => $new_amount,
         ]);
       }
     }
 
     $form['ajax_container']['markup'] = [
-      '#markup' => $rate_description?:$this->t('Conversion rate applied: 1%'),
+      '#markup' => $rate_description ?: $this->t('Conversion rate applied: 1%'),
       '#attributes' => [
         'id' => ['rate-output'],
       ],
@@ -199,7 +219,7 @@ class FundsConverter extends ConfigFormBase {
       $currency = $form_state->getValue('currency_left');
 
       $issuer = $this->currentUser;
-      $issuer_balance = \Drupal::service('commerce_funds.transaction_manager')->loadAccountBalance($issuer->getAccount(), $currency);
+      $issuer_balance = $this->transactionManager->loadAccountBalance($issuer->getAccount(), $currency);
       $currency_balance = isset($issuer_balance[$currency]) ? $issuer_balance[$currency] : 0;
 
       // Error if the user doesn't have enought money to cover the escrow + fee.
@@ -221,8 +241,7 @@ class FundsConverter extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $amount = $form_state->getValue('amount');
-    $exchange_rates = \Drupal::config('commerce_funds.settings')->get('exchange_rates');
-    $conversion = \Drupal::service('commerce_funds.fees_manager')->convertCurrencyAmount($amount, $form_state->getValue('currency_left'), $form_state->getValue('currency_right'));
+    $conversion = $this->feesManager->convertCurrencyAmount($amount, $form_state->getValue('currency_left'), $form_state->getValue('currency_right'));
 
     $transaction = Transaction::create([
       'issuer' => $this->currentUser->id(),
@@ -236,19 +255,18 @@ class FundsConverter extends ConfigFormBase {
       'currency' => $form_state->getValue('currency_right'),
       'status' => 'Completed',
       'notes' => [
-        'value' => $this->t('@amount @currency_left converted into @new_amount @currency_right using @rate% rate.', [
+        'value' => $this->t('@amount @currency_left converted into @new_amount @currency_right.', [
           '@amount' => $amount,
           '@currency_left' => $form_state->getValue('currency_left'),
           '@new_amount' => $conversion['new_amount'],
           '@currency_right' => $form_state->getValue('currency_right'),
-          '@rate' => $conversion['rate'],
         ]),
         'format' => 'basic_html',
       ],
     ]);
     $transaction->save();
 
-    \Drupal::service('commerce_funds.transaction_manager')->performTransaction($transaction);
+    $this->transactionManager->performTransaction($transaction);
 
   }
 

@@ -30,8 +30,11 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *     "label" = "label",
  *     "uuid" = "uuid"
  *   },
+ *   config_export = {
+ *     "id",
+ *     "label"
+ *   },
  *   links = {
- *     "canonical" = "/admin/commerce/config/commerce_stock_location_type/{commerce_stock_location_type}",
  *     "add-form" = "/admin/commerce/config/commerce_stock_location_type/add",
  *     "edit-form" = "/admin/commerce/config/commerce_stock_location_type/{commerce_stock_location_type}/edit",
  *     "delete-form" = "/admin/commerce/config/commerce_stock_location_type/{commerce_stock_location_type}/delete",

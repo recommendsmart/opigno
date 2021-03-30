@@ -85,8 +85,6 @@ class ConfigureExchangeRates extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
-   *
-   * Https://www.drupal.org/docs/8/api/form-api/configformbase-with-simple-configuration-api.
    */
   protected function getEditableConfigNames() {
     return [
@@ -129,7 +127,7 @@ class ConfigureExchangeRates extends ConfigFormBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Use transferwise to automatically manage the rates? Uses the <a href="@cron-url">cron</a>.',
       [
-        '@cron-url' => URL::fromRoute('system.cron_settings')->toString(),
+        '@cron-url' => Url::fromRoute('system.cron_settings')->toString(),
       ]),
       '#default_value' => $config->get('transferwise')['use_transferwise'],
       '#ajax' => [
@@ -175,7 +173,7 @@ class ConfigureExchangeRates extends ConfigFormBase {
       '#open' => TRUE,
     ];
 
-    $exchange_rates = $config->get('exchange_rates') ?: [];
+    $exchange_rates = $config->get('exchange_rates');
 
     foreach ($currencies as $currency_left) {
       $currency_code_left = $currency_left->getCurrencyCode();
@@ -189,7 +187,7 @@ class ConfigureExchangeRates extends ConfigFormBase {
               '@currency_left' => $currency_code_left,
               '@currency_right' => $currency_code_right,
             ]),
-            '#default_value' => $exchange_rates ? $exchange_rates[$currency_code_left . '_' . $currency_code_right] : 0,
+            '#default_value' => isset($exchange_rates[$currency_code_left . '_' . $currency_code_right]) ? $exchange_rates[$currency_code_left . '_' . $currency_code_right] : 0,
             '#step' => 'any',
             '#size' => 10,
             '#maxlength' => 10,
@@ -227,18 +225,6 @@ class ConfigureExchangeRates extends ConfigFormBase {
         'token' => isset($values['token']) ? $values['token'] : '',
       ])
       ->save();
-
-    if ($values['use_transferwise']) {
-      /** @var QueueInterface $queue */
-      $queue = $this->queueFactory->get('commerce_funds_transferwise_rates');
-      $queue->createQueue();
-      $queue->createItem($values['token']);
-    }
-    else {
-      /** @var QueueInterface $queue */
-      $queue = $this->queueFactory->get('commerce_funds_transferwise_rates');
-      $queue->deleteQueue();
-    }
 
     unset($values['use_transferwise'], $values['token']);
 

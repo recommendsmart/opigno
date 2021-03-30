@@ -15,7 +15,7 @@ function lc_simple_accordion_theme($existing, $type, $theme, $path) {
   return [
     'layoutcomponents_block_content__simple_accordion' => [
       'base hook' => 'block',
-      'variables' => ['countdown_attributes' => null]
+      'variables' => ['countdown_attributes' => NULL],
     ],
   ];
 }
@@ -41,8 +41,13 @@ function lc_simple_accordion_preprocess_block(&$variables) {
     return;
   }
 
+  if (!array_key_exists('#block_content',$variables['content'])) {
+    return;
+  }
+
   /** @var \Drupal\block_content\Entity\BlockContent $block */
   $block = $variables['content']['#block_content'];
+
   $block_id = str_replace(' ', '_', $block->uuid());
 
   $extra_class = $block->get('field_sa_extra_class')->getString();
@@ -64,6 +69,10 @@ function lc_simple_accordion_preprocess_block(&$variables) {
   /** @var \Drupal\entity_reference_revisions\EntityReferenceRevisionsFieldItemList $cards */
   $cards = $items['field_sa_accordion_item']['#items'];
 
+  if (!isset($cards)) {
+    return;
+  }
+
   for ($i = 0; $i < $cards->count(); $i++) {
     /** @var \Drupal\block_content\Entity\BlockContent $block_item */
     $block_item = $items['field_sa_accordion_item'][$i]['#block_content'];
@@ -72,26 +81,28 @@ function lc_simple_accordion_preprocess_block(&$variables) {
     $header = new Attribute();
     $header->addClass([
       'lc-inline_block_' . $block_item->uuid() . '-accordion-item-edit',
-      'card-header'
+      'card-header',
     ]);
-    $header->setAttribute('id', 'card-' . $i);
+    $header->setAttribute('id', 'card-' . $block_id . '-' . $i);
 
     // Card attributes.
     $item = new Attribute();
     $item->addClass([
       'collapse',
     ]);
-    $item->setAttribute('aria-labelledby', 'card-' . $i);
+    $item->setAttribute('aria-labelledby', 'card-' . $block_id . '-' . $i);
 
     // Store.
     $items['field_sa_accordion_item'][$i]['header_attributes'] = $header;
     $items['field_sa_accordion_item'][$i]['card_attributes'] = $item;
+    $items['field_sa_accordion_item'][$i]['uuid'] = $block_id;
   }
 
   // Store container.
   $variables['content']['container'] = [
     '#type' => 'container',
     'attributes' => $container_attr,
+    'id' => $block_id,
     'content' => $items,
   ];
 }
@@ -130,12 +141,11 @@ function lc_simple_accordion_block_type_form_alter(array &$form, FormStateInterf
  * Change the elements with LayoutComponents Api.
  *
  * @param array $form
- *  The array with the form.
- *
+ *   The array with the form.
  * @param string $block_id
- *  The id of the block.
+ *   The id of the block.
  */
-function _lc_simple_accordion_form_alter(array &$form, $block_id){
+function _lc_simple_accordion_form_alter(array &$form, $block_id) {
   /** @var \Drupal\layoutcomponents\Api\Component $lcApi */
   $lcApi = Drupal::service('layoutcomponents.apiComponent');
 

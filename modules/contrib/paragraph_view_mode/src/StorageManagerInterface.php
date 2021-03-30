@@ -57,6 +57,19 @@ interface StorageManagerInterface {
   public function deleteField(string $bundle): bool;
 
   /**
+   * Sets field label.
+   *
+   * @param string $bundle
+   *   Paragraph entity bundle.
+   *
+   * @param string $label
+   *   Label.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function setFieldLabel(string $bundle, string $label): void;
+
+  /**
    * Add paragraph view mode field to paragraph entity form display.
    *
    * @param string $bundle

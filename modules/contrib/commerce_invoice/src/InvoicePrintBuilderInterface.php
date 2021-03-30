@@ -11,6 +11,17 @@ use Drupal\entity_print\Plugin\PrintEngineInterface;
 interface InvoicePrintBuilderInterface {
 
   /**
+   * Generates a filename for the given invoice.
+   *
+   * @param \Drupal\commerce_invoice\Entity\InvoiceInterface $invoice
+   *   The invoice.
+   *
+   * @return string
+   *   The generated filename.
+   */
+  public function generateFilename(InvoiceInterface $invoice);
+
+  /**
    * Renders the invoice as a printed document and save to disk.
    *
    * @param \Drupal\commerce_invoice\Entity\InvoiceInterface $invoice

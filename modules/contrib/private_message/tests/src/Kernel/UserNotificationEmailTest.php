@@ -129,6 +129,21 @@ class UserNotificationEmailTest extends EntityKernelTestBase {
   }
 
   /**
+   * Test that no email is attempted if a user has no email address.
+   */
+  public function testNoEmailToUserWithNoEmailAddress() {
+    $owner = $this->createUser();
+    $member = $this->createUser(['mail' => NULL]);
+
+    \Drupal::currentUser()->setAccount($owner);
+
+    $message = $this->createMessage(['owner' => $owner]);
+    $this->threadManager->saveThread($message, [$owner, $member]);
+
+    $this->assertEmpty($this->getMails(), 'Attempted to send email to a NULL address.');
+  }
+
+  /**
    * Create a new private message with some default values.
    *
    * @param array $values

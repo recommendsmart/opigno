@@ -8,7 +8,7 @@ use Drupal\views\Tests\ViewTestData;
 /**
  * Tests the manual_selection exposed form.
  *
- * @group views
+ * @group flexible_views
  */
 class ManualSelectionTest extends WebDriverTestBase {
   /**
@@ -33,7 +33,10 @@ class ManualSelectionTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $testViews = ['test_flexible_views'];
+  public static $testViews = [
+    'test_flexible_views',
+    'test_flexible_views_without_exposed',
+  ];
 
   /**
    * {@inheritdoc}
@@ -165,9 +168,41 @@ class ManualSelectionTest extends WebDriverTestBase {
     $manual_select[0]->selectOption('body_value');
     $manual_select[0]->blur();
 
-    $this->assertSession()->elementExists('xpath', "//form[@class='views-exposed-form manual-selection-form']//div[@class='filter-wrap']//input[@id='edit-body-value-check-deactivate']")->isVisible();
-    $this->assertSession()->elementExists('xpath', "//form[@class='views-exposed-form manual-selection-form']//div[@class='filter-wrap']//select[@id='edit-body-value-op']")->isVisible();
-    $this->assertSession()->elementExists('xpath', "//form[@class='views-exposed-form manual-selection-form']//div[@class='filter-wrap']//input[@id='edit-body-value']")->isVisible();
+    $this->assertSession()->elementExists('xpath', "//form[@class='views-exposed-form manual-selection-form']//div[@class='filter-wrap active']//input[@id='edit-body-value-check-deactivate']")->isVisible();
+    $this->assertSession()->elementExists('xpath', "//form[@class='views-exposed-form manual-selection-form']//div[@class='filter-wrap active']//select[@id='edit-body-value-op']")->isVisible();
+    $this->assertSession()->elementExists('xpath', "//form[@class='views-exposed-form manual-selection-form']//div[@class='filter-wrap active']//input[@id='edit-body-value']")->isVisible();
+  }
+
+  /**
+   * Checks visibility of used filters after submit.
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   * @throws \Behat\Mink\Exception\ResponseTextException
+   */
+  public function testFilterVisibilityAfterSubmit() {
+    $this->testManualSelectionFilterAdd();
+
+    // Set body filter op to contains.
+    $body_filter_op = $this->xpath("//form[@class='views-exposed-form manual-selection-form']//div[@class='filter-wrap active']//select[@id='edit-body-value-op']");
+    $body_filter_op[0]->selectOption('contains');
+    $body_filter_op[0]->blur();
+
+    // Set body filter value.
+    $body_filter = $this->xpath("//form[@class='views-exposed-form manual-selection-form']//div[@class='filter-wrap active']//input[@id='edit-body-value']");
+    $body_filter[0]->setValue("Body 2");
+    $body_filter[0]->blur();
+
+    // Submit form.
+    $this->submitForm([], 'Apply');
+
+    // Check that the body filter is still visible.
+    $this->assertSession()->elementExists('xpath', "//form[@class='views-exposed-form manual-selection-form']//div[@class='filter-wrap active']//input[@id='edit-body-value-check-deactivate']")->isVisible();
+    $this->assertSession()->elementExists('xpath', "//form[@class='views-exposed-form manual-selection-form']//div[@class='filter-wrap active']//select[@id='edit-body-value-op']")->isVisible();
+    $this->assertSession()->elementExists('xpath', "//form[@class='views-exposed-form manual-selection-form']//div[@class='filter-wrap active']//input[@id='edit-body-value']")->isVisible();
+
+    // Check the result.
+    $this->assertSession()->pageTextNotContains(t('Node Content 4'));
+    $this->assertSession()->pageTextContains(t('Node Content 2'));
   }
 
   /**
@@ -179,7 +214,7 @@ class ManualSelectionTest extends WebDriverTestBase {
     $this->testManualSelectionFilterAdd();
 
     // Uncheck the deactivate checkbox.
-    $deactivate_checkbox = $this->xpath("//form[@class='views-exposed-form manual-selection-form']//div[@class='filter-wrap']//input[@id='edit-body-value-check-deactivate']");
+    $deactivate_checkbox = $this->xpath("//form[@class='views-exposed-form manual-selection-form']//div[@class='filter-wrap active']//input[@id='edit-body-value-check-deactivate']");
     $deactivate_checkbox[0]->uncheck();
 
     // Check that the body filter is invisible again.
@@ -194,6 +229,53 @@ class ManualSelectionTest extends WebDriverTestBase {
     $this->assertFalse(
       $this->assertSession()->elementExists('xpath', "//form[@class='views-exposed-form manual-selection-form']//div[@class='filter-wrap']//input[@id='edit-body-value']")->isVisible(),
       'Body filter value is invisble'
+    );
+  }
+
+  /**
+   * Tests that the manual_selection is not shown if a view has nothing exposed.
+   */
+  public function testViewWithoutExposedFilters() {
+    // Load the linked page display.
+    $this->drupalGet('admin/test-flexible-views-2');
+
+    // Check that the select exists.
+    $this->assertSession()->elementExists('xpath', "//form[@class='views-exposed-form manual-selection-form']//select[@id='edit-manual-select-filter']");
+
+    // Check that the select is not visible.
+    $this->assertFalse(
+      $this->assertSession()->elementExists('xpath', "//form[@class='views-exposed-form manual-selection-form']//select[@id='edit-manual-select-filter']")->isVisible(),
+      'Manual select is visible.'
+    );
+
+    // Check select options count.
+    $manual_select_options = $this->xpath("//select[@id='edit-manual-select-filter']/option");
+    $this->assertEqual(count($manual_select_options), 1, 'Incorrect manual select options count.');
+  }
+
+  /**
+   * Checks visibility of filters after change sorting.
+   */
+  public function testFilterVisibilityAfterSorting() {
+    // Load the linked page display.
+    $this->drupalGet('admin/test-flexible-views');
+
+    // Change the sorting.
+    $content_type_header = $this->xpath("//th[@id='view-type-table-column']/a");
+    $content_type_header[0]->click();
+
+    // Check that the e.g. body filter is invisible.
+    $this->assertFalse(
+      $this->assertSession()->elementExists('xpath', "//form[@class='views-exposed-form manual-selection-form']//input[@id='edit-body-value-check-deactivate']")->isVisible(),
+      'Body filter value is visible'
+    );
+    $this->assertFalse(
+      $this->assertSession()->elementExists('xpath', "//form[@class='views-exposed-form manual-selection-form']//select[@id='edit-body-value-op']")->isVisible(),
+      'Body filter op is visible'
+    );
+    $this->assertFalse(
+      $this->assertSession()->elementExists('xpath', "//form[@class='views-exposed-form manual-selection-form']//input[@id='edit-body-value']")->isVisible(),
+      'Body filter value is visible'
     );
   }
 

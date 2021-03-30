@@ -2,8 +2,10 @@
 
 namespace Drupal\ingredient\Form;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Url;
@@ -24,13 +26,17 @@ class IngredientDeleteForm extends ContentEntityConfirmFormBase {
   /**
    * Constructs a new IngredientDeleteForm object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle service.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    * @param \Drupal\Core\Logger\LoggerChannelInterface $logger_channel
    *   The logger service.
    */
-  public function __construct(EntityManagerInterface $entity_manager, LoggerChannelInterface $logger_channel) {
-    parent::__construct($entity_manager);
+  public function __construct(EntityRepositoryInterface $entity_repository, EntityTypeBundleInfoInterface $entity_type_bundle_info, TimeInterface $time, LoggerChannelInterface $logger_channel) {
+    parent::__construct($entity_repository, $entity_type_bundle_info, $time);
     $this->loggerChannel = $logger_channel;
   }
 
@@ -39,7 +45,9 @@ class IngredientDeleteForm extends ContentEntityConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager'),
+      $container->get('entity.repository'),
+      $container->get('entity_type.bundle.info'),
+      $container->get('datetime.time'),
       $container->get('logger.factory')->get('ingredient')
     );
   }

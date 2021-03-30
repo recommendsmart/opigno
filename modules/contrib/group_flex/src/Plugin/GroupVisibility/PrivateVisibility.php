@@ -20,7 +20,7 @@ class PrivateVisibility extends GroupVisibilityBase {
   /**
    * {@inheritdoc}
    */
-  public function enableGroupType(GroupTypeInterface $groupType): void {
+  public function enableGroupType(GroupTypeInterface $groupType) {
     $mappedPerm = [
       $groupType->getOutsiderRoleId() => [
         'view group' => FALSE,
@@ -35,7 +35,7 @@ class PrivateVisibility extends GroupVisibilityBase {
   /**
    * {@inheritdoc}
    */
-  public function disableGroupType(GroupTypeInterface $groupType): void {
+  public function disableGroupType(GroupTypeInterface $groupType) {
     $mappedPerm = [
       $groupType->getOutsiderRoleId() => [
         'view group' => FALSE,
@@ -61,6 +61,7 @@ class PrivateVisibility extends GroupVisibilityBase {
    */
   public function getDisallowedGroupPermissions(GroupInterface $group): array {
     return [
+      $group->getGroupType()->getAnonymousRoleId() => ['view group'],
       $group->getGroupType()->getOutsiderRoleId() => ['view group'],
     ];
   }
@@ -69,14 +70,14 @@ class PrivateVisibility extends GroupVisibilityBase {
    * {@inheritdoc}
    */
   public function getGroupLabel(GroupTypeInterface $groupType): string {
-    return t('Private (The @group_type_name will be viewed by group members only)', ['@group_type_name' => $groupType->label()]);
+    return $this->t('Private (The @group_type_name will be viewed by group members only)', ['@group_type_name' => $groupType->label()]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getValueDescription(GroupTypeInterface $groupType): string {
-    return t('The @group_type_name will be viewed by group members only', ['@group_type_name' => $groupType->label()]);
+    return $this->t('The @group_type_name will be viewed by group members only', ['@group_type_name' => $groupType->label()]);
   }
 
 }

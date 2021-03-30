@@ -8,6 +8,7 @@ use Drupal\commerce_shipping\PackageTypeManagerInterface;
 use Drupal\commerce_shipping\ShippingRate;
 use Drupal\commerce_shipping\ShippingService;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\state_machine\WorkflowManagerInterface;
 
 /**
  * Provides the FlatRate shipping method.
@@ -30,9 +31,11 @@ class FlatRate extends ShippingMethodBase {
    *   The plugin implementation definition.
    * @param \Drupal\commerce_shipping\PackageTypeManagerInterface $package_type_manager
    *   The package type manager.
+   * @param \Drupal\state_machine\WorkflowManagerInterface $workflow_manager
+   *   The workflow manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, PackageTypeManagerInterface $package_type_manager) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $package_type_manager);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, PackageTypeManagerInterface $package_type_manager, WorkflowManagerInterface $workflow_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $package_type_manager, $workflow_manager);
 
     $this->services['default'] = new ShippingService('default', $this->configuration['rate_label']);
   }
@@ -42,7 +45,8 @@ class FlatRate extends ShippingMethodBase {
    */
   public function defaultConfiguration() {
     return [
-      'rate_label' => NULL,
+      'rate_label' => '',
+      'rate_description' => '',
       'rate_amount' => NULL,
       'services' => ['default'],
     ] + parent::defaultConfiguration();
@@ -63,9 +67,15 @@ class FlatRate extends ShippingMethodBase {
     $form['rate_label'] = [
       '#type' => 'textfield',
       '#title' => t('Rate label'),
-      '#description' => t('Shown to customers during checkout.'),
+      '#description' => t('Shown to customers when selecting the rate.'),
       '#default_value' => $this->configuration['rate_label'],
       '#required' => TRUE,
+    ];
+    $form['rate_description'] = [
+      '#type' => 'textfield',
+      '#title' => t('Rate description'),
+      '#description' => t('Provides additional details about the rate to the customer.'),
+      '#default_value' => $this->configuration['rate_description'],
     ];
     $form['rate_amount'] = [
       '#type' => 'commerce_price',
@@ -86,6 +96,7 @@ class FlatRate extends ShippingMethodBase {
     if (!$form_state->getErrors()) {
       $values = $form_state->getValue($form['#parents']);
       $this->configuration['rate_label'] = $values['rate_label'];
+      $this->configuration['rate_description'] = $values['rate_description'];
       $this->configuration['rate_amount'] = $values['rate_amount'];
     }
   }
@@ -94,13 +105,13 @@ class FlatRate extends ShippingMethodBase {
    * {@inheritdoc}
    */
   public function calculateRates(ShipmentInterface $shipment) {
-    // Rate IDs aren't used in a flat rate scenario because there's always a
-    // single rate per plugin, and there's no support for purchasing rates.
-    $rate_id = 0;
-    $amount = $this->configuration['rate_amount'];
-    $amount = new Price($amount['number'], $amount['currency_code']);
     $rates = [];
-    $rates[] = new ShippingRate($rate_id, $this->services['default'], $amount);
+    $rates[] = new ShippingRate([
+      'shipping_method_id' => $this->parentEntity->id(),
+      'service' => $this->services['default'],
+      'amount' => Price::fromArray($this->configuration['rate_amount']),
+      'description' => $this->configuration['rate_description'],
+    ]);
 
     return $rates;
   }

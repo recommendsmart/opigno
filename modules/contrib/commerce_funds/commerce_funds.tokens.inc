@@ -27,27 +27,27 @@ function commerce_funds_token_info() {
 
   foreach ($currencies as $currency_code => $currency) {
     $balance[$currency_code] = [
-      'name' => t('@curreny currency code.', [
-        '@curreny' => $currency_code,
+      'name' => t('@currency currency code.', [
+        '@currency' => $currency_code,
       ]),
       'description' => t('@currency currency symbol.', [
-        '@curreny' => $currency_code,
+        '@currency' => $currency_code,
       ]),
     ];
     $balance[$currency_code . '_amount'] = [
       'name' => t('@currency balance amount', [
-        '@curreny' => $currency_code,
+        '@currency' => $currency_code,
       ]),
       'description' => t("User's @currency balance amount.", [
-        '@curreny' => $currency_code,
+        '@currency' => $currency_code,
       ]),
     ];
     $balance[$currency_code . '_symbol'] = [
       'name' => t('@currency symbol', [
-        '@curreny' => $currency_code,
+        '@currency' => $currency_code,
       ]),
       'description' => t('@currency currency code.', [
-        '@curreny' => $currency_code,
+        '@currency' => $currency_code,
       ]),
     ];
   }

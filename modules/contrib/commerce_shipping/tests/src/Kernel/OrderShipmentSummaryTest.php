@@ -4,7 +4,6 @@ namespace Drupal\Tests\commerce_shipping\Kernel;
 
 use Drupal\commerce_order\Entity\Order;
 use Drupal\commerce_order\Entity\OrderItem;
-use Drupal\commerce_order\Entity\OrderItemType;
 use Drupal\commerce_price\Price;
 use Drupal\commerce_product\Entity\Product;
 use Drupal\commerce_product\Entity\ProductVariation;
@@ -49,8 +48,6 @@ class OrderShipmentSummaryTest extends ShippingKernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installEntitySchema('commerce_shipping_method');
-
     $this->orderShipmentSummary = $this->container->get('commerce_shipping.order_shipment_summary');
 
     $user = $this->createUser(['mail' => $this->randomString() . '@example.com']);
@@ -88,11 +85,6 @@ class OrderShipmentSummaryTest extends ShippingKernelTestBase {
     $profile->save();
     $profile = $this->reloadEntity($profile);
 
-    OrderItemType::create([
-      'id' => 'test',
-      'label' => 'Test',
-      'orderType' => 'default',
-    ])->save();
     $order_item = OrderItem::create([
       'type' => 'test',
       'quantity' => 1,

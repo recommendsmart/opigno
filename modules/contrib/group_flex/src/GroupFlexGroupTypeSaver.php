@@ -57,7 +57,7 @@ class GroupFlexGroupTypeSaver {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function save(GroupTypeInterface $groupType): void {
+  public function save(GroupTypeInterface $groupType) {
     $this->saveGroupVisibility($groupType);
     $this->saveJoiningMethods($groupType);
   }
@@ -70,7 +70,7 @@ class GroupFlexGroupTypeSaver {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function saveGroupVisibility(GroupTypeInterface $groupType): void {
+  protected function saveGroupVisibility(GroupTypeInterface $groupType) {
     $visibility = $groupType->getThirdPartySetting('group_flex', 'group_type_visibility');
     /** @var \Drupal\group_flex\Plugin\GroupVisibilityBase $pluginInstance */
     $groupVisibilities = $this->getAllGroupVisibility();
@@ -92,7 +92,7 @@ class GroupFlexGroupTypeSaver {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  private function saveJoiningMethods(GroupTypeInterface $groupType): void {
+  private function saveJoiningMethods(GroupTypeInterface $groupType) {
     $setJoiningMethods = $groupType->getThirdPartySetting('group_flex', 'group_type_joining_method', []);
     /** @var \Drupal\group_flex\Plugin\GroupJoiningMethodBase $pluginInstance */
     $joiningMethods = $this->getAllJoiningMethods();

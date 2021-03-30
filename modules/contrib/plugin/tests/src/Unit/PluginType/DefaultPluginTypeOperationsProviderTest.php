@@ -38,7 +38,7 @@ class DefaultPluginTypeOperationsProviderTest extends UnitTestCase {
    */
   protected $sut;
 
-  public function setUp() {
+  protected function setUp(): void {
     $this->stringTranslation = $this->getStringTranslationStub();
 
     $this->services = [

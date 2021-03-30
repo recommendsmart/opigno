@@ -42,7 +42,7 @@ class ContactMessageFieldConfigListController extends FieldConfigListController 
   public function listing($entity_type_id = NULL, $bundle = NULL, RouteMatchInterface $route_match = NULL) {
     $listing = parent::listing($entity_type_id, $bundle, $route_match);
 
-    /* @var \Drupal\Core\Entity\EntityFieldManager $entityFieldManager */
+    /** @var \Drupal\Core\Entity\EntityFieldManager $entityFieldManager */
     $entityFieldManager = $this->container->get('entity_field.manager');
 
     $baseFieldDefinitions = $entityFieldManager->getBaseFieldDefinitions($entity_type_id);

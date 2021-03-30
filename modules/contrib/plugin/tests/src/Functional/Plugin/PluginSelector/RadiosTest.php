@@ -17,6 +17,11 @@ class RadiosTest extends BrowserTestBase {
   public static $modules = ['filter', 'plugin_test_helper'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the element.
    */
   public function testElement() {

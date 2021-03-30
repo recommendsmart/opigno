@@ -3,9 +3,11 @@
 namespace Drupal\commerce_shipping\Entity;
 
 use Drupal\commerce_order\Entity\OrderInterface;
+use Drupal\commerce_price\Calculator;
 use Drupal\commerce_shipping\Plugin\Commerce\PackageType\PackageTypeInterface as PackageTypePluginInterface;
 use Drupal\commerce_shipping\ProposedShipment;
 use Drupal\commerce_shipping\ShipmentItem;
+use Drupal\commerce_order\Adjustment;
 use Drupal\commerce_price\Price;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
@@ -33,13 +35,17 @@ use Drupal\profile\Entity\ProfileInterface;
  *   handlers = {
  *     "list_builder" = "Drupal\commerce_shipping\ShipmentListBuilder",
  *     "storage" = "Drupal\commerce_shipping\ShipmentStorage",
- *     "access" = "Drupal\Core\Entity\EntityAccessControlHandler",
+ *     "access" = "Drupal\commerce_shipping\ShipmentAccessControlHandler",
+ *     "permission_provider" = "Drupal\commerce_shipping\ShipmentPermissionProvider",
+ *     "views_data" = "Drupal\commerce\CommerceEntityViewsData",
  *     "form" = {
  *       "default" = "Drupal\commerce_shipping\Form\ShipmentForm",
  *       "add" = "Drupal\commerce_shipping\Form\ShipmentForm",
  *       "edit" = "Drupal\commerce_shipping\Form\ShipmentForm",
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
+ *       "resend-confirmation" = "Drupal\commerce_shipping\Form\ShipmentConfirmationResendForm",
  *     },
+ *     "inline_form" = "Drupal\commerce_shipping\Form\ShipmentInlineForm",
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "route_provider" = {
  *       "default" = "Drupal\commerce_shipping\ShipmentRouteProvider",
@@ -61,6 +67,7 @@ use Drupal\profile\Entity\ProfileInterface;
  *     "add-form" = "/admin/commerce/orders/{commerce_order}/shipments/add/{commerce_shipment_type}",
  *     "edit-form" = "/admin/commerce/orders/{commerce_order}/shipments/{commerce_shipment}/edit",
  *     "delete-form" = "/admin/commerce/orders/{commerce_order}/shipments/{commerce_shipment}/delete",
+ *     "resend-confirmation-form" = "/admin/commerce/orders/{commerce_order}/shipments/{commerce_shipment}/resend-confirmation"
  *   },
  *   bundle_entity_type = "commerce_shipment_type",
  *   field_ui_base_route = "entity.commerce_shipment_type.edit_form",
@@ -77,6 +84,17 @@ class Shipment extends ContentEntityBase implements ShipmentInterface {
     $uri_route_parameters = parent::urlRouteParameters($rel);
     $uri_route_parameters['commerce_order'] = $this->getOrderId();
     return $uri_route_parameters;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function clearRate() {
+    $fields = ['amount', 'original_amount', 'shipping_method', 'shipping_service'];
+    foreach ($fields as $field) {
+      $this->set($field, NULL);
+    }
+    return $this;
   }
 
   /**
@@ -101,7 +119,6 @@ class Shipment extends ContentEntityBase implements ShipmentInterface {
       }
     }
     $this->prepareFields();
-    // @todo Reset the shipping method/service/amount if the items changed.
   }
 
   /**
@@ -232,6 +249,17 @@ class Shipment extends ContentEntityBase implements ShipmentInterface {
   /**
    * {@inheritdoc}
    */
+  public function getTotalQuantity() {
+    $total_quantity = '0';
+    foreach ($this->getItems() as $item) {
+      $total_quantity = Calculator::add($total_quantity, $item->getQuantity());
+    }
+    return $total_quantity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function hasItems() {
     return !$this->get('items')->isEmpty();
   }
@@ -286,6 +314,23 @@ class Shipment extends ContentEntityBase implements ShipmentInterface {
   /**
    * {@inheritdoc}
    */
+  public function getOriginalAmount() {
+    if (!$this->get('original_amount')->isEmpty()) {
+      return $this->get('original_amount')->first()->toPrice();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOriginalAmount(Price $original_amount) {
+    $this->set('original_amount', $original_amount);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getAmount() {
     if (!$this->get('amount')->isEmpty()) {
       return $this->get('amount')->first()->toPrice();
@@ -297,6 +342,81 @@ class Shipment extends ContentEntityBase implements ShipmentInterface {
    */
   public function setAmount(Price $amount) {
     $this->set('amount', $amount);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAdjustedAmount(array $adjustment_types = []) {
+    $amount = $this->getAmount();
+    if (!$amount) {
+      return NULL;
+    }
+    foreach ($this->getAdjustments($adjustment_types) as $adjustment) {
+      if (!$adjustment->isIncluded()) {
+        $amount = $amount->add($adjustment->getAmount());
+      }
+    }
+    $rounder = \Drupal::service('commerce_price.rounder');
+    $amount = $rounder->round($amount);
+
+    return $amount;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAdjustments(array $adjustment_types = []) {
+    /** @var \Drupal\commerce_order\Adjustment[] $adjustments */
+    $adjustments = $this->get('adjustments')->getAdjustments();
+    // Filter adjustments by type, if needed.
+    if ($adjustment_types) {
+      foreach ($adjustments as $index => $adjustment) {
+        if (!in_array($adjustment->getType(), $adjustment_types)) {
+          unset($adjustments[$index]);
+        }
+      }
+      $adjustments = array_values($adjustments);
+    }
+
+    return $adjustments;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setAdjustments(array $adjustments) {
+    $this->set('adjustments', $adjustments);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addAdjustment(Adjustment $adjustment) {
+    $this->get('adjustments')->appendItem($adjustment);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeAdjustment(Adjustment $adjustment) {
+    $this->get('adjustments')->removeAdjustment($adjustment);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function clearAdjustments() {
+    $locked_callback = function ($adjustment) {
+      /** @var \Drupal\commerce_order\Adjustment $adjustment */
+      return $adjustment->isLocked();
+    };
+    $adjustments = array_filter($this->getAdjustments(), $locked_callback);
+    $this->setAdjustments($adjustments);
     return $this;
   }
 
@@ -391,13 +511,15 @@ class Shipment extends ContentEntityBase implements ShipmentInterface {
   public static function postDelete(EntityStorageInterface $storage, array $entities) {
     parent::postDelete($storage, $entities);
 
+    /** @var \Drupal\commerce_shipping\ShippingOrderManagerInterface $shipping_order_manager */
+    $shipping_order_manager = \Drupal::service('commerce_shipping.order_manager');
     // When shipments are being deleted, we need to make sure the parent order
     // is refreshed so that the corresponding shipping adjustment is removed.
     $orders_to_refresh = [];
     /** @var \Drupal\commerce_shipping\Entity\ShipmentInterface[] $entities */
     foreach ($entities as $shipment) {
       $order = $shipment->getOrder();
-      if (empty($order) || !$order->hasField('shipments') || $order->get('shipments')->isEmpty()) {
+      if (empty($order) || !$shipping_order_manager->hasShipments($order)) {
         continue;
       }
       $order_shipments = $order->get('shipments');
@@ -422,8 +544,11 @@ class Shipment extends ContentEntityBase implements ShipmentInterface {
    */
   protected function prepareFields() {
     if (empty($this->getPackageType()) && !empty($this->getShippingMethodId())) {
-      $default_package_type = $this->getShippingMethod()->getPlugin()->getDefaultPackageType();
-      $this->set('package_type', $default_package_type->getId());
+      $shipping_method = $this->getShippingMethod();
+      if ($shipping_method) {
+        $default_package_type = $shipping_method->getPlugin()->getDefaultPackageType();
+        $this->set('package_type', $default_package_type->getId());
+      }
     }
     $this->recalculateWeight();
   }
@@ -540,12 +665,23 @@ class Shipment extends ContentEntityBase implements ShipmentInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['amount'] = BaseFieldDefinition::create('commerce_price')
-      ->setLabel(t('Amount'))
-      ->setDescription(t('The shipment amount.'))
-      ->setReadOnly(TRUE)
+    $fields['original_amount'] = BaseFieldDefinition::create('commerce_price')
+      ->setLabel(t('Original amount'))
+      ->setDescription(t('The original amount.'))
       ->setDisplayConfigurable('form', FALSE)
       ->setDisplayConfigurable('view', TRUE);
+
+    $fields['amount'] = BaseFieldDefinition::create('commerce_price')
+      ->setLabel(t('Amount'))
+      ->setDescription(t('The amount.'))
+      ->setDisplayConfigurable('form', FALSE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['adjustments'] = BaseFieldDefinition::create('commerce_adjustment')
+      ->setLabel(t('Adjustments'))
+      ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
+      ->setDisplayConfigurable('form', FALSE)
+      ->setDisplayConfigurable('view', FALSE);
 
     $fields['tracking_code'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Tracking code'))

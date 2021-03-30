@@ -11,10 +11,7 @@
         }
     ],
     "require": {
-        "PHP": ">=7"
-    },
-    "require-dev": {
-        "drupol/drupal-conventions": "^1"
+        "php": ">=7"
     },
     "autoload-dev": {
         "psr-4": {
@@ -25,9 +22,6 @@
         "grumphp": "./vendor/bin/grumphp run"
     },
     "extra": {
-        "grumphp": {
-            "config-default-path": "vendor/drupol/drupal-conventions/config/drupal8/grumphp.yml"
-        },
         "composer-exit-on-patch-failure": true,
         "enable-patching": true,
         "patches": {

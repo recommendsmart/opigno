@@ -99,6 +99,24 @@ function subgroup_group_update(GroupInterface $group) {
 }
 
 /**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function subgroup_group_type_insert(GroupTypeInterface $group_type) {
+  /** @var \Drupal\subgroup\Entity\SubgroupHandlerInterface $subgroup_handler */
+  $subgroup_handler = \Drupal::entityTypeManager()->getHandler('group_type', 'subgroup');
+
+  // If the newly added group type was created during a config import and has
+  // Subgroup metadata, we need to fire the import event so we can, for example,
+  // clear the plugin definitions cache.
+  if ($subgroup_handler->isLeaf($group_type) && $group_type->isSyncing()) {
+    /** @var \Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher $event_dispatcher */
+    $event_dispatcher = \Drupal::service('event_dispatcher');
+    $event = new GroupTypeLeafEvent($group_type);
+    $event_dispatcher->dispatch(LeafEvents::GROUP_TYPE_LEAF_IMPORT, $event);
+  }
+}
+
+/**
  * Implements hook_ENTITY_TYPE_update().
  */
 function subgroup_group_type_update(GroupTypeInterface $group_type) {
@@ -116,7 +134,10 @@ function subgroup_group_type_update(GroupTypeInterface $group_type) {
     /** @var \Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher $event_dispatcher */
     $event_dispatcher = \Drupal::service('event_dispatcher');
     $event = new GroupTypeLeafEvent($group_type);
-    if ($current_is_leaf) {
+    if ($group_type->isSyncing()) {
+      $event_dispatcher->dispatch(LeafEvents::GROUP_TYPE_LEAF_IMPORT, $event);
+    }
+    elseif ($current_is_leaf) {
       $event_dispatcher->dispatch(LeafEvents::GROUP_TYPE_LEAF_ADD, $event);
     }
     else {

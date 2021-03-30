@@ -65,9 +65,19 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
   public $field_type_id;
 
   /**
+   * @var bool
+   */
+  public $display_label = FALSE;
+
+  /**
    * @var array
    */
   public $field_type_config = [];
+
+  /**
+   * @var array
+   */
+  public $field_type_condition = [];
 
   /**
    * @var string
@@ -78,6 +88,11 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
    * @var string
    */
   public $base_bundle_type_id;
+
+  /**
+   * @var array
+   */
+  protected $build_attachments = [];
 
   /**
    * {@inheritdoc}
@@ -104,6 +119,13 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
    */
   public function description() {
     return $this->description;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function displayLabel() {
+    return $this->display_label;
   }
 
   /**
@@ -143,6 +165,13 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
    */
   public function getFieldTypePluginConfig() {
     return $this->field_type_config;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getFieldTypeCondition() {
+    return $this->field_type_condition;
   }
 
   /**
@@ -195,6 +224,38 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
   }
 
   /**
+   * {@inheritDoc}
+   */
+  public function getBuildAttachments() {
+    return $this->build_attachments;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getActiveFieldTypeConditions() {
+    return array_filter($this->getFieldTypeCondition(), function ($value) {
+      unset($value['id'], $value['negate']);
+      return !empty(array_filter($value));
+    });
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function setBuildAttachment($type, array $attachment) {
+    if (!isset($this->build_attachments[$type])) {
+      $this->build_attachments[$type] = [];
+    }
+
+    $this->build_attachments[$type] = array_replace_recursive(
+      $this->build_attachments[$type], $attachment
+    );
+
+    return $this;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function build(EntityInterface $entity, EntityDisplayInterface $display) {
@@ -207,8 +268,55 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
     return [
       '#field' => $this,
       '#theme' => 'entity_extra_field',
+      'label' => [
+        '#plain_text' => $this->displayLabel()
+          ? $this->label()
+          : NULL
+      ],
       'content' => $field_type_plugin->build($entity, $display)
     ];
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function hasDisplayComponent(EntityDisplayInterface $display) {
+    return $display->getComponent($this->name()) !== NULL;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function hasConditionsBeenMet(array $contexts, $all_must_pass = FALSE) {
+    $conditions = $this->getActiveFieldTypeConditions();
+
+    if (empty($conditions)) {
+      return TRUE;
+    }
+    $verdicts = [];
+
+    foreach ($this->getActiveFieldTypeConditions() as $plugin_id => $configuration) {
+      /** @var \Drupal\Core\Condition\ConditionPluginBase $condition */
+      $condition = $this->conditionPluginManager()
+        ->createInstance($plugin_id, $configuration);
+
+      if ($context_definitions = $condition->getContextDefinitions()) {
+        $condition_contexts = array_intersect_key($contexts, $context_definitions);
+
+        foreach ($condition_contexts as $name => $context) {
+          $condition->setContextValue($name, $context);
+        }
+      }
+      $verdict = $condition->evaluate();
+
+      if ($verdict && !$all_must_pass) {
+        return TRUE;
+      }
+      $verdicts[] = $verdict;
+    }
+    $verdicts = array_unique($verdicts);
+
+    return count($verdicts) === 1 && current($verdicts) === TRUE;
   }
 
   /**
@@ -377,5 +485,15 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
   protected function getStorage() {
     return $this->entityTypeManager()
       ->getStorage($this->getEntityTypeId());
+  }
+
+  /**
+   * Condition plugin manager service.
+   *
+   * @return \Drupal\Component\Plugin\PluginManagerInterface
+   *   The condition plugin manager service.
+   */
+  protected function conditionPluginManager() {
+    return \Drupal::service('plugin.manager.condition');
   }
 }

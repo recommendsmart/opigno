@@ -4,7 +4,6 @@ namespace Drupal\content_as_config\Form;
 
 use Drupal\content_as_config\Controller\BlockContentController;
 use Drupal\content_as_config\Controller\EntityControllerBase;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -24,13 +23,6 @@ trait BlockContentImportExportTrait {
    */
   public function getEntityType(): string {
     return 'block_content';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getEntityNamePlural(): TranslatableMarkup {
-    return t('custom blocks');
   }
 
   /**

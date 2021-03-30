@@ -31,7 +31,7 @@ class FragmentRevisionRevertForm extends ConfirmFormBase {
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $FragmentStorage;
+  protected $fragmentStorage;
 
   /**
    * The date formatter service.
@@ -58,7 +58,7 @@ class FragmentRevisionRevertForm extends ConfirmFormBase {
    *   The time service.
    */
   public function __construct(EntityStorageInterface $entity_storage, DateFormatterInterface $date_formatter, TimeInterface $time) {
-    $this->FragmentStorage = $entity_storage;
+    $this->fragmentStorage = $entity_storage;
     $this->dateFormatter = $date_formatter;
     $this->time = $time;
   }
@@ -124,7 +124,7 @@ class FragmentRevisionRevertForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $fragment_revision = NULL) {
-    $this->revision = $this->FragmentStorage->loadRevision($fragment_revision);
+    $this->revision = $this->fragmentStorage->loadRevision($fragment_revision);
     $form = parent::buildForm($form, $form_state);
 
     return $form;

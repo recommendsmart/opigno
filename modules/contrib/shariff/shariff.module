@@ -141,8 +141,8 @@ function _shariff_get_settings($blocksettings = NULL) {
   $lang = $language->getId();
   $supported_languages = _shariff_supported_languages();
 
-  if ($blocksettings) {
-    // Block specific settings are active.
+  if ($blocksettings && !$blocksettings['shariff_default_settings']) {
+    // block specific settings are active.
     $services = $blocksettings['shariff_services'];
     $setting['shariff_theme'] = $blocksettings['shariff_theme'];
 
@@ -200,8 +200,10 @@ function _shariff_supported_languages() {
     'en',
     'es',
     'fi',
+    'fr',
     'hr',
     'hu',
+    'it',
     'ja',
     'ko',
     'no',
@@ -272,14 +274,17 @@ function shariff_library_info_alter(&$libraries, $extension) {
     // Define shariff library path.
     $shariff_path = NULL;
     $base_path = 'libraries/shariff';
-    if (function_exists('libraries_get_path')) {
+    if (\Drupal::hasService('library.libraries_directory_file_finder')) {
+      $base_path = \Drupal::service('library.libraries_directory_file_finder')->find('shariff');
+    }
+    elseif (function_exists('libraries_get_path')) {
       // Libraries API is active.
       $base_path = libraries_get_path('shariff');
     }
 
     $subfolders = [
       // No subfolder.
-      '/',
+      '',
       // Libraries folder with build subfolder. Let's support this for legacy
       // reasons.
       '/build',
@@ -291,6 +296,7 @@ function shariff_library_info_alter(&$libraries, $extension) {
         // If Libraries API is not active we use the libraries folder in Drupal
         // root.
         $shariff_path = $base_path . $subfolder;
+        break;
       }
     }
 
@@ -298,19 +304,16 @@ function shariff_library_info_alter(&$libraries, $extension) {
     if ($shariff_path) {
       $libraries['shariff-min']['css']['component'] = ['/' . $shariff_path . '/shariff.min.css' => []];
       $libraries['shariff-min']['js'] = [
-        '/' . $shariff_path . '/shariff.min.js' => ['scope' => 'footer'],
-        'js/shariff.js' => ['scope' => 'footer'],
+        '/' . $shariff_path . '/shariff.complete.js' => ['scope' => 'footer'],
       ];
 
       $libraries['shariff-complete']['css']['component'] = ['/' . $shariff_path . '/shariff.complete.css' => []];
       $libraries['shariff-complete']['js'] = [
-        '/' . $shariff_path . '/shariff.min.js' => ['scope' => 'footer'],
-        'js/shariff.js' => ['scope' => 'footer'],
+        '/' . $shariff_path . '/shariff.complete.js' => ['scope' => 'footer'],
       ];
 
       $libraries['shariff-naked']['js'] = [
-        '/' . $shariff_path . '/shariff.min.js' => ['scope' => 'footer'],
-        'js/shariff.js' => ['scope' => 'footer'],
+        '/' . $shariff_path . '/shariff.complete.js' => ['scope' => 'footer'],
       ];
     }
   }

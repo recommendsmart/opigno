@@ -202,42 +202,6 @@ class TermViewsData extends EntityViewsData {
       ],
     ];
 
-
-    $data['entity_taxonomy_index']['status'] = [
-      'title' => $this->t('Publish status'),
-      'help' => $this->t('Whether or not the content related to a term is published.'),
-      'filter' => [
-        'id' => 'boolean',
-        'label' => $this->t('Published status'),
-        'type' => 'yes-no',
-      ],
-    ];
-
-    $data['entity_taxonomy_index']['sticky'] = [
-      'title' => $this->t('Sticky status'),
-      'help' => $this->t('Whether or not the content related to a term is sticky.'),
-      'filter' => [
-        'id' => 'boolean',
-        'label' => $this->t('Sticky status'),
-        'type' => 'yes-no',
-      ],
-      'sort' => [
-        'id' => 'standard',
-        'help' => $this->t('Whether or not the content related to a term is sticky. To list sticky content first, set this to descending.'),
-      ],
-    ];
-
-    $data['entity_taxonomy_index']['created'] = [
-      'title' => $this->t('Post date'),
-      'help' => $this->t('The date the content related to a term was posted.'),
-      'sort' => [
-        'id' => 'date',
-      ],
-      'filter' => [
-        'id' => 'date',
-      ],
-    ];
-
     // Link to self through left.parent = right.tid (going down in depth).
     $data['entity_taxonomy_term__parent']['table']['join']['entity_taxonomy_term__parent'] = [
       'left_field' => 'entity_id',

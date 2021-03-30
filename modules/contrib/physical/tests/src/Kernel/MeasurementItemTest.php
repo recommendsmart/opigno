@@ -6,7 +6,9 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+use Drupal\physical\Comparator\MeasurementComparator;
 use Drupal\physical\Weight;
+use SebastianBergmann\Comparator\Factory as PhpUnitComparatorFactory;
 
 /**
  * Tests the 'physical_measurement' field type.
@@ -27,6 +29,9 @@ class MeasurementItemTest extends EntityKernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
+
+    $factory = PhpUnitComparatorFactory::getInstance();
+    $factory->register(new MeasurementComparator());
 
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'test_weight',
@@ -64,8 +69,7 @@ class MeasurementItemTest extends EntityKernelTestBase {
     $item = $entity->get('test_weight')->first();
     $measurement = $item->toMeasurement();
     $this->assertInstanceOf(Weight::class, $measurement);
-    $this->assertEquals('10', $measurement->getNumber());
-    $this->assertEquals('lb', $measurement->getUnit());
+    $this->assertEquals(new Weight('10', 'lb'), $measurement);
   }
 
 }

@@ -1,6 +1,6 @@
-name: Layoutcomponents - Simple Video
+name: Layout Components - Simple Video
 type: module
-description: Simple video block
+description: Simple video block type
 package: LayoutComponents
 core_version_requirement: ^8.8 || ^9
 dependencies:
@@ -10,7 +10,7 @@ dependencies:
   - media
   - video_embed_field
 
-# Information added by Drupal.org packaging script on 2020-07-17
-version: '8.x-1.0-beta1'
+# Information added by Drupal.org packaging script on 2021-03-26
+version: '8.x-1.23-beta2'
 project: 'layoutcomponents'
-datestamp: 1594976968
+datestamp: 1616765573

@@ -15,6 +15,7 @@ use Drupal\layoutcomponents\Api\Select;
 use Drupal\layoutcomponents\Api\Slider;
 use Drupal\layoutcomponents\Api\Checkbox;
 use Drupal\layoutcomponents\Api\Media;
+use Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage;
 
 /**
  * Layout class for all Layoutcomponents.
@@ -112,59 +113,62 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
    *   Default region array.
    */
   protected function getRegionDefaults() {
+    /** @var \Drupal\Core\Config\Config $lc */
+    $lc = \Drupal::getContainer()->get('config.factory')->getEditable('layoutcomponents.column');
+
     return [
       'title' => [
-        'title' => '',
+        'title' => $lc->get('title_text'),
       ],
       'styles' => [
         'title' => [
-          'type' => 'div',
+          'type' => $lc->get('title_type'),
           'color' => [
             'settings' => [
-              'color' => '#ffffff',
-              'opacity' => 0,
+              'color' => $lc->get('title_color')['settings']['color'],
+              'opacity' => $lc->get('title_color')['settings']['opacity'],
             ],
           ],
-          'size' => (int) 0,
-          'align' => 'left',
-          'border' => 'none',
-          'border_size' => (int) 0,
+          'size' => $lc->get('title_size'),
+          'align' => $lc->get('title_align'),
+          'border' => $lc->get('title_border'),
+          'border_size' => $lc->get('title_border_size'),
           'border_color' => [
             'settings' => [
-              'color' => '#ffffff',
-              'opacity' => 0,
+              'color' => $lc->get('title_border_color')['settings']['color'],
+              'opacity' => $lc->get('title_border_color')['settings']['opacity'],
             ],
           ],
         ],
         'border' => [
-          'border' => 'none',
-          'size' => (int) 0,
+          'border' => $lc->get('border_type'),
+          'size' => $lc->get('border_size'),
           'color' => [
             'settings' => [
-              'color' => '#ffffff',
-              'opacity' => 0,
+              'color' => $lc->get('border_color')['settings']['color'],
+              'opacity' => $lc->get('border_color')['settings']['opacity'],
             ],
           ],
-          'radius_top_left' => (int) 0,
-          'radius_top_right' => (int) 0,
-          'radius_bottom_left' => (int) 0,
-          'radius_bottom_right' => (int) 0,
+          'radius_top_left' => $lc->get('border_radius_top_left'),
+          'radius_top_right' => $lc->get('border_radius_top_right'),
+          'radius_bottom_left' => $lc->get('border_radius_bottom_left'),
+          'radius_bottom_right' => $lc->get('border_radius_bottom_right'),
         ],
         'background' => [
           'color' => [
             'settings' => [
-              'color' => '#ffffff',
-              'opacity' => 0,
+              'color' => $lc->get('background_color')['settings']['color'],
+              'opacity' => $lc->get('background_color')['settings']['opacity'],
             ],
           ],
         ],
         'spacing' => [
-          'paddings' => FALSE,
-          'paddings_left' => FALSE,
-          'paddings_right' => FALSE,
+          'paddings' => $lc->get('remove_paddings'),
+          'paddings_left' => $lc->get('remove_left_padding'),
+          'paddings_right' => $lc->get('remove_right_padding'),
         ],
         'misc' => [
-          'extra_class' => '',
+          'extra_class' => $lc->get('extra_class'),
         ],
       ],
     ];
@@ -175,76 +179,90 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
    */
   public function defaultConfiguration() {
     $configuration = parent::defaultConfiguration();
+
+    /** @var \Drupal\Core\Config\Config $lc */
+    $lc = \Drupal::getContainer()->get('config.factory')->getEditable('layoutcomponents.section');
+
     $configuration += [
       'title' => [
         'general' => [
-          'title' => '',
+          'title' => $lc->get('title_text'),
+          'description' => $lc->get('description_text'),
         ],
         'styles' => [
           'design' => [
             'title_color' => [
               'settings' => [
-                'color' => '#ffffff',
-                'opacity' => 1,
+                'color' => $lc->get('title_color')['settings']['color'],
+                'opacity' => $lc->get('title_color')['settings']['opacity'],
               ],
             ],
-            'title_type' => 'h2',
-            'title_align' => 'text-left',
+            'title_type' => $lc->get('title_type'),
+            'title_align' => $lc->get('title_align'),
           ],
           'sizing' => [
-            'title_size' => (int) 0,
+            'title_size' => $lc->get('title_size'),
           ],
           'border' => [
-            'title_border' => 'left',
-            'title_border_size' => (int) 0,
+            'title_border' => $lc->get('title_border'),
+            'title_border_size' => $lc->get('title_border_size'),
             'title_border_color' => [
               'settings' => [
-                'color' => '#ffffff',
-                'opacity' => 0,
+                'color' => $lc->get('title_border_color')['settings']['color'],
+                'opacity' => $lc->get('title_border_color')['settings']['opacity'],
               ],
             ],
           ],
           'spacing' => [
-            'title_margin_top' => (int) 0,
-            'title_margin_bottom' => (int) 0,
+            'title_margin_top' => $lc->get('title_margin_top'),
+            'title_margin_bottom' => $lc->get('title_margin_bottom'),
+          ],
+          'misc' => [
+            'title_extra_class' => '',
+            'description_extra_class' => '',
           ],
         ],
       ],
       'section' => [
         'general' => [
           'basic' => [
-            'section_type' => 'div',
+            'section_type' => $lc->get('section_type'),
+            'section_overwrite' => boolval(0),
+            'section_label' => '',
+            'section_delta' => (int) 0,
           ],
           'structure' => [
+            'section_structure_sm' => 12,
             'section_structure' => 12,
+            'section_structure_lg' => 12,
+            'section_carousel' => boolval(0),
+            'section_carousel_slick' => 'none',
           ],
         ],
         'styles' => [
           'background' => [
             'image' => '',
-            'backgroud_color' => [
+            'background_color' => [
               'settings' => [
-                'color' => '#ffffff',
-                'opacity' => 0,
+                'color' => $lc->get('background_color')['settings']['color'],
+                'opacity' => $lc->get('background_color')['settings']['opacity'],
               ],
             ],
           ],
           'sizing' => [
-            'full_width' => (int) 0,
-            'full_width_container' => (int) 0,
-            'full_width_container_title' => (int) 0,
-            'height' => (int) 0,
-            'height_size' => (int) 1,
+            'full_width' => $lc->get('full_width'),
+            'full_width_container' => $lc->get('full_width_container'),
+            'full_width_container_title' => $lc->get('full_width_container_title'),
+            'height' => $lc->get('height'),
+            'height_size' => $lc->get('height_size'),
           ],
           'spacing' => [
-            'no_top_padding' => (int) 1,
-            'top_padding' => (int) 0,
-            'no_bottom_padding' => (int) 1,
-            'bottom_padding' => (int) 1,
+            'top_padding' => $lc->get('top_padding'),
+            'bottom_padding' => $lc->get('bottom_padding'),
           ],
           'misc' => [
-            'extra_class' => '',
-            'extra_attributes' => '',
+            'extra_class' => $lc->get('extra_class'),
+            'extra_attributes' => $lc->get('extra_attributes'),
             'parallax' => (int) 0,
           ],
         ],
@@ -264,16 +282,13 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-
-    $complete_form_state = $form_state instanceof SubformStateInterface ? $form_state->getCompleteFormState() : $form_state;
-
     // Merge default configuration.
     $this->getConfiguration();
 
     // Section container.
     $form['container'] = [
       '#type' => 'horizontal_tabs',
-      '#title' => t('Settings'),
+      '#title' => $this->t('Settings'),
       '#prefix' => '<div class="lc-lateral-container">',
       '#suffix' => '</div>',
     ];
@@ -281,13 +296,13 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
     // Build Title.
     $form['container']['title'] = [
       '#type' => 'details',
-      '#title' => t('Title'),
+      '#title' => $this->t('Title'),
       '#group' => 'container',
     ];
 
     $form['container']['title']['container'] = [
       '#type' => 'horizontal_tabs',
-      '#title' => t('Title'),
+      '#title' => $this->t('Title'),
       '#group' => 'title',
     ];
 
@@ -296,13 +311,13 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
     // Build Section.
     $form['container']['section'] = [
       '#type' => 'details',
-      '#title' => t('Section'),
+      '#title' => $this->t('Section'),
       '#group' => 'container',
     ];
 
     $form['container']['section']['container'] = [
       '#type' => 'horizontal_tabs',
-      '#title' => t('Section'),
+      '#title' => $this->t('Section'),
       '#group' => 'section',
     ];
 
@@ -311,14 +326,14 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
     // Build Regions.
     $form['container']['regions'] = [
       '#type' => 'details',
-      '#title' => t('Regions'),
+      '#title' => $this->t('Regions'),
       '#group' => 'container',
     ];
 
     foreach ($this->getPluginDefinition()->getRegionNames() as $region) {
       $form['container']['regions'][$region] = [
         '#type' => 'horizontal_tabs',
-        '#title' => t('Regions'),
+        '#title' => $this->t('Regions'),
         '#group' => 'regions',
         '#prefix' => '<div class="lc-lateral-regions">',
         '#suffix' => '</div>',
@@ -341,21 +356,24 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
    *   The region.
    */
   public function setAdminsitrativeRegion(array &$form, FormStateInterface $form_state, $region) {
+    $general = $styles = NULL;
     $config = $this->getConfiguration()['regions'][$region];
-    $general = $config['general'];
+    if (array_key_exists('general', $config)) {
+      $general = $config['general'];
+    }
     $styles = $config['styles'];
     $container = &$form['container']['regions'][$region];
 
     $container['general'] = [
       '#type' => 'details',
-      '#title' => t('General'),
+      '#title' => $this->t('General'),
       '#group' => 'regions',
       'title' => $this->lcApiText->plainText(
         [
           'id' => 'column_' . $region . '-title',
           'title' => $this->t('Title'),
-          'description' => $this->t('Set the title of this section'),
-          'default_value' => $general['title'],
+          'description' => $this->t('Set the title of this column'),
+          'default_value' => (isset($general['title'])) ? $general['title'] : '',
           'attributes' => [
             'placeholder' => $this->t('Title'),
             'lc' => [
@@ -368,11 +386,11 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
 
     $container['styles'] = [
       '#type' => 'details',
-      '#title' => t('Styles'),
+      '#title' => $this->t('Styles'),
       '#group' => 'regions',
       'title' => [
         '#type' => 'details',
-        '#title' => t('Text'),
+        '#title' => $this->t('Text'),
         '#group' => 'title',
         'type' => $this->lcApiSelect->normal(
           [
@@ -522,7 +540,7 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
       ],
       'border' => [
         '#type' => 'details',
-        '#title' => t('Border'),
+        '#title' => $this->t('Border'),
         '#group' => 'regions',
         'border' => $this->lcApiSelect->normal(
           [
@@ -668,7 +686,7 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
       ],
       'background' => [
         '#type' => 'details',
-        '#title' => t('Background'),
+        '#title' => $this->t('Background'),
         '#group' => 'regions',
         'color' => $this->lcApiColor->colorPicker(
           [
@@ -697,14 +715,14 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
       ],
       'spacing' => [
         '#type' => 'details',
-        '#title' => t('Spacing'),
+        '#title' => $this->t('Spacing'),
         '#group' => 'regions',
-        'remove_paddings' => $this->lcApiCheckbox->normal(
+        'paddings' => $this->lcApiCheckbox->normal(
           [
             'id' => 'column_' . $region,
             'title' => $this->t('No paddings'),
             'description' => $this->t('Remove the spaces betwen columns'),
-            'default_value' => $styles['spacing']['remove_paddings'],
+            'default_value' => $styles['spacing']['paddings'],
             'attributes' => [
               'lc' => [
                 'type' => 'class',
@@ -713,15 +731,15 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
                 'class_checkbox_disable' => '',
               ],
             ],
-            'class' => "$region-remove-paddings",
+            'class' => "$region-paddings",
           ]
         ),
-        'remove_padding_left' => $this->lcApiCheckbox->normal(
+        'paddings_left' => $this->lcApiCheckbox->normal(
           [
             'id' => 'column_' . $region,
             'title' => $this->t('No left padding'),
             'description' => $this->t('Remove left padding'),
-            'default_value' => $styles['spacing']['remove_padding_left'],
+            'default_value' => $styles['spacing']['paddings_left'],
             'attributes' => [
               'lc' => [
                 'type' => 'class',
@@ -730,15 +748,15 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
                 'class_checkbox_disable' => '',
               ],
             ],
-            'class' => "$region-remove-left_paddings",
+            'class' => "$region-paddings_left",
           ]
         ),
-        'remove_padding_right' => $this->lcApiCheckbox->normal(
+        'paddings_right' => $this->lcApiCheckbox->normal(
           [
             'id' => 'column_' . $region,
             'title' => $this->t('No right padding'),
             'description' => $this->t('Remove right padding'),
-            'default_value' => $styles['spacing']['remove_padding_right'],
+            'default_value' => $styles['spacing']['paddings_right'],
             'attributes' => [
               'lc' => [
                 'type' => 'class',
@@ -747,13 +765,13 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
                 'class_checkbox_disable' => '',
               ],
             ],
-            'class' => "$region-remove-right_paddings",
+            'class' => "$region-paddings_right",
           ]
         ),
       ],
       'misc' => [
         '#type' => 'details',
-        '#title' => t('Misc'),
+        '#title' => $this->t('Misc'),
         '#group' => 'regions',
         'extra_class' => $this->lcApiText->plainText(
           [
@@ -792,7 +810,7 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
 
     $container['general'] = [
       '#type' => 'details',
-      '#title' => t('General'),
+      '#title' => $this->t('General'),
       '#group' => 'title',
       'title' => $this->lcApiText->plainText(
         [
@@ -809,15 +827,32 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
           'class' => 'title',
         ]
       ),
+      'description' => $this->lcApiText->plainTextArea(
+        [
+          'id' => 'description',
+          'title' => $this->t('Description'),
+          'description' => $this->t('Set the description of this section'),
+          'default_value' => $general['description'],
+          'rows' => 10,
+          'cols' => 10,
+          'attributes' => [
+            'placeholder' => $this->t('My Description'),
+            'lc' => [
+              'type' => 'text',
+            ],
+          ],
+          'class' => 'description',
+        ],
+      ),
     ];
 
     $container['styles'] = [
       '#type' => 'details',
-      '#title' => t('Styles'),
+      '#title' => $this->t('Styles'),
       '#group' => 'title',
       'design' => [
         '#type' => 'details',
-        '#title' => t('Text'),
+        '#title' => $this->t('Text'),
         '#group' => 'title',
         'title_color' => $this->lcApiColor->colorPicker(
           [
@@ -873,7 +908,7 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
       ],
       'sizing' => [
         '#type' => 'details',
-        '#title' => t('Sizing'),
+        '#title' => $this->t('Sizing'),
         '#group' => 'title',
         'title_size' => $this->lcApiSlider->sliderWidget(
           [
@@ -895,7 +930,7 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
       ],
       'border' => [
         '#type' => 'details',
-        '#title' => t('Border'),
+        '#title' => $this->t('Border'),
         '#group' => 'title',
         'title_border' => $this->lcApiSelect->normal(
           [
@@ -1008,6 +1043,43 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
           ]
         ),
       ],
+      'misc' => [
+        '#type' => 'details',
+        '#title' => $this->t('Misc'),
+        '#group' => 'title',
+        'title_extra_class' => $this->lcApiText->plainText(
+          [
+            'id' => 'description',
+            'title' => $this->t('Title - Additional classes'),
+            'description' => $this->t('Set extra classes for title, ilegal character will be removed automatically'),
+            'default_value' => $styles['misc']['title_extra_class'],
+            'attributes' => [
+              'placeholder' => $this->t('Ej. myclass1 myclass2'),
+              'lc' => [
+                'type' => 'class',
+                'style' => 'extra_class',
+              ],
+            ],
+            'class' => 'extra_class',
+          ]
+        ),
+        'description_extra_class' => $this->lcApiText->plainText(
+          [
+            'id' => 'description',
+            'title' => $this->t('Description - Additional classes'),
+            'description' => $this->t('Set extra classes for description, ilegal character will be removed automatically'),
+            'default_value' => $styles['misc']['description_extra_class'],
+            'attributes' => [
+              'placeholder' => $this->t('Ej. myclass1 myclass2'),
+              'lc' => [
+                'type' => 'class',
+                'style' => 'extra_class',
+              ],
+            ],
+            'class' => 'extra_class',
+          ]
+        ),
+      ],
     ];
   }
 
@@ -1020,10 +1092,22 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
    *   The FormStateInterface object.
    */
   public function setAdminsitrativeSection(array &$form, FormStateInterface $form_state) {
+    $is_default_storage = FALSE;
+
+    /** @var \Drupal\Core\Form\FormState $complete_form_state */
+    $complete_form_state = $form_state instanceof SubformStateInterface ? $form_state->getCompleteFormState() : $form_state;
+
+    /** @var \Drupal\layoutcomponents\Form\LcConfigureSection $callback */
+    $section_storage = $complete_form_state->getBuildInfo()['callback_object']->getSectionStorage();
+    if ($section_storage instanceof DefaultsSectionStorage) {
+      $is_default_storage = TRUE;
+    }
+
     $config = $this->getConfiguration()['section'];
     $general = $config['general'];
     $styles = $config['styles'];
     $container = &$form['container']['section']['container'];
+    $column_structures = $this->manager->getColumnOptions(count($this->getPluginDefinition()->getRegionNames()));
 
     $container['general'] = [
       '#type' => 'details',
@@ -1031,7 +1115,7 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
       '#group' => 'section',
       'basic' => [
         '#type' => 'details',
-        '#title' => t('Basic'),
+        '#title' => $this->t('Basic'),
         '#group' => 'section',
         'section_type' => $this->lcApiSelect->normal(
           [
@@ -1048,22 +1132,90 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
             'class' => 'container-type',
           ]
         ),
+        'section_overwrite' => $this->lcApiCheckbox->normal(
+          [
+            'id' => 'section',
+            'title' => $this->t('Disable the overwrite'),
+            'description' => $this->t('If you check this chekbox, this section wont be modified from the rest of nodes'),
+            'default_value' => $general['basic']['section_overwrite'],
+            'class' => 'section-overwrite',
+            '#access' => ($is_default_storage) ? TRUE : FALSE,
+          ]
+        ),
+        'section_label' => [
+          '#type' => 'textfield',
+          '#title' => $this->lcApiText->getLcTitle(
+            [
+              'title' => $this->t('Label'),
+              'description' => $this->t('Set the label'),
+            ]
+          ),
+          '#default_value' => $general['basic']['section_label'] ?: (($is_default_storage) ? \Drupal::currentUser()->id() . \Drupal::time()->getCurrentTime() : ''),
+          '#access' => FALSE,
+        ],
+        'section_delta' => [
+          '#type' => 'number',
+          '#title' => $this->lcApiSlider->getLcTitle(
+            [
+              'title' => $this->t('Section delta'),
+              'description' => $this->t('Select the delta for the rest of nodes'),
+            ]
+          ),
+          '#default_value' => $general['basic']['section_delta'],
+          '#min' => 0,
+          '#max' => 1000,
+          '#access' => ($is_default_storage) ? TRUE : FALSE,
+        ],
       ],
       'structure' => [
         '#type' => 'details',
-        '#title' => t('Structure'),
+        '#title' => $this->t('Structure'),
         '#group' => 'section',
+        'section_structure_sm' => $this->lcApiSelect->normal(
+          [
+            'id' => 'row',
+            'title' => $this->t('SM Columns Structure'),
+            'description' => $this->t('The sizes that appear in this selector are based on the set of combinations that can be created in Bootstrap'),
+            'default_value' => $general['structure']['section_structure_sm'],
+            'options' => $column_structures,
+            'attributes' => [
+              'lc' => [
+                'type' => 'class',
+                'class_remove' => 'col-sm-*',
+                'style' => 'column_size',
+              ],
+            ],
+            'class' => 'column-size',
+          ]
+        ),
         'section_structure' => $this->lcApiSelect->normal(
           [
             'id' => 'row',
-            'title' => $this->t('Type'),
-            'description' => $this->t('Set the size of each column'),
+            'title' => $this->t('SM Columns Structure'),
+            'description' => $this->t('The sizes that appear in this selector are based on the set of combinations that can be created in Bootstrap'),
             'default_value' => $general['structure']['section_structure'],
-            'options' => $this->manager->getColumnOptions(count($this->getPluginDefinition()->getRegionNames())),
+            'options' => $column_structures,
             'attributes' => [
               'lc' => [
                 'type' => 'class',
                 'class_remove' => 'col-md-*',
+                'style' => 'column_size',
+              ],
+            ],
+            'class' => 'column-size',
+          ]
+        ),
+        'section_structure_lg' => $this->lcApiSelect->normal(
+          [
+            'id' => 'row',
+            'title' => $this->t('LG Columns Structure'),
+            'description' => $this->t('The sizes that appear in this selector are based on the set of combinations that can be created in Bootstrap'),
+            'default_value' => $general['structure']['section_structure_lg'],
+            'options' => $column_structures,
+            'attributes' => [
+              'lc' => [
+                'type' => 'class',
+                'class_remove' => 'col-lg-*',
                 'style' => 'column_size',
               ],
             ],
@@ -1075,11 +1227,11 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
 
     $container['styles'] = [
       '#type' => 'details',
-      '#title' => t('Styles'),
+      '#title' => $this->t('Styles'),
       '#group' => 'section',
       'background' => [
         '#type' => 'details',
-        '#title' => t('Background'),
+        '#title' => $this->t('Background'),
         '#group' => 'section',
         'image' => $this->lcApiMedia->mediaLibrary(
           [
@@ -1129,7 +1281,7 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
       ],
       'sizing' => [
         '#type' => 'details',
-        '#title' => t('Sizing'),
+        '#title' => $this->t('Sizing'),
         '#group' => 'section',
         'full_width' => $this->lcApiCheckbox->normal(
           [
@@ -1232,7 +1384,7 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
       ],
       'spacing' => [
         '#type' => 'details',
-        '#title' => t('Spacing'),
+        '#title' => $this->t('Spacing'),
         '#group' => 'section',
         'top_padding' => $this->lcApiSlider->sliderWidget(
           [
@@ -1277,7 +1429,7 @@ class LcBase extends LayoutDefault implements ContainerFactoryPluginInterface {
       ],
       'misc' => [
         '#type' => 'details',
-        '#title' => t('Misc'),
+        '#title' => $this->t('Misc'),
         '#group' => 'section',
         'extra_class' => $this->lcApiText->plainText(
           [

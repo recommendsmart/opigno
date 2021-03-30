@@ -70,8 +70,6 @@ class BankAccount extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
-   *
-   * Https://www.drupal.org/docs/8/api/form-api/configformbase-with-simple-configuration-api.
    */
   protected function getEditableConfigNames() {
     return [
@@ -172,7 +170,6 @@ class BankAccount extends ConfigFormBase {
       '#default_value' => $bank_user_data ? $bank_user_data['bank_province'] : '',
       '#size' => 20,
       '#maxlength' => 128,
-      '#required' => TRUE,
     ];
 
     $form['bank_postalcode'] = [
@@ -198,7 +195,7 @@ class BankAccount extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    // @TODO
+    // @todo validate form.
   }
 
   /**

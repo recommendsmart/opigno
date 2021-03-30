@@ -15,14 +15,13 @@ use Drupal\Core\Form\FormStateInterface;
  *   label = @Translation("Subgroup"),
  *   description = @Translation("Adds groups to groups as subgroups."),
  *   entity_type_id = "group",
- *   entity_access = TRUE,
  *   pretty_path_key = "subgroup",
  *   reference_label = @Translation("Group"),
  *   reference_description = @Translation("The group you want to make a subgroup"),
  *   deriver = "Drupal\subgroup\Plugin\GroupContentEnabler\SubgroupDeriver",
  *   code_only = TRUE,
  *   handlers = {
- *     "access" = "Drupal\group\Plugin\GroupContentAccessControlHandler",
+ *     "access" = "Drupal\subgroup\Plugin\SubgroupAccessControlHandler",
  *     "permission_provider" = "Drupal\subgroup\Plugin\SubgroupPermissionProvider",
  *   },
  * )
@@ -99,6 +98,15 @@ class Subgroup extends GroupContentEnablerBase {
     $form['entity_cardinality']['#description'] .= '<br /><em>' . $info . '</em>';
 
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $dependencies = parent::calculateDependencies();
+    $dependencies['config'][] = 'group.type.' . $this->getEntityBundle();
+    return $dependencies;
   }
 
 }

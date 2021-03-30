@@ -2,9 +2,11 @@
 
 namespace Drupal\commerce_funds\EventSubscriber;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\commerce_order\Event\OrderEvent;
 use Drupal\commerce_order\Event\OrderEvents;
+use Drupal\commerce_funds\TransactionManagerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class OrderPaidSubscriber.
@@ -14,9 +16,26 @@ use Drupal\commerce_order\Event\OrderEvents;
 class OrderUpdateSubscriber implements EventSubscriberInterface {
 
   /**
-   * Constructor.
+   * The transaction manager.
+   *
+   * @var \Drupal\commerce_funds\TransactionManagerInterface
    */
-  public function __construct() {
+  protected $transactionManager;
+
+  /**
+   * Class constructor.
+   */
+  public function __construct(TransactionManagerInterface $transaction_manager) {
+    $this->transactionManager = $transaction_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+    $container->get('commerce_funds.transaction_manager')
+    );
   }
 
   /**
@@ -39,13 +58,13 @@ class OrderUpdateSubscriber implements EventSubscriberInterface {
   public function updateAccountBalance(OrderEvent $event) {
     $order = $event->getOrder();
     // We don't want to trigger this event if not a deposit.
-    // @TODO Improve this with order is paid event.
+    // @todo Improve this with order is paid event.
     // It seems that drupal commerce have issue if the payment
     // is made in another currency (with paypal i.e), then,
     // the order balance is not zero (100$ paid 90€ = 10).
     if ($order->bundle() === 'deposit') {
       if ($order->getState()->getValue()['value'] == 'completed' && !$order->isPaid()) {
-        \Drupal::service('commerce_funds.transaction_manager')->addDepositToBalance($order);
+        $this->transactionManager->addDepositToBalance($order);
       }
     }
   }

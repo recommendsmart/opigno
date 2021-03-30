@@ -112,7 +112,7 @@ class GroupBehaviorHelpers {
   /**
    * @param \Drupal\group\Entity\GroupContentTypeInterface $groupContentType
    *
-   * @return boolean
+   * @return bool
    */
   public static function checkGroupContentTypeHasGroupBehavior(GroupContentTypeInterface $groupContentType) {
     return $groupContentType->getContentPluginId() ===
@@ -140,7 +140,8 @@ class GroupBehaviorHelpers {
     try {
       /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $contentPlugin */
       $contentPlugin = $pluginManager->createInstance($contentPluginId);
-    } catch (PluginException $e) {
+    }
+    catch (PluginException $e) {
       $contentPlugin = NULL;
     }
     return $contentPlugin;

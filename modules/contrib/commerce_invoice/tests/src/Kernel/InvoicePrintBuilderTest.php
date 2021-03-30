@@ -5,7 +5,6 @@ namespace Drupal\Tests\commerce_invoice\Kernel;
 use Drupal\commerce_invoice\Entity\Invoice;
 use Drupal\commerce_order\Entity\Order;
 use Drupal\commerce_order\Entity\OrderItem;
-use Drupal\commerce_order\Entity\OrderItemType;
 use Drupal\commerce_price\Price;
 use Drupal\profile\Entity\Profile;
 
@@ -16,13 +15,6 @@ use Drupal\profile\Entity\Profile;
  * @group commerce_invoice
  */
 class InvoicePrintBuilderTest extends InvoiceKernelTestBase {
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = ['system', 'file', 'entity_print_test'];
 
   /**
    * The invoice print builder.
@@ -51,14 +43,6 @@ class InvoicePrintBuilderTest extends InvoiceKernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installEntitySchema('file');
-    $this->installConfig(['system', 'entity_print_test']);
-    $this->container->get('theme_handler')->install(['stark']);
-    OrderItemType::create([
-      'id' => 'test',
-      'label' => 'Test',
-      'orderType' => 'default',
-    ])->save();
     $user = $this->createUser();
     $this->user = $this->reloadEntity($user);
     $profile = Profile::create([
@@ -80,6 +64,7 @@ class InvoicePrintBuilderTest extends InvoiceKernelTestBase {
   }
 
   /**
+   * @covers ::generateFilename
    * @covers ::savePrintable
    */
   public function testSavePrintable() {
@@ -112,10 +97,17 @@ class InvoicePrintBuilderTest extends InvoiceKernelTestBase {
     ]);
     $invoice->save();
     $print_engine = $this->container->get('plugin.manager.entity_print.print_engine')->createInstance('testprintengine');
-    $file = $this->printBuilder->savePrintable($invoice, $print_engine, 'public');
+    $file = $this->printBuilder->savePrintable($invoice, $print_engine);
     $this->assertNotEmpty($file);
-    $this->assertRegExp('#public://(.*)\.pdf#', $file->getFileUri());
+    $this->assertRegExp('#private://(.*)\.pdf#', $file->getFileUri());
     $this->assertEquals('10-en-paid.pdf', $file->getFilename());
+    $this->assertEquals('application/pdf', $file->getMimeType());
+
+    // Tests the filename alteration via an event subscriber.
+    $invoice->setData('alter_filename', TRUE);
+    $file = $this->printBuilder->savePrintable($invoice, $print_engine);
+    $this->assertRegExp('#private://(.*)\.pdf#', $file->getFileUri());
+    $this->assertEquals('10-en-paid-altered.pdf', $file->getFilename());
     $this->assertEquals('application/pdf', $file->getMimeType());
   }
 

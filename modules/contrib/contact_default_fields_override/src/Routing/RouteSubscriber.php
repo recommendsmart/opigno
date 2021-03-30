@@ -9,6 +9,8 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Class RouteSubscriber.
  *
+ * Overrides the entity.contact_message.field_ui_fields route.
+ *
  * @package Drupal\contact_default_fields_override\Routing
  */
 class RouteSubscriber extends RouteSubscriberBase {

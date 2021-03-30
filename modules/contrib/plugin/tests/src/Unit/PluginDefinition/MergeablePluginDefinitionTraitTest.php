@@ -5,6 +5,7 @@ namespace Drupal\Tests\plugin\Unit\PluginDefinition;
 use Drupal\plugin\PluginDefinition\MergeablePluginDefinitionTrait;
 use Drupal\plugin\PluginDefinition\PluginDefinitionInterface;
 use Drupal\Tests\UnitTestCase;
+use InvalidArgumentException;
 
 /**
  * @coversDefaultClass \Drupal\plugin\PluginDefinition\MergeablePluginDefinitionTrait
@@ -22,7 +23,7 @@ class MergeablePluginDefinitionTraitTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->sut = $this->getMockForTrait(MergeablePluginDefinitionTrait::class);
@@ -50,10 +51,9 @@ class MergeablePluginDefinitionTraitTest extends UnitTestCase {
    * @covers ::isDefinitionCompatible
    *
    * @depends testMergeDefaultDefinition
-   *
-   * @expectedException \InvalidArgumentException
    */
   public function testMergeDefaultDefinitionWithInvalidOtherDefinition() {
+    $this->expectException(InvalidArgumentException::class);
     $other_definition = $this->createMock(PluginDefinitionInterface::class);
 
     $this->sut->expects($this->atLeastOnce())
@@ -85,10 +85,9 @@ class MergeablePluginDefinitionTraitTest extends UnitTestCase {
    * @covers ::isDefinitionCompatible
    *
    * @depends testMergeOverrideDefinition
-   *
-   * @expectedException \InvalidArgumentException
    */
   public function testMergeOverrideDefinitionWithInvalidOtherDefinition() {
+    $this->expectException(InvalidArgumentException::class);
     $other_definition = $this->createMock(PluginDefinitionInterface::class);
 
     $this->sut->expects($this->atLeastOnce())

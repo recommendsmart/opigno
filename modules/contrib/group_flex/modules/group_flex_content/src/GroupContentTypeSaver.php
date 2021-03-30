@@ -39,7 +39,7 @@ class GroupContentTypeSaver {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function save(GroupContentTypeInterface $groupContentType, string $visibility): void {
+  public function save(GroupContentTypeInterface $groupContentType, string $visibility) {
     if (!$visibility) {
       return;
     }

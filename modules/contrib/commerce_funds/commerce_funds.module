@@ -5,6 +5,7 @@
  * Handles tierce functions for Commerce funds.
  */
 
+use Drupal\Component\Serialization\Json;
 use Drupal\commerce_payment\Entity\PaymentMethod;
 use Drupal\commerce_price\Calculator;
 use Drupal\Core\Url;
@@ -19,7 +20,7 @@ function commerce_funds_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.commerce_funds':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('Commerce Funds implements a Site Funds Management System using Drupal Commerce. It creates a site balance and user balances to store users money and allow them to perform different type of operations.') . '</p>';
+      $output .= '<p>' . t('Commerce Funds implements a Funds Management System using Drupal Commerce. It creates a site balance and user balances to store users money and allow them to perform different type of operations.') . '</p>';
       $output .= '<p>' . t('Users will be able to:') . '</p>';
       $output .= '<ul><li>' . t('Deposit Funds in their account,') . '</li>';
       $output .= '<li>' . t('Transfer Funds and make Escrow Payment to other users from their account balance,') . '</li>';
@@ -74,7 +75,7 @@ function commerce_funds_theme($existing, $type, $theme, $path) {
         'message' => [],
       ],
     ],
-    'commerce_funds_deposit_completion_message' => [
+    'deposit_completion_message' => [
       'variables' => [
         'order_entity' => NULL,
         'payment_instructions' => NULL,
@@ -97,6 +98,75 @@ function commerce_funds_mail($key, &$message, $params) {
       // Drupal\Core\Mail\Plugin\Mail::format() need an array.
       $message['body'] = [$params['body']];
       break;
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function commerce_funds_cron() {
+  $transferwise_config = \Drupal::config('commerce_funds.settings')->get('transferwise');
+  if ($transferwise_config['use_transferwise']) {
+    // Update exchange rates.
+    $currencies = \Drupal::entityTypeManager()->getStorage('commerce_currency')->loadMultiple();
+
+    foreach ($currencies as $currency_left) {
+      $currency_code_left = $currency_left->getCurrencyCode();
+      foreach ($currencies as $currency_right) {
+        $currency_code_right = $currency_right->getCurrencyCode();
+        if ($currency_code_left !== $currency_code_right) {
+          $rate = commerce_funds_get_pair_of_currency_rate($transferwise_config['token'], $currency_code_left, $currency_code_right);
+          $rate = $rate ?: \Drupal::config('commerce_funds.settings')->get('exchange_rates')[$currency_code_left . '_' . $currency_code_right];
+          $exchange_rates[$currency_code_left . '_' . $currency_code_right] = $rate;
+        }
+      }
+    }
+
+    \Drupal::service('config.factory')->getEditable('commerce_funds.settings')
+      ->set('exchange_rates', $exchange_rates)
+      ->save();
+  }
+
+}
+
+/**
+ * Get Transferwise API rate for a pair of currency.
+ *
+ * @param string $token
+ *   The transferwise sandbox API token.
+ * @param string $currency_code_left
+ *   The source currency.
+ * @param string $currency_code_right
+ *   The target currency.
+ *
+ * @return string
+ *   The transferwise rate.
+ */
+function commerce_funds_get_pair_of_currency_rate($token, $currency_code_left, $currency_code_right) {
+  try {
+    $response = \Drupal::httpClient()->request('GET', 'https://api.sandbox.transferwise.tech/v1/rates', [
+      'headers' => [
+        'authorization' => 'Bearer ' . $token,
+      ],
+      'query' => [
+        'source' => $currency_code_left,
+        'target' => $currency_code_right,
+      ],
+    ]);
+  }
+  catch (Exception $e) {
+    \Drupal::logger('commerce_funds')->error($e->getMessage());
+  }
+  finally {
+    if ($response->getStatusCode() == "200") {
+      $contents = $response->getBody()->getContents();
+      $rate = (string) Json::decode($contents)[0]['rate'];
+
+      return Calculator::round($rate, 3);
+    }
+    else {
+      return '0';
+    }
   }
 }
 
@@ -135,7 +205,6 @@ function commerce_funds_form_commerce_checkout_flow_multistep_default_alter(&$fo
  * @see \Drupal\commerce_funds\Plugin\Commerce\PaymentGateway::validatePayment
  */
 function commerce_funds_payment_validate(&$form, &$form_state) {
-
   if ($form['#step_id'] == 'order_information' || $form['#step_id'] == 'review') {
     $order = \Drupal::service('current_route_match')->getParameter('commerce_order');
     $order_currency = $order->getTotalPrice()->getCurrencyCode();

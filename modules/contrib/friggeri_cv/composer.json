@@ -16,7 +16,7 @@
     "issues": "https://www.drupal.org/project/issues/friggeri_cv",
     "source": "https://git.drupalcode.org/project/friggeri_cv"
   },
-  "require-dev": {
+  "require": {
     "drupal/inline_entity_form": "^1.0@RC",
     "drupal/multiple_fields_remove_button": "^1.0@alpha",
     "mikehaertl/phpwkhtmltopdf": "^2.4.2"

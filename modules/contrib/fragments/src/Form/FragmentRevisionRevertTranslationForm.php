@@ -85,7 +85,13 @@ class FragmentRevisionRevertTranslationForm extends FragmentRevisionRevertForm {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to revert @language translation to the revision from %revision-date?', ['@language' => $this->languageManager->getLanguageName($this->langcode), '%revision-date' => $this->dateFormatter->format($this->revision->getRevisionCreationTime())]);
+    return $this->t(
+      'Are you sure you want to revert @language translation to the revision from %revision-date?',
+      [
+        '@language' => $this->languageManager->getLanguageName($this->langcode),
+        '%revision-date' => $this->dateFormatter->format($this->revision->getRevisionCreationTime()),
+      ]
+    );
   }
 
   /**
@@ -111,7 +117,7 @@ class FragmentRevisionRevertTranslationForm extends FragmentRevisionRevertForm {
     $revert_untranslated_fields = $form_state->getValue('revert_untranslated_fields');
 
     /** @var \Drupal\fragments\Entity\FragmentInterface $latest_revision */
-    $latest_revision = $this->FragmentStorage->load($revision->id());
+    $latest_revision = $this->fragmentStorage->load($revision->id());
     $latest_revision_translation = $latest_revision->getTranslation($this->langcode);
 
     $revision_translation = $revision->getTranslation($this->langcode);

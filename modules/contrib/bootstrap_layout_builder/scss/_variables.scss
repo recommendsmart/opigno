@@ -10,5 +10,13 @@ $gray-333:  #333333;
 $gray-212:  #212529;
 $black:     #000000;
 
+// Blues
+$blue-277:     #277abd;
+
 // Tooltips
 $zindex-tooltip: 1070;
+
+// Main Color Controllers
+$panel_text_color:          $white !default;
+$panel_link_color:          $blue-277 !default;
+$panel_bg_color:            $gray-444 !default;

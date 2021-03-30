@@ -35,79 +35,6 @@ function recipe_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implements hook_permission().
- */
-function recipe_permission() {
-  return array(
-    'export recipes' => array(
-      'title' => t('Export recipes'),
-      'description' => t('Export recipes in various formats.'),
-    ),
-    'import recipes' => array(
-      'title' => t('Import recipes'),
-      'description' => t('Import recipes in various formats.'),
-    ),
-  );
-}
-
-/**
- * Implements hook_menu().
- */
-function recipe_menu() {
-  // Add a tab on the recipe add screen for Recipe Import.
-  // Need to add 'file path' because some modules render node/add/recipe/std
-  // even though they shouldn't.
-  $items['node/add/recipe/std'] = array(
-    'title' => 'Standard entry',
-    'weight' => 0,
-    'file path' => drupal_get_path('module', 'node'),
-    'type' => MENU_DEFAULT_LOCAL_TASK
-  );
-  $items['node/add/recipe/import'] = array(
-    'title' => 'Recipe Import',
-    'description' => 'Allows you to create a recipe by pasting various formats into a big text box.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('recipe_import_form'),
-    'access callback' => 'recipe_import_myaccess',
-    'access arguments' => array('import recipes'),
-    'file' => 'recipe.admin.inc',
-    'weight' => 1,
-    'type' => MENU_LOCAL_TASK
-  );
-  $items['recipe/export'] = array(
-    'page callback' => 'recipe_export',
-    'type' => MENU_CALLBACK,
-    'access arguments' => array('access content'),  // lower level permissions are handled in recipe_export
-    'file' => 'recipe.pages.inc',
-  );
-  $items['admin/structure/recipe'] = array(
-    'title' => 'Recipe bulk import/export',
-    'description' => 'Export/Import all recipes from this site to/from a supported format.',
-    'page callback' => 'recipe_export_multi',
-    'access callback' => 'recipe_export_multi_myaccess',
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'recipe.admin.inc',
-  );
-  $items['admin/structure/recipe/export_multi'] = array(
-    'title' => 'Recipe bulk export',
-    'description' => 'Export all recipes from this site into a supported output format.',
-    'type' => MENU_DEFAULT_LOCAL_TASK | MENU_LOCAL_TASK,
-  );
-  $items['admin/structure/recipe/import_multi'] = array(
-    'title' => 'Recipe bulk import',
-    'description' => 'Import all recipes from this site into a supported output format.',
-    'page callback' => 'recipe_import_multi',
-    'access callback' => 'recipe_import_multi_myaccess',
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'recipe.admin.inc',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_form_BASE_FORM_ID_alter() for 'field_config_edit_form'.
  */
 function recipe_form_field_config_edit_form_alter(&$form, FormStateInterface $form_state) {
@@ -133,10 +60,6 @@ function recipe_form_field_config_edit_form_alter(&$form, FormStateInterface $fo
 function recipe_form_node_type_edit_form_alter(&$form, FormStateInterface $form_state) {
   $node_type = $form_state->getFormObject()->getEntity();
 
-  // Return if this isn't a Recipe node.
-  // @todo Add the ability to define other content types as recipes, allowing
-  //   those types to display the pseudo-fields by enabling them with a
-  //   checkbox.
   if ($node_type->id() != 'recipe') {
     return;
   }
@@ -218,9 +141,21 @@ function recipe_node_view(array &$build, EntityInterface $entity, EntityViewDisp
     return;
   }
 
+  // Calculate the total time required to make the recipe.
+  if ($display->getComponent('recipe_total_time')) {
+    recipe_build_total_time($build, $entity, $display, $view_mode);
+  }
+
+  // Display the recipe yield by combining the recipe_yield_amount and
+  // recipe_yield_unit fields.
+  if ($display->getComponent('recipe_yield')) {
+    recipe_build_yield($build, $entity, $display, $view_mode);
+  }
+}
+
+function recipe_build_total_time(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
   $node_type = NodeType::load('recipe');
 
-  // Calculate the total time required to make the recipe.
   $total_time = 0;
   $total_time_count = 0;
   foreach ($entity->getFieldDefinitions() as $field_name => $field_definition) {
@@ -242,48 +177,25 @@ function recipe_node_view(array &$build, EntityInterface $entity, EntityViewDisp
       '#total_time' => ['#theme' => 'recipe_duration', '#duration' => $total_time],
     ];
   }
+}
 
-  // Display the recipe yield by combining the recipe_yield_amount and
-  // recipe_yield_unit fields. Do not display if the yield_amount is NULL.
-  if ($entity->recipe_yield_amount->value != NULL) {
-    $arguments = [
-      '@yield_amount' => $entity->recipe_yield_amount->value,
-      '@yield_unit' => $entity->recipe_yield_unit->value,
-    ];
-    $build['recipe_yield'] = [
-      '#theme' => 'recipe_yield',
-      '#label' => $node_type->getThirdPartySetting('recipe', 'yield_label'),
-      '#label_display' => $node_type->getThirdPartySetting('recipe', 'total_time_label_display'),
-      '#yield' => t('@yield_amount @yield_unit', $arguments),
-    ];
-  }
-  /*if ( isset($node->in_preview) && $node->in_preview == 1 ) {
+function recipe_build_yield(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  $node_type = NodeType::load('recipe');
+
+  // Do not display if the yield_amount is NULL.
+  if ($entity->recipe_yield_amount->value == NULL) {
     return;
   }
-
-  if ($node->type == 'recipe' && $view_mode != 'rss' && $view_mode != 'teaser') {
-    $formats = module_invoke_all('recipeio', 'export_single');
-    $links = array();
-    foreach ($formats as $key => $format) {
-      $perm = isset($format['access arguments']) ? $format['access arguments'] : 'export recipes';
-      if (user_access($perm)) {
-        $links[$key] = array(
-          'title' => $format['format_name'],
-          'href' => "recipe/export/$key/$node->nid/" . $node->recipe_yield,
-          'attributes' => array('title' => $format['format_help']),
-        );
-      }
-    }
-
-    if (!empty($links)) {
-      array_unshift($links, array('title' => '<br/>' . t('Export to') . ':', 'html' => TRUE));
-      $node->content['links']['recipe'] = array(
-        '#theme' => 'links__recipe__node',
-        '#links' => $links,
-        '#attributes' => array('class' => array('links', 'inline')),
-      );
-    }
-  }*/
+  $arguments = [
+    '@yield_amount' => $entity->recipe_yield_amount->value,
+    '@yield_unit' => $entity->recipe_yield_unit->value,
+  ];
+  $build['recipe_yield'] = [
+    '#theme' => 'recipe_yield',
+    '#label' => $node_type->getThirdPartySetting('recipe', 'yield_label'),
+    '#label_display' => $node_type->getThirdPartySetting('recipe', 'total_time_label_display'),
+    '#yield' => t('@yield_amount @yield_unit', $arguments),
+  ];
 }
 
 /**
@@ -331,45 +243,6 @@ function template_preprocess_recipe_yield(&$variables, $hook) {
 }
 
 /**
- * Extends user_access to handle the case where no import formats are available.
- */
-function recipe_import_myaccess($string, $account = NULL, $reset = FALSE) {
-  // short circuit if there are no parsers available.
-  $formats = module_invoke_all('recipeio', 'import_single');
-  if (count($formats) == 0) {
-    return FALSE;
-  }
-  // we have a format so continue to user_access
-  return user_access($string, $account, $reset);
-}
-
-/**
- * Extends user_access to handle the case where no export formats are available.
- */
-function recipe_export_multi_myaccess($string, $account = NULL, $reset = FALSE) {
-  // short circuit if there are no parsers available.
-  $formats = module_invoke_all('recipeio', 'export_multi');
-  if (count($formats) == 0) {
-    return FALSE;
-  }
-  // we have a format so continue to user_access
-  return user_access($string, $account, $reset);
-}
-
-/**
- * Extends user_access to handle the case where no import formats are available.
- */
-function recipe_import_multi_myaccess($string, $account = NULL, $reset = FALSE) {
-  // short circuit if there are no parsers available.
-  $formats = module_invoke_all('recipeio', 'import_multi');
-  if (count($formats) == 0) {
-    return FALSE;
-  }
-  // we have a format so continue to user_access
-  return user_access($string, $account, $reset);
-}
-
-/**
  * Prepares content for display in plain text recipe formats.
  *
  * Removes HTML tags and encodes the &deg; symbol.
@@ -403,33 +276,13 @@ function recipe_entity_extra_field_info() {
 }
 
 /**
- * Checks a string for ISO-8859-1 chars and encodes them to UTF-8.
- *
- * @param string $in_str
- *   A string with possible ISO-8859-1 chars.
- *
- * @return string
- *   A UTF8 string representation of $in_str.
- */
-function fixEncoding($in_str) {
-  $cur_encoding = mb_detect_encoding($in_str);
-  if ($cur_encoding == "UTF-8" && mb_check_encoding($in_str, "UTF-8")) {
-    return $in_str;
-  }
-  else {
-    return utf8_encode($in_str);
-  }
-}
-
-/**
  * Prepares variables for the recipe duration template.
  *
  * Default template: recipe-duration.html.twig.
  *
  * @param array $variables
  *   An associative array containing:
- *   - hours: The amount of hours in the time duration.
- *   - minutes: The amount of minutes in the time duration.
+ *   - duration: The total time duration in minutes.
  */
 function template_preprocess_recipe_duration(&$variables) {
   $hours = floor($variables['duration'] / 60);

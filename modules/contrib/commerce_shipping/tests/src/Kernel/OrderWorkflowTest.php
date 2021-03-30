@@ -4,7 +4,6 @@ namespace Drupal\Tests\commerce_shipping\Kernel;
 
 use Drupal\commerce_order\Entity\Order;
 use Drupal\commerce_order\Entity\OrderItem;
-use Drupal\commerce_order\Entity\OrderItemType;
 use Drupal\commerce_order\Entity\OrderType;
 use Drupal\commerce_price\Price;
 use Drupal\commerce_shipping\Entity\Shipment;
@@ -39,12 +38,6 @@ class OrderWorkflowTest extends ShippingKernelTestBase {
     parent::setUp();
 
     $user = $this->createUser(['mail' => $this->randomString() . '@example.com']);
-
-    OrderItemType::create([
-      'id' => 'test',
-      'label' => 'Test',
-      'orderType' => 'default',
-    ])->save();
     $order_item = OrderItem::create([
       'type' => 'test',
       'quantity' => 1,

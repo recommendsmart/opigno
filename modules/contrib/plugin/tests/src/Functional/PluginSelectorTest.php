@@ -19,6 +19,11 @@ class PluginSelectorTest extends BrowserTestBase {
   public static $modules = ['block', 'field_ui', 'plugin'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the widget.
    */
   public function testWidget() {
@@ -30,7 +35,7 @@ class PluginSelectorTest extends BrowserTestBase {
     $field_name = strtolower($this->randomMachineName());
     $selectable_plugin_type_id = 'block';
     $field_type = 'plugin:' . $selectable_plugin_type_id;
-    $default_selected_plugin_id = 'broken';
+    $default_selected_plugin_id = 'user_login_block';
     $this->drupalPostForm('admin/config/people/accounts/fields/add-field', [
       'label' => $this->randomString(),
       'field_name' => $field_name,

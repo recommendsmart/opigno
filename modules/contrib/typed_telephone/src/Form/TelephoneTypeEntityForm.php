@@ -6,7 +6,7 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class TelephoneTypeEntityForm.
+ * Main form for adding or editing TelephoneType entities.
  */
 class TelephoneTypeEntityForm extends EntityForm {
 

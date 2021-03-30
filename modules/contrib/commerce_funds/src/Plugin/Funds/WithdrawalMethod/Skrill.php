@@ -69,8 +69,6 @@ class Skrill extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
-   *
-   * Https://www.drupal.org/docs/8/api/form-api/configformbase-with-simple-configuration-api.
    */
   protected function getEditableConfigNames() {
     return [

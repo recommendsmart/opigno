@@ -10,5 +10,8 @@
   "keywords": [
     "Drupal",
     "Shariff"
-  ]
+  ],
+  "require": {
+    "drupal/core": "^8 || ^9"
+  }
 }

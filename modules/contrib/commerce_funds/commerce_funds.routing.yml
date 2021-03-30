@@ -44,22 +44,22 @@ commerce_funds.settings_mails:
     _permission: 'administer funds'
 
 commerce_funds.admin.withdrawal_requests.approve:
-  path: '/admin/commerce/funds/withdrawals/approve/{request_id}'
+  path: '/admin/commerce/funds/withdrawals/approve/{request_hash}'
   defaults:
     _form: '\Drupal\commerce_funds\Form\ConfirmWithdrawalApproval'
     _title: 'Approve withdrawal request'
   requirements:
     _permission: 'administer withdrawal requests'
-    request_id: ^\d+$
+    request_hash: ^(\w|-)+$
 
 commerce_funds.admin.withdrawal_requests.decline:
-  path: '/admin/commerce/funds/withdrawals/decline/{request_id}'
+  path: '/admin/commerce/funds/withdrawals/decline/{request_hash}'
   defaults:
     _form: '\Drupal\commerce_funds\Form\ConfirmWithdrawalDecline'
     _title: 'Decline withdrawal request'
   requirements:
     _permission: 'administer withdrawal requests'
-    request_id: ^\d+$
+    request_hash: ^(\w|-)+$
 
 commerce_funds.deposit:
   path: '/user/funds/deposit'
@@ -71,14 +71,31 @@ commerce_funds.deposit:
     _permission: 'deposit funds'
 
 commerce_funds.withdrawal_methods:
-  path: '/user/funds/withdrawal-methods/{method}'
+  path: '/user/{user}/withdrawal-methods'
   defaults:
     _controller: '\Drupal\commerce_funds\Controller\WithdrawalMethods::content'
-    method: 'list'
     _title: 'Configure Withdrawal Methods'
     link_id: 'commerce_funds.withdrawal_methods'
   requirements:
-    _permission: 'withdraw funds'
+    _custom_access: '\Drupal\commerce_funds\Access\WithdrawalMethodAccessCheck::checkAccess'
+  options:
+    parameters:
+      user:
+        type: entity:user
+
+commerce_funds.withdrawal_methods.edit:
+  path: '/user/{user}/withdrawal-methods/{method}/edit'
+  defaults:
+    _controller: '\Drupal\commerce_funds\Controller\WithdrawalMethods::editMethod'
+    _title: 'Configure Withdrawal Methods'
+    link_id: 'commerce_funds.withdrawal_methods.edit'
+  requirements:
+    _custom_access: '\Drupal\commerce_funds\Access\WithdrawalMethodAccessCheck::checkAccess'
+  options:
+    parameters:
+      user:
+        type: entity:user
+      method: ^(\w|-)+$
 
 commerce_funds.withdraw:
   path: '/user/funds/withdraw'
@@ -108,24 +125,24 @@ commerce_funds.escrow:
     _permission: 'create escrow payment'
 
 commerce_funds.escrow.release:
-  path: '/user/funds/escrow/release/{transaction_id}'
+  path: '/user/funds/escrow/manage/release/{transaction_hash}'
   defaults:
     _form: '\Drupal\commerce_funds\Form\ConfirmEscrowRelease'
-    _title: 'Approve escrow payment'
-    link_id: 'commerce_funds.escrow.manage.release'
+    _title: 'Release escrow payment'
+    link_id: 'commerce_funds.escrow.release'
   requirements:
     _permission: 'create escrow payment'
-    transaction_id: ^\d+$
+    transaction_hash: ^(\w|-)+$
 
 commerce_funds.escrow.cancel:
-  path: '/user/funds/escrow/cancel/{transaction_id}'
+  path: '/user/funds/escrow/manage/cancel/{transaction_hash}'
   defaults:
     _form: '\Drupal\commerce_funds\Form\ConfirmEscrowCancel'
-    _title: 'Decline escrow payment'
-    link_id: 'commerce_funds.escrow.manage.decline'
+    _title: 'Cancel escrow payment'
+    link_id: 'commerce_funds.escrow.cancel'
   requirements:
     _permission: 'create escrow payment'
-    transaction_id: ^\d+$
+    transaction_hash: ^(\w|-)+$
 
 commerce_funds.convert_currencies:
   path: '/user/funds/converter'

@@ -4,7 +4,7 @@ audit: true
 migration_tags:
   - Drupal 7
   - Content
-deriver: Drupal\entity_taxonomy\Plugin\migrate\D7entity_taxonomyTermDeriver
+deriver: Drupal\entity_taxonomy\Plugin\migrate\D7TaxonomyTermDeriver
 source:
   plugin: d7_entity_taxonomy_term
 process:

@@ -70,6 +70,7 @@ Additional instructions can be found at https://www.drupal.org/node/3188438.
 MAINTAINERS
 -----------
 
+* Bram ten Hove - https://www.drupal.org/u/bramtenhove
 * Jaap Jan Koster - https://www.drupal.org/u/jaapjan
 
 Supporting organizations:

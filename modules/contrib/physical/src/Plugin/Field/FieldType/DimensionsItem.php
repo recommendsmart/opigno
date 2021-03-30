@@ -85,9 +85,9 @@ class DimensionsItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function getConstraints() {
-    $manager = \Drupal::typedDataManager()->getValidationConstraintManager();
+    $constraint_manager = $this->getTypedDataManager()->getValidationConstraintManager();
     $constraints = parent::getConstraints();
-    $constraints[] = $manager->create('Dimensions', []);
+    $constraints[] = $constraint_manager->create('Dimensions', []);
 
     return $constraints;
   }

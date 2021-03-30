@@ -133,6 +133,14 @@ class FieldInheritance extends ConfigEntityBase implements FieldInheritanceInter
   /**
    * {@inheritdoc}
    */
+  public function idWithoutTypeAndBundle() {
+    $prefix = $this->destinationEntityType() . '_' . $this->destinationEntityBundle() . '_';
+    return str_replace($prefix, '', $this->id());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function sourceEntityType() {
     return isset($this->sourceEntityType) ? $this->sourceEntityType : NULL;
   }
@@ -241,6 +249,16 @@ class FieldInheritance extends ConfigEntityBase implements FieldInheritanceInter
   public function setPlugin($plugin) {
     $this->plugin = $plugin;
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function save() {
+    if (strpos($this->id(), $this->destinationEntityType() . '_' . $this->destinationEntityBundle() . '_') === FALSE) {
+      $this->id = $this->destinationEntityType() . '_' . $this->destinationEntityBundle() . '_' . $this->id();
+    }
+    parent::save();
   }
 
 }

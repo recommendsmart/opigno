@@ -12,7 +12,7 @@ class FundsEntityViewsData extends EntityViewsData {
   /**
    * Alter views data to add our custom handlers.
    *
-   * @return data
+   * @return array
    *   The data exposed to views.
    */
   public function getViewsData() {

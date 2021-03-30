@@ -39,7 +39,7 @@ class PluginCollectionItemDeriverTest extends UnitTestCase {
    */
   protected $sut;
 
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->container = $this->prophesize(ContainerInterface::class);

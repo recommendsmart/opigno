@@ -56,13 +56,6 @@ class FieldInheritanceSettingsForm extends ConfigFormBase {
   protected $entityTypeBundleInfo;
 
   /**
-   * The field inheritance plugin manager.
-   *
-   * @var \Drupal\field_inheritance\FieldInheritancePluginManager
-   */
-  protected $fieldInheritance;
-
-  /**
    * Construct an FieldInheritanceForm.
    *
    * @param \Drupal\Core\Messenger\Messenger $messenger
@@ -71,8 +64,6 @@ class FieldInheritanceSettingsForm extends ConfigFormBase {
    *   The entity type manager service.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfo $entity_type_bundle_info
    *   The entity type bundle info service.
-   * @param \Drupal\field_inheritance\FieldInheritancePluginManager $field_inheritance
-   *   The field inheritance plugin manager.
    */
   public function __construct(Messenger $messenger, EntityTypeManager $entity_type_manager, EntityTypeBundleInfo $entity_type_bundle_info) {
     $this->messenger = $messenger;
@@ -136,11 +127,11 @@ class FieldInheritanceSettingsForm extends ConfigFormBase {
       '#default_value' => explode(',', $config->get('included_entities')),
     ];
 
-    $entity_bundles = []; 
+    $entity_bundles = [];
     foreach ($entity_types as $entity_type) {
       $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type);
       foreach (array_keys($bundles) as $bundle) {
-        $entity_bundles[]  = $entity_type . ':' . $bundle;
+        $entity_bundles[] = $entity_type . ':' . $bundle;
       }
     }
     $entity_bundles = array_combine($entity_bundles, $entity_bundles);
@@ -152,7 +143,6 @@ class FieldInheritanceSettingsForm extends ConfigFormBase {
       '#options' => $entity_bundles,
       '#default_value' => explode(',', $config->get('included_bundles')),
     ];
-
 
     return parent::buildForm($form, $form_state);
   }

@@ -245,4 +245,22 @@ interface TransactionInterface extends ContentEntityInterface, EntityOwnerInterf
    */
   public function setNotes($notes);
 
+  /**
+   * Get the transaction hash.
+   *
+   * @return string
+   *   The transaction hash.
+   */
+  public function getHash();
+
+  /**
+   * Set the hash.
+   *
+   * @param string $hash
+   *   The transaction hash.
+   *
+   * @return $this
+   */
+  public function setHash($hash);
+
 }

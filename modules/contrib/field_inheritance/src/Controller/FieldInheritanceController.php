@@ -6,9 +6,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Form\FormState;
-use Drupal\field_inheritance\Entity\FieldInheritance;
 
 /**
  * The FieldInheritanceController class.
@@ -17,7 +15,7 @@ class FieldInheritanceController extends ControllerBase implements ContainerInje
 
   /**
    * Gets the creation form in a modal.
-   * 
+   *
    * @param string $entity_type
    *   The entity type.
    * @param string $entity_bundle
@@ -26,7 +24,7 @@ class FieldInheritanceController extends ControllerBase implements ContainerInje
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   Returns an ajax response.
    */
-  public function ajaxCreationForm($entity_type = NULL , $entity_bundle = NULL) {
+  public function ajaxCreationForm($entity_type = NULL, $entity_bundle = NULL) {
     $inheritance_entity = $this->entityTypeManager()->getStorage('field_inheritance')->create();
     $inheritance_entity->setDestinationEntityType($entity_type);
     $inheritance_entity->setDestinationEntityBundle($entity_bundle);

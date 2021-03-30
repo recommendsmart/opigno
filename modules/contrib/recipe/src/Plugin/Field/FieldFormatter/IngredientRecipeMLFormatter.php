@@ -5,7 +5,6 @@ namespace Drupal\recipe\Plugin\Field\FieldFormatter;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\ingredient\IngredientUnitTrait;
 use Drupal\ingredient\Plugin\Field\FieldFormatter\IngredientFormatter;
 
 /**
@@ -21,8 +20,6 @@ use Drupal\ingredient\Plugin\Field\FieldFormatter\IngredientFormatter;
  * )
  */
 class IngredientRecipeMLFormatter extends IngredientFormatter {
-
-  use IngredientUnitTrait;
 
   /**
    * {@inheritdoc}
@@ -59,7 +56,7 @@ class IngredientRecipeMLFormatter extends IngredientFormatter {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $fraction_format = $this->getSetting('fraction_format');
-    $unit_list = $this->getConfiguredUnits();
+    $unit_list = $this->ingredientUnitUtility->getConfiguredUnits();
     $elements = [];
 
     foreach ($this->getEntitiesToView($items, $langcode) as $delta => $entity) {
@@ -68,7 +65,7 @@ class IngredientRecipeMLFormatter extends IngredientFormatter {
       $note = Xss::filter($items[$delta]->note, []);
 
       if ($items[$delta]->quantity > 0) {
-        $formatted_quantity = ingredient_quantity_from_decimal($items[$delta]->quantity, $fraction_format);
+        $formatted_quantity = $this->ingredientQuantityUtility->getQuantityFromDecimal($items[$delta]->quantity, $fraction_format);
       }
       else {
         $formatted_quantity = '&nbsp;';

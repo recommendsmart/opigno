@@ -67,7 +67,7 @@ abstract class PluginSelectorBaseTestBase extends UnitTestCase {
    * {@inheritdoc}
    *
    */
-  public function setUp() {
+  protected function setUp(): void {
     $this->defaultPluginResolver = $this->createMock(DefaultPluginResolverInterface::class);
 
     $this->pluginId = $this->randomMachineName();

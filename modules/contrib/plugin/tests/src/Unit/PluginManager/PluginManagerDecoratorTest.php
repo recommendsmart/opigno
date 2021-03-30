@@ -2,7 +2,9 @@
 
 namespace Drupal\Tests\plugin\Unit\PluginManager;
 
+use BadMethodCallException;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\plugin\PluginManager\PluginManagerDecorator;
@@ -109,10 +111,9 @@ class PluginManagerDecoratorTest extends UnitTestCase {
   /**
    * @covers ::__construct
    * @covers ::createInstance
-   *
-   * @expectedException \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function testCreateInstanceWithNonExistingPlugin() {
+    $this->expectException(PluginNotFoundException::class);
     $plugin_manager = $this->createMock(PluginManagerInterface::class);
 
     $this->decoratedDiscovery = $plugin_manager;
@@ -136,10 +137,9 @@ class PluginManagerDecoratorTest extends UnitTestCase {
   /**
    * @covers ::__construct
    * @covers ::createInstance
-   *
-   * @expectedException \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function testCreateInstanceWithNonExistingPluginAndOverriddenDiscovery() {
+    $this->expectException(PluginNotFoundException::class);
     $plugin_manager = $this->createMock(PluginManagerInterface::class);
 
     $this->decoratedDiscovery = $this->createMock(DiscoveryInterface::class);
@@ -162,10 +162,9 @@ class PluginManagerDecoratorTest extends UnitTestCase {
 
   /**
    * @covers ::getInstance
-   *
-   * @expectedException \BadMethodCallException
    */
   public function testGetInstance() {
+    $this->expectException(BadMethodCallException::class);
     $plugin_manager = $this->createMock(PluginManagerInterface::class);
 
     $this->sut = new PluginManagerDecorator($plugin_manager);

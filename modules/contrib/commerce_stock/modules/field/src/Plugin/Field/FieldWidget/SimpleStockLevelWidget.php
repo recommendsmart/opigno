@@ -3,19 +3,21 @@
 namespace Drupal\commerce_stock_field\Plugin\Field\FieldWidget;
 
 use Drupal\commerce\PurchasableEntityInterface;
+use Drupal\commerce_stock\ContextCreatorTrait;
 use Drupal\commerce_stock\StockServiceManager;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'commerce_stock_level' widget.
  *
- * Deprecated: We have now a dedicated widget per use case.
+ * @Deprecated: We have now a dedicated widget per use case.
  *
  * @see https://www.drupal.org/project/commerce_stock/issues/2931754
  *
@@ -29,6 +31,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class SimpleStockLevelWidget extends WidgetBase implements ContainerFactoryPluginInterface {
+
+  use ContextCreatorTrait;
+  use MessengerTrait;
 
   /**
    * The Stock Service Manager.
@@ -55,7 +60,12 @@ class SimpleStockLevelWidget extends WidgetBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(
+    ContainerInterface $container,
+    array $configuration,
+    $plugin_id,
+    $plugin_definition
+  ) {
     return new static(
       $plugin_id,
       $plugin_definition,
@@ -79,9 +89,9 @@ class SimpleStockLevelWidget extends WidgetBase implements ContainerFactoryPlugi
   /**
    * Submits the form.
    */
-  public static function closeForm($form, FormStateInterface $form_state) {
+  public function closeForm($form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
-    drupal_set_message(t('updated STOCK'));
+    $this->messenger()->addMessage(t('Updated the stock.'));
   }
 
   /**
@@ -95,6 +105,7 @@ class SimpleStockLevelWidget extends WidgetBase implements ContainerFactoryPlugi
       $summary[] = $this->t('Transaction note: @transaction_note', ['@transaction_note' => $this->getSetting('transaction_note') ? 'Yes' : 'No']);
       $summary[] = $this->t('context fallback: @context_fallback', ['@context_fallback' => $this->getSetting('context_fallback') ? 'Yes' : 'No']);
     }
+
     return $summary;
   }
 
@@ -116,7 +127,13 @@ class SimpleStockLevelWidget extends WidgetBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
+  public function formElement(
+    FieldItemListInterface $items,
+    $delta,
+    array $element,
+    array &$form,
+    FormStateInterface $form_state
+  ) {
     $field = $items->first();
     $entity = $items->getEntity();
 
@@ -138,10 +155,11 @@ class SimpleStockLevelWidget extends WidgetBase implements ContainerFactoryPlugi
       return [];
     }
 
-    // Get the Stock service manager.
-    $stockServiceManager = $this->stockServiceManager;
     // If not a valid context.
-    if (!$stockServiceManager->isValidContext($entity)) {
+    try {
+      $this->getContext($entity);
+    }
+    catch (\Exception $e) {
       // If context fallback is not set.
       if (!$this->getSetting('context_fallback')) {
         // Return an empty form.
@@ -246,6 +264,7 @@ class SimpleStockLevelWidget extends WidgetBase implements ContainerFactoryPlugi
   public function validateSimple($element, FormStateInterface $form_state) {
     if (!is_numeric($element['#value'])) {
       $form_state->setError($element, $this->t('Stock must be a number.'));
+
       return;
     }
     // @todo Needs to mark element as needing updating? Updated qty??
@@ -263,23 +282,30 @@ class SimpleStockLevelWidget extends WidgetBase implements ContainerFactoryPlugi
    * Submits the form.
    */
   public function submitAll(array &$form, FormStateInterface $form_state) {
-    drupal_set_message($this->t('updated STOCK!!'));
+    $this->messenger()->addMessage($this->t('Updated stock!'));
   }
 
   /**
    * {@inheritdoc}
    */
-  public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
+  public function massageFormValues(
+    array $values,
+    array $form,
+    FormStateInterface $form_state
+  ) {
     if (isset($values[0]['stock_level'])) {
       if (empty($values[0]['stock_level']) && $values[0]['stock_level'] !== "0") {
         $values[0]['adjustment'] = NULL;
+
         return $values;
       }
       $new_level = $values[0]['stock_level'];
       $current_level = $this->stockServiceManager->getStockLevel($values[0]['stocked_entity']);
       $values[0]['adjustment'] = $new_level - $current_level;
+
       return $values;
     }
+
     return $values;
   }
 

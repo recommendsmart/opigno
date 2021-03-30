@@ -6,10 +6,11 @@ use Drupal\commerce\Context;
 use Drupal\commerce_product\Entity\Product;
 use Drupal\commerce_product\Entity\ProductVariation;
 use Drupal\commerce_stock\StockTransactionsInterface;
+use Drupal\commerce_stock_field\Plugin\Field\FieldType\StockLevel;
 use Drupal\commerce_stock_local\Entity\StockLocation;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Tests\commerce_stock\Kernel\CommerceStockKernelTestBase;
-use Drupal\Tests\commerce_stock\Kernel\StockLevelFieldCreationTrait;
-use Drupal\Tests\commerce_stock\Kernel\StockTransactionQueryTrait;
+use Drupal\Tests\commerce_stock_local\Kernel\StockTransactionQueryTrait;
 
 /**
  * Ensure the stock level field works.
@@ -31,7 +32,6 @@ class StockLevelTest extends CommerceStockKernelTestBase {
   public static $modules = [
     'path',
     'commerce_product',
-    'commerce_stock',
     'commerce_stock_field',
     'commerce_stock_local',
   ];
@@ -143,6 +143,25 @@ class StockLevelTest extends CommerceStockKernelTestBase {
   }
 
   /**
+   * Test always in stock field is added to purchasable entities.
+   *
+   * Test that a commerce_stock_always_in_stock base field
+   * is added to purchasable entities.
+   */
+  public function testBaseFieldisAddedtoPurchasableEntity() {
+
+    $variation = ProductVariation::create([
+      'type' => 'default',
+    ]);
+    $variation->save();
+
+    // This would throw an Exception, if the field isn't there.
+    $field = $variation->get('commerce_stock_always_in_stock');
+    // Check the default value is set to FALSE.
+    self::assertFalse($field->getValue()[0]['value']);
+  }
+
+  /**
    * Whether setting a plain value results in increased stock level.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
@@ -170,7 +189,7 @@ class StockLevelTest extends CommerceStockKernelTestBase {
    * Whether a wrong value is throwing.
    */
   public function testInvalidArgumentThrows() {
-    $this->setExpectedException(\InvalidArgumentException::class);
+    $this->expectException(\InvalidArgumentException::class);
     $this->variation->set('test_stock_level', 'FAIL');
   }
 
@@ -202,7 +221,23 @@ class StockLevelTest extends CommerceStockKernelTestBase {
     $this->assertEquals($mock_widget_values['user_id'], $transaction->related_uid);
     $this->assertEquals($mock_widget_values['unit_cost']['amount'], $transaction->unit_cost);
     $this->assertEquals($mock_widget_values['unit_cost']['currency_code'], $transaction->currency_code);
-    $this->assertTrue($mock_widget_values['stock_transaction_note'], $data['message']);
+    $this->assertEquals($mock_widget_values['stock_transaction_note'], $data['message']);
+  }
+
+  /**
+   * Tests the ::generateSampleValue() method.
+   */
+  public function testSampeValueGenerator() {
+    $i = 0;
+    $fieldDefinition = $this->createMock(FieldDefinitionInterface::class);
+    while ($i < 100) {
+      $sampleValue = StockLevel::generateSampleValue($fieldDefinition);
+      $value = $sampleValue['value'];
+      $this->assertTrue(is_float($value));
+      $this->assertTrue(is_float($value));
+      $this->assertTrue(999 >= $value && -999 <= $value);
+      $i++;
+    }
   }
 
 }

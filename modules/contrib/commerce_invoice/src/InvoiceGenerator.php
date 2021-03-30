@@ -64,7 +64,7 @@ class InvoiceGenerator implements InvoiceGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function generate(array $orders, StoreInterface $store, ProfileInterface $profile, array $values = []) {
+  public function generate(array $orders, StoreInterface $store, ProfileInterface $profile = NULL, array $values = []) {
     $transaction = $this->connection->startTransaction();
     try {
       return $this->doGenerate($orders, $store, $profile, $values);
@@ -79,7 +79,7 @@ class InvoiceGenerator implements InvoiceGeneratorInterface {
   /**
    * @see \Drupal\commerce_invoice\InvoiceGeneratorInterface::generate()
    */
-  protected function doGenerate(array $orders, StoreInterface $store, ProfileInterface $profile, array $values = []) {
+  protected function doGenerate(array $orders, StoreInterface $store, ProfileInterface $profile = NULL, array $values = []) {
     $invoice_storage = $this->entityTypeManager->getStorage('commerce_invoice');
     $invoice_item_storage = $this->entityTypeManager->getStorage('commerce_invoice_item');
     // Assume the order type from the first passed order, we'll use it
@@ -91,7 +91,7 @@ class InvoiceGenerator implements InvoiceGeneratorInterface {
     $order_type = OrderType::load($first_order->bundle());
     $values += [
       'type' => $order_type->getThirdPartySetting('commerce_invoice', 'invoice_type', 'default'),
-      'state' => 'pending',
+      'state' => 'draft',
       'store_id' => $store->id(),
     ];
 
@@ -142,9 +142,11 @@ class InvoiceGenerator implements InvoiceGeneratorInterface {
       }
     }
 
-    $billing_profile = $profile->createDuplicate();
-    $billing_profile->save();
-    $invoice->setBillingProfile($billing_profile);
+    if ($profile) {
+      $billing_profile = $profile->createDuplicate();
+      $billing_profile->save();
+      $invoice->setBillingProfile($billing_profile);
+    }
     // Get the default invoice language so we can set it on invoice items.
     $default_langcode = $invoice->language()->getId();
 
@@ -184,6 +186,10 @@ class InvoiceGenerator implements InvoiceGeneratorInterface {
       $invoice->setTotalPaid($total_paid);
     }
     $invoice->setOrders($orders);
+
+    if ($invoice->getState()->getId() === 'draft') {
+      $invoice->getState()->applyTransitionById('confirm');
+    }
 
     $invoice->save();
     return $invoice;

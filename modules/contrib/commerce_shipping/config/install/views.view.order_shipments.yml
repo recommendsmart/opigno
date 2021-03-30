@@ -6,13 +6,12 @@ dependencies:
     - commerce_shipping
     - state_machine
 id: order_shipments
-label: 'Order Shipments'
+label: 'Order shipments'
 module: views
 description: ''
 tag: ''
 base_table: commerce_shipment
 base_field: shipment_id
-core: 8.x
 display:
   default:
     display_plugin: default
@@ -243,7 +242,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: 'Tracking code'
+          label: 'Tracking link'
           exclude: false
           alter:
             alter_text: false
@@ -285,9 +284,8 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: string
-          settings:
-            link_to_entity: false
+          type: commerce_tracking_link
+          settings: {  }
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -433,7 +431,7 @@ display:
           entity_type: commerce_shipment
           entity_field: created
           plugin_id: date
-      title: 'Order Shipments'
+      title: 'Order shipments'
       header: {  }
       footer: {  }
       empty:

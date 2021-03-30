@@ -48,7 +48,7 @@ class DepthDeleteDataForm extends FormBase {
       ])
       ->execute();
 
-    drupal_set_message($this->t('Taxonomy depth fields\' columns has been deleted.'));
+    $this->messenger()->addMessage($this->t('Taxonomy depth fields\' columns has been deleted.'));
   }
 
 }

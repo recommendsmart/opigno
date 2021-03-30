@@ -94,7 +94,6 @@ class GroupContentDeleteTest extends SubgroupKernelTestBase {
     $group_parent = $this->createGroup(['type' => $group_type_parent->id()]);
     $group_child = $this->createGroup(['type' => $group_type_child->id()]);
 
-
     $group_content = $this->storage->createForEntityInGroup($group_child, $group_parent, 'subgroup:' . $group_type_child->id(), []);
     $this->storage->save($group_content);
     $group_child->delete();

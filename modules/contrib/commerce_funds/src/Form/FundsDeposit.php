@@ -2,15 +2,16 @@
 
 namespace Drupal\commerce_funds\Form;
 
-use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\commerce_funds\ProductManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form to deposit money on user account.
  */
-class FundsDeposit extends ConfigFormBase {
+class FundsDeposit extends FormBase {
 
   /**
    * The entity type manager.
@@ -20,10 +21,18 @@ class FundsDeposit extends ConfigFormBase {
   protected $entityManager;
 
   /**
+   * The product manager.
+   *
+   * @var \Drupal\commerce_funds\ProductManagerInterface
+   */
+  protected $productManager;
+
+  /**
    * Class constructor.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ProductManagerInterface $product_manager) {
     $this->entityTypeManager = $entity_type_manager;
+    $this->productManager = $product_manager;
   }
 
   /**
@@ -31,7 +40,8 @@ class FundsDeposit extends ConfigFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('commerce_funds.product_manager')
     );
   }
 
@@ -96,9 +106,9 @@ class FundsDeposit extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $product_variation = \Drupal::service('commerce_funds.product_manager')->createProduct('deposit', $form_state->getValue('amount'), $form_state->getValue('currency'));
+    $product_variation = $this->productManager->createProduct('deposit', $form_state->getValue('amount'), $form_state->getValue('currency'));
     /** @var Drupal\commerce_product\Entity\ProductVariation $product_variation */
-    $order = \Drupal::service('commerce_funds.product_manager')->createOrder($product_variation);
+    $order = $this->productManager->createOrder($product_variation);
 
     // Redirect to checkout.
     $form_state->setRedirect('commerce_checkout.form', [

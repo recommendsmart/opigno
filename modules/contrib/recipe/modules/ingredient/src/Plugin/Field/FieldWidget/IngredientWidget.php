@@ -2,10 +2,13 @@
 
 namespace Drupal\ingredient\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\ingredient\IngredientUnitTrait;
+use Drupal\ingredient\Utility\IngredientUnitUtility;
+use Drupal\ingredient\Utility\IngredientQuantityUtility;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'ingredient_autocomplete' widget.
@@ -21,7 +24,58 @@ use Drupal\ingredient\IngredientUnitTrait;
  */
 class IngredientWidget extends WidgetBase {
 
-  use IngredientUnitTrait;
+  /**
+   * The ingredient.unit service.
+   *
+   * @var \Drupal\ingredient\Utility\IngredientUnitUtility
+   */
+  protected $ingredientUnitUtility;
+
+  /**
+   * The ingredient.quantity service.
+   *
+   * @var \Drupal\ingredient\Utility\IngredientQuantityUtility
+   */
+  protected $ingredientQuantityUtility;
+
+  /**
+   * Constructs a IngredientWidget.
+   *
+   * @param string $plugin_id
+   *   The plugin_id for the widget.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The definition of the field to which the widget is associated.
+   * @param array $settings
+   *   The widget settings.
+   * @param array $third_party_settings
+   *   Any third party settings.
+   * @param \Drupal\ingredient\Utility\IngredientUnitUtility $ingredient_unit_utility
+   *   The ingredient.unit service.
+   * @param \Drupal\ingredient\Utility\IngredientQuantityUtility $ingredient_quantity_utility
+   *   The ingredient.quantity service.
+   */
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, IngredientUnitUtility $ingredient_unit_utility, IngredientQuantityUtility $ingredient_quantity_utility) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
+    $this->ingredientUnitUtility = $ingredient_unit_utility;
+    $this->ingredientQuantityUtility = $ingredient_quantity_utility;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $plugin_id,
+      $plugin_definition,
+      $configuration['field_definition'],
+      $configuration['settings'],
+      $configuration['third_party_settings'],
+      $container->get('ingredient.unit'),
+      $container->get('ingredient.quantity')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -30,11 +84,11 @@ class IngredientWidget extends WidgetBase {
     $referenced_entities = $items->referencedEntities();
 
     // Get the enabled units and sort them for the select options.
-    $units = $this->getConfiguredUnits($this->getFieldSetting('unit_sets'));
-    $units = $this->sortUnitsByName($units);
+    $units = $this->ingredientUnitUtility->getConfiguredUnits($this->getFieldSetting('unit_sets'));
+    $units = $this->ingredientUnitUtility->sortUnitsByName($units);
 
     // Strange, but html_entity_decode() doesn't handle &frasl;.
-    $quantity = isset($items[$delta]->quantity) ? preg_replace('/\&frasl;/', '/', ingredient_quantity_from_decimal($items[$delta]->quantity, '{%d} %d&frasl;%d', TRUE)) : '';
+    $quantity = isset($items[$delta]->quantity) ? preg_replace('/\&frasl;/', '/', $this->ingredientQuantityUtility->getQuantityFromDecimal($items[$delta]->quantity, '{%d} %d&frasl;%d', TRUE)) : '';
     $element['quantity'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Quantity'),
@@ -47,7 +101,7 @@ class IngredientWidget extends WidgetBase {
       '#type' => 'select',
       '#title' => $this->t('Unit'),
       '#default_value' => isset($items[$delta]->unit_key) ? $items[$delta]->unit_key : $this->getFieldSetting('default_unit'),
-      '#options' => $this->createUnitSelectOptions($units),
+      '#options' => $this->ingredientUnitUtility->createUnitSelectOptions($units),
       '#attributes' => ['class' => ['recipe-ingredient-unit-key']],
     ];
     $element['target_id'] = [
@@ -100,7 +154,7 @@ class IngredientWidget extends WidgetBase {
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     foreach ($values as $key => $value) {
       // Convert fractional quantities to decimal.
-      $values[$key]['quantity'] = round(ingredient_quantity_from_fraction($value['quantity']), 6);
+      $values[$key]['quantity'] = round($this->ingredientQuantityUtility->getQuantityFromFraction($value['quantity']), 6);
 
       // The entity_autocomplete form element returns an array when an entity
       // was "autocreated", so we need to move it up a level.

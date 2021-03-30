@@ -46,7 +46,15 @@ abstract class ImportBase extends FormBase implements ContentImportExportInterfa
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $entity_type_label = $this->container->get('entity_type.manager')->getDefinition($this->getEntityType())->getPluralLabel();
     $item_list = $this->config('content_as_config.' . $this->getEntityType())->get();
+    if (empty($item_list)) {
+      $form['no_items_found'] = [
+        '#type' => 'markup',
+        '#markup' => $this->t('No exported %et were found.', ['%et' => $entity_type_label]),
+      ];
+      return $form;
+    }
     $options = [];
     foreach ($item_list as $item) {
       $options[$item['uuid']] = $this->getLabel($item);
@@ -56,7 +64,7 @@ abstract class ImportBase extends FormBase implements ContentImportExportInterfa
       '#type' => 'checkboxes',
       '#options' => $options,
       '#default_value' => array_keys($options),
-      '#title' => $this->t('Select the @type you would like to import:', ['@type' => $this->getEntityNamePlural()]),
+      '#title' => $this->t('Select the @type you would like to import:', ['@type' => $entity_type_label]),
     ];
 
     $form['actions'] = [
@@ -67,7 +75,7 @@ abstract class ImportBase extends FormBase implements ContentImportExportInterfa
       '#type' => 'markup',
       '#markup' => $this->t(
         '<p>A <em>safe</em> import will create any new @type without updating or deleting anything.<br/>A <em>full</em> import will create/update @type present in configuration, and delete those not present.<br/>A <em>forced</em> import will first delete <strong>all</strong> @type, then perform an import.</p>',
-        ['@type' => $this->getEntityNamePlural()]),
+        ['@type' => $entity_type_label]),
     ];
 
     $form['actions']['import_safe'] = [

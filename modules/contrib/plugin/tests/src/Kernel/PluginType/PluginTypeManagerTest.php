@@ -20,7 +20,7 @@ class PluginTypeManagerTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     // Get any directory within Drupal core.
     $class_reflector = new \ReflectionClass(KernelTestBase::class);
     $directory = $class_reflector->getFileName();

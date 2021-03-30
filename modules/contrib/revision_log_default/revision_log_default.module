@@ -20,9 +20,12 @@ function revision_log_default_entity_presave(EntityInterface $entity) {
         $bundle = \Drupal::entityTypeManager()
           ->getStorage($bundle_type)
           ->load($entity->bundle());
-        $label = $bundle->label();
+        if ($bundle instanceof EntityInterface) {
+          $label = $bundle->label();
+        }
       }
-      else {
+      // Fall back to entity type label if not bundle-able or bundle is missing.
+      if (!isset($label)) {
         $label = $entity_type->getLabel();
       }
       // Use the current timestamp if the revision_timestamp is the same as its
@@ -54,10 +57,33 @@ function revision_log_default_entity_presave(EntityInterface $entity) {
         $ignore = ['changed', $entity_type->getKey('revision')];
         /** @var \Drupal\Core\Field\FieldItemListInterface $field_items */
         foreach ($entity as $field_name => $field_items) {
-          if (in_array($field_name, $ignore, TRUE) || strpos($field_name, 'revision') !== FALSE || ($field_name === 'path' && isset($entity->path->pathauto))) {
+          // Workaround for the weird empty comment always added to the list.
+          $is_comment = is_a($field_items, '\Drupal\comment\CommentFieldItemList');
+          if ($is_comment || in_array($field_name, $ignore, TRUE) || strpos($field_name, 'revision') !== FALSE || ($field_name === 'path' && isset($entity->path->pathauto))) {
             continue;
           }
-          if (!$original->hasField($field_name) || !$field_items->equals($original->get($field_name))) {
+          // If the original doesn't have the field, mark the change.
+          if (!$original->hasField($field_name)) {
+            $changed_fields[] = $field_items->getDataDefinition()->getLabel();
+            continue;
+          }
+          $original_field_items = $original->get($field_name);
+          // Workaround for path fields being funky.
+          if (is_a($field_items, '\Drupal\path\Plugin\Field\FieldType\PathFieldItemList')) {
+            // Paths are too complex for normal equals logic.
+            $first_original_field_item = $original_field_items->first();
+            $first_field_item = $field_items->first();
+            if ($first_original_field_item && $first_field_item) {
+              $original_path = isset($first_original_field_item->getValue()['alias']) ? $first_original_field_item->getValue()['alias'] : '';
+              $path = isset($first_field_item->getValue()['alias']) ? $first_field_item->getValue()['alias'] : '';
+              if ($original_path !== $path) {
+                $changed_fields[] = $field_items->getDataDefinition()->getLabel();
+              }
+            }
+            continue;
+          }
+          // This logic should, ideally, support all other field types.
+          if (!$field_items->equals($original_field_items)) {
             $changed_fields[] = $field_items->getDataDefinition()->getLabel();
           }
         }
@@ -110,9 +136,10 @@ function _revision_log_default_get_original(ContentEntityInterface $entity) {
     $information = \Drupal::service('workbench_moderation.moderation_information');
     $is_moderated = $information->isModeratableEntity($entity);
   }
-  if ($is_moderated) {
-    $latest = $information
-      ->getLatestRevision($entity->getEntityTypeId(), $entity->id());
+  if ($is_moderated && $entity->id()) {
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+    $latest_revision_id = $node_storage->getLatestRevisionId($entity->id());
+    $latest = $node_storage->loadRevision($latest_revision_id);
     $langcode = $entity->language()->getId();
     if ($latest && $latest->hasTranslation($langcode)) {
       return $latest->getTranslation($langcode);

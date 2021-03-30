@@ -2,12 +2,13 @@
 
 namespace Drupal\commerce_funds\Plugin\Funds\WithdrawalMethod;
 
+use Drupal\Core\Locale\CountryManager;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Messenger\MessengerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\user\UserDataInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides check withdrawal method.
@@ -69,8 +70,6 @@ class Check extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
-   *
-   * Https://www.drupal.org/docs/8/api/form-api/configformbase-with-simple-configuration-api.
    */
   protected function getEditableConfigNames() {
     return [
@@ -84,6 +83,7 @@ class Check extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $uid = $this->account->id();
     $check_user_data = $this->userData->get('commerce_funds', $uid, 'check');
+    $countries = CountryManager::getStandardList();
 
     $form['check_name'] = [
       '#type' => 'textfield',
@@ -92,6 +92,15 @@ class Check extends ConfigFormBase {
       '#default_value' => $check_user_data ? $check_user_data['check_name'] : '',
       '#size' => 40,
       '#maxlength' => 128,
+      '#required' => TRUE,
+    ];
+
+    $form['check_country'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Country'),
+      '#options' => $countries,
+      '#default_value' => $check_user_data ? $check_user_data['check_country'] : '',
+      '#description' => '',
       '#required' => TRUE,
     ];
 
@@ -114,6 +123,35 @@ class Check extends ConfigFormBase {
       '#maxlength' => 128,
     ];
 
+    $form['check_city'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('City'),
+      '#description' => '',
+      '#default_value' => $check_user_data ? $check_user_data['check_city'] : '',
+      '#size' => 20,
+      '#maxlength' => 128,
+      '#required' => TRUE,
+    ];
+
+    $form['check_province'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Province'),
+      '#description' => '',
+      '#default_value' => $check_user_data ? $check_user_data['check_province'] : '',
+      '#size' => 20,
+      '#maxlength' => 128,
+    ];
+
+    $form['check_postalcode'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Postal Code'),
+      '#description' => '',
+      '#default_value' => $check_user_data ? $check_user_data['check_postalcode'] : '',
+      '#size' => 20,
+      '#maxlength' => 128,
+      '#required' => TRUE,
+    ];
+
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = [
       '#type' => 'submit',
@@ -127,7 +165,7 @@ class Check extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    // @TODO
+    // @todo validate form.
   }
 
   /**

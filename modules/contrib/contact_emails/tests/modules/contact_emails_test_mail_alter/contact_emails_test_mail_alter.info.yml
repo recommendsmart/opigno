@@ -6,7 +6,7 @@ core_version_requirement: ^8 || ^9
 dependencies:
   - contact_emails
 
-# Information added by Drupal.org packaging script on 2020-05-23
-version: '8.x-1.19'
+# Information added by Drupal.org packaging script on 2021-03-20
+version: '8.x-1.20'
 project: 'contact_emails'
-datestamp: 1590234742
+datestamp: 1616233106

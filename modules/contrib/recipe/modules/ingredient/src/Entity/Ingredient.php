@@ -102,7 +102,7 @@ class Ingredient extends ContentEntityBase implements IngredientInterface {
       ->setDescription(t('The ingredient language code.'))
       ->setTranslatable(TRUE)
       ->setDisplayOptions('view', [
-        'type' => 'hidden',
+        'region' => 'hidden',
       ])
       ->setDisplayOptions('form', [
         'type' => 'language_select',

@@ -32,7 +32,7 @@ class PluginTypeConverterTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->pluginTypeManager = $this->prophesize(PluginTypeManagerInterface::class);
@@ -99,9 +99,7 @@ class PluginTypeConverterTest extends UnitTestCase {
     $name = 'foo_bar';
     $defaults = [];
 
-    $plugin_type = $this->prophesize(PluginTypeInterface::class);
-
-    $this->pluginTypeManager->getPluginType($plugin_type_id)->willReturn($plugin_type);
+    $this->pluginTypeManager->hasPluginType($plugin_type_id)->willReturn(FALSE);
 
     $original_error_reporting = error_reporting();
     error_reporting($original_error_reporting & ~E_USER_WARNING);

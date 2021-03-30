@@ -2,12 +2,14 @@
 
 namespace Drupal\Tests\commerce_invoice\Kernel;
 
-use Drupal\Tests\commerce\Kernel\CommerceKernelTestBase;
+use Drupal\Component\FileSystem\FileSystem;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Tests\commerce_order\Kernel\OrderKernelTestBase;
 
 /**
  * Provides a base class for invoice kernel tests.
  */
-abstract class InvoiceKernelTestBase extends CommerceKernelTestBase {
+abstract class InvoiceKernelTestBase extends OrderKernelTestBase {
 
   /**
    * Modules to enable.
@@ -16,13 +18,11 @@ abstract class InvoiceKernelTestBase extends CommerceKernelTestBase {
    */
   public static $modules = [
     'entity_print',
-    'entity_reference_revisions',
-    'profile',
-    'state_machine',
-    'commerce_order',
-    'commerce_number_pattern',
+    'entity_print_test',
+    'file',
     'commerce_invoice',
     'commerce_invoice_test',
+    'system',
   ];
 
   /**
@@ -31,18 +31,36 @@ abstract class InvoiceKernelTestBase extends CommerceKernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installEntitySchema('profile');
-    $this->installEntitySchema('commerce_order');
-    $this->installEntitySchema('commerce_order_item');
     $this->installEntitySchema('commerce_invoice_item');
     $this->installEntitySchema('commerce_invoice');
-    $this->installEntitySchema('commerce_number_pattern');
-    $this->installSchema('commerce_number_pattern', ['commerce_number_pattern_sequence']);
+    $this->installEntitySchema('file');
     $this->installConfig([
       'commerce_invoice',
       'entity_print',
+      'entity_print_test',
       'commerce_order',
+      'system',
     ]);
+    $this->container->get('theme_installer')->install(['stark']);
+
+    // Set the default print engine.
+    $config = $this->container->get('config.factory')->getEditable('entity_print.settings');
+    $config
+      ->set('print_engines.pdf_engine', 'testprintengine')
+      ->save();
+
+    $private = FileSystem::getOsTemporaryDirectory();
+    $this->setSetting('file_private_path', $private);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function register(ContainerBuilder $container) {
+    parent::register($container);
+
+    $container->register('stream_wrapper.private', 'Drupal\Core\StreamWrapper\PrivateStream')
+      ->addTag('stream_wrapper', ['scheme' => 'private']);
   }
 
 }

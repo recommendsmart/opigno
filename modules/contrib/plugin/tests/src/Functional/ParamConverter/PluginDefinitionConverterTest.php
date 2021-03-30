@@ -17,6 +17,11 @@ class PluginDefinitionConverterTest extends BrowserTestBase {
   public static $modules = ['plugin', 'plugin_test_helper', 'system'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the integration.
    */
   public function testIntegration() {

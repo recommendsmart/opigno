@@ -16,19 +16,11 @@ it), fragments are meant to be re-used and potentially update the same
 bit of content across many pages. Fragments are fieldable and 
 revisionable.
 
-Requirements
-------------
-### Entity Reference
-Although not *technically* a requirement (i.e. Drupal won't force you to
-install the module when it's not already installed), Fragments's use is
-extremely limited without it. Entity Reference is the basic method with
-which you associate Fragments to e.g. nodes in order to display them on
-a page for end users. With that said, please report any other uses you
-might find for Fragments that do not require Entity Reference (if that
-sounds like a challenge, it is).
-
 Recommended modules
 -------------------
+From an editorial workflow point of view, several modules go together 
+particularly well with Fragments, depending on your use-case.
+
 ### Enhance the administrative overview
 By default, Fragments has a simple administrative view. A much more 
 powerful view will be installed when the 
@@ -37,9 +29,6 @@ module is available, containing filters and sorting options. It is
 highly recommended to install this module, the default screen is only 
 meant for the most basic of use cases where it is absolutely undesirable 
 to install VBO.
-
-From an editorial workflow point of view, several modules go together 
-particularly well with Fragments, depending on your use-case.
 
 ### Create new fragments where you need them
 [Inline Entity Form](https://www.drupal.org/project/inline_entity_form) 

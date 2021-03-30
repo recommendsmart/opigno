@@ -5,6 +5,7 @@ namespace Drupal\group_flex;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\group_flex\Plugin\GroupJoiningMethodManager;
+use Drupal\group_flex\Plugin\GroupVisibilityInterface;
 
 /**
  * Get the group flex settings from a group type.
@@ -74,7 +75,7 @@ class GroupFlexGroupType {
    *   Returns TRUE if the group type visibility is flexible.
    */
   public function hasFlexibleGroupTypeVisibility(GroupTypeInterface $groupType): bool {
-    return $this->getGroupTypeVisibility($groupType) === GROUP_FLEX_TYPE_VIS_FLEX;
+    return $this->getGroupTypeVisibility($groupType) === GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_FLEX;
   }
 
   /**

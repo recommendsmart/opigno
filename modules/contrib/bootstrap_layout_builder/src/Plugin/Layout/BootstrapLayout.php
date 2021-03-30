@@ -2,14 +2,15 @@
 
 namespace Drupal\bootstrap_layout_builder\Plugin\Layout;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Layout\LayoutDefault;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Serialization\Yaml;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\media\Entity\Media;
-use Drupal\file\Entity\File;
+use Drupal\bootstrap_styles\StylesGroup\StylesGroupManager;
 
 /**
  * A layout from our bootstrap layout builder.
@@ -36,6 +37,13 @@ class BootstrapLayout extends LayoutDefault implements ContainerFactoryPluginInt
   protected $entityTypeManager;
 
   /**
+   * The styles group plugin manager.
+   *
+   * @var \Drupal\bootstrap_styles\StylesGroup\StylesGroupManager
+   */
+  protected $stylesGroupManager;
+
+  /**
    * Constructs a new class instance.
    *
    * @param array $configuration
@@ -44,15 +52,18 @@ class BootstrapLayout extends LayoutDefault implements ContainerFactoryPluginInt
    *   The plugin_id for the plugin instance.
    * @param array $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   Config factory service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\bootstrap_styles\StylesGroup\StylesGroupManager $styles_group_manager
+   *   The styles group plugin manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $configFactory, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, StylesGroupManager $styles_group_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->configFactory = $configFactory;
+    $this->configFactory = $config_factory;
     $this->entityTypeManager = $entity_type_manager;
+    $this->stylesGroupManager = $styles_group_manager;
   }
 
   /**
@@ -64,7 +75,8 @@ class BootstrapLayout extends LayoutDefault implements ContainerFactoryPluginInt
       $plugin_id,
       $plugin_definition,
       $container->get('config.factory'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('plugin.manager.bootstrap_styles_group')
     );
   }
 
@@ -73,65 +85,83 @@ class BootstrapLayout extends LayoutDefault implements ContainerFactoryPluginInt
    */
   public function build(array $regions) {
     $build = parent::build($regions);
-    $config = $this->configFactory->get('bootstrap_layout_builder.settings');
 
-    // Flag for local video.
-    $has_background_local_video = FALSE;
-
-    // Container.
-    if ($this->configuration['container']) {
-      $build['container']['#attributes']['class'] = $this->configuration['container'];
-
-      if ($media_id = $this->configuration['container_wrapper_bg_media']) {
-        $media_entity = Media::load($media_id);
-        if ($media_entity) {
-          $bundle = $media_entity->bundle();
-        
-          if ($config->get('background_image.bundle') && $bundle == $config->get('background_image.bundle')) {
-            $media_field_name = $config->get('background_image.field');
-            $build['container_wrapper']['#attributes']['style'] = $this->buildBackgroundMediaImage($media_entity, $media_field_name);
-          }
-          elseif ($config->get('background_local_video.bundle') && $bundle == $config->get('background_local_video.bundle')) {
-            $media_field_name = $config->get('background_local_video.field');
-            $has_background_local_video = TRUE;
-            $build['container_wrapper']['#video_wrapper_classes'] = $this->configuration['container_wrapper_bg_color_class'];
-            $build['container_wrapper']['#video_background_url'] = $this->buildBackgroundMediaLocalVideo($media_entity, $media_field_name);
-          }
-        }
-      }
-
-      if ($this->configuration['container_wrapper_bg_color_class'] || $this->configuration['container_wrapper_classes']) {
-        $container_wrapper_classes = '';
-        if ($this->configuration['container_wrapper_bg_color_class'] && !$has_background_local_video) {
-          $container_wrapper_classes .= $this->configuration['container_wrapper_bg_color_class'];
-        }
-
-        if ($this->configuration['container_wrapper_classes']) {
-          // Add space after the last class.
-          if ($container_wrapper_classes) {
-            $container_wrapper_classes = $container_wrapper_classes . ' ';
-          }
-          $container_wrapper_classes .= $this->configuration['container_wrapper_classes'];
-        }
-        $build['container_wrapper']['#attributes']['class'] = $container_wrapper_classes;
-      }
-
-    }
-
-    // Section Classes.
+    // Row classes and attributes.
     $section_classes = [];
     if ($this->configuration['section_classes']) {
       $section_classes = explode(' ', $this->configuration['section_classes']);
       $build['#attributes']['class'] = $section_classes;
     }
 
-    // Regions classes.
+    if (!empty($this->configuration['section_attributes'])) {
+      $section_attributes = $this->configuration['section_attributes'];
+      $build['#attributes'] = NestedArray::mergeDeep($build['#attributes'] ?? [], $section_attributes);
+    }
+
+    // The default one col layout class.
+    if (count($this->getPluginDefinition()->getRegionNames()) == 1) {
+      $config = $this->configFactory->get('bootstrap_layout_builder.settings');
+      $one_col_layout_class = 'col-12';
+      if ($config->get('one_col_layout_class')) {
+        $one_col_layout_class = $config->get('one_col_layout_class');
+      }
+      $this->configuration['layout_regions_classes']['blb_region_col_1'][] = $one_col_layout_class;
+    }
+
+    // Regions classes and attributes.
     if ($this->configuration['regions_classes']) {
       foreach ($this->getPluginDefinition()->getRegionNames() as $region_name) {
         $region_classes = $this->configuration['regions_classes'][$region_name];
-        $build[$region_name]['#attributes']['class'] = $this->configuration['layout_regions_classes'][$region_name];
+        if ($this->configuration['layout_regions_classes'] && isset($this->configuration['layout_regions_classes'][$region_name])) {
+          $build[$region_name]['#attributes']['class'] = $this->configuration['layout_regions_classes'][$region_name];
+        }
         $build[$region_name]['#attributes']['class'][] = $region_classes;
       }
+    }
+
+    if ($this->configuration['regions_attributes']) {
+      foreach ($this->getPluginDefinition()->getRegionNames() as $region_name) {
+        $region_attributes = $this->configuration['regions_attributes'][$region_name];
+        if (!empty($region_attributes)) {
+          $build[$region_name]['#attributes'] = NestedArray::mergeDeep($build[$region_name]['#attributes'] ?? [], $region_attributes);
+        }
+      }
+    }
+
+    // Container.
+    if ($this->configuration['container']) {
+      $theme_wrappers = [
+        'blb_container' => [
+          '#attributes' => [
+            'class' => [$this->configuration['container']],
+          ],
+        ],
+        'blb_container_wrapper' => [
+          '#attributes' => [
+            'class' => [],
+          ],
+        ],
+      ];
+
+      if ($this->configuration['container_wrapper_classes']) {
+        $theme_wrappers['blb_container_wrapper']['#attributes']['class'][] = $this->configuration['container_wrapper_classes'];
+      }
+
+      if (!empty($this->configuration['container_wrapper_attributes'])) {
+        $wrapper_attributes = $this->configuration['container_wrapper_attributes'];
+        $theme_wrappers['blb_container_wrapper']['#attributes'] = NestedArray::mergeDeep($theme_wrappers['blb_container_wrapper']['#attributes'] ?? [], $wrapper_attributes);
+      }
+
+      $build['#theme_wrappers'] = $theme_wrappers;
+
+      // Build dynamic styles.
+      $build = $this->stylesGroupManager->buildStyles(
+        $build,
+      // storage.
+        $this->configuration['container_wrapper']['bootstrap_styles'],
+      // Theme wrapper that we need to apply styles to it.
+        'blb_container_wrapper'
+      );
     }
 
     return $build;
@@ -143,14 +173,21 @@ class BootstrapLayout extends LayoutDefault implements ContainerFactoryPluginInt
   public function defaultConfiguration() {
     $default_configuration = parent::defaultConfiguration();
 
-    $regions_classes = [];
+    $regions_classes = $regions_attributes = [];
     foreach ($this->getPluginDefinition()->getRegionNames() as $region_name) {
       $regions_classes[$region_name] = '';
+      $regions_attributes[$region_name] = [];
     }
 
     return $default_configuration + [
       // Container wrapper commonly used on container background and minor styling.
       'container_wrapper_classes' => '',
+      'container_wrapper_attributes' => [],
+      // Container wrapper.
+      'container_wrapper' => [
+        // The dynamic bootstrap styles storage.
+        'bootstrap_styles' => [],
+      ],
       // Add background color to container wrapper.
       'container_wrapper_bg_color_class' => '',
       // Add background media to container wrapper.
@@ -161,50 +198,15 @@ class BootstrapLayout extends LayoutDefault implements ContainerFactoryPluginInt
       'container' => '',
       // Section refer to the div that contains row in bootstrap.
       'section_classes' => '',
+      'section_attributes' => [],
       // Region refer to the div that contains Col in bootstrap "Advanced mode".
       'regions_classes' => $regions_classes,
+      'regions_attributes' => $regions_attributes,
       // Array of breakpoints and the value of its option.
       'breakpoints' => [],
       // The region refer to the div that contains Col in bootstrap.
       'layout_regions_classes' => [],
     ];
-  }
-
-  /**
-   * Helper function to the background media image style.
-   *
-   * @param object $media_entity
-   *   A media entity object.
-   * @param object $field_name
-   *   The Media entity local video field name.
-   * 
-   * @return string
-   *   Background media image style.
-   */
-  public function buildBackgroundMediaImage($media_entity, $field_name) {
-    $fid = $media_entity->get($field_name)->target_id;
-    $file = File::load($fid);
-    $background_url = $file->url();
-
-    $style = 'background-image: url(' . $background_url . '); background-repeat: no-repeat; background-size: cover;';
-    return $style;
-  }
-
-  /**
-   * Helper function to the background media local video style.
-   *
-   * @param object $media_entity
-   *   A media entity object.
-   * @param object $field_name
-   *   The Media entity local video field name.
-   * 
-   * @return string
-   *   Background media local video style.
-   */
-  public function buildBackgroundMediaLocalVideo($media_entity, $field_name) {
-    $fid = $media_entity->get($field_name)->target_id;
-    $file = File::load($fid);
-    return $file->url();
   }
 
   /**
@@ -236,7 +238,7 @@ class BootstrapLayout extends LayoutDefault implements ContainerFactoryPluginInt
     $options = [];
     $config_options = $config->get($name);
 
-    $options = ['_none' => t('N/A')];
+    $options = ['_none' => $this->t('N/A')];
     $lines = explode(PHP_EOL, $config_options);
     foreach ($lines as $line) {
       $line = explode('|', $line);
@@ -259,7 +261,7 @@ class BootstrapLayout extends LayoutDefault implements ContainerFactoryPluginInt
       '#type' => 'container',
       '#weight' => -100,
       '#attributes' => [
-        'class' => 'blb_ui',
+        'id' => 'bs_ui',
       ],
     ];
 
@@ -275,12 +277,6 @@ class BootstrapLayout extends LayoutDefault implements ContainerFactoryPluginInt
         'icon' => 'appearance.svg',
         'title' => $this->t('Style'),
       ],
-      // @TODO enable effects.
-      // [
-      //   'machine_name' => 'effects',
-      //   'icon' => 'effects.svg',
-      //   'title' => $this->t('Effects'),
-      // ],
       [
         'machine_name' => 'settings',
         'icon' => 'settings.svg',
@@ -288,17 +284,13 @@ class BootstrapLayout extends LayoutDefault implements ContainerFactoryPluginInt
       ],
     ];
 
-    if ($this->sectionSettingsIsHidden()) {
-      array_pop($tabs);
-    }
-
     // Create our tabs from above.
     $form['ui']['nav_tabs'] = [
       '#type' => 'html_tag',
       '#tag' => 'ul',
       '#attributes' => [
-        'class' => 'blb_nav-tabs',
-        'id' => 'blb_nav-tabs',
+        'class' => 'bs_nav-tabs',
+        'id' => 'bs_nav-tabs',
         'role' => 'tablist',
       ],
     ];
@@ -306,8 +298,8 @@ class BootstrapLayout extends LayoutDefault implements ContainerFactoryPluginInt
     $form['ui']['tab_content'] = [
       '#type' => 'container',
       '#attributes' => [
-        'class' => 'blb_tab-content',
-        'id' => 'blb_tabContent',
+        'class' => 'bs_tab-content',
+        'id' => 'bs_tabContent',
       ],
     ];
 
@@ -315,12 +307,12 @@ class BootstrapLayout extends LayoutDefault implements ContainerFactoryPluginInt
     foreach ($tabs as $tab) {
       $form['ui']['nav_tabs'][$tab['machine_name']] = [
         '#type' => 'inline_template',
-        '#template' => '<li><a data-target="{{ target|clean_class }}" class="{{active}}">{{ icon }}<div class="blb_tooltip" data-placement="bottom" role="tooltip">{{ title }}</div></a></li>',
+        '#template' => '<li><a data-target="{{ target|clean_class }}" class="{{active}}"><span role="img">{% include icon %}</span><div class="bs_tooltip" data-placement="bottom" role="tooltip">{{ title }}</div></a></li>',
         '#context' => [
           'title' => $tab['title'],
           'target' => $tab['machine_name'],
           'active' => isset($tab['active']) && $tab['active'] == TRUE ? 'active' : '',
-          'icon' => t('<img class="blb_icon" src="/' . drupal_get_path('module', 'bootstrap_layout_builder') . '/images/ui/' . ($tab['icon'] ? $tab['icon'] : 'default.svg') . '" />'),
+          'icon' => drupal_get_path('module', 'bootstrap_styles') . '/images/ui/' . ($tab['icon'] ? $tab['icon'] : 'default.svg'),
         ],
       ];
 
@@ -328,104 +320,80 @@ class BootstrapLayout extends LayoutDefault implements ContainerFactoryPluginInt
         '#type' => 'container',
         '#attributes' => [
           'class' => [
-            'blb_tab-pane',
-            'blb_tab-pane--' . $tab['machine_name'],
+            'bs_tab-pane',
+            'bs_tab-pane--' . $tab['machine_name'],
             isset($tab['active']) && $tab['active'] == TRUE ? 'active' : '',
           ],
         ],
       ];
     }
 
-    // Check if section settings visible.
-    $form['ui']['tab_content']['layout']['has_container'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Add Container'),
-      '#default_value' => (int) !empty($this->configuration['container']) ? TRUE : FALSE,
-    ];
-
     $container_types = [
       'container' => $this->t('Boxed'),
-      'container-fluid' => $this->t('Full Width'),
+      'container-fluid' => $this->t('Full'),
+      'w-100' => $this->t('Edge to Edge'),
     ];
 
     $form['ui']['tab_content']['layout']['container_type'] = [
       '#type' => 'radios',
       '#title' => $this->t('Container type'),
-      '#title_display' => 'invisible',
       '#options' => $container_types,
       '#default_value' => !empty($this->configuration['container']) ? $this->configuration['container'] : 'container',
       '#attributes' => [
         'class' => ['blb_container_type'],
       ],
-      '#states' => [
-        'visible' => [
-          ':input[name="layout_settings[ui][tab_content][layout][has_container]"]' => ['checked' => TRUE],
-        ],
+    ];
+
+    // Add icons to the container types.
+    foreach ($form['ui']['tab_content']['layout']['container_type']['#options'] as $key => $value) {
+      $form['ui']['tab_content']['layout']['container_type']['#options'][$key] = '<span class="input-icon ' . $key . '"></span>' . $value;
+    }
+
+    $gutter_types = [
+      0 => $this->t('With Gutters'),
+      1 => $this->t('No Gutters'),
+    ];
+
+    $form['ui']['tab_content']['layout']['remove_gutters'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Gutters'),
+      '#options' => $gutter_types,
+      '#default_value' => (int) !empty($this->configuration['remove_gutters']) ? 1 : 0,
+      '#attributes' => [
+        'class' => ['blb_gutter_type'],
       ],
     ];
 
-    // @TODO Style the select list.
+    // Add icons to the gutter types.
+    foreach ($form['ui']['tab_content']['layout']['remove_gutters']['#options'] as $key => $value) {
+      $form['ui']['tab_content']['layout']['remove_gutters']['#options'][$key] = '<span class="input-icon gutter-icon-' . $key . '"></span>' . $value;
+    }
+
     $layout_id = $this->getPluginDefinition()->id();
     $breakpoints = $this->entityTypeManager->getStorage('blb_breakpoint')->getQuery()->sort('weight', 'ASC')->execute();
     foreach ($breakpoints as $breakpoint_id) {
       $breakpoint = $this->entityTypeManager->getStorage('blb_breakpoint')->load($breakpoint_id);
       $layout_options = $breakpoint->getLayoutOptions($layout_id);
-      $form['ui']['tab_content']['layout']['breakpoints'][$breakpoint_id] = [
-        '#type' => 'radios',
-        '#title' => $breakpoint->label(),
-        '#options' => $layout_options,
-        '#default_value' => $this->configuration['breakpoints'][$breakpoint_id] ?: '',
-        '#validated' => TRUE,
-        '#attributes' => [
-          'class' => ['blb_breakpoint_cols'],
-        ],
-      ];
-    }
-
-    // Background Colors.
-    $form['ui']['tab_content']['appearance']['container_wrapper_bg_color_class'] = [
-      '#type' => 'radios',
-      '#options' => $this->getStyleOptions('background_colors'),
-      '#title' => $this->t('Background color'),
-      '#default_value' => $this->configuration['container_wrapper_bg_color_class'],
-      '#validated' => TRUE,
-      '#attributes' => [
-        'class' => ['bootstrap_layout_builder_bg_color'],
-      ],
-      '#states' => [
-        'visible' => [
-          ':input[name="layout_settings[ui][tab_content][layout][has_container]"]' => ['checked' => TRUE],
-        ],
-      ],
-    ];
-
-    // Background media.
-    $allowed_bundles = [];
-    $config = $this->configFactory->get('bootstrap_layout_builder.settings');
-    // Check if the bundle exist.
-    if ($config->get('background_image.bundle') && $this->entityTypeManager->getStorage('media_type')->load($config->get('background_image.bundle'))) {
-      $allowed_bundles[] = $config->get('background_image.bundle');
-    }
-    // Check if the bundle exist.
-    if ($config->get('background_local_video.bundle') && $this->entityTypeManager->getStorage('media_type')->load($config->get('background_local_video.bundle'))) {
-      $allowed_bundles[] = $config->get('background_local_video.bundle');
-    }
-
-    if ($allowed_bundles) {
-      $form['ui']['tab_content']['appearance']['container_wrapper_bg_media'] = [
-        '#type' => 'media_library',
-        '#title' => $this->t('Background media'),
-        '#description' => $this->t('Background media'),
-        '#allowed_bundles' => $allowed_bundles,
-        '#default_value' => $this->configuration['container_wrapper_bg_media'],
-        '#prefix' => '<hr />',
-        '#states' => [
-          'visible' => [
-            ':input[name="layout_settings[ui][tab_content][layout][has_container]"]' => ['checked' => TRUE],
+      if ($layout_options) {
+        $default_value = '';
+        if ($this->configuration['breakpoints'] && isset($this->configuration['breakpoints'][$breakpoint_id])) {
+          $default_value = $this->configuration['breakpoints'][$breakpoint_id];
+        }
+        $form['ui']['tab_content']['layout']['breakpoints'][$breakpoint_id] = [
+          '#type' => 'radios',
+          '#title' => $breakpoint->label(),
+          '#options' => $layout_options,
+          '#default_value' => $default_value,
+          '#validated' => TRUE,
+          '#attributes' => [
+            'class' => ['blb_breakpoint_cols'],
           ],
-        ],
-      ];
+        ];
+      }
     }
+
+    // Container wrapper styling.
+    $form['ui']['tab_content']['appearance'] = $this->stylesGroupManager->buildStylesFormElements($form['ui']['tab_content']['appearance'], $form_state, $this->configuration['container_wrapper']['bootstrap_styles'], 'bootstrap_layout_builder.styles');
 
     // Move default admin label input to setting tab.
     $form['ui']['tab_content']['settings']['label'] = $form['label'];
@@ -446,6 +414,16 @@ class BootstrapLayout extends LayoutDefault implements ContainerFactoryPluginInt
         '#default_value' => $this->configuration['container_wrapper_classes'],
       ];
 
+      $container_attributes = $this->configuration['container_wrapper_attributes'];
+      $form['ui']['tab_content']['settings']['container']['container_wrapper_attributes'] = [
+        '#type' => 'textarea',
+        '#title' => $this->t('Container wrapper attributes (YAML)'),
+        '#default_value' => empty($container_attributes) ? '' : Yaml::encode($container_attributes),
+        '#attributes' => ['class' => ['blb-auto-size']],
+        '#rows' => 1,
+        '#element_validate' => [[$this, 'validateYaml']],
+      ];
+
       $form['ui']['tab_content']['settings']['row'] = [
         '#type' => 'details',
         '#title' => $this->t('Row Settings'),
@@ -458,6 +436,16 @@ class BootstrapLayout extends LayoutDefault implements ContainerFactoryPluginInt
         '#title' => $this->t('Row classes'),
         '#description' => $this->t('Row has "row" class, you can add more classes separated by space. Ex: no-gutters py-3.'),
         '#default_value' => $this->configuration['section_classes'],
+      ];
+
+      $row_attributes = $this->configuration['section_attributes'];
+      $form['ui']['tab_content']['settings']['row']['section_attributes'] = [
+        '#type' => 'textarea',
+        '#title' => $this->t('Row attributes (YAML)'),
+        '#default_value' => empty($row_attributes) ? '' : Yaml::encode($row_attributes),
+        '#attributes' => ['class' => ['auto-size']],
+        '#rows' => 1,
+        '#element_validate' => [[$this, 'validateYaml']],
       ];
 
       $form['ui']['tab_content']['settings']['regions'] = [
@@ -473,17 +461,25 @@ class BootstrapLayout extends LayoutDefault implements ContainerFactoryPluginInt
           '#title' => $this->getPluginDefinition()->getRegionLabels()[$region_name] . ' ' . $this->t('classes'),
           '#default_value' => $this->configuration['regions_classes'][$region_name],
         ];
+
+        $region_attributes = $this->configuration['regions_attributes'][$region_name];
+        $form['ui']['tab_content']['settings']['regions'][$region_name . '_attributes'] = [
+          '#type' => 'textarea',
+          '#title' => $this->getPluginDefinition()->getRegionLabels()[$region_name] . ' ' . $this->t('attributes (YAML)'),
+          '#default_value' => empty($region_attributes) ? '' : Yaml::encode($region_attributes),
+          '#attributes' => ['class' => ['auto-size']],
+          '#rows' => 1,
+          '#element_validate' => [[$this, 'validateYaml']],
+        ];
+
       }
     }
 
-    // @TODO Effects.
-    // $form['ui']['tab_content']['effects']['message'] = [
-    //   '#type' => 'inline_template',
-    //   '#template' => '<small>Transition Effects Coming Soon...</small>',
-    // ];
-    // Attach the Bootstrap Layout Builder base library.
-    $form['#attached']['library'][] = 'bootstrap_layout_builder/base';
+    // Attach Bootstrap Styles base library.
+    $form['#attached']['library'][] = 'bootstrap_styles/layout_builder_form_style';
 
+    // Attach the Bootstrap Layout Builder base library.
+    $form['#attached']['library'][] = 'bootstrap_layout_builder/layout_builder_form_style';
     return $form;
   }
 
@@ -520,6 +516,25 @@ class BootstrapLayout extends LayoutDefault implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    */
+  public function validateYaml($element, FormStateInterface $form_state, array $form) {
+    $value = $element['#value'];
+    try {
+      $array_values = Yaml::decode($value);
+
+      // Fix Classes as strings.
+      if (isset($array_values['class']) && !is_array($array_values['class'])) {
+        $array_values['class'] = explode(' ', $array_values['class']);
+      }
+      $form_state->setValueForElement($element, Yaml::encode($array_values));
+    }
+    catch (\Exception $exception) {
+      $form_state->setError($element, $this->t('Invalid YAML entered for %field', ['%field' => $element['#title']]));
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     parent::submitConfigurationForm($form, $form_state);
     // The tabs structure.
@@ -530,29 +545,39 @@ class BootstrapLayout extends LayoutDefault implements ContainerFactoryPluginInt
     // Save sction label.
     $this->configuration['label'] = $form_state->getValue(array_merge($settings_tab, ['label']));
 
-    // Check if section settings visible.
+    // Container type.
+    $this->configuration['container'] = $form_state->getValue(array_merge($layout_tab, ['container_type']));
+
+    // Styles tab.
+    $this->configuration['container_wrapper']['bootstrap_styles'] = $this->stylesGroupManager->submitStylesFormElements($form['ui']['tab_content']['appearance'], $form_state, $style_tab, $this->configuration['container_wrapper']['bootstrap_styles'], 'bootstrap_layout_builder.styles');
+
+    // Container classes from advanced mode.
     if (!$this->sectionSettingsIsHidden()) {
-      // Container type.
-      $this->configuration['container'] = '';
-      if ($form_state->getValue(array_merge($layout_tab, ['has_container']))) {
-        $this->configuration['container'] = $form_state->getValue(array_merge($layout_tab, ['container_type']));
-        // Container wrapper.
-        $this->configuration['container_wrapper_bg_color_class'] = $form_state->getValue(array_merge($style_tab, ['container_wrapper_bg_color_class']));
-        $this->configuration['container_wrapper_bg_media'] = $form_state->getValue(array_merge($style_tab, ['container_wrapper_bg_media']));
-        $this->configuration['container_wrapper_classes'] = $form_state->getValue(array_merge($settings_tab, ['container', 'container_wrapper_classes']));
-      }
+      $this->configuration['container_wrapper_classes'] = $form_state->getValue(array_merge($settings_tab, ['container', 'container_wrapper_classes']));
+      $this->configuration['container_wrapper_attributes'] = Yaml::decode($form_state->getValue(array_merge($settings_tab, ['container', 'container_wrapper_attributes'])));
+    }
 
+    // Gutter Classes.
+    $this->configuration['remove_gutters'] = $form_state->getValue(array_merge($layout_tab, ['remove_gutters']));
+
+    // Row classes from advanced mode.
+    if (!$this->sectionSettingsIsHidden()) {
       $this->configuration['section_classes'] = $form_state->getValue(array_merge($settings_tab, ['row', 'section_classes']));
+      $this->configuration['section_attributes'] = Yaml::decode($form_state->getValue(array_merge($settings_tab, ['row', 'section_attributes'])));
+    }
 
-      $breakpoints = $form_state->getValue(array_merge($layout_tab, ['breakpoints']));
-      // Save breakpoints configuration.
+    $breakpoints = $form_state->getValue(array_merge($layout_tab, ['breakpoints']));
+    // Save breakpoints configuration.
+    if ($breakpoints) {
       $this->saveBreakpoints($breakpoints);
-
       foreach ($this->getPluginDefinition()->getRegionNames() as $key => $region_name) {
         // Save layout region classes.
         $this->configuration['layout_regions_classes'][$region_name] = $this->getRegionClasses($key, $breakpoints);
-        // Get the additonal classes from advanced mode.
-        $this->configuration['regions_classes'][$region_name] = $form_state->getValue(array_merge($settings_tab, ['regions', $region_name . '_classes']));
+        // Cols classes from advanced mode.
+        if (!$this->sectionSettingsIsHidden()) {
+          $this->configuration['regions_classes'][$region_name] = $form_state->getValue(array_merge($settings_tab, ['regions', $region_name . '_classes']));
+          $this->configuration['regions_attributes'][$region_name] = Yaml::decode($form_state->getValue(array_merge($settings_tab, ['regions', $region_name . '_attributes'])));
+        }
       }
     }
   }

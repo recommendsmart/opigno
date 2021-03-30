@@ -8,6 +8,7 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\paragraphs\ParagraphInterface;
 use Drupal\paragraph_view_mode\StorageManagerInterface;
 use Drupal\paragraph_view_mode\ViewModeInterface;
 
@@ -37,6 +38,10 @@ function paragraph_view_mode_help($route_name, RouteMatchInterface $route_match)
  * Implements hook_entity_view_mode_alter().
  */
 function paragraph_view_mode_entity_view_mode_alter(&$view_mode, EntityInterface $entity, $context) {
+  if (!$entity instanceof ParagraphInterface) {
+    return;
+  }
+
   $field_name = StorageManagerInterface::FIELD_NAME;
   if (!$entity->hasField($field_name) || $view_mode === ViewModeInterface::PREVIEW) {
     return;
@@ -48,8 +53,8 @@ function paragraph_view_mode_entity_view_mode_alter(&$view_mode, EntityInterface
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function paragraph_view_mode_form_paragraphs_type_edit_form_alter(&$form, FormStateInterface $formState) {
-  $paragraph = $formState->getFormObject();
+function paragraph_view_mode_form_paragraphs_type_edit_form_alter(&$form, FormStateInterface $form_state) {
+  $paragraph = $form_state->getFormObject();
   $paragraphType = $paragraph->getEntity();
 
   $config_name = StorageManagerInterface::CONFIG_NAME;
@@ -70,6 +75,18 @@ function paragraph_view_mode_form_paragraphs_type_edit_form_alter(&$form, FormSt
     '#default_value' => $paragraphType->getThirdPartySetting($config_name, 'enabled') ?: FALSE,
   ];
 
+  $form[$config_name]['label'] = [
+    '#title' => t('Label'),
+    "#description" => t('If you do not set the label, the default will be used instead: %label', ['%label' => StorageManagerInterface::FIELD_LABEL]),
+    '#type' => 'textfield',
+    '#default_value' => $paragraphType->getThirdPartySetting($config_name, 'label') ?: NULL,
+    '#states' => [
+      'visible' => [
+        ':input[name="paragraph_view_mode[enabled]"]' => ['checked' => TRUE],
+      ],
+    ],
+  ];
+
   $form['actions']['submit']['#submit'][] = 'paragraph_view_mode_form_paragraphs_type_edit_form_submit';
 }
 
@@ -78,22 +95,28 @@ function paragraph_view_mode_form_paragraphs_type_edit_form_alter(&$form, FormSt
  *
  * @param array $form
  *   Form structure.
- * @param \Drupal\Core\Form\FormStateInterface $formState
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   Form state object.
  */
-function paragraph_view_mode_form_paragraphs_type_edit_form_submit(array &$form, FormStateInterface $formState) {
+function paragraph_view_mode_form_paragraphs_type_edit_form_submit(array &$form, FormStateInterface $form_state) {
   $config_name = StorageManagerInterface::CONFIG_NAME;
-  $enable = $formState->getValue([$config_name, 'enabled']);
+  $enable = $form_state->getValue([$config_name, 'enabled']);
+  $label = $form_state->getValue([$config_name, 'label'], NULL);
 
-  $paragraphType = $formState->getFormObject()->getEntity();
+  $paragraphType = $form_state->getFormObject()->getEntity();
   $bundle = $paragraphType->getOriginalId();
 
+  /** @var \Drupal\paragraph_view_mode\StorageManagerInterface $storage_manager */
   $storage_manager = \Drupal::service('paragraph_view_mode.storage_manager');
 
   if (!empty($enable)) {
     $enable = $storage_manager->addField($bundle);
     if ($enable) {
       $storage_manager->addToFormDisplay($bundle);
+    }
+    if ($label) {
+      $storage_manager->setFieldLabel($bundle, $label);
+      $paragraphType->setThirdPartySetting($config_name, 'label', $label);
     }
   }
   else {

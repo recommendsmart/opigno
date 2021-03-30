@@ -4,12 +4,11 @@ namespace Drupal\commerce_funds\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Utility\Token;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
-use Drupal\commerce_funds\Entity\Transaction;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a confirmation form to approve a withdrawal request.
@@ -58,11 +57,11 @@ class ConfirmWithdrawalApproval extends ConfirmFormBase {
   }
 
   /**
-   * ID of the withdrawal request.
+   * The transaction.
    *
-   * @var int
+   * @var \Drupal\commerce_funds\Entity\Transaction
    */
-  protected $requestId;
+  protected $transaction;
 
   /**
    * {@inheritdoc}
@@ -74,9 +73,9 @@ class ConfirmWithdrawalApproval extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, string $request_id = NULL) {
-    $this->requestId = $request_id;
-
+  public function buildForm(array $form, FormStateInterface $form_state, string $request_hash = NULL) {
+    // Load the transaction.
+    $this->transaction = \Drupal::service('commerce_funds.transaction_manager')->loadTransactionByHash($request_hash);
     return parent::buildForm($form, $form_state);
   }
 
@@ -91,15 +90,14 @@ class ConfirmWithdrawalApproval extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return t('Are you sure you want to approve request: %id?', ['%id' => $this->requestId]);
+    return $this->t('Are you sure you want to approve request: %id?', ['%id' => $this->transaction->id()]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // Load the request.
-    $transaction = Transaction::load($this->requestId);
+    $transaction = $this->transaction;
     // Perform transaction.
     \Drupal::service('commerce_funds.transaction_manager')->performTransaction($transaction);
 

@@ -47,30 +47,11 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
           'unsigned' => TRUE,
           'not null' => TRUE,
           'default' => 0,
-        ],
-        'status' => [
-          'description' => 'Boolean indicating whether the node is published (visible to non-administrators).',
-          'type' => 'int',
-          'not null' => TRUE,
-          'default' => 1,
-        ],
-        'sticky' => [
-          'description' => 'Boolean indicating whether the node is sticky.',
-          'type' => 'int',
-          'not null' => FALSE,
-          'default' => 0,
-          'size' => 'tiny',
-        ],
-        'created' => [
-          'description' => 'The Unix timestamp when the node was created.',
-          'type' => 'int',
-          'not null' => TRUE,
-          'default' => 0,
-        ],
+        ]
       ],
       'primary key' => ['entity_id','entity_type_id', 'tid'],
       'indexes' => [
-        'term_node' => ['tid', 'status', 'sticky', 'created'],
+        'term_entity' => ['entity_id','entity_type_id', 'tid'],
       ],
       'foreign keys' => [
         'term' => [

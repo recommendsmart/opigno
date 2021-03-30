@@ -8,7 +8,7 @@ unit_sets:
         plural: 'cups'
         abbreviation: 'c'
         aliases: {  }
-      us liquid pint':
+      us liquid pint:
         name: 'pint'
         plural: 'pints'
         abbreviation: 'pt'
@@ -107,7 +107,7 @@ unit_sets:
         plural: 'cloves'
         abbreviation: 'clv'
         aliases: {  }
-      load:
+      loaf:
         name: 'loaf'
         plural: 'loaves'
         abbreviation: 'lf'

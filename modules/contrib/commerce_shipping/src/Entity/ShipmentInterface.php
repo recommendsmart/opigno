@@ -5,6 +5,7 @@ namespace Drupal\commerce_shipping\Entity;
 use Drupal\commerce_shipping\Plugin\Commerce\PackageType\PackageTypeInterface as PackageTypePluginInterface;
 use Drupal\commerce_shipping\ProposedShipment;
 use Drupal\commerce_shipping\ShipmentItem;
+use Drupal\commerce_order\EntityAdjustableInterface;
 use Drupal\commerce_price\Price;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
@@ -14,7 +15,14 @@ use Drupal\profile\Entity\ProfileInterface;
 /**
  * Defines the interface for shipments.
  */
-interface ShipmentInterface extends ContentEntityInterface, EntityChangedInterface {
+interface ShipmentInterface extends ContentEntityInterface, EntityAdjustableInterface, EntityChangedInterface {
+
+  /**
+   * Clears the shipment's rate, its shipping service & method.
+   *
+   * @return $this
+   */
+  public function clearRate();
 
   /**
    * Populates the shipment from the given proposed shipment.
@@ -195,6 +203,16 @@ interface ShipmentInterface extends ContentEntityInterface, EntityChangedInterfa
   public function removeItem(ShipmentItem $shipment_item);
 
   /**
+   * Gets the total quantity.
+   *
+   * Represents the sum of the quantities of all shipment items.
+   *
+   * @return string
+   *   The total quantity.
+   */
+  public function getTotalQuantity();
+
+  /**
    * Gets the total declared value.
    *
    * Represents the sum of the declared values of all shipment items.
@@ -226,10 +244,30 @@ interface ShipmentInterface extends ContentEntityInterface, EntityChangedInterfa
   public function setWeight(Weight $weight);
 
   /**
-   * Gets the shipment amount.
+   * Gets the original amount.
    *
-   * Represents the cost of shipping the shipment using
-   * the selected shipping method and service.
+   * This is the amount before promotions and fees are applied.
+   *
+   * @return \Drupal\commerce_price\Price|null
+   *   The original amount, or NULL if unknown.
+   */
+  public function getOriginalAmount();
+
+  /**
+   * Sets the original amount.
+   *
+   * @param \Drupal\commerce_price\Price $original_amount
+   *   The original amount.
+   *
+   * @return $this
+   */
+  public function setOriginalAmount(Price $original_amount);
+
+  /**
+   * Gets the amount.
+   *
+   * Calculated from the original amount by applying
+   * promotions and fees during order refresh.
    *
    * @return \Drupal\commerce_price\Price|null
    *   The shipment amount, or NULL if unknown.
@@ -237,7 +275,7 @@ interface ShipmentInterface extends ContentEntityInterface, EntityChangedInterfa
   public function getAmount();
 
   /**
-   * Sets the shipment amount.
+   * Sets the amount.
    *
    * @param \Drupal\commerce_price\Price $amount
    *   The shipment amount.
@@ -245,6 +283,25 @@ interface ShipmentInterface extends ContentEntityInterface, EntityChangedInterfa
    * @return $this
    */
   public function setAmount(Price $amount);
+
+  /**
+   * Gets the adjusted amount.
+   *
+   * @param string[] $adjustment_types
+   *   The adjustment types to include in the adjusted price.
+   *   Examples: fee, promotion, tax. Defaults to all adjustment types.
+   *
+   * @return \Drupal\commerce_price\Price|null
+   *   The adjusted amount, or NULL.
+   */
+  public function getAdjustedAmount(array $adjustment_types = []);
+
+  /**
+   * Removes all adjustments that belong to the shipment.
+   *
+   * @return $this
+   */
+  public function clearAdjustments();
 
   /**
    * Gets the shipment tracking code.

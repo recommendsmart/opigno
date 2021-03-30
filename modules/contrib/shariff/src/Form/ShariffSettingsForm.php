@@ -100,6 +100,7 @@ class ShariffSettingsForm extends ConfigFormBase {
         'threema' => $this->t('Threema'),
         'mail' => $this->t('E-Mail'),
         'info' => $this->t('Info Button'),
+        'buffer' => $this->t('Buffer'),
       ],
       '#default_value' => $settings['services'],
     ];

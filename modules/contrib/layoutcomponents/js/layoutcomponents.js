@@ -8,7 +8,7 @@
   'use strict';
 
   var ajax = Drupal.ajax,
-      behaviors = Drupal.behaviors;
+    behaviors = Drupal.behaviors;
 
   behaviors.editBlockInline = {
     attach: function (context) {
@@ -49,7 +49,7 @@
       });
 
       // Handle
-      $('#layout-builder').on('replaceWith', function(event) {
+      $('#layout-builder').on('replaceWith', function (event) {
         alert('closed');
       });
     }
@@ -63,7 +63,7 @@
    * @return boolean
    *   True or false.
    */
-  Drupal.isEmpty = function(data) {
+  Drupal.isEmpty = function (data) {
     if (data == null || data.length < 1 || data === '') {
       return true;
     }
@@ -95,12 +95,14 @@
           (data.value.length > 0 ? item.show() : item.hide());
 
           break;
+
         }
         case "element": {
 
           item.changeElementType(data.value);
 
           break;
+
         }
         case "class": {
 
@@ -113,6 +115,7 @@
           item.addClass(data.value);
 
           break;
+
         }
         case "style": {
 
@@ -131,8 +134,8 @@
             if (data.style === 'background') {
               // Alter background style.
               item.css({
-                'background-position':'50% 50%',
-                'background-size':'cover'
+                'background-position': '50% 50%',
+                'background-size': 'cover'
               })
             }
 
@@ -145,11 +148,13 @@
 
           }
           break;
+
         }
         case "attribute": {
           // Alter attribute.
           item.attr(data.attribute, data.value);
           break;
+
         }
       }
     })
@@ -412,7 +417,6 @@
       return style;
     };
 
-
     if (style === 'font-size') {
       if (value !== '') {
         value += 'px';
@@ -454,7 +458,7 @@
 
         if (!Drupal.isEmpty(type) && !Drupal.isEmpty(size)) {
           values = Drupal.builBorder(type, size, processedcolor);
-        } else if (!Drupal.isEmpty(background)){
+        } else if (!Drupal.isEmpty(background)) {
           background = Drupal.buildBackground(background, color.val(), value, item);
           values = {
             value: background,
@@ -614,9 +618,9 @@
     }
 
     if (style === 'margin-top' ||
-        style === 'margin-right' ||
-        style === 'margin-bottom' ||
-        style === 'margin-left'
+      style === 'margin-right' ||
+      style === 'margin-bottom' ||
+      style === 'margin-left'
     ) {
       value = value > 0 ? value + "px" : "0";
       data.push({
@@ -708,7 +712,7 @@
     return data;
   }
 
-  behaviors.inlineTypeAttribute = function(input, item) {
+  behaviors.inlineTypeAttribute = function (input, item) {
     input = $(input);
     let input_type = input.attr('lc-input');
     let value = input.val();
@@ -736,7 +740,7 @@
     if (style === "image") {
       if (!item.is('img')) {
         let element = info.id + "-edit";
-        item.find(".content").first().append("<img class='" + element + "'>");
+        item.find(".content").first().append("<img class='" + element + "' style='max-width: 100%'>");
         item = item.find("." + element);
       }
 
@@ -772,7 +776,7 @@
     return data;
   }
 
-  Drupal.setHeight = function(type, size) {
+  Drupal.setHeight = function (type, size) {
     let nvalue = '';
     let nsize = 0;
 
@@ -798,7 +802,7 @@
     }
   }
 
-  Drupal.builBorder = function(type, size, color) {
+  Drupal.builBorder = function (type, size, color) {
     let value = '';
 
     let ntype = 'border';
@@ -823,7 +827,7 @@
     };
   }
 
-  Drupal.getMedia = function(media) {
+  Drupal.getMedia = function (media) {
 
     if (Drupal.isEmpty(media)) {
       return '';
@@ -832,10 +836,9 @@
     // Get media url from Drupal.
     let data = $.ajax({
       url: '/layoutcomponents/media/' + media,
-      method :'GET',
+      method: 'GET',
       async: false
     }).responseText;
-
 
     if (Drupal.isEmpty(data)) {
       throw new Error('Empty image');
@@ -844,7 +847,7 @@
     return $.parseJSON(data).uri;
   }
 
-  Drupal.buildBackground = function(media, color, opacity, item) {
+  Drupal.buildBackground = function (media, color, opacity, item) {
     let res = '';
 
     // Get media url from Drupal.
@@ -860,19 +863,19 @@
     }
     else {
       // If item has not parallax return normal item.
-      res = 'linear-gradient(' + color + ', ' + color + '), ' + 'url('+ media +')' + '';
+      res = 'linear-gradient(' + color + ', ' + color + '), ' + 'url(' + media + ')' + '';
     }
 
     return res;
   }
 
-  Drupal.buildParallax = function(item, src, color) {
+  Drupal.buildParallax = function (item, src, color) {
     if (!Drupal.isEmpty(src)) {
       item.parallax({ imageSrc: src });
     }
   }
 
-  Drupal.hexToRgbA = function(hex, opacity) {
+  Drupal.hexToRgbA = function (hex, opacity) {
 
     if (Drupal.isEmpty(opacity)) {
       opacity = 1;
@@ -882,24 +885,24 @@
       return 'rgba(255,255,255,0)';
     }
     let c;
-    if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
-      c= hex.substring(1).split('');
-      if(c.length === 3){
-        c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+    if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+      c = hex.substring(1).split('');
+      if (c.length === 3) {
+        c = [c[0], c[0], c[1], c[1], c[2], c[2]];
       }
-      c= '0x'+c.join('');
-      return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',' + opacity + ')';
+      c = '0x' + c.join('');
+      return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',' + opacity + ')';
     }
     throw new Error('Bad Hex');
   }
 
   Drupal.rgbToHex = function (rgb) {
-    function rgb2hex(rgb){
+    function rgb2hex(rgb) {
       rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
       return (rgb && rgb.length === 4) ? "#" +
-          ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
-          ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
-          ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
+        ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) +
+        ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) +
+        ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : '';
     }
   }
 
@@ -907,10 +910,12 @@
     attach: function (context) {
       $('.parallax-window').each(function () {
         let element = $(this);
-        $(element).parallax({imageSrc: element.attr('data-image-src')});
+        $(element).parallax({ imageSrc: element.attr('data-image-src') });
       });
     }
   };
+
+
 
 
 })(jQuery, Drupal, drupalSettings);

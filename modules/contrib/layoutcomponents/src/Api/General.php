@@ -30,9 +30,8 @@ trait General {
       $class .= '-' . $data['class'];
     }
 
-    // lc-inline_column_first-title
     // Serialize the LC attributes.
-    $data['attributes']['input'] = $data['attributes']['lc']['input'];
+    $data['attributes']['input'] = (isset($data['attributes']['lc']['input'])) ? $data['attributes']['lc']['input'] : '';
     $data['attributes']['lc']['id'] = 'lc-inline_' . $data['id'];
     $data['attributes']['lc']['class'] = $class;
     $data['attributes']['lc'] = Json::encode($data['attributes']['lc']);
@@ -44,6 +43,10 @@ trait General {
       '#title' => $this->getLcTitle($data),
       '#attributes' => $data['attributes'],
     ];
+
+    if (array_key_exists('#access', $data)) {
+      $new_element['#access'] = $data['#access'];
+    }
 
     // Merge with old element.
     $element = array_merge($new_element, $element);
@@ -58,6 +61,11 @@ trait General {
    *   The default values.
    */
   public function getLcTitle(array $data) {
+    $data['description'] = str_replace('<br />The maximum number of media items have been selected.', '', $data['description']);
+    $data['description'] = str_replace('<br />One media item remaining.', '', $data['description']);
+    if (strpos($data['title'], 'lc-lateral-title')) {
+      return $data['title'];
+    }
     return '<span class="lc-lateral-title">' . $data['title'] . '</span>' . '<span class="lc-lateral-info" title="' . $data['description'] . '"/>';
   }
 

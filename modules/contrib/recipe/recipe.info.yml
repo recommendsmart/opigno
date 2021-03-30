@@ -2,7 +2,7 @@ name: Recipe
 type: module
 description: 'Collect and display recipes.'
 package: Recipe
-# core: 8.x
+core_version_requirement: ^8.8 || ^9
 dependencies:
   - recipe:ingredient
   - drupal:node
@@ -10,8 +10,7 @@ dependencies:
   - drupal:rdf
   - drupal:text
 
-# Information added by Drupal.org packaging script on 2017-10-01
-version: '8.x-2.0-alpha2'
-core: '8.x'
+# Information added by Drupal.org packaging script on 2021-01-02
+version: '8.x-2.0'
 project: 'recipe'
-datestamp: 1506832149
+datestamp: 1609618859

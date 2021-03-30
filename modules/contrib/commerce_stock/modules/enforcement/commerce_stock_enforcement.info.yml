@@ -5,10 +5,11 @@ package: Commerce Stock
 dependencies:
   - commerce:commerce_product
   - commerce_stock:commerce_stock
-# core: 8.x
+core: 8.x
+core_version_requirement: ^8 || ^9
+configure: commerce_stock_enforcement.settings
 
-# Information added by Drupal.org packaging script on 2019-04-12
-version: '8.x-1.0-alpha3'
-core: '8.x'
+# Information added by Drupal.org packaging script on 2020-11-17
+version: '8.x-1.0-alpha5'
 project: 'commerce_stock'
-datestamp: 1555061946
+datestamp: 1605624597

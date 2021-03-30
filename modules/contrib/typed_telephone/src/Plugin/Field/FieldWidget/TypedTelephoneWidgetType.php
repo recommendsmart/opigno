@@ -38,16 +38,16 @@ class TypedTelephoneWidgetType extends WidgetBase {
 
     $elements['size'] = [
       '#type' => 'number',
-      '#title' => t('Size of telephone textfield'),
+      '#title' => $this->t('Size of telephone textfield'),
       '#default_value' => $this->getSetting('size'),
       '#required' => TRUE,
       '#min' => 1,
     ];
     $elements['placeholder'] = [
       '#type' => 'textfield',
-      '#title' => t('Placeholder'),
+      '#title' => $this->t('Placeholder'),
       '#default_value' => $this->getSetting('placeholder'),
-      '#description' => t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
+      '#description' => $this->t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
     ];
 
     return $elements;
@@ -59,9 +59,9 @@ class TypedTelephoneWidgetType extends WidgetBase {
   public function settingsSummary() {
     $summary = [];
 
-    $summary[] = t('Telephone textfield size: @size', ['@size' => $this->getSetting('size')]);
+    $summary[] = $this->t('Telephone textfield size: @size', ['@size' => $this->getSetting('size')]);
     if (!empty($this->getSetting('placeholder'))) {
-      $summary[] = t('Placeholder: @placeholder', ['@placeholder' => $this->getSetting('placeholder')]);
+      $summary[] = $this->t('Placeholder: @placeholder', ['@placeholder' => $this->getSetting('placeholder')]);
     }
 
     return $summary;
@@ -75,7 +75,7 @@ class TypedTelephoneWidgetType extends WidgetBase {
       '#type' => 'html_tag',
       '#tag' => 'div',
       '#open' => TRUE,
-      '#attributes' => array('class' => array('container-inline')),
+      '#attributes' => ['class' => ['container-inline']],
       '#description' => $element['#description'],
     ] + $element;
 
@@ -91,8 +91,8 @@ class TypedTelephoneWidgetType extends WidgetBase {
     $element['details']['value'] = [
       '#type' => 'textfield',
       '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,
-      '#placeholder' => $this->getSetting['placeholder'],
-      '#size' => $this->getSetting['size'],
+      '#placeholder' => $this->getSetting('placeholder'),
+      '#size' => $this->getSetting('size'),
       '#required' => $element['#required'],
     ];
 

@@ -7,4 +7,6 @@ numberPattern: invoice_default
 footerText: ''
 paymentTerms: ''
 workflow: invoice_default
+sendConfirmation: false
+confirmationBcc: ''
 traits: {  }

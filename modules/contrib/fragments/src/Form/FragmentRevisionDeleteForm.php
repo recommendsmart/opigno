@@ -29,7 +29,7 @@ class FragmentRevisionDeleteForm extends ConfirmFormBase {
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $FragmentStorage;
+  protected $fragmentStorage;
 
   /**
    * The database connection.
@@ -56,7 +56,7 @@ class FragmentRevisionDeleteForm extends ConfirmFormBase {
    *   Date formatter service.
    */
   public function __construct(EntityStorageInterface $entity_storage, Connection $connection, DateFormatterInterface $dateFormatter) {
-    $this->FragmentStorage = $entity_storage;
+    $this->fragmentStorage = $entity_storage;
     $this->connection = $connection;
     $this->dateFormatter = $dateFormatter;
   }
@@ -116,7 +116,7 @@ class FragmentRevisionDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $fragment_revision = NULL) {
-    $this->revision = $this->FragmentStorage->loadRevision($fragment_revision);
+    $this->revision = $this->fragmentStorage->loadRevision($fragment_revision);
     $form = parent::buildForm($form, $form_state);
 
     return $form;
@@ -126,9 +126,15 @@ class FragmentRevisionDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->FragmentStorage->deleteRevision($this->revision->getRevisionId());
+    $this->fragmentStorage->deleteRevision($this->revision->getRevisionId());
 
-    $this->logger('content')->notice('Fragment: deleted %title revision %revision.', ['%title' => $this->revision->label(), '%revision' => $this->revision->getRevisionId()]);
+    $this->logger('content')->notice(
+      'Fragment: deleted %title revision %revision.',
+      [
+        '%title' => $this->revision->label(),
+        '%revision' => $this->revision->getRevisionId(),
+      ]
+    );
 
     $replacements = [
       '%revision-date' => $this->dateFormatter->format($this->revision->getRevisionCreationTime()),

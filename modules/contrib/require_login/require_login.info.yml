@@ -1,5 +1,5 @@
 name: 'Require Login'
-description: 'Require login authentication to view pages regardless of user role permissions.'
+description: 'Provides catch-all solution to require user authentication on pages.'
 type: module
 core: 8.x
 core_version_requirement: ^8 || ^9
@@ -8,7 +8,7 @@ dependencies:
   - drupal:user
   - drupal:node
 
-# Information added by Drupal.org packaging script on 2021-02-21
-version: '8.x-2.3'
+# Information added by Drupal.org packaging script on 2021-03-11
+version: '8.x-2.4'
 project: 'require_login'
-datestamp: 1613936551
+datestamp: 1615474750

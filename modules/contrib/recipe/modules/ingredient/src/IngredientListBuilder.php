@@ -54,7 +54,7 @@ class IngredientListBuilder extends EntityListBuilder {
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
       $entity_type,
-      $container->get('entity.manager')->getStorage($entity_type->id()),
+      $container->get('entity_type.manager')->getStorage($entity_type->id()),
       $container->get('date.formatter'),
       $container->get('language_manager')
     );
@@ -86,7 +86,7 @@ class IngredientListBuilder extends EntityListBuilder {
     $row['name'] = $entity->toLink();
     $row['changed'] = $this->dateFormatter->format($entity->getChangedTime(), 'short');
     if ($this->languageManager->isMultilingual()) {
-      $row['language_name'] = $this->languageManager->getLanguageName($entity->language());
+      $row['language_name'] = $this->languageManager->getLanguageName($entity->language()->getId());
     }
     return $row + parent::buildRow($entity);
   }

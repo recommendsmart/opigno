@@ -14,7 +14,9 @@ use Drupal\field_inheritance\FieldInheritancePluginInterface;
  *     "entity_reference",
  *     "image",
  *     "file",
- *     "webform"
+ *     "webform",
+ *     "entity_reference_revisions",
+ *     "paragraphs"
  *   }
  * )
  */

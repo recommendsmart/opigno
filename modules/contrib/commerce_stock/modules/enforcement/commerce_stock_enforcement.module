@@ -10,6 +10,7 @@ use Drupal\commerce\PurchasableEntityInterface;
 use Drupal\commerce\Response\NeedsRedirectException;
 use Drupal\commerce_order\Entity\OrderInterface;
 use Drupal\commerce_product\Entity\ProductVariation;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\views\Form\ViewsForm;
@@ -25,7 +26,8 @@ function commerce_stock_enforcement_form_alter(
 ) {
 
   // Add to cart form.
-  if (strpos($form_id, "commerce_order_item_add_to_cart_form") !== FALSE) {
+  if (strpos($form_id, "commerce_order_item_add_to_cart_form") !== FALSE
+    || strpos($form_id, "commerce_order_item_dc_ajax_add_cart_form") !== FALSE) {
     /** @var \Drupal\commerce_product\Entity\ProductInterface $product */
     $product = $form_state->get('product');
     // Get the product variation.
@@ -47,6 +49,10 @@ function commerce_stock_enforcement_form_alter(
     if (!$instock) {
       $form['actions']['submit']['#value'] = t('Out of stock');
       $form['actions']['submit']['#disabled'] = TRUE;
+      // If quantity is visible.
+      if (isset($form['quantity'])) {
+        $form['quantity']['#disabled'] = TRUE;
+      }
     }
   }
 
@@ -63,7 +69,12 @@ function commerce_stock_enforcement_form_alter(
         ->getStorage('commerce_order')
         ->load($order_id);
       // Force a check to display the stock state to the user.
-      commerce_stock_enforcement_is_order_in_stock($order, TRUE);
+      $request_method = \Drupal::requestStack()->getCurrentRequest()->getMethod();
+      // If a GET e.g. not a submit/post.
+      if ($request_method == 'GET') {
+        // Perform a check to display the stock state to the user.
+        commerce_stock_enforcement_is_order_in_stock($order, TRUE);
+      }
       // Add a form validate needed for the add to cart action.
       $form['#validate'] = array_merge($form['#validate'], ['commerce_stock_enforcement_cart_order_item_views_form_validate']);
     }
@@ -76,7 +87,7 @@ function commerce_stock_enforcement_form_alter(
     $form_object = $form_state->getFormObject();
     /** @var \Drupal\commerce_order\Entity\OrderInterface $order */
     $order = $form_object->getOrder();
-    if (!commerce_stock_enforcement_is_order_in_stock($order, FALSE)) {
+    if ($form['#step_id'] != 'complete' && !commerce_stock_enforcement_is_order_in_stock($order, FALSE)) {
       // Redirect back to cart.
       $response = new RedirectResponse('/cart');
       $response->send();
@@ -124,15 +135,29 @@ function commerce_stock_enforcement_add_to_cart_form_validate(
   // Get the already ordered quantity.
   $already_ordered = commerce_stock_enforcement_get_ordered_quantity($purchased_entity, $context);
   $total_requested = $already_ordered + $quantity;
-  if ($total_requested > $stock_level) {
-    $form_state->setError(
-      $form,
-      t('Sorry we only have %qty in stock and you already added %qty_o to your cart.', [
-        '%qty' => $stock_level,
-        '%qty_o' => $already_ordered,
-      ])
-    );
+  if ($total_requested <= $stock_level) {
+    return;
   }
+
+  if ($already_ordered === 0) {
+    $message_text = Drupal::config('commerce_stock_enforcement.settings')
+      ->get('insufficient_stock_add_to_cart_zero_in_cart');
+    $message_text = Xss::filter($message_text);
+    $message = t($message_text, [
+      '%qty' => $stock_level,
+      '%qty_asked' => $quantity,
+    ]);
+  }
+  else {
+    $message_text = Drupal::config('commerce_stock_enforcement.settings')
+      ->get('insufficient_stock_add_to_cart_quantity_in_cart');
+    $message_text = Xss::filter($message_text);
+    $message = t($message_text, [
+      '%qty' => $stock_level,
+      '%qty_o' => $already_ordered,
+    ]);
+  }
+  $form_state->setError($form, $message);
 }
 
 /**
@@ -157,11 +182,13 @@ function commerce_stock_enforcement_cart_order_item_views_form_validate(
   }
 
   $values = $form_state->getValues();
-  $quantities = $values['edit_quantity'];
+  if (isset($values['edit_quantity'])) {
+    $quantities = $values['edit_quantity'];
+  }
+  else {
+    $quantities = [];
+  }
 
-  /** @var \Drupal\views\ViewExecutable $view */
-  $view = reset($form_state->getBuildInfo()['args']);
-  // Get the order ID from the view argument.
   /** @var \Drupal\views\ViewExecutable $view */
   $view = reset($form_state->getBuildInfo()['args']);
   // Get the order ID from the view argument.
@@ -173,18 +200,30 @@ function commerce_stock_enforcement_cart_order_item_views_form_validate(
 
   foreach ($order->getItems() as $id => $order_item) {
     $purchased_entity = $order_item->getPurchasedEntity();
+    if (!$purchased_entity) {
+      // Not every order item has a purchased entity.
+      continue;
+    }
     $name = $purchased_entity->getTitle();
-    $qty = $quantities[$id];
+    if (isset($quantities) && isset($quantities[$id])) {
+      $qty = $quantities[$id];
+    }
+    else {
+      $qty = 1;
+    }
     $context = commerce_stock_enforcement_get_context($purchased_entity);
     $stock_level = commerce_stock_enforcement_get_stock_level($purchased_entity, $context);
     // Get the already ordered quantity.
     $already_ordered = commerce_stock_enforcement_get_ordered_quantity($purchased_entity, $context);
 
     if ($qty > $stock_level) {
+      $message_text = Drupal::config('commerce_stock_enforcement.settings')
+        ->get('insufficient_stock_cart');
+      $message_text = Xss::filter($message_text);
       $form_state->setError(
         $form['edit_quantity'][$id],
         // t('Sorry we only have %qty in stock', array('%qty' => $stock_level))
-        t('The maximum quantity for %name that can be ordered is %qty.', [
+        t($message_text, [
           '%name' => $name,
           '%qty' => $stock_level,
         ])
@@ -217,7 +256,7 @@ function commerce_stock_enforcement_checkout_form_validate(
 
   if (!commerce_stock_enforcement_is_order_in_stock($order, FALSE)) {
     $cart_page = Url::fromRoute('commerce_cart.page', [], ['absolute' => TRUE]);
-    drupal_set_message(t('One or more Items are out of stock. Checkout canceled!'), 'error');
+    \Drupal::messenger()->addError('One or more Items are out of stock. Checkout canceled!');
     throw new NeedsRedirectException($cart_page->toString());
   }
 }
@@ -230,6 +269,9 @@ function commerce_stock_enforcement_checkout_form_validate(
  *
  * @return \Drupal\commerce\Context
  *   The context.
+ *
+ * @see \Drupal\commerce_stock\ContextCreatorTrait::getContextDetails()
+ * @see \Drupal\commerce_cart\Form\AddToCartForm::selectStore()
  */
 function commerce_stock_enforcement_get_context(
   PurchasableEntityInterface $entity
@@ -317,6 +359,7 @@ function commerce_stock_enforcement_is_order_in_stock(
   foreach ($order->getItems() as $id => $order_item) {
     $purchased_entity = $order_item->getPurchasedEntity();
     if (!$purchased_entity) {
+      // Not every order item has a purchased entity.
       continue;
     }
     $name = $purchased_entity->getTitle();
@@ -324,10 +367,13 @@ function commerce_stock_enforcement_is_order_in_stock(
     $stock_level = commerce_stock_enforcement_get_stock_level($purchased_entity, $order_context);
     if ($qty > $stock_level) {
       if ($show_warnings) {
-        drupal_set_message(t('The maximum quantity for %name that can be ordered is %qty.', [
+        $message_text = Drupal::config('commerce_stock_enforcement.settings')
+          ->get('insufficient_stock_cart');
+        $message_text = Xss::filter($message_text);
+        \Drupal::messenger()->addError(t($message_text, [
           '%name' => $name,
           '%qty' => $stock_level,
-        ]), 'error');
+        ]));
       }
       $order_in_stock = FALSE;
     }

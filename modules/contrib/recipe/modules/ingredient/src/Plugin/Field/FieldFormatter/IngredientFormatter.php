@@ -3,11 +3,13 @@
 namespace Drupal\ingredient\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceFormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Link;
-use Drupal\ingredient\IngredientUnitTrait;
+use Drupal\ingredient\Utility\IngredientUnitUtility;
+use Drupal\ingredient\Utility\IngredientQuantityUtility;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'ingredient_default' formatter.
@@ -23,7 +25,64 @@ use Drupal\ingredient\IngredientUnitTrait;
  */
 class IngredientFormatter extends EntityReferenceFormatterBase {
 
-  use IngredientUnitTrait;
+  /**
+   * The ingredient.unit service.
+   *
+   * @var \Drupal\ingredient\Utility\IngredientUnitUtility
+   */
+  protected $ingredientUnitUtility;
+
+  /**
+   * The ingredient.quantity service.
+   *
+   * @var \Drupal\ingredient\Utility\IngredientQuantityUtility
+   */
+  protected $ingredientQuantityUtility;
+
+  /**
+   * Constructs a IngredientFormatter service.
+   *
+   * @param string $plugin_id
+   *   The plugin_id for the formatter.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The definition of the field to which the formatter is associated.
+   * @param array $settings
+   *   The formatter settings.
+   * @param string $label
+   *   The formatter label display setting.
+   * @param string $view_mode
+   *   The view mode.
+   * @param array $third_party_settings
+   *   Any third party settings.
+   * @param \Drupal\ingredient\Utility\IngredientUnitUtility $ingredient_unit_utility
+   *   The ingredient.unit service.
+   * @param \Drupal\ingredient\Utility\IngredientQuantityUtility $ingredient_quantity_utility
+   *   The ingredient.quantity service.
+   */
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, IngredientUnitUtility $ingredient_unit_utility, IngredientQuantityUtility $ingredient_quantity_utility) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
+    $this->ingredientUnitUtility = $ingredient_unit_utility;
+    $this->ingredientQuantityUtility = $ingredient_quantity_utility;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $plugin_id,
+      $plugin_definition,
+      $configuration['field_definition'],
+      $configuration['settings'],
+      $configuration['label'],
+      $configuration['view_mode'],
+      $configuration['third_party_settings'],
+      $container->get('ingredient.unit'),
+      $container->get('ingredient.quantity')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -96,7 +155,7 @@ class IngredientFormatter extends EntityReferenceFormatterBase {
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $fraction_format = $this->getSetting('fraction_format');
     $output_as_link = $this->getSetting('link');
-    $unit_list = $this->getConfiguredUnits();
+    $unit_list = $this->ingredientUnitUtility->getConfiguredUnits();
     $elements = [];
 
     foreach ($this->getEntitiesToView($items, $langcode) as $delta => $entity) {
@@ -106,13 +165,10 @@ class IngredientFormatter extends EntityReferenceFormatterBase {
 
       // If the link should be displayed and the entity has a URI, display the
       // link.
-      if ($output_as_link && !$entity->isNew()) {
-        $url = $entity->toUrl();
-        $name = Link::fromTextAndUrl($name, $url);
-      }
+      $url = $output_as_link && !$entity->isNew() ? $entity->toUrl() : NULL;
 
       if ($items[$delta]->quantity > 0) {
-        $formatted_quantity = ingredient_quantity_from_decimal($items[$delta]->quantity, $fraction_format);
+        $formatted_quantity = $this->ingredientQuantityUtility->getQuantityFromDecimal($items[$delta]->quantity, $fraction_format);
       }
       else {
         $formatted_quantity = '&nbsp;';
@@ -130,6 +186,8 @@ class IngredientFormatter extends EntityReferenceFormatterBase {
 
       $elements[$delta] = [
         '#theme' => 'ingredient_formatter',
+        '#ingredient' => $entity,
+        '#url' => $url,
         '#name' => $name,
         '#quantity' => $formatted_quantity,
         '#unit_name' => $unit_name,

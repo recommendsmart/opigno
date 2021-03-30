@@ -2,16 +2,13 @@
 
 namespace Drupal\commerce_invoice\Controller;
 
+use Drupal\commerce_invoice\InvoiceFileManagerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\commerce_invoice\InvoicePrintBuilderInterface;
-use Drupal\entity_print\Plugin\EntityPrintPluginManagerInterface;
-use Drupal\entity_print\PrintEngineException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Provides the invoice download route.
@@ -28,33 +25,23 @@ class InvoiceController implements ContainerInjectionInterface {
   protected $configFactory;
 
   /**
-   * The Entity print plugin manager.
+   * The invoice file manager.
    *
-   * @var \Drupal\entity_print\Plugin\EntityPrintPluginManagerInterface
+   * @var \Drupal\commerce_invoice\InvoiceFileManagerInterface
    */
-  protected $pluginManager;
-
-  /**
-   * The print builder.
-   *
-   * @var \Drupal\commerce_invoice\InvoicePrintBuilderInterface
-   */
-  protected $printBuilder;
+  protected $invoiceFileManager;
 
   /**
    * Constructs a new InvoiceController object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
-   * @param \Drupal\entity_print\Plugin\EntityPrintPluginManagerInterface $plugin_manager
-   *   The Entity print plugin manager.
-   * @param \Drupal\commerce_invoice\InvoicePrintBuilderInterface $print_builder
-   *   The print builder.
+   * @param \Drupal\commerce_invoice\InvoiceFileManagerInterface $invoice_file_manager
+   *   The invoice file manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityPrintPluginManagerInterface $plugin_manager, InvoicePrintBuilderInterface $print_builder) {
+  public function __construct(ConfigFactoryInterface $config_factory, InvoiceFileManagerInterface $invoice_file_manager) {
     $this->configFactory = $config_factory;
-    $this->pluginManager = $plugin_manager;
-    $this->printBuilder = $print_builder;
+    $this->invoiceFileManager = $invoice_file_manager;
   }
 
   /**
@@ -63,8 +50,7 @@ class InvoiceController implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
-      $container->get('plugin.manager.entity_print.print_engine'),
-      $container->get('commerce_invoice.print_builder')
+      $container->get('commerce_invoice.invoice_file_manager')
     );
   }
 
@@ -84,20 +70,7 @@ class InvoiceController implements ContainerInjectionInterface {
     /** @var \Drupal\commerce_invoice\Entity\InvoiceInterface $invoice */
     $invoice = $route_match->getParameter('commerce_invoice');
 
-    try {
-      /** @var \Drupal\entity_print\Plugin\PrintEngineInterface $print_engine */
-      $print_engine = $this->pluginManager->createSelectedInstance('pdf');
-    }
-    catch (PrintEngineException $e) {
-      watchdog_exception('commerce_invoice', $e);
-      throw new NotFoundHttpException();
-    }
-    $file = $this->printBuilder->savePrintable($invoice, $print_engine);
-
-    if (!$file) {
-      throw new NotFoundHttpException();
-    }
-
+    $file = $this->invoiceFileManager->getInvoiceFile($invoice);
     $config = $this->configFactory->get('entity_print.settings');
     // Check whether we need to force the download.
     $content_disposition = $config->get('force_download') ? 'attachment' : NULL;

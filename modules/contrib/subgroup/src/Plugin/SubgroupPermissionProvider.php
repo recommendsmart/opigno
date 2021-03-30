@@ -28,33 +28,8 @@ class SubgroupPermissionProvider extends GroupContentPermissionProvider {
   /**
    * {@inheritdoc}
    */
-  public function getEntityViewPermission($scope = 'any') {
-    // Handled by the subgroup's permission layer.
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getEntityViewUnpublishedPermission($scope = 'any') {
-    // Handled by the subgroup's permission layer.
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getEntityUpdatePermission($scope = 'any') {
-    // Handled by the subgroup's permission layer.
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getEntityDeletePermission($scope = 'any') {
-    // Handled by the subgroup's permission layer.
-    return FALSE;
+  public function getEntityCreatePermission() {
+    return "create $this->pluginId entity";
   }
 
 }

@@ -64,9 +64,8 @@ class GroupContentInsertTest extends SubgroupKernelTestBase {
       )
     );
 
-    $group_storage = $this->entityTypeManager->getStorage('group');
-    $group_parent = $group_storage->load($group_parent->id());
-    $group_child = $group_storage->load($group_child->id());
+    $group_parent = $this->groupStorage->load($group_parent->id());
+    $group_child = $this->groupStorage->load($group_child->id());
 
     $this->assertTrue($this->groupSubgroupHandler->isLeaf($group_parent));
     $this->assertTrue($this->groupSubgroupHandler->isRoot($group_parent));
@@ -97,9 +96,8 @@ class GroupContentInsertTest extends SubgroupKernelTestBase {
       )
     );
 
-    $group_storage = $this->entityTypeManager->getStorage('group');
-    $group_parent = $group_storage->load($group_parent->id());
-    $group_child = $group_storage->load($group_child->id());
+    $group_parent = $this->groupStorage->load($group_parent->id());
+    $group_child = $this->groupStorage->load($group_child->id());
 
     $this->assertTrue($this->groupSubgroupHandler->isLeaf($group_parent));
     $this->assertTrue($this->groupSubgroupHandler->isRoot($group_parent));

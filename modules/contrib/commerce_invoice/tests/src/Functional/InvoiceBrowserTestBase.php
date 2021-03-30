@@ -15,8 +15,11 @@ abstract class InvoiceBrowserTestBase extends CommerceBrowserTestBase {
    * @var array
    */
   public static $modules = [
+    'commerce_cart',
+    'commerce_product',
     'commerce_invoice',
     'commerce_invoice_test',
+    'entity_print_test',
   ];
 
   /**
@@ -28,6 +31,19 @@ abstract class InvoiceBrowserTestBase extends CommerceBrowserTestBase {
       'administer commerce_invoice_type',
       'access commerce_invoice overview',
     ], parent::getAdministratorPermissions());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    // Set the default engine.
+    $config = $this->container->get('config.factory')->getEditable('entity_print.settings');
+    $config
+      ->set('print_engines.pdf_engine', 'testprintengine')
+      ->save();
   }
 
 }

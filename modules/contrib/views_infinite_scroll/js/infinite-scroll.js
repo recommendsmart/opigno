@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Infinite Scroll JS.
+ */
+
 (function ($, Drupal, debounce) {
   "use strict";
 
@@ -12,6 +17,9 @@
 
   // The selector for both manual load and automatic pager.
   var pagerSelector = '[data-drupal-views-infinite-scroll-pager]';
+
+  // The selector for the automatic pager.
+  var contentWrapperSelector = '[data-drupal-views-infinite-scroll-content-wrapper]';
 
   // The event and namespace that is bound to window for automatic scrolling.
   var scrollEvent = 'scroll.views_infinite_scroll';
@@ -37,17 +45,16 @@
     var $existingPager = view.$view.find(pagerSelector);
     $existingPager.removeOnce('infinite-scroll');
 
-    // The selector for the automatic pager.
-    var contentWrapperSelector = '[data-drupal-views-infinite-scroll-content-wrapper]';
-    if ($newView.find('[data-drupal-views-infinite-scroll-table]' + ' > tbody').length) {
-      contentWrapperSelector = '[data-drupal-views-infinite-scroll-table]' + ' > tbody';
-    }
-
     var $newRows = $newView.find(contentWrapperSelector).children();
     var $newPager = $newView.find(pagerSelector);
 
-    // Add the new rows to existing view.
-    view.$view.find(contentWrapperSelector).append($newRows);
+    view.$view.find(contentWrapperSelector)
+      // Trigger a jQuery event on the wrapper to inform that new content was
+      // loaded and allow other scripts to respond to the event.
+      .trigger('views_infinite_scroll.new_content', $newRows.clone())
+      // Add the new rows to existing view.
+      .append($newRows);
+
     // Replace the pager link with the new link and ajaxPageState values.
     $existingPager.replaceWith($newPager);
 
@@ -66,16 +73,22 @@
    *   During `unload` remove the scroll event binding.
    */
   Drupal.behaviors.views_infinite_scroll_automatic = {
-    attach : function(context, settings) {
-      $(context).find(automaticPagerSelector).once('infinite-scroll').each(function() {
+    attach : function (context, settings) {
+      $(context).find(automaticPagerSelector).once('infinite-scroll').each(function () {
         var $pager = $(this);
         $pager.addClass('visually-hidden');
-        $window.on(scrollEvent, debounce(function() {
-          if (window.innerHeight + window.pageYOffset > $pager.offset().top - scrollThreshold) {
+        var isLoadNeeded = function () {
+          return window.innerHeight + window.pageYOffset > $pager.offset().top - scrollThreshold;
+        };
+        $window.on(scrollEvent, debounce(function () {
+          if (isLoadNeeded()) {
             $pager.find('[rel=next]').click();
             $window.off(scrollEvent);
           }
         }, 200));
+        if (isLoadNeeded()) {
+          $window.trigger(scrollEvent);
+        }
       });
     },
     detach: function (context, settings, trigger) {

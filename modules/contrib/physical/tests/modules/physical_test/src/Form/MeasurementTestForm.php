@@ -45,7 +45,8 @@ class MeasurementTestForm extends FormBase {
     // Create a Length object to ensure the values are valid.
     $value = $form_state->getValue('height');
     $height = new Length($value['number'], $value['unit']);
-    drupal_set_message(t('The number is "@number" and the unit is "@unit".', [
+
+    $this->messenger()->addStatus($this->t('The number is "@number" and the unit is "@unit".', [
       '@number' => $height->getNumber(),
       '@unit' => $height->getUnit(),
     ]));

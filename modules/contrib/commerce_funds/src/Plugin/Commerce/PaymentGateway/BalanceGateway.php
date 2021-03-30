@@ -2,19 +2,19 @@
 
 namespace Drupal\commerce_funds\Plugin\Commerce\PaymentGateway;
 
+use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\commerce_payment\Entity\PaymentInterface;
 use Drupal\commerce_payment\Entity\PaymentMethodInterface;
 use Drupal\commerce_payment\PaymentMethodTypeManager;
 use Drupal\commerce_payment\PaymentTypeManager;
 use Drupal\commerce_payment\Plugin\Commerce\PaymentGateway\PaymentGatewayBase;
 use Drupal\commerce_funds\Entity\Transaction;
-use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\commerce_store\Resolver\DefaultStoreResolver;
-use Drupal\commerce_funds\Services\TransactionManager;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\commerce_funds\TransactionManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -45,7 +45,7 @@ class BalanceGateway extends PaymentGatewayBase implements BalanceGatewayInterfa
   /**
    * The transaction manager.
    *
-   * @var \Drupal\commerce_funds\Services\TransactionManager
+   * @var \Drupal\commerce_funds\TransactionManager
    */
   protected $transactionManager;
 

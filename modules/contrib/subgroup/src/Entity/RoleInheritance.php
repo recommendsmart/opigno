@@ -137,23 +137,10 @@ class RoleInheritance extends ConfigEntityBase implements RoleInheritanceInterfa
   /**
    * {@inheritdoc}
    */
-  protected function invalidateTagsOnSave($update) {
-    parent::invalidateTagsOnSave($update);
-    Cache::invalidateTags(['subgroup_role_inheritance_list:tree:' . $this->getTree()]);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static function invalidateTagsOnDelete(EntityTypeInterface $entity_type, array $entities) {
-    /** @var \Drupal\subgroup\Entity\RoleInheritanceInterface[] $entities */
-    parent::invalidateTagsOnDelete($entity_type, $entities);
-
-    $tags = [];
-    foreach ($entities as $entity) {
-      $tags[] = 'subgroup_role_inheritance_list:tree:' . $entity->getTree();
-    }
-    Cache::invalidateTags(array_unique($tags));
+  public function getListCacheTagsToInvalidate() {
+    $tags = parent::getListCacheTagsToInvalidate();
+    $tags[] = 'subgroup_role_inheritance_list:tree:' . $this->getTree();
+    return $tags;
   }
 
   /**

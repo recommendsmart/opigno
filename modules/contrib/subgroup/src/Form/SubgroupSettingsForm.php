@@ -528,8 +528,8 @@ class SubgroupSettingsForm extends FormBase {
     }
 
     $base = ['#type' => 'select', '#options' => $options, '#required' => TRUE];
-    $form['source'] = $base + ['#title' => $this->t('Source')];
-    $form['target'] = $base + ['#title' => $this->t('Target')];
+    $form['source'] = $base + ['#title' => $this->t('People with this role &hellip;')];
+    $form['target'] = $base + ['#title' => $this->t('&hellip; will inherit the following role')];
 
     $form['submit'] = [
       '#type' => 'submit',

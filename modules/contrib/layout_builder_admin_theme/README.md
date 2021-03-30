@@ -21,7 +21,7 @@ REQUIREMENTS
 ------------
 
 This module requires the following modules:
- * Layout builder (included in core)
+ * Layout builder (included in core).
 
 
 INSTALLATION
@@ -41,4 +41,4 @@ MAINTAINERS
 -----------
 
 Current maintainers:
-* Rob Duplock - https://www.drupal.org/user/3645985
+* Rob Duplock - https://www.drupal.org/user/3645985.

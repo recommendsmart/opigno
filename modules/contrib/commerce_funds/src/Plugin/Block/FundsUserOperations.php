@@ -5,9 +5,9 @@ namespace Drupal\commerce_funds\Plugin\Block;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Config\ConfigFactory;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a block for site balance.
@@ -57,8 +57,9 @@ class FundsUserOperations extends BlockBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function build() {
-    $withdrawal_methods = $this->config->get('commerce_funds.settings')->get('withdrawal_methods')['methods'];
-    $exchange_rates = $this->config->get('commerce_funds.settings')->get('exchange_rates');
+    $config = $this->config->get('commerce_funds.settings');
+    $withdrawal_methods = $config->get('withdrawal_methods');
+    $exchange_rates = $config->get('exchange_rates');
 
     return [
       '#theme' => 'user_operations',

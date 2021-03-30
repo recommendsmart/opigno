@@ -40,14 +40,6 @@ interface IfthenelseUtilitiesInterface extends PluginManagerInterface, CachedDis
   public function getFieldsByEntityBundleId(array $content_entity_types, $return_type = 'field');
 
   /**
-   * Get Entity and Bundle list by Field name.
-   *
-   * @param string $fields
-   *   Content Entity id.
-   */
-  public function getEntityByFieldName($fields);
-
-  /**
    * Get a specific field by entity, bundle id and field id.
    *
    * @param string $entity_id

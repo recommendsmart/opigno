@@ -4,7 +4,6 @@ namespace Drupal\content_as_config\Form;
 
 use Drupal\content_as_config\Controller\EntityControllerBase;
 use Drupal\content_as_config\Controller\MenuLinksController;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -24,13 +23,6 @@ trait MenuLinksImportExportTrait {
    */
   public function getEntityType(): string {
     return 'menu_link_content';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getEntityNamePlural(): TranslatableMarkup {
-    return $this->t('menu links');
   }
 
   /**

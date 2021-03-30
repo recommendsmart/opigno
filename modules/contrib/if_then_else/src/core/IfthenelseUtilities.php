@@ -158,6 +158,7 @@ class IfthenelseUtilities extends DefaultPluginManager implements IfthenelseUtil
    *   List of fields associated with bundle.
    */
   public function getFieldsByEntityBundleId(array $content_entity_types, $return_type = 'field') {
+    static $all_fields_list = [];
     static $listFields = [];
     static $field_type = [];
     static $field_cardinality = [];
@@ -177,16 +178,16 @@ class IfthenelseUtilities extends DefaultPluginManager implements IfthenelseUtil
             foreach ($fields as $field_name => $field_definition) {
               if (!empty($field_definition->getTargetBundle()) || in_array($field_name, $extra_fields_name)) {
                 // List of all fields in an entity bundle.
-                $listFields[$field_name]['name'] = $field_definition->getLabel();
-                if (is_object($listFields[$field_name]['name'])) {
-                  $listFields[$field_name]['name'] = $listFields[$field_name]['name']->__toString();
+                $listFields[$entity_id][$bundle_id]['fields'][$field_name]['name'] = $field_definition->getLabel();
+                if (is_object($listFields[$entity_id][$bundle_id]['fields'][$field_name]['name'])) {
+                  $listFields[$entity_id][$bundle_id]['fields'][$field_name]['name'] = $listFields[$entity_id][$bundle_id]['fields'][$field_name]['name']->__toString();
                 }
                 if ($field_name == 'status') {
-                  $listFields[$field_name]['name'] = $this->t('Status');
+                  $listFields[$entity_id][$bundle_id]['fields'][$field_name]['name'] = $this->t('Status');
                 }
-                $listFields[$field_name]['code'] = $field_name;
-                $listFields[$field_name]['entity_bundle']['entity'][$entity_id] = ['code' => $entity_id, 'name' => $entity['label']];
-                $listFields[$field_name]['entity_bundle'][$entity_id]['bundle'][] = ['code' => $bundle_id, 'name' => $bundle['label']];
+                $listFields[$entity_id][$bundle_id]['fields'][$field_name]['code'] = $field_name;
+                $all_fields_list[$field_name]['code'] = $field_name;
+                $all_fields_list[$field_name]['name'] = $listFields[$entity_id][$bundle_id]['fields'][$field_name]['name'];
 
                 $field_type[$entity_id][$field_name] = $field_definition->getType();
                 $field_cardinality[$entity_id][$field_name] = $field_definition->getFieldStorageDefinition()->getCardinality();
@@ -194,27 +195,6 @@ class IfthenelseUtilities extends DefaultPluginManager implements IfthenelseUtil
             }
           }
         }
-      }
-
-      // Converting it to non associative array for working with
-      // Vuejs multiselect.
-      $listFieldsAssoc = $listFields;
-      $listFields = [];
-      $i = 0;
-      foreach ($listFieldsAssoc as $field) {
-        if ($field['name'] == 'Menu link title') {
-          $field['name'] = 'Title';
-        }
-        $listFields[$i]['name'] = $field['name'];
-        $listFields[$i]['code'] = $field['code'];
-        $listFields[$i]['entity_bundle'] = $field['entity_bundle'];
-        $k = 0;
-        foreach ($listFields[$i]['entity_bundle']['entity'] as $ekey => $entity) {
-          $listFields[$i]['entity_bundle']['entity'][$k] = $entity;
-          unset($listFields[$i]['entity_bundle']['entity'][$ekey]);
-          $k++;
-        }
-        $i++;
       }
     }
 
@@ -226,17 +206,22 @@ class IfthenelseUtilities extends DefaultPluginManager implements IfthenelseUtil
     }elseif ($return_type == 'field_cardinality') {
       return $field_cardinality;
     }
-  }
-
-  /**
-   * Get Entity and Bundle list by Field name.
-   */
-  public function getEntityByFieldName($fields) {
-
-    foreach ($fields as $field) {
-      $fieldentity[$field['code']] = $field['entity_bundle'];
+    elseif($return_type == 'all'){
+      // Converting it to non associative array for working with
+      // Vuejs multiselect.
+      $listFieldsAssoc = $all_fields_list;
+      $all_fields_list = [];
+      $i = 0;
+      foreach ($listFieldsAssoc as $field) {
+        if ($field['name'] == 'Menu link title') {
+          $field['name'] = 'Title';
+        }
+        $all_fields_list[$i]['name'] = $field['name'];
+        $all_fields_list[$i]['code'] = $field['code'];
+        $i++;
+      }
+      return $all_fields_list;
     }
-    return $fieldentity;
   }
 
   /**

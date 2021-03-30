@@ -85,7 +85,7 @@ class GroupFlexGroupSaver {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function saveGroupVisibility(GroupInterface $group, string $groupVisibility): void {
+  public function saveGroupVisibility(GroupInterface $group, string $groupVisibility) {
     $groupPermission = $this->getGroupPermissionObject($group);
 
     if (!$groupPermission) {
@@ -133,7 +133,7 @@ class GroupFlexGroupSaver {
    * @throws \Drupal\Core\Entity\EntityStorageException
    * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    */
-  public function saveGroupJoiningMethods(GroupInterface $group, array $joiningMethods): void {
+  public function saveGroupJoiningMethods(GroupInterface $group, array $joiningMethods) {
     $groupPermission = $this->getGroupPermissionObject($group);
     if (!$groupPermission) {
       return;
@@ -221,18 +221,21 @@ class GroupFlexGroupSaver {
    * @SuppressWarnings(PHPMD.StaticAccess)
    */
   private function getGroupPermissionObject(GroupInterface $group): ?GroupPermission {
-    $groupPermission = NULL;
     /** @var \Drupal\group_permissions\Entity\GroupPermission $groupPermission */
-    if (!$group->isNew()) {
-      $groupPermission = $this->groupPermManager->getGroupPermission($group);
-    }
+    $groupPermission = $this->groupPermManager->getGroupPermission($group);
+
     if ($groupPermission === NULL) {
       // Create the entity.
       $groupPermission = GroupPermission::create([
         'gid' => $group->id(),
         'permissions' => $this->getDefaultGroupTypePermissions($group->getGroupType()),
+        'status' => 1,
       ]);
     }
+    else {
+      $groupPermission->setNewRevision(TRUE);
+    }
+
     return $groupPermission;
   }
 

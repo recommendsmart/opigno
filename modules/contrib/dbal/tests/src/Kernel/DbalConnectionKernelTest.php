@@ -30,14 +30,14 @@ class DbalConnectionKernelTest extends KernelTestBase {
    * Tests dbal_connection service and factory.
    */
   public function testConnectionFactory() {
+    $database = $this->container->get('database');
     $connection = $this->container->get('dbal_connection');
-    $connection->insert($this->getDatabasePrefix() . 'semaphore',
+    $connection->insert($database->getFullQualifiedTableName('semaphore'),
       [
         'name' => 'dbal_test',
         'value' => 'dbal_test',
         'expire' => time(),
       ]);
-    $database = $this->container->get('database');
     $this->assertEquals('dbal_test', $database->select('semaphore', 's')
       ->condition('name', 'dbal_test')
       ->fields('s', ['value'])

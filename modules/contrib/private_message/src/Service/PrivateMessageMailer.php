@@ -113,6 +113,11 @@ class PrivateMessageMailer implements PrivateMessageMailerInterface {
    *   A boolean indicating whether or not the message should be sent.
    */
   private function shouldSend(AccountInterface $recipient) {
+    // If the recipient email address is not populated, return FALSE.
+    if (!$recipient->getEmail()) {
+      return FALSE;
+    }
+
     // If the user data value is set, return it as a boolean.
     if (($value = $this->userData->get('private_message', $recipient->id(), 'email_notification')) !== NULL) {
       return (bool) $value;

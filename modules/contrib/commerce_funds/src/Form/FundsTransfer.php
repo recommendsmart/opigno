@@ -2,20 +2,22 @@
 
 namespace Drupal\commerce_funds\Form;
 
-use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Utility\Token;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\commerce_funds\Entity\Transaction;
+use Drupal\commerce_funds\TransactionManagerInterface;
+use Drupal\commerce_funds\FeesManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form to transfer money to another user account.
  */
-class FundsTransfer extends ConfigFormBase {
+class FundsTransfer extends FormBase {
 
   /**
    * The current account.
@@ -53,14 +55,30 @@ class FundsTransfer extends ConfigFormBase {
   protected $messenger;
 
   /**
+   * The transaction manager.
+   *
+   * @var \Drupal\commerce_funds\TransactionManagerInterface
+   */
+  protected $transactionManager;
+
+  /**
+   * The fees manager.
+   *
+   * @var \Drupal\commerce_funds\FeesManagerInterface
+   */
+  protected $feesManager;
+
+  /**
    * Class constructor.
    */
-  public function __construct(AccountProxy $current_user, EntityTypeManagerInterface $entity_type_manager, MailManagerInterface $mail_manager, Token $token, MessengerInterface $messenger) {
+  public function __construct(AccountProxy $current_user, EntityTypeManagerInterface $entity_type_manager, MailManagerInterface $mail_manager, Token $token, MessengerInterface $messenger, TransactionManagerInterface $transaction_manager, FeesManagerInterface $fees_manager) {
     $this->currentUser = $current_user;
     $this->entityTypeManager = $entity_type_manager;
     $this->mailManager = $mail_manager;
     $this->token = $token;
     $this->messenger = $messenger;
+    $this->transactionManager = $transaction_manager;
+    $this->feesManager = $fees_manager;
   }
 
   /**
@@ -72,7 +90,9 @@ class FundsTransfer extends ConfigFormBase {
     $container->get('entity_type.manager'),
     $container->get('plugin.manager.mail'),
     $container->get('token'),
-    $container->get('messenger')
+    $container->get('messenger'),
+    $container->get('commerce_funds.transaction_manager'),
+    $container->get('commerce_funds.fees_manager')
     );
   }
 
@@ -104,7 +124,7 @@ class FundsTransfer extends ConfigFormBase {
       $currency_code = $currency->getCurrencyCode();
       $currencyCodes[$currency_code] = $currency_code;
     }
-    $fees_description = \Drupal::service('commerce_funds.fees_manager')->printTransactionFees('transfer');
+    $fees_description = $this->feesManager->printTransactionFees('transfer');
 
     $form['amount'] = [
       '#type' => 'number',
@@ -160,10 +180,10 @@ class FundsTransfer extends ConfigFormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $amount = $form_state->getValue('amount');
     $currency = $form_state->getValue('currency');
-    $fee_applied = \Drupal::service('commerce_funds.fees_manager')->calculateTransactionFee($amount, $currency, 'transfer');
+    $fee_applied = $this->feesManager->calculateTransactionFee($amount, $currency, 'transfer');
 
     $issuer = $this->currentUser;
-    $issuer_balance = \Drupal::service('commerce_funds.transaction_manager')->loadAccountBalance($issuer->getAccount(), $currency);
+    $issuer_balance = $this->transactionManager->loadAccountBalance($issuer->getAccount(), $currency);
     $currency_balance = isset($issuer_balance[$currency]) ? $issuer_balance[$currency] : 0;
     // Error if the user doesn't have enough money to cover the transfer + fee.
     if ($currency_balance < $fee_applied['net_amount']) {
@@ -192,7 +212,7 @@ class FundsTransfer extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $amount = $form_state->getValue('amount');
     $currency = $form_state->getValue('currency');
-    $fee_applied = \Drupal::service('commerce_funds.fees_manager')->calculateTransactionFee($amount, $currency, 'transfer');
+    $fee_applied = $this->feesManager->calculateTransactionFee($amount, $currency, 'transfer');
     $config = $this->config('commerce_funds.settings');
 
     $issuer = $this->currentUser;
@@ -215,7 +235,7 @@ class FundsTransfer extends ConfigFormBase {
     ]);
     $transaction->save();
 
-    \Drupal::service('commerce_funds.transaction_manager')->performTransaction($transaction);
+    $this->transactionManager->performTransaction($transaction);
 
     // Load necessary parameters for email.
     $mailManager = $this->mailManager;
@@ -224,7 +244,7 @@ class FundsTransfer extends ConfigFormBase {
 
     // To recipient.
     if ($config->get('mail_transfer_recipient')['activated']) {
-      $balance = \Drupal::service('commerce_funds.transaction_manager')->loadAccountBalance($recipient);
+      $balance = $this->transactionManager->loadAccountBalance($recipient);
       $params = [
         'id' => 'transfer_recipient',
         'subject' => $token->replace($config->get('mail_transfer_recipient')['subject'], ['commerce_funds_transaction' => $transaction]),
@@ -239,7 +259,7 @@ class FundsTransfer extends ConfigFormBase {
 
     // To issuer.
     if ($config->get('mail_transfer_issuer')['activated']) {
-      $balance = \Drupal::service('commerce_funds.transaction_manager')->loadAccountBalance($issuer);
+      $balance = $this->transactionManager->loadAccountBalance($issuer);
       $params = [
         'id' => 'transfer_issuer',
         'subject' => $token->replace($config->get('mail_transfer_issuer')['subject'], ['commerce_funds_transaction' => $transaction]),

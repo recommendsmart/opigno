@@ -68,18 +68,19 @@ function commerce_funds_uninstall() {
   $config->set('interface', $mail_plugins)->save();
 
   // Delete all products and product variations.
+  $entity_manager = \Drupal::entityTypeManager();
   $entities = [
-    'deposit_product' => \Drupal::entityTypeManager()->getStorage('commerce_product')->loadByProperties((['type' => 'deposit'])),
-    'deposit_product_variation' => \Drupal::entityTypeManager()->getStorage('commerce_product_variation')->loadByProperties((['type' => 'deposit'])),
-    'fee_product' => \Drupal::entityTypeManager()->getStorage('commerce_product')->loadByProperties((['type' => 'fee'])),
-    'fee_product_variation' => \Drupal::entityTypeManager()->getStorage('commerce_product_variation')->loadByProperties((['type' => 'fee'])),
+    'deposit_product' => $entity_manager->getStorage('commerce_product')->loadByProperties((['type' => 'deposit'])),
+    'deposit_product_variation' => $entity_manager->getStorage('commerce_product_variation')->loadByProperties((['type' => 'deposit'])),
+    'fee_product' => $entity_manager->getStorage('commerce_product')->loadByProperties((['type' => 'fee'])),
+    'fee_product_variation' => $entity_manager->getStorage('commerce_product_variation')->loadByProperties((['type' => 'fee'])),
   ];
   foreach ($entities as $type => $entity) {
     if ($type == 'deposit_product' || $type == 'fee_product') {
-      \Drupal::entityTypeManager()->getStorage('commerce_product')->delete($entity);
+      $entity_manager->getStorage('commerce_product')->delete($entity);
     }
     elseif ($type == 'deposit_product_variation' || $type == 'fee_product_variation') {
-      \Drupal::entityTypeManager()->getStorage('commerce_product_variation')->delete($entity);
+      $entity_manager->getStorage('commerce_product_variation')->delete($entity);
     }
   }
 
@@ -183,5 +184,148 @@ function commerce_funds_update_8102() {
     $field_storage_definitions['method']->setRequired(TRUE);
     $field_storage_definitions['method']->setDefaultValue('internal');
     $definition_update_manager->updateFieldableEntityType($entity_type, $field_storage_definitions);
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Implements transaction hash.
+ * Creates hash for each previous transaction.
+ */
+function commerce_funds_update_8103(&$sandbox) {
+  // No need to apply changes on first install.
+  $transaction_id = \Drupal::database()->select('commerce_funds_transactions', 'cft')->fields('cft')->range(0, 1)->execute()->fetchAll();
+  if (!empty($transaction_id)) {
+    // Initialize variables on first batch operation.
+    if (!isset($sandbox['total'])) {
+      $transaction_ids = \Drupal::entityQuery('commerce_funds_transaction')
+        ->execute();
+      $sandbox['total'] = count($transaction_ids);
+      $sandbox['current'] = 0;
+
+      // Update the field storage definition.
+      $new_hash_field = BaseFieldDefinition::create('string')
+        ->setLabel(t('Hash'))
+        ->setDescription(t('Unique transaction hash.'))
+        ->setDefaultValueCallback('Drupal\commerce_funds\Entity\Transaction::hashGenerate')
+        ->setRequired(TRUE)
+        ->setDisplayConfigurable('form', FALSE)
+        ->setDisplayConfigurable('view', FALSE);
+
+      \Drupal::entityDefinitionUpdateManager()->installFieldStorageDefinition('hash', 'commerce_funds_transaction', 'commerce_funds_transaction', $new_hash_field);
+    }
+
+    // Handles one batch operation.
+    $transaction_ids = \Drupal::entityQuery('commerce_funds_transaction')
+      ->range($sandbox['current'], $sandbox['current'] + 10)
+      ->execute();
+
+    foreach ($transaction_ids as $transaction_id) {
+      $transaction = Transaction::load($transaction_id);
+      $transaction->setHash(Transaction::hashGenerate());
+      $transaction->save();
+      $sandbox['current']++;
+    }
+
+    // Once $sandbox['#finished'] == 1, the process is complete.
+    $sandbox['#finished'] = ($sandbox['current'] / $sandbox['total']);
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Update field fee with a scale of 3.
+ */
+function commerce_funds_update_8104(&$sandbox) {
+  // No need to apply changes on first install.
+  $transaction_id = \Drupal::database()->select('commerce_funds_transactions', 'cft')->fields('cft')->range(0, 1)->execute()->fetchAll();
+  if (!empty($transaction_id)) {
+    // Initialize variables on first batch operation.
+    if (!isset($sandbox['total'])) {
+      $transaction_ids = \Drupal::entityQuery('commerce_funds_transaction')
+        ->execute();
+      $sandbox['total'] = count($transaction_ids);
+      $sandbox['current'] = 0;
+
+      // Rename old table.
+      \Drupal::database()->schema()->renameTable('commerce_funds_transactions', 'commerce_funds_transactions_bkp');
+      // Create new schema.
+      $manager = \Drupal::entityDefinitionUpdateManager();
+      $entity_type = $manager->getEntityType('commerce_funds_transaction');
+      $manager->installEntityType($entity_type);
+    }
+
+    // Transfers data into new schema per batch.
+    $old_data = \Drupal::database()->select('commerce_funds_transactions_bkp', 'cftb')
+      ->fields('cftb')
+      ->range($sandbox['current'], $sandbox['current'] + 10)
+      ->execute()
+      ->fetchAllAssoc('transaction_id', PDO::FETCH_ASSOC);
+    foreach ($old_data as $data) {
+      \Drupal::database()->insert('commerce_funds_transactions')->fields($data)->execute();
+      $sandbox['current']++;
+    }
+    // Once $sandbox['#finished'] == 1, the process is complete.
+    $sandbox['#finished'] = ($sandbox['current'] / $sandbox['total']);
+    if ($sandbox['#finished'] == 1) {
+      // Drop old db.
+      \Drupal::database()->schema()->dropTable('commerce_funds_transactions_bkp');
+    }
+  }
+}
+
+/**
+ * Install mails schema for translations.
+ */
+function commerce_funds_update_8105() {
+  // No need to apply changes on first install.
+  $transaction_id = \Drupal::database()->select('commerce_funds_transactions', 'cft')->fields('cft')->range(0, 1)->execute()->fetchAll();
+  if (!empty($transaction_id)) {
+    // Backup user funds.
+    \Drupal::database()->schema()->renameTable('commerce_funds_user_funds', 'commerce_funds_user_funds_bkp');
+    // Store configs for later.
+    $config_messages = [
+      'mail_transfer_issuer',
+      'mail_transfer_recipient',
+      'mail_escrow_created_issuer',
+      'mail_escrow_created_recipient',
+      'mail_escrow_canceled_by_issuer_issuer',
+      'mail_escrow_canceled_by_issuer_recipient',
+      'mail_escrow_canceled_by_recipient_issuer',
+      'mail_escrow_canceled_by_recipient_recipient',
+      'mail_escrow_released_issuer',
+      'mail_escrow_released_recipient',
+      'mail_withdrawal_declined',
+      'mail_withdrawal_approved',
+    ];
+    foreach ($config_messages as $config_message) {
+      $configs[$config_message] = \Drupal::config('commerce_funds.settings')->get($config_message);
+    }
+    // Delete existing schema and install new.
+    drupal_uninstall_schema('commerce_funds');
+    drupal_install_schema('commerce_funds');
+    \Drupal::database()->schema()->dropTable('commerce_funds_user_funds');
+    // Restore user funds.
+    \Drupal::database()->schema()->renameTable('commerce_funds_user_funds_bkp', 'commerce_funds_user_funds');
+    // Restore configs.
+    foreach ($configs as $config_name => $config) {
+      \Drupal::configFactory()->getEditable('commerce_funds.settings')->set($config_name, $config)->save();
+    }
+  }
+}
+
+/**
+ * Reset withdrawal methods schema.
+ */
+function commerce_funds_update_8106() {
+  // No need to apply changes on first install.
+  $transaction_id = \Drupal::database()->select('commerce_funds_transactions', 'cft')->fields('cft')->range(0, 1)->execute()->fetchAll();
+  if (!empty($transaction_id)) {
+    $config_factory = \Drupal::configFactory();
+    $config = $config_factory->getEditable('commerce_funds.settings');
+    $config->set('withdrawal_methods', $config->get('withdrawal_methods')['methods']);
+    $config->save(TRUE);
   }
 }

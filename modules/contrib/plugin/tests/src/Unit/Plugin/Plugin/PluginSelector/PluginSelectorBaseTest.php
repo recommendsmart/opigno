@@ -26,7 +26,7 @@ class PluginSelectorBaseTest extends PluginSelectorBaseTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $configuration = [];
     $this->sut = $this->getMockBuilder(PluginSelectorBase::class)
@@ -58,7 +58,7 @@ class PluginSelectorBaseTest extends PluginSelectorBaseTestBase {
    */
   public function testDefaultConfiguration() {
     $configuration = $this->sut->defaultConfiguration();
-    $this->assertInternalType('array', $configuration);
+    $this->assertIsArray($configuration);
   }
 
   /**
@@ -172,7 +172,7 @@ class PluginSelectorBaseTest extends PluginSelectorBaseTestBase {
 
     $form = $this->sut->buildSelectorForm($form, $form_state);
 
-    $this->assertInternalType('array', $form);
+    $this->assertIsArray($form);
   }
 
 }

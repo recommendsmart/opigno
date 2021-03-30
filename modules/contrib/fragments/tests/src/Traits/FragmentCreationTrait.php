@@ -38,9 +38,9 @@ trait FragmentCreationTrait {
     $fragments = $entityTypeManager
       ->getStorage('fragment')
       ->loadByProperties(['title' => $title]);
+
     // Load the first fragment returned from the database.
-    $returned_fragment = reset($fragments);
-    return $returned_fragment;
+    return reset($fragments);
   }
 
   /**

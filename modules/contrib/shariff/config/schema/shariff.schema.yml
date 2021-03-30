@@ -75,6 +75,9 @@ shariff.settings:
         info:
           type: string
           label: 'info'
+        buffer:
+          type: string
+          label: 'buffer'
     shariff_theme:
       type: string
       label: 'Shariff layout'

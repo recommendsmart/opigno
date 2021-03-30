@@ -3,14 +3,22 @@
 namespace Drupal\commerce_funds;
 
 use Drupal\commerce_store\Entity\Store;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Print default currency class.
  */
 final class FundsDefaultCurrency {
 
-  use StringTranslationTrait;
+  use \Drupal\Core\StringTranslation\StringTranslationTrait;
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * Defines default currency code.
@@ -22,11 +30,24 @@ final class FundsDefaultCurrency {
   /**
    * Class constructor.
    *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\commerce_store\Entity\Store $store
    *   The store.
    */
-  public function __construct(Store $store) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, Store $store) {
+    $this->entityTypeManager = $entity_type_manager;
     $this->defaultCurrencyCode = $store->getDefaultCurrencyCode();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, Store $store) {
+    return new static(
+      $container->get('entity_type.manager'),
+      $store
+    );
   }
 
   /**
@@ -39,14 +60,14 @@ final class FundsDefaultCurrency {
     $default_currency = $this->defaultCurrencyCode;
 
     if (!$default_currency) {
-      return t('No currency set');
+      return $this->t('No currency set');
     }
 
-    $currencies = \Drupal::entityTypeManager()->getStorage('commerce_currency')->loadMultiple();
+    $currencies = $this->entityTypeManager->getStorage('commerce_currency')->loadMultiple();
     $currency_qty = count($currencies);
 
     if ($currency_qty > 1) {
-      return t('All currencies');
+      return $this->t('All currencies');
     }
     elseif ($currency_qty == 1) {
       return $default_currency;
@@ -63,11 +84,11 @@ final class FundsDefaultCurrency {
    *   Default currency code or "Selected currency".
    */
   public function printTransactionCurrency() {
-    $currencies = \Drupal::entityTypeManager()->getStorage('commerce_currency')->loadMultiple();
+    $currencies = $this->entityTypeManager->getStorage('commerce_currency')->loadMultiple();
     $currency_qty = count($currencies);
 
     if ($currency_qty > 1) {
-      return t('unit(s) of selected currency');
+      return $this->t('unit(s) of selected currency');
     }
     elseif ($currency_qty == 1) {
       return $this->defaultCurrencyCode;

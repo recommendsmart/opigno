@@ -2,7 +2,7 @@ layout_builder_admin_theme.lbat_config_form:
   path: '/admin/config/content/lbat'
   defaults:
     _form: '\Drupal\layout_builder_admin_theme\Form\LBATConfigForm'
-    _title: 'Layout builder admin theme'
+    _title: 'Layout Builder Admin Theme'
   requirements:
     _permission: 'administer site configuration'
   options:

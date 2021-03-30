@@ -28,6 +28,14 @@ interface EntityExtraFieldInterface extends ConfigEntityInterface {
   public function description();
 
   /**
+   * Should display the extra field label.
+   *
+   * @return boolean
+   *   Return TRUE if the field label should be rendered; otherwise FALSE.
+   */
+  public function displayLabel();
+
+  /**
    * Get extra field display.
    *
    * @return array
@@ -66,6 +74,14 @@ interface EntityExtraFieldInterface extends ConfigEntityInterface {
    *   An array of the plugin configuration.
    */
   public function getFieldTypePluginConfig();
+
+  /**
+   * Get field type condition.
+   *
+   * @return array
+   *   An array of condition plugin with configuration.
+   */
+  public function getFieldTypeCondition();
 
   /**
    * Get base entity type id.
@@ -112,6 +128,34 @@ interface EntityExtraFieldInterface extends ConfigEntityInterface {
   public function getCacheDiscoveryId();
 
   /**
+   * Get active field type conditions.
+   *
+   * @return array
+   *   An array of active field type conditions.
+   */
+  public function getActiveFieldTypeConditions();
+
+  /**
+   * Get the build attachments.
+   *
+   * @return array
+   *   An array of the build attachments.
+   */
+  public function getBuildAttachments();
+
+  /**
+   * Set a build attachment.
+   *
+   * @param $type
+   *   The type of attachment (library, drupalSettings, etc)
+   * @param array $attachment
+   *   An array of attachment settings for the particular type.
+
+   * @return $this
+   */
+  public function setBuildAttachment($type, array $attachment);
+
+  /**
    * Check if entity identifier exist.
    *
    * @param $name
@@ -137,4 +181,30 @@ interface EntityExtraFieldInterface extends ConfigEntityInterface {
    *   The extra field renderable array.
    */
   public function build(EntityInterface $entity, EntityDisplayInterface $display);
+
+  /**
+   * Extra field has display component.
+   *
+   * @param \Drupal\Core\Entity\Display\EntityDisplayInterface $display
+   *   An entity display to check for the extra field.
+   *
+   * @return bool
+   *   Return TRUE if the component exists in the display; otherwise FALSE.
+   */
+  public function hasDisplayComponent(EntityDisplayInterface $display);
+
+  /**
+   * Has extra field conditions been met.
+   *
+   * @param array $contexts
+   *   An array of context values.
+   * @param bool $all_must_pass
+   *   Determine if all conditions must pass.
+   *
+   * @return bool
+   *   Return TRUE if the extra field conditions have been met; otherwise FALSE.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   */
+  public function hasConditionsBeenMet(array $contexts, $all_must_pass = FALSE);
 }

@@ -36,7 +36,7 @@ class PluginLabelTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->fieldDefinition = $this->createMock(FieldDefinitionInterface::class);
 
     $this->sut = new PluginLabel('plugin_label', [], $this->fieldDefinition, [], $this->randomMachineName(), $this->randomMachineName(), []);

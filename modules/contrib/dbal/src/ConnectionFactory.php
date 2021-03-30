@@ -3,6 +3,7 @@
 namespace Drupal\dbal;
 
 use Doctrine\DBAL\Configuration;
+use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\DriverManager;
 use Drupal\Core\Database\Database;
 
@@ -58,8 +59,8 @@ class ConnectionFactory {
       $info = $this->info[$target]['default'];
       $options = [
         'dbname' => $info['database'],
-        'user' => $info['username'],
-        'password' => $info['password'],
+        'user' => $info['username'] ?? '',
+        'password' => $info['password'] ?? '',
         'driver' => 'pdo_' . $info['driver'],
       ];
       if (isset($info['host'])) {
@@ -72,8 +73,45 @@ class ConnectionFactory {
         $options['port'] = $info['port'];
       }
       $this->cache[$target] = DriverManager::getConnection($options, new Configuration());
+      if ($info['driver'] == 'sqlite') {
+        $this->sqliteDatabases($this->cache[$target], $info['prefix'], $info['database']);
+      }
     }
     return $this->cache[$target];
+  }
+
+  /**
+   * SQLite attach prefixes as databases.
+   *
+   * @param \Doctrine\DBAL\Driver\Connection $connection
+   *   The connection to an SQLite database.
+   * @param array $prefixes
+   *   Drupal info array of database prefixes.
+   * @param string $base_db
+   *   The connected dbname.
+   *
+   * @see Drupal\Core\Database\Driver\sqlite\Connection::__construct()
+   */
+  protected function sqliteDatabases(Connection $connection, array $prefixes, $base_db) {
+    $attached = [];
+    foreach ($prefixes as $prefix) {
+      if (!isset($attached[$prefix])) {
+        $attached[$prefix] = TRUE;
+        $query = $connection->prepare('ATTACH DATABASE :db AS :prefix');
+        if ($base_db == ':memory:') {
+          $query->execute([
+            ':db' => $base_db,
+            ':prefix' => $prefix,
+          ]);
+        }
+        else {
+          $query->execute([
+            ':db' => $base_db . '-' . $prefix,
+            ':prefix' => $prefix,
+          ]);
+        }
+      }
+    }
   }
 
 }

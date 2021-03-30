@@ -5,8 +5,11 @@
     "support": {
         "source": "http://cgit.drupalcode.org/fragments"
     },
-    "require": {
-        "drupal/core": "^8.0"
+    "require": {},
+    "suggest": {
+        "drupal/views_bulk_operations": "Provides more advanced administration screen.",
+        "drupal/inline_entity_form": "Create fragments where and when you need them.",
+        "drupal/auto_entitylabel": "Automatically create a title for fragments based on other fields."
     },
     "type": "drupal-module",
     "authors": [

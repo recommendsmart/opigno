@@ -30,7 +30,7 @@ class PluginOperationsProviderPluginManagerTraitTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     $this->classResolver = $this->createMock(ClassResolverInterface::class);
   }
 

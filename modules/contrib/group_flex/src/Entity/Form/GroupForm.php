@@ -6,6 +6,7 @@ use Drupal\Core\TempStore\TempStoreException;
 use Drupal\Core\TypedData\Exception\MissingDataException;
 use Drupal\group\Entity\Form\GroupForm as GroupFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\group_flex\Plugin\GroupVisibilityInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -98,7 +99,7 @@ class GroupForm extends GroupFormBase {
             $default = $this->groupFlex->getGroupVisibility($group);
           }
           catch (MissingDataException $e) {
-            $default = GROUP_FLEX_TYPE_VIS_PUBLIC;
+            $default = GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC;
           }
           $form['footer']['group_visibility']['#default_value'] = $default;
         }
@@ -162,7 +163,7 @@ class GroupForm extends GroupFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state): void {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
     // Create an array of group flex settings.
     $groupFlexSettings = [
@@ -229,7 +230,7 @@ class GroupForm extends GroupFormBase {
   /**
    * {@inheritdoc}
    */
-  public function store(array &$form, FormStateInterface $form_state): void {
+  public function store(array &$form, FormStateInterface $form_state) {
     parent::store($form, $form_state);
     $store = $this->privateTempStoreFactory->get('group_creator_flex');
     $storeId = $form_state->get('store_id');

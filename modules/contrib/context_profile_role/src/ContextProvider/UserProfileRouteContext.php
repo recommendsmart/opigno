@@ -6,6 +6,8 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\ContextProviderInterface;
+use Drupal\Core\Plugin\Context\EntityContext;
+use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -38,7 +40,7 @@ class UserProfileRouteContext implements ContextProviderInterface {
    */
   public function getRuntimeContexts(array $unqualified_context_ids) {
     $result = [];
-    $context_definition = new ContextDefinition('entity:user', NULL, FALSE);
+    $context_definition = EntityContextDefinition::create('user')->setRequired(FALSE);
     $value = NULL;
     if (($route_object = $this->routeMatch->getRouteObject()) && ($route_contexts = $route_object->getOption('parameters')) && isset($route_contexts['user'])) {
       if ($user = $this->routeMatch->getParameter('user')) {
@@ -60,7 +62,7 @@ class UserProfileRouteContext implements ContextProviderInterface {
    * {@inheritdoc}
    */
   public function getAvailableContexts() {
-    $context = new Context(new ContextDefinition('entity:user', $this->t('User profile from URL')));
+    $context = EntityContext::fromEntityTypeId('user', $this->t('User profile from URL'));
     return ['user_profile' => $context];
   }
 

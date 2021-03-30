@@ -1,13 +1,5 @@
-content_as_config:
+content_as_config.config:
   path: '/admin/structure/content-as-config'
-  defaults:
-    _form: '\Drupal\content_as_config\Form\SettingsForm'
-    _title: 'Content as Config'
-  requirements:
-    _permission: 'administer site configuration'
-
-content_as_config.general.form:
-  path: '/admin/structure/content-as-config/general'
   defaults:
     _form: '\Drupal\content_as_config\Form\SettingsForm'
     _title: 'Content as Config'

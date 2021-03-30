@@ -4,17 +4,25 @@ namespace Drupal\commerce_funds\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
 use Drupal\commerce_payment\Entity\PaymentGateway;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\commerce_store\StoreStorageInterface;
 use Drupal\commerce_funds\FundsDefaultCurrency;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form to configure the fees for each transaction type.
  */
 class ConfigureFees extends ConfigFormBase {
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * The store storage interface.
@@ -33,7 +41,8 @@ class ConfigureFees extends ConfigFormBase {
   /**
    * Class constructor.
    */
-  public function __construct(StoreStorageInterface $store_storage, MessengerInterface $messenger) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, StoreStorageInterface $store_storage, MessengerInterface $messenger) {
+    $this->entityTypeManager = $entity_type_manager;
     $this->storeStorage = $store_storage;
     $this->messenger = $messenger;
   }
@@ -43,6 +52,7 @@ class ConfigureFees extends ConfigFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('entity_type.manager'),
       $container->get('entity_type.manager')->getStorage('commerce_store'),
       $container->get('messenger')
     );
@@ -57,8 +67,6 @@ class ConfigureFees extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
-   *
-   * Https://www.drupal.org/docs/8/api/form-api/configformbase-with-simple-configuration-api.
    */
   protected function getEditableConfigNames() {
     return [
@@ -82,90 +90,11 @@ class ConfigureFees extends ConfigFormBase {
       $this->messenger->addError($message);
       return $form;
     }
-    $funds_default_currency = new FundsDefaultCurrency($store);
+    $funds_default_currency = FundsDefaultCurrency::create(\Drupal::getContainer(), $store);
     $currency = $funds_default_currency->printConfigureFeesCurrency();
 
-    $fees = $config->get('fees') ?: [];
+    $fees = $config->get('fees');
 
-    $form['commerce_funds'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Commerce funds'),
-      '#open' => TRUE,
-    ];
-
-    $form['commerce_funds']['transfer_rate'] = [
-      '#type' => 'number',
-      '#min' => 0,
-      '#title' => $this->t('Transfer Fee (%)'),
-      '#description' => $this->t('Commission rate taken on Transfers'),
-      '#default_value' => $fees ? $fees['transfer_rate'] : 0,
-      '#step' => 0.01,
-      '#size' => 2,
-      '#maxlength' => 3,
-      '#required' => TRUE,
-    ];
-
-    $form['commerce_funds']['transfer_fixed'] = [
-      '#type' => 'number',
-      '#min' => 0,
-      '#title' => $this->t('Fixed Transfer Fee (@currency)', ['@currency' => $currency]),
-      '#description' => $this->t('Fixed fee taken (or minimum applied if a rate is defined) on Transfers.'),
-      '#default_value' => $fees ? $fees['transfer_fixed'] : 0,
-      '#step' => 0.01,
-      '#size' => 2,
-      '#maxlength' => 3,
-      '#required' => TRUE,
-    ];
-
-    $form['commerce_funds']['escrow_rate'] = [
-      '#type' => 'number',
-      '#min' => 0,
-      '#title' => $this->t('Escrow Fee (%)'),
-      '#description' => $this->t('Commission rate taken on Escrows'),
-      '#default_value' => $fees ? $fees['escrow_rate'] : 0,
-      '#step' => 0.01,
-      '#size' => 2,
-      '#maxlength' => 3,
-      '#required' => TRUE,
-    ];
-
-    $form['commerce_funds']['escrow_fixed'] = [
-      '#type' => 'number',
-      '#min' => 0,
-      '#title' => $this->t('Fixed Escrow Fee (@currency)', ['@currency' => $currency]),
-      '#description' => $this->t('Fixed fee taken (or minimum applied if a rate is defined) on Escrows.'),
-      '#default_value' => $fees ? $fees['escrow_fixed'] : 0,
-      '#step' => 0.01,
-      '#size' => 2,
-      '#maxlength' => 3,
-      '#required' => TRUE,
-    ];
-
-    /* Experimental
-    $form['commerce_funds']['payment_rate'] = [
-      '#type' => 'number',
-      '#min' => 0,
-      '#title' => $this->t('Payment Discount (%)'),
-      '#description' => $this->t('Discount applied on balance payment.'),
-      '#default_value' => $fees ? $fees['payment_rate'] : 0,
-      '#step' => 0.01,
-      '#size' => 2,
-      '#maxlength' => 3,
-      '#required' => TRUE,
-    ];
-
-    $form['commerce_funds']['payment_fixed'] = [
-      '#type' => 'number',
-      '#min' => 0,
-      '#title' => $this->t('Fixed Payment Discount (@currency)', ['@currency' => $currency]),
-      '#description' => $this->t('Fixed discount applied on balance payment (or minimum applied if a rate is defined) on Payments.'),
-      '#default_value' => $fees ? $fees['payment_fixed'] : 0,
-      '#step' => 0.01,
-      '#size' => 2,
-      '#maxlength' => 3,
-      '#required' => TRUE,
-    ];
-    */
     $form['deposit'] = [
       '#type' => 'details',
       '#title' => $this->t('Deposit Fees'),
@@ -173,6 +102,8 @@ class ConfigureFees extends ConfigFormBase {
     ];
 
     if ($enabled_methods) {
+      $form['deposit']['#markup'] = $this->t('Fees are added on top of the amount requested by the user during checkout process.');
+
       $enabled_methods_num = count($enabled_methods);
       foreach ($enabled_methods as $method) {
         $method_id = $method->id();
@@ -182,7 +113,7 @@ class ConfigureFees extends ConfigFormBase {
             '#min' => 0,
             '#title' => $this->t('@method Fee (%)', ['@method' => $method->label()]),
             '#description' => $this->t('Fee taken for Deposits made using @method', ['@method' => $method->label()]),
-            '#default_value' => array_key_exists('deposit_' . $method_id . '_rate', $fees) ? $fees['deposit_' . $method_id . '_rate'] : 0,
+            '#default_value' => isset($fees['deposit_' . $method_id . '_rate']) ? $fees['deposit_' . $method_id . '_rate'] : 0,
             '#step' => 0.01,
             '#size' => 2,
             '#maxlength' => 3,
@@ -198,7 +129,7 @@ class ConfigureFees extends ConfigFormBase {
             ]
             ),
             '#description' => $this->t('Fixed fee taken (or minimum applied if a rate is defined) for Deposits made using @method', ['@method' => $method->label()]),
-            '#default_value' => array_key_exists('deposit_' . $method_id . '_fixed', $fees) ? $fees['deposit_' . $method_id . '_fixed'] : 0,
+            '#default_value' => isset($fees['deposit_' . $method_id . '_fixed']) ? $fees['deposit_' . $method_id . '_fixed'] : 0,
             '#step' => 0.01,
             '#size' => 2,
             '#maxlength' => 3,
@@ -218,15 +149,105 @@ class ConfigureFees extends ConfigFormBase {
       ];
     }
 
+    $form['internal'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Internal exchange Fees'),
+      '#open' => TRUE,
+    ];
+
+    $form['internal']['#markup'] = $this->t('Fees are added on top of the amount entered by the user.');
+
+    $form['internal']['transfer_rate'] = [
+      '#type' => 'number',
+      '#min' => 0,
+      '#title' => $this->t('Transfer Fee (%)'),
+      '#description' => $this->t('Commission rate taken on Transfers'),
+      '#default_value' => $fees ? $fees['transfer_rate'] : 0,
+      '#step' => 0.01,
+      '#size' => 2,
+      '#maxlength' => 3,
+      '#required' => TRUE,
+    ];
+
+    $form['internal']['transfer_fixed'] = [
+      '#type' => 'number',
+      '#min' => 0,
+      '#title' => $this->t('Fixed Transfer Fee (@currency)', ['@currency' => $currency]),
+      '#description' => $this->t('Fixed fee taken (or minimum applied if a rate is defined) on Transfers.'),
+      '#default_value' => $fees ? $fees['transfer_fixed'] : 0,
+      '#step' => 0.01,
+      '#size' => 2,
+      '#maxlength' => 3,
+      '#required' => TRUE,
+    ];
+
+    $form['internal']['escrow_rate'] = [
+      '#type' => 'number',
+      '#min' => 0,
+      '#title' => $this->t('Escrow Fee (%)'),
+      '#description' => $this->t('Commission rate taken on Escrows'),
+      '#default_value' => $fees ? $fees['escrow_rate'] : 0,
+      '#step' => 0.01,
+      '#size' => 2,
+      '#maxlength' => 3,
+      '#required' => TRUE,
+    ];
+
+    $form['internal']['escrow_fixed'] = [
+      '#type' => 'number',
+      '#min' => 0,
+      '#title' => $this->t('Fixed Escrow Fee (@currency)', ['@currency' => $currency]),
+      '#description' => $this->t('Fixed fee taken (or minimum applied if a rate is defined) on Escrows.'),
+      '#default_value' => $fees ? $fees['escrow_fixed'] : 0,
+      '#step' => 0.01,
+      '#size' => 2,
+      '#maxlength' => 3,
+      '#required' => TRUE,
+    ];
+
+    $form['payment'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Payment Fees'),
+      '#open' => TRUE,
+    ];
+
+    $form['payment']['#markup'] = $this->t('Fees are deducted from the amount paid by the user for the product. The product owner is credited of the amount deducted from the fee. The site balance is credited from the fee.');
+
+    $form['payment']['payment_rate'] = [
+      '#type' => 'number',
+      '#min' => 0,
+      '#title' => $this->t('Payment Fees (%)'),
+      '#description' => $this->t('Fees applied on payment using funds balance.'),
+      '#default_value' => $fees ? $fees['payment_rate'] : 0,
+      '#step' => 0.01,
+      '#size' => 2,
+      '#maxlength' => 3,
+      '#required' => TRUE,
+    ];
+
+    $form['payment']['payment_fixed'] = [
+      '#type' => 'number',
+      '#min' => 0,
+      '#title' => $this->t('Fixed Payment fees (@currency)', ['@currency' => $currency]),
+      '#description' => $this->t('Fixed fees applied on payments using funds balance (or minimum applied if a rate is defined).'),
+      '#default_value' => $fees ? $fees['payment_fixed'] : 0,
+      '#step' => 0.01,
+      '#size' => 2,
+      '#maxlength' => 3,
+      '#required' => TRUE,
+    ];
+
     $form['withdraw'] = [
       '#type' => 'details',
       '#title' => $this->t('Withdrawal Fees'),
       '#open' => TRUE,
     ];
 
-    $withdrawal_methods = $this->config('commerce_funds.settings')->get('withdrawal_methods')['methods'];
+    $withdrawal_methods = $config->get('withdrawal_methods') ?: [];
 
     if ($withdrawal_methods && !empty(array_filter($withdrawal_methods))) {
+      $form['withdraw']['#markup'] = $this->t('Fees are applied on top of the amount requested by the user.');
+
       foreach ($withdrawal_methods as $key => $method) {
         if ($method) {
           $method_id = $key;
@@ -235,7 +256,7 @@ class ConfigureFees extends ConfigFormBase {
             '#min' => 0,
             '#title' => $this->t('@method Fee (%)', ['@method' => $method]),
             '#description' => $this->t('Fee taken for Withdrawals made using @method', ['@method' => $method]),
-            '#default_value' => array_key_exists('withdraw_' . $method_id . '_rate', $fees) ? $fees['withdraw_' . $method_id . '_rate'] : 0,
+            '#default_value' => isset($fees['withdraw_' . $method_id . '_rate']) ? $fees['withdraw_' . $method_id . '_rate'] : 0,
             '#step' => 0.01,
             '#size' => 2,
             '#maxlength' => 3,
@@ -251,7 +272,7 @@ class ConfigureFees extends ConfigFormBase {
             ]
             ),
             '#description' => $this->t('Fixed fee taken (or minimum applied if a rate is defined) for Withdrawals made using @method', ['@method' => $method]),
-            '#default_value' => array_key_exists('withdraw_' . $method_id . '_fixed', $fees) ? $fees['withdraw_' . $method_id . '_fixed'] : 0,
+            '#default_value' => isset($fees['withdraw_' . $method_id . '_fixed']) ? $fees['withdraw_' . $method_id . '_fixed'] : 0,
             '#step' => 0.01,
             '#size' => 2,
             '#maxlength' => 3,

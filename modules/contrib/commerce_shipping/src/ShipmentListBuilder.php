@@ -59,7 +59,7 @@ class ShipmentListBuilder extends EntityListBuilder {
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
       $entity_type,
-      $container->get('entity.manager')->getStorage($entity_type->id()),
+      $container->get('entity_type.manager')->getStorage($entity_type->id()),
       $container->get('commerce_price.currency_formatter'),
       $container->get('current_route_match')
     );
@@ -117,6 +117,23 @@ class ShipmentListBuilder extends EntityListBuilder {
     $row['state'] = $entity->getState()->getLabel();
 
     return $row + parent::buildRow($entity);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getDefaultOperations(EntityInterface $entity) {
+    $operations = parent::getDefaultOperations($entity);
+
+    if ($entity->getOrder()->access('resend_receipt')) {
+      $operations['resend_confirmation'] = [
+        'title' => $this->t('Resend confirmation'),
+        'weight' => 20,
+        'url' => $entity->toUrl('resend-confirmation-form'),
+      ];
+    }
+
+    return $operations;
   }
 
 }

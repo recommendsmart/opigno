@@ -12,6 +12,7 @@ final class AreaUnit implements UnitInterface {
   const SQUARE_METER = 'm2';
   const SQUARE_INCH = 'in2';
   const SQUARE_FOOT = 'ft2';
+  const HECTARE = 'ha';
 
   /**
    * {@inheritdoc}
@@ -23,6 +24,7 @@ final class AreaUnit implements UnitInterface {
       self::SQUARE_METER => t('m²'),
       self::SQUARE_INCH => t('in²'),
       self::SQUARE_FOOT => t('ft²'),
+      self::HECTARE => t('ha'),
     ];
   }
 
@@ -44,6 +46,7 @@ final class AreaUnit implements UnitInterface {
       self::SQUARE_METER => '1',
       self::SQUARE_INCH => '0.0006451600',
       self::SQUARE_FOOT => '0.09290304',
+      self::HECTARE => '10000',
     ];
 
     return $factors[$unit];
@@ -55,7 +58,7 @@ final class AreaUnit implements UnitInterface {
   public static function assertExists($unit) {
     $allowed_units = [
       self::SQUARE_MILLIMETER, self::SQUARE_CENTIMETER, self::SQUARE_METER,
-      self::SQUARE_INCH, self::SQUARE_FOOT,
+      self::SQUARE_INCH, self::SQUARE_FOOT, self::HECTARE,
     ];
     if (!in_array($unit, $allowed_units)) {
       throw new \InvalidArgumentException(sprintf('Invalid area unit "%s" provided.', $unit));

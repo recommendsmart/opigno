@@ -9,6 +9,7 @@ use Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator;
 use Drupal\plugin\PluginDefinition\PluginDefinitionInterface;
 use Drupal\plugin\PluginType\PluginType;
 use Drupal\Tests\UnitTestCase;
+use Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -46,7 +47,7 @@ class PluginTypeTest extends UnitTestCase {
    */
   protected $sut;
 
-  public function setUp() {
+  protected function setUp(): void {
     $this->pluginTypeDefinition = [
       'id' => $this->randomMachineName(),
       'label' => $this->getRandomGenerator()->string(),
@@ -190,10 +191,9 @@ class PluginTypeTest extends UnitTestCase {
 
   /**
    * @covers ::ensureTypedPluginDefinition
-   *
-   * @expectedException \Exception
    */
   public function testEnsureTypedPluginDefinitionWithoutDecorator() {
+    $this->expectException(Exception::class);
     $decorated_plugin_definition = [
       'foo' => $this->randomMachineName(),
     ];

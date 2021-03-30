@@ -3,6 +3,7 @@
 namespace Drupal\Tests\group_flex\Functional;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\group_flex\Plugin\GroupVisibilityInterface;
 use Drupal\Tests\group\Functional\GroupBrowserTestBase;
 
 /**
@@ -66,7 +67,7 @@ class GroupFlexTest extends GroupBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
     $this->account = $this->createUser([
       'administer group',
@@ -85,7 +86,7 @@ class GroupFlexTest extends GroupBrowserTestBase {
   /**
    * Tests group flex group type.
    */
-  public function testGroupFlexGroupType(): void {
+  public function testGroupFlexGroupType() {
     $this->drupalLogin($this->account);
 
     // Make sure by default it is not enabled.
@@ -110,7 +111,7 @@ class GroupFlexTest extends GroupBrowserTestBase {
     $this->drupalGet('/admin/group/types/manage/default');
     $page = $this->getSession()->getPage();
     $page->selectFieldOption('group_flex_enabler', TRUE);
-    $page->selectFieldOption('group_type_visibility', GROUP_FLEX_TYPE_VIS_PRIVATE);
+    $page->selectFieldOption('group_type_visibility', GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PRIVATE);
     $this->submitForm([], 'Save group type');
     $this->assertSession()->statusCodeEquals(200);
 
@@ -122,31 +123,32 @@ class GroupFlexTest extends GroupBrowserTestBase {
     $this->drupalGet('/admin/group/types/manage/default');
     $page = $this->getSession()->getPage();
     $page->selectFieldOption('group_flex_enabler', TRUE);
-    $page->selectFieldOption('group_type_visibility', GROUP_FLEX_TYPE_VIS_FLEX);
+    $page->selectFieldOption('group_type_visibility', GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_FLEX);
     $this->submitForm([], 'Save group type');
     $this->assertSession()->statusCodeEquals(200);
 
     // Make sure now the default value is Public and field enabled again.
     $this->drupalGet('/group/1/edit');
     $this->assertSession()->fieldEnabled('group_visibility');
-    $this->assertSession()->fieldValueEquals('group_visibility', GROUP_FLEX_TYPE_VIS_PUBLIC);
+    $this->assertSession()->fieldValueEquals('group_visibility', GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC);
 
   }
 
   /**
    * Tests group flex override group Public functionality.
    */
-  public function testGroupFlexGroupPublic(): void {
+  public function testGroupFlexGroupPublic() {
     $this->drupalLogin($this->groupCreator);
     $this->createFlexGroup();
     $this->drupalLogout();
 
-    $this->drupalLogin($this->createUser(['create flexible_group group']));
+    $flexGroupCreator = $this->createUser(['create flexible_group group']);
+    $this->drupalLogin($flexGroupCreator);
 
     // Make sure now the default value is Public and field enabled again.
     $this->drupalGet('/group/add/flexible_group');
     $this->assertSession()->fieldEnabled('group_visibility');
-    $this->assertSession()->fieldValueEquals('group_visibility', GROUP_FLEX_TYPE_VIS_PUBLIC);
+    $this->assertSession()->fieldValueEquals('group_visibility', GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC);
     $this->assertSession()->fieldEnabled('edit-group-joining-methods-join-button');
     $page = $this->getSession()->getPage();
     $page->fillField('Title', 'Flex group - public');
@@ -167,12 +169,45 @@ class GroupFlexTest extends GroupBrowserTestBase {
     $this->drupalGet($join_link);
     $this->assertSession()->statusCodeEquals(200);
 
+    // Verify the group cannot be viewed directly as anonymous.
+    $this->drupalLogout();
+    $this->drupalGet('/group/2');
+    $this->assertSession()->statusCodeEquals(403);
+
+    /** @var \Drupal\group\Entity\GroupInterface $group */
+    $group = $this->entityTypeManager->getStorage('group')->load(2);
+    $groupType = $group->getGroupType();
+    $role = $groupType->getAnonymousRole();
+    $role->grantPermissions(['view group']);
+    $role->save();
+
+    $flexGroupCreator = $this->createUser(['create flexible_group group']);
+    $this->drupalLogin($flexGroupCreator);
+
+    // Make sure now the default value is Public and field enabled again.
+    $this->drupalGet('/group/add/flexible_group');
+    $this->assertSession()->fieldEnabled('group_visibility');
+    $this->assertSession()->fieldValueEquals('group_visibility', GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC);
+    $this->assertSession()->fieldEnabled('edit-group-joining-methods-join-button');
+    $page = $this->getSession()->getPage();
+    $page->fillField('Title', 'Flex group - anonymous');
+    $this->submitForm([], 'edit-submit');
+
+    // Verify the group can be viewed directly as anonymous.
+    $this->drupalLogout();
+    $this->drupalGet('/group/3');
+    $this->assertSession()->statusCodeEquals(200);
+
+    // All good, let's restore the permissions.
+    $role = $groupType->getAnonymousRole();
+    $role->revokePermissions(['view group']);
+    $role->save();
   }
 
   /**
    * Tests group flex override group Public unjoinable functionality.
    */
-  public function testGroupFlexGroupPublicUnjoinable(): void {
+  public function testGroupFlexGroupPublicUnjoinable() {
     $this->drupalLogin($this->groupCreator);
     $this->createFlexGroup();
     $this->drupalLogout();
@@ -207,7 +242,7 @@ class GroupFlexTest extends GroupBrowserTestBase {
   /**
    * Tests group flex override group Private functionality.
    */
-  public function testGroupFlexGroupPrivate(): void {
+  public function testGroupFlexGroupPrivate() {
     $this->drupalLogin($this->groupCreator);
     $this->createFlexGroup();
     $this->drupalLogout();
@@ -218,7 +253,7 @@ class GroupFlexTest extends GroupBrowserTestBase {
     $this->drupalGet('/group/add/flexible_group');
     $this->assertSession()->fieldEnabled('group_visibility');
     $page = $this->getSession()->getPage();
-    $page->selectFieldOption('group_visibility', GROUP_FLEX_TYPE_VIS_PRIVATE);
+    $page->selectFieldOption('group_visibility', GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PRIVATE);
     $page->fillField('Title', 'Flex group - private');
     $this->submitForm([], 'edit-submit');
     $this->assertSession()->pageTextContains('Flex group - private');
@@ -238,7 +273,7 @@ class GroupFlexTest extends GroupBrowserTestBase {
   /**
    * Tests group open/closed groups.
    */
-  public function testGroupFlexGroupOpenClosed(): void {
+  public function testGroupFlexGroupOpenClosed() {
     $this->drupalLogin($this->groupCreator);
 
     // Now create a public open group.
@@ -248,7 +283,7 @@ class GroupFlexTest extends GroupBrowserTestBase {
     $page->fillField('id', 'public_open_group');
     $page->selectFieldOption('creator_wizard', FALSE);
     $page->selectFieldOption('group_flex_enabler', TRUE);
-    $page->selectFieldOption('group_type_visibility', GROUP_FLEX_TYPE_VIS_PUBLIC);
+    $page->selectFieldOption('group_type_visibility', GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC);
     $page->selectFieldOption('group_type_joining_method[join_button]', TRUE);
     $page->selectFieldOption('group_type_joining_method[fake_button]', FALSE);
     $page->selectFieldOption('group_type_joining_method_override', FALSE);
@@ -262,7 +297,7 @@ class GroupFlexTest extends GroupBrowserTestBase {
     $page->fillField('id', 'public_closed_group');
     $page->selectFieldOption('creator_wizard', FALSE);
     $page->selectFieldOption('group_flex_enabler', TRUE);
-    $page->selectFieldOption('group_type_visibility', GROUP_FLEX_TYPE_VIS_PUBLIC);
+    $page->selectFieldOption('group_type_visibility', GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC);
     $page->selectFieldOption('group_type_joining_method[join_button]', FALSE);
     $page->selectFieldOption('group_type_joining_method[fake_button]', FALSE);
     $page->selectFieldOption('group_type_joining_method_override', FALSE);
@@ -276,7 +311,7 @@ class GroupFlexTest extends GroupBrowserTestBase {
     $page->fillField('id', 'private_closed_group');
     $page->selectFieldOption('creator_wizard', FALSE);
     $page->selectFieldOption('group_flex_enabler', TRUE);
-    $page->selectFieldOption('group_type_visibility', GROUP_FLEX_TYPE_VIS_PRIVATE);
+    $page->selectFieldOption('group_type_visibility', GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PRIVATE);
     $page->selectFieldOption('group_type_joining_method[join_button]', FALSE);
     $page->selectFieldOption('group_type_joining_method[fake_button]', FALSE);
     $page->selectFieldOption('group_type_joining_method_override', FALSE);
@@ -336,7 +371,7 @@ class GroupFlexTest extends GroupBrowserTestBase {
   /**
    * Tests group flex group creator group..
    */
-  public function testGroupFlexGroupCreatorWizardGroup(): void {
+  public function testGroupFlexGroupCreatorWizardGroup() {
     $this->drupalLogin($this->groupCreator);
 
     // Now create a public open group.
@@ -346,7 +381,7 @@ class GroupFlexTest extends GroupBrowserTestBase {
     $page->fillField('id', 'group_creator_group');
     $page->selectFieldOption('creator_wizard', TRUE);
     $page->selectFieldOption('group_flex_enabler', TRUE);
-    $page->selectFieldOption('group_type_visibility', GROUP_FLEX_TYPE_VIS_PUBLIC);
+    $page->selectFieldOption('group_type_visibility', GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC);
     $page->selectFieldOption('group_type_joining_method[join_button]', TRUE);
     $page->selectFieldOption('group_type_joining_method[fake_button]', FALSE);
     $page->selectFieldOption('group_type_joining_method_override', TRUE);
@@ -397,7 +432,7 @@ class GroupFlexTest extends GroupBrowserTestBase {
     $page->fillField('id', 'flexible_group');
     $page->selectFieldOption('creator_wizard', FALSE);
     $page->selectFieldOption('group_flex_enabler', TRUE);
-    $page->selectFieldOption('group_type_visibility', GROUP_FLEX_TYPE_VIS_FLEX);
+    $page->selectFieldOption('group_type_visibility', GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_FLEX);
     $page->selectFieldOption('group_type_joining_method[join_button]', TRUE);
     $page->selectFieldOption('group_type_joining_method[fake_button]', TRUE);
     $page->selectFieldOption('group_type_joining_method_override', TRUE);

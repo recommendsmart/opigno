@@ -184,4 +184,12 @@ class LayoutOption extends ConfigEntityBase implements LayoutOptionInterface {
     return $layout;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getLayoutById($layout_id) {
+    $layout = $this->entityTypeManager()->getStorage('blb_layout')->load($layout_id);
+    return $layout;
+  }
+
 }
