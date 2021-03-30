@@ -170,6 +170,8 @@ class OrganizationUiTest extends BrowserTestBase {
       ->getStorage('crm_core_organization')
       ->loadByProperties(['name' => 'Example ltd']);
     $organization = current($organizations);
+    $this->drupalGet('crm-core/organization');
+
     $this->assertEqual($organization->getOwnerId(), $new_user->id());
     $this->assertEqual($organization->getOwner()->id(), $new_user->id());
 

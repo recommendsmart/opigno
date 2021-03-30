@@ -6,3 +6,4 @@ label: Default
 allowed_bundles:
   - node.article
   - node.page
+attributes_access: administrators

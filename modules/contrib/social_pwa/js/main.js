@@ -34,6 +34,11 @@
         return;
       }
 
+      // Ensure this is only executed once.
+      if ($("body").once('social_pwa-attach').length !== 1) {
+        return;
+      }
+
       const applicationServerKey = urlBase64ToUint8Array(settings.social_pwa.vapidPublicKey);
       const pushOptions = { userVisibleOnly: true, applicationServerKey: applicationServerKey };
 

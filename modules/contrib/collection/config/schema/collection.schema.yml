@@ -37,6 +37,8 @@ collection.collection_item_type.*:
       sequence:
         type: string
         label: 'Bundle'
+    attributes_access:
+      type: string
 
 views.field.collection_view_item_entity_type_label:
   type: views_field

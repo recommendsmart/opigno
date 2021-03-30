@@ -11,6 +11,8 @@ use Drupal\Core\Entity\ContentEntityInterface;
  */
 function collection_pathauto_pathauto_alias_alter(&$alias, array &$context) {
   $collection_content_manager = \Drupal::service('collection.content_manager');
+  $path_alias_manager = \Drupal::service('path_alias.manager');
+
   $entity = reset($context['data']);
 
   if (empty($entity) || !$entity instanceof ContentEntityInterface) {
@@ -19,12 +21,9 @@ function collection_pathauto_pathauto_alias_alter(&$alias, array &$context) {
 
   foreach ($collection_content_manager->getCollectionItemsForEntity($entity) as $collection_item) {
     if ($collection_item->isCanonical()) {
-      $collection_url = $collection_item->collection->entity->toUrl()->toString();
+      $collection_url = $path_alias_manager->getAliasByPath('/collection/' . $collection_item->collection->target_id);
       $context['original_alias'] = $alias;
-
-      if (strpos($alias, $collection_url) !== 0) {
-        $alias = $collection_item->collection->entity->toUrl()->toString() . $alias;
-      }
+      $alias = $collection_url . $alias;
 
       // Add relevant collection details to the context and allow other modules to
       // alter the alias.

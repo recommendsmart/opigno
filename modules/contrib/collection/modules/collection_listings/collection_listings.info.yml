@@ -8,7 +8,7 @@ dependencies:
   - collection:collection
   - paragraphs:paragraphs
 
-# Information added by Drupal.org packaging script on 2021-03-17
-version: '2.3.1-alpha1'
+# Information added by Drupal.org packaging script on 2021-03-26
+version: '2.4.2-beta1'
 project: 'collection'
-datestamp: 1616021066
+datestamp: 1616794455

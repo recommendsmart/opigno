@@ -1,10 +1,18 @@
 social_pwa.settings:
-  path: '/admin/config/system/pwa'
+  path: '/admin/config/opensocial/pwa'
   defaults:
     _form: '\Drupal\social_pwa\Form\ManifestSettingsForm'
-    _title: 'Social PWA Settings'
+    _title: 'Progressive Web App Settings'
   requirements:
     _permission: 'administer pwa settings'
+
+social_pwa.send-push-notification:
+  path: '/admin/config/opensocial/pwa/notification'
+  defaults:
+    _form: '\Drupal\social_pwa\Form\PushNotificationForm'
+    _title: 'Broadcast Push Notification'
+  requirements:
+    _permission: 'broadcast push notification'
 
 social_pwa.manifest:
   path: '/manifest.json'
@@ -40,11 +48,3 @@ social_pwa.save-prompt:
     _controller: '\Drupal\social_pwa\Controller\UserSubscriptionController::savePrompt'
   requirements:
     _permission: 'access content'
-
-social_pwa.send-push-notification:
-  path: '/admin/config/system/pwa/notification'
-  defaults:
-    _form: '\Drupal\social_pwa\Form\PushNotificationForm'
-    _title: 'Broadcast Push Notification'
-  requirements:
-    _permission: 'broadcast push notification'

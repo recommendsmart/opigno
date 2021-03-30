@@ -52,14 +52,16 @@ class CollectionItemRouteProvider extends AdminHtmlRouteProvider {
     if ($route = parent::getCanonicalRoute($entity_type)) {
       // Include the collection parameter in the collection item canonical
       // route.
-      $route->setOption('parameters', [
-        'collection' => [
-          'type' => 'entity:collection',
-        ],
-        'collection_item' => [
-          'type' => 'entity:collection_item',
-        ],
-      ]);
+      $route
+        ->setRequirement('_collection_item_collection_check', 'TRUE')
+        ->setOption('parameters', [
+          'collection' => [
+            'type' => 'entity:collection',
+          ],
+          'collection_item' => [
+            'type' => 'entity:collection_item',
+          ],
+        ]);
 
       return $route;
     }
@@ -70,14 +72,16 @@ class CollectionItemRouteProvider extends AdminHtmlRouteProvider {
    */
   protected function getEditFormRoute(EntityTypeInterface $entity_type) {
     $route = parent::getEditFormRoute($entity_type);
-    $route->setOption('parameters', [
-      'collection' => [
-        'type' => 'entity:collection',
-      ],
-      'collection_item' => [
-        'type' => 'entity:collection_item',
-      ],
-    ]);
+    $route
+      ->setRequirement('_collection_item_collection_check', 'TRUE')
+      ->setOption('parameters', [
+        'collection' => [
+          'type' => 'entity:collection',
+        ],
+        'collection_item' => [
+          'type' => 'entity:collection_item',
+        ],
+      ]);
     return $route;
   }
 
@@ -87,14 +91,16 @@ class CollectionItemRouteProvider extends AdminHtmlRouteProvider {
   protected function getDeleteFormRoute(EntityTypeInterface $entity_type) {
     $route = parent::getDeleteFormRoute($entity_type);
     // $route->setDefault('_title_callback', EntityController::class . '::deleteTitle');
-    $route->setOption('parameters', [
-      'collection' => [
-        'type' => 'entity:collection',
-      ],
-      'collection_item' => [
-        'type' => 'entity:collection_item',
-      ],
-    ]);
+    $route
+      ->setRequirement('_collection_item_collection_check', 'TRUE')
+      ->setOption('parameters', [
+        'collection' => [
+          'type' => 'entity:collection',
+        ],
+        'collection_item' => [
+          'type' => 'entity:collection_item',
+        ],
+      ]);
 
     return $route;
   }

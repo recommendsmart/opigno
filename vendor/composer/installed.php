@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'f88f03dd8e0f4436e283e9a7055206dff6143e3e',
+    'reference' => '4436f0efdb0191a8045c48c600eb6a77e938b3d8',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -173,8 +173,8 @@
     ),
     'drupal/activity_send_push' => 
     array (
-      'pretty_version' => '1.0.0-alpha13',
-      'version' => '1.0.0.0-alpha13',
+      'pretty_version' => '1.3.0',
+      'version' => '1.3.0.0',
       'aliases' => 
       array (
       ),
@@ -618,7 +618,7 @@
       array (
         0 => '3.x-dev',
       ),
-      'reference' => 'ebab15bd25c2d07734bd368c824773ced4ef1909',
+      'reference' => '56f7055903e46f671befe20d84824092ddcf8a93',
     ),
     'drupal/crop' => 
     array (
@@ -1274,7 +1274,7 @@
       array (
         0 => '1.0.x-dev',
       ),
-      'reference' => '20ad99a2b34e2409bb686ba6e143323f042c7e5d',
+      'reference' => 'dd5c5ceac387af688b7d117e8ff9a252a7fee010',
     ),
     'drupal/private_message' => 
     array (
@@ -1447,12 +1447,12 @@
     ),
     'drupal/social_pwa' => 
     array (
-      'pretty_version' => '1.0.0-alpha13',
-      'version' => '1.0.0.0-alpha13',
+      'pretty_version' => '1.3.0',
+      'version' => '1.3.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '8.x-1.0-alpha13',
+      'reference' => '8.x-1.3',
     ),
     'drupal/socialbase' => 
     array (
@@ -1746,12 +1746,12 @@
     ),
     'goalgorilla/open_social' => 
     array (
-      'pretty_version' => '10.0.3',
-      'version' => '10.0.3.0',
+      'pretty_version' => '10.0.4',
+      'version' => '10.0.4.0',
       'aliases' => 
       array (
       ),
-      'reference' => '5f07bd110d864438057bc24a9df4230a5a301bc3',
+      'reference' => 'a7aa6af9a41cc8ed5e97f83d2ffb4b4943a23644',
     ),
     'goalgorilla/social_template' => 
     array (
@@ -1760,7 +1760,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'f88f03dd8e0f4436e283e9a7055206dff6143e3e',
+      'reference' => '4436f0efdb0191a8045c48c600eb6a77e938b3d8',
     ),
     'guzzlehttp/guzzle' => 
     array (
@@ -1782,12 +1782,12 @@
     ),
     'guzzlehttp/psr7' => 
     array (
-      'pretty_version' => '1.7.0',
-      'version' => '1.7.0.0',
+      'pretty_version' => '1.8.1',
+      'version' => '1.8.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '53330f47520498c0ae1f61f7e2c90f55690c06a3',
+      'reference' => '35ea11d335fd638b5882ff1725228b3d35496ab1',
     ),
     'html2text/html2text' => 
     array (
@@ -1854,12 +1854,12 @@
     ),
     'league/csv' => 
     array (
-      'pretty_version' => '9.6.2',
-      'version' => '9.6.2.0',
+      'pretty_version' => '9.7.0',
+      'version' => '9.7.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'f28da6e483bf979bac10e2add384c90ae9983e4e',
+      'reference' => '4cacd9c72c4aa8bdbef43315b2ca25c46a0f833f',
     ),
     'lsolesen/pel' => 
     array (
@@ -2232,12 +2232,12 @@
     ),
     'pear/pear_exception' => 
     array (
-      'pretty_version' => 'v1.0.1',
-      'version' => '1.0.1.0',
+      'pretty_version' => 'v1.0.2',
+      'version' => '1.0.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'dbb42a5a0e45f3adcf99babfb2a1ba77b8ac36a7',
+      'reference' => 'b14fbe2ddb0b9f94f5b24cf08783d599f776fff0',
     ),
     'phayes/geophp' => 
     array (
@@ -2608,12 +2608,12 @@
     ),
     'symfony/var-dumper' => 
     array (
-      'pretty_version' => 'v4.4.20',
-      'version' => '4.4.20.0',
+      'pretty_version' => 'v4.4.21',
+      'version' => '4.4.21.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'a1eab2f69906dc83c5ddba4632180260d0ab4f7f',
+      'reference' => '0da0e174f728996f5d5072d6a9f0a42259dbc806',
     ),
     'symfony/yaml' => 
     array (
@@ -2653,8 +2653,8 @@
     ),
     'web-token/jwt-core' => 
     array (
-      'pretty_version' => 'v2.2.9',
-      'version' => '2.2.9.0',
+      'pretty_version' => 'v2.2.10',
+      'version' => '2.2.10.0',
       'aliases' => 
       array (
       ),
@@ -2662,8 +2662,8 @@
     ),
     'web-token/jwt-key-mgmt' => 
     array (
-      'pretty_version' => 'v2.2.9',
-      'version' => '2.2.9.0',
+      'pretty_version' => 'v2.2.10',
+      'version' => '2.2.10.0',
       'aliases' => 
       array (
       ),
@@ -2671,8 +2671,8 @@
     ),
     'web-token/jwt-signature' => 
     array (
-      'pretty_version' => 'v2.2.9',
-      'version' => '2.2.9.0',
+      'pretty_version' => 'v2.2.10',
+      'version' => '2.2.10.0',
       'aliases' => 
       array (
       ),
@@ -2680,8 +2680,8 @@
     ),
     'web-token/jwt-signature-algorithm-ecdsa' => 
     array (
-      'pretty_version' => 'v2.2.9',
-      'version' => '2.2.9.0',
+      'pretty_version' => 'v2.2.10',
+      'version' => '2.2.10.0',
       'aliases' => 
       array (
       ),
@@ -2689,21 +2689,21 @@
     ),
     'web-token/jwt-util-ecc' => 
     array (
-      'pretty_version' => 'v2.2.9',
-      'version' => '2.2.9.0',
+      'pretty_version' => 'v2.2.10',
+      'version' => '2.2.10.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'a7ec5beb004a171f0305f8ba771d8b0ee9823839',
+      'reference' => '915f3fde86f5236c205620d61177b9ef43863deb',
     ),
     'webonyx/graphql-php' => 
     array (
-      'pretty_version' => 'v14.5.1',
-      'version' => '14.5.1.0',
+      'pretty_version' => 'v14.6.1',
+      'version' => '14.6.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '3af8b92d07e0d7a9085c0b83daf86beaeb76f092',
+      'reference' => 'cb54f64b972f8071835721848ddd74415aba31d9',
     ),
     'willdurand/geocoder' => 
     array (

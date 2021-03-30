@@ -81,6 +81,18 @@ class CollectionItemTypeForm extends EntityForm {
       '#default_value' => $collection_item_type->get('allowed_bundles'),
     ];
 
+    $form['attributes_access'] = [
+      '#type' => 'radios',
+      '#title' => 'Attributes access',
+      '#options' => [
+        'none' => $this->t('None'),
+        'owners' => $this->t('Collection owners only'),
+        'administrators' => $this->t('Collections administrators only'),
+      ],
+      '#default_value' => $collection_item_type->isNew() ? 'administrators' : $collection_item_type->get('attributes_access'),
+      '#description' => $this->t('Restrict access to the key/value attributes field for this collection item type.'),
+    ];
+
     return $form;
   }
 
@@ -93,6 +105,7 @@ class CollectionItemTypeForm extends EntityForm {
     $entity->set('label', $values['label']);
     $entity->set('id', $values['id']);
     $entity->set('allowed_bundles', array_keys(array_filter($values['allowed_bundles'])));
+    $entity->set('attributes_access', $values['attributes_access']);
   }
 
   /**

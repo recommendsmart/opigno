@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "00c67cd0c80e4d2548e2df3f245e030b",
+    "content-hash": "935f05ffd1f445b735c07c49e50ebd6b",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1378,7 +1378,7 @@
         },
         {
             "name": "drupal/activity_send_push",
-            "version": "1.0.0-alpha13",
+            "version": "1.3.0",
             "require": {
                 "drupal/core": "^8 || ^9",
                 "drupal/social_pwa": "^1"
@@ -1386,11 +1386,11 @@
             "type": "metapackage",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.0-alpha13",
-                    "datestamp": "1616002086",
+                    "version": "8.x-1.3",
+                    "datestamp": "1616520531",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 }
             },
@@ -2359,7 +2359,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/crm_core.git",
-                "reference": "ebab15bd25c2d07734bd368c824773ced4ef1909"
+                "reference": "56f7055903e46f671befe20d84824092ddcf8a93"
             },
             "require": {
                 "drupal/core": "^8.9.13"
@@ -2383,7 +2383,7 @@
                 },
                 "drupal": {
                     "version": "8.x-3.x-dev",
-                    "datestamp": "1614939072",
+                    "datestamp": "1614939995",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Dev releases are not covered by Drupal security advisories."
@@ -5041,10 +5041,10 @@
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/places.git",
-                "reference": "20ad99a2b34e2409bb686ba6e143323f042c7e5d"
+                "reference": "dd5c5ceac387af688b7d117e8ff9a252a7fee010"
             },
             "require": {
-                "drupal/core": "~8.0",
+                "drupal/core": "^8",
                 "drupal/entity": "*",
                 "drupal/geocoder": "*",
                 "drupal/geocoder_field": "*",
@@ -5057,7 +5057,7 @@
                 },
                 "drupal": {
                     "version": "1.0.x-dev",
-                    "datestamp": "1615821112",
+                    "datestamp": "1616437974",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
@@ -5820,17 +5820,17 @@
         },
         {
             "name": "drupal/social_pwa",
-            "version": "1.0.0-alpha13",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/social_pwa.git",
-                "reference": "8.x-1.0-alpha13"
+                "reference": "8.x-1.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/social_pwa-8.x-1.0-alpha13.zip",
-                "reference": "8.x-1.0-alpha13",
-                "shasum": "e7e3a11c1bc3585b9ce17843958e5d9e2fe871fa"
+                "url": "https://ftp.drupal.org/files/projects/social_pwa-8.x-1.3.zip",
+                "reference": "8.x-1.3",
+                "shasum": "68cee0bbb62a524d2e61902e22d8ef99e1856a11"
             },
             "require": {
                 "drupal/activity_send_push": "*",
@@ -5841,11 +5841,11 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.0-alpha13",
-                    "datestamp": "1616002086",
+                    "version": "8.x-1.3",
+                    "datestamp": "1616520531",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 }
             },
@@ -7149,16 +7149,16 @@
         },
         {
             "name": "goalgorilla/open_social",
-            "version": "10.0.3",
+            "version": "10.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/goalgorilla/open_social.git",
-                "reference": "5f07bd110d864438057bc24a9df4230a5a301bc3"
+                "reference": "a7aa6af9a41cc8ed5e97f83d2ffb4b4943a23644"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/goalgorilla/open_social/zipball/5f07bd110d864438057bc24a9df4230a5a301bc3",
-                "reference": "5f07bd110d864438057bc24a9df4230a5a301bc3",
+                "url": "https://api.github.com/repos/goalgorilla/open_social/zipball/a7aa6af9a41cc8ed5e97f83d2ffb4b4943a23644",
+                "reference": "a7aa6af9a41cc8ed5e97f83d2ffb4b4943a23644",
                 "shasum": ""
             },
             "require": {
@@ -7320,7 +7320,7 @@
                         "Make sure lazy doesnt do anything on cron": "https://www.drupal.org/files/issues/2019-07-30/3071331-lazy-cron-empty-path-2.patch"
                     },
                     "drupal/ajax_comments": {
-                        "Fix display mode issue": "https://www.drupal.org/files/issues/2021-02-19/ajax_comments-ajax_not_working_when_using_non_default_view_mode-2896916-41-beta1.patch"
+                        "Fix display mode issue": "https://www.drupal.org/files/issues/2021-03-19/ajax_comments-ajax_not_working_when_using_non_default_view_mode-2896916-beta3.patch"
                     },
                     "drupal/field_group": {
                         "Undefined property: stdClass::$region in field_group_form_process().": "https://www.drupal.org/files/issues/2020-06-15/3059614-37.patch"
@@ -7349,9 +7349,9 @@
             ],
             "description": "Open Social is a distribution for building social communities and intranets.",
             "support": {
-                "source": "https://github.com/goalgorilla/open_social/tree/10.0.3"
+                "source": "https://github.com/goalgorilla/open_social/tree/10.0.4"
             },
-            "time": "2021-03-02T11:33:55+00:00"
+            "time": "2021-03-23T09:15:25+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -7481,16 +7481,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.7.0",
+            "version": "1.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "53330f47520498c0ae1f61f7e2c90f55690c06a3"
+                "reference": "35ea11d335fd638b5882ff1725228b3d35496ab1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/53330f47520498c0ae1f61f7e2c90f55690c06a3",
-                "reference": "53330f47520498c0ae1f61f7e2c90f55690c06a3",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/35ea11d335fd638b5882ff1725228b3d35496ab1",
+                "reference": "35ea11d335fd638b5882ff1725228b3d35496ab1",
                 "shasum": ""
             },
             "require": {
@@ -7550,9 +7550,9 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/1.7.0"
+                "source": "https://github.com/guzzle/psr7/tree/1.8.1"
             },
-            "time": "2020-09-30T07:37:11+00:00"
+            "time": "2021-03-21T16:25:00+00:00"
         },
         {
             "name": "html2text/html2text",
@@ -7992,22 +7992,22 @@
         },
         {
             "name": "league/csv",
-            "version": "9.6.2",
+            "version": "9.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/csv.git",
-                "reference": "f28da6e483bf979bac10e2add384c90ae9983e4e"
+                "reference": "4cacd9c72c4aa8bdbef43315b2ca25c46a0f833f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/csv/zipball/f28da6e483bf979bac10e2add384c90ae9983e4e",
-                "reference": "f28da6e483bf979bac10e2add384c90ae9983e4e",
+                "url": "https://api.github.com/repos/thephpleague/csv/zipball/4cacd9c72c4aa8bdbef43315b2ca25c46a0f833f",
+                "reference": "4cacd9c72c4aa8bdbef43315b2ca25c46a0f833f",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-mbstring": "*",
-                "php": ">=7.2.5"
+                "php": "^7.3 || ^8.0"
             },
             "require-dev": {
                 "ext-curl": "*",
@@ -8016,7 +8016,7 @@
                 "phpstan/phpstan": "^0.12.0",
                 "phpstan/phpstan-phpunit": "^0.12.0",
                 "phpstan/phpstan-strict-rules": "^0.12.0",
-                "phpunit/phpunit": "^8.5"
+                "phpunit/phpunit": "^9.5"
             },
             "suggest": {
                 "ext-dom": "Required to use the XMLConverter and or the HTMLConverter classes",
@@ -8072,7 +8072,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-12-10T19:40:30+00:00"
+            "time": "2021-03-26T22:08:10+00:00"
         },
         {
             "name": "lsolesen/pel",
@@ -9167,23 +9167,23 @@
         },
         {
             "name": "pear/pear_exception",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pear/PEAR_Exception.git",
-                "reference": "dbb42a5a0e45f3adcf99babfb2a1ba77b8ac36a7"
+                "reference": "b14fbe2ddb0b9f94f5b24cf08783d599f776fff0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pear/PEAR_Exception/zipball/dbb42a5a0e45f3adcf99babfb2a1ba77b8ac36a7",
-                "reference": "dbb42a5a0e45f3adcf99babfb2a1ba77b8ac36a7",
+                "url": "https://api.github.com/repos/pear/PEAR_Exception/zipball/b14fbe2ddb0b9f94f5b24cf08783d599f776fff0",
+                "reference": "b14fbe2ddb0b9f94f5b24cf08783d599f776fff0",
                 "shasum": ""
             },
             "require": {
-                "php": ">=4.4.0"
+                "php": ">=5.2.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "*"
+                "phpunit/phpunit": "<9"
             },
             "type": "class",
             "extra": {
@@ -9222,7 +9222,7 @@
                 "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=PEAR_Exception",
                 "source": "https://github.com/pear/PEAR_Exception"
             },
-            "time": "2019-12-10T10:24:42+00:00"
+            "time": "2021-03-21T15:43:46+00:00"
         },
         {
             "name": "phayes/geophp",
@@ -11738,16 +11738,16 @@
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v4.4.20",
+            "version": "v4.4.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "a1eab2f69906dc83c5ddba4632180260d0ab4f7f"
+                "reference": "0da0e174f728996f5d5072d6a9f0a42259dbc806"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/a1eab2f69906dc83c5ddba4632180260d0ab4f7f",
-                "reference": "a1eab2f69906dc83c5ddba4632180260d0ab4f7f",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/0da0e174f728996f5d5072d6a9f0a42259dbc806",
+                "reference": "0da0e174f728996f5d5072d6a9f0a42259dbc806",
                 "shasum": ""
             },
             "require": {
@@ -11807,7 +11807,7 @@
                 "dump"
             ],
             "support": {
-                "source": "https://github.com/symfony/var-dumper/tree/v4.4.20"
+                "source": "https://github.com/symfony/var-dumper/tree/v4.4.21"
             },
             "funding": [
                 {
@@ -11823,7 +11823,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-27T09:09:26+00:00"
+            "time": "2021-03-27T19:49:03+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -12084,7 +12084,7 @@
         },
         {
             "name": "web-token/jwt-core",
-            "version": "v2.2.9",
+            "version": "v2.2.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-core.git",
@@ -12148,7 +12148,7 @@
                 "symfony"
             ],
             "support": {
-                "source": "https://github.com/web-token/jwt-core/tree/v2.2.9"
+                "source": "https://github.com/web-token/jwt-core/tree/v2.2.10"
             },
             "funding": [
                 {
@@ -12160,7 +12160,7 @@
         },
         {
             "name": "web-token/jwt-key-mgmt",
-            "version": "v2.2.9",
+            "version": "v2.2.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-key-mgmt.git",
@@ -12225,7 +12225,7 @@
                 "symfony"
             ],
             "support": {
-                "source": "https://github.com/web-token/jwt-key-mgmt/tree/v2.2.9"
+                "source": "https://github.com/web-token/jwt-key-mgmt/tree/v2.2.10"
             },
             "funding": [
                 {
@@ -12237,7 +12237,7 @@
         },
         {
             "name": "web-token/jwt-signature",
-            "version": "v2.2.9",
+            "version": "v2.2.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-signature.git",
@@ -12301,7 +12301,7 @@
                 "symfony"
             ],
             "support": {
-                "source": "https://github.com/web-token/jwt-signature/tree/v2.2.9"
+                "source": "https://github.com/web-token/jwt-signature/tree/v2.2.10"
             },
             "funding": [
                 {
@@ -12313,7 +12313,7 @@
         },
         {
             "name": "web-token/jwt-signature-algorithm-ecdsa",
-            "version": "v2.2.9",
+            "version": "v2.2.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-signature-algorithm-ecdsa.git",
@@ -12370,7 +12370,7 @@
                 "symfony"
             ],
             "support": {
-                "source": "https://github.com/web-token/jwt-signature-algorithm-ecdsa/tree/v2.2.9"
+                "source": "https://github.com/web-token/jwt-signature-algorithm-ecdsa/tree/v2.2.10"
             },
             "funding": [
                 {
@@ -12382,16 +12382,16 @@
         },
         {
             "name": "web-token/jwt-util-ecc",
-            "version": "v2.2.9",
+            "version": "v2.2.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-util-ecc.git",
-                "reference": "a7ec5beb004a171f0305f8ba771d8b0ee9823839"
+                "reference": "915f3fde86f5236c205620d61177b9ef43863deb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-token/jwt-util-ecc/zipball/a7ec5beb004a171f0305f8ba771d8b0ee9823839",
-                "reference": "a7ec5beb004a171f0305f8ba771d8b0ee9823839",
+                "url": "https://api.github.com/repos/web-token/jwt-util-ecc/zipball/915f3fde86f5236c205620d61177b9ef43863deb",
+                "reference": "915f3fde86f5236c205620d61177b9ef43863deb",
                 "shasum": ""
             },
             "require": {
@@ -12442,7 +12442,7 @@
                 "symfony"
             ],
             "support": {
-                "source": "https://github.com/web-token/jwt-util-ecc/tree/v2.2.9"
+                "source": "https://github.com/web-token/jwt-util-ecc/tree/v2.2.10"
             },
             "funding": [
                 {
@@ -12450,20 +12450,20 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2021-03-17T14:55:52+00:00"
+            "time": "2021-03-24T13:35:17+00:00"
         },
         {
             "name": "webonyx/graphql-php",
-            "version": "v14.5.1",
+            "version": "v14.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webonyx/graphql-php.git",
-                "reference": "3af8b92d07e0d7a9085c0b83daf86beaeb76f092"
+                "reference": "cb54f64b972f8071835721848ddd74415aba31d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/3af8b92d07e0d7a9085c0b83daf86beaeb76f092",
-                "reference": "3af8b92d07e0d7a9085c0b83daf86beaeb76f092",
+                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/cb54f64b972f8071835721848ddd74415aba31d9",
+                "reference": "cb54f64b972f8071835721848ddd74415aba31d9",
                 "shasum": ""
             },
             "require": {
@@ -12477,9 +12477,9 @@
                 "nyholm/psr7": "^1.2",
                 "phpbench/phpbench": "^0.16.10",
                 "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "0.12.32",
-                "phpstan/phpstan-phpunit": "0.12.11",
-                "phpstan/phpstan-strict-rules": "0.12.2",
+                "phpstan/phpstan": "0.12.82",
+                "phpstan/phpstan-phpunit": "0.12.18",
+                "phpstan/phpstan-strict-rules": "0.12.9",
                 "phpunit/phpunit": "^7.2|^8.5",
                 "psr/http-message": "^1.0",
                 "react/promise": "2.*",
@@ -12508,7 +12508,7 @@
             ],
             "support": {
                 "issues": "https://github.com/webonyx/graphql-php/issues",
-                "source": "https://github.com/webonyx/graphql-php/tree/v14.5.1"
+                "source": "https://github.com/webonyx/graphql-php/tree/v14.6.1"
             },
             "funding": [
                 {
@@ -12516,7 +12516,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2021-02-05T10:51:56+00:00"
+            "time": "2021-03-29T15:04:45+00:00"
         },
         {
             "name": "willdurand/geocoder",
@@ -12635,11 +12635,10 @@
     "stability-flags": {
         "drupal/aggrid": 15,
         "drupal/places": 20,
-        "drupal/social_pwa": 15,
         "drupal/feeds": 15,
         "drupal/book_pdf": 15,
-        "drupal/friggeri_cv": 15,
-        "drupal/crm_core": 20
+        "drupal/crm_core": 20,
+        "drupal/friggeri_cv": 15
     },
     "prefer-stable": true,
     "prefer-lowest": false,

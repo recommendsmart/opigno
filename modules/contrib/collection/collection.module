@@ -9,8 +9,10 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\Core\Url;
+use Drupal\Core\Access\AccessResult;
 
 /**
  * Implements hook_help().
@@ -191,8 +193,34 @@ function collection_entity_predelete(EntityInterface $entity) {
 function collection_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $form_object = $form_state->getFormObject();
 
-  if ($form_object instanceof Drupal\Core\Entity\ContentEntityForm) {
+  if ($form_object instanceof ContentEntityForm) {
     \Drupal::service('collection.content_entity_form.alter')->embedCollectionItems($form, $form_state, $form_object->getEntity());
+  }
+}
+
+/**
+ * Implements hook_entity_field_access_alter().
+ */
+function collection_entity_field_access_alter(array &$grants, array $context) {
+  // Prevent change of collected item reference when editing a collection item.
+  if ($context['field_definition']->getTargetEntityTypeId() === 'collection_item' && $context['field_definition']->getName() === 'item' && $context['operation'] === 'edit') {
+    $grants[':default'] = AccessResult::allowedIf($context['items']->getEntity()->isNew());
+  }
+
+  // Restrict access to collection item attributes.
+  if ($context['field_definition']->getTargetEntityTypeId() === 'collection_item' && $context['field_definition']->getName() === 'attributes' && $context['operation'] === 'edit') {
+    $attributes_access = $context['items']->getEntity()->type->entity->get('attributes_access');
+
+    if ($attributes_access === 'administrators') {
+      $grants[':default'] = AccessResult::allowedIfHasPermission($context['account'], 'administer collections');
+    }
+    elseif ($attributes_access === 'owners') {
+      $is_owner = in_array($context['account']->id(), $context['items']->getEntity()->collection->entity->getOwnerIds());
+      $grants[':default'] = AccessResult::allowedIf($is_owner);
+    }
+    else {
+      $grants[':default'] = AccessResult::forbidden();
+    }
   }
 }
 

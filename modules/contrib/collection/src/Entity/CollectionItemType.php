@@ -42,6 +42,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *     "id",
  *     "label",
  *     "allowed_bundles",
+ *     "attributes_access",
  *   }
  * )
  */
@@ -67,6 +68,14 @@ class CollectionItemType extends ConfigEntityBundleBase implements CollectionIte
    * @var array
    */
   protected $allowed_bundles = [];
+
+
+  /**
+   * The Collection item attributes access setting.
+   *
+   * @var string
+   */
+  protected $attributes_access;
 
   /**
    * {@inheritdoc}

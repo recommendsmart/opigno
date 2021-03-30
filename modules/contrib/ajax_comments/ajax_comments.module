@@ -80,10 +80,13 @@ function ajax_comments_entity_view_mode_alter(&$view_mode, Drupal\Core\Entity\En
  * classes to allow ajax behaviors to be attached.
  */
 function ajax_comments_comment_links_alter(array &$links, CommentInterface &$entity, array &$context) {
-  $request = \Drupal::request();
+  /** @var \Drupal\ajax_comments\TempStore $tempStore */
+  $tempStore = \Drupal::service('ajax_comments.temp_store');
+  $view_mode = $tempStore->getViewMode($entity->getCommentedEntity()->getEntityType()->getLabel()->getUntranslatedString());
+
   /** @var \Drupal\ajax_comments\FieldSettingsHelper $field_settings_helper */
   $field_settings_helper = \Drupal::service('ajax_comments.field_settings_helper');
-  $comment_formatter = $field_settings_helper->getFieldFormatterFromComment($entity, $context['view_mode']);
+  $comment_formatter = $field_settings_helper->getFieldFormatterFromComment($entity, $view_mode);
 
   if (!empty($comment_formatter) && $field_settings_helper->isEnabled($comment_formatter)) {
     // A little HACK for do not mark as NEW own comments.
@@ -276,9 +279,13 @@ function ajax_comments_form_comment_form_alter(&$form, \Drupal\Core\Form\FormSta
   $commented_entity = $comment->getCommentedEntity();
   $field_name = $comment->getFieldName();
 
+  /** @var \Drupal\ajax_comments\TempStore $tempStore */
+  $tempStore = \Drupal::service('ajax_comments.temp_store');
+  $view_mode = $tempStore->getViewMode($commented_entity->getEntityType()->getLabel()->getUntranslatedString());
+
   // Check to see if this node type uses ajax comments.
-  $comment_formatter = $field_settings_helper->getFieldFormatterFromComment($comment, 'full');
-  if (empty($comment_formatter) || !$field_settings_helper->isEnabled($comment_formatter)) {
+  $comment_formatter = $field_settings_helper->getFieldFormatterFromComment($comment, $view_mode);
+  if (!empty($comment_formatter) && !$field_settings_helper->isEnabled($comment_formatter)) {
     return;
   }
 
@@ -331,6 +338,14 @@ function _ajax_comments_preview_js($form, FormStateInterface $form_state) {
   return $response;
 }
 
+/**
+ * Implements template_preprocess_comment().
+ */
+function ajax_comments_preprocess_comment(&$variables) {
+  /** @var \Drupal\comment\CommentInterface $comment */
+  $comment = $variables['elements']['#comment'];
+  $variables['attributes']['class'][] = AjaxCommentsController::$commentClassPrefix . $comment->id();
+}
 
 /**
  * Implements template_preprocess_pager().
@@ -343,29 +358,32 @@ function ajax_comments_preprocess_pager(&$variables) {
   // the pager.
   // Unfortunately there is no way to remove this parameter before it is rendered to text,
   // so this preprocess function removes the parameter with string replacement.
+  $items = [];
 
   // Remove ajax wrapper format from first, previous.
   if (isset($variables['items']['first'])) {
-    $variables['items']['first']['href'] = str_replace('_wrapper_format=drupal_ajax&', '', $variables['items']['first']['href']);
+    $items['first'] = ['href' => str_replace('_wrapper_format=drupal_ajax&', '', $variables['items']['first']['href'])];
   }
   if (isset($variables['items']['previous'])) {
-    $variables['items']['previous']['href'] = str_replace('_wrapper_format=drupal_ajax&', '', $variables['items']['previous']['href']);
+    $items['previous'] = ['href' => str_replace('_wrapper_format=drupal_ajax&', '', $variables['items']['previous']['href'])];
   }
 
   // Remove ajax wrapper format from specific page links.
   if (isset($variables['items']['pages'])) {
     foreach($variables['items']['pages'] as $key => $value) {
-      $variables['items']['pages'][$key]['href'] = str_replace('_wrapper_format=drupal_ajax&', '', $value['href']);
+      $items['pages'][$key] = ['href' => str_replace('_wrapper_format=drupal_ajax&', '', $value['href'])];
     }
   }
 
   // Remove ajax wrapper format from next, last.
   if (isset($variables['items']['next'])) {
-    $variables['items']['next']['href'] = str_replace('_wrapper_format=drupal_ajax&', '', $variables['items']['next']['href']);
+    $items['next'] = ['href' => str_replace('_wrapper_format=drupal_ajax&', '', $variables['items']['next']['href'])];
   }
   if (isset($variables['items']['last'])) {
-    $variables['items']['last']['href'] = str_replace('_wrapper_format=drupal_ajax&', '', $variables['items']['last']['href']);
+    $items['last'] = ['href' => str_replace('_wrapper_format=drupal_ajax&', '', $variables['items']['last']['href'])];
   }
+
+  $variables['items'] = $items;
 }
 
 /**

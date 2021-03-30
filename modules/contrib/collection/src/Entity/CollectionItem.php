@@ -8,6 +8,7 @@ use Drupal\collection\Event\CollectionItemCreateEvent;
 use Drupal\collection\Event\CollectionItemUpdateEvent;
 use Drupal\collection\Event\CollectionItemDeleteEvent;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -60,7 +61,7 @@ use Drupal\Core\Cache\Cache;
  *   },
  *   bundle_entity_type = "collection_item_type",
  *   field_ui_base_route = "entity.collection_item_type.edit_form",
- *   constraints = {"UniqueItem" = {}, "SingleCanonicalItem" = {}}
+ *   constraints = {"UniqueItem" = {}, "SingleCanonicalItem" = {}, "PreventSelf" = {}}
  * )
  */
 class CollectionItem extends ContentEntityBase implements CollectionItemInterface {
@@ -359,13 +360,18 @@ class CollectionItem extends ContentEntityBase implements CollectionItemInterfac
 
     $fields['attributes'] = BaseFieldDefinition::create('key_value')
       ->setLabel(t('Attributes'))
-      ->setCardinality(\Drupal\Core\Field\FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
       ->setSetting('key_max_length', 255)
       ->setSetting('max_length', 255)
       ->setSetting('key_is_ascii', FALSE)
       ->setSetting('is_ascii', FALSE)
       ->setSetting('case_sensitive', FALSE)
       ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'key_value_textfield',
+        'weight' => 100,
+        'settings' => ['description_enabled' => FALSE],
+      ])
       ->setDisplayConfigurable('view', FALSE);
 
     $fields['weight'] = BaseFieldDefinition::create('integer')

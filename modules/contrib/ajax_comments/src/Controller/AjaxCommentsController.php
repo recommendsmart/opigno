@@ -160,6 +160,29 @@ class AjaxCommentsController extends ControllerBase {
     unset($comment_display[0]['comments']['pager']['#route_parameters']['field_name']);
     unset($comment_display[0]['comments']['pager']['#route_parameters']['pid']);
 
+    /**
+    
+	    $entity_type = $entity->getEntityType();
+
+	    // For replies, the passed $entity is the parent comment.
+	    // However, for the pager we want the parent entity.
+	    if ($entity_type->id() === 'comment') {
+	      $entity = $entity->getCommentedEntity();
+	      $entity_type = $entity->getEntityType();
+	    }
+
+	    $handler = $this->entityTypeManager()->getRouteProviders($entity_type->id())['html'];
+	    $route_collection = $handler->getRoutes($entity_type);
+	    $name = 'entity.' . $entity_type->get('id') . '.canonical';
+	    $route = $route_collection->get($name);
+	    // Override the ajax route object with the actual entity route.
+	    $entity_url = $entity->toURL();
+	    if ($route) {
+	      $comment_display[0]['comments']['pager']['#route_name'] = $route;
+	      $comment_display[0]['comments']['pager']['#route_parameters'] = $entity_url->getRouteParameters();
+	    }
+    */
+    
     return $comment_display;
   }
 

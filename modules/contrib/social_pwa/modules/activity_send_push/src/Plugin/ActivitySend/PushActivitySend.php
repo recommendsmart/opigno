@@ -5,7 +5,9 @@ namespace Drupal\activity_send_push\Plugin\ActivitySend;
 use Drupal\activity_send\Plugin\ActivitySendBase;
 use Drupal\Core\Url;
 use Drupal\message\Entity\Message;
-use Minishlink\WebPush\Subscription;
+use Drupal\social_pwa\WebPushPayload;
+use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 use Minishlink\WebPush\WebPush;
 use Drupal\file\Entity\File;
 
@@ -41,10 +43,19 @@ class PushActivitySend extends ActivitySendBase {
       return;
     }
 
-    // Get subscription object of the selected user, if the user does not have
-    // push notifications enabled then we're done.
-    $user_subscription = \Drupal::service('user.data')->get('social_pwa', $uid, 'subscription');
-    if (empty($user_subscription)) {
+    $user = User::load($uid);
+    if (!$user instanceof UserInterface) {
+      \Drupal::logger('activity_send_push')->debug('Ignored push notification for non-existing user.');
+      return;
+    }
+
+    /** @var \Drupal\social_pwa\WebPushManagerInterface $web_push_manager */
+    $web_push_manager = \Drupal::service('social_pwa.web_push_manager');
+
+    $user_subscriptions = $web_push_manager->getSubscriptionsForUser($user);
+
+    // If the user has no push subscriptions then we can stop early.
+    if (empty($user_subscriptions)) {
       return;
     }
 
@@ -70,7 +81,7 @@ class PushActivitySend extends ActivitySendBase {
 
     // Set fields for payload.
     $message_to_send = html_entity_decode($message_to_send);
-    $payload = [
+    $push_data = [
       'message' => strip_tags($message_to_send),
       'site_name' => $pwa_settings->get('name'),
       'url' => $url->toString(),
@@ -84,60 +95,32 @@ class PushActivitySend extends ActivitySendBase {
       $file = File::load($fid);
       $path = $file->createFileUrl(FALSE);
 
-      $payload['icon_url'] = file_url_transform_relative($path);
+      $push_data['icon'] = file_url_transform_relative($path);
     }
 
     // Encode payload.
-    $serialized_payload = json_encode($payload);
+    $serialized_payload = (new WebPushPayload('legacy', $push_data))->toJson();
 
-    // Get the VAPID keys that were generated before.
-    $vapid_keys = \Drupal::state()->get('social_pwa.vapid_keys');
-
-    $auth = [
-      'VAPID' => [
-        'subject' => Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(),
-        'publicKey' => $vapid_keys['public'],
-        'privateKey' => $vapid_keys['private'],
-      ],
-    ];
+    $auth = $web_push_manager->getAuth();
     $webPush = new WebPush($auth);
 
-    foreach ($user_subscription as $subscription_data) {
-      $subscription = new Subscription(
-        $subscription_data['endpoint'],
-        $subscription_data['key'],
-        $subscription_data['token']
-      );
-      $webPush->queueNotification(
-        $subscription,
-        $serialized_payload
-      );
+    foreach ($user_subscriptions as $subscription) {
+      $webPush->queueNotification($subscription, $serialized_payload);
     }
 
-    $removed = FALSE;
+    $outdated_subscriptions = [];
     // Send each notification and check the results.
     // flush() returns a generator that won't actually send all batches until
     // we've consumed all the results of the previous batch.
     /** @var \Minishlink\WebPush\MessageSentReport $push_result */
     foreach ($webPush->flush() as $push_result) {
-      // If we had any results back that we're unsuccessful, we should act and
-      // remove the push subscription endpoint.
-      if (!$push_result->isSuccess()) {
-        // Loop through the users subscriptions.
-        foreach ($user_subscription as $key => $subscription) {
-          // Remove from list of subscriptions, as the endpoint is no longer
-          // being used.
-          if ($subscription['endpoint'] === $push_result->getEndpoint()) {
-            unset($user_subscription[$key]);
-            $removed = TRUE;
-          }
-        }
+      if ($push_result->isSubscriptionExpired()) {
+        $outdated_subscriptions[] = $push_result->getEndpoint();
       }
     }
 
-    // Update the users subscriptions if we removed something from the list.
-    if ($removed) {
-      \Drupal::service('user.data')->set('social_pwa', $uid, 'subscription', $user_subscription);
+    if (!empty($outdated_subscriptions)) {
+      $web_push_manager->removeSubscriptionsForUser($user, $outdated_subscriptions);
     }
   }
 

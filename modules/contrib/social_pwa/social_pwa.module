@@ -8,19 +8,30 @@
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_page_attachments().
  */
 function social_pwa_page_attachments(array &$page) {
+  /** @var \Drupal\Core\Render\RendererInterface $renderer */
+  $renderer = \Drupal::service('renderer');
+  $settings = \Drupal::config('social_pwa.settings');
+  $account = \Drupal::currentUser();
+
+  // Fix cache metadata for this page.
+  $page['#cache']['contexts'][] = 'user';
+  $renderer->addCacheableDependency($page, $settings);
+  $renderer->addCacheableDependency($page, User::load($account->id()));
+
   // Check first if sending push notifications is enabled.
-  $pwa_enabled = \Drupal::config('social_pwa.settings')->get('status.all');
+  $pwa_enabled = $settings->get('status.all');
   if (!$pwa_enabled) {
     return;
   }
 
   // Get the uploaded icon.
-  $icon = \Drupal::config('social_pwa.settings')->get('icons.icon');
+  $icon = $settings->get('icons.icon');
 
   if ($icon === NULL || !isset($icon[0])) {
     return;
@@ -82,7 +93,7 @@ function social_pwa_page_attachments(array &$page) {
       '#tag' => 'meta',
       '#attributes' => [
         'name' => 'application-name',
-        'content' => \Drupal::config('social_pwa.settings')->get('short_name'),
+        'content' => $settings->get('short_name'),
       ],
     ],
     // iOS Support: Add to home screen for Safari on iOS
@@ -98,14 +109,14 @@ function social_pwa_page_attachments(array &$page) {
       '#tag' => 'meta',
       '#attributes' => [
         'name' => 'apple-mobile-web-app-status-bar-style',
-        'content' => \Drupal::config('social_pwa.settings')->get('theme_color'),
+        'content' => $settings->get('theme_color'),
       ],
     ],
     'apple-mobile-web-app-title' => [
       '#tag' => 'meta',
       '#attributes' => [
         'name' => 'apple-mobile-web-app-title',
-        'content' => \Drupal::config('social_pwa.settings')->get('short_name'),
+        'content' => $settings->get('short_name'),
       ],
     ],
     // Windows Mobile Support: Tile icon and color for Windows Mobile.
@@ -120,7 +131,7 @@ function social_pwa_page_attachments(array &$page) {
       '#tag' => 'meta',
       '#attributes' => [
         'name' => 'msapplication-TileColor',
-        'content' => \Drupal::config('social_pwa.settings')->get('theme_color'),
+        'content' => $settings->get('theme_color'),
       ],
     ],
     // Color the status bar on mobile devices.
@@ -128,8 +139,7 @@ function social_pwa_page_attachments(array &$page) {
       '#tag' => 'meta',
       '#attributes' => [
         'name' => 'theme-color',
-        'content' => \Drupal::config('social_pwa.settings')
-          ->get('theme_color'),
+        'content' => $settings->get('theme_color'),
       ],
     ],
   ];
@@ -139,7 +149,6 @@ function social_pwa_page_attachments(array &$page) {
   }
 
   // Push notification support is only available to authenticated users.
-  $account = \Drupal::currentUser();
   if ($account->isAuthenticated()) {
     // Get all the subscriptions for this user and attach them to the page.
     $user_subscriptions = \Drupal::service('user.data')

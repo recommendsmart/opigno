@@ -2,6 +2,16 @@
 
 #### Unreleased
 
+#### 14.6.1
+
+Fix:
+- Add fallback for `directive.isRepeatable` in `BuildClientSchema`
+
+#### 14.6.0
+
+Feat:
+- Open ReferenceExecutor for extending
+
 #### 14.5.1
 
 Fix:
