@@ -1,7 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-name: 'Population Segment'
-vid: population_segment
-description: 'Used to count groups of users for registrations and attendance'
-weight: 0

@@ -1,9 +1,0 @@
-intercept_core:
-  controller: 'Drupal\intercept_core\Controller\ManagementController::view'
-  pages:
-    settings:
-      title: 'Settings'
-      menu_link: FALSE
-    system_configuration:
-      title: 'System Configuration'
-      menu_link: FALSE

@@ -1,7 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-name: 'Meeting Purpose'
-vid: meeting_purpose
-description: 'Room reservation meeting purpose'
-weight: 0

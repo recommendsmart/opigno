@@ -1,7 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-name: 'Room Type'
-vid: room_type
-description: 'Room categorization'
-weight: 0

@@ -1,9 +1,0 @@
-langcode: en
-status: true
-dependencies:
-  module:
-    - node
-id: node.evaluation_attendee
-label: 'Evaluation (attendee)'
-targetEntityType: node
-cache: true

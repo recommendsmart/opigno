@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'efc3ded936d458899ddeb9744b65783845a83750',
+    'reference' => '787c80ca4f24aa67c2e4eaa9f099273cc593d821',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -211,15 +211,6 @@ private static $installed = array (
       array (
       ),
       'reference' => '8.x-1.7',
-    ),
-    'drupal/addtocalendar' => 
-    array (
-      'pretty_version' => '3.2.0',
-      'version' => '3.2.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '8.x-3.2',
     ),
     'drupal/admin_toolbar' => 
     array (
@@ -427,24 +418,6 @@ private static $installed = array (
       array (
       ),
       'reference' => '8.x-1.6',
-    ),
-    'drupal/consumer_image_styles' => 
-    array (
-      'pretty_version' => '3.1.0',
-      'version' => '3.1.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '8.x-3.1',
-    ),
-    'drupal/consumers' => 
-    array (
-      'pretty_version' => '1.11.0',
-      'version' => '1.11.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '8.x-1.11',
     ),
     'drupal/contact' => 
     array (
@@ -706,15 +679,6 @@ private static $installed = array (
       ),
       'reference' => '8.x-1.0-beta7',
     ),
-    'drupal/date_recur' => 
-    array (
-      'pretty_version' => '2.2.0',
-      'version' => '2.2.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '8.x-2.2',
-    ),
     'drupal/datetime' => 
     array (
       'replaced' => 
@@ -744,15 +708,6 @@ private static $installed = array (
       array (
       ),
       'reference' => '8.x-2.1',
-    ),
-    'drupal/duration_field' => 
-    array (
-      'pretty_version' => '2.0.0',
-      'version' => '2.0.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '8.x-2.0',
     ),
     'drupal/dynamic_entity_reference' => 
     array (
@@ -804,15 +759,6 @@ private static $installed = array (
       ),
       'reference' => '8.x-1.0-rc3',
     ),
-    'drupal/entity_browser' => 
-    array (
-      'pretty_version' => '2.5.0',
-      'version' => '2.5.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '8.x-2.5',
-    ),
     'drupal/entity_reference' => 
     array (
       'replaced' => 
@@ -837,24 +783,6 @@ private static $installed = array (
       array (
       ),
       'reference' => '8.x-1.1',
-    ),
-    'drupal/existing_values_autocomplete_widget' => 
-    array (
-      'pretty_version' => '1.2.0',
-      'version' => '1.2.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '8.x-1.2',
-    ),
-    'drupal/externalauth' => 
-    array (
-      'pretty_version' => '1.3.0',
-      'version' => '1.3.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '8.x-1.3',
     ),
     'drupal/features' => 
     array (
@@ -953,15 +881,6 @@ private static $installed = array (
       array (
       ),
       'reference' => '8.x-4.0-alpha3',
-    ),
-    'drupal/focal_point' => 
-    array (
-      'pretty_version' => '1.5.0',
-      'version' => '1.5.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '8.x-1.5',
     ),
     'drupal/forum' => 
     array (
@@ -1148,30 +1067,12 @@ private static $installed = array (
         0 => '8.9.13',
       ),
     ),
-    'drupal/intercept' => 
-    array (
-      'pretty_version' => '1.0.0-alpha31',
-      'version' => '1.0.0.0-alpha31',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '8.x-1.0-alpha31',
-    ),
     'drupal/jsonapi' => 
     array (
       'replaced' => 
       array (
         0 => '8.9.13',
       ),
-    ),
-    'drupal/jsonapi_extras' => 
-    array (
-      'pretty_version' => '3.17.0',
-      'version' => '3.17.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '8.x-3.17',
     ),
     'drupal/language' => 
     array (
@@ -1332,15 +1233,6 @@ private static $installed = array (
       array (
         0 => '8.9.13',
       ),
-    ),
-    'drupal/office_hours' => 
-    array (
-      'pretty_version' => '1.3.0',
-      'version' => '1.3.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '8.x-1.3',
     ),
     'drupal/options' => 
     array (
@@ -1665,16 +1557,6 @@ private static $installed = array (
         0 => '8.9.13',
       ),
     ),
-    'drupal/tally' => 
-    array (
-      'pretty_version' => 'dev-1.x',
-      'version' => 'dev-1.x',
-      'aliases' => 
-      array (
-        0 => '1.x-dev',
-      ),
-      'reference' => '30a17454e379a4cd342feb0312e217da8899f745',
-    ),
     'drupal/taxonomy' => 
     array (
       'replaced' => 
@@ -1840,15 +1722,6 @@ private static $installed = array (
         0 => '8.9.13',
       ),
     ),
-    'e0ipso/shaper' => 
-    array (
-      'pretty_version' => '1.2.3',
-      'version' => '1.2.3.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '04e17ee682d1a66726378d7d2c2a9a9b4d6984eb',
-    ),
     'easyrdf/easyrdf' => 
     array (
       'pretty_version' => '0.9.1',
@@ -1910,7 +1783,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'efc3ded936d458899ddeb9744b65783845a83750',
+      'reference' => '787c80ca4f24aa67c2e4eaa9f099273cc593d821',
     ),
     'guzzlehttp/guzzle' => 
     array (
@@ -1956,15 +1829,6 @@ private static $installed = array (
       array (
       ),
       'reference' => '170ded831f49abc6a6061f655aba9bdbcf7b8111',
-    ),
-    'justinrainbow/json-schema' => 
-    array (
-      'pretty_version' => '5.2.10',
-      'version' => '5.2.10.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '2ba9c8c862ecd5510ed16c6340aa9f6eadb4f31b',
     ),
     'laminas/laminas-diactoros' => 
     array (
@@ -2500,15 +2364,6 @@ private static $installed = array (
       array (
       ),
       'reference' => '120b605dfeb996808c31b6477290a714d356e822',
-    ),
-    'rlanvin/php-rrule' => 
-    array (
-      'pretty_version' => 'v1.6.3',
-      'version' => '1.6.3.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '1373df401e0926cf7548716dabbc0d19603a144d',
     ),
     'roundcube/plugin-installer' => 
     array (

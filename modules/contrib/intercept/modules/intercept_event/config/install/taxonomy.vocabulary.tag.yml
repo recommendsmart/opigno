@@ -1,7 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-name: Tag
-vid: tag
-description: 'Keywords for categorizing events'
-weight: 0

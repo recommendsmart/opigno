@@ -1,7 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-name: 'Equipment Type'
-vid: equipment_type
-description: 'Equipment categorization'
-weight: 0
