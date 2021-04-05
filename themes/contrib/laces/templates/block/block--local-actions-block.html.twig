@@ -1,0 +1,17 @@
+{% extends "@block/block.html.twig" %}
+{#
+/**
+ * @file
+ * Theme override for local actions (primary admin actions.)
+ */
+#}
+{% block content %}
+  {{ attach_library('laces/bootstrap-containers') }}
+  <div class="container">
+  {% if content %}
+    <ul class="action-links list-inline">
+      {{ content }}
+    </ul>
+  {% endif %}
+  </div>
+{% endblock %}

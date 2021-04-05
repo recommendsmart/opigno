@@ -1,0 +1,6 @@
+#drupal-off-canvas #bs_nav-tabs,
+#layout-builder-modal #bs_nav-tabs {
+  width: calc(100% + 30px);
+}
+
+/*# sourceMappingURL=laces__module__bootstrap_styles__overrides.css.map */

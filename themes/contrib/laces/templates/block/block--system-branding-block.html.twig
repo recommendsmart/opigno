@@ -1,0 +1,38 @@
+{#
+/**
+ * @file
+ * lacess's theme implementation for a branding block.
+ *
+ * Each branding element variable (logo, name, slogan) is only available if
+ * enabled in the block configuration.
+ *
+ * Available variables:
+ * - site_logo: Logo for site as defined in Appearance or theme settings.
+ * - site_name: Name for site as defined in Site information settings.
+ * - site_slogan: Slogan for site as defined in Site information settings.
+ */
+#}
+{{ attach_library('laces/bootstrap-navbar') }}
+{{ attach_library('laces/bootstrap-containers') }}
+{{ attach_library('laces/bootstrap-grid') }}
+{% if site_logo or site_slogan %}
+  <div class="container-fluid bg-dark text-light py-3">
+    <div class="row">
+      {% if site_logo %}
+        <div class="col-auto">
+          <img src="{{ site_logo }}" alt="{{ 'Home'|t }}">
+        </div>
+      {% endif %}
+      <div class="col">
+        {% if site_name %}
+          <h1><a href="{{ path('<front>') }}" class="text-light text-decoration-none" title="{{ 'Home'|t }}" rel="home">{{ site_name }}</a></h1>
+        {% endif %}
+        {% if site_slogan %}
+          <p>{{ site_slogan }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% elseif site_name %}
+  <a href="{{ path('<front>') }}" title="{{ 'Home'|t }}" rel="home" class="navbar-brand">{{ site_name }}</a>
+{% endif %}

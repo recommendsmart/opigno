@@ -1,0 +1,527 @@
+bootstrap-alert:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_alert.css: { }
+  dependencies:
+    - laces/bootstrap-js-alert
+
+bootstrap-all:
+  version: VERSION
+  dependencies:
+    - laces/bootstrap-required
+    - laces/bootstrap-alert
+    - laces/bootstrap-breadcrumb
+    - laces/bootstrap-button-group
+    - laces/bootstrap-buttons
+    - laces/bootstrap-card
+    - laces/bootstrap-carousel
+    - laces/bootstrap-close
+    - laces/bootstrap-code
+    - laces/bootstrap-collapse
+    - laces/boptstrap-containers
+    - laces/bootstrap-dropdown
+    - laces/bootstrap-forms
+    - laces/bootstrap-grid
+    - laces/bootstrap-images
+    - laces/bootstrap-list-group
+    - laces/bootstrap-modal
+    - laces/bootstrap-nav
+    - laces/bootstrap-navbar
+    - laces/bootstrap-pagination
+    - laces/bootstrap-popover
+    - laces/bootstrap-progress
+    - laces/bootstrap-scrollspy
+    - laces/bootstrap-spiners
+    - laces/bootstrap-tab
+    - laces/bootstrap-tables
+    - laces/bootstrap-toasts
+    - laces/bootstrap-tooltip
+    - laces/bootstrap-transitions
+
+bootstrap-badge:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_badge.css: { }
+
+bootstrap-breadcrumb:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_breadcrumb.css: { }
+
+
+bootstrap-button-group:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_button-group.css: { }
+
+bootstrap-buttons:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_buttons.css: { }
+
+bootstrap-card:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_card.css: { }
+
+bootstrap-carousel:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_carousel.css: { }
+  dependencies:
+    laces/bootstrap-js-carousel
+
+bootstrap-close:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_close.css: { }
+
+bootstrap-code:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_code.css: { }
+
+bootstrap-containers:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_containers.css: { }
+
+bootstrap-dropdown:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_dropdown.css: { }
+  dependencies:
+    - laces/bootstrap-js-dropdown
+
+bootstrap-forms:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_forms.css: { }
+
+bootstrap-grid:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_grid.css: { }
+
+bootstrap-images:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_images.css: { }
+
+bootstrap-js-alert:
+  version: VERSION
+  js:
+    js/bootstrap/js/dist/alert.js: { }
+  dependencies:
+    - laces/bootstrap-js-dom-data
+    - laces/bootstrap-js-dom-event-handler
+    - laces/bootstrap-js-base-component
+
+bootstrap-js-base-component:
+  version: VERSION
+  js:
+    js/bootstrap/js/dist/base-component.js: { }
+  dependencies:
+    - laces/bootstrap-js-dom-data
+
+bootstrap-js-bundle:
+  version: VERSION
+  js:
+    js/bootstrap/js/bootstrap.bundle.js: { }
+
+bootstrap-js-bundle-min:
+  version: VERSION
+  js:
+    js/bootstrap/js/bootstrap.bundle.min.js: { minified: true }
+
+#
+# Bootstrap button.js has a conflict with jquery.ui.dialog.
+# Bootstrap button.js is ony needed for toggle buttons.
+#
+bootstrap-js-button:
+  version: VERSION
+  js:
+    js/bootstrap/js/dist/button.js: { }
+  dependencies:
+    - laces/bootstrap-js-dom-data
+    - laces/bootstrap-js-dom-event-handler
+    - laces/bootstrap-js-base-component
+
+bootstrap-js-carousel:
+  version: VERSION
+  js:
+    js/bootstrap/js/dist/carousel.js: { }
+  dependencies:
+    - laces/bootstrap-js-dom-data
+    - laces/bootstrap-js-dom-event-handler
+    - laces/bootstrap-js-dom-manipulator
+    - laces/bootstrap-js-dom-selector-engine
+    - laces/bootstrap-js-base-component
+
+bootstrap-js-collapse:
+  version: VERSION
+  js:
+    js/bootstrap/js/dist/collapse.js: { }
+  dependencies:
+    - laces/bootstrap-js-dom-data
+    - laces/bootstrap-js-dom-event-handler
+    - laces/bootstrap-js-dom-manipulator
+    - laces/bootstrap-js-dom-selector-engine
+    - laces/bootstrap-js-base-component
+
+bootstrap-js-dom-data:
+  version: VERSION
+  js:
+    js/bootstrap/js/dist/dom/data.js: { }
+
+bootstrap-js-dom-event-handler:
+  version: VERSION
+  js:
+    js/bootstrap/js/dist/dom/event-handler.js: { }
+
+bootstrap-js-dom-manipulator:
+  version: VERSION
+  js:
+    js/bootstrap/js/dist/dom/manipulator.js: { }
+
+bootstrap-js-dom-selector-engine:
+  version: VERSION
+  js:
+    js/bootstrap/js/dist/dom/selector-engine.js: { }
+
+bootstrap-js-dropdown:
+  version: VERSION
+  js:
+    js/bootstrap/js/dist/dropdown.js: { }
+  dependencies:
+    - core/popperjs
+    - laces/bootstrap-js-dom-data
+    - laces/bootstrap-js-dom-event-handler
+    - laces/bootstrap-js-dom-manipulator
+    - laces/bootstrap-js-dom-selector-engine
+    - laces/bootstrap-js-base-component
+
+bootstrap-js-modal:
+  version: VERSION
+  js:
+    js/bootstrap/js/dist/modal.js: { }
+  dependencies:
+    - laces/bootstrap-js-dom-data
+    - laces/bootstrap-js-dom-event-handler
+    - laces/bootstrap-js-dom-manipulator
+    - laces/bootstrap-js-dom-selector-engine
+    - laces/bootstrap-js-base-component
+
+bootstrap-js-offcanvas:
+  version: VERSION
+  js:
+    js/bootstrap/js/dist/offcanvas.js:  { }
+  dependencies:
+    - laces/bootstrap-js-dom-data
+    - laces/bootstrap-js-dom-event-handler
+    - laces/bootstrap-js-base-component
+    - laces/bootstrap-js-dom-selector-engine
+    - laces/bootstrap-js-dom-manipulator
+
+bootstrap-js-popover:
+  version: VERSION
+  js:
+    js/bootstrap/js/dist/popover.js: { }
+  dependencies:
+    - laces/bootstrap-js-dom-data
+    - laces/bootstrap-js-dom-selector-engine
+    - laces/bootstrap-js-tooltip
+
+bootstrap-js-scrollspy:
+  version: VERSION
+  js:
+    js/bootstrap/js/dist/scrollspy.js: { }
+  dependencies:
+    - laces/bootstrap-js-dom-data
+    - laces/bootstrap-js-dom-event-handler
+    - laces/bootstrap-js-dom-manipulator
+    - laces/bootstrap-js-dom-selector-engine
+    - laces/bootstrap-js-base-component
+
+bootstrap-js-tab:
+  version: VERSION
+  js:
+    js/bootstrap/js/dist/tab.js: { }
+  dependencies:
+    - laces/bootstrap-js-dom-data
+    - laces/bootstrap-js-dom-event-handler
+    - laces/bootstrap-js-dom-selector-engine
+    - laces/bootstrap-js-base-component
+
+bootstrap-js-toast:
+  version: VERSION
+  js:
+    js/bootstrap/js/dist/toast.js: { }
+  dependencies:
+    - laces/bootstrap-js-dom-data
+    - laces/bootstrap-js-dom-event-handler
+    - laces/bootstrap-js-dom-manipulator
+    - laces/bootstrap-js-base-component
+
+bootstrap-js-tooltip:
+  version: VERSION
+  js:
+    js/bootstrap/js/dist/tooltip.js: { }
+  dependencies:
+    - core/popperjs
+    - laces/bootstrap-js-dom-data
+    - laces/bootstrap-js-dom-event-handler
+    - laces/bootstrap-js-dom-manipulator
+    - laces/bootstrap-js-dom-selector-engine
+    - laces/bootstrap-js-base-component
+
+bootstrap-list-group:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_list-group.css: { }
+
+bootstrap-modal:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_modal.css: { }
+  dependencies:
+    - laces/bootstrap-js-modal
+
+bootstrap-nav:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_nav.css: { }
+  dependencies:
+    - laces/bootstrap-js-tab
+
+bootstrap-navbar:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_navbar.css: { }
+  dependencies:
+    - laces/bootstrap-nav
+    - laces/bootstrap-transitions
+    - laces/bootstrap-js-collapse
+
+bootstrap-offcanvas:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_offcanvas.css: { }
+  dependencies:
+    - laces/bootstrap-js-offcanvas
+
+bootstrap-pagination:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_pagination.css: { }
+
+bootstrap-popover:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_popover.css: { }
+  dependencies:
+    laces/bootstrap-js-popover
+
+bootstrap-progress:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_progress.css: { }
+
+bootstrap-required:
+  version: VERSION
+  css:
+    component:
+      css/base/bootstrap_required.css: { }
+
+bootstrap-spinners:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_spinners.css: { }
+
+bootstrap-tables:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_tables.css: { }
+
+bootstrap-toasts:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_toasts.css: { }
+  dependencies:
+    - laces/bootstrap-js-toast
+
+bootstrap-tooltip:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_tooltip.css: { }
+  dependencies:
+    - laces/bootstrap-js-tooltip
+
+bootstrap-transitions:
+  version: VERSION
+  css:
+    component:
+      css/components/bootstrap_transitions.css: { }
+
+laces-alert:
+  version: VERSION
+  css:
+    component:
+      css/components/laces_alert.css: { }
+  dependencies:
+    - laces/bootstrap-alert
+
+laces-card:
+  version: VERSION
+  css:
+    component:
+      css/components/laces_card.css: { }
+  dependencies:
+    - laces/bootstrap-card
+
+laces-checkbox:
+  version: VERSION
+  dependencies:
+    - core/drupal
+    - laces/bootstrap-js-checkbox
+
+laces-dialog:
+  version: VERSION
+  css:
+    component:
+      css/components/laces_dialog.css: { }
+
+laces-feed-icon:
+  version: VERSION
+  css:
+    component:
+      css/components/laces_feed-icon.css: { }
+
+laces-forms:
+  version: VERSION
+  css:
+    layout:
+      css/layout/laces_node-add.css: { }
+    component:
+      css/components/laces_forms.css: { }
+      css/components/laces_entity-meta.css: { }
+      css/components/laces_details.css: { }
+      css/components/laces_link.css: { }
+  dependencies:
+    - node/form
+    - laces/bootstrap-forms
+
+laces-images:
+  version: VERSION
+  css:
+    component:
+      css/components/laces_images.css: { }
+  dependencies:
+    - laces/bootstrap-images
+
+laces-jquery-ui:
+  version: VERSION
+  css:
+    component:
+      css/components/jquery.ui/theme.css: { weight: -1 }
+
+laces-media-library:
+  version: VERSION
+  css:
+    theme:
+      css/theme/laces_media-library.css: { }
+
+laces-node-form:
+  version: VERSION
+  css:
+    layout:
+      css/layout/laces_node-add.css: { }
+    component:
+      css/components/laces_entity-meta.css: { }
+      css/components/laces_details.css: { }
+      css/components/laces_link.css: { }
+  dependencies:
+    - node/form
+    - laces/forms
+
+laces-off-canvas:
+  version: VERSION
+  css:
+    component:
+      css/components/laces_off-canvas.css: { }
+      css/components/laces__module__bootstrap_styles__overrides.css: { }
+
+laces-required:
+  version: VERSION
+  css:
+    base:
+      css/base/laces_reboot.css: { }
+
+laces-vertical-tabs:
+  version: VERSION
+  css:
+    component:
+      css/components/laces_details.css: { }
+      css/components/laces_vertical-tabs.css: { }
+
+laces-sticky-header:
+  version: VERSION
+  css:
+    component:
+      css/components/laces_sticky-header.css: { }
+  js:
+    js/sticky.js: { }
+  dependencies:
+    - core/jquery
+
+laces-super-login:
+  version: VERSION
+  css:
+    component:
+      css/components/laces__module__super_login__overrides.css: { }
+  dependencies:
+    - laces/bootstrap-container
+    - laces/bootstrap-grid
+    - laces/laces-forms
+    - laces/bootstrap-card
+
+laces-tabledrag:
+  version: VERSION
+  css:
+    component:
+      css/components/laces_tabledrag.css: { }
+  dependencies:
+    - core/drupal.tabledrag
+    - laces/bootstrap-tables
+
+laces-utilities:
+  version: VERSION
+  css:
+    component:
+      css/components/laces_utilities.css: { }

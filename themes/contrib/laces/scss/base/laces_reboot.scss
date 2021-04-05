@@ -1,0 +1,16 @@
+@import "../variables-override";
+@import "../../../../../../vendor/twbs/bootstrap/scss/functions";
+@import "../../../../../../vendor/twbs/bootstrap/scss/variables";
+@import "../../../../../../vendor/twbs/bootstrap/scss/mixins";
+
+// Add display inline-block to ol and ul so they display properly around floats.
+ol, ul {
+  display: inline-block;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}

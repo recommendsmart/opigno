@@ -1,0 +1,10 @@
+#drupal-off-canvas,
+#layout-builder-modal {
+  @import "../variables-override";
+  @import "../../../../../../vendor/twbs/bootstrap/scss/functions";
+  @import "../../../../../../vendor/twbs/bootstrap/scss/variables";
+  @import "../../../../../../vendor/twbs/bootstrap/scss/mixins";
+  @import "bootstrap_forms";
+  @import "bootstrap_buttons";
+  @import "bootstrap_dropdown";
+}

@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '787c80ca4f24aa67c2e4eaa9f099273cc593d821',
+    'reference' => '7e2f555d6bceff3c69ace55a8cd121d589d3b4fd',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -321,6 +321,15 @@
       array (
       ),
       'reference' => '8.x-3.20',
+    ),
+    'drupal/bootstrap5' => 
+    array (
+      'pretty_version' => '1.0.0-alpha4',
+      'version' => '1.0.0.0-alpha4',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1.0.0-alpha4',
     ),
     'drupal/breakpoint' => 
     array (
@@ -895,8 +904,8 @@
     ),
     'drupal/geocoder_field' => 
     array (
-      'pretty_version' => '3.17.0',
-      'version' => '3.17.0.0',
+      'pretty_version' => '3.19.0',
+      'version' => '3.19.0.0',
       'aliases' => 
       array (
       ),
@@ -1050,6 +1059,15 @@
       array (
         0 => '8.9.13',
       ),
+    ),
+    'drupal/laces' => 
+    array (
+      'pretty_version' => '1.2.0-alpha1',
+      'version' => '1.2.0.0-alpha1',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1.2.0-alpha1',
     ),
     'drupal/language' => 
     array (
@@ -1585,6 +1603,15 @@
         0 => '8.9.13',
       ),
     ),
+    'drupal/twig_tweak' => 
+    array (
+      'pretty_version' => '2.9.0',
+      'version' => '2.9.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-2.9',
+    ),
     'drupal/typed_data' => 
     array (
       'pretty_version' => '1.0.0-alpha5',
@@ -1728,12 +1755,12 @@
     ),
     'embed/embed' => 
     array (
-      'pretty_version' => 'v3.4.13',
-      'version' => '3.4.13.0',
+      'pretty_version' => 'v3.4.15',
+      'version' => '3.4.15.0',
       'aliases' => 
       array (
       ),
-      'reference' => '99f6d95aebd94251573e4f4febf14bc6aba28697',
+      'reference' => '5028323230da075d6f515448fe62dfb179b9bde8',
     ),
     'fgrosse/phpasn1' => 
     array (
@@ -1760,7 +1787,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '787c80ca4f24aa67c2e4eaa9f099273cc593d821',
+      'reference' => '7e2f555d6bceff3c69ace55a8cd121d589d3b4fd',
     ),
     'guzzlehttp/guzzle' => 
     array (
@@ -1827,12 +1854,12 @@
     ),
     'laminas/laminas-feed' => 
     array (
-      'pretty_version' => '2.14.0',
-      'version' => '2.14.0.0',
+      'pretty_version' => '2.14.1',
+      'version' => '2.14.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '85cf475aa76c10b8c12134873100f592251456a6',
+      'reference' => '463fdae515fba30633906098c258d3b2c733c15c',
     ),
     'laminas/laminas-stdlib' => 
     array (
@@ -2452,6 +2479,15 @@
       array (
       ),
       'reference' => '31fde73757b6bad247c54597beef974919ec6860',
+    ),
+    'symfony/filesystem' => 
+    array (
+      'pretty_version' => 'v5.2.6',
+      'version' => '5.2.6.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8c86a82f51658188119e62cff0a050a12d09836f',
     ),
     'symfony/http-foundation' => 
     array (

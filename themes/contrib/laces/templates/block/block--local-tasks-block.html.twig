@@ -1,0 +1,17 @@
+{% extends "block.html.twig" %}
+{#
+/**
+ * @file
+ * Theme override for tabs.
+ */
+#}
+{% block content %}
+  {% if content %}
+    {{ attach_library('laces/bootstrap-containers') }}
+    <div class="container my-3">
+      <nav role="navigation" aria-label="{{ 'Tabs'|t }}">
+        {{ content }}
+      </nav>
+    </div>
+  {% endif %}
+{% endblock %}

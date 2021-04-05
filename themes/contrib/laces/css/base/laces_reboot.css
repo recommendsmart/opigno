@@ -1,0 +1,12 @@
+ol, ul {
+  display: inline-block;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/*# sourceMappingURL=laces_reboot.css.map */

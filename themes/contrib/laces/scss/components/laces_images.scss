@@ -1,0 +1,41 @@
+/**
+ * @file
+ * Patches for images.
+ */
+@import "../variables-override";
+@import "../../../../../../vendor/twbs/bootstrap/scss/functions";
+@import "../../../../../../vendor/twbs/bootstrap/scss/variables";
+@import "../../../../../../vendor/twbs/bootstrap/scss/mixins";
+
+/* Classes to apply Bootstrap styles to a child image since there appears to be no direct way to modify
+ * img element classes within the figure element based on the content of the container.
+ */
+
+.img-fluid--child-img img.child-img {
+  @include img-fluid();
+}
+
+// Image thumbnails
+.img-thumbnail--child-img img.child-img {
+  padding: $thumbnail-padding;
+  background-color: $thumbnail-bg;
+  border: $thumbnail-border-width solid $thumbnail-border-color;
+  @include border-radius($thumbnail-border-radius);
+  @include box-shadow($thumbnail-box-shadow);
+
+  // Keep them at most 100% wide
+  @include img-fluid();
+}
+
+//
+// Figures
+//
+
+.figure-img--child-img img.child-img {
+  margin-bottom: $spacer / 2;
+  line-height: 1;
+}
+
+.rounded--child-img img.child-img {
+  border-right: $border-radius;
+}

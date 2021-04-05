@@ -1,0 +1,2101 @@
+#drupal-off-canvas .form-label,
+#layout-builder-modal .form-label {
+  margin-bottom: 0.5rem;
+}
+#drupal-off-canvas .col-form-label,
+#layout-builder-modal .col-form-label {
+  padding-top: calc(0.375rem + 1px);
+  padding-bottom: calc(0.375rem + 1px);
+  margin-bottom: 0;
+  font-size: inherit;
+  line-height: 1.5;
+}
+#drupal-off-canvas .col-form-label-lg,
+#layout-builder-modal .col-form-label-lg {
+  padding-top: calc(0.5rem + 1px);
+  padding-bottom: calc(0.5rem + 1px);
+  font-size: 1.25rem;
+}
+#drupal-off-canvas .col-form-label-sm,
+#layout-builder-modal .col-form-label-sm {
+  padding-top: calc(0.25rem + 1px);
+  padding-bottom: calc(0.25rem + 1px);
+  font-size: 0.875rem;
+}
+#drupal-off-canvas .form-text,
+#layout-builder-modal .form-text {
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #6c757d;
+}
+#drupal-off-canvas .form-control,
+#layout-builder-modal .form-control {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border-radius: 0.25rem;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  #drupal-off-canvas .form-control,
+#layout-builder-modal .form-control {
+    transition: none;
+  }
+}
+#drupal-off-canvas .form-control[type=file],
+#layout-builder-modal .form-control[type=file] {
+  overflow: hidden;
+}
+#drupal-off-canvas .form-control[type=file]:not(:disabled):not([readonly]),
+#layout-builder-modal .form-control[type=file]:not(:disabled):not([readonly]) {
+  cursor: pointer;
+}
+#drupal-off-canvas .form-control:focus,
+#layout-builder-modal .form-control:focus {
+  color: #212529;
+  background-color: #fff;
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075), 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+#drupal-off-canvas .form-control::-webkit-date-and-time-value,
+#layout-builder-modal .form-control::-webkit-date-and-time-value {
+  height: 1.5em;
+}
+#drupal-off-canvas .form-control::-moz-placeholder, #layout-builder-modal .form-control::-moz-placeholder {
+  color: #6c757d;
+  opacity: 1;
+}
+#drupal-off-canvas .form-control:-ms-input-placeholder, #layout-builder-modal .form-control:-ms-input-placeholder {
+  color: #6c757d;
+  opacity: 1;
+}
+#drupal-off-canvas .form-control::placeholder,
+#layout-builder-modal .form-control::placeholder {
+  color: #6c757d;
+  opacity: 1;
+}
+#drupal-off-canvas .form-control:disabled, #drupal-off-canvas .form-control[readonly],
+#layout-builder-modal .form-control:disabled,
+#layout-builder-modal .form-control[readonly] {
+  background-color: #e9ecef;
+  opacity: 1;
+}
+#drupal-off-canvas .form-control::file-selector-button,
+#layout-builder-modal .form-control::file-selector-button {
+  padding: 0.375rem 0.75rem;
+  margin: -0.375rem -0.75rem;
+  -webkit-margin-end: 0.75rem;
+          margin-inline-end: 0.75rem;
+  color: #212529;
+  background-color: #e9ecef;
+  background-image: var(--bs-gradient);
+  pointer-events: none;
+  border-color: inherit;
+  border-style: solid;
+  border-width: 0;
+  border-inline-end-width: 1px;
+  border-radius: 0;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  #drupal-off-canvas .form-control::file-selector-button,
+#layout-builder-modal .form-control::file-selector-button {
+    transition: none;
+  }
+}
+#drupal-off-canvas .form-control:hover:not(:disabled):not([readonly])::file-selector-button,
+#layout-builder-modal .form-control:hover:not(:disabled):not([readonly])::file-selector-button {
+  background-color: #dde0e3;
+}
+#drupal-off-canvas .form-control::-webkit-file-upload-button,
+#layout-builder-modal .form-control::-webkit-file-upload-button {
+  padding: 0.375rem 0.75rem;
+  margin: -0.375rem -0.75rem;
+  -webkit-margin-end: 0.75rem;
+          margin-inline-end: 0.75rem;
+  color: #212529;
+  background-color: #e9ecef;
+  background-image: var(--bs-gradient);
+  pointer-events: none;
+  border-color: inherit;
+  border-style: solid;
+  border-width: 0;
+  border-inline-end-width: 1px;
+  border-radius: 0;
+  -webkit-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  #drupal-off-canvas .form-control::-webkit-file-upload-button,
+#layout-builder-modal .form-control::-webkit-file-upload-button {
+    -webkit-transition: none;
+    transition: none;
+  }
+}
+#drupal-off-canvas .form-control:hover:not(:disabled):not([readonly])::-webkit-file-upload-button,
+#layout-builder-modal .form-control:hover:not(:disabled):not([readonly])::-webkit-file-upload-button {
+  background-color: #dde0e3;
+}
+#drupal-off-canvas .form-control-plaintext,
+#layout-builder-modal .form-control-plaintext {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 0;
+  margin-bottom: 0;
+  line-height: 1.5;
+  color: #212529;
+  background-color: transparent;
+  border: solid transparent;
+  border-width: 1px 0;
+}
+#drupal-off-canvas .form-control-plaintext.form-control-sm, #drupal-off-canvas .form-control-plaintext.form-control-lg,
+#layout-builder-modal .form-control-plaintext.form-control-sm,
+#layout-builder-modal .form-control-plaintext.form-control-lg {
+  padding-right: 0;
+  padding-left: 0;
+}
+#drupal-off-canvas .form-control-sm,
+#layout-builder-modal .form-control-sm {
+  min-height: calc(1.5em + 0.5rem + 2px);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  border-radius: 0.2rem;
+}
+#drupal-off-canvas .form-control-sm::file-selector-button,
+#layout-builder-modal .form-control-sm::file-selector-button {
+  padding: 0.25rem 0.5rem;
+  margin: -0.25rem -0.5rem;
+  -webkit-margin-end: 0.5rem;
+          margin-inline-end: 0.5rem;
+}
+#drupal-off-canvas .form-control-sm::-webkit-file-upload-button,
+#layout-builder-modal .form-control-sm::-webkit-file-upload-button {
+  padding: 0.25rem 0.5rem;
+  margin: -0.25rem -0.5rem;
+  -webkit-margin-end: 0.5rem;
+          margin-inline-end: 0.5rem;
+}
+#drupal-off-canvas .form-control-lg,
+#layout-builder-modal .form-control-lg {
+  min-height: calc(1.5em + 1rem + 2px);
+  padding: 0.5rem 1rem;
+  font-size: 1.25rem;
+  border-radius: 0.3rem;
+}
+#drupal-off-canvas .form-control-lg::file-selector-button,
+#layout-builder-modal .form-control-lg::file-selector-button {
+  padding: 0.5rem 1rem;
+  margin: -0.5rem -1rem;
+  -webkit-margin-end: 1rem;
+          margin-inline-end: 1rem;
+}
+#drupal-off-canvas .form-control-lg::-webkit-file-upload-button,
+#layout-builder-modal .form-control-lg::-webkit-file-upload-button {
+  padding: 0.5rem 1rem;
+  margin: -0.5rem -1rem;
+  -webkit-margin-end: 1rem;
+          margin-inline-end: 1rem;
+}
+#drupal-off-canvas textarea.form-control,
+#layout-builder-modal textarea.form-control {
+  min-height: calc(1.5em + 0.75rem + 2px);
+}
+#drupal-off-canvas textarea.form-control-sm,
+#layout-builder-modal textarea.form-control-sm {
+  min-height: calc(1.5em + 0.5rem + 2px);
+}
+#drupal-off-canvas textarea.form-control-lg,
+#layout-builder-modal textarea.form-control-lg {
+  min-height: calc(1.5em + 1rem + 2px);
+}
+#drupal-off-canvas .form-control-color,
+#layout-builder-modal .form-control-color {
+  max-width: 3rem;
+  height: auto;
+  padding: 0.375rem;
+}
+#drupal-off-canvas .form-control-color:not(:disabled):not([readonly]),
+#layout-builder-modal .form-control-color:not(:disabled):not([readonly]) {
+  cursor: pointer;
+}
+#drupal-off-canvas .form-control-color::-moz-color-swatch,
+#layout-builder-modal .form-control-color::-moz-color-swatch {
+  height: 1.5em;
+  border-radius: 0.25rem;
+}
+#drupal-off-canvas .form-control-color::-webkit-color-swatch,
+#layout-builder-modal .form-control-color::-webkit-color-swatch {
+  height: 1.5em;
+  border-radius: 0.25rem;
+}
+#drupal-off-canvas .form-select,
+#layout-builder-modal .form-select {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+#drupal-off-canvas .form-select:focus,
+#layout-builder-modal .form-select:focus {
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075), 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+#drupal-off-canvas .form-select[multiple], #drupal-off-canvas .form-select[size]:not([size="1"]),
+#layout-builder-modal .form-select[multiple],
+#layout-builder-modal .form-select[size]:not([size="1"]) {
+  padding-right: 0.75rem;
+  background-image: none;
+}
+#drupal-off-canvas .form-select:disabled,
+#layout-builder-modal .form-select:disabled {
+  background-color: #e9ecef;
+}
+#drupal-off-canvas .form-select:-moz-focusring,
+#layout-builder-modal .form-select:-moz-focusring {
+  color: transparent;
+  text-shadow: 0 0 0 #212529;
+}
+#drupal-off-canvas .form-select-sm,
+#layout-builder-modal .form-select-sm {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  padding-left: 0.5rem;
+  font-size: 0.875rem;
+}
+#drupal-off-canvas .form-select-lg,
+#layout-builder-modal .form-select-lg {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  font-size: 1.25rem;
+}
+#drupal-off-canvas .form-check,
+#layout-builder-modal .form-check {
+  display: block;
+  min-height: 1.5rem;
+  padding-left: 1.5em;
+  margin-bottom: 0.125rem;
+}
+#drupal-off-canvas .form-check .form-check-input,
+#layout-builder-modal .form-check .form-check-input {
+  float: left;
+  margin-left: -1.5em;
+}
+#drupal-off-canvas .form-check-input,
+#layout-builder-modal .form-check-input {
+  width: 1em;
+  height: 1em;
+  margin-top: 0.25em;
+  vertical-align: top;
+  background-color: #fff;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  -webkit-print-color-adjust: exact;
+          color-adjust: exact;
+}
+#drupal-off-canvas .form-check-input[type=checkbox],
+#layout-builder-modal .form-check-input[type=checkbox] {
+  border-radius: 0.25em;
+}
+#drupal-off-canvas .form-check-input[type=radio],
+#layout-builder-modal .form-check-input[type=radio] {
+  border-radius: 50%;
+}
+#drupal-off-canvas .form-check-input:active,
+#layout-builder-modal .form-check-input:active {
+  filter: brightness(90%);
+}
+#drupal-off-canvas .form-check-input:focus,
+#layout-builder-modal .form-check-input:focus {
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+#drupal-off-canvas .form-check-input:checked,
+#layout-builder-modal .form-check-input:checked {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+#drupal-off-canvas .form-check-input:checked[type=checkbox],
+#layout-builder-modal .form-check-input:checked[type=checkbox] {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e"), var(--bs-gradient);
+}
+#drupal-off-canvas .form-check-input:checked[type=radio],
+#layout-builder-modal .form-check-input:checked[type=radio] {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff'/%3e%3c/svg%3e"), var(--bs-gradient);
+}
+#drupal-off-canvas .form-check-input[type=checkbox]:indeterminate,
+#layout-builder-modal .form-check-input[type=checkbox]:indeterminate {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10h8'/%3e%3c/svg%3e"), var(--bs-gradient);
+}
+#drupal-off-canvas .form-check-input:disabled,
+#layout-builder-modal .form-check-input:disabled {
+  pointer-events: none;
+  filter: none;
+  opacity: 0.5;
+}
+#drupal-off-canvas .form-check-input[disabled] ~ .form-check-label, #drupal-off-canvas .form-check-input:disabled ~ .form-check-label,
+#layout-builder-modal .form-check-input[disabled] ~ .form-check-label,
+#layout-builder-modal .form-check-input:disabled ~ .form-check-label {
+  opacity: 0.5;
+}
+#drupal-off-canvas .form-switch,
+#layout-builder-modal .form-switch {
+  padding-left: 2.5em;
+}
+#drupal-off-canvas .form-switch .form-check-input,
+#layout-builder-modal .form-switch .form-check-input {
+  width: 2em;
+  margin-left: -2.5em;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%280, 0, 0, 0.25%29'/%3e%3c/svg%3e");
+  background-position: left center;
+  border-radius: 2em;
+  transition: background-position 0.15s ease-in-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  #drupal-off-canvas .form-switch .form-check-input,
+#layout-builder-modal .form-switch .form-check-input {
+    transition: none;
+  }
+}
+#drupal-off-canvas .form-switch .form-check-input:focus,
+#layout-builder-modal .form-switch .form-check-input:focus {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%2386b7fe'/%3e%3c/svg%3e");
+}
+#drupal-off-canvas .form-switch .form-check-input:checked,
+#layout-builder-modal .form-switch .form-check-input:checked {
+  background-position: right center;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e"), var(--bs-gradient);
+}
+#drupal-off-canvas .form-check-inline,
+#layout-builder-modal .form-check-inline {
+  display: inline-block;
+  margin-right: 1rem;
+}
+#drupal-off-canvas .btn-check,
+#layout-builder-modal .btn-check {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+  pointer-events: none;
+}
+#drupal-off-canvas .btn-check[disabled] + .btn, #drupal-off-canvas .btn-check:disabled + .btn,
+#layout-builder-modal .btn-check[disabled] + .btn,
+#layout-builder-modal .btn-check:disabled + .btn {
+  pointer-events: none;
+  filter: none;
+  opacity: 0.65;
+}
+#drupal-off-canvas .form-range,
+#layout-builder-modal .form-range {
+  width: 100%;
+  height: 1.5rem;
+  padding: 0;
+  background-color: transparent;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+#drupal-off-canvas .form-range:focus,
+#layout-builder-modal .form-range:focus {
+  outline: 0;
+}
+#drupal-off-canvas .form-range:focus::-webkit-slider-thumb,
+#layout-builder-modal .form-range:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 1px #fff, 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+#drupal-off-canvas .form-range:focus::-moz-range-thumb,
+#layout-builder-modal .form-range:focus::-moz-range-thumb {
+  box-shadow: 0 0 0 1px #fff, 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+#drupal-off-canvas .form-range::-moz-focus-outer,
+#layout-builder-modal .form-range::-moz-focus-outer {
+  border: 0;
+}
+#drupal-off-canvas .form-range::-webkit-slider-thumb,
+#layout-builder-modal .form-range::-webkit-slider-thumb {
+  width: 1rem;
+  height: 1rem;
+  margin-top: -0.25rem;
+  background-color: #0d6efd;
+  background-image: var(--bs-gradient);
+  border: 0;
+  border-radius: 1rem;
+  box-shadow: 0 0.1rem 0.25rem rgba(0, 0, 0, 0.1);
+  -webkit-transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  -webkit-appearance: none;
+          appearance: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  #drupal-off-canvas .form-range::-webkit-slider-thumb,
+#layout-builder-modal .form-range::-webkit-slider-thumb {
+    -webkit-transition: none;
+    transition: none;
+  }
+}
+#drupal-off-canvas .form-range::-webkit-slider-thumb:active,
+#layout-builder-modal .form-range::-webkit-slider-thumb:active {
+  background-color: #b6d4fe;
+  background-image: var(--bs-gradient);
+}
+#drupal-off-canvas .form-range::-webkit-slider-runnable-track,
+#layout-builder-modal .form-range::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 0.5rem;
+  color: transparent;
+  cursor: pointer;
+  background-color: #dee2e6;
+  border-color: transparent;
+  border-radius: 1rem;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+}
+#drupal-off-canvas .form-range::-moz-range-thumb,
+#layout-builder-modal .form-range::-moz-range-thumb {
+  width: 1rem;
+  height: 1rem;
+  background-color: #0d6efd;
+  background-image: var(--bs-gradient);
+  border: 0;
+  border-radius: 1rem;
+  box-shadow: 0 0.1rem 0.25rem rgba(0, 0, 0, 0.1);
+  -moz-transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  -moz-appearance: none;
+       appearance: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  #drupal-off-canvas .form-range::-moz-range-thumb,
+#layout-builder-modal .form-range::-moz-range-thumb {
+    -moz-transition: none;
+    transition: none;
+  }
+}
+#drupal-off-canvas .form-range::-moz-range-thumb:active,
+#layout-builder-modal .form-range::-moz-range-thumb:active {
+  background-color: #b6d4fe;
+  background-image: var(--bs-gradient);
+}
+#drupal-off-canvas .form-range::-moz-range-track,
+#layout-builder-modal .form-range::-moz-range-track {
+  width: 100%;
+  height: 0.5rem;
+  color: transparent;
+  cursor: pointer;
+  background-color: #dee2e6;
+  border-color: transparent;
+  border-radius: 1rem;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+}
+#drupal-off-canvas .form-range:disabled,
+#layout-builder-modal .form-range:disabled {
+  pointer-events: none;
+}
+#drupal-off-canvas .form-range:disabled::-webkit-slider-thumb,
+#layout-builder-modal .form-range:disabled::-webkit-slider-thumb {
+  background-color: #adb5bd;
+}
+#drupal-off-canvas .form-range:disabled::-moz-range-thumb,
+#layout-builder-modal .form-range:disabled::-moz-range-thumb {
+  background-color: #adb5bd;
+}
+#drupal-off-canvas .form-floating,
+#layout-builder-modal .form-floating {
+  position: relative;
+}
+#drupal-off-canvas .form-floating > .form-control,
+#drupal-off-canvas .form-floating > .form-select,
+#layout-builder-modal .form-floating > .form-control,
+#layout-builder-modal .form-floating > .form-select {
+  height: calc(3.5rem + 2px);
+  padding: 1rem 0.75rem;
+}
+#drupal-off-canvas .form-floating > label,
+#layout-builder-modal .form-floating > label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  padding: 1rem 0.75rem;
+  pointer-events: none;
+  border: 1px solid transparent;
+  transform-origin: 0 0;
+  transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  #drupal-off-canvas .form-floating > label,
+#layout-builder-modal .form-floating > label {
+    transition: none;
+  }
+}
+#drupal-off-canvas .form-floating > .form-control::-moz-placeholder, #layout-builder-modal .form-floating > .form-control::-moz-placeholder {
+  color: transparent;
+}
+#drupal-off-canvas .form-floating > .form-control:-ms-input-placeholder, #layout-builder-modal .form-floating > .form-control:-ms-input-placeholder {
+  color: transparent;
+}
+#drupal-off-canvas .form-floating > .form-control::placeholder,
+#layout-builder-modal .form-floating > .form-control::placeholder {
+  color: transparent;
+}
+#drupal-off-canvas .form-floating > .form-control:not(:-moz-placeholder-shown), #layout-builder-modal .form-floating > .form-control:not(:-moz-placeholder-shown) {
+  padding-top: 1.625rem;
+  padding-bottom: 0.625rem;
+}
+#drupal-off-canvas .form-floating > .form-control:not(:-ms-input-placeholder), #layout-builder-modal .form-floating > .form-control:not(:-ms-input-placeholder) {
+  padding-top: 1.625rem;
+  padding-bottom: 0.625rem;
+}
+#drupal-off-canvas .form-floating > .form-control:focus, #drupal-off-canvas .form-floating > .form-control:not(:placeholder-shown),
+#layout-builder-modal .form-floating > .form-control:focus,
+#layout-builder-modal .form-floating > .form-control:not(:placeholder-shown) {
+  padding-top: 1.625rem;
+  padding-bottom: 0.625rem;
+}
+#drupal-off-canvas .form-floating > .form-control:-webkit-autofill,
+#layout-builder-modal .form-floating > .form-control:-webkit-autofill {
+  padding-top: 1.625rem;
+  padding-bottom: 0.625rem;
+}
+#drupal-off-canvas .form-floating > .form-select,
+#layout-builder-modal .form-floating > .form-select {
+  padding-top: 1.625rem;
+  padding-bottom: 0.625rem;
+}
+#drupal-off-canvas .form-floating > .form-control:not(:-moz-placeholder-shown) ~ label, #layout-builder-modal .form-floating > .form-control:not(:-moz-placeholder-shown) ~ label {
+  opacity: 0.65;
+  transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+}
+#drupal-off-canvas .form-floating > .form-control:not(:-ms-input-placeholder) ~ label, #layout-builder-modal .form-floating > .form-control:not(:-ms-input-placeholder) ~ label {
+  opacity: 0.65;
+  transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+}
+#drupal-off-canvas .form-floating > .form-control:focus ~ label,
+#drupal-off-canvas .form-floating > .form-control:not(:placeholder-shown) ~ label,
+#drupal-off-canvas .form-floating > .form-select ~ label,
+#layout-builder-modal .form-floating > .form-control:focus ~ label,
+#layout-builder-modal .form-floating > .form-control:not(:placeholder-shown) ~ label,
+#layout-builder-modal .form-floating > .form-select ~ label {
+  opacity: 0.65;
+  transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+}
+#drupal-off-canvas .form-floating > .form-control:-webkit-autofill ~ label,
+#layout-builder-modal .form-floating > .form-control:-webkit-autofill ~ label {
+  opacity: 0.65;
+  transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+}
+#drupal-off-canvas .input-group,
+#layout-builder-modal .input-group {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  width: 100%;
+}
+#drupal-off-canvas .input-group > .form-control,
+#drupal-off-canvas .input-group > .form-select,
+#layout-builder-modal .input-group > .form-control,
+#layout-builder-modal .input-group > .form-select {
+  position: relative;
+  flex: 1 1 auto;
+  width: 1%;
+  min-width: 0;
+}
+#drupal-off-canvas .input-group > .form-control:focus,
+#drupal-off-canvas .input-group > .form-select:focus,
+#layout-builder-modal .input-group > .form-control:focus,
+#layout-builder-modal .input-group > .form-select:focus {
+  z-index: 3;
+}
+#drupal-off-canvas .input-group .btn,
+#layout-builder-modal .input-group .btn {
+  position: relative;
+  z-index: 2;
+}
+#drupal-off-canvas .input-group .btn:focus,
+#layout-builder-modal .input-group .btn:focus {
+  z-index: 3;
+}
+#drupal-off-canvas .input-group-text,
+#layout-builder-modal .input-group-text {
+  display: flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  text-align: center;
+  white-space: nowrap;
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+}
+#drupal-off-canvas .input-group-lg > .form-control,
+#drupal-off-canvas .input-group-lg > .form-select,
+#drupal-off-canvas .input-group-lg > .input-group-text,
+#drupal-off-canvas .input-group-lg > .btn,
+#layout-builder-modal .input-group-lg > .form-control,
+#layout-builder-modal .input-group-lg > .form-select,
+#layout-builder-modal .input-group-lg > .input-group-text,
+#layout-builder-modal .input-group-lg > .btn {
+  padding: 0.5rem 1rem;
+  font-size: 1.25rem;
+  border-radius: 0.3rem;
+}
+#drupal-off-canvas .input-group-sm > .form-control,
+#drupal-off-canvas .input-group-sm > .form-select,
+#drupal-off-canvas .input-group-sm > .input-group-text,
+#drupal-off-canvas .input-group-sm > .btn,
+#layout-builder-modal .input-group-sm > .form-control,
+#layout-builder-modal .input-group-sm > .form-select,
+#layout-builder-modal .input-group-sm > .input-group-text,
+#layout-builder-modal .input-group-sm > .btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  border-radius: 0.2rem;
+}
+#drupal-off-canvas .input-group-lg > .form-select,
+#drupal-off-canvas .input-group-sm > .form-select,
+#layout-builder-modal .input-group-lg > .form-select,
+#layout-builder-modal .input-group-sm > .form-select {
+  padding-right: 3rem;
+}
+#drupal-off-canvas .input-group:not(.has-validation) > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu),
+#drupal-off-canvas .input-group:not(.has-validation) > .dropdown-toggle:nth-last-child(n+3),
+#layout-builder-modal .input-group:not(.has-validation) > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu),
+#layout-builder-modal .input-group:not(.has-validation) > .dropdown-toggle:nth-last-child(n+3) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+#drupal-off-canvas .input-group.has-validation > :nth-last-child(n+3):not(.dropdown-toggle):not(.dropdown-menu),
+#drupal-off-canvas .input-group.has-validation > .dropdown-toggle:nth-last-child(n+4),
+#layout-builder-modal .input-group.has-validation > :nth-last-child(n+3):not(.dropdown-toggle):not(.dropdown-menu),
+#layout-builder-modal .input-group.has-validation > .dropdown-toggle:nth-last-child(n+4) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+#drupal-off-canvas .input-group > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback),
+#layout-builder-modal .input-group > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+  margin-left: -1px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+#drupal-off-canvas .valid-feedback,
+#layout-builder-modal .valid-feedback {
+  display: none;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #198754;
+}
+#drupal-off-canvas .valid-tooltip,
+#layout-builder-modal .valid-tooltip {
+  position: absolute;
+  top: 100%;
+  z-index: 5;
+  display: none;
+  max-width: 100%;
+  padding: 0.25rem 0.5rem;
+  margin-top: 0.1rem;
+  font-size: 0.875rem;
+  color: #fff;
+  background-color: rgba(25, 135, 84, 0.9);
+  border-radius: 0.25rem;
+}
+.was-validated #drupal-off-canvas:valid ~ .valid-feedback,
+.was-validated #drupal-off-canvas:valid ~ .valid-tooltip, #drupal-off-canvas.is-valid ~ .valid-feedback,
+#drupal-off-canvas.is-valid ~ .valid-tooltip,
+.was-validated #layout-builder-modal:valid ~ .valid-feedback,
+.was-validated #layout-builder-modal:valid ~ .valid-tooltip,
+#layout-builder-modal.is-valid ~ .valid-feedback,
+#layout-builder-modal.is-valid ~ .valid-tooltip {
+  display: block;
+}
+.was-validated #drupal-off-canvas .form-control:valid, #drupal-off-canvas .form-control.is-valid,
+.was-validated #layout-builder-modal .form-control:valid,
+#layout-builder-modal .form-control.is-valid {
+  border-color: #198754;
+  padding-right: calc(1.5em + 0.75rem);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right calc(0.375em + 0.1875rem) center;
+  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+.was-validated #drupal-off-canvas .form-control:valid:focus, #drupal-off-canvas .form-control.is-valid:focus,
+.was-validated #layout-builder-modal .form-control:valid:focus,
+#layout-builder-modal .form-control.is-valid:focus {
+  border-color: #198754;
+  box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+}
+.was-validated #drupal-off-canvas textarea.form-control:valid, #drupal-off-canvas textarea.form-control.is-valid,
+.was-validated #layout-builder-modal textarea.form-control:valid,
+#layout-builder-modal textarea.form-control.is-valid {
+  padding-right: calc(1.5em + 0.75rem);
+  background-position: top calc(0.375em + 0.1875rem) right calc(0.375em + 0.1875rem);
+}
+.was-validated #drupal-off-canvas .form-select:valid, #drupal-off-canvas .form-select.is-valid,
+.was-validated #layout-builder-modal .form-select:valid,
+#layout-builder-modal .form-select.is-valid {
+  border-color: #198754;
+  padding-right: 4.125rem;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e"), url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+  background-position: right 0.75rem center, center right 2.25rem;
+  background-size: 16px 12px, calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+.was-validated #drupal-off-canvas .form-select:valid:focus, #drupal-off-canvas .form-select.is-valid:focus,
+.was-validated #layout-builder-modal .form-select:valid:focus,
+#layout-builder-modal .form-select.is-valid:focus {
+  border-color: #198754;
+  box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+}
+.was-validated #drupal-off-canvas .form-check-input:valid, #drupal-off-canvas .form-check-input.is-valid,
+.was-validated #layout-builder-modal .form-check-input:valid,
+#layout-builder-modal .form-check-input.is-valid {
+  border-color: #198754;
+}
+.was-validated #drupal-off-canvas .form-check-input:valid:checked, #drupal-off-canvas .form-check-input.is-valid:checked,
+.was-validated #layout-builder-modal .form-check-input:valid:checked,
+#layout-builder-modal .form-check-input.is-valid:checked {
+  background-color: #198754;
+}
+.was-validated #drupal-off-canvas .form-check-input:valid:focus, #drupal-off-canvas .form-check-input.is-valid:focus,
+.was-validated #layout-builder-modal .form-check-input:valid:focus,
+#layout-builder-modal .form-check-input.is-valid:focus {
+  box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+}
+.was-validated #drupal-off-canvas .form-check-input:valid ~ .form-check-label, #drupal-off-canvas .form-check-input.is-valid ~ .form-check-label,
+.was-validated #layout-builder-modal .form-check-input:valid ~ .form-check-label,
+#layout-builder-modal .form-check-input.is-valid ~ .form-check-label {
+  color: #198754;
+}
+#drupal-off-canvas .form-check-inline .form-check-input ~ .valid-feedback,
+#layout-builder-modal .form-check-inline .form-check-input ~ .valid-feedback {
+  margin-left: 0.5em;
+}
+.was-validated #drupal-off-canvas .input-group .form-control:valid, #drupal-off-canvas .input-group .form-control.is-valid,
+.was-validated #drupal-off-canvas .input-group .form-select:valid,
+#drupal-off-canvas .input-group .form-select.is-valid,
+.was-validated #layout-builder-modal .input-group .form-control:valid,
+#layout-builder-modal .input-group .form-control.is-valid,
+.was-validated #layout-builder-modal .input-group .form-select:valid,
+#layout-builder-modal .input-group .form-select.is-valid {
+  z-index: 3;
+}
+#drupal-off-canvas .invalid-feedback,
+#layout-builder-modal .invalid-feedback {
+  display: none;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}
+#drupal-off-canvas .invalid-tooltip,
+#layout-builder-modal .invalid-tooltip {
+  position: absolute;
+  top: 100%;
+  z-index: 5;
+  display: none;
+  max-width: 100%;
+  padding: 0.25rem 0.5rem;
+  margin-top: 0.1rem;
+  font-size: 0.875rem;
+  color: #fff;
+  background-color: rgba(220, 53, 69, 0.9);
+  border-radius: 0.25rem;
+}
+.was-validated #drupal-off-canvas:invalid ~ .invalid-feedback,
+.was-validated #drupal-off-canvas:invalid ~ .invalid-tooltip, #drupal-off-canvas.is-invalid ~ .invalid-feedback,
+#drupal-off-canvas.is-invalid ~ .invalid-tooltip,
+.was-validated #layout-builder-modal:invalid ~ .invalid-feedback,
+.was-validated #layout-builder-modal:invalid ~ .invalid-tooltip,
+#layout-builder-modal.is-invalid ~ .invalid-feedback,
+#layout-builder-modal.is-invalid ~ .invalid-tooltip {
+  display: block;
+}
+.was-validated #drupal-off-canvas .form-control:invalid, #drupal-off-canvas .form-control.is-invalid,
+.was-validated #layout-builder-modal .form-control:invalid,
+#layout-builder-modal .form-control.is-invalid {
+  border-color: #dc3545;
+  padding-right: calc(1.5em + 0.75rem);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right calc(0.375em + 0.1875rem) center;
+  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+.was-validated #drupal-off-canvas .form-control:invalid:focus, #drupal-off-canvas .form-control.is-invalid:focus,
+.was-validated #layout-builder-modal .form-control:invalid:focus,
+#layout-builder-modal .form-control.is-invalid:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+}
+.was-validated #drupal-off-canvas textarea.form-control:invalid, #drupal-off-canvas textarea.form-control.is-invalid,
+.was-validated #layout-builder-modal textarea.form-control:invalid,
+#layout-builder-modal textarea.form-control.is-invalid {
+  padding-right: calc(1.5em + 0.75rem);
+  background-position: top calc(0.375em + 0.1875rem) right calc(0.375em + 0.1875rem);
+}
+.was-validated #drupal-off-canvas .form-select:invalid, #drupal-off-canvas .form-select.is-invalid,
+.was-validated #layout-builder-modal .form-select:invalid,
+#layout-builder-modal .form-select.is-invalid {
+  border-color: #dc3545;
+  padding-right: 4.125rem;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e"), url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+  background-position: right 0.75rem center, center right 2.25rem;
+  background-size: 16px 12px, calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+.was-validated #drupal-off-canvas .form-select:invalid:focus, #drupal-off-canvas .form-select.is-invalid:focus,
+.was-validated #layout-builder-modal .form-select:invalid:focus,
+#layout-builder-modal .form-select.is-invalid:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+}
+.was-validated #drupal-off-canvas .form-check-input:invalid, #drupal-off-canvas .form-check-input.is-invalid,
+.was-validated #layout-builder-modal .form-check-input:invalid,
+#layout-builder-modal .form-check-input.is-invalid {
+  border-color: #dc3545;
+}
+.was-validated #drupal-off-canvas .form-check-input:invalid:checked, #drupal-off-canvas .form-check-input.is-invalid:checked,
+.was-validated #layout-builder-modal .form-check-input:invalid:checked,
+#layout-builder-modal .form-check-input.is-invalid:checked {
+  background-color: #dc3545;
+}
+.was-validated #drupal-off-canvas .form-check-input:invalid:focus, #drupal-off-canvas .form-check-input.is-invalid:focus,
+.was-validated #layout-builder-modal .form-check-input:invalid:focus,
+#layout-builder-modal .form-check-input.is-invalid:focus {
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+}
+.was-validated #drupal-off-canvas .form-check-input:invalid ~ .form-check-label, #drupal-off-canvas .form-check-input.is-invalid ~ .form-check-label,
+.was-validated #layout-builder-modal .form-check-input:invalid ~ .form-check-label,
+#layout-builder-modal .form-check-input.is-invalid ~ .form-check-label {
+  color: #dc3545;
+}
+#drupal-off-canvas .form-check-inline .form-check-input ~ .invalid-feedback,
+#layout-builder-modal .form-check-inline .form-check-input ~ .invalid-feedback {
+  margin-left: 0.5em;
+}
+.was-validated #drupal-off-canvas .input-group .form-control:invalid, #drupal-off-canvas .input-group .form-control.is-invalid,
+.was-validated #drupal-off-canvas .input-group .form-select:invalid,
+#drupal-off-canvas .input-group .form-select.is-invalid,
+.was-validated #layout-builder-modal .input-group .form-control:invalid,
+#layout-builder-modal .input-group .form-control.is-invalid,
+.was-validated #layout-builder-modal .input-group .form-select:invalid,
+#layout-builder-modal .input-group .form-select.is-invalid {
+  z-index: 3;
+}
+#drupal-off-canvas .btn,
+#layout-builder-modal .btn {
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  #drupal-off-canvas .btn,
+#layout-builder-modal .btn {
+    transition: none;
+  }
+}
+#drupal-off-canvas .btn:hover,
+#layout-builder-modal .btn:hover {
+  color: #212529;
+}
+.btn-check:focus + #drupal-off-canvas .btn, #drupal-off-canvas .btn:focus,
+.btn-check:focus + #layout-builder-modal .btn,
+#layout-builder-modal .btn:focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+.btn-check:checked + #drupal-off-canvas .btn, .btn-check:active + #drupal-off-canvas .btn, #drupal-off-canvas .btn:active, #drupal-off-canvas .btn.active,
+.btn-check:checked + #layout-builder-modal .btn,
+.btn-check:active + #layout-builder-modal .btn,
+#layout-builder-modal .btn:active,
+#layout-builder-modal .btn.active {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-check:checked + #drupal-off-canvas .btn:focus, .btn-check:active + #drupal-off-canvas .btn:focus, #drupal-off-canvas .btn:active:focus, #drupal-off-canvas .btn.active:focus,
+.btn-check:checked + #layout-builder-modal .btn:focus,
+.btn-check:active + #layout-builder-modal .btn:focus,
+#layout-builder-modal .btn:active:focus,
+#layout-builder-modal .btn.active:focus {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25), inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+#drupal-off-canvas .btn:disabled, #drupal-off-canvas .btn.disabled, fieldset:disabled #drupal-off-canvas .btn,
+#layout-builder-modal .btn:disabled,
+#layout-builder-modal .btn.disabled,
+fieldset:disabled #layout-builder-modal .btn {
+  pointer-events: none;
+  opacity: 0.65;
+  box-shadow: none;
+}
+#drupal-off-canvas .btn-primary,
+#layout-builder-modal .btn-primary {
+  color: #fff;
+  background-color: #0d6efd;
+  background-image: var(--bs-gradient);
+  border-color: #0d6efd;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+#drupal-off-canvas .btn-primary:hover,
+#layout-builder-modal .btn-primary:hover {
+  color: #fff;
+  background-color: #0b5ed7;
+  background-image: var(--bs-gradient);
+  border-color: #0a58ca;
+}
+.btn-check:focus + #drupal-off-canvas .btn-primary, #drupal-off-canvas .btn-primary:focus,
+.btn-check:focus + #layout-builder-modal .btn-primary,
+#layout-builder-modal .btn-primary:focus {
+  color: #fff;
+  background-color: #0b5ed7;
+  background-image: var(--bs-gradient);
+  border-color: #0a58ca;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 0.25rem rgba(49, 132, 253, 0.5);
+}
+.btn-check:checked + #drupal-off-canvas .btn-primary, .btn-check:active + #drupal-off-canvas .btn-primary, #drupal-off-canvas .btn-primary:active, #drupal-off-canvas .btn-primary.active, .show > #drupal-off-canvas .btn-primary.dropdown-toggle,
+.btn-check:checked + #layout-builder-modal .btn-primary,
+.btn-check:active + #layout-builder-modal .btn-primary,
+#layout-builder-modal .btn-primary:active,
+#layout-builder-modal .btn-primary.active,
+.show > #layout-builder-modal .btn-primary.dropdown-toggle {
+  color: #fff;
+  background-color: #0a58ca;
+  background-image: none;
+  border-color: #0a53be;
+}
+.btn-check:checked + #drupal-off-canvas .btn-primary:focus, .btn-check:active + #drupal-off-canvas .btn-primary:focus, #drupal-off-canvas .btn-primary:active:focus, #drupal-off-canvas .btn-primary.active:focus, .show > #drupal-off-canvas .btn-primary.dropdown-toggle:focus,
+.btn-check:checked + #layout-builder-modal .btn-primary:focus,
+.btn-check:active + #layout-builder-modal .btn-primary:focus,
+#layout-builder-modal .btn-primary:active:focus,
+#layout-builder-modal .btn-primary.active:focus,
+.show > #layout-builder-modal .btn-primary.dropdown-toggle:focus {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125), 0 0 0 0.25rem rgba(49, 132, 253, 0.5);
+}
+#drupal-off-canvas .btn-primary:disabled, #drupal-off-canvas .btn-primary.disabled,
+#layout-builder-modal .btn-primary:disabled,
+#layout-builder-modal .btn-primary.disabled {
+  color: #fff;
+  background-color: #0d6efd;
+  background-image: none;
+  border-color: #0d6efd;
+}
+#drupal-off-canvas .btn-secondary,
+#layout-builder-modal .btn-secondary {
+  color: #fff;
+  background-color: #6c757d;
+  background-image: var(--bs-gradient);
+  border-color: #6c757d;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+#drupal-off-canvas .btn-secondary:hover,
+#layout-builder-modal .btn-secondary:hover {
+  color: #fff;
+  background-color: #5c636a;
+  background-image: var(--bs-gradient);
+  border-color: #565e64;
+}
+.btn-check:focus + #drupal-off-canvas .btn-secondary, #drupal-off-canvas .btn-secondary:focus,
+.btn-check:focus + #layout-builder-modal .btn-secondary,
+#layout-builder-modal .btn-secondary:focus {
+  color: #fff;
+  background-color: #5c636a;
+  background-image: var(--bs-gradient);
+  border-color: #565e64;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 0.25rem rgba(130, 138, 145, 0.5);
+}
+.btn-check:checked + #drupal-off-canvas .btn-secondary, .btn-check:active + #drupal-off-canvas .btn-secondary, #drupal-off-canvas .btn-secondary:active, #drupal-off-canvas .btn-secondary.active, .show > #drupal-off-canvas .btn-secondary.dropdown-toggle,
+.btn-check:checked + #layout-builder-modal .btn-secondary,
+.btn-check:active + #layout-builder-modal .btn-secondary,
+#layout-builder-modal .btn-secondary:active,
+#layout-builder-modal .btn-secondary.active,
+.show > #layout-builder-modal .btn-secondary.dropdown-toggle {
+  color: #fff;
+  background-color: #565e64;
+  background-image: none;
+  border-color: #51585e;
+}
+.btn-check:checked + #drupal-off-canvas .btn-secondary:focus, .btn-check:active + #drupal-off-canvas .btn-secondary:focus, #drupal-off-canvas .btn-secondary:active:focus, #drupal-off-canvas .btn-secondary.active:focus, .show > #drupal-off-canvas .btn-secondary.dropdown-toggle:focus,
+.btn-check:checked + #layout-builder-modal .btn-secondary:focus,
+.btn-check:active + #layout-builder-modal .btn-secondary:focus,
+#layout-builder-modal .btn-secondary:active:focus,
+#layout-builder-modal .btn-secondary.active:focus,
+.show > #layout-builder-modal .btn-secondary.dropdown-toggle:focus {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125), 0 0 0 0.25rem rgba(130, 138, 145, 0.5);
+}
+#drupal-off-canvas .btn-secondary:disabled, #drupal-off-canvas .btn-secondary.disabled,
+#layout-builder-modal .btn-secondary:disabled,
+#layout-builder-modal .btn-secondary.disabled {
+  color: #fff;
+  background-color: #6c757d;
+  background-image: none;
+  border-color: #6c757d;
+}
+#drupal-off-canvas .btn-success,
+#layout-builder-modal .btn-success {
+  color: #fff;
+  background-color: #198754;
+  background-image: var(--bs-gradient);
+  border-color: #198754;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+#drupal-off-canvas .btn-success:hover,
+#layout-builder-modal .btn-success:hover {
+  color: #fff;
+  background-color: #157347;
+  background-image: var(--bs-gradient);
+  border-color: #146c43;
+}
+.btn-check:focus + #drupal-off-canvas .btn-success, #drupal-off-canvas .btn-success:focus,
+.btn-check:focus + #layout-builder-modal .btn-success,
+#layout-builder-modal .btn-success:focus {
+  color: #fff;
+  background-color: #157347;
+  background-image: var(--bs-gradient);
+  border-color: #146c43;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 0.25rem rgba(60, 153, 110, 0.5);
+}
+.btn-check:checked + #drupal-off-canvas .btn-success, .btn-check:active + #drupal-off-canvas .btn-success, #drupal-off-canvas .btn-success:active, #drupal-off-canvas .btn-success.active, .show > #drupal-off-canvas .btn-success.dropdown-toggle,
+.btn-check:checked + #layout-builder-modal .btn-success,
+.btn-check:active + #layout-builder-modal .btn-success,
+#layout-builder-modal .btn-success:active,
+#layout-builder-modal .btn-success.active,
+.show > #layout-builder-modal .btn-success.dropdown-toggle {
+  color: #fff;
+  background-color: #146c43;
+  background-image: none;
+  border-color: #13653f;
+}
+.btn-check:checked + #drupal-off-canvas .btn-success:focus, .btn-check:active + #drupal-off-canvas .btn-success:focus, #drupal-off-canvas .btn-success:active:focus, #drupal-off-canvas .btn-success.active:focus, .show > #drupal-off-canvas .btn-success.dropdown-toggle:focus,
+.btn-check:checked + #layout-builder-modal .btn-success:focus,
+.btn-check:active + #layout-builder-modal .btn-success:focus,
+#layout-builder-modal .btn-success:active:focus,
+#layout-builder-modal .btn-success.active:focus,
+.show > #layout-builder-modal .btn-success.dropdown-toggle:focus {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125), 0 0 0 0.25rem rgba(60, 153, 110, 0.5);
+}
+#drupal-off-canvas .btn-success:disabled, #drupal-off-canvas .btn-success.disabled,
+#layout-builder-modal .btn-success:disabled,
+#layout-builder-modal .btn-success.disabled {
+  color: #fff;
+  background-color: #198754;
+  background-image: none;
+  border-color: #198754;
+}
+#drupal-off-canvas .btn-info,
+#layout-builder-modal .btn-info {
+  color: #000;
+  background-color: #0dcaf0;
+  background-image: var(--bs-gradient);
+  border-color: #0dcaf0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+#drupal-off-canvas .btn-info:hover,
+#layout-builder-modal .btn-info:hover {
+  color: #000;
+  background-color: #31d2f2;
+  background-image: var(--bs-gradient);
+  border-color: #25cff2;
+}
+.btn-check:focus + #drupal-off-canvas .btn-info, #drupal-off-canvas .btn-info:focus,
+.btn-check:focus + #layout-builder-modal .btn-info,
+#layout-builder-modal .btn-info:focus {
+  color: #000;
+  background-color: #31d2f2;
+  background-image: var(--bs-gradient);
+  border-color: #25cff2;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 0.25rem rgba(11, 172, 204, 0.5);
+}
+.btn-check:checked + #drupal-off-canvas .btn-info, .btn-check:active + #drupal-off-canvas .btn-info, #drupal-off-canvas .btn-info:active, #drupal-off-canvas .btn-info.active, .show > #drupal-off-canvas .btn-info.dropdown-toggle,
+.btn-check:checked + #layout-builder-modal .btn-info,
+.btn-check:active + #layout-builder-modal .btn-info,
+#layout-builder-modal .btn-info:active,
+#layout-builder-modal .btn-info.active,
+.show > #layout-builder-modal .btn-info.dropdown-toggle {
+  color: #000;
+  background-color: #3dd5f3;
+  background-image: none;
+  border-color: #25cff2;
+}
+.btn-check:checked + #drupal-off-canvas .btn-info:focus, .btn-check:active + #drupal-off-canvas .btn-info:focus, #drupal-off-canvas .btn-info:active:focus, #drupal-off-canvas .btn-info.active:focus, .show > #drupal-off-canvas .btn-info.dropdown-toggle:focus,
+.btn-check:checked + #layout-builder-modal .btn-info:focus,
+.btn-check:active + #layout-builder-modal .btn-info:focus,
+#layout-builder-modal .btn-info:active:focus,
+#layout-builder-modal .btn-info.active:focus,
+.show > #layout-builder-modal .btn-info.dropdown-toggle:focus {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125), 0 0 0 0.25rem rgba(11, 172, 204, 0.5);
+}
+#drupal-off-canvas .btn-info:disabled, #drupal-off-canvas .btn-info.disabled,
+#layout-builder-modal .btn-info:disabled,
+#layout-builder-modal .btn-info.disabled {
+  color: #000;
+  background-color: #0dcaf0;
+  background-image: none;
+  border-color: #0dcaf0;
+}
+#drupal-off-canvas .btn-warning,
+#layout-builder-modal .btn-warning {
+  color: #000;
+  background-color: #ffc107;
+  background-image: var(--bs-gradient);
+  border-color: #ffc107;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+#drupal-off-canvas .btn-warning:hover,
+#layout-builder-modal .btn-warning:hover {
+  color: #000;
+  background-color: #ffca2c;
+  background-image: var(--bs-gradient);
+  border-color: #ffc720;
+}
+.btn-check:focus + #drupal-off-canvas .btn-warning, #drupal-off-canvas .btn-warning:focus,
+.btn-check:focus + #layout-builder-modal .btn-warning,
+#layout-builder-modal .btn-warning:focus {
+  color: #000;
+  background-color: #ffca2c;
+  background-image: var(--bs-gradient);
+  border-color: #ffc720;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 0.25rem rgba(217, 164, 6, 0.5);
+}
+.btn-check:checked + #drupal-off-canvas .btn-warning, .btn-check:active + #drupal-off-canvas .btn-warning, #drupal-off-canvas .btn-warning:active, #drupal-off-canvas .btn-warning.active, .show > #drupal-off-canvas .btn-warning.dropdown-toggle,
+.btn-check:checked + #layout-builder-modal .btn-warning,
+.btn-check:active + #layout-builder-modal .btn-warning,
+#layout-builder-modal .btn-warning:active,
+#layout-builder-modal .btn-warning.active,
+.show > #layout-builder-modal .btn-warning.dropdown-toggle {
+  color: #000;
+  background-color: #ffcd39;
+  background-image: none;
+  border-color: #ffc720;
+}
+.btn-check:checked + #drupal-off-canvas .btn-warning:focus, .btn-check:active + #drupal-off-canvas .btn-warning:focus, #drupal-off-canvas .btn-warning:active:focus, #drupal-off-canvas .btn-warning.active:focus, .show > #drupal-off-canvas .btn-warning.dropdown-toggle:focus,
+.btn-check:checked + #layout-builder-modal .btn-warning:focus,
+.btn-check:active + #layout-builder-modal .btn-warning:focus,
+#layout-builder-modal .btn-warning:active:focus,
+#layout-builder-modal .btn-warning.active:focus,
+.show > #layout-builder-modal .btn-warning.dropdown-toggle:focus {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125), 0 0 0 0.25rem rgba(217, 164, 6, 0.5);
+}
+#drupal-off-canvas .btn-warning:disabled, #drupal-off-canvas .btn-warning.disabled,
+#layout-builder-modal .btn-warning:disabled,
+#layout-builder-modal .btn-warning.disabled {
+  color: #000;
+  background-color: #ffc107;
+  background-image: none;
+  border-color: #ffc107;
+}
+#drupal-off-canvas .btn-danger,
+#layout-builder-modal .btn-danger {
+  color: #fff;
+  background-color: #dc3545;
+  background-image: var(--bs-gradient);
+  border-color: #dc3545;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+#drupal-off-canvas .btn-danger:hover,
+#layout-builder-modal .btn-danger:hover {
+  color: #fff;
+  background-color: #bb2d3b;
+  background-image: var(--bs-gradient);
+  border-color: #b02a37;
+}
+.btn-check:focus + #drupal-off-canvas .btn-danger, #drupal-off-canvas .btn-danger:focus,
+.btn-check:focus + #layout-builder-modal .btn-danger,
+#layout-builder-modal .btn-danger:focus {
+  color: #fff;
+  background-color: #bb2d3b;
+  background-image: var(--bs-gradient);
+  border-color: #b02a37;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 0.25rem rgba(225, 83, 97, 0.5);
+}
+.btn-check:checked + #drupal-off-canvas .btn-danger, .btn-check:active + #drupal-off-canvas .btn-danger, #drupal-off-canvas .btn-danger:active, #drupal-off-canvas .btn-danger.active, .show > #drupal-off-canvas .btn-danger.dropdown-toggle,
+.btn-check:checked + #layout-builder-modal .btn-danger,
+.btn-check:active + #layout-builder-modal .btn-danger,
+#layout-builder-modal .btn-danger:active,
+#layout-builder-modal .btn-danger.active,
+.show > #layout-builder-modal .btn-danger.dropdown-toggle {
+  color: #fff;
+  background-color: #b02a37;
+  background-image: none;
+  border-color: #a52834;
+}
+.btn-check:checked + #drupal-off-canvas .btn-danger:focus, .btn-check:active + #drupal-off-canvas .btn-danger:focus, #drupal-off-canvas .btn-danger:active:focus, #drupal-off-canvas .btn-danger.active:focus, .show > #drupal-off-canvas .btn-danger.dropdown-toggle:focus,
+.btn-check:checked + #layout-builder-modal .btn-danger:focus,
+.btn-check:active + #layout-builder-modal .btn-danger:focus,
+#layout-builder-modal .btn-danger:active:focus,
+#layout-builder-modal .btn-danger.active:focus,
+.show > #layout-builder-modal .btn-danger.dropdown-toggle:focus {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125), 0 0 0 0.25rem rgba(225, 83, 97, 0.5);
+}
+#drupal-off-canvas .btn-danger:disabled, #drupal-off-canvas .btn-danger.disabled,
+#layout-builder-modal .btn-danger:disabled,
+#layout-builder-modal .btn-danger.disabled {
+  color: #fff;
+  background-color: #dc3545;
+  background-image: none;
+  border-color: #dc3545;
+}
+#drupal-off-canvas .btn-light,
+#layout-builder-modal .btn-light {
+  color: #000;
+  background-color: #f8f9fa;
+  background-image: var(--bs-gradient);
+  border-color: #f8f9fa;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+#drupal-off-canvas .btn-light:hover,
+#layout-builder-modal .btn-light:hover {
+  color: #000;
+  background-color: #f9fafb;
+  background-image: var(--bs-gradient);
+  border-color: #f9fafb;
+}
+.btn-check:focus + #drupal-off-canvas .btn-light, #drupal-off-canvas .btn-light:focus,
+.btn-check:focus + #layout-builder-modal .btn-light,
+#layout-builder-modal .btn-light:focus {
+  color: #000;
+  background-color: #f9fafb;
+  background-image: var(--bs-gradient);
+  border-color: #f9fafb;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 0.25rem rgba(211, 212, 213, 0.5);
+}
+.btn-check:checked + #drupal-off-canvas .btn-light, .btn-check:active + #drupal-off-canvas .btn-light, #drupal-off-canvas .btn-light:active, #drupal-off-canvas .btn-light.active, .show > #drupal-off-canvas .btn-light.dropdown-toggle,
+.btn-check:checked + #layout-builder-modal .btn-light,
+.btn-check:active + #layout-builder-modal .btn-light,
+#layout-builder-modal .btn-light:active,
+#layout-builder-modal .btn-light.active,
+.show > #layout-builder-modal .btn-light.dropdown-toggle {
+  color: #000;
+  background-color: #f9fafb;
+  background-image: none;
+  border-color: #f9fafb;
+}
+.btn-check:checked + #drupal-off-canvas .btn-light:focus, .btn-check:active + #drupal-off-canvas .btn-light:focus, #drupal-off-canvas .btn-light:active:focus, #drupal-off-canvas .btn-light.active:focus, .show > #drupal-off-canvas .btn-light.dropdown-toggle:focus,
+.btn-check:checked + #layout-builder-modal .btn-light:focus,
+.btn-check:active + #layout-builder-modal .btn-light:focus,
+#layout-builder-modal .btn-light:active:focus,
+#layout-builder-modal .btn-light.active:focus,
+.show > #layout-builder-modal .btn-light.dropdown-toggle:focus {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125), 0 0 0 0.25rem rgba(211, 212, 213, 0.5);
+}
+#drupal-off-canvas .btn-light:disabled, #drupal-off-canvas .btn-light.disabled,
+#layout-builder-modal .btn-light:disabled,
+#layout-builder-modal .btn-light.disabled {
+  color: #000;
+  background-color: #f8f9fa;
+  background-image: none;
+  border-color: #f8f9fa;
+}
+#drupal-off-canvas .btn-dark,
+#layout-builder-modal .btn-dark {
+  color: #fff;
+  background-color: #212529;
+  background-image: var(--bs-gradient);
+  border-color: #212529;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+#drupal-off-canvas .btn-dark:hover,
+#layout-builder-modal .btn-dark:hover {
+  color: #fff;
+  background-color: #1c1f23;
+  background-image: var(--bs-gradient);
+  border-color: #1a1e21;
+}
+.btn-check:focus + #drupal-off-canvas .btn-dark, #drupal-off-canvas .btn-dark:focus,
+.btn-check:focus + #layout-builder-modal .btn-dark,
+#layout-builder-modal .btn-dark:focus {
+  color: #fff;
+  background-color: #1c1f23;
+  background-image: var(--bs-gradient);
+  border-color: #1a1e21;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 0.25rem rgba(66, 70, 73, 0.5);
+}
+.btn-check:checked + #drupal-off-canvas .btn-dark, .btn-check:active + #drupal-off-canvas .btn-dark, #drupal-off-canvas .btn-dark:active, #drupal-off-canvas .btn-dark.active, .show > #drupal-off-canvas .btn-dark.dropdown-toggle,
+.btn-check:checked + #layout-builder-modal .btn-dark,
+.btn-check:active + #layout-builder-modal .btn-dark,
+#layout-builder-modal .btn-dark:active,
+#layout-builder-modal .btn-dark.active,
+.show > #layout-builder-modal .btn-dark.dropdown-toggle {
+  color: #fff;
+  background-color: #1a1e21;
+  background-image: none;
+  border-color: #191c1f;
+}
+.btn-check:checked + #drupal-off-canvas .btn-dark:focus, .btn-check:active + #drupal-off-canvas .btn-dark:focus, #drupal-off-canvas .btn-dark:active:focus, #drupal-off-canvas .btn-dark.active:focus, .show > #drupal-off-canvas .btn-dark.dropdown-toggle:focus,
+.btn-check:checked + #layout-builder-modal .btn-dark:focus,
+.btn-check:active + #layout-builder-modal .btn-dark:focus,
+#layout-builder-modal .btn-dark:active:focus,
+#layout-builder-modal .btn-dark.active:focus,
+.show > #layout-builder-modal .btn-dark.dropdown-toggle:focus {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125), 0 0 0 0.25rem rgba(66, 70, 73, 0.5);
+}
+#drupal-off-canvas .btn-dark:disabled, #drupal-off-canvas .btn-dark.disabled,
+#layout-builder-modal .btn-dark:disabled,
+#layout-builder-modal .btn-dark.disabled {
+  color: #fff;
+  background-color: #212529;
+  background-image: none;
+  border-color: #212529;
+}
+#drupal-off-canvas .btn-outline-primary,
+#layout-builder-modal .btn-outline-primary {
+  color: #0d6efd;
+  border-color: #0d6efd;
+}
+#drupal-off-canvas .btn-outline-primary:hover,
+#layout-builder-modal .btn-outline-primary:hover {
+  color: #fff;
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+.btn-check:focus + #drupal-off-canvas .btn-outline-primary, #drupal-off-canvas .btn-outline-primary:focus,
+.btn-check:focus + #layout-builder-modal .btn-outline-primary,
+#layout-builder-modal .btn-outline-primary:focus {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.5);
+}
+.btn-check:checked + #drupal-off-canvas .btn-outline-primary, .btn-check:active + #drupal-off-canvas .btn-outline-primary, #drupal-off-canvas .btn-outline-primary:active, #drupal-off-canvas .btn-outline-primary.active, #drupal-off-canvas .btn-outline-primary.dropdown-toggle.show,
+.btn-check:checked + #layout-builder-modal .btn-outline-primary,
+.btn-check:active + #layout-builder-modal .btn-outline-primary,
+#layout-builder-modal .btn-outline-primary:active,
+#layout-builder-modal .btn-outline-primary.active,
+#layout-builder-modal .btn-outline-primary.dropdown-toggle.show {
+  color: #fff;
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+.btn-check:checked + #drupal-off-canvas .btn-outline-primary:focus, .btn-check:active + #drupal-off-canvas .btn-outline-primary:focus, #drupal-off-canvas .btn-outline-primary:active:focus, #drupal-off-canvas .btn-outline-primary.active:focus, #drupal-off-canvas .btn-outline-primary.dropdown-toggle.show:focus,
+.btn-check:checked + #layout-builder-modal .btn-outline-primary:focus,
+.btn-check:active + #layout-builder-modal .btn-outline-primary:focus,
+#layout-builder-modal .btn-outline-primary:active:focus,
+#layout-builder-modal .btn-outline-primary.active:focus,
+#layout-builder-modal .btn-outline-primary.dropdown-toggle.show:focus {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125), 0 0 0 0.25rem rgba(13, 110, 253, 0.5);
+}
+#drupal-off-canvas .btn-outline-primary:disabled, #drupal-off-canvas .btn-outline-primary.disabled,
+#layout-builder-modal .btn-outline-primary:disabled,
+#layout-builder-modal .btn-outline-primary.disabled {
+  color: #0d6efd;
+  background-color: transparent;
+}
+#drupal-off-canvas .btn-outline-secondary,
+#layout-builder-modal .btn-outline-secondary {
+  color: #6c757d;
+  border-color: #6c757d;
+}
+#drupal-off-canvas .btn-outline-secondary:hover,
+#layout-builder-modal .btn-outline-secondary:hover {
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+.btn-check:focus + #drupal-off-canvas .btn-outline-secondary, #drupal-off-canvas .btn-outline-secondary:focus,
+.btn-check:focus + #layout-builder-modal .btn-outline-secondary,
+#layout-builder-modal .btn-outline-secondary:focus {
+  box-shadow: 0 0 0 0.25rem rgba(108, 117, 125, 0.5);
+}
+.btn-check:checked + #drupal-off-canvas .btn-outline-secondary, .btn-check:active + #drupal-off-canvas .btn-outline-secondary, #drupal-off-canvas .btn-outline-secondary:active, #drupal-off-canvas .btn-outline-secondary.active, #drupal-off-canvas .btn-outline-secondary.dropdown-toggle.show,
+.btn-check:checked + #layout-builder-modal .btn-outline-secondary,
+.btn-check:active + #layout-builder-modal .btn-outline-secondary,
+#layout-builder-modal .btn-outline-secondary:active,
+#layout-builder-modal .btn-outline-secondary.active,
+#layout-builder-modal .btn-outline-secondary.dropdown-toggle.show {
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+.btn-check:checked + #drupal-off-canvas .btn-outline-secondary:focus, .btn-check:active + #drupal-off-canvas .btn-outline-secondary:focus, #drupal-off-canvas .btn-outline-secondary:active:focus, #drupal-off-canvas .btn-outline-secondary.active:focus, #drupal-off-canvas .btn-outline-secondary.dropdown-toggle.show:focus,
+.btn-check:checked + #layout-builder-modal .btn-outline-secondary:focus,
+.btn-check:active + #layout-builder-modal .btn-outline-secondary:focus,
+#layout-builder-modal .btn-outline-secondary:active:focus,
+#layout-builder-modal .btn-outline-secondary.active:focus,
+#layout-builder-modal .btn-outline-secondary.dropdown-toggle.show:focus {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125), 0 0 0 0.25rem rgba(108, 117, 125, 0.5);
+}
+#drupal-off-canvas .btn-outline-secondary:disabled, #drupal-off-canvas .btn-outline-secondary.disabled,
+#layout-builder-modal .btn-outline-secondary:disabled,
+#layout-builder-modal .btn-outline-secondary.disabled {
+  color: #6c757d;
+  background-color: transparent;
+}
+#drupal-off-canvas .btn-outline-success,
+#layout-builder-modal .btn-outline-success {
+  color: #198754;
+  border-color: #198754;
+}
+#drupal-off-canvas .btn-outline-success:hover,
+#layout-builder-modal .btn-outline-success:hover {
+  color: #fff;
+  background-color: #198754;
+  border-color: #198754;
+}
+.btn-check:focus + #drupal-off-canvas .btn-outline-success, #drupal-off-canvas .btn-outline-success:focus,
+.btn-check:focus + #layout-builder-modal .btn-outline-success,
+#layout-builder-modal .btn-outline-success:focus {
+  box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.5);
+}
+.btn-check:checked + #drupal-off-canvas .btn-outline-success, .btn-check:active + #drupal-off-canvas .btn-outline-success, #drupal-off-canvas .btn-outline-success:active, #drupal-off-canvas .btn-outline-success.active, #drupal-off-canvas .btn-outline-success.dropdown-toggle.show,
+.btn-check:checked + #layout-builder-modal .btn-outline-success,
+.btn-check:active + #layout-builder-modal .btn-outline-success,
+#layout-builder-modal .btn-outline-success:active,
+#layout-builder-modal .btn-outline-success.active,
+#layout-builder-modal .btn-outline-success.dropdown-toggle.show {
+  color: #fff;
+  background-color: #198754;
+  border-color: #198754;
+}
+.btn-check:checked + #drupal-off-canvas .btn-outline-success:focus, .btn-check:active + #drupal-off-canvas .btn-outline-success:focus, #drupal-off-canvas .btn-outline-success:active:focus, #drupal-off-canvas .btn-outline-success.active:focus, #drupal-off-canvas .btn-outline-success.dropdown-toggle.show:focus,
+.btn-check:checked + #layout-builder-modal .btn-outline-success:focus,
+.btn-check:active + #layout-builder-modal .btn-outline-success:focus,
+#layout-builder-modal .btn-outline-success:active:focus,
+#layout-builder-modal .btn-outline-success.active:focus,
+#layout-builder-modal .btn-outline-success.dropdown-toggle.show:focus {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125), 0 0 0 0.25rem rgba(25, 135, 84, 0.5);
+}
+#drupal-off-canvas .btn-outline-success:disabled, #drupal-off-canvas .btn-outline-success.disabled,
+#layout-builder-modal .btn-outline-success:disabled,
+#layout-builder-modal .btn-outline-success.disabled {
+  color: #198754;
+  background-color: transparent;
+}
+#drupal-off-canvas .btn-outline-info,
+#layout-builder-modal .btn-outline-info {
+  color: #0dcaf0;
+  border-color: #0dcaf0;
+}
+#drupal-off-canvas .btn-outline-info:hover,
+#layout-builder-modal .btn-outline-info:hover {
+  color: #000;
+  background-color: #0dcaf0;
+  border-color: #0dcaf0;
+}
+.btn-check:focus + #drupal-off-canvas .btn-outline-info, #drupal-off-canvas .btn-outline-info:focus,
+.btn-check:focus + #layout-builder-modal .btn-outline-info,
+#layout-builder-modal .btn-outline-info:focus {
+  box-shadow: 0 0 0 0.25rem rgba(13, 202, 240, 0.5);
+}
+.btn-check:checked + #drupal-off-canvas .btn-outline-info, .btn-check:active + #drupal-off-canvas .btn-outline-info, #drupal-off-canvas .btn-outline-info:active, #drupal-off-canvas .btn-outline-info.active, #drupal-off-canvas .btn-outline-info.dropdown-toggle.show,
+.btn-check:checked + #layout-builder-modal .btn-outline-info,
+.btn-check:active + #layout-builder-modal .btn-outline-info,
+#layout-builder-modal .btn-outline-info:active,
+#layout-builder-modal .btn-outline-info.active,
+#layout-builder-modal .btn-outline-info.dropdown-toggle.show {
+  color: #000;
+  background-color: #0dcaf0;
+  border-color: #0dcaf0;
+}
+.btn-check:checked + #drupal-off-canvas .btn-outline-info:focus, .btn-check:active + #drupal-off-canvas .btn-outline-info:focus, #drupal-off-canvas .btn-outline-info:active:focus, #drupal-off-canvas .btn-outline-info.active:focus, #drupal-off-canvas .btn-outline-info.dropdown-toggle.show:focus,
+.btn-check:checked + #layout-builder-modal .btn-outline-info:focus,
+.btn-check:active + #layout-builder-modal .btn-outline-info:focus,
+#layout-builder-modal .btn-outline-info:active:focus,
+#layout-builder-modal .btn-outline-info.active:focus,
+#layout-builder-modal .btn-outline-info.dropdown-toggle.show:focus {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125), 0 0 0 0.25rem rgba(13, 202, 240, 0.5);
+}
+#drupal-off-canvas .btn-outline-info:disabled, #drupal-off-canvas .btn-outline-info.disabled,
+#layout-builder-modal .btn-outline-info:disabled,
+#layout-builder-modal .btn-outline-info.disabled {
+  color: #0dcaf0;
+  background-color: transparent;
+}
+#drupal-off-canvas .btn-outline-warning,
+#layout-builder-modal .btn-outline-warning {
+  color: #ffc107;
+  border-color: #ffc107;
+}
+#drupal-off-canvas .btn-outline-warning:hover,
+#layout-builder-modal .btn-outline-warning:hover {
+  color: #000;
+  background-color: #ffc107;
+  border-color: #ffc107;
+}
+.btn-check:focus + #drupal-off-canvas .btn-outline-warning, #drupal-off-canvas .btn-outline-warning:focus,
+.btn-check:focus + #layout-builder-modal .btn-outline-warning,
+#layout-builder-modal .btn-outline-warning:focus {
+  box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.5);
+}
+.btn-check:checked + #drupal-off-canvas .btn-outline-warning, .btn-check:active + #drupal-off-canvas .btn-outline-warning, #drupal-off-canvas .btn-outline-warning:active, #drupal-off-canvas .btn-outline-warning.active, #drupal-off-canvas .btn-outline-warning.dropdown-toggle.show,
+.btn-check:checked + #layout-builder-modal .btn-outline-warning,
+.btn-check:active + #layout-builder-modal .btn-outline-warning,
+#layout-builder-modal .btn-outline-warning:active,
+#layout-builder-modal .btn-outline-warning.active,
+#layout-builder-modal .btn-outline-warning.dropdown-toggle.show {
+  color: #000;
+  background-color: #ffc107;
+  border-color: #ffc107;
+}
+.btn-check:checked + #drupal-off-canvas .btn-outline-warning:focus, .btn-check:active + #drupal-off-canvas .btn-outline-warning:focus, #drupal-off-canvas .btn-outline-warning:active:focus, #drupal-off-canvas .btn-outline-warning.active:focus, #drupal-off-canvas .btn-outline-warning.dropdown-toggle.show:focus,
+.btn-check:checked + #layout-builder-modal .btn-outline-warning:focus,
+.btn-check:active + #layout-builder-modal .btn-outline-warning:focus,
+#layout-builder-modal .btn-outline-warning:active:focus,
+#layout-builder-modal .btn-outline-warning.active:focus,
+#layout-builder-modal .btn-outline-warning.dropdown-toggle.show:focus {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125), 0 0 0 0.25rem rgba(255, 193, 7, 0.5);
+}
+#drupal-off-canvas .btn-outline-warning:disabled, #drupal-off-canvas .btn-outline-warning.disabled,
+#layout-builder-modal .btn-outline-warning:disabled,
+#layout-builder-modal .btn-outline-warning.disabled {
+  color: #ffc107;
+  background-color: transparent;
+}
+#drupal-off-canvas .btn-outline-danger,
+#layout-builder-modal .btn-outline-danger {
+  color: #dc3545;
+  border-color: #dc3545;
+}
+#drupal-off-canvas .btn-outline-danger:hover,
+#layout-builder-modal .btn-outline-danger:hover {
+  color: #fff;
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+.btn-check:focus + #drupal-off-canvas .btn-outline-danger, #drupal-off-canvas .btn-outline-danger:focus,
+.btn-check:focus + #layout-builder-modal .btn-outline-danger,
+#layout-builder-modal .btn-outline-danger:focus {
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.5);
+}
+.btn-check:checked + #drupal-off-canvas .btn-outline-danger, .btn-check:active + #drupal-off-canvas .btn-outline-danger, #drupal-off-canvas .btn-outline-danger:active, #drupal-off-canvas .btn-outline-danger.active, #drupal-off-canvas .btn-outline-danger.dropdown-toggle.show,
+.btn-check:checked + #layout-builder-modal .btn-outline-danger,
+.btn-check:active + #layout-builder-modal .btn-outline-danger,
+#layout-builder-modal .btn-outline-danger:active,
+#layout-builder-modal .btn-outline-danger.active,
+#layout-builder-modal .btn-outline-danger.dropdown-toggle.show {
+  color: #fff;
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+.btn-check:checked + #drupal-off-canvas .btn-outline-danger:focus, .btn-check:active + #drupal-off-canvas .btn-outline-danger:focus, #drupal-off-canvas .btn-outline-danger:active:focus, #drupal-off-canvas .btn-outline-danger.active:focus, #drupal-off-canvas .btn-outline-danger.dropdown-toggle.show:focus,
+.btn-check:checked + #layout-builder-modal .btn-outline-danger:focus,
+.btn-check:active + #layout-builder-modal .btn-outline-danger:focus,
+#layout-builder-modal .btn-outline-danger:active:focus,
+#layout-builder-modal .btn-outline-danger.active:focus,
+#layout-builder-modal .btn-outline-danger.dropdown-toggle.show:focus {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125), 0 0 0 0.25rem rgba(220, 53, 69, 0.5);
+}
+#drupal-off-canvas .btn-outline-danger:disabled, #drupal-off-canvas .btn-outline-danger.disabled,
+#layout-builder-modal .btn-outline-danger:disabled,
+#layout-builder-modal .btn-outline-danger.disabled {
+  color: #dc3545;
+  background-color: transparent;
+}
+#drupal-off-canvas .btn-outline-light,
+#layout-builder-modal .btn-outline-light {
+  color: #f8f9fa;
+  border-color: #f8f9fa;
+}
+#drupal-off-canvas .btn-outline-light:hover,
+#layout-builder-modal .btn-outline-light:hover {
+  color: #000;
+  background-color: #f8f9fa;
+  border-color: #f8f9fa;
+}
+.btn-check:focus + #drupal-off-canvas .btn-outline-light, #drupal-off-canvas .btn-outline-light:focus,
+.btn-check:focus + #layout-builder-modal .btn-outline-light,
+#layout-builder-modal .btn-outline-light:focus {
+  box-shadow: 0 0 0 0.25rem rgba(248, 249, 250, 0.5);
+}
+.btn-check:checked + #drupal-off-canvas .btn-outline-light, .btn-check:active + #drupal-off-canvas .btn-outline-light, #drupal-off-canvas .btn-outline-light:active, #drupal-off-canvas .btn-outline-light.active, #drupal-off-canvas .btn-outline-light.dropdown-toggle.show,
+.btn-check:checked + #layout-builder-modal .btn-outline-light,
+.btn-check:active + #layout-builder-modal .btn-outline-light,
+#layout-builder-modal .btn-outline-light:active,
+#layout-builder-modal .btn-outline-light.active,
+#layout-builder-modal .btn-outline-light.dropdown-toggle.show {
+  color: #000;
+  background-color: #f8f9fa;
+  border-color: #f8f9fa;
+}
+.btn-check:checked + #drupal-off-canvas .btn-outline-light:focus, .btn-check:active + #drupal-off-canvas .btn-outline-light:focus, #drupal-off-canvas .btn-outline-light:active:focus, #drupal-off-canvas .btn-outline-light.active:focus, #drupal-off-canvas .btn-outline-light.dropdown-toggle.show:focus,
+.btn-check:checked + #layout-builder-modal .btn-outline-light:focus,
+.btn-check:active + #layout-builder-modal .btn-outline-light:focus,
+#layout-builder-modal .btn-outline-light:active:focus,
+#layout-builder-modal .btn-outline-light.active:focus,
+#layout-builder-modal .btn-outline-light.dropdown-toggle.show:focus {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125), 0 0 0 0.25rem rgba(248, 249, 250, 0.5);
+}
+#drupal-off-canvas .btn-outline-light:disabled, #drupal-off-canvas .btn-outline-light.disabled,
+#layout-builder-modal .btn-outline-light:disabled,
+#layout-builder-modal .btn-outline-light.disabled {
+  color: #f8f9fa;
+  background-color: transparent;
+}
+#drupal-off-canvas .btn-outline-dark,
+#layout-builder-modal .btn-outline-dark {
+  color: #212529;
+  border-color: #212529;
+}
+#drupal-off-canvas .btn-outline-dark:hover,
+#layout-builder-modal .btn-outline-dark:hover {
+  color: #fff;
+  background-color: #212529;
+  border-color: #212529;
+}
+.btn-check:focus + #drupal-off-canvas .btn-outline-dark, #drupal-off-canvas .btn-outline-dark:focus,
+.btn-check:focus + #layout-builder-modal .btn-outline-dark,
+#layout-builder-modal .btn-outline-dark:focus {
+  box-shadow: 0 0 0 0.25rem rgba(33, 37, 41, 0.5);
+}
+.btn-check:checked + #drupal-off-canvas .btn-outline-dark, .btn-check:active + #drupal-off-canvas .btn-outline-dark, #drupal-off-canvas .btn-outline-dark:active, #drupal-off-canvas .btn-outline-dark.active, #drupal-off-canvas .btn-outline-dark.dropdown-toggle.show,
+.btn-check:checked + #layout-builder-modal .btn-outline-dark,
+.btn-check:active + #layout-builder-modal .btn-outline-dark,
+#layout-builder-modal .btn-outline-dark:active,
+#layout-builder-modal .btn-outline-dark.active,
+#layout-builder-modal .btn-outline-dark.dropdown-toggle.show {
+  color: #fff;
+  background-color: #212529;
+  border-color: #212529;
+}
+.btn-check:checked + #drupal-off-canvas .btn-outline-dark:focus, .btn-check:active + #drupal-off-canvas .btn-outline-dark:focus, #drupal-off-canvas .btn-outline-dark:active:focus, #drupal-off-canvas .btn-outline-dark.active:focus, #drupal-off-canvas .btn-outline-dark.dropdown-toggle.show:focus,
+.btn-check:checked + #layout-builder-modal .btn-outline-dark:focus,
+.btn-check:active + #layout-builder-modal .btn-outline-dark:focus,
+#layout-builder-modal .btn-outline-dark:active:focus,
+#layout-builder-modal .btn-outline-dark.active:focus,
+#layout-builder-modal .btn-outline-dark.dropdown-toggle.show:focus {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125), 0 0 0 0.25rem rgba(33, 37, 41, 0.5);
+}
+#drupal-off-canvas .btn-outline-dark:disabled, #drupal-off-canvas .btn-outline-dark.disabled,
+#layout-builder-modal .btn-outline-dark:disabled,
+#layout-builder-modal .btn-outline-dark.disabled {
+  color: #212529;
+  background-color: transparent;
+}
+#drupal-off-canvas .btn-link,
+#layout-builder-modal .btn-link {
+  font-weight: 400;
+  color: #0d6efd;
+  text-decoration: underline;
+}
+#drupal-off-canvas .btn-link:hover,
+#layout-builder-modal .btn-link:hover {
+  color: #0a58ca;
+}
+#drupal-off-canvas .btn-link:disabled, #drupal-off-canvas .btn-link.disabled,
+#layout-builder-modal .btn-link:disabled,
+#layout-builder-modal .btn-link.disabled {
+  color: #6c757d;
+}
+#drupal-off-canvas .btn-lg,
+#layout-builder-modal .btn-lg {
+  padding: 0.5rem 1rem;
+  font-size: 1.25rem;
+  border-radius: 0.3rem;
+}
+#drupal-off-canvas .btn-sm,
+#layout-builder-modal .btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  border-radius: 0.2rem;
+}
+#drupal-off-canvas .dropup,
+#drupal-off-canvas .dropend,
+#drupal-off-canvas .dropdown,
+#drupal-off-canvas .dropstart,
+#layout-builder-modal .dropup,
+#layout-builder-modal .dropend,
+#layout-builder-modal .dropdown,
+#layout-builder-modal .dropstart {
+  position: relative;
+}
+#drupal-off-canvas .dropdown-toggle,
+#layout-builder-modal .dropdown-toggle {
+  white-space: nowrap;
+}
+#drupal-off-canvas .dropdown-toggle::after,
+#layout-builder-modal .dropdown-toggle::after {
+  display: inline-block;
+  margin-left: 0.255em;
+  vertical-align: 0.255em;
+  content: "";
+  border-top: 0.3em solid;
+  border-right: 0.3em solid transparent;
+  border-bottom: 0;
+  border-left: 0.3em solid transparent;
+}
+#drupal-off-canvas .dropdown-toggle:empty::after,
+#layout-builder-modal .dropdown-toggle:empty::after {
+  margin-left: 0;
+}
+#drupal-off-canvas .dropdown-menu,
+#layout-builder-modal .dropdown-menu {
+  position: absolute;
+  top: 100%;
+  z-index: 1000;
+  display: none;
+  min-width: 10rem;
+  padding: 0.5rem 0;
+  margin: 0;
+  font-size: 1rem;
+  color: #212529;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+#drupal-off-canvas .dropdown-menu[data-bs-popper],
+#layout-builder-modal .dropdown-menu[data-bs-popper] {
+  left: 0;
+  margin-top: 0.125rem;
+}
+#drupal-off-canvas .dropdown-menu-start,
+#layout-builder-modal .dropdown-menu-start {
+  --bs-position: start;
+}
+#drupal-off-canvas .dropdown-menu-start[data-bs-popper],
+#layout-builder-modal .dropdown-menu-start[data-bs-popper] {
+  right: auto /* rtl:ignore */;
+  left: 0 /* rtl:ignore */;
+}
+#drupal-off-canvas .dropdown-menu-end,
+#layout-builder-modal .dropdown-menu-end {
+  --bs-position: end;
+}
+#drupal-off-canvas .dropdown-menu-end[data-bs-popper],
+#layout-builder-modal .dropdown-menu-end[data-bs-popper] {
+  right: 0 /* rtl:ignore */;
+  left: auto /* rtl:ignore */;
+}
+@media (min-width: 576px) {
+  #drupal-off-canvas .dropdown-menu-sm-start,
+#layout-builder-modal .dropdown-menu-sm-start {
+    --bs-position: start;
+  }
+  #drupal-off-canvas .dropdown-menu-sm-start[data-bs-popper],
+#layout-builder-modal .dropdown-menu-sm-start[data-bs-popper] {
+    right: auto /* rtl:ignore */;
+    left: 0 /* rtl:ignore */;
+  }
+  #drupal-off-canvas .dropdown-menu-sm-end,
+#layout-builder-modal .dropdown-menu-sm-end {
+    --bs-position: end;
+  }
+  #drupal-off-canvas .dropdown-menu-sm-end[data-bs-popper],
+#layout-builder-modal .dropdown-menu-sm-end[data-bs-popper] {
+    right: 0 /* rtl:ignore */;
+    left: auto /* rtl:ignore */;
+  }
+}
+@media (min-width: 768px) {
+  #drupal-off-canvas .dropdown-menu-md-start,
+#layout-builder-modal .dropdown-menu-md-start {
+    --bs-position: start;
+  }
+  #drupal-off-canvas .dropdown-menu-md-start[data-bs-popper],
+#layout-builder-modal .dropdown-menu-md-start[data-bs-popper] {
+    right: auto /* rtl:ignore */;
+    left: 0 /* rtl:ignore */;
+  }
+  #drupal-off-canvas .dropdown-menu-md-end,
+#layout-builder-modal .dropdown-menu-md-end {
+    --bs-position: end;
+  }
+  #drupal-off-canvas .dropdown-menu-md-end[data-bs-popper],
+#layout-builder-modal .dropdown-menu-md-end[data-bs-popper] {
+    right: 0 /* rtl:ignore */;
+    left: auto /* rtl:ignore */;
+  }
+}
+@media (min-width: 992px) {
+  #drupal-off-canvas .dropdown-menu-lg-start,
+#layout-builder-modal .dropdown-menu-lg-start {
+    --bs-position: start;
+  }
+  #drupal-off-canvas .dropdown-menu-lg-start[data-bs-popper],
+#layout-builder-modal .dropdown-menu-lg-start[data-bs-popper] {
+    right: auto /* rtl:ignore */;
+    left: 0 /* rtl:ignore */;
+  }
+  #drupal-off-canvas .dropdown-menu-lg-end,
+#layout-builder-modal .dropdown-menu-lg-end {
+    --bs-position: end;
+  }
+  #drupal-off-canvas .dropdown-menu-lg-end[data-bs-popper],
+#layout-builder-modal .dropdown-menu-lg-end[data-bs-popper] {
+    right: 0 /* rtl:ignore */;
+    left: auto /* rtl:ignore */;
+  }
+}
+@media (min-width: 1200px) {
+  #drupal-off-canvas .dropdown-menu-xl-start,
+#layout-builder-modal .dropdown-menu-xl-start {
+    --bs-position: start;
+  }
+  #drupal-off-canvas .dropdown-menu-xl-start[data-bs-popper],
+#layout-builder-modal .dropdown-menu-xl-start[data-bs-popper] {
+    right: auto /* rtl:ignore */;
+    left: 0 /* rtl:ignore */;
+  }
+  #drupal-off-canvas .dropdown-menu-xl-end,
+#layout-builder-modal .dropdown-menu-xl-end {
+    --bs-position: end;
+  }
+  #drupal-off-canvas .dropdown-menu-xl-end[data-bs-popper],
+#layout-builder-modal .dropdown-menu-xl-end[data-bs-popper] {
+    right: 0 /* rtl:ignore */;
+    left: auto /* rtl:ignore */;
+  }
+}
+@media (min-width: 1400px) {
+  #drupal-off-canvas .dropdown-menu-xxl-start,
+#layout-builder-modal .dropdown-menu-xxl-start {
+    --bs-position: start;
+  }
+  #drupal-off-canvas .dropdown-menu-xxl-start[data-bs-popper],
+#layout-builder-modal .dropdown-menu-xxl-start[data-bs-popper] {
+    right: auto /* rtl:ignore */;
+    left: 0 /* rtl:ignore */;
+  }
+  #drupal-off-canvas .dropdown-menu-xxl-end,
+#layout-builder-modal .dropdown-menu-xxl-end {
+    --bs-position: end;
+  }
+  #drupal-off-canvas .dropdown-menu-xxl-end[data-bs-popper],
+#layout-builder-modal .dropdown-menu-xxl-end[data-bs-popper] {
+    right: 0 /* rtl:ignore */;
+    left: auto /* rtl:ignore */;
+  }
+}
+#drupal-off-canvas .dropup .dropdown-menu[data-bs-popper],
+#layout-builder-modal .dropup .dropdown-menu[data-bs-popper] {
+  top: auto;
+  bottom: 100%;
+  margin-top: 0;
+  margin-bottom: 0.125rem;
+}
+#drupal-off-canvas .dropup .dropdown-toggle::after,
+#layout-builder-modal .dropup .dropdown-toggle::after {
+  display: inline-block;
+  margin-left: 0.255em;
+  vertical-align: 0.255em;
+  content: "";
+  border-top: 0;
+  border-right: 0.3em solid transparent;
+  border-bottom: 0.3em solid;
+  border-left: 0.3em solid transparent;
+}
+#drupal-off-canvas .dropup .dropdown-toggle:empty::after,
+#layout-builder-modal .dropup .dropdown-toggle:empty::after {
+  margin-left: 0;
+}
+#drupal-off-canvas .dropend .dropdown-menu,
+#layout-builder-modal .dropend .dropdown-menu {
+  top: 0;
+  right: auto;
+  left: 100%;
+}
+#drupal-off-canvas .dropend .dropdown-menu[data-bs-popper],
+#layout-builder-modal .dropend .dropdown-menu[data-bs-popper] {
+  margin-top: 0;
+  margin-left: 0.125rem;
+}
+#drupal-off-canvas .dropend .dropdown-toggle::after,
+#layout-builder-modal .dropend .dropdown-toggle::after {
+  display: inline-block;
+  margin-left: 0.255em;
+  vertical-align: 0.255em;
+  content: "";
+  border-top: 0.3em solid transparent;
+  border-right: 0;
+  border-bottom: 0.3em solid transparent;
+  border-left: 0.3em solid;
+}
+#drupal-off-canvas .dropend .dropdown-toggle:empty::after,
+#layout-builder-modal .dropend .dropdown-toggle:empty::after {
+  margin-left: 0;
+}
+#drupal-off-canvas .dropend .dropdown-toggle::after,
+#layout-builder-modal .dropend .dropdown-toggle::after {
+  vertical-align: 0;
+}
+#drupal-off-canvas .dropstart .dropdown-menu,
+#layout-builder-modal .dropstart .dropdown-menu {
+  top: 0;
+  right: 100%;
+  left: auto;
+}
+#drupal-off-canvas .dropstart .dropdown-menu[data-bs-popper],
+#layout-builder-modal .dropstart .dropdown-menu[data-bs-popper] {
+  margin-top: 0;
+  margin-right: 0.125rem;
+}
+#drupal-off-canvas .dropstart .dropdown-toggle::after,
+#layout-builder-modal .dropstart .dropdown-toggle::after {
+  display: inline-block;
+  margin-left: 0.255em;
+  vertical-align: 0.255em;
+  content: "";
+}
+#drupal-off-canvas .dropstart .dropdown-toggle::after,
+#layout-builder-modal .dropstart .dropdown-toggle::after {
+  display: none;
+}
+#drupal-off-canvas .dropstart .dropdown-toggle::before,
+#layout-builder-modal .dropstart .dropdown-toggle::before {
+  display: inline-block;
+  margin-right: 0.255em;
+  vertical-align: 0.255em;
+  content: "";
+  border-top: 0.3em solid transparent;
+  border-right: 0.3em solid;
+  border-bottom: 0.3em solid transparent;
+}
+#drupal-off-canvas .dropstart .dropdown-toggle:empty::after,
+#layout-builder-modal .dropstart .dropdown-toggle:empty::after {
+  margin-left: 0;
+}
+#drupal-off-canvas .dropstart .dropdown-toggle::before,
+#layout-builder-modal .dropstart .dropdown-toggle::before {
+  vertical-align: 0;
+}
+#drupal-off-canvas .dropdown-divider,
+#layout-builder-modal .dropdown-divider {
+  height: 0;
+  margin: 0.5rem 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+}
+#drupal-off-canvas .dropdown-item,
+#layout-builder-modal .dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.25rem 1rem;
+  clear: both;
+  font-weight: 400;
+  color: #212529;
+  text-align: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+}
+#drupal-off-canvas .dropdown-item:hover, #drupal-off-canvas .dropdown-item:focus,
+#layout-builder-modal .dropdown-item:hover,
+#layout-builder-modal .dropdown-item:focus {
+  color: #1e2125;
+  background-color: #e9ecef;
+  background-image: var(--bs-gradient);
+}
+#drupal-off-canvas .dropdown-item.active, #drupal-off-canvas .dropdown-item:active,
+#layout-builder-modal .dropdown-item.active,
+#layout-builder-modal .dropdown-item:active {
+  color: #fff;
+  text-decoration: none;
+  background-color: #0d6efd;
+  background-image: var(--bs-gradient);
+}
+#drupal-off-canvas .dropdown-item.disabled, #drupal-off-canvas .dropdown-item:disabled,
+#layout-builder-modal .dropdown-item.disabled,
+#layout-builder-modal .dropdown-item:disabled {
+  color: #adb5bd;
+  pointer-events: none;
+  background-color: transparent;
+  background-image: none;
+}
+#drupal-off-canvas .dropdown-menu.show,
+#layout-builder-modal .dropdown-menu.show {
+  display: block;
+}
+#drupal-off-canvas .dropdown-header,
+#layout-builder-modal .dropdown-header {
+  display: block;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0;
+  font-size: 0.875rem;
+  color: #6c757d;
+  white-space: nowrap;
+}
+#drupal-off-canvas .dropdown-item-text,
+#layout-builder-modal .dropdown-item-text {
+  display: block;
+  padding: 0.25rem 1rem;
+  color: #212529;
+}
+#drupal-off-canvas .dropdown-menu-dark,
+#layout-builder-modal .dropdown-menu-dark {
+  color: #dee2e6;
+  background-color: #343a40;
+  border-color: rgba(0, 0, 0, 0.15);
+}
+#drupal-off-canvas .dropdown-menu-dark .dropdown-item,
+#layout-builder-modal .dropdown-menu-dark .dropdown-item {
+  color: #dee2e6;
+}
+#drupal-off-canvas .dropdown-menu-dark .dropdown-item:hover, #drupal-off-canvas .dropdown-menu-dark .dropdown-item:focus,
+#layout-builder-modal .dropdown-menu-dark .dropdown-item:hover,
+#layout-builder-modal .dropdown-menu-dark .dropdown-item:focus {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.15);
+  background-image: var(--bs-gradient);
+}
+#drupal-off-canvas .dropdown-menu-dark .dropdown-item.active, #drupal-off-canvas .dropdown-menu-dark .dropdown-item:active,
+#layout-builder-modal .dropdown-menu-dark .dropdown-item.active,
+#layout-builder-modal .dropdown-menu-dark .dropdown-item:active {
+  color: #fff;
+  background-color: #0d6efd;
+  background-image: var(--bs-gradient);
+}
+#drupal-off-canvas .dropdown-menu-dark .dropdown-item.disabled, #drupal-off-canvas .dropdown-menu-dark .dropdown-item:disabled,
+#layout-builder-modal .dropdown-menu-dark .dropdown-item.disabled,
+#layout-builder-modal .dropdown-menu-dark .dropdown-item:disabled {
+  color: #adb5bd;
+}
+#drupal-off-canvas .dropdown-menu-dark .dropdown-divider,
+#layout-builder-modal .dropdown-menu-dark .dropdown-divider {
+  border-color: rgba(0, 0, 0, 0.15);
+}
+#drupal-off-canvas .dropdown-menu-dark .dropdown-item-text,
+#layout-builder-modal .dropdown-menu-dark .dropdown-item-text {
+  color: #dee2e6;
+}
+#drupal-off-canvas .dropdown-menu-dark .dropdown-header,
+#layout-builder-modal .dropdown-menu-dark .dropdown-header {
+  color: #adb5bd;
+}
+
+/*# sourceMappingURL=laces_off-canvas.css.map */

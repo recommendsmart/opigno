@@ -1,0 +1,24 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a 'form' element.
+ *
+ * Available variables
+ * - attributes: A list of HTML attributes for the wrapper element.
+ * - children: The child elements of the form.
+ *
+ * @see template_preprocess_form()
+ *
+ * @ingroup themeable
+ */
+#}
+{{ attach_library('laces/laces-forms') }}
+{{ attach_library('laces/bootstrap-containers') }}
+{{ attach_library('laces/bootstrap-grid') }}
+<form{{ attributes.addClass('container') }}>
+  <div class="row justify-content-center">
+    <div class="my-3 col-md-12 col-lg-8">
+      {{ children }}
+    </div>
+  </div>
+</form>

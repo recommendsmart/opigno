@@ -1,0 +1,13 @@
+.sticky-nav-top {
+  min-height: 1px;
+  min-width: 1px;
+}
+
+/**
+  Core toolbar sits behind the Laces navbar using bootstraps default z-index.
+ */
+.page-navigation-header.sticky-top {
+  z-index: 490;
+}
+
+/*# sourceMappingURL=laces_sticky-header.css.map */

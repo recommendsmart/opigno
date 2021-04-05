@@ -1,0 +1,22 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a 'form' element.
+ *
+ * Available variables
+ * - attributes: A list of HTML attributes for the wrapper element.
+ * - children: The child elements of the form.
+ *
+ * @see template_preprocess_form()
+ *
+ * @ingroup themeable
+ */
+#}
+
+{{ attach_library('laces/bootstrap-containers') }}
+{{ attach_library('laces/laces-forms') }}
+<div class="container-lg my-3">
+  <form{{ attributes }}>
+    {{ children }}
+  </form>
+</div>
