@@ -1541,8 +1541,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Open Social\n"
 "POT-Creation-Date: 2021-02-20 00:32+0000\n"
-"PO-Revision-Date: 2021-03-18 22:03+0000\n"
-"Last-Translator: Nina Geyer <nina.geyer@greenpeace.org>\n"
+"PO-Revision-Date: 2021-03-25 13:56+0000\n"
+"Last-Translator: Marie Rateniek <marie.rateniek@greenpeace.org>\n"
 "Language-Team: German <https://translate.getopensocial.com/projects/gpcee/"
 "distribution/de/>\n"
 "Language: de\n"
@@ -1762,8 +1762,8 @@ msgstr[1] "@count Downloads"
 #: modules/social_features/social_follow_taxonomy/modules/social_follow_tag/templates/social-tagging-split.html.twig:49
 msgid "1 follower"
 msgid_plural "@count followers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 Follower"
+msgstr[1] "@count Follower"
 
 #: modules/social_features/social_group/modules/social_group_invite/social_group_invite.module:294
 msgid "1 group invite"
@@ -1777,8 +1777,8 @@ msgstr[1] "@count Gruppen-Einladungen"
 #: modules/social_features/social_follow_taxonomy/modules/social_follow_tag/templates/social-tagging-split.html.twig:45
 msgid "1 item"
 msgid_plural "@count items"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 Element"
+msgstr[1] "@count Elemente"
 
 #: modules/social_features/social_post/social_post.admin.inc:166
 msgid "1 item successfully processed:"
@@ -1841,14 +1841,14 @@ msgstr[1] "@count ausgewählte Mitglieder wurden erfolgreich entfernt"
 #: translations.php:114
 msgid "1 selected member has not been exported"
 msgid_plural "@count selected members have not been exported"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 ausgewähltes Mitglied wurde nicht exportiert"
+msgstr[1] "@count ausgewählte Mitglieder wurden nicht exportiert"
 
 #: translations.php:116
 msgid "1 selected member has not been removed successfully"
 msgid_plural "@count selected members have been removed successfully"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 ausgewähltes Mitglied wurde nicht erfolgreich entfernt"
+msgstr[1] "@count ausgewählte Mitglieder wurden nicht erfolgreich entfernt"
 
 #: modules/social_features/social_core/src/Plugin/Field/FieldFormatter/CommentNodeFormatter.php:139
 msgid ":num_comments comment"
@@ -3137,7 +3137,7 @@ msgstr ""
 #: modules/social_features/social_event/modules/social_event_invite/src/Form/EventInviteEnrollActionForm.php:55
 #: modules/social_features/social_group/modules/social_group_invite/config/optional/views.view.social_group_user_invitations.yml:0;0
 msgid "Accept"
-msgstr ""
+msgstr "Akzeptieren"
 
 #: modules/social_features/social_event/modules/social_event_invite/social_event_invite.module:300
 msgid "Accept invite"
@@ -3583,7 +3583,7 @@ msgstr "Zur Gruppe hinzufügen"
 #: modules/social_features/social_event/modules/social_event_addtocal/social_event_addtocal.links.menu.yml:0
 #: modules/social_features/social_event/modules/social_event_addtocal/social_event_addtocal.routing.yml:0
 msgid "Add to calendar settings"
-msgstr ""
+msgstr "Zu Kalendereinstellungen hinzufügen"
 
 #: modules/custom/social_lets_connect/modules/social_lets_connect_usage/src/Form/LetsConnectUsageSettingsForm.php:48
 msgid "Add-on information (including installed modules, profiles, and themes)"
@@ -3720,7 +3720,7 @@ msgstr ""
 #: modules/social_features/social_group/modules/social_group_flexible_group/config/install/group.content_type.flexible_group-group_membership.yml:0
 #: modules/social_features/social_group/modules/social_group_secret/config/install/group.content_type.secret_group-group_membership.yml:0
 msgid "Adds users to groups as members."
-msgstr "Füge Benutzer*innen zu der Gruppe hinzu."
+msgstr "Fügt Benutzer*innen Gruppen als Mitglieder hinzu."
 
 #: modules/custom/activity_creator/activity_creator.permissions.yml:0
 msgid "Administer Activity entities"
@@ -5210,7 +5210,7 @@ msgstr ""
 
 #: modules/social_features/social_comment_upload/social_comment_upload.links.menu.yml:0
 msgid "Configure if people can attach files to comments."
-msgstr ""
+msgstr "Konfiguriere, ob Leute Dateien an ihre Kommentare anheften können."
 
 #: modules/social_features/social_activity/modules/social_activity_filter/social_activity_filter.links.menu.yml:0
 msgid ""
@@ -5852,7 +5852,7 @@ msgstr "Tag Monat Zeit"
 #: modules/social_features/social_event/modules/social_event_invite/src/Form/EventInviteEnrollActionForm.php:105
 #: modules/social_features/social_group/modules/social_group_invite/config/optional/views.view.social_group_user_invitations.yml:0;0
 msgid "Decline"
-msgstr ""
+msgstr "Ablehnen"
 
 #: modules/social_features/social_event/src/Controller/SocialEventController.php:101
 msgid "Decline enrollment request for the event @event_title"
@@ -6900,7 +6900,7 @@ msgstr "ID der Anmeldung zur Veranstaltung"
 
 #: modules/social_features/social_event/social_event.links.menu.yml:0
 msgid "Event enrollment settings"
-msgstr "Anmeldungseinstellungen für Veranstaltungen"
+msgstr "Einstellungen für Veranstaltungsanmeldungen"
 
 #: modules/social_features/social_user_export/src/Plugin/UserExportPlugin/UserAnalyticsEventEnrollments.php:23;8
 msgid "Event enrollments"
@@ -6943,7 +6943,7 @@ msgstr "Veranstaltungsmanager*innen Einstellungen"
 
 #: modules/social_features/social_event/modules/social_event_managers/social_event_managers.routing.yml:0
 msgid "Event organiser settings"
-msgstr "Veranstaltungsmanager Einstellungen"
+msgstr "Einstellungen für Veranstaltungsorganisator*innen"
 
 #: modules/social_features/social_event/modules/social_event_managers/config/install/views.view.managers.yml:0
 msgid "Event organisers"
@@ -7339,7 +7339,7 @@ msgstr ""
 
 #: modules/social_features/social_follow_taxonomy/config/install/flag.flag.follow_term.yml:0
 msgid "Follow"
-msgstr ""
+msgstr "Folgen"
 
 #: modules/custom/social_tour/config/install/tour.tour.social_node_view.yml:0
 msgid ""
@@ -8049,7 +8049,7 @@ msgstr ""
 #: modules/social_features/social_post/src/Entity/Post.php:307
 #: modules/social_features/social_user/config/install/views.view.user_admin_people.yml:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: modules/social_features/social_user/src/Form/SocialUserFloodForm.php:40
 msgid "IP limit"
@@ -9540,7 +9540,7 @@ msgstr "Nicht angemeldet"
 
 #: social.profile:84
 msgid "Not installed"
-msgstr "Nicht installiert"
+msgstr "Nicht installiert."
 
 #: modules/custom/activity_basics/src/Plugin/ActivityEntityCondition/CommentNotReplyActivityEntityCondition.php:7
 msgid "Not reply comment"
@@ -11344,7 +11344,7 @@ msgstr ""
 #: modules/social_features/social_group/modules/social_group_request/social_group_request.module:193;369
 #: modules/social_features/social_group/modules/social_group_request/src/Controller/GroupRequestController.php:141;157
 msgid "Request to join"
-msgstr ""
+msgstr "Beitrittsanfrage"
 
 #: translations.php:48
 msgid ""
@@ -11519,7 +11519,7 @@ msgstr ""
 #: modules/social_features/social_event/modules/social_event_invite/src/Form/EventInviteSettingsForm.php:81
 #: modules/social_features/social_footer/src/Form/FooterSettingsForm.php:96
 msgid "Save configuration"
-msgstr ""
+msgstr "Konfiguration speichern"
 
 #: modules/custom/activity_creator/src/Form/ActivityForm.php:39
 msgid "Saved the %label Activity."
@@ -15382,7 +15382,7 @@ msgstr ""
 #: modules/social_features/social_featured_content/templates/group--featured.html.twig:102
 msgctxt "Is a member"
 msgid "You have joined"
-msgstr ""
+msgstr "Du bist beigetreten"
 
 #: modules/custom/group_core_comments/src/Controller/GroupCoreCommentsController.php:95
 msgid "You have joined the group and you can leave your comment now."
@@ -15927,7 +15927,7 @@ msgstr[1] "sind (@count) neue Anfragen"
 #: modules/social_features/social_topic/config/install/views.view.latest_topics.yml:0
 #: modules/social_features/social_topic/config/install/views.view.topics.yml:0
 msgid "is the type of"
-msgstr "ist die Art von"
+msgstr "Art"
 
 #: modules/social_features/social_core/config/install/core.date_format.social_long_date.yml:0
 msgctxt "PHP date format"
@@ -15965,7 +15965,7 @@ msgstr "befindet sich:"
 
 #: modules/social_features/social_event/src/Form/EnrollActionForm.php:396;406
 msgid "log in"
-msgstr "anmelden"
+msgstr "einloggen"
 
 #: modules/custom/social_queue_storage/config/install/field.field.queue_storage_entity.email.field_message.yml:0
 msgid "message"

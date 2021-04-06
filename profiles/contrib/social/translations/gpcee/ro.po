@@ -1486,8 +1486,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Open Social\n"
 "POT-Creation-Date: 2021-02-20 00:32+0000\n"
-"PO-Revision-Date: 2021-03-22 22:03+0000\n"
-"Last-Translator: Diana Mihaela Zaheu <diana.mihaela.zaheu@gmail.com>\n"
+"PO-Revision-Date: 2021-03-25 13:56+0000\n"
+"Last-Translator: Theodora Bautu <theodorabautu29@gmail.com>\n"
 "Language-Team: Romanian <https://translate.getopensocial.com/projects/gpcee/"
 "distribution/ro/>\n"
 "Language: ro\n"
@@ -5910,9 +5910,8 @@ msgid "Created the %label Post type."
 msgstr "Tipul postării %label a fost creat."
 
 #: modules/custom/social_queue_storage/src/Form/QueueStorageEntityTypeForm.php:47
-#, fuzzy
 msgid "Created the %label Queue storage entity type."
-msgstr "S-a creat tipul de entitate de stocare a cozii %label."
+msgstr "S-a creat %label de Coadă pentru stocarea tipului de entitate."
 
 #: modules/custom/social_queue_storage/src/Form/QueueStorageEntityForm.php:55
 msgid "Created the %label Queue storage entity."
@@ -6703,7 +6702,6 @@ msgstr ""
 "postărilor."
 
 #: modules/custom/activity_creator/activity_creator.module:194
-#, fuzzy
 msgid "Enable activity access control."
 msgstr "Permite control la accesul activităților."
 
@@ -6744,7 +6742,6 @@ msgid "Enable post access for public and community posts."
 msgstr "Activează acessul la postări pentru public și postări comunitare."
 
 #: modules/social_features/social_post/social_post.module:176
-#, fuzzy
 msgid "Enable post for the account stream."
 msgstr "Activează postare pentru fluxul contului."
 
@@ -7748,7 +7745,7 @@ msgstr "Configurare generală"
 
 #: src/Installer/Form/ModuleConfigureForm.php:116
 msgid "Generate demo content and users"
-msgstr "Generați conținut demonstrativ și utilizatori"
+msgstr "Generează utilizatori și conținut demonstrativ"
 
 #: modules/custom/social_demo/social_demo.drush.inc:75
 msgid "Generate demo content."
@@ -7781,19 +7778,20 @@ msgstr "Fișier generic cu număr de descărcări"
 
 #: modules/social_features/social_mentions/social_mentions.tokens.inc:24
 msgid "Get the mentioned user"
-msgstr ""
+msgstr "Obține utilizatorul menționat"
 
 #: modules/social_features/social_editor/social_editor.module:103
 msgid "Give a title that will appear when hovering over this link."
 msgstr ""
+"Oferă un titlu care va apărea atunci când treci cu mouse-ul peste acest link."
 
 #: modules/social_features/social_album/src/Form/SocialAlbumPostForm.php:75
 msgid "Go to album"
-msgstr ""
+msgstr "Accesează albumul"
 
 #: modules/social_features/social_event/modules/social_event_addtocal/src/Plugin/SocialAddToCalendar/AddToGoogle.php:9
 msgid "Google"
-msgstr ""
+msgstr "Google"
 
 #: modules/custom/group_core_comments/group_core_comments.info.yml:0
 #: modules/custom/social_demo/src/Plugin/DemoContent/Group.php:7
@@ -7819,34 +7817,34 @@ msgstr "Administrator Grup"
 
 #: modules/social_features/social_album/config/install/views.view.albums.yml:0
 msgid "Group Albums Overview Page"
-msgstr ""
+msgstr "Pagina de prezentare a albumelor grupului"
 
 #: modules/social_features/social_group/social_group.views.inc:16
 msgid "Group Content"
-msgstr ""
+msgstr "Conținut de grup"
 
 #: modules/custom/group_core_comments/group_core_comments.info.yml:0
 msgid "Group Core Comments support"
-msgstr ""
+msgstr "Suport pentru comentarii de bază ale grupului"
 
 #: modules/social_features/social_group/config/install/views.view.group_events.yml:0;0
 msgid "Group Events"
-msgstr ""
+msgstr "Evenimente de grup"
 
 #: modules/social_features/social_group/config/install/field.field.group.closed_group.field_group_image.yml:0
 #: modules/social_features/social_group/config/install/field.field.group.open_group.field_group_image.yml:0
 #: modules/social_features/social_group/config/install/field.field.group.public_group.field_group_image.yml:0
 #: modules/social_features/social_group/modules/social_group_secret/config/install/field.field.group.secret_group.field_group_image.yml:0
 msgid "Group Image"
-msgstr ""
+msgstr "Imagine de grup"
 
 #: modules/social_features/social_group/config/install/views.view.group_information.yml:0
 msgid "Group Information"
-msgstr ""
+msgstr "Informații despre grup"
 
 #: modules/social_features/social_group/config/install/views.view.group_manage_members.yml:0;0
 msgid "Group Manage Members"
-msgstr ""
+msgstr "Gestionează membrii grupului"
 
 #: modules/social_features/social_group/config/install/group.role.closed_group-group_manager.yml:0
 #: modules/social_features/social_group/config/install/group.role.open_group-group_manager.yml:0
@@ -7858,11 +7856,11 @@ msgstr "Director Grup"
 
 #: modules/social_features/social_group/config/install/views.view.group_managers.yml:0
 msgid "Group Managers"
-msgstr ""
+msgstr "Managerii de grup"
 
 #: modules/social_features/social_group/src/Plugin/views/access/ManageByGroupManagersOnlyAccess.php:9
 msgid "Group Managers Only"
-msgstr ""
+msgstr "Numai pentru manageri de grup"
 
 #: modules/social_features/social_group/config/install/views.view.group_members.yml:0;0
 msgid "Group Members"
@@ -7870,67 +7868,67 @@ msgstr "Membrii ai grupului"
 
 #: modules/custom/social_tour/config/install/tour.tour.social_group_overview.yml:0
 msgid "Group Overview functionality."
-msgstr ""
+msgstr "Funcționalitate Prezentare generală a grupului."
 
 #: modules/social_features/social_group/modules/social_group_quickjoin/social_group_quickjoin.links.menu.yml:0
 #: modules/social_features/social_group/modules/social_group_quickjoin/social_group_quickjoin.routing.yml:0
 msgid "Group Quickjoin settings"
-msgstr ""
+msgstr "Setări de alăturare rapidă la grup"
 
 #: modules/social_features/social_activity/config/optional/views.view.activity_stream_group.yml:0
 msgid "Group Stream"
-msgstr ""
+msgstr "Flux de grup"
 
 #: modules/social_features/social_tagging/config/optional/block.block.socialgrouptagsblock.yml:0
 msgid "Group Tags"
-msgstr ""
+msgstr "Etichetele grupului"
 
 #: modules/social_features/social_group/config/install/views.view.group_topics.yml:0;0
 msgid "Group Topics"
-msgstr ""
+msgstr "Subiecte de grup"
 
 #: modules/social_features/social_event/config/schema/social_event.schema.yml:0
 #: modules/social_features/social_event/modules/social_event_invite/config/schema/social_event_invite.schema.yml:0
 msgid "Group Type"
-msgstr ""
+msgstr "Tipul grupului"
 
 #: modules/social_features/social_group/modules/social_group_flexible_group/social_group_flexible_group.module:403
 msgid "Group Visibility"
-msgstr ""
+msgstr "Vizibilitatea grupului"
 
 #: modules/custom/activity_basics/src/Plugin/ActivityContext/GroupActivityContext.php:14
 msgid "Group activity context"
-msgstr ""
+msgstr "Contextul activității de grup"
 
 #: modules/social_features/social_group/src/Plugin/Block/GroupAddBlock.php:19
 #: modules/social_features/social_group/config/optional/block.block.group_add_block.yml:0
 #: modules/social_features/social_group/config/optional/block.block.socialblue_group_add_block.yml:0
 msgid "Group add block"
-msgstr ""
+msgstr "Câmp adăugare grup"
 
 #: modules/social_features/social_book/src/Plugin/Block/GroupAddBookBlock.php:15
 msgid "Group add book block"
-msgstr ""
+msgstr "Grupează câmpul adaugă cărți"
 
 #: modules/social_features/social_group/src/Plugin/Block/GroupAddEventBlock.php:11
 #: modules/social_features/social_group/config/optional/block.block.group_add_event_block.yml:0
 #: modules/social_features/social_group/config/optional/block.block.socialblue_group_add_event_block.yml:0
 msgid "Group add event block"
-msgstr ""
+msgstr "Grupează câmpul adaugă evenimente"
 
 #: modules/social_features/social_group/src/Plugin/Block/GroupAddTopicBlock.php:11
 #: modules/social_features/social_group/config/optional/block.block.group_add_topic_block.yml:0
 #: modules/social_features/social_group/config/optional/block.block.socialblue_group_add_topic_block.yml:0
 msgid "Group add topic block"
-msgstr ""
+msgstr "Grupează câmpul adaugă subiecte"
 
 #: modules/social_features/social_album/config/optional/block.block.socialblue_group_album_creation_page_title.yml:0
 msgid "Group album creation page title"
-msgstr ""
+msgstr "Grupează titlul paginii de creare a albumului"
 
 #: modules/social_features/social_album/src/Plugin/views/access/SocialAlbumGroupAccess.php:9
 msgid "Group albums"
-msgstr ""
+msgstr "Albume de grup"
 
 #: modules/social_features/social_group/config/install/views.view.group_events.yml:0
 #: modules/social_features/social_group/config/install/views.view.group_topics.yml:0
@@ -7939,42 +7937,42 @@ msgstr "Conținut despre conținutul grupului"
 
 #: modules/social_features/social_group/config/install/views.view.group_manage_members.yml:0
 msgid "Group content User"
-msgstr ""
+msgstr "Utilizator pentru Conținut de grup"
 
 #: modules/custom/activity_basics/src/Plugin/ActivityContext/GroupContentInMyGroupActivityContext.php:13
 msgid "Group content in my group activity context"
-msgstr ""
+msgstr "Conținutul grupului în contextul activității mele de grup"
 
 #: modules/social_features/social_group/social_group.module:401
 #: modules/social_features/social_group/modules/social_group_flexible_group/social_group_flexible_group.module:413
 msgid "Group content visibility"
-msgstr ""
+msgstr "Vizibilitatea conținutului de pe grup"
 
 #: modules/social_features/social_group/modules/social_group_flexible_group/social_group_flexible_group.module:114
 msgid "Group content visibility options"
-msgstr ""
+msgstr "Opțiuni de vizibilitate a conținutului de pe grup"
 
 #: modules/custom/social_metatag/config/install/metatag.metatag_defaults.group_content__closed_group-group_node-event.yml:0
 msgid "Group content: event"
-msgstr ""
+msgstr "Conținutul grupului: eveniment"
 
 #: modules/custom/social_metatag/config/install/metatag.metatag_defaults.group_content__closed_group-group_node-topic.yml:0
 msgid "Group content: topic"
-msgstr ""
+msgstr "Conținutul grupului: subiect"
 
 #: modules/custom/social_magic_login/social_magic_login.module:26
 msgid "Group destination"
-msgstr ""
+msgstr "Destinația grupului"
 
 #: modules/custom/social_tour/config/install/tour.tour.social_group.yml:0
 msgid "Group functionality."
-msgstr ""
+msgstr "Funcționalitatea grupului."
 
 #: modules/social_features/social_group/src/Plugin/Block/GroupHeroBlock.php:12
 #: modules/social_features/social_group/config/optional/block.block.groupheroblock.yml:0
 #: modules/social_features/social_group/config/optional/block.block.socialblue_groupheroblock.yml:0
 msgid "Group hero block"
-msgstr ""
+msgstr "Câmp pentru erou de grup"
 
 #: modules/social_features/social_group/modules/social_group_invite/config/optional/views.view.social_group_invitations.yml:0
 msgid "Group invitations"
@@ -7982,30 +7980,30 @@ msgstr "Invitații de grup"
 
 #: modules/social_features/social_group/modules/social_group_invite/social_group_invite.module:477
 msgid "Group invite settings"
-msgstr ""
+msgstr "Setări pentru invitații pe grup"
 
 #: modules/social_features/social_group/modules/social_group_invite/src/Plugin/Menu/LocalTask/GroupInviteLocalTask.php:78
 msgid "Group invites"
-msgstr ""
+msgstr "Invitații pentru grup"
 
 #: modules/social_features/social_group/modules/social_group_invite/src/Plugin/Menu/LocalTask/GroupInviteLocalTask.php:75
 msgid "Group invites (@count)"
-msgstr ""
+msgstr "Invitații pentru grup (@count)"
 
 #: modules/social_features/social_group/social_group.module:1554
 msgid "Group manager"
-msgstr ""
+msgstr "Coordonatorul grupului"
 
 #: modules/social_features/social_group/config/install/views.view.group_managers.yml:0
 msgid "Group managers"
-msgstr ""
+msgstr "Coordonatorii grupului"
 
 #: modules/social_features/social_post/social_post.module:138
 #: modules/social_features/social_event/config/install/field.storage.node.field_content_visibility.yml:0
 #: modules/social_features/social_group/modules/social_group_flexible_group/config/install/field.storage.group.field_group_allowed_visibility.yml:0
 #: modules/social_features/social_post/config/install/field.storage.post.field_visibility.yml:0
 msgid "Group members"
-msgstr ""
+msgstr "Membrii grupului"
 
 #: modules/social_features/social_group/modules/social_group_default_route/social_group_default_route.module:60
 msgid "Group members landing tab"
@@ -8013,40 +8011,40 @@ msgstr "Pagina de aterizare a membrilor grupului"
 
 #: modules/social_features/social_group/social_group.module:2621
 msgid "Group members only"
-msgstr ""
+msgstr "Numai pentru membrii grupului"
 
 #: modules/social_features/social_group/social_group.module:611
 msgid "Group members only (Secret)"
-msgstr ""
+msgstr "Numai pentru membrii grupului (Secret)"
 
 #: modules/social_features/social_group/modules/social_group_flexible_group/config/install/field.storage.group.field_flexible_group_visibility.yml:0
 msgid "Group members only (secret)"
-msgstr ""
+msgstr "Numai pentru membrii grupului (Secret)"
 
 #: modules/social_features/social_group/modules/social_group_invite/src/Plugin/Block/SocialGroupInviteNotificationBlock.php:15
 msgid "Group membership invite notification"
-msgstr ""
+msgstr "Notificare de invitație pentru aderare la grup"
 
 #: modules/social_features/social_user_export/src/Plugin/UserExportPlugin/UserAnalyticsGroupMemberships.php:86;13
 msgid "Group memberships"
-msgstr ""
+msgstr "Certificate de apartenență la grup"
 
 #: modules/social_features/social_user_export/src/Plugin/UserExportPlugin/UserGroupMemberships.php:87;14
 msgid "Group memberships (specified)"
-msgstr ""
+msgstr "Certificate de apartenență la grup (specificat)"
 
 #: modules/social_features/social_group/src/Form/SocialGroupSettings.php:43
 msgid "Group permissions"
-msgstr ""
+msgstr "Permisiuni pentru grup"
 
 #: modules/social_features/social_group/social_group.module:832
 #: modules/social_features/social_group/src/Plugin/Action/ChangeGroupMembershipRole.php:167
 msgid "Group roles"
-msgstr ""
+msgstr "Roluri de grup"
 
 #: modules/social_features/social_group/src/Plugin/EntityReferenceSelection/SocialGroupSelection.php:7
 msgid "Group selection"
-msgstr ""
+msgstr "Selectarea grupului"
 
 #: modules/social_features/social_group/social_group.links.menu.yml:0
 #: modules/social_features/social_group/social_group.routing.yml:0
@@ -8056,7 +8054,7 @@ msgstr "Setări grup"
 #: modules/social_features/social_group/src/Plugin/Block/GroupStatisticBlock.php:15
 #: modules/social_features/social_group/config/optional/block.block.socialblue_group_statistic_block.yml:0
 msgid "Group statistic block"
-msgstr ""
+msgstr "Bloc statistic de grup"
 
 #: modules/social_features/social_featured_content/templates/group--featured.html.twig:54
 #: modules/social_features/social_group/src/Form/SocialGroupAddForm.php:128;176
@@ -8074,7 +8072,7 @@ msgstr "Tipuri de grup"
 #: modules/social_features/social_group/social_group.module:391
 #: modules/social_features/social_group/modules/social_group_flexible_group/config/install/field.field.group.flexible_group.field_flexible_group_visibility.yml:0
 msgid "Group visibility"
-msgstr ""
+msgstr "Vizibilitatea grupului"
 
 #: modules/social_features/social_group/social_group.links.task.yml:0
 #: modules/social_features/social_search/social_search.links.task.yml:0;0
@@ -8086,26 +8084,26 @@ msgstr "Grupuri"
 
 #: modules/social_features/social_user_export/src/Plugin/UserExportPlugin/UserAnalyticsGroupsCreated.php:23;8
 msgid "Groups created"
-msgstr ""
+msgstr "Grupuri create"
 
 #: modules/custom/activity_logger/activity_logger.tokens.inc:32
 msgid "Groups title"
-msgstr ""
+msgstr "Titlul grupurilor"
 
 #: modules/custom/activity_logger/activity_logger.tokens.inc:36
 msgid "Groups url"
-msgstr ""
+msgstr "URL grupuri"
 
 #: modules/social_features/social_event/modules/social_event_an_enroll/src/EventAnEnrollManager.php:32
 #: modules/social_features/social_event/modules/social_event_an_enroll/src/Plugin/Action/SocialEventAnEnrollSendEmail.php:168
 #: modules/social_features/social_event/modules/social_event_an_enroll_enrolments_export/src/Plugin/UserExportPlugin/EnrolmentUserDisplayName.php:85
 msgid "Guest"
-msgstr ""
+msgstr "Vizitator"
 
 #: translations.php:94
 #: modules/social_features/social_event/modules/social_event_an_enroll/config/install/views.view.manage_enrollments.yml:0
 msgid "Guest enrollments"
-msgstr ""
+msgstr "Înrolarea vizitatorilor"
 
 #: modules/social_features/social_core/config/install/core.date_format.social_time.yml:0
 msgctxt "PHP date format"
@@ -8114,7 +8112,7 @@ msgstr ""
 
 #: modules/social_features/social_user/social_user.module:224
 msgid "Have an account already? @link"
-msgstr ""
+msgstr "Ai deja un cont? @link"
 
 #: modules/custom/sitewide_js/src/Form/SiteWideJSForm.php:51
 msgid "Header"
@@ -8122,19 +8120,19 @@ msgstr "Cap"
 
 #: modules/social_features/social_landing_page/config/install/crop.type.hero_landing.yml:0
 msgid "Header image for Landing Page Hero section."
-msgstr ""
+msgstr "Imagine antet pentru secțiunea de Hero a Landing Page-ului."
 
 #: modules/social_features/social_landing_page/config/install/crop.type.hero_small_landing.yml:0
 msgid "Header image for Landing Page Hero small section."
-msgstr ""
+msgstr "Imagine antet pentru secțiunea mică de Hero a Landing Page-ului."
 
 #: modules/social_features/social_core/config/install/crop.type.hero_an.yml:0
 msgid "Header image in the AN hero region"
-msgstr ""
+msgstr "Imaginea antent este în secțiunea AN hero"
 
 #: modules/social_features/social_core/config/install/crop.type.hero.yml:0
 msgid "Header image in the hero region"
-msgstr ""
+msgstr "Imagine antet în secțiunea hero"
 
 #: modules/social_features/social_swiftmail/config/schema/social_swiftmail.schema.yml:0
 msgid "Header markup"
@@ -8156,6 +8154,9 @@ msgid ""
 "messages on your own profile, these messages will be shown on other "
 "community members' homepage."
 msgstr ""
+"Aici alți membri ai comunității vă pot lăsa mesaje! De asemenea, puteți "
+"posta mesaje pe propriul profil, iar aceste mesaje vor fi afișate pe pagina "
+"de start a altor membri ai comunității."
 
 #: modules/custom/social_tour/config/install/tour.tour.social_group.yml:0
 msgid "Here you can see all the activity in this group and join it."
@@ -8286,7 +8287,7 @@ msgstr "Sunt de acord cu @url"
 #: modules/social_features/social_post/src/Entity/Post.php:307
 #: modules/social_features/social_user/config/install/views.view.user_admin_people.yml:0
 msgid "ID"
-msgstr "Identificator"
+msgstr "ID"
 
 #: modules/social_features/social_user/src/Form/SocialUserFloodForm.php:40
 msgid "IP limit"
@@ -8310,28 +8311,36 @@ msgstr "Identificator"
 msgid ""
 "If enabled, logged-in users are allowed to add the event to own calendar"
 msgstr ""
+"Dacă este activat, utilizatorii conectați au permisiunea de a adăuga "
+"evenimentul în propriul calendar"
 
 #: modules/social_features/social_event/src/Form/EventSettingsForm.php:74
 msgid ""
 "If enabled, user’s own time zone will be displayed after the event date and "
 "time."
 msgstr ""
+"Dacă este activat, fusul orar al utilizatorului va fi afișat după data și "
+"ora evenimentului."
 
 #: modules/social_features/social_core/src/Plugin/Field/FieldFormatter/CommentNodeFormatter.php:186
 msgid ""
 "If selected it will show a \"all comments\" link if there is at least 1 "
 "comment."
 msgstr ""
+"Dacă este selectat, va apărea un link „toate comentariile” dacă există cel "
+"puțin 1 comentariu."
 
 #: modules/social_features/social_profile/modules/social_profile_fields/src/Form/SocialProfileFieldsSettingsForm.php:223
 msgid ""
 "If you check this, validation is applied that verifies the users nickname is "
 "unique whenever they save their profile."
 msgstr ""
+"Dacă bifați acest lucru, se verifică că nickname-ul utilizatorilor este unic "
+"ori de câte ori își salvează profilul."
 
 #: modules/social_features/social_group/social_group.permissions.yml:0
 msgid "Ignore an option on the setting page for creating groups."
-msgstr ""
+msgstr "Ignorați opțiunea din pagina de setări pentru crearea grupurilor."
 
 #: modules/social_features/social_post/modules/social_post_album/src/Plugin/Field/FieldWidget/SocialPostAlbumImageWidget.php:14
 #: modules/social_features/social_book/config/optional/field.field.node.book.field_book_image.yml:0
@@ -8353,19 +8362,19 @@ msgstr "Imagini"
 #: modules/social_features/social_album/src/Plugin/Field/FieldFormatter/SocialAlbumEntityReferenceLabelFormatter.php:39;47
 #: modules/social_features/social_album/templates/social-album-post.html.twig:19
 msgid "Images posted in album %album"
-msgstr ""
+msgstr "Imagini postate în albumul %album"
 
 #: modules/custom/activity_send/modules/activity_send_email/src/Plugin/EmailFrequency/Immediately.php:13
 msgid "Immediately"
-msgstr ""
+msgstr "Imediat"
 
 #: modules/custom/social_metatag/social_metatag.info.yml:0
 msgid "Implement defaults for the Metatag module"
-msgstr ""
+msgstr "Implementați valorile implicite pentru modulul Metatag"
 
 #: modules/social_features/social_group/modules/social_group_welcome_message/social_group_welcome_message.info.yml:0
 msgid "Implements group welcome message functionality."
-msgstr ""
+msgstr "Implementează funcționalitatea mesajului de întâmpinare grup."
 
 #: modules/custom/improved_theme_settings/improved_theme_settings.info.yml:0
 msgid "Improved Theme Settings"
@@ -8452,7 +8461,7 @@ msgstr ""
 #: modules/social_features/social_profile/config/install/taxonomy.vocabulary.interests.yml:0
 #: modules/social_features/social_search/config/install/views.view.search_users.yml:0
 msgid "Interests"
-msgstr ""
+msgstr "Interese"
 
 #: modules/custom/social_language/social_language.module:35
 msgid "Interface language"
@@ -8706,7 +8715,7 @@ msgstr "Limba"
 #: modules/social_features/social_event/src/Entity/EventEnrollment.php:249
 #: modules/social_features/social_post/src/Entity/Post.php:356
 msgid "Language code"
-msgstr "Codul limbii"
+msgstr "Cod de limbă"
 
 #: modules/custom/social_language/src/Plugin/Block/LanguageSwitcherBlock.php:8
 #: modules/custom/social_language/config/optional/block.block.socialbase_language_switcher_block.yml:0
@@ -9431,7 +9440,7 @@ msgstr ""
 
 #: modules/social_features/social_group/social_group.module:2099;2104
 msgid "My Groups"
-msgstr ""
+msgstr "Grupurile mele"
 
 #: modules/social_features/social_group/modules/social_group_invite/config/optional/views.view.social_group_user_invitations.yml:0
 msgid "My Invitations"
@@ -9451,7 +9460,7 @@ msgstr "Cererea mea de membru al grupului este aprobată"
 
 #: modules/social_features/social_group/social_group.module:2126
 msgid "My groups"
-msgstr ""
+msgstr "Grupurile mele"
 
 #: modules/social_features/social_profile/social_profile.module:788
 msgid "My profile"
@@ -9542,7 +9551,7 @@ msgstr "Cele noi primele"
 #: modules/social_features/social_landing_page/src/Plugin/Field/FieldWidget/BlockFieldWidget.php:46
 #: modules/social_features/social_group/config/install/views.view.newest_groups.yml:0;0
 msgid "Newest groups"
-msgstr ""
+msgstr "Cele mai noi grupuri"
 
 #: modules/social_features/social_group/config/install/views.view.newest_groups.yml:0;0
 msgid "Newest groups block"
@@ -9640,7 +9649,7 @@ msgstr "Nu este conţinut disponibil."
 
 #: modules/social_features/social_event/config/install/views.view.upcoming_events.yml:0
 msgid "No events found"
-msgstr ""
+msgstr "Nu s-au găsit evenimente"
 
 #: modules/social_features/social_event/config/install/views.view.events.yml:0
 msgid "No events found for this user"
@@ -9777,7 +9786,7 @@ msgstr "Notificare"
 
 #: modules/social_features/social_activity/social_activity.module:42;50;141;1
 msgid "Notification Centre"
-msgstr ""
+msgstr "Notificări"
 
 #: modules/social_features/social_activity/config/install/core.entity_view_mode.activity.notification_archive.yml:0
 msgid "Notification archive"
@@ -9817,7 +9826,7 @@ msgstr "Numărul comentariilor"
 
 #: modules/social_features/social_featured_content/templates/group--featured.html.twig:89
 msgid "Number of group members"
-msgstr ""
+msgstr "Numărul de membri al grupului"
 
 #: modules/social_features/social_content_block/config/install/field.field.block_content.custom_content_list.field_item_amount.yml:0
 msgid "Number of items"
@@ -11242,6 +11251,8 @@ msgid ""
 "Recursive rendering detected when rendering entity @entity_type @entity_id. "
 "Aborting rendering."
 msgstr ""
+"Redare recursivă detectată la randarea entității @entity_type @entity_id. "
+"Încetarea redării."
 
 #: modules/social_features/social_post/social_post.module:77
 msgid "Redir"
@@ -11354,7 +11365,7 @@ msgstr ""
 
 #: modules/social_features/social_post/modules/social_post_album/templates/image-widget--album.html.twig:49
 msgid "Remove image"
-msgstr ""
+msgstr "Elimină imaginea"
 
 #: modules/social_features/social_group/src/Controller/SocialGroupController.php:155
 #: modules/social_features/social_group/modules/social_group_invite/config/optional/views.view.social_group_invitations.yml:0
@@ -11746,7 +11757,7 @@ msgstr "Spune ceva comunității"
 
 #: modules/social_features/social_post/social_post.module:39;40
 msgid "Say something to the group"
-msgstr ""
+msgstr "Spune ceva grupului"
 
 #: modules/social_features/social_search/social_search.module:214
 #: modules/social_features/social_search/src/SocialSearchBreadcrumbBuilder.php:53
@@ -12033,7 +12044,7 @@ msgstr ""
 
 #: modules/social_features/social_private_message/social_private_message.module:90;125
 msgid "Send"
-msgstr ""
+msgstr "Trimite"
 
 #: modules/social_features/social_group/modules/social_group_welcome_message/social_group_welcome_message.module:23
 msgid "Send a welcome message to new group members"
@@ -15853,7 +15864,7 @@ msgstr "basic_html"
 
 #: modules/social_features/social_featured_content/templates/node--featured.html.twig:129
 msgid "by"
-msgstr ""
+msgstr "de"
 
 #: social.profile:129
 #: modules/social_features/social_landing_page/src/Plugin/Block/ActivityOverviewBlock.php:258

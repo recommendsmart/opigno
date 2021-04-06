@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '7e2f555d6bceff3c69ace55a8cd121d589d3b4fd',
+    'reference' => '5ac67d8dfbf75d805c093280ccd5a90916e5ab65',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -904,8 +904,8 @@
     ),
     'drupal/geocoder_field' => 
     array (
-      'pretty_version' => '3.19.0',
-      'version' => '3.19.0.0',
+      'pretty_version' => '3.20.0',
+      'version' => '3.20.0.0',
       'aliases' => 
       array (
       ),
@@ -913,12 +913,12 @@
     ),
     'drupal/geofield' => 
     array (
-      'pretty_version' => '1.20.0',
-      'version' => '1.20.0.0',
+      'pretty_version' => '1.22.0',
+      'version' => '1.22.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '8.x-1.20',
+      'reference' => '8.x-1.22',
     ),
     'drupal/geolocation' => 
     array (
@@ -1773,12 +1773,12 @@
     ),
     'goalgorilla/open_social' => 
     array (
-      'pretty_version' => '10.0.4',
-      'version' => '10.0.4.0',
+      'pretty_version' => '10.0.5',
+      'version' => '10.0.5.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'a7aa6af9a41cc8ed5e97f83d2ffb4b4943a23644',
+      'reference' => '9c45d7055b8a960db6e507886c9adb8c9e4204f6',
     ),
     'goalgorilla/social_template' => 
     array (
@@ -1787,7 +1787,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '7e2f555d6bceff3c69ace55a8cd121d589d3b4fd',
+      'reference' => '5ac67d8dfbf75d805c093280ccd5a90916e5ab65',
     ),
     'guzzlehttp/guzzle' => 
     array (

@@ -3826,7 +3826,7 @@
         },
         {
             "name": "drupal/geocoder_field",
-            "version": "3.19.0",
+            "version": "3.20.0",
             "require": {
                 "drupal/core": "^8 || ^9",
                 "drupal/geocoder": "*"
@@ -3834,8 +3834,8 @@
             "type": "metapackage",
             "extra": {
                 "drupal": {
-                    "version": "8.x-3.19",
-                    "datestamp": "1617519436",
+                    "version": "8.x-3.20",
+                    "datestamp": "1617644936",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -3900,17 +3900,17 @@
         },
         {
             "name": "drupal/geofield",
-            "version": "1.20.0",
+            "version": "1.22.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/geofield.git",
-                "reference": "8.x-1.20"
+                "reference": "8.x-1.22"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/geofield-8.x-1.20.zip",
-                "reference": "8.x-1.20",
-                "shasum": "cff7baf2e5e98325c7fbbe1be170538a76dfacc9"
+                "url": "https://ftp.drupal.org/files/projects/geofield-8.x-1.22.zip",
+                "reference": "8.x-1.22",
+                "shasum": "6fd9299863cf1bbda8747772febf4b90399f6580"
             },
             "require": {
                 "drupal/core": "^8.8 || ^9",
@@ -3919,8 +3919,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.20",
-                    "datestamp": "1613156933",
+                    "version": "8.x-1.22",
+                    "datestamp": "1617652199",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -6068,8 +6068,8 @@
                     "version": "1.1.0",
                     "datestamp": "1612455596",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 }
             },
@@ -7295,16 +7295,16 @@
         },
         {
             "name": "goalgorilla/open_social",
-            "version": "10.0.4",
+            "version": "10.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/goalgorilla/open_social.git",
-                "reference": "a7aa6af9a41cc8ed5e97f83d2ffb4b4943a23644"
+                "reference": "9c45d7055b8a960db6e507886c9adb8c9e4204f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/goalgorilla/open_social/zipball/a7aa6af9a41cc8ed5e97f83d2ffb4b4943a23644",
-                "reference": "a7aa6af9a41cc8ed5e97f83d2ffb4b4943a23644",
+                "url": "https://api.github.com/repos/goalgorilla/open_social/zipball/9c45d7055b8a960db6e507886c9adb8c9e4204f6",
+                "reference": "9c45d7055b8a960db6e507886c9adb8c9e4204f6",
                 "shasum": ""
             },
             "require": {
@@ -7495,9 +7495,9 @@
             ],
             "description": "Open Social is a distribution for building social communities and intranets.",
             "support": {
-                "source": "https://github.com/goalgorilla/open_social/tree/10.0.4"
+                "source": "https://github.com/goalgorilla/open_social/tree/10.0.5"
             },
-            "time": "2021-03-23T09:15:25+00:00"
+            "time": "2021-04-06T06:26:21+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
