@@ -1,0 +1,33 @@
+add storage entities:
+  title: 'Create new Storage entities'
+
+administer storage entities:
+  title: 'Administer Storage entities'
+  description: 'Allow to access the administration form to configure Storage entities.'
+  restrict access: true
+
+delete storage entities:
+  title: 'Delete Storage entities'
+
+edit storage entities:
+  title: 'Edit Storage entities'
+
+view published storage entities:
+  title: 'View published Storage entities'
+
+view unpublished storage entities:
+  title: 'View unpublished Storage entities'
+
+view all storage revisions:
+  title: 'View all Storage revisions'
+
+revert all storage revisions:
+  title: 'Revert all Storage revisions'
+  description: 'Role requires permission <em>view Storage revisions</em> and <em>edit rights</em> for storage entities in question or <em>administer storage entities</em>.'
+
+delete all storage revisions:
+  title: 'Delete all revisions'
+  description: 'Role requires permission to <em>view Storage revisions</em> and <em>delete rights</em> for storage entities in question or <em>administer storage entities</em>.'
+
+permission_callbacks:
+  - \Drupal\storage\StoragePermissions::generatePermissions
