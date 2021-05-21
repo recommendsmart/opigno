@@ -582,12 +582,12 @@ html:not(.js) .navbar-default .dropdown:hover > button .navbar-nav__icon {
   fill: #29abe2;
 }
 
-.back-to-albums {
+.back-link {
   color: #29abe2;
   fill: #29abe2;
 }
 
-.back-to-albums:hover, .back-to-albums:focus {
+.back-link:hover, .back-link:focus {
   color: #1f80aa;
   fill: #1f80aa;
 }

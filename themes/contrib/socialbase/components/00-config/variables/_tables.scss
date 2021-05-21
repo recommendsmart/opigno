@@ -1,5 +1,10 @@
 //** Padding for `<th>`s and `<td>`s.
+
+// ** Current variable does not use for the tables.
 $table-cell-padding:            0.75rem;
+
+$table-cell-padding-y:          0.75rem;
+$table-cell-padding-x:          1.25rem;
 //** Padding for cells in `.table-condensed`.
 $table-cell-padding-sm:         0.3rem;
 
@@ -10,7 +15,7 @@ $table-hover-bg:                rgba(0,0,0,.075);
 $table-active-bg:               $table-hover-bg;
 
 $table-border-width:            $border-width;
-$table-border-color:            $gray-lighter;
+$table-border-color:            $gray-lighter-2;
 
 $table-head-bg:                 $gray-lighter;
 $table-head-color:              $gray;

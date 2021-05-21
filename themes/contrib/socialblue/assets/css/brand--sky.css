@@ -2,7 +2,7 @@
   color: #1f80aa;
 }
 
-.socialblue--sky.path-group .cover-wrap .teaser__tag {
+.socialblue--sky.path-group .cover-wrap:not(.cover-wrap--course-statistic) .teaser__tag {
   background: #29abe2;
 }
 

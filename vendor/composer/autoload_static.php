@@ -101,6 +101,7 @@ class ComposerStaticInitc57549eb6c7c9f12f114a0a413c5516d
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Http\\Client\\' => 16,
             'Psr\\Container\\' => 14,
+            'Psr\\Cache\\' => 10,
         ),
         'O' => 
         array (
@@ -345,6 +346,10 @@ class ComposerStaticInitc57549eb6c7c9f12f114a0a413c5516d
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'Psr\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/cache/src',
         ),
         'OomphInc\\ComposerInstallersExtender\\' => 
         array (

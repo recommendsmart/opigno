@@ -17,8 +17,8 @@ table {
 }
 
 caption {
-  padding-top: $table-cell-padding;
-  padding-bottom: $table-cell-padding;
+  padding-top: $table-cell-padding-y;
+  padding-bottom: $table-cell-padding-y;
   color: $text-muted;
   text-align: left;
   caption-side: bottom;
@@ -33,31 +33,41 @@ th {
 // Baseline styles
 
 .table,
-.path-node .body-text table {
+.path-node .body-text table,
+.comment .comment__text table {
   width: 100%;
   max-width: 100%;
   margin-bottom: $spacer;
   background-color: $table-bg;
   font-size: 0.875rem;
+  border-color: $table-border-color;
 
   th,
   td {
-    padding: $table-cell-padding;
+    padding: $table-cell-padding-y $table-cell-padding-x;
     vertical-align: top;
     word-wrap: break-word;
+    border: 1px solid $table-border-color;
+
+    p:last-child {
+      margin-bottom: 0;
+    }
   }
 
   // Bottom align for column headings
   thead th {
-    font-weight: $font-weight-strong;
-    font-size: $font-size-xs;
+    font-weight: $font-weight-bold;
+    font-size: $font-size-small;
     vertical-align: bottom;
-    border-bottom: (2 * $table-border-width) solid $table-border-color;
+
+    a {
+      font-weight: bold;
+    }
   }
 
   // Account for multiple tbody instances
   tbody + tbody {
-    border-top: (2 * $table-border-width) solid $table-border-color;
+    border-top: $table-border-width solid $table-border-color;
   }
 
   // allow columns to have their own alignment
@@ -71,6 +81,55 @@ th {
     text-align: center;
   }
 
+}
+
+// Resent some table style for the create/edit pages.
+.page-node-edit,
+.path-group,
+.page-node {
+  form .table {
+    td,
+    th {
+      border: none;
+    }
+
+    thead {
+      th {
+        padding: 0.5rem 0;
+        font-weight: bold;
+        border: none;
+      }
+    }
+
+    tbody {
+      td {
+        vertical-align: middle;
+
+        &.field-multiple-drag {
+          width: 22px;
+          max-width: 100%;
+          padding-left: 1.75rem;
+          padding-right: .25rem;
+          text-align: center;
+
+          .tabledrag-handle {
+            position: static;
+            width: 22px;
+            padding: 0;
+            margin: 0 auto;
+
+            span:before {
+              top: auto;
+            }
+          }
+
+          + td {
+            padding-left: .25rem;
+          }
+        }
+      }
+    }
+  }
 }
 
 
@@ -170,13 +229,17 @@ form:not(.layout-builder-add-block) {
   display: block;
   width: 100%;
 
-  @include for-phone-only {
+  @include for-tablet-landscape-down {
     overflow-x: auto;
     -ms-overflow-style: -ms-autohiding-scrollbar;
     padding-bottom: 100px;
     margin-bottom: -100px;
+  }
 
-    &.card__block--table {
+  &.card__block--table {
+    margin-bottom: .625rem;
+
+    @include for-phone-only {
       margin-bottom: 0;
     }
   }
@@ -229,6 +292,10 @@ form:not(.layout-builder-configure-block) .select-all.checkbox {
 
 .vbo-table .btn-group--operations {
   justify-content: left;
+
+  > .btn {
+    white-space: nowrap;
+  }
 }
 
 .vbo-table .form-no-label.checkbox label {
@@ -314,5 +381,188 @@ form:not(.layout-builder-configure-block) .select-all.checkbox {
   }
   .vbo-multipage-selector li:first-child {
     padding-top: 0.5rem;
+  }
+}
+
+// Cart table.
+.card__block--table {
+  table {
+    margin-bottom: 0;
+
+    th,
+    td {
+      border-color: $gray-lighter;
+    }
+
+    thead {
+      th {
+        border: none;
+      }
+    }
+
+    tbody {
+      tr {
+        &:nth-of-type(odd),
+        &:hover {
+          background-color: $gray-lightest;
+        }
+      }
+
+      td {
+        border-width: 1px 0 0;
+
+        @include for-tablet-landscape-up {
+          padding-top: 1.875rem;
+          padding-bottom: 1.875rem;
+        }
+
+        a {
+          font-weight: bold;
+        }
+      }
+
+      td,
+      td a {
+        font-size: 1rem;
+        line-height: 1.5rem;
+      }
+    }
+
+    tr {
+      @include for-tablet-landscape-up {
+        th,
+        td {
+          &:first-child {
+            padding-left: 2.5rem;
+          }
+
+          &:last-child {
+            padding-right: 2.5rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Cart table.
+.card__block--table {
+  table {
+    margin-bottom: 0;
+
+    th,
+    td {
+      border-color: $gray-lighter;
+    }
+
+    thead {
+      th {
+        border: none;
+      }
+    }
+
+    tbody {
+      tr {
+        &:nth-of-type(odd),
+        &:hover {
+          background-color: $gray-lightest;
+        }
+      }
+
+      td {
+        border-width: 1px 0 0;
+
+        @include for-tablet-landscape-up {
+          padding-top: 1.875rem;
+          padding-bottom: 1.875rem;
+        }
+
+        a {
+          font-weight: bold;
+        }
+      }
+
+      td,
+      td a {
+        font-size: 1rem;
+        line-height: 1.5rem;
+      }
+    }
+
+    tr {
+      @include for-tablet-landscape-up {
+        th,
+        td {
+          &:first-child {
+            padding-left: 2.5rem;
+          }
+
+          &:last-child {
+            padding-right: 2.5rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Cart table.
+.card__block--table {
+  table {
+    margin-bottom: 0;
+
+    th,
+    td {
+      border-color: $gray-lighter;
+    }
+
+    thead {
+      th {
+        border: none;
+      }
+    }
+
+    tbody {
+      tr {
+        &:nth-of-type(odd),
+        &:hover {
+          background-color: $gray-lightest;
+        }
+      }
+
+      td {
+        border-width: 1px 0 0;
+
+        @include for-tablet-landscape-up {
+          padding-top: 1.875rem;
+          padding-bottom: 1.875rem;
+        }
+
+        a {
+          font-weight: bold;
+        }
+      }
+
+      td,
+      td a {
+        font-size: 1rem;
+        line-height: 1.5rem;
+      }
+    }
+
+    tr {
+      @include for-tablet-landscape-up {
+        th,
+        td {
+          &:first-child {
+            padding-left: 2.5rem;
+          }
+
+          &:last-child {
+            padding-right: 2.5rem;
+          }
+        }
+      }
+    }
   }
 }

@@ -125,6 +125,21 @@ form:not(.layout-builder-configure-block) {
     height: auto;
   }
 
+  fieldset {
+    margin-top: -1.25rem;
+
+    &.field--widget-path {
+      margin-top: 0;
+    }
+  }
+
+  details,
+  fieldset {
+    fieldset {
+      margin-top: 0;
+    }
+  }
+
   @import 'input';
   @import 'textarea';
 

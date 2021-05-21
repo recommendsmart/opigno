@@ -95,6 +95,23 @@
 
   @include for-tablet-landscape-up {
     order: 10;
+
+    .nav {
+      flex-wrap: nowrap;
+    }
+  }
+
+  .profile .profile {
+    width: 24px;
+    height: 24px;
+  }
+
+  .not-logged-in {
+    ul {
+      a {
+        white-space: nowrap;
+      }
+    }
   }
 
 }
@@ -146,6 +163,18 @@
       padding-bottom: $navbar-padding-vertical;
     }
 
+  }
+
+  // Margin-bottom space for the main menu on the desktop screen.
+  &.main {
+    @include for-tablet-landscape-up {
+      margin-bottom: $navbar-padding-vertical;
+
+      // Add negative margin-bottom for the menu items on the desktop screen.
+      > li {
+        margin-bottom: -$navbar-padding-vertical;
+      }
+    }
   }
 
   // Second level menu
@@ -323,17 +352,18 @@
 // Brand/project name
 
 .navbar-brand {
-  display: inline-block;
-  vertical-align: top;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: $navbar-height;
-  max-width: 200px;
   overflow: hidden;
 
   > img {
     display: block;
-    pointer-events: none;
+    max-height: 50px;
+    max-width: 200px;
     width: auto;
-    height: 50px;
+    pointer-events: none;
   }
 
 }
@@ -523,35 +553,33 @@
       margin-bottom: 0;
     }
 
-  }
-
-  .form-control {
-    padding: $padding-base-vertical 38px $padding-base-vertical $padding-base-horizontal;
-    max-width: none;
-    border: 0;
-  }
-
-  .form-submit {
-    width: 38px;
-    height: 38px;
-    display: block;
-    position: absolute;
-    overflow: hidden;
-    right: 0;
-    top: 0;
-    line-height: 38px;
-    cursor: pointer;
-    font-size: 0;
-    padding: 0;
-    background-color: transparent;
-
-    svg {
-      width: 30px;
-      height: 30px;
+    .form-control {
+      padding: $padding-base-vertical 38px $padding-base-vertical $padding-base-horizontal;
+      max-width: none;
+      border: 0;
     }
 
-  }
+    .form-submit {
+      width: 38px;
+      height: 38px;
+      display: block;
+      position: absolute;
+      overflow: hidden;
+      right: 0;
+      top: 0;
+      line-height: 38px;
+      cursor: pointer;
+      font-size: 0;
+      padding: 0;
+      background-color: transparent;
 
+      svg {
+        width: 30px;
+        height: 30px;
+      }
+
+    }
+  }
 }
 
 .region--content-top .search-take-over,
@@ -770,7 +798,7 @@
 
 }
 
-//Open main navigation if JavaScript is disabled.
+// Open main navigation if JavaScript is disabled.
 html:not(.js) {
 
   @include for-tablet-landscape-down {
@@ -799,4 +827,15 @@ html:not(.js) {
 
   }
 
+}
+
+// Social translate block.
+.social-gtranslate-list--desktop {
+  @include for-tablet-landscape-up {
+    min-width: 200px;
+    
+    > a {
+      white-space: nowrap;
+    }
+  }
 }

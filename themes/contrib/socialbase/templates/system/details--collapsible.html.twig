@@ -18,8 +18,11 @@
 #}
 <details{{ attributes.removeAttribute('open').addClass('form-horizontal form-item js-form-item form-wrapper js-form-wrapper card panel panel-default') }}>
   {%- if title -%}
-    <summary{{ summary_attributes.addClass('card__title card__title--underline') }}>
+    <summary{{ summary_attributes.addClass('card__title') }}>
       {{ title }}
+      <svg class="icon-summary-arrow">
+        <use xlink:href="#icon-expand_more"></use>
+      </svg>
     </summary>
   {%- endif -%}
 

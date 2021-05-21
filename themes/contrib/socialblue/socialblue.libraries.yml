@@ -210,7 +210,7 @@ page-node:
 layout:
   css:
     component:
-      assets/css/layout.css: {}
+      assets/css/layout--sky.css: {}
 
 color.preview:
   css:

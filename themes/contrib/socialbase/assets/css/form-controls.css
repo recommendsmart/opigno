@@ -101,6 +101,19 @@ form:not(.layout-builder-configure-block) textarea.form-control {
   height: auto;
 }
 
+form:not(.layout-builder-configure-block) fieldset {
+  margin-top: -1.25rem;
+}
+
+form:not(.layout-builder-configure-block) fieldset.field--widget-path {
+  margin-top: 0;
+}
+
+form:not(.layout-builder-configure-block) details fieldset,
+form:not(.layout-builder-configure-block) fieldset fieldset {
+  margin-top: 0;
+}
+
 form:not(.layout-builder-configure-block) input[type="search"] {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
@@ -137,11 +150,20 @@ form:not(.layout-builder-configure-block) .data-policy-edit-form .form-textarea 
   max-width: 100%;
 }
 
+form:not(.layout-builder-configure-block) .field--widget-string-textarea .form-textarea {
+  max-width: 100%;
+  min-height: 106px;
+}
+
 form:not(.layout-builder-configure-block) .radio,
 form:not(.layout-builder-configure-block) .checkbox {
   position: relative;
   display: block;
   margin-bottom: 8px;
+}
+
+form:not(.layout-builder-configure-block) .checkbox.form-item-event-all-day {
+  margin-bottom: 1.5rem;
 }
 
 form:not(.layout-builder-configure-block) .radio + .radio,
@@ -169,7 +191,7 @@ form:not(.layout-builder-configure-block) .checkbox label,
 form:not(.layout-builder-configure-block) .radio label {
   font-weight: 300;
   position: relative;
-  padding-left: 25px;
+  padding-left: 30px;
   cursor: pointer;
   display: inline-block;
   line-height: 21px;
@@ -358,12 +380,38 @@ form:not(.layout-builder-configure-block).group-form .field--widget-options-butt
   display: flex;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
-  margin: 5px -13px 0;
+  margin: 5px -.75rem -8px;
 }
 
 form:not(.layout-builder-configure-block).group-form .field--widget-options-buttons .fieldgroup .fieldset-wrapper > .radio, form:not(.layout-builder-configure-block).node-form .field--widget-options-buttons .fieldgroup .fieldset-wrapper > .radio {
-  padding: 0 13px;
+  padding: 0 .75rem;
   margin-top: -5px;
+}
+
+form:not(.layout-builder-configure-block).group-form .field--widget-options-buttons .fieldgroup#edit-field-group-allowed-visibility--wrapper #edit-field-group-allowed-visibility,
+form:not(.layout-builder-configure-block).group-form .field--widget-options-buttons .fieldgroup#edit-field-social-idea-phases--wrapper #edit-field-social-idea-phases, form:not(.layout-builder-configure-block).node-form .field--widget-options-buttons .fieldgroup#edit-field-group-allowed-visibility--wrapper #edit-field-group-allowed-visibility,
+form:not(.layout-builder-configure-block).node-form .field--widget-options-buttons .fieldgroup#edit-field-social-idea-phases--wrapper #edit-field-social-idea-phases {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  margin: 5px -.75rem -8px;
+  padding: 0 .75rem;
+}
+
+form:not(.layout-builder-configure-block).group-form .field--widget-options-buttons .fieldgroup#edit-field-group-allowed-visibility--wrapper #edit-field-group-allowed-visibility > .checkbox,
+form:not(.layout-builder-configure-block).group-form .field--widget-options-buttons .fieldgroup#edit-field-social-idea-phases--wrapper #edit-field-social-idea-phases > .checkbox, form:not(.layout-builder-configure-block).node-form .field--widget-options-buttons .fieldgroup#edit-field-group-allowed-visibility--wrapper #edit-field-group-allowed-visibility > .checkbox,
+form:not(.layout-builder-configure-block).node-form .field--widget-options-buttons .fieldgroup#edit-field-social-idea-phases--wrapper #edit-field-social-idea-phases > .checkbox {
+  padding: 0 .75rem;
+  margin-top: -5px;
+}
+
+form:not(.layout-builder-configure-block).group-form .field--widget-options-buttons .fieldgroup#edit-field-social-idea-phases--wrapper #edit-field-social-idea-phases, form:not(.layout-builder-configure-block).node-form .field--widget-options-buttons .fieldgroup#edit-field-social-idea-phases--wrapper #edit-field-social-idea-phases {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
 
 form:not(.layout-builder-configure-block).group-form .field--widget-options-buttons .fieldgroup#edit-field-group-allowed-visibility--wrapper #edit-field-group-allowed-visibility, form:not(.layout-builder-configure-block).node-form .field--widget-options-buttons .fieldgroup#edit-field-group-allowed-visibility--wrapper #edit-field-group-allowed-visibility {
@@ -372,13 +420,6 @@ form:not(.layout-builder-configure-block).group-form .field--widget-options-butt
   display: flex;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
-  margin: 5px -13px 0;
-  padding: 0 13px;
-}
-
-form:not(.layout-builder-configure-block).group-form .field--widget-options-buttons .fieldgroup#edit-field-group-allowed-visibility--wrapper #edit-field-group-allowed-visibility > .checkbox, form:not(.layout-builder-configure-block).node-form .field--widget-options-buttons .fieldgroup#edit-field-group-allowed-visibility--wrapper #edit-field-group-allowed-visibility > .checkbox {
-  padding: 0 13px;
-  margin-top: -5px;
 }
 
 form:not(.layout-builder-configure-block) .switch * {
@@ -521,8 +562,8 @@ form:not(.layout-builder-configure-block) .form-disabled .select-wrapper::after 
   }
   form:not(.layout-builder-configure-block) .form-inline .radio label,
   form:not(.layout-builder-configure-block) .form-inline .checkbox label {
-    padding-left: 22px;
-    margin-right: 25px;
+    padding-left: 27px;
+    margin-right: 30px;
   }
 }
 

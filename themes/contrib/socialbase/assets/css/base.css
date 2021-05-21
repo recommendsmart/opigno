@@ -155,7 +155,8 @@ body {
 
 #skip-link a {
   background: #222222;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
+  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
+          box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
   color: #f3f3f3;
   padding: 3px 20px 8px;
   text-decoration: none;
@@ -548,49 +549,127 @@ th {
 }
 
 .table,
-.path-node .body-text table {
+.path-node .body-text table,
+.comment .comment__text table {
   width: 100%;
   max-width: 100%;
   margin-bottom: 1rem;
   background-color: transparent;
   font-size: 0.875rem;
+  border-color: #CCCCCC;
 }
 
 .table th,
 .table td,
 .path-node .body-text table th,
-.path-node .body-text table td {
-  padding: 0.75rem;
+.path-node .body-text table td,
+.comment .comment__text table th,
+.comment .comment__text table td {
+  padding: 0.75rem 1.25rem;
   vertical-align: top;
   word-wrap: break-word;
+  border: 1px solid #CCCCCC;
+}
+
+.table th p:last-child,
+.table td p:last-child,
+.path-node .body-text table th p:last-child,
+.path-node .body-text table td p:last-child,
+.comment .comment__text table th p:last-child,
+.comment .comment__text table td p:last-child {
+  margin-bottom: 0;
 }
 
 .table thead th,
-.path-node .body-text table thead th {
-  font-weight: 500;
-  font-size: 12px;
+.path-node .body-text table thead th,
+.comment .comment__text table thead th {
+  font-weight: 700;
+  font-size: 14px;
   vertical-align: bottom;
-  border-bottom: 2px solid #e6e6e6;
+}
+
+.table thead th a,
+.path-node .body-text table thead th a,
+.comment .comment__text table thead th a {
+  font-weight: bold;
 }
 
 .table tbody + tbody,
-.path-node .body-text table tbody + tbody {
-  border-top: 2px solid #e6e6e6;
+.path-node .body-text table tbody + tbody,
+.comment .comment__text table tbody + tbody {
+  border-top: 1px solid #CCCCCC;
 }
 
 .table .views-align-left,
-.path-node .body-text table .views-align-left {
+.path-node .body-text table .views-align-left,
+.comment .comment__text table .views-align-left {
   text-align: left;
 }
 
 .table .views-align-right,
-.path-node .body-text table .views-align-right {
+.path-node .body-text table .views-align-right,
+.comment .comment__text table .views-align-right {
   text-align: right;
 }
 
 .table .views-align-center,
-.path-node .body-text table .views-align-center {
+.path-node .body-text table .views-align-center,
+.comment .comment__text table .views-align-center {
   text-align: center;
+}
+
+.page-node-edit form .table td,
+.page-node-edit form .table th,
+.path-group form .table td,
+.path-group form .table th,
+.page-node form .table td,
+.page-node form .table th {
+  border: none;
+}
+
+.page-node-edit form .table thead th,
+.path-group form .table thead th,
+.page-node form .table thead th {
+  padding: 0.5rem 0;
+  font-weight: bold;
+  border: none;
+}
+
+.page-node-edit form .table tbody td,
+.path-group form .table tbody td,
+.page-node form .table tbody td {
+  vertical-align: middle;
+}
+
+.page-node-edit form .table tbody td.field-multiple-drag,
+.path-group form .table tbody td.field-multiple-drag,
+.page-node form .table tbody td.field-multiple-drag {
+  width: 22px;
+  max-width: 100%;
+  padding-left: 1.75rem;
+  padding-right: .25rem;
+  text-align: center;
+}
+
+.page-node-edit form .table tbody td.field-multiple-drag .tabledrag-handle,
+.path-group form .table tbody td.field-multiple-drag .tabledrag-handle,
+.page-node form .table tbody td.field-multiple-drag .tabledrag-handle {
+  position: static;
+  width: 22px;
+  padding: 0;
+  margin: 0 auto;
+}
+
+.page-node-edit form .table tbody td.field-multiple-drag .tabledrag-handle span:before,
+.path-group form .table tbody td.field-multiple-drag .tabledrag-handle span:before,
+.page-node form .table tbody td.field-multiple-drag .tabledrag-handle span:before {
+  top: auto;
+}
+
+.page-node-edit form .table tbody td.field-multiple-drag + td,
+.path-group form .table tbody td.field-multiple-drag + td,
+.page-node form .table tbody td.field-multiple-drag + td {
+  padding-left: .25rem;
 }
 
 .table-sm th,
@@ -599,12 +678,12 @@ th {
 }
 
 .table-bordered {
-  border: 1px solid #e6e6e6;
+  border: 1px solid #CCCCCC;
 }
 
 .table-bordered th,
 .table-bordered td {
-  border: 1px solid #e6e6e6;
+  border: 1px solid #CCCCCC;
 }
 
 .table-bordered thead th,
@@ -655,6 +734,10 @@ form:not(.layout-builder-add-block) .tabledrag-handle ~ .form-managed-file {
   width: 100%;
 }
 
+.table-responsive.card__block--table {
+  margin-bottom: .625rem;
+}
+
 .table-responsive .table-bordered {
   border: 0;
 }
@@ -684,6 +767,10 @@ form:not(.layout-builder-configure-block) .select-all.checkbox {
   -webkit-box-pack: left;
       -ms-flex-pack: left;
           justify-content: left;
+}
+
+.vbo-table .btn-group--operations > .btn {
+  white-space: nowrap;
 }
 
 .vbo-table .form-no-label.checkbox label {
@@ -754,6 +841,99 @@ form:not(.layout-builder-configure-block) .select-all.checkbox {
 
 #vbo-action-form-wrapper.card__block .vbo-multipage-selector li:first-child {
   padding-top: 0.5rem;
+}
+
+.card__block--table table {
+  margin-bottom: 0;
+}
+
+.card__block--table table th,
+.card__block--table table td {
+  border-color: #e6e6e6;
+}
+
+.card__block--table table thead th {
+  border: none;
+}
+
+.card__block--table table tbody tr:nth-of-type(odd), .card__block--table table tbody tr:hover {
+  background-color: #f3f3f3;
+}
+
+.card__block--table table tbody td {
+  border-width: 1px 0 0;
+}
+
+.card__block--table table tbody td a {
+  font-weight: bold;
+}
+
+.card__block--table table tbody td,
+.card__block--table table tbody td a {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.card__block--table table {
+  margin-bottom: 0;
+}
+
+.card__block--table table th,
+.card__block--table table td {
+  border-color: #e6e6e6;
+}
+
+.card__block--table table thead th {
+  border: none;
+}
+
+.card__block--table table tbody tr:nth-of-type(odd), .card__block--table table tbody tr:hover {
+  background-color: #f3f3f3;
+}
+
+.card__block--table table tbody td {
+  border-width: 1px 0 0;
+}
+
+.card__block--table table tbody td a {
+  font-weight: bold;
+}
+
+.card__block--table table tbody td,
+.card__block--table table tbody td a {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.card__block--table table {
+  margin-bottom: 0;
+}
+
+.card__block--table table th,
+.card__block--table table td {
+  border-color: #e6e6e6;
+}
+
+.card__block--table table thead th {
+  border: none;
+}
+
+.card__block--table table tbody tr:nth-of-type(odd), .card__block--table table tbody tr:hover {
+  background-color: #f3f3f3;
+}
+
+.card__block--table table tbody td {
+  border-width: 1px 0 0;
+}
+
+.card__block--table table tbody td a {
+  font-weight: bold;
+}
+
+.card__block--table table tbody td,
+.card__block--table table tbody td a {
+  font-size: 1rem;
+  line-height: 1.5rem;
 }
 
 b,
@@ -1404,6 +1584,42 @@ button.close {
   h4, .h4 {
     font-size: 1.25rem;
   }
+  .card__block--table table tbody td {
+    padding-top: 1.875rem;
+    padding-bottom: 1.875rem;
+  }
+  .card__block--table table tr th:first-child,
+  .card__block--table table tr td:first-child {
+    padding-left: 2.5rem;
+  }
+  .card__block--table table tr th:last-child,
+  .card__block--table table tr td:last-child {
+    padding-right: 2.5rem;
+  }
+  .card__block--table table tbody td {
+    padding-top: 1.875rem;
+    padding-bottom: 1.875rem;
+  }
+  .card__block--table table tr th:first-child,
+  .card__block--table table tr td:first-child {
+    padding-left: 2.5rem;
+  }
+  .card__block--table table tr th:last-child,
+  .card__block--table table tr td:last-child {
+    padding-right: 2.5rem;
+  }
+  .card__block--table table tbody td {
+    padding-top: 1.875rem;
+    padding-bottom: 1.875rem;
+  }
+  .card__block--table table tr th:first-child,
+  .card__block--table table tr td:first-child {
+    padding-left: 2.5rem;
+  }
+  .card__block--table table tr th:last-child,
+  .card__block--table table tr td:last-child {
+    padding-right: 2.5rem;
+  }
 }
 
 @media (min-width: 1200px) {
@@ -1422,12 +1638,6 @@ button.close {
   }
   figure.align-left figcaption, figure.align-right figcaption, figure.align-center figcaption {
     padding: 0;
-  }
-  .table-responsive {
-    overflow-x: auto;
-    -ms-overflow-style: -ms-autohiding-scrollbar;
-    padding-bottom: 100px;
-    margin-bottom: -100px;
   }
   .table-responsive.card__block--table {
     margin-bottom: 0;
@@ -1456,5 +1666,14 @@ button.close {
   }
   .hidden-for-phone-only {
     display: none;
+  }
+}
+
+@media (max-width: 899px) {
+  .table-responsive {
+    overflow-x: auto;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    padding-bottom: 100px;
+    margin-bottom: -100px;
   }
 }

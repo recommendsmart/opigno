@@ -32,3 +32,10 @@
     max-width: 100%;
   }
 }
+
+.field--widget-string-textarea {
+  .form-textarea {
+    max-width: 100%;
+    min-height: 106px;
+  }
+}

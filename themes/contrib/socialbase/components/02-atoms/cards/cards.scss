@@ -71,6 +71,11 @@
   font-size: 1rem;
 }
 
+// The card title on the summary collapse block.
+summary.card__title {
+  padding-bottom: 15px;
+}
+
 .card__subtitle {
   font-size: 0.75rem;
   display: block;
@@ -93,10 +98,6 @@
   & + .card__block {
     padding-top: 0;
   }
-}
-
-.card__block--table {
-  padding: $card-spacer-x 0;
 }
 
 .card__block--list:not(:first-child) {

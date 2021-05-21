@@ -25,6 +25,10 @@
   font-size: 1rem;
 }
 
+summary.card__title {
+  padding-bottom: 15px;
+}
+
 .card__subtitle {
   font-size: 0.75rem;
   display: block;
@@ -45,10 +49,6 @@
 
 .card__block + .card__block {
   padding-top: 0;
-}
-
-.card__block--table {
-  padding: 1.25rem 0;
 }
 
 .card__block--list:not(:first-child) {

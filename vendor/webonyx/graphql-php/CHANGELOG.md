@@ -2,6 +2,26 @@
 
 #### Unreleased
 
+#### 14.7.0
+
+Feat:
+- Allow providing field definitions as a callable and resolve them lazily
+
+#### 14.6.4
+
+Fix:
+- Avoid crashing in `QueryPlan` when `__typename` is used in the query
+
+#### 14.6.3
+
+Refactoring:
+- Improve performance of subtype checks
+
+#### 14.6.2
+
+Fix:
+- Fix overly eager validation of repeatable directive usage
+
 #### 14.6.1
 
 Fix:

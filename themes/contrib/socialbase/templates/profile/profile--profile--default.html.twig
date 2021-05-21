@@ -121,11 +121,26 @@
       {% endfor %}
     {% endif %}
 
-    {% if content.field_profile_profile_tag['#items'] %}
-      <h5>{% trans %}Profile tags{% endtrans %}</h5>
-      {% for item in content.field_profile_profile_tag['#items'] %}
-        <div class="badge badge--pill badge--large badge-default">{{ item.entity.label }}</div>
-      {% endfor %}
+    {% if content.field_profile_profile_tag['#items'] and profile_tagging_active %}
+      {% if profile_tagging_allow_split %}
+        {% for item in profile_tagging_hierarchy %}
+          <h5>{{ item.title }}</h5>
+          {% for tag in item.tags %}
+            <a href="{{ tag.url }}">
+              <div class="badge badge--pill badge--large badge-default">{{ tag.name }}</div>
+            </a>
+          {% endfor %}
+        {% endfor %}
+      {% else %}
+        <h5>{% trans %}Profile tags{% endtrans %}</h5>
+        {% for item in profile_tagging_hierarchy %}
+          {% for tag in item.tags %}
+            <a href="{{ tag.url }}">
+              <div class="badge badge--pill badge--large badge-default">{{ tag.name }}</div>
+            </a>
+          {% endfor %}
+        {% endfor %}
+      {% endif %}
     {% endif %}
 
     {% if content.social_tagging['#items'] and social_tagging_profile_active %}

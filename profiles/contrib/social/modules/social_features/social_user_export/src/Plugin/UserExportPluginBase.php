@@ -127,8 +127,8 @@ abstract class UserExportPluginBase extends PluginBase implements UserExportPlug
   public function getProfile(UserInterface $entity) {
     $user_profile = NULL;
 
-    /** @var \Drupal\profile\ProfileStorageInterface $storage */
     try {
+      /** @var \Drupal\profile\ProfileStorageInterface $storage */
       $storage = $this->entityTypeManager->getStorage('profile');
       if ($storage instanceof ProfileStorageInterface) {
         $user_profile = $storage->loadByUser($entity, 'profile');

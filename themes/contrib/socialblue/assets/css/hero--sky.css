@@ -396,7 +396,7 @@
   display: flex;
 }
 
-.socialblue--sky .hero__banner--static .back-to-albums {
+.socialblue--sky .hero__banner--static .back-link {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -409,7 +409,7 @@
   line-height: 21px;
 }
 
-.socialblue--sky .hero__banner--static .back-to-albums svg {
+.socialblue--sky .hero__banner--static .back-link svg {
   width: 24px;
   height: 24px;
 }
@@ -477,28 +477,28 @@
   margin-right: auto;
 }
 
-.socialblue--sky.path-group .cover-wrap {
+.socialblue--sky.path-group .cover-wrap:not(.cover-wrap--course-statistic) {
   padding: 0 2.25rem;
 }
 
-.socialblue--sky.path-group .cover-wrap .page-title {
+.socialblue--sky.path-group .cover-wrap:not(.cover-wrap--course-statistic) .page-title {
   width: 100%;
   max-width: 100%;
   text-align: left;
 }
 
-.socialblue--sky.path-group .cover-wrap .page-title .badge {
+.socialblue--sky.path-group .cover-wrap:not(.cover-wrap--course-statistic) .page-title .badge {
   font-size: 12px;
   font-weight: 700;
   padding-left: 1em;
   padding-right: 1em;
 }
 
-.socialblue--sky.path-group .cover-wrap .page-title .group-hero--wrapper {
+.socialblue--sky.path-group .cover-wrap:not(.cover-wrap--course-statistic) .page-title .group-hero--wrapper {
   margin-top: 8px;
 }
 
-.socialblue--sky.path-group .cover-wrap h1 {
+.socialblue--sky.path-group .cover-wrap:not(.cover-wrap--course-statistic) h1 {
   font-size: 1.5rem;
   font-weight: 700;
   line-height: 32px;
@@ -506,7 +506,7 @@
   margin: 0;
 }
 
-.socialblue--sky.path-group .cover-wrap .teaser__tag {
+.socialblue--sky.path-group .cover-wrap:not(.cover-wrap--course-statistic) .teaser__tag {
   display: inline-block;
   width: auto;
   padding: 1px 1em;
@@ -518,25 +518,25 @@
   text-transform: inherit;
 }
 
-.socialblue--sky.path-group .cover-wrap .teaser__tag:hover {
+.socialblue--sky.path-group .cover-wrap:not(.cover-wrap--course-statistic) .teaser__tag:hover {
   color: #fff;
 }
 
-.socialblue--sky.path-group .cover-wrap a[data-toggle='popover'].icon-before {
+.socialblue--sky.path-group .cover-wrap:not(.cover-wrap--course-statistic) a[data-toggle='popover'].icon-before {
   display: inline-block;
   margin-top: 1rem;
   font-weight: 700;
 }
 
-.socialblue--sky.path-group .cover-wrap a[data-toggle='popover'].icon-before svg {
+.socialblue--sky.path-group .cover-wrap:not(.cover-wrap--course-statistic) a[data-toggle='popover'].icon-before svg {
   margin-right: .5rem;
 }
 
-.socialblue--sky.path-group .cover-wrap .hero-footer {
+.socialblue--sky.path-group .cover-wrap:not(.cover-wrap--course-statistic) .hero-footer {
   padding-top: 0;
 }
 
-.socialblue--sky.path-group .cover-wrap .hero-footer__text {
+.socialblue--sky.path-group .cover-wrap:not(.cover-wrap--course-statistic) .hero-footer__text {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 100%;
           flex: 0 0 100%;
@@ -673,7 +673,7 @@
   .socialblue--sky main:not(.is-navbar-secondary) .hero__full .hero-footer__bottom {
     padding-bottom: 20px;
   }
-  .socialblue--sky.path-group .cover-wrap h1 {
+  .socialblue--sky.path-group .cover-wrap:not(.cover-wrap--course-statistic) h1 {
     font-size: 2.25rem;
     line-height: 1.4;
   }
@@ -724,7 +724,7 @@
   .socialblue--sky.path-node:not(.page-node-type-topic) .hero__banner--static .hero-image {
     margin-bottom: 1.75rem;
   }
-  .socialblue--sky.path-group .cover-wrap .page-title {
+  .socialblue--sky.path-group .cover-wrap:not(.cover-wrap--course-statistic) .page-title {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -733,11 +733,11 @@
         -ms-flex-direction: column;
             flex-direction: column;
   }
-  .socialblue--sky.path-group .cover-wrap .page-title > * {
+  .socialblue--sky.path-group .cover-wrap:not(.cover-wrap--course-statistic) .page-title > * {
     -ms-flex-item-align: start;
         align-self: flex-start;
   }
-  .socialblue--sky.path-group .cover-wrap .page-title > *:not(:first-child) {
+  .socialblue--sky.path-group .cover-wrap:not(.cover-wrap--course-statistic) .page-title > *:not(:first-child) {
     margin-top: 8px;
   }
 }

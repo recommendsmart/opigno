@@ -10,7 +10,7 @@ and recompile css!)
 
 ## FEATURES
 
-* Bootstrap 5 library (5.0 beta 1) included
+* Bootstrap 5 library (5.0.1) included
 * Bootstrap 5 style guide (view all Bootstrap 5 components on one page)
 * Bootstrap 5 breakpoints
 * Bootstrap 5 integration with CKEditor

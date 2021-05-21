@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: node-gettext\n"
 "POT-Creation-Date: 2021-02-20 00:32+0000\n"
-"PO-Revision-Date: 2021-03-05 21:16+0000\n"
-"Last-Translator: aborbon <aborbon@greenpeace.org>\n"
+"PO-Revision-Date: 2020-11-25 08:49+0000\n"
+"Last-Translator: Sjoerd van der Vis <sjoerdvandervis@getopensocial.com>\n"
 "Language-Team: Greenpeace Spanish (Mexico) <https://translate.getopensocial."
 "com/projects/open-social/distribution/es_MX_gpi/>\n"
 "Language: es_MX_gpi\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.4.2\n"
+"X-Generator: Weblate 4.3.1\n"
 
 #: modules/social_features/social_user/src/Form/SocialUserLoginForm.php:258
 msgid ""
@@ -161,7 +161,7 @@ msgstr "— Todo(s) —"
 #: modules/social_features/social_tagging/social_tagging.module:450;473
 #: modules/social_features/social_user/social_user.module:133
 msgid "- Any -"
-msgstr "- Alguna(o)-"
+msgstr "- Cualquiera -"
 
 #: modules/social_features/social_group/modules/social_group_default_route/social_group_default_route.module:44
 msgid "- Default -"
@@ -965,9 +965,6 @@ msgid ""
 "display-name]</a> has requested membership to the <a href=\"[message:gurl]\">"
 "[message:gtitle]</a> group</p>\r\n"
 msgstr ""
-"<p><a href=\"[message:recipient-user:url:absolute]\">[message:recipient-user"
-":display-name]</a> ha solicitado ser miembro en <a href=\"[message:gurl]\""
-">[message:gtitle]</a> grupo</p>\n"
 
 #: modules/social_features/social_group/modules/social_group_request/config/install/message.template.request_to_join_a_group.yml:0
 msgid ""
@@ -985,19 +982,6 @@ msgid ""
 "\t</tbody>\r\n"
 "</table>\r\n"
 msgstr ""
-"<p><a href=\"[message:recipient-user:url:absolute]\">[message:recipient-user"
-":display-name]</a> ha solicitado ser miembro de <a href=\"[message:gurl]\""
-">[message:gtitle]</a> group</p>\n"
-"\n"
-"<table class=\"btn-wrapp\">\n"
-"\t<tbody>\n"
-"\t\t<tr>\n"
-"\t\t\t<td class=\"align-center\"><a class=\"btn-link btn-link-bg btn-link-"
-"one\" href=\"[social_group_request:request_page_link]\">Ver "
-"solicitud</a></td>\n"
-"\t\t</tr>\n"
-"\t</tbody>\n"
-"</table>\n"
 
 #: modules/social_features/social_activity/config/install/message.template.join_to_group.yml:0;0;0
 msgid ""
@@ -1025,9 +1009,6 @@ msgid ""
 "</a> has requested enrollment to the event [social_event:"
 "event_iam_organizing] you are organizing</p>\r\n"
 msgstr ""
-"<p><a href=\"[social_event:enrolled_event_url]\""
-">[social_event:enrolled_user]</a> Ha solicitado inscribirse al evento "
-"[social_event:event_iam_organizing] que estás organizando</p>\n"
 
 #: modules/social_features/social_event/modules/social_event_an_enroll/config/install/views.view.manage_enrollments.yml:0
 msgid "<p>@total people have enrolled anonymously</p>"
@@ -2053,7 +2034,7 @@ msgstr "Agregar a grupo"
 #: modules/social_features/social_event/modules/social_event_addtocal/social_event_addtocal.links.menu.yml:0
 #: modules/social_features/social_event/modules/social_event_addtocal/social_event_addtocal.routing.yml:0
 msgid "Add to calendar settings"
-msgstr "Agregar a la configuración del calendario"
+msgstr ""
 
 #: modules/custom/social_lets_connect/modules/social_lets_connect_usage/src/Form/LetsConnectUsageSettingsForm.php:48
 msgid "Add-on information (including installed modules, profiles, and themes)"
@@ -2817,7 +2798,7 @@ msgstr "Cantidad de usuarios agregados al grupo"
 
 #: modules/social_features/social_post/social_post.admin.inc:165
 msgid "An error occurred and processing did not complete."
-msgstr "Se produjo un error y el procesamiento no se completó."
+msgstr "Hubo un error y no se ejecutó el proceso por completo."
 
 #: modules/social_features/social_group/modules/social_group_invite/src/Form/SocialBulkGroupInvitation.php:368
 msgid "An error occurred during processing"
@@ -2841,7 +2822,7 @@ msgstr "Anónimo"
 #: modules/social_features/social_event/modules/social_event_an_enroll/social_event_an_enroll.links.menu.yml:0
 #: modules/social_features/social_event/modules/social_event_an_enroll/social_event_an_enroll.routing.yml:0
 msgid "Anonymous event enrollment settings"
-msgstr "Configuración de inscripción a eventos anónimos"
+msgstr "Configuración de inscripción de eventos anónimos"
 
 #: modules/custom/social_magic_login/src/Controller/MagicLoginController.php:91
 msgid ""
@@ -3440,7 +3421,7 @@ msgstr ""
 #: modules/social_features/social_event/src/Entity/EventEnrollment.php:262
 #: modules/social_features/social_post/src/Entity/Post.php:369
 msgid "Changed"
-msgstr "Cambiado(a)"
+msgstr "Modificado"
 
 #: modules/social_features/social_album/social_album.module:371
 msgid ""
@@ -4207,7 +4188,7 @@ msgstr "Crea tu perfil"
 #: modules/social_features/social_post/src/PostListBuilder.php:23
 #: modules/social_features/social_post/src/Entity/Post.php:365
 msgid "Created"
-msgstr "Creado"
+msgstr "Ha creado"
 
 #: modules/social_features/social_search/social_search.module:189
 msgid "Created Date Filter by Open Social"
@@ -4528,7 +4509,7 @@ msgstr ""
 #: modules/social_features/social_private_message/src/Plugin/Field/FieldFormatter/SocialPrivateMessageOwnerFormatter.php:29
 #: modules/social_features/social_private_message/src/Plugin/Field/FieldFormatter/SocialPrivateMessageThreadMemberFormatter.php:55
 msgid "Deleted user"
-msgstr "Usuario eliminado(a)"
+msgstr "Eliminar usuario"
 
 #: modules/social_features/social_group/src/Controller/DeleteGroup.php:31
 msgid "Deleting @type's"
@@ -8975,7 +8956,7 @@ msgstr ""
 
 #: modules/social_features/social_post/src/Controller/PostCommentController.php:21
 msgid "Preview"
-msgstr "Avance"
+msgstr "Previsualizar"
 
 #: modules/social_features/social_event/modules/social_event_managers/src/Form/SocialEventManagersAddEnrolleeForm.php:248
 msgid "Preview your email"

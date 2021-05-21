@@ -10,7 +10,14 @@
 
 .input-group-addon {
   color: $input-color;
-  background-color: $input-group-addon-bg;
-  border: 1px solid $input-group-addon-border-color;
-  @include border-radius($input-border-radius);
+  background-color: $gray-lightest;
+  border: 1px solid $gray-light-1;
+}
+
+.input-group.input-group-expanded {
+  .input-group-addon {
+    color: $default-color;
+    border-color: $gray-light-1;
+    background: $gray-lightest;
+  }
 }

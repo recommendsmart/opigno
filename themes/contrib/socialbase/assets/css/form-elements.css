@@ -33,7 +33,7 @@ label {
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   position: relative;
 }
 
@@ -221,31 +221,6 @@ span.form-required {
   font-weight: 300;
 }
 
-.node-event-form .field--type-address .panel .panel-heading,
-.node-event-edit-form .field--type-address .panel .panel-heading,
-.profile-form .field--type-address .panel .panel-heading,
-.group-form .field--type-address .panel .panel-heading {
-  margin-bottom: .5rem;
-  font-size: .875rem;
-}
-
-.node-event-form .field--type-address .panel [id*='address-ajax-wrapper'],
-.node-event-edit-form .field--type-address .panel [id*='address-ajax-wrapper'],
-.profile-form .field--type-address .panel [id*='address-ajax-wrapper'],
-.group-form .field--type-address .panel [id*='address-ajax-wrapper'] {
-  max-width: 500px;
-  padding: 1.25rem 1.25rem .25rem;
-  background: #f3f3f3;
-  border-radius: 5px !important;
-}
-
-.node-event-form .field--type-address .panel [id*='address-ajax-wrapper'] label,
-.node-event-edit-form .field--type-address .panel [id*='address-ajax-wrapper'] label,
-.profile-form .field--type-address .panel [id*='address-ajax-wrapper'] label,
-.group-form .field--type-address .panel [id*='address-ajax-wrapper'] label {
-  margin-bottom: .5rem;
-}
-
 .node-event-form #edit-timezone-indication .btn,
 .node-event-edit-form #edit-timezone-indication .btn {
   cursor: auto;
@@ -255,10 +230,38 @@ fieldset.card legend.card__title {
   width: 100%;
   top: 1.5rem;
   margin-bottom: 1.25rem;
+  padding-top: .75rem;
+  padding-bottom: .75rem;
 }
 
 legend.control-label {
   margin-bottom: 5px;
+}
+
+.form-wrapper .card__block {
+  padding-bottom: 1rem;
+}
+
+details summary {
+  position: relative;
+}
+
+details summary svg.icon-summary-arrow {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  right: 1.25rem;
+  margin-right: 0;
+  top: .75rem;
+}
+
+details[open] summary {
+  border-bottom: 1px solid #e6e6e6;
+}
+
+details[open] summary svg.icon-summary-arrow {
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
 }
 
 @media (min-width: 600px) {

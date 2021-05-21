@@ -8,7 +8,7 @@ dependencies:
   - social_geolocation:social_geolocation
 package: Social
 
-# Information added by Drupal.org packaging script on 2021-02-26
-version: '8.x-1.4'
+# Information added by Drupal.org packaging script on 2021-04-13
+version: '8.x-1.5'
 project: 'social_geolocation'
-datestamp: 1614327195
+datestamp: 1618324285

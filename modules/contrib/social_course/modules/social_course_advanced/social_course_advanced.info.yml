@@ -6,7 +6,7 @@ dependencies:
   - social_course:social_course
 package: Social
 
-# Information added by Drupal.org packaging script on 2021-02-05
-version: '8.x-2.13'
+# Information added by Drupal.org packaging script on 2021-04-21
+version: '8.x-2.14'
 project: 'social_course'
-datestamp: 1612538945
+datestamp: 1619017811

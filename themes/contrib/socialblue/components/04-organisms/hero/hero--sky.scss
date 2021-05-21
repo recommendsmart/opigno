@@ -498,7 +498,7 @@
       }
     }
 
-    .back-to-albums {
+    .back-link {
       display: flex;
       align-items: center;
       margin-left: -7px;
@@ -646,7 +646,7 @@
   }
 
   &.path-group {
-    .cover-wrap {
+    .cover-wrap:not(.cover-wrap--course-statistic) {
       padding: 0 2.25rem;
 
       .page-title {

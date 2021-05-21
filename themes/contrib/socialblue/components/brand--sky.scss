@@ -5,7 +5,7 @@
     color: $brand-secondary;
   }
 
-  &.path-group .cover-wrap .teaser__tag {
+  &.path-group .cover-wrap:not(.cover-wrap--course-statistic) .teaser__tag {
     background: $brand-primary;
   }
 

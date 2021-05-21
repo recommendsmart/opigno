@@ -9,7 +9,7 @@
   * Rename `SUBTHEME.info` to `b5theme.info.yml` and its content
   * Rename `SUBTHEME.libraries.yml` to `b5theme.libraries.yml`
   * Rename `SUBTHEME.breakpoints.yml` to `b5theme.breakpoints.yml`
-  * Change all occurence of `SUBTHEME` by `b5theme` in `b5theme.breakpoints.yml`
+      * Change all occurrences of `SUBTHEME` to `b5theme` in `b5theme.breakpoints.yml` (naming and groups).
   * Rename `SUBTHEME.theme` to `b5theme.theme` and its comments
 * Update import path in `SUBTHEME/scss/style.scss` to Bootstrap 5 theme path 
     `@import "[DOCROOT]/themes/contrib/bootstrap5/scss/style";`, 
@@ -19,7 +19,7 @@
 
 ### Customisations
 
-To customise look and feel of subtheme override SCSS variables. Full list of variables is in `[path to themes/contrib]/bootstrap5/dist/bootstrap/5.0.0-beta3/scss/_variables.scss` or `[path to themes/contrib]/bootstrap5/scss/_theme_variables.scss`.
+To customise look and feel of subtheme override SCSS variables. Full list of variables is in `[path to themes/contrib]/bootstrap5/dist/bootstrap/5.0.1/scss/_variables.scss` or `[path to themes/contrib]/bootstrap5/scss/_theme_variables.scss`.
 * Bootstrap 5 variables for font-face, font-sizes, colours, etc [Read more](https://getbootstrap.com/docs/5.0/customize/sass/#variable-defaults)
 * Bootstrap 5 Theme specific variables `scss/_theme_variables.scss` for site logo image size, region paddings, etc
 

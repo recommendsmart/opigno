@@ -2,6 +2,24 @@
 
 All Notable changes to `Csv` will be documented in this file
 
+## 9.7.1 - 2021-04-17
+
+### Added
+
+- None
+
+### Deprecated
+
+- None
+
+### Fixed
+
+- fix writer filter [#421](https://github.com/thephpleague/csv/pull/421) by [LosingBattle](https://github.com/cpj555)
+
+### Removed
+
+- None
+
 ## 9.7.0 - 2021-03-26
 
 ### Added
@@ -36,7 +54,7 @@ All Notable changes to `Csv` will be documented in this file
 
 ### Removed
 
-- None
+- PHP7.2 support
 - `League\Csv\AbstractCsv::$stream_filter_mode`
 
 
