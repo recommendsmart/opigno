@@ -22,6 +22,7 @@ use Drupal\Core\Render\Element;
 function template_preprocess_storage(array &$variables) {
   // Fetch Storage Entity Object.
   $storage = $variables['elements']['#storage'];
+  $variables['storage'] = $storage;
 
   // Helpful $content variable for templates.
   foreach (Element::children($variables['elements']) as $key) {

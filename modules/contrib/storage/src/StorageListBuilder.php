@@ -42,4 +42,22 @@ class StorageListBuilder extends EntityListBuilder {
     return $row + parent::buildRow($entity);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEntityIds() {
+    $query = $this
+      ->getStorage()
+      ->getQuery()
+      ->sort('changed', 'DESC');
+
+    // Only add the pager if a limit is specified.
+    if ($this->limit) {
+      $query
+        ->pager($this->limit);
+    }
+    return $query
+      ->execute();
+  }
+
 }

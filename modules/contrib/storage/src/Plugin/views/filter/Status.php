@@ -36,7 +36,7 @@ class Status extends FilterPluginBase {
    */
   public function query() {
     $table = $this->ensureMyTable();
-    $snippet = "$table.status = 1 OR ($table.user_id = ***CURRENT_USER*** AND ***CURRENT_USER*** <> 0 AND ***VIEW_OWN_UNPUBLISHED_MEDIA*** = 1) OR ***ADMINISTER_MEDIA*** = 1";
+    $snippet = "$table.status = 1 OR ($table.user_id = ***CURRENT_USER*** AND ***CURRENT_USER*** <> 0 AND ***VIEW_OWN_UNPUBLISHED_STORAGE*** = 1) OR ***ADMINISTER_STORAGE*** = 1";
     if ($this->moduleHandler->moduleExists('content_moderation')) {
       $snippet .= ' OR ***VIEW_ANY_UNPUBLISHED_NODES*** = 1';
     }

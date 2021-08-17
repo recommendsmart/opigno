@@ -91,7 +91,33 @@ class StorageTypeForm extends BundleEntityFormBase {
       '#description' => $this->t('This text will be used as the label for the title field when creating or editing data of this storage type.'),
       '#required' => TRUE,
     ];
-    /* You will need additional form elements for your custom properties. */
+
+    $form['new_revision'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Create new revision'),
+      '#default_value' => $storage_type->get('new_revision'),
+      '#description' => t('Create a new revision by default for this storage type.'),
+    ];
+
+    $form['revision_expose'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Expose revision checkbox'),
+      '#default_value' => $storage_type->get('revision_expose'),
+      '#description' => t('Whether or not a checkbox will be visible in the form. If not exposed, the default value above will always be used.'),
+    ];
+
+    $form['revision_log'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Expose revision log'),
+      '#default_value' => $storage_type->get('revision_log'),
+      '#description' => t('Whether or not the editor can write a revision log message.'),
+      '#states' => [
+        // Show this textarea only if the 'repeat' select has a value.
+        'visible' => [
+          'input[name="revision_expose"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
 
     return $form;
   }

@@ -13,7 +13,7 @@ bundle: course_section
 label: 'Redirect URL'
 description: "Redirect people to this URL after they finished a section. Text of the next button may be customized.\r\nWorks only for non-sequential courses."
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:

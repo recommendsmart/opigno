@@ -3,7 +3,7 @@
 namespace Drupal\storage;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\storage\Entity\Storage;
+use Drupal\storage\Entity\StorageType;
 
 
 /**
@@ -26,7 +26,7 @@ class StoragePermissions{
   public function generatePermissions() {
     $perms = [];
 
-    foreach (Storage::loadMultiple() as $type) {
+    foreach (StorageType::loadMultiple() as $type) {
       $perms += $this->buildPermissions($type);
     }
 
@@ -36,13 +36,13 @@ class StoragePermissions{
   /**
    * Returns a list of node permissions for a given node type.
    *
-   * @param \Drupal\storage\Entity\Storage $type
+   * @param \Drupal\storage\Entity\StorageType $type
    *   The Storage type.
    *
    * @return array
    *   An associative array of permission names and descriptions.
    */
-  protected function buildPermissions(Storage $type) {
+  protected function buildPermissions(StorageType $type) {
     $type_id = $type->id();
     $type_params = ['%type_name' => $type->label()];
 

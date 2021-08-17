@@ -119,30 +119,30 @@ class CourseNavigationBlock extends BlockBase implements ContainerFactoryPluginI
     $account = $this->currentUser;
 
     if ($node instanceof NodeInterface && $node->id()) {
-      /** @var \Drupal\social_course\CourseWrapperInterface $course_wrapper */
-      $course_wrapper = \Drupal::service('social_course.course_wrapper');
-      $course_wrapper->setCourseFromMaterial($node);
-      $parent_section = $course_wrapper->getSectionFromMaterial($node);
+      // Get node translation if exists.
+      $node = $this->entityRepository->getTranslationFromContext($node);
+      $this->courseWrapper->setCourseFromMaterial($node);
+      $parent_section = $this->courseWrapper->getSectionFromMaterial($node);
 
       // Prepares variable with the course sections.
       $course_sections = [];
       /** @var \Drupal\node\NodeInterface $section */
-      foreach ($course_wrapper->getSections() as $section) {
+      foreach ($this->courseWrapper->getSections() as $section) {
         $section_item = [
           'attributes' => new Attribute(),
           'parent' => FALSE,
-          'number' => $course_wrapper->getSectionNumber($section) + 1,
+          'number' => $this->courseWrapper->getSectionNumber($section) + 1,
           'parts_count' => 0,
           'parts_finished' => 0,
         ];
 
         // Set the values for progress indicator.
-        $section_item['parts_count'] = count($course_wrapper->getMaterials($section));
-        $section_item['parts_finished'] = count($course_wrapper->getFinishedMaterials($section, $account));
+        $section_item['parts_count'] = count($this->courseWrapper->getMaterials($section));
+        $section_item['parts_finished'] = count($this->courseWrapper->getFinishedMaterials($section, $account));
 
-        $entities = $this->getCourseEnrollmentEntities($course_wrapper, $section);
+        $entities = $this->getCourseEnrollmentEntities($this->courseWrapper, $section);
 
-        $this->addStatusLabelForSections($entities, $course_wrapper, $section, $section_item);
+        $this->addStatusLabelForSections($entities, $this->courseWrapper, $section, $section_item);
         $this->addAccessLabelForSections($section, $section_item, $parent_section);
 
         $course_sections[] = $section_item;
@@ -150,7 +150,7 @@ class CourseNavigationBlock extends BlockBase implements ContainerFactoryPluginI
 
       // Prepares variable with the material items of the active section.
       $items = [];
-      $course_enrollments = $this->getCourseEnrollmentEntities($course_wrapper, $parent_section);
+      $course_enrollments = $this->getCourseEnrollmentEntities($this->courseWrapper, $parent_section);
 
       foreach ($course_enrollments as $key => $course_enrollment) {
         unset($course_enrollments[$key]);
@@ -158,12 +158,12 @@ class CourseNavigationBlock extends BlockBase implements ContainerFactoryPluginI
       }
 
       /** @var \Drupal\node\NodeInterface $material */
-      foreach ($course_wrapper->getMaterials($parent_section) as $material) {
+      foreach ($this->courseWrapper->getMaterials($parent_section) as $material) {
         $item = [
           'label' => $material->label(),
           'url' => FALSE,
           'type' => $material->bundle(),
-          'number' => $course_wrapper->getMaterialNumber($material) + 1,
+          'number' => $this->courseWrapper->getMaterialNumber($material) + 1,
           'active' => FALSE,
           'finished' => FALSE,
         ];
@@ -176,20 +176,20 @@ class CourseNavigationBlock extends BlockBase implements ContainerFactoryPluginI
           $item['finished'] = TRUE;
         }
 
-        if ($course_wrapper->materialAccess($material, $this->currentUser, 'view')->isAllowed()) {
+        if ($this->courseWrapper->materialAccess($material, $this->currentUser, 'view')->isAllowed()) {
           $item['url'] = $material->toUrl();
         }
 
         $items[] = $item;
       }
 
-      return [
+      $build = [
         '#theme' => 'course_navigation',
         '#items' => $items,
         '#course_sections' => $course_sections,
         '#parent_course' => [
-          'label' => $course_wrapper->getCourse()->label(),
-          'url' => $course_wrapper->getCourse()->toUrl(),
+          'label' => $this->courseWrapper->getCourse()->label(),
+          'url' => $this->courseWrapper->getCourse()->toUrl(),
         ],
         '#parent_section' => [
           'label' => $section->label(),
@@ -198,7 +198,7 @@ class CourseNavigationBlock extends BlockBase implements ContainerFactoryPluginI
       ];
     }
 
-    return [];
+    return $build ?? [];
   }
 
   /**

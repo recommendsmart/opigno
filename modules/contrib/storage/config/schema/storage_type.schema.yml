@@ -8,5 +8,14 @@ storage.storage_type.*:
     label:
       type: label
       label: 'Label'
+    new_revision:
+      type: boolean
+      label: 'Whether a new revision should be created by default'
+    revision_expose:
+      type: boolean
+      label: 'Whether to show the revision checkbox'
+    revision_log:
+      type: boolean
+      label: 'Whether to show the revision log text field'
     uuid:
       type: string

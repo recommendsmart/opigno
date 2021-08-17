@@ -13,7 +13,7 @@ bundle: course_video
 label: Video
 description: 'Enter a URL to video on Vimeo internet media provider, e.g. https://vimeo.com/1234567'
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:

@@ -2,6 +2,7 @@
 
 namespace Drupal\social_course;
 
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\group\Entity\GroupInterface;
@@ -41,6 +42,13 @@ class CourseWrapper implements CourseWrapperInterface {
   protected $entityTypeManager;
 
   /**
+   * The entity repository.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
+
+  /**
    * The current user.
    *
    * @var \Drupal\Core\Session\AccountInterface
@@ -59,13 +67,21 @@ class CourseWrapper implements CourseWrapperInterface {
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    * @param \Drupal\Core\Extension\ModuleHandler $moduleHandler
    *   The module handler.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, AccountInterface $current_user, ModuleHandler $moduleHandler) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager, 
+    EntityRepositoryInterface $entity_repository, 
+    AccountInterface $current_user, 
+    ModuleHandler $moduleHandler
+  ) {
     $this->entityTypeManager = $entity_type_manager;
+    $this->entityRepository = $entity_repository;
     $this->currentUser = $current_user;
     $this->moduleHandler = $moduleHandler;
   }
@@ -77,8 +93,8 @@ class CourseWrapper implements CourseWrapperInterface {
     if (!in_array($group->bundle(), self::$bundles)) {
       throw new InvalidArgumentException(sprintf('%s bundle is not allowed. Allowed bundles: %s', $group->bundle(), implode(', ', self::$bundles)));
     }
-
-    $this->group = $group;
+    // Get group translation if exists.
+    $this->group = $this->entityRepository->getTranslationFromContext($group);
     return $this;
   }
 
@@ -262,10 +278,20 @@ class CourseWrapper implements CourseWrapperInterface {
         $access = $access->orIf(AccessResult::allowedIf($course_enrollments));
         $access = $access->orIf(AccessResult::allowedIf($node->getOwnerId() === $account->id()));
         $access = $access->orIf(AccessResult::allowedIf(!$this->courseIsSequential()));
-        $access = $access->orIf(AccessResult::allowedIfHasPermissions($account, [
+
+        // Allow CM/CM+ to edit material pages.
+        $has_permission = AccessResult::allowedIfHasPermissions($account, [
           'bypass node access',
           'administer nodes',
-        ], 'OR'));
+        ], 'OR');
+        $access = $access->orIf($has_permission);
+
+        // Check if current user doesn't have permissions to view a material
+        // pages and make sure that is a member, otherwise set access to
+        // forbidden to prevent unauthorized direct access by url to that pages.
+        if (!$has_permission->isAllowed() && $node->getOwnerId() !== $account->id()) {
+          $access = $access->orIf(AccessResult::forbiddenIf(!$this->getCourse()->getMember($account)));
+        }
         break;
     }
 
@@ -288,6 +314,8 @@ class CourseWrapper implements CourseWrapperInterface {
       unset($sections[$key]);
 
       if ($section instanceof NodeInterface) {
+        // Get section translation if exists.
+        $section = $this->entityRepository->getTranslationFromContext($section);
         $sections[$section->id()] = $section;
       }
     }
@@ -315,6 +343,8 @@ class CourseWrapper implements CourseWrapperInterface {
       $nodes = $sections;
     }
     elseif (isset($sections[$node->id()])) {
+      // Get node translation if exists.
+      $node = $this->entityRepository->getTranslationFromContext($node);
       $nodes = [$node];
     }
 
@@ -338,7 +368,11 @@ class CourseWrapper implements CourseWrapperInterface {
 
     $storage = $this->entityTypeManager->getStorage('node');
     $materials = $storage->loadMultiple($ids);
-
+    // Get node translation if exists.
+    foreach ($materials as $material) {
+      $materials[$material->id()] = $this->entityRepository->getTranslationFromContext($material);
+    }
+    
     return $materials;
   }
 

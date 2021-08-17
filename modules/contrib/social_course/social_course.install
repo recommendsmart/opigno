@@ -30,6 +30,9 @@ function social_course_install() {
       $entity->save();
     }
   }
+  // Set module weight higher as the weight of the "Social Flexible Group" module because
+  // needs have a few hooks executed first.
+  module_set_weight('social_course', 6);
 }
 
 /**
@@ -70,7 +73,9 @@ function _social_course_get_permissions($role) {
   // Content manager.
   $permissions['contentmanager'] = array_merge($permissions['authenticated'], [
     'create course_advanced group',
+    'translate course_advanced group',
     'create course_basic group',
+    'translate course_basic group',
     'create course_article content',
     'delete own course_article content',
     'edit own course_article content',
@@ -88,6 +93,7 @@ function _social_course_get_permissions($role) {
     'revert course_article revisions',
     'delete course_article revisions',
     'view course_article revisions',
+    'translate course_article node',
     'override course_article revision log entry',
     'override course_article authored by option',
     'override course_article authored on option',
@@ -99,6 +105,7 @@ function _social_course_get_permissions($role) {
     'revert course_video revisions',
     'delete course_video revisions',
     'view course_video revisions',
+    'translate course_video node',
     'override course_video revision log entry',
     'override course_video authored by option',
     'override course_video authored on option',
@@ -110,6 +117,7 @@ function _social_course_get_permissions($role) {
     'revert course_section revisions',
     'delete course_section revisions',
     'view course_section revisions',
+    'translate course_section node',
     'override course_section revision log entry',
     'override course_section authored by option',
     'override course_section authored on option',
@@ -362,9 +370,31 @@ function social_course_update_8009() {
 }
 
 /**
+ * Configuration update: change Course Section form display.
+ */
+function social_course_update_8301() {
+  /** @var \Drupal\update_helper\Updater $updateHelper */
+  $updateHelper = \Drupal::service('update_helper.updater');
+
+  // Execute configuration update definitions with logging of success.
+  $updateHelper->executeUpdate('social_course', 'social_course_update_8010');
+
+  // Output logged messages to related channel of update execution.
+  return $updateHelper->logger()->output();
+}
+
+/**
+ * Change weight for "Social Course" module.
+ */
+function social_course_update_8302() {
+  // Set module weight higher as the weight of the "Social Flexible Group" module because
+  // needs have a few hooks executed first.
+  module_set_weight('social_course', 6);
+}
+/**
  * Add infinite scroll to show all sections on one page when visiting courses.
  */
-function social_course_update_8010() {
+function social_course_update_8303() {
   $view = \Drupal::configFactory()
     ->getEditable('views.view.course');
   // Get the config of the filters.
@@ -387,7 +417,7 @@ function social_course_update_8010() {
 /**
  * Set the amount of items in the courses block to 25.
  */
-function social_course_update_8011() {
+function social_course_update_8304() {
   $config_file = drupal_get_path('module', 'social_course') . '/config/static/block.block.socialblue_views_block__course_sections_block_8011.yml';
 
   if (is_file($config_file)) {
@@ -400,3 +430,46 @@ function social_course_update_8011() {
   }
 }
 
+/**
+ * Add translations support for "Course" content.
+ */
+function social_course_update_8305() {
+  /** @var \Drupal\update_helper\UpdaterInterface $update_helper */
+  $update_helper = \Drupal::service('update_helper.updater');
+
+  // Execute configuration update definitions with logging of success.
+  $update_helper->executeUpdate('social_course', 'social_course_update_8305');
+
+  // Output logged messages to related channel of update execution.
+  return $update_helper->logger()->output();
+}
+
+/**
+ * Set missed permissions for OS roles ("Site manager" && "Content manager").
+ */
+function social_course_update_8306() {
+  foreach (['sitemanager', 'contentmanager'] as $role_id) {
+    $role = Role::load($role_id);
+    $permissions = _social_course_get_permissions($role_id);
+    foreach ($permissions as $permission) {
+      if (!$role->hasPermission($permission)) {
+        $role->grantPermission($permission);
+      }
+    }
+    $role->save();
+  }
+}
+
+/**
+ * Hide "Course Section block" if empty.
+ */
+function social_course_update_8307() {
+  /** @var \Drupal\update_helper\UpdaterInterface $update_helper */
+  $update_helper = \Drupal::service('update_helper.updater');
+
+  // Execute configuration update definitions with logging of success.
+  $update_helper->executeUpdate('social_course', __FUNCTION__);
+
+  // Output logged messages to related channel of update execution.
+  return $update_helper->logger()->output();
+}

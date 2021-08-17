@@ -27,7 +27,7 @@ class Storage extends WizardPluginBase {
    */
   public function getAvailableSorts() {
     return [
-      'media_field_data-name:DESC' => $this->t('Storage name'),
+      'storage_field_data-name:DESC' => $this->t('Storage name'),
     ];
   }
 
@@ -39,7 +39,7 @@ class Storage extends WizardPluginBase {
 
     // Add permission-based access control.
     $display_options['access']['type'] = 'perm';
-    $display_options['access']['options']['perm'] = 'view storage';
+    $display_options['access']['options']['perm'] = 'view published storage entities';
 
     // Remove the default fields, since we are customizing them here.
     unset($display_options['fields']);

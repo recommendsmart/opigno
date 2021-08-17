@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '0c332f4320b51939a5e536ec2daa9792da5b4416',
+    'reference' => 'f5abaa8c30ea9e4c8f1908e6c39b5434b4a0ff8f',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -414,6 +414,42 @@ private static $installed = array (
       ),
       'reference' => '8.x-2.24',
     ),
+    'drupal/commerce_price' => 
+    array (
+      'pretty_version' => '2.26.0',
+      'version' => '2.26.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => NULL,
+    ),
+    'drupal/commerce_product' => 
+    array (
+      'pretty_version' => '2.26.0',
+      'version' => '2.26.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => NULL,
+    ),
+    'drupal/commerce_product_taxonomy_filter' => 
+    array (
+      'pretty_version' => '1.0.4',
+      'version' => '1.0.4.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1.0.4',
+    ),
+    'drupal/commerce_store' => 
+    array (
+      'pretty_version' => '2.26.0',
+      'version' => '2.26.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => NULL,
+    ),
     'drupal/config' => 
     array (
       'replaced' => 
@@ -688,6 +724,15 @@ private static $installed = array (
       ),
       'reference' => '8.x-3.7',
     ),
+    'drupal/custom_pub' => 
+    array (
+      'pretty_version' => '1.0.0-beta3',
+      'version' => '1.0.0.0-beta3',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-1.0-beta3',
+    ),
     'drupal/data_policy' => 
     array (
       'pretty_version' => '1.0.0-rc3',
@@ -717,6 +762,15 @@ private static $installed = array (
       array (
         0 => '8.9.18',
       ),
+    ),
+    'drupal/description_list_field' => 
+    array (
+      'pretty_version' => '1.0.0-alpha2',
+      'version' => '1.0.0.0-alpha2',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1.0.0-alpha2',
     ),
     'drupal/devel' => 
     array (
@@ -792,6 +846,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '8.x-1.6',
+    ),
+    'drupal/entity_version' => 
+    array (
+      'pretty_version' => '1.0.0-beta7',
+      'version' => '1.0.0.0-beta7',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-1.0-beta7',
     ),
     'drupal/exif_orientation' => 
     array (
@@ -899,6 +962,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '8.x-4.0-alpha3',
+    ),
+    'drupal/form_filter_fields' => 
+    array (
+      'pretty_version' => '1.3.0',
+      'version' => '1.3.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-1.3',
     ),
     'drupal/forum' => 
     array (
@@ -1486,12 +1558,12 @@ private static $installed = array (
     ),
     'drupal/social_course' => 
     array (
-      'pretty_version' => '2.14.0',
-      'version' => '2.14.0.0',
+      'pretty_version' => '3.1.1',
+      'version' => '3.1.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '8.x-2.14',
+      'reference' => '3.1.1',
     ),
     'drupal/social_geolocation' => 
     array (
@@ -1558,6 +1630,15 @@ private static $installed = array (
       array (
         0 => '8.9.18',
       ),
+    ),
+    'drupal/storage' => 
+    array (
+      'pretty_version' => '1.0.1',
+      'version' => '1.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1.0.1',
     ),
     'drupal/subgroup' => 
     array (
@@ -1650,6 +1731,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '8.x-2.9',
+    ),
+    'drupal/type_tray' => 
+    array (
+      'pretty_version' => '1.1.0',
+      'version' => '1.1.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1.1.0',
     ),
     'drupal/typed_data' => 
     array (
@@ -1835,7 +1925,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '0c332f4320b51939a5e536ec2daa9792da5b4416',
+      'reference' => 'f5abaa8c30ea9e4c8f1908e6c39b5434b4a0ff8f',
     ),
     'guzzlehttp/guzzle' => 
     array (

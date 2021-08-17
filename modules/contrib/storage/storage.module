@@ -5,9 +5,11 @@
  * Contains storage.module.
  */
 
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field_ui\FieldUI;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_help().
@@ -86,5 +88,26 @@ function storage_form_storage_type_add_form_alter(&$form, FormStateInterface $fo
 function storage_form_storage_type_add_form_submit($form, FormStateInterface $form_state) {
   if ($form_state->getTriggeringElement()['#parents'][0] === 'save_continue' && $route_info = FieldUI::getOverviewRouteInfo('storage', $form_state->getValue('id'))) {
     $form_state->setRedirectUrl($route_info);
+  }
+}
+
+/**
+ * Implements hook_views_query_substitutions().
+ */
+function storage_views_query_substitutions(ViewExecutable $view) {
+  $account = \Drupal::currentUser();
+  return [
+    '***VIEW_OWN_UNPUBLISHED_STORAGE***' => (int) $account->hasPermission('view own unpublished storage'),
+    '***ADMINISTER_STORAGE***' => (int) $account->hasPermission('administer storage'),
+  ];
+}
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function storage_entity_base_field_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() == 'storage' && \Drupal::hasService('rabbit_hole.entity_extender')) {
+    return \Drupal::service('rabbit_hole.entity_extender')
+      ->getRabbitHoleFields('storage');
   }
 }

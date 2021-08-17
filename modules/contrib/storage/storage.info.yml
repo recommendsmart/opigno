@@ -4,7 +4,7 @@ description: 'Lightweight, bundleable entities for storing structured data'
 core: 8.x
 core_version_requirement: '^8 || ^9'
 
-# Information added by Drupal.org packaging script on 2021-04-04
-version: '1.0.0-alpha2'
+# Information added by Drupal.org packaging script on 2021-08-14
+version: '1.0.1'
 project: 'storage'
-datestamp: 1617554850
+datestamp: 1628940524

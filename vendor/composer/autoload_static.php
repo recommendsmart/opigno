@@ -159,6 +159,8 @@ class ComposerStaticInitc57549eb6c7c9f12f114a0a413c5516d
         array (
             'Drupal\\social\\Behat\\' => 20,
             'Drupal\\social\\' => 14,
+            'Drupal\\entity_version\\' => 22,
+            'Drupal\\description_list_field\\' => 30,
             'Drupal\\aggrid\\' => 14,
             'Drupal\\Driver\\' => 14,
             'Drupal\\Core\\' => 12,
@@ -459,6 +461,14 @@ class ComposerStaticInitc57549eb6c7c9f12f114a0a413c5516d
         'Drupal\\social\\' => 
         array (
             0 => __DIR__ . '/../..' . '/profiles/contrib/social/src',
+        ),
+        'Drupal\\entity_version\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/contrib/entity_version/src',
+        ),
+        'Drupal\\description_list_field\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/contrib/description_list_field/src',
         ),
         'Drupal\\aggrid\\' => 
         array (

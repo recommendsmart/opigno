@@ -51,6 +51,8 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "description",
  *     "help",
  *     "new_revision",
+ *     "revision_expose",
+ *     "revision_log",
  *   }
  * )
  */
@@ -90,6 +92,20 @@ class StorageType extends ConfigEntityBundleBase implements StorageTypeInterface
    * @var bool
    */
   protected $new_revision = TRUE;
+
+  /**
+   * Whether to show the 'Create new revision' checkbox of this storage type.
+   *
+   * @var bool
+   */
+  protected $revision_expose = FALSE;
+
+  /**
+   * Whether to show the revision log for this storage type.
+   *
+   * @var bool
+   */
+  protected $revision_log = FALSE;
 
   /**
    * {@inheritdoc}
@@ -169,5 +185,19 @@ class StorageType extends ConfigEntityBundleBase implements StorageTypeInterface
    */
   public function shouldCreateNewRevision() {
     return $this->new_revision;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function shouldShowRevisionToggle() {
+    return $this->revision_expose;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function shouldShowRevisionLog() {
+    return $this->revision_log;
   }
 }

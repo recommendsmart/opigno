@@ -4,6 +4,7 @@ namespace Drupal\storage\Form;
 
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\storage\Entity\StorageType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -49,17 +50,32 @@ class StorageForm extends ContentEntityForm {
     $fields = \Drupal::service('entity_field.manager')->getFieldDefinitions('storage', $entity->bundle());
     $form['name']['#title'] = $fields['name']->getLabel();
 
-    // TODO: make the visibility of this element configurable?
-    $form['revision_log']['#access'] = FALSE;
+    // Load the bundle.
+    $bundle = StorageType::load($entity->bundle());
 
-    // if (!$this->entity->isNew()) {
-    //   $form['new_revision'] = [
-    //     '#type' => 'checkbox',
-    //     '#title' => $this->t('Create new revision'),
-    //     '#default_value' => FALSE,
-    //     '#weight' => 10,
-    //   ];
-    // }
+    $revision_default = $bundle->get('new_revision');
+
+    // Only expose the log field if so configured.
+    if (!$bundle->shouldShowRevisionLog()) {
+      $form['revision_log']['#access'] = FALSE;
+    }
+
+    if ($bundle->shouldShowRevisionToggle()) {
+      if (!$this->entity->isNew()) {
+        $form['new_revision'] = [
+          '#type' => 'checkbox',
+          '#title' => $this->t('Create new revision'),
+          '#default_value' => $revision_default,
+          '#weight' => 10,
+        ];
+      }
+    }
+    else {
+      $form['new_revision'] = [
+        '#type' => 'value',
+        '#value' => $revision_default,
+      ];
+    }
 
     return $form;
   }
@@ -97,6 +113,21 @@ class StorageForm extends ContentEntityForm {
         ]));
     }
     $form_state->setRedirect('entity.storage.canonical', ['storage' => $entity->id()]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function actions(array $form, FormStateInterface $form_state) {
+    $element = parent::actions($form, $form_state);
+
+    // Explicitly set weights to a high value.
+    $element['submit']['#weight'] = 100;
+    if (array_key_exists('delete', $element)) {
+      $element['delete']['#weight'] = 100;
+    }
+
+    return $element;
   }
 
 }

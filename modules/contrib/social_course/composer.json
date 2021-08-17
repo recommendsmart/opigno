@@ -6,6 +6,15 @@
         "drupal/inline_entity_form": "^1.0@beta",
         "drupal/video_embed_field": "^1.5",
         "drupal/weight": "^3.0",
-        "drupal/views_infinite_scroll": "^1.0"
+        "drupal/views_infinite_scroll": "^1.0",
+        "goalgorilla/open_social": "^10.1"
+    },
+    "extra": {
+        "enable-patching": true,
+        "patches": {
+            "drupal/inline_entity_form": {
+                "Issue #2903964: Nesting Paragraph into a IEF then translating makes Paragraph field disappear": "https://www.drupal.org/files/issues/2020-01-23/enable-translatable-references-2903964-23.patch"
+            }
+        }
     }
 }

@@ -1,0 +1,13 @@
+name: 'Social Basic Course Invite'
+description: 'Adds "Group Invitation" feature to basic course'
+type: module
+core: 8.x
+dependencies:
+  - social_course_basic:social_course_basic
+  - social:social_group_invite
+package: Social
+
+# Information added by Drupal.org packaging script on 2021-07-22
+version: '3.1.1'
+project: 'social_course'
+datestamp: 1626954153
