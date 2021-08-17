@@ -52,20 +52,35 @@ class GroupContentTypeSaver {
 
     $contentPlugin = $groupContentType->getContentPlugin();
     $permission = 'view group_node:' . $contentPlugin->getEntityBundle() . ' entity';
+    $visibility_permissions = [
+      'use visibility anonymous for group_node:' . $contentPlugin->getEntityBundle() . ' entity',
+      'use visibility outsider for group_node:' . $contentPlugin->getEntityBundle() . ' entity',
+      'use visibility member for group_node:' . $contentPlugin->getEntityBundle() . ' entity',
+    ];
     switch ($visibility) {
+      case 'anonymous':
+        $groupType->getAnonymousRole()->grantPermission($permission)->save();
+        $groupType->getOutsiderRole()->grantPermission($permission)->save();
+        $groupType->getMemberRole()->grantPermission($permission)->save();
+        break;
+
       case 'outsider':
+        $groupType->getAnonymousRole()->revokePermission($permission)->save();
         $groupType->getOutsiderRole()->grantPermission($permission)->save();
         $groupType->getMemberRole()->grantPermission($permission)->save();
         break;
 
       case 'member':
+        $groupType->getAnonymousRole()->revokePermission($permission)->save();
         $groupType->getOutsiderRole()->revokePermission($permission)->save();
         $groupType->getMemberRole()->grantPermission($permission)->save();
         break;
 
       case 'flexible':
+        $groupType->getAnonymousRole()->revokePermission($permission)->save();
         $groupType->getOutsiderRole()->revokePermission($permission)->save();
         $groupType->getMemberRole()->grantPermission($permission)->save();
+        $groupType->getMemberRole()->grantPermissions($visibility_permissions)->save();
         $bundle = $groupContentType->id();
 
         // Add the content_visibility field to the added group content type.

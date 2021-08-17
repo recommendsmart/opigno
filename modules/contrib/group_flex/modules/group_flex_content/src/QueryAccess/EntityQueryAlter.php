@@ -34,11 +34,6 @@ class EntityQueryAlter extends EntityQueryAlterBase {
       return;
     }
 
-    // If the user is anonymous we don't need to show any content.
-    if ($this->currentUser->isAnonymous()) {
-      return;
-    }
-
     // We only alter SQL queries.
     $storage = $this->entityTypeManager->getStorage($entity_type_id);
     if (!$storage instanceof SqlContentEntityStorage) {
@@ -116,6 +111,9 @@ class EntityQueryAlter extends EntityQueryAlterBase {
       return $nids;
     }
 
+    // Determine the content visibility based on the user role.
+    $content_visibility = $this->currentUser->isAuthenticated() ? ['anonymous', 'outsider'] : ['anonymous'];
+
     // Note that we are deliberately not getting any private/member content.
     // These are handled by the default Group EntityQueryAlter Filtering.
     // We assume the permission 'view group_node:node entity' is set correctly.
@@ -123,7 +121,7 @@ class EntityQueryAlter extends EntityQueryAlterBase {
     $outsider_gcids = $this->database
       ->select('group_content__content_visibility', 'gcv')
       ->fields('gcv', ['entity_id'])
-      ->condition('content_visibility_value', 'outsider')
+      ->condition('content_visibility_value', $content_visibility, 'IN')
       ->execute()
       ->fetchCol();
 
@@ -181,11 +179,16 @@ class EntityQueryAlter extends EntityQueryAlterBase {
     }
 
     // Find all group content types that have content for them.
-    $group_content_type_ids_in_use = $this->database
+    $group_content_type_query = $this->database
       ->select('group_content_field_data', 'gc')
-      ->fields('gc', ['type'])
-      ->condition('type', array_keys($group_content_types), 'IN')
-      ->distinct()
+      ->fields('gc', ['type']);
+
+    // Only add a type condition if we have content types to check for.
+    if (!empty($group_content_types)) {
+      $group_content_type_query->condition('type', array_keys($group_content_types), 'IN');
+    }
+
+    $group_content_type_ids_in_use = $group_content_type_query->distinct()
       ->execute()
       ->fetchCol();
 
@@ -206,7 +209,7 @@ class EntityQueryAlter extends EntityQueryAlterBase {
 
       foreach ($plugin_id_map[$plugin_id] as $group_content_type_id) {
         // If the group content type has no content, skip it.
-        if (!in_array($group_content_type_id, $group_content_type_ids_in_use)) {
+        if (!in_array($group_content_type_id, $group_content_type_ids_in_use, TRUE)) {
           continue;
         }
         $content_types[] = $group_content_type_id;

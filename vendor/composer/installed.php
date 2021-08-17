@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'f5abaa8c30ea9e4c8f1908e6c39b5434b4a0ff8f',
+    'reference' => '453feab2a43daa1f9e086db269f4626d995c239f',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -1065,6 +1065,24 @@
       ),
       'reference' => '8.x-1.0-rc5',
     ),
+    'drupal/group_flex' => 
+    array (
+      'pretty_version' => '1.0.0-beta5',
+      'version' => '1.0.0.0-beta5',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1.0.0-beta5',
+    ),
+    'drupal/group_permissions' => 
+    array (
+      'pretty_version' => '1.0.0-alpha4',
+      'version' => '1.0.0.0-alpha4',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1.0.0-alpha4',
+    ),
     'drupal/hal' => 
     array (
       'replaced' => 
@@ -1902,7 +1920,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'f5abaa8c30ea9e4c8f1908e6c39b5434b4a0ff8f',
+      'reference' => '453feab2a43daa1f9e086db269f4626d995c239f',
     ),
     'guzzlehttp/guzzle' => 
     array (

@@ -5137,6 +5137,122 @@
             "install-path": "../../modules/contrib/group"
         },
         {
+            "name": "drupal/group_flex",
+            "version": "1.0.0-beta5",
+            "version_normalized": "1.0.0.0-beta5",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/group_flex.git",
+                "reference": "1.0.0-beta5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/group_flex-1.0.0-beta5.zip",
+                "reference": "1.0.0-beta5",
+                "shasum": "233b510a10b943da6cf5624d76ebfc574f460ab0"
+            },
+            "require": {
+                "drupal/core": "^8.9 || ^9",
+                "drupal/group": "^1.0",
+                "drupal/group_permissions": "1.0.0-alpha4"
+            },
+            "require-dev": {
+                "drupal/gnode": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0-beta5",
+                    "datestamp": "1621430304",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Beta releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jaap Jan Koster",
+                    "homepage": "https://www.drupal.org/u/jaapjan",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "bramtenhove",
+                    "homepage": "https://www.drupal.org/user/1549848"
+                },
+                {
+                    "name": "jaapjan",
+                    "homepage": "https://www.drupal.org/user/555428"
+                },
+                {
+                    "name": "ronaldtebrake",
+                    "homepage": "https://www.drupal.org/user/2314038"
+                }
+            ],
+            "description": "Makes the creation of your groups and group types more flexible",
+            "homepage": "https://www.drupal.org/project/group_flex",
+            "support": {
+                "source": "https://git.drupalcode.org/project/group_flex",
+                "issues": "https://www.drupal.org/project/issues/group_flex"
+            },
+            "install-path": "../../modules/contrib/group_flex"
+        },
+        {
+            "name": "drupal/group_permissions",
+            "version": "1.0.0-alpha4",
+            "version_normalized": "1.0.0.0-alpha4",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/group_permissions.git",
+                "reference": "1.0.0-alpha4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/group_permissions-1.0.0-alpha4.zip",
+                "reference": "1.0.0-alpha4",
+                "shasum": "0db18460a8548d131924682a0276d38b29914958"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9",
+                "drupal/group": "^1.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0-alpha4",
+                    "datestamp": "1613602228",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Nikolay Lobachev",
+                    "homepage": "https://www.drupal.org/u/lobsterr",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Group permissions module provides custom permissions per group.",
+            "homepage": "https://github.com/cnect-web/group_permissions",
+            "support": {
+                "source": "https://www.drupal.org/project/issues/group_permissions",
+                "issues": "https://www.drupal.org/project/issues/group_permissions"
+            },
+            "install-path": "../../modules/contrib/group_permissions"
+        },
+        {
             "name": "drupal/image_effects",
             "version": "3.1.0",
             "version_normalized": "3.1.0.0",

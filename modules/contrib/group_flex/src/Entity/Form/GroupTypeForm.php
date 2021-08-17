@@ -121,10 +121,10 @@ class GroupTypeForm extends GroupTypeFormBase {
     }
 
     $form['group_flex']['group_type_joining_method_override'] = [
-      '#title' => $this->t('Group owner can select the method of her/his "Group"?'),
+      '#title' => $this->t('Group owner can select the joining method(s) for their group'),
       '#type' => 'checkbox',
       '#default_value' => $this->flexGroupType->canOverrideJoiningMethod($type),
-      '#description' => $this->t('When this is enabled the group owner can select one of the enabled joining methods on group creation.'),
+      '#description' => $this->t('When this is enabled the group owner can select one or multiple of the enabled joining methods for their group.'),
     ];
 
     return $form;

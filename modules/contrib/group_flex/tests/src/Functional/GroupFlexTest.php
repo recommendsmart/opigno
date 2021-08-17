@@ -84,127 +84,6 @@ class GroupFlexTest extends GroupBrowserTestBase {
   }
 
   /**
-   * Tests group flex group type.
-   */
-  public function testGroupFlexGroupType() {
-    $this->drupalLogin($this->account);
-
-    // Make sure by default it is not enabled.
-    $this->drupalGet('/group/1/edit');
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextNotContains('Visibility');
-
-    // Now change the settings to enabled and public.
-    $this->drupalGet('/admin/group/types/manage/default');
-    $page = $this->getSession()->getPage();
-    $page->selectFieldOption('group_flex_enabler', TRUE);
-    $this->submitForm([], 'Save group type');
-    $this->assertSession()->statusCodeEquals(200);
-
-    // Make sure now it is enabled and default value Public..
-    $this->drupalGet('/group/1/edit');
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains('Visibility');
-    $this->assertSession()->pageTextContains('visibility is Public');
-
-    // Now change the settings to enabled and private.
-    $this->drupalGet('/admin/group/types/manage/default');
-    $page = $this->getSession()->getPage();
-    $page->selectFieldOption('group_flex_enabler', TRUE);
-    $page->selectFieldOption('group_type_visibility', GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PRIVATE);
-    $this->submitForm([], 'Save group type');
-    $this->assertSession()->statusCodeEquals(200);
-
-    // Make sure now the default value is Private.
-    $this->drupalGet('/group/1/edit');
-    $this->assertSession()->pageTextContains('visibility is Private');
-
-    // Now change the settings to enabled and flexible.
-    $this->drupalGet('/admin/group/types/manage/default');
-    $page = $this->getSession()->getPage();
-    $page->selectFieldOption('group_flex_enabler', TRUE);
-    $page->selectFieldOption('group_type_visibility', GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_FLEX);
-    $this->submitForm([], 'Save group type');
-    $this->assertSession()->statusCodeEquals(200);
-
-    // Make sure now the default value is Public and field enabled again.
-    $this->drupalGet('/group/1/edit');
-    $this->assertSession()->fieldEnabled('group_visibility');
-    $this->assertSession()->fieldValueEquals('group_visibility', GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC);
-
-  }
-
-  /**
-   * Tests group flex override group Public functionality.
-   */
-  public function testGroupFlexGroupPublic() {
-    $this->drupalLogin($this->groupCreator);
-    $this->createFlexGroup();
-    $this->drupalLogout();
-
-    $flexGroupCreator = $this->createUser(['create flexible_group group']);
-    $this->drupalLogin($flexGroupCreator);
-
-    // Make sure now the default value is Public and field enabled again.
-    $this->drupalGet('/group/add/flexible_group');
-    $this->assertSession()->fieldEnabled('group_visibility');
-    $this->assertSession()->fieldValueEquals('group_visibility', GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC);
-    $this->assertSession()->fieldEnabled('edit-group-joining-methods-join-button');
-    $page = $this->getSession()->getPage();
-    $page->fillField('Title', 'Flex group - public');
-    $this->submitForm([], 'edit-submit');
-
-    $this->drupalLogout();
-
-    $user2 = $this->createUser(['access group overview']);
-    $this->drupalLogin($user2);
-
-    $this->drupalGet('/admin/group');
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains('Groups');
-    $this->assertSession()->pageTextContains('Flex group - public');
-
-    $this->clickLink('Flex group - public');
-    $join_link = $page->getSession()->getCurrentUrl() . '/join';
-    $this->drupalGet($join_link);
-    $this->assertSession()->statusCodeEquals(200);
-
-    // Verify the group cannot be viewed directly as anonymous.
-    $this->drupalLogout();
-    $this->drupalGet('/group/2');
-    $this->assertSession()->statusCodeEquals(403);
-
-    /** @var \Drupal\group\Entity\GroupInterface $group */
-    $group = $this->entityTypeManager->getStorage('group')->load(2);
-    $groupType = $group->getGroupType();
-    $role = $groupType->getAnonymousRole();
-    $role->grantPermissions(['view group']);
-    $role->save();
-
-    $flexGroupCreator = $this->createUser(['create flexible_group group']);
-    $this->drupalLogin($flexGroupCreator);
-
-    // Make sure now the default value is Public and field enabled again.
-    $this->drupalGet('/group/add/flexible_group');
-    $this->assertSession()->fieldEnabled('group_visibility');
-    $this->assertSession()->fieldValueEquals('group_visibility', GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC);
-    $this->assertSession()->fieldEnabled('edit-group-joining-methods-join-button');
-    $page = $this->getSession()->getPage();
-    $page->fillField('Title', 'Flex group - anonymous');
-    $this->submitForm([], 'edit-submit');
-
-    // Verify the group can be viewed directly as anonymous.
-    $this->drupalLogout();
-    $this->drupalGet('/group/3');
-    $this->assertSession()->statusCodeEquals(200);
-
-    // All good, let's restore the permissions.
-    $role = $groupType->getAnonymousRole();
-    $role->revokePermissions(['view group']);
-    $role->save();
-  }
-
-  /**
    * Tests group flex override group Public unjoinable functionality.
    */
   public function testGroupFlexGroupPublicUnjoinable() {
@@ -218,7 +97,8 @@ class GroupFlexTest extends GroupBrowserTestBase {
     $this->drupalGet('/group/add/flexible_group');
     $page = $this->getSession()->getPage();
     $page->fillField('Title', 'Flex group - public - unjoinable');
-    $page->selectFieldOption('group_joining_methods', 'fake_button');
+    $page->selectFieldOption('group_joining_methods[fake_button]', TRUE);
+    $page->selectFieldOption('group_joining_methods[join_button]', FALSE);
     $this->submitForm([], 'edit-submit');
 
     $this->drupalLogout();
@@ -397,7 +277,7 @@ class GroupFlexTest extends GroupBrowserTestBase {
     $this->drupalGet('/group/add/group_creator_group');
     $page = $this->getSession()->getPage();
     $page->fillField('Title', 'Group creator group');
-    $page->selectFieldOption('group_joining_methods', 'join_button');
+    $page->selectFieldOption('group_joining_methods[join_button]', TRUE);
     $this->submitForm([], 'edit-submit');
     // Fill in step 2.
     $page = $this->getSession()->getPage();

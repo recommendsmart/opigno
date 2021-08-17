@@ -129,12 +129,16 @@ function _group_flex_form_group_step2_form_submit(array $form, FormStateInterfac
  * Implements hook_group_flex_group_joining_method_info_alter().
  */
 function group_flex_group_flex_group_joining_method_info_alter(array &$definitions) {
+  /** @var \Drupal\Core\Extension\ModuleHandler $moduleHandler */
+  $moduleHandler = Drupal::service('module_handler');
+
   // When the grequest module is not installed remove this plugin.
-  if (isset($definitions['group_membership_request'])) {
-    /** @var \Drupal\Core\Extension\ModuleHandler $moduleHandler */
-    $moduleHandler = Drupal::service('module_handler');
-    if (!$moduleHandler->moduleExists('grequest')) {
-      unset($definitions['group_membership_request']);
-    }
+  if (isset($definitions['group_membership_request']) && !$moduleHandler->moduleExists('grequest')) {
+    unset($definitions['group_membership_request']);
+  }
+
+  // When the ginvite module is not installed remove this plugin.
+  if (isset($definitions['group_invitation']) && !$moduleHandler->moduleExists('ginvite')) {
+    unset($definitions['group_invitation']);
   }
 }

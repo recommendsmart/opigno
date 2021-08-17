@@ -18,8 +18,8 @@ class GroupContentAccessControlHandler extends GroupContentAccessControlHandlerB
   public function entityAccess(EntityInterface $entity, $operation, AccountInterface $account, $return_as_object = FALSE) {
     $parentAccess = parent::entityAccess($entity, $operation, $account, $return_as_object);
 
-    // We don't have an opinion for all operations or if user is anonymous.
-    if ($operation !== 'view' || $account->isAnonymous()) {
+    // We don't have an opinion for all operations.
+    if ($operation !== 'view') {
       return $parentAccess;
     }
 
@@ -48,7 +48,9 @@ class GroupContentAccessControlHandler extends GroupContentAccessControlHandlerB
       }
 
       $content_visibility = $group_content->get('content_visibility')->getValue()[0]['value'];
-      if ($content_visibility === 'outsider' && $group_content->getEntity()->isPublished()) {
+      if ((($content_visibility === 'outsider' && $account->isAuthenticated()) ||
+          ($content_visibility === 'anonymous'))
+        && $group_content->getEntity()->isPublished()) {
         $result = AccessResult::allowed();
         $result->cachePerUser();
         $result->addCacheableDependency($entity);

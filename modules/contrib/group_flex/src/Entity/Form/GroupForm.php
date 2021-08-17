@@ -128,7 +128,7 @@ class GroupForm extends GroupFormBase {
         }
         $form['footer']['group_joining_methods'] = [
           '#title' => $this->t('Joining methods'),
-          '#type' => 'radios',
+          '#type' => 'checkboxes',
           '#options' => $methodOptions,
           '#weight' => $form['footer']['group_visibility']['#weight'] + 1,
         ];
@@ -138,7 +138,13 @@ class GroupForm extends GroupFormBase {
         catch (MissingDataException $e) {
           $defaultOptions = [];
         }
-        $form['footer']['group_joining_methods']['#default_value'] = !empty($defaultOptions) ? reset($defaultOptions) : array_key_first($methodOptions);
+
+        // If this is a new group we enable all methods by default.
+        if (empty($defaultOptions) && empty($group->id())) {
+          $defaultOptions = array_keys($methodOptions);
+        }
+
+        $form['footer']['group_joining_methods']['#default_value'] = $defaultOptions;
 
         // Availability of join method depends on the group visibility.
         if (isset($visibilityOptions)) {

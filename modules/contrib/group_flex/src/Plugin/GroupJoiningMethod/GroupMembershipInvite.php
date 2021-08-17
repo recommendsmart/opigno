@@ -7,19 +7,20 @@ use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\group_flex\Plugin\GroupJoiningMethodBase;
 
 /**
- * Provides a 'group_membership_request' group joining method.
+ * Provides a 'group_membership_invite' group joining method.
  *
  * @GroupJoiningMethod(
- *  id = "group_membership_request",
- *  label = @Translation("Request to join"),
+ *  id = "group_invitation",
+ *  label = @Translation("Invite users by email"),
  *  weight = -90,
  *  visibilityOptions = {
  *   "public",
+ *   "private",
  *   "flex"
  *  }
  * )
  */
-class GroupMembershipRequest extends GroupJoiningMethodBase {
+class GroupMembershipInvite extends GroupJoiningMethodBase {
 
   /**
    * {@inheritdoc}
@@ -27,33 +28,27 @@ class GroupMembershipRequest extends GroupJoiningMethodBase {
   public function enableGroupType(GroupTypeInterface $groupType) {
     // Only enable plugin when it doesn't exist yet.
     $contentEnablers = $this->groupContentEnabler->getInstalledIds($groupType);
-    if (!in_array('group_membership_request', $contentEnablers)) {
+    if (!in_array('group_invitation', $contentEnablers)) {
       $storage = $this->entityTypeManager->getStorage('group_content_type');
       $config = [
         'group_cardinality' => 0,
-        'entity_cardinality' => 1,
+        'entity_cardinality' => 0,
       ];
-      $storage->createFromPlugin($groupType, 'group_membership_request', $config)->save();
+      $storage->createFromPlugin($groupType, 'group_invitation', $config)->save();
     }
-
-    $mappedPerm = [$groupType->getOutsiderRoleId() => ['request group membership' => TRUE]];
-    $this->saveMappedPerm($mappedPerm, $groupType);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function disableGroupType(GroupTypeInterface $groupType) {
-    $mappedPerm = [$groupType->getOutsiderRoleId() => ['request group membership' => FALSE]];
-    $this->saveMappedPerm($mappedPerm, $groupType);
-  }
+  public function disableGroupType(GroupTypeInterface $groupType) { }
 
   /**
    * {@inheritdoc}
    */
   public function getGroupPermissions(GroupInterface $group): array {
     return [
-      $group->getGroupType()->getOutsiderRoleId() => ['request group membership'],
+      $group->getGroupType()->getMemberRoleId() => ['invite users to group'],
     ];
   }
 
@@ -62,7 +57,7 @@ class GroupMembershipRequest extends GroupJoiningMethodBase {
    */
   public function getDisallowedGroupPermissions(GroupInterface $group): array {
     return [
-      $group->getGroupType()->getOutsiderRoleId() => ['request group membership'],
+      $group->getGroupType()->getMemberRoleId() => ['invite users to group'],
     ];
   }
 
