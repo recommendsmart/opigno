@@ -100,8 +100,8 @@ abstract class BackendBase extends PluginBase implements BackendInterface, Conta
     $form['lease_time'] = [
       '#type' => 'number',
       '#title' => $this->t('Lease time'),
-      '#description' => t('How long a job is reserved for processing.'),
-      '#field_suffix' => t('seconds'),
+      '#description' => $this->t('How long a job is reserved for processing.'),
+      '#field_suffix' => $this->t('seconds'),
       '#default_value' => $this->configuration['lease_time'],
       '#min' => 1,
     ];

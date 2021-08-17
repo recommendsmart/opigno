@@ -7,6 +7,8 @@ use Drupal\advancedqueue\JobResult;
 use Drupal\advancedqueue\Plugin\AdvancedQueue\JobType\JobTypeBase;
 
 /**
+ * Sleepy job type.
+ *
  * @AdvancedQueueJobType(
  *   id = "sleepy",
  *   label = @Translation("Sleepy"),

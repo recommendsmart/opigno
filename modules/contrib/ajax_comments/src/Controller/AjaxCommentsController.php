@@ -391,7 +391,7 @@ class AjaxCommentsController extends ControllerBase {
     $form = $this->entityFormBuilder()->getForm($comment, 'default', ['editing' => TRUE]);
 
     // Check for errors.
-    if (empty(drupal_get_messages('error', FALSE))) {
+    if (empty($this->messenger->messagesByType('error'))) {
       $errors = FALSE;
       // If there are no errors, set the ajax-updated
       // selector value for the form.
@@ -624,7 +624,7 @@ class AjaxCommentsController extends ControllerBase {
     $form = $this->entityFormBuilder()->getForm($comment);
 
     // Check for errors.
-    if (empty(drupal_get_messages('error', FALSE))) {
+    if (empty($this->messenger->messagesByType('error'))) {
       // If there are no errors, set the ajax-updated
       // selector value for the form.
       $this->tempStore->setSelector('form_html_id', $form['#attributes']['id']);
@@ -865,7 +865,7 @@ class AjaxCommentsController extends ControllerBase {
       if (empty($selector)) {
         $selector = $wrapper_html_id;
       }
-      drupal_set_message(t('You do not have permission to post a comment.'), 'error');
+      $this->messenger->addError(t('You do not have permission to post a comment.'));
       // If this is a new top-level comment (not a reply to another comment so
       // no $pid), replace the comment form with the error message.
       if (empty($pid)) {

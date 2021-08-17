@@ -4,7 +4,6 @@ namespace Drupal\Tests\graphql\Traits;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\graphql\GraphQL\Execution\ExecutionResult;
-use GraphQL\Error\Error;
 use GraphQL\Server\OperationParams;
 
 /**
@@ -81,7 +80,7 @@ trait QueryResultAssertionTrait {
    * @param \Drupal\Core\Cache\CacheableMetadata|null $metadata
    *   The expected cache metadata object.
    */
-  protected function assertResults($query, array $variables, array $expected, CacheableMetadata $metadata = NULL) {
+  protected function assertResults($query, array $variables, array $expected, CacheableMetadata $metadata = NULL): void {
     $result = $this->server->executeOperation(
       OperationParams::create([
         'query' => $query,
@@ -106,7 +105,7 @@ trait QueryResultAssertionTrait {
    * @param \Drupal\Core\Cache\CacheableMetadata $metadata
    *   The expected cache metadata object.
    */
-  protected function assertErrors($query, array $variables, $expected, CacheableMetadata $metadata) {
+  protected function assertErrors($query, array $variables, $expected, CacheableMetadata $metadata): void {
     $result = $this->server->executeOperation(
       OperationParams::create([
         'query' => $query,
@@ -128,7 +127,7 @@ trait QueryResultAssertionTrait {
    *
    * @internal
    */
-  private function assertResultData(ExecutionResult $result, $expected) {
+  private function assertResultData(ExecutionResult $result, $expected): void {
     $data = $result->toArray();
     $this->assertArrayHasKey('data', $data, 'No result data.');
     $this->assertEquals($expected, $data['data'], 'Unexpected query result.');
@@ -144,35 +143,35 @@ trait QueryResultAssertionTrait {
    *
    * @internal
    */
-  private function assertResultErrors(ExecutionResult $result, array $expected) {
-    // Retrieve the list of error strings.
-    $errors = array_map(function (Error $error) {
-      return $error->getMessage();
-    }, $result->errors);
-
+  private function assertResultErrors(ExecutionResult $result, array $expected): void {
     // Initalize the status.
     $unexpected = [];
-    $matchCount = array_map(function () {
-      return 0;
-    }, array_flip($expected));
+    $matchCount = array_fill_keys($expected, 0);
 
     // Iterate through error messages.
     // Collect unmatched errors and count pattern hits.
-    while ($error = array_pop($errors)) {
+    foreach ($result->errors as $error) {
+      $error_message = $error->getMessage();
       $match = FALSE;
       foreach ($expected as $pattern) {
-        if (@preg_match($pattern, $error) === FALSE) {
-          $match = $match || $pattern == $error;
+        if (@preg_match($pattern, $error_message) === FALSE) {
+          $match = $match || $pattern == $error_message;
           $matchCount[$pattern]++;
         }
         else {
-          $match = $match || preg_match($pattern, $error);
+          $match = $match || preg_match($pattern, $error_message);
           $matchCount[$pattern]++;
         }
       }
 
       if (!$match) {
-        $unexpected[] = $error;
+        // Add error location information of the original error in the chain to
+        // show developers where to look.
+        $original_error = $error;
+        while ($original_error->getPrevious() !== NULL) {
+          $original_error = $original_error->getPrevious();
+        }
+        $unexpected[] = "Error message: ${error_message}\n  Originated in: {$original_error->getFile()}:{$original_error->getLine()}";
       }
     }
 
@@ -181,8 +180,8 @@ trait QueryResultAssertionTrait {
       return $count == 0;
     }));
 
-    $this->assertEquals([], $missing, "Missing errors:\n* " . implode("\n* ", $missing));
-    $this->assertEquals([], $unexpected, "Unexpected errors:\n* " . implode("\n* ", $unexpected));
+    self::assertEmpty($missing, "Missing errors:\n* " . implode("\n* ", $missing));
+    self::assertEmpty($unexpected, "Unexpected errors:\n* " . implode("\n* ", $unexpected));
   }
 
   /**
@@ -195,7 +194,7 @@ trait QueryResultAssertionTrait {
    *
    * @internal
    */
-  private function assertResultMetadata(ExecutionResult $result, CacheableMetadata $expected) {
+  private function assertResultMetadata(ExecutionResult $result, CacheableMetadata $expected): void {
     $this->assertEquals($expected->getCacheMaxAge(), $result->getCacheMaxAge(), 'Unexpected cache max age.');
 
     $missingContexts = array_diff($expected->getCacheContexts(), $result->getCacheContexts());

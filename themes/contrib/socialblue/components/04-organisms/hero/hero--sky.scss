@@ -340,6 +340,11 @@
     }
 
     .metainfo__content {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-left: -5px;
+      margin-right: -5px;
       line-height: 2;
 
       a {
@@ -350,10 +355,20 @@
         }
       }
 
+      > * {
+        padding-left: 5px;
+        padding-right: 5px;
+      }
+
+      > div:not([class]),
+      > div:last-child {
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+
       .badge--large {
         line-height: 1.2;
         margin-bottom: 0;
-        padding-left: 0;
       }
     }
 

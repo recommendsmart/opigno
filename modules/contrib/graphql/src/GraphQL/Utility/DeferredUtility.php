@@ -6,6 +6,9 @@ use GraphQL\Deferred;
 use GraphQL\Executor\Promise\Adapter\SyncPromise;
 use GraphQL\Executor\Promise\Adapter\SyncPromiseAdapter;
 
+/**
+ * Helper class for dealing with deferred promises.
+ */
 class DeferredUtility {
 
   /**
@@ -30,6 +33,8 @@ class DeferredUtility {
   }
 
   /**
+   * Execute a callback after a value is resolved.
+   *
    * @param mixed $value
    * @param callable $callback
    *
@@ -50,6 +55,8 @@ class DeferredUtility {
   }
 
   /**
+   * Execute a callback after a value is resolved and return the result.
+   *
    * @param mixed $value
    * @param callable $callback
    *

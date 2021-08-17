@@ -8,6 +8,9 @@ use Drupal\graphql\GraphQL\Utility\DeferredUtility;
 use Drupal\graphql\GraphQL\Execution\ResolveContext;
 use GraphQL\Type\Definition\ResolveInfo;
 
+/**
+ * Resolves by calling a chain of resolvers after each other.
+ */
 class Composite implements ResolverInterface {
 
   /**
@@ -32,7 +35,7 @@ class Composite implements ResolverInterface {
    * @param \Drupal\graphql\GraphQL\Resolver\ResolverInterface $resolver
    *   DataProducerProxy object.
    */
-  public function add(ResolverInterface $resolver) {
+  public function add(ResolverInterface $resolver): void {
     $this->resolvers[] = $resolver;
   }
 

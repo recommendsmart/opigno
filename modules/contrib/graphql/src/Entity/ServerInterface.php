@@ -6,9 +6,14 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\graphql\Plugin\PersistedQueryPluginInterface;
 use GraphQL\Server\OperationParams;
 
+/**
+ * Defines a GraphQL server that has configuration and executes queries.
+ */
 interface ServerInterface extends ConfigEntityInterface {
 
   /**
+   * Execute an operation on this server.
+   *
    * @param \GraphQL\Server\OperationParams $operation
    *
    * @return \Drupal\graphql\GraphQL\Execution\ExecutionResult
@@ -16,6 +21,8 @@ interface ServerInterface extends ConfigEntityInterface {
   public function executeOperation(OperationParams $operation);
 
   /**
+   * Execute multiple operations as batch on this server.
+   *
    * @param \GraphQL\Server\OperationParams[] $operations
    *
    * @return \Drupal\graphql\GraphQL\Execution\ExecutionResult[]

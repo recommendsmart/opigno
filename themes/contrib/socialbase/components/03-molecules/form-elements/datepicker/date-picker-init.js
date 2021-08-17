@@ -10,26 +10,29 @@
 
         var $time = $('.form-time');
         var $date = $('.form-date');
-        // We want to use the native date picker
-        // when the browser supports this on specific fields.
-        if (browserSupportsDateInput()) {
-          if (drupalSettings.socialbase != undefined &&
-            drupalSettings.socialbase.datepicker.nativeDatePickFields != undefined) {
-            // Get the fields which should use the native picker.
-            var nativePicker = drupalSettings.socialbase.datepicker.nativeDatePickFields;
-            if (nativePicker !== typeof undefined && nativePicker !== false) {
-              $date.each(function (dateIndex) {
-                $.each(nativePicker, function (index, value) {
-                  var nameAttr = $(this).attr('name');
-                  // If the name attribute contains the field name from
-                  // the settings, remove it from the date array.
-                  if (nameAttr !== typeof undefined && nameAttr !== false && nameAttr.includes(value)) {
-                    $date.splice(dateIndex, 1);
-                  }
-                });
-              });
+        // We want to use the native date picker when the browser supports this
+        // on specific fields and fields have been defined as requiring the
+        // native date picker.
+        if (
+          browserSupportsDateInput() &&
+          typeof drupalSettings.socialbase !== "undefined" &&
+          typeof drupalSettings.socialbase.datepicker !== "undefined" &&
+          typeof drupalSettings.socialbase.datepicker.nativeDatePickFields !== "undefined" &&
+          Array.isArray(drupalSettings.socialbase.datepicker.nativeDatePickFields)
+        ) {
+          // Filter out any date elements where the name attribute contains any
+          // of the strings in the array of field names to exclude.
+          const nativeFieldNames = drupalSettings.socialbase.datepicker.nativeDatePickFields;
+          $date = $date.filter(function () {
+            const $dateEl = $(this);
+            const elName = $dateEl.attr('name');
+            // If it has no name then keep it.
+            if (!elName) {
+              return true;
             }
-          }
+            // Keep it if it has no match to the configured excluded fields.
+            return !nativeFieldNames.some(excludedName => elName.includes(excludedName));
+          })
         }
 
         // TIME

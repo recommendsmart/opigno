@@ -5,7 +5,7 @@ namespace Drupal\ajax_comments;
 use Drupal\ajax_comments\Utility;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\PrivateTempStore;
-use Drupal\user\PrivateTempStoreFactory;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -28,7 +28,7 @@ class TempStore {
   /**
    * TempStore constructor.
    *
-   * @param \Drupal\user\PrivateTempStoreFactory $private_temp_store_factory
+   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $private_temp_store_factory
    *   The factory to create the PrivateTempStore object.
    */
   public function __construct(PrivateTempStoreFactory $private_temp_store_factory) {

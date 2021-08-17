@@ -22,8 +22,11 @@ abstract class BufferBase {
   protected $results = [];
 
   /**
+   * Returns the bucket name for grouping items together.
+   *
    * @param object $item
    *   The item to get the buffer id for.
+   *
    * @return string
    *   The buffer id.
    */
@@ -138,6 +141,9 @@ abstract class BufferBase {
    *
    * @param array $buffer
    *   The buffer as an array.
+   *
+   * @return array
+   *   The resolved/loaded items.
    */
   protected function resolveBufferArray(array $buffer) {
     throw new \LogicException('Method not implemented.');

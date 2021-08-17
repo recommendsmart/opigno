@@ -17,6 +17,8 @@ use GraphQL\Error\DebugFlag;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
+ * Admin form to set up a GraphQL server configuration entity.
+ *
  * @package Drupal\graphql\Form
  *
  * @codeCoverageIgnore
@@ -57,7 +59,7 @@ class ServerForm extends EntityForm {
    *
    * @codeCoverageIgnore
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): self {
     return new static(
       $container->get('plugin.manager.graphql.schema'),
       $container->get('router.request_context')
@@ -83,7 +85,7 @@ class ServerForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, FormStateInterface $formState) {
+  public function form(array $form, FormStateInterface $formState): array {
     $form = parent::form($form, $formState);
     /** @var \Drupal\graphql\Entity\ServerInterface $server */
     $server = $this->entity;
@@ -220,7 +222,7 @@ class ServerForm extends EntityForm {
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
-  public function validateForm(array &$form, FormStateInterface $formState) {
+  public function validateForm(array &$form, FormStateInterface $formState): void {
     $endpoint = &$formState->getValue('endpoint');
 
     // Trim the submitted value of whitespace and slashes. Ensure to not trim
@@ -245,7 +247,7 @@ class ServerForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $formState) {
+  public function submitForm(array &$form, FormStateInterface $formState): void {
     // Translate the debug flag from individual checkboxes to the enum value
     // that the GraphQL library expects.
     $formState->setValue('debug_flag', array_sum($formState->getValue('debug_flag')));

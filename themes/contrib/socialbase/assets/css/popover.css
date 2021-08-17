@@ -220,9 +220,15 @@
 
 @media (min-width: 976px) {
   .gin--vertical-toolbar .popover {
-    margin-left: 90px;
+    margin-left: 72px;
   }
   .gin--vertical-toolbar .popover > .arrow {
     margin-left: -103px;
+  }
+}
+
+@media (min-width: 976px) and (max-width: 1199px) {
+  .gin--vertical-toolbar .popover {
+    left: 0 !important;
   }
 }

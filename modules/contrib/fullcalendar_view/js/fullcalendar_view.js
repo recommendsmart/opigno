@@ -50,6 +50,7 @@
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',
+        timeZone: 'UTC',
         locale: 'sv-SE'
       };
     // define the end date string in 'YYYY-MM-DD' format.
@@ -181,6 +182,7 @@
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',
+        timeZone: 'UTC',
         locale: 'sv-SE'
       };
     // define the end date string in 'YYYY-MM-DD' format.
@@ -333,7 +335,7 @@
   // The workaround is to ckeck the document state
   // every 100 milliseconds until it is completed.
   // @see https://www.drupal.org/project/drupal/issues/2794099#comment-13274828
-  var checkReadyState = setInterval(() => {
+  var checkReadyState = setInterval(function() {
     if (
         document.readyState === "complete" &&
         $('.js-drupal-fullcalendar').length > 0

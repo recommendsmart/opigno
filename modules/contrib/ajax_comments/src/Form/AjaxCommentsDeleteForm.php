@@ -6,7 +6,9 @@ use Drupal\ajax_comments\TempStore;
 use Drupal\ajax_comments\Utility;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Form\DeleteForm;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -30,13 +32,17 @@ class AjaxCommentsDeleteForm extends DeleteForm {
   /**
    * Constructs an AjaxCommentsDeleteForm object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle service.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    * @param \Drupal\ajax_comments\TempStore $temp_store
    *   The TempStore service.
    */
-  public function __construct(EntityManagerInterface $entity_manager, TempStore $temp_store) {
-    parent::__construct($entity_manager);
+  public function __construct(EntityRepositoryInterface $entity_repository, EntityTypeBundleInfoInterface $entity_type_bundle_info, TimeInterface $time, TempStore $temp_store) {
+    parent::__construct($entity_repository, $entity_type_bundle_info, $time);
     $this->tempStore = $temp_store;
   }
 
@@ -45,7 +51,9 @@ class AjaxCommentsDeleteForm extends DeleteForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager'),
+      $container->get('entity.repository'),
+      $container->get('entity_type.bundle.info'),
+      $container->get('datetime.time'),
       $container->get('ajax_comments.temp_store')
     );
   }

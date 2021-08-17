@@ -24,6 +24,24 @@ class ThemeSuggestions extends BaseThemeSuggestions {
 
     switch ($hook) {
 
+      case 'comment':
+
+        if (
+          function_exists('_social_dashboard_is_activity_stream_on_dashboard') &&
+          _social_dashboard_is_activity_stream_on_dashboard() &&
+          $variables['elements']['#view_mode'] === 'activity_comment'
+        ) {
+          /** @var \Drupal\node\NodeInterface $node */
+          $node = \Drupal::routeMatch()->getParameter('node');
+          /** @var \Drupal\layout_builder\SectionStorageInterface $section_storage */
+          $section_storage = \Drupal::routeMatch()->getParameter('section_storage');
+          $bundle = is_null($node) ? $section_storage->getContextValues()['entity']->bundle() : $node->bundle();
+
+          $suggestions[] = 'comment__' . $variables['elements']['#view_mode'] . '__' . $bundle;
+        }
+
+        break;
+
       case 'block':
 
         if (isset($variables['elements']['#base_plugin_id'])) {

@@ -7,6 +7,8 @@ use Drupal\advancedqueue\JobResult;
 use Drupal\advancedqueue\Plugin\AdvancedQueue\JobType\JobTypeBase;
 
 /**
+ * Simple job type.
+ *
  * @AdvancedQueueJobType(
  *   id = "simple",
  *   label = @Translation("Simple"),

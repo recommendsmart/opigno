@@ -25,7 +25,7 @@ use Drupal\user\UserInterface;
  *     "translation" = "Drupal\data_policy\DataPolicyTranslationHandler",
  *     "form" = {
  *       "default" = "Drupal\data_policy\Form\DataPolicyForm",
- *       "edit" = "Drupal\data_policy\Form\DataPolicyForm",
+ *       "add" = "Drupal\data_policy\Form\DataPolicyAddForm"
  *     },
  *     "access" = "Drupal\data_policy\DataPolicyAccessControlHandler",
  *     "route_provider" = {
@@ -49,14 +49,15 @@ use Drupal\user\UserInterface;
  *   },
  *   links = {
  *     "canonical" = "/admin/config/people/data-policy/all/{data_policy}",
- *     "edit-form" = "/admin/config/people/data-policy/all/{data_policy}",
- *     "version-history" = "/admin/config/people/data-policy",
- *     "revision" = "/admin/config/people/data-policy/{data_policy_revision}",
- *     "revision_edit" = "/admin/config/people/data-policy/{data_policy_revision}/edit",
- *     "revision_revert" = "/admin/config/people/data-policy/{data_policy_revision}/revert",
- *     "revision_delete" = "/admin/config/people/data-policy/{data_policy_revision}/delete",
- *     "translation_revert" = "/admin/config/people/data-policy/{data_policy_revision}/revert/{langcode}",
- *     "collection" = "/admin/config/people/data-policy/all"
+ *     "collection" = "/admin/config/people/data-policy",
+ *     "edit-form" = "/admin/config/people/data-policy/{data_policy}",
+ *     "delete-form" = "/admin/config/people/data-policy/{data_policy}/delete",
+ *     "version-history" = "/admin/config/people/data-policy/{entity_id}/all",
+ *     "revision_edit" = "/admin/config/people/data-policy/{entity_id}/{data_policy_revision}/edit",
+ *     "revision" = "/admin/config/people/data-policy/{entity_id}/{data_policy_revision}",
+ *     "revision_revert" = "/admin/config/people/data-policy/{entity_id}/{data_policy_revision}/revert",
+ *     "revision_delete" = "/admin/config/people/data-policy/{entity_id}/{data_policy_revision}/delete",
+ *     "translation_revert" = "/admin/config/people/data-policy/{data_policy_revision}/revert/{langcode}"
  *   }
  * )
  */
@@ -204,7 +205,9 @@ class DataPolicy extends RevisionableContentEntityBase implements DataPolicyInte
 
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
+      ->setRequired(TRUE)
       ->setDescription(t('The name of the Data policy entity.'))
+      ->setTranslatable(TRUE)
       ->setRevisionable(TRUE)
       ->setSettings([
         'max_length' => 50,

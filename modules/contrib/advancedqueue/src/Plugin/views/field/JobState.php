@@ -4,6 +4,7 @@ namespace Drupal\advancedqueue\Plugin\views\field;
 
 use Drupal\advancedqueue\Job;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
@@ -47,7 +48,6 @@ class JobState extends FieldPluginBase {
     $state_options = self::getOptions();
     $label = isset($state_options[$state]) ? $state_options[$state] : $state;
 
-    $result = NULL;
     if ($this->options['icon']) {
       return [
         '#theme' => 'advancedqueue_state_icon',
@@ -70,10 +70,10 @@ class JobState extends FieldPluginBase {
    */
   public static function getOptions() {
     return [
-      Job::STATE_QUEUED => t('Queued'),
-      Job::STATE_PROCESSING => t('Processing'),
-      Job::STATE_SUCCESS => t('Success'),
-      Job::STATE_FAILURE => t('Failure'),
+      Job::STATE_QUEUED => new TranslatableMarkup('Queued'),
+      Job::STATE_PROCESSING => new TranslatableMarkup('Processing'),
+      Job::STATE_SUCCESS => new TranslatableMarkup('Success'),
+      Job::STATE_FAILURE => new TranslatableMarkup('Failure'),
     ];
   }
 

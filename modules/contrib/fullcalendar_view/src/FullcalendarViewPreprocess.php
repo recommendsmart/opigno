@@ -8,7 +8,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 class FullcalendarViewPreprocess {
   use StringTranslationTrait;
-  
+
   protected  static $viewIndex = 0;
   /**
    * Process the view variable array.
@@ -141,9 +141,18 @@ class FullcalendarViewPreprocess {
         // Entity bundle type.
         $entity_bundle = $current_entity->bundle();
         // Background color based on taxonomy field.
-        if (!empty($tax_field) && $current_entity->hasField($tax_field)) {
-          // Event type.
-          $event_type = $current_entity->get($tax_field)->target_id;
+        if (!empty($view->field[$tax_field])) {
+          $event_type = $view->style_plugin->getFieldValue($row->index, $tax_field);
+          if (!empty($event_type)) {
+            if (is_array($event_type)) {
+              // The taxonomy field might have multiple values.
+              // We just need the first one as the color code.
+              $event_type = reset($event_type);
+            }
+          }
+          else {
+            $event_type = '';
+          }
         }
         // Calendar event start date.
         $start_dates = $current_entity->get($start_field)->getValue();
@@ -153,6 +162,8 @@ class FullcalendarViewPreprocess {
         // Render all other fields to so they can be used in rewrite.
         foreach ($fields as $name => $field) {
           if (method_exists($field, 'advancedRender')) {
+            // Set the row_index property used by advancedRender function.
+            $field->view->row_index = $row->index;
             $des = $field->advancedRender($row);
           }
         }
@@ -239,7 +250,7 @@ class FullcalendarViewPreprocess {
               else {
                 // Drupal store date time in UTC timezone.
                 // So we need to convert it into user timezone.
-                $entry['start'] = $timezone_service->utcToLocal($start_date_value, $timezone, DATE_ATOM);
+                $entry['start'] = $timezone_service->utcToLocal($start_date_value, $timezone);
               }
             }
             else {
@@ -279,7 +290,7 @@ class FullcalendarViewPreprocess {
                 else {
                   // Drupal store date time in UTC timezone.
                   // So we need to convert it into user timezone.
-                  $entry['end'] = $timezone_service->utcToLocal($end_date, $timezone, DATE_ATOM);
+                  $entry['end'] = $timezone_service->utcToLocal($end_date, $timezone);
                 }
               }
             }
@@ -314,6 +325,7 @@ class FullcalendarViewPreprocess {
       // Fullcalendar options.
       $calendar_options = [
         'plugins' => [ 'moment','interaction', 'dayGrid', 'timeGrid', 'list', 'rrule' ],
+        'timeZone' => date_default_timezone_get(),
         'defaultView' => isset($options['default_view']) ? $options['default_view'] : 'dayGridMonth',
         'defaultDate' => empty($default_date) ? date('Y-m-d') : $default_date,
         'header' => [

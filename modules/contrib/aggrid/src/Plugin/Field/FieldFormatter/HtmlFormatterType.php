@@ -80,7 +80,7 @@ class HtmlFormatterType extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function createAggridRowData($rowSettings, $headers, $rowData) {
+  public function createAggridRowData($rowSettings, $columns, $headers, $rowData) {
 
     $aggridSuppression = new AggridSuppression();
 
@@ -172,6 +172,12 @@ class HtmlFormatterType extends FormatterBase {
             } else {
               $cellScope = '';
             }
+
+            // Check settings
+            if (isset($columns[0][$field])
+              && $columns[0][$field]['viewHide']) {
+              $cellClass = $cellClass . ' aggrid-htmlcell-viewhide';
+            }
             
             // Check if field/cell exists. If not, blank it as default.
             if (isset($rowData[$i]->$field)) {
@@ -257,28 +263,50 @@ class HtmlFormatterType extends FormatterBase {
         $headers = $getHeaders['headers'];
         $columns = $getHeaders['columns'];
 
+        // Data Header Settings.
+        $dataHeaderSettings[][][] = "";
+        $dataHeaderSettings = $aggridConfigHelpers->getRowSettings($aggridRowSettings, $headers, $columns, 'dh-');
+
+        // Run the headers again for colSpan
+        // Get header information
+        $getHeaders = $aggridConfigHelpers->getHeaders($aggridDefault['default']->columnDefs, $dataHeaderSettings);
+
+        // Set the variables from header information
+        $headers = $getHeaders['headers'];
+        $columns = $getHeaders['columns'];
+
         // Build table.
         $table_render = '';
         $table_render .= '<table id="' . $item_id . '-table" class="aggrid-html-widget"><thead>';
-        
+
         // Get the header rows.
         for ($y = 1; $y <= $rowIndex; $y++) {
           // Each header row and each column cell with spanning.
           $table_render .= '<tr>';
           for ($x = 1; $x <= $colIndex; $x++) {
             if (!array_key_exists($x, $columns[$y])) {
-              $table_render .= '<th id="' . $x . '"></th>';
+              $table_render .= '<th id="'. $item_id .'-h' . $y . 'c' . $x .'"></th>';
             }
             else {
               foreach ($columns[$y][$x] as $count => $value) {
-                foreach ($columns[$y][$x][$count] as $column => $value) {
-                  $table_render .= '<th scope="col" id="' . $x .'" colspan="' . $columns[$y][$x][$count][$column]['colspan'] . '" data-width="' . $columns[$y][$x][$count][$column]['width'] . '" data-minWidth="' . $columns[$y][$x][$count][$column]['minWidth'] . '">' . $columns[$y][$x][$count][$column]['headerName'] . '</th>';
+                // Set variables for columns
+                $colClass = [];
+                $field = $columns[$y][$x][$count]['field'];
+
+                // Check settings
+                if (isset($columns[0][$field])
+                  && $columns[0][$field]['viewHide']) {
+                  $colClass[] = 'aggrid-htmlcell-viewhide';
                 }
+
+                // Render the header
+                $table_render .= '<th scope="col" id="'. $item_id .'-h' . $y . 'c' . $x .'" class="'. implode(' ', $colClass) .'" colspan="' . $columns[$y][$x][$count]['colspan'] . '" data-width="' . $columns[$y][$x][$count]['width'] . '" data-minWidth="' . $columns[$y][$x][$count]['minWidth'] . '">' . $columns[$y][$x][$count]['headerName'] . '</th>';
               }
             }
           }
           $table_render .= '</tr>';
         }
+
         // Close up the headers and start on data rows.
         $table_render .= '</thead><tbody>';
         
@@ -287,13 +315,13 @@ class HtmlFormatterType extends FormatterBase {
         $pinnedTopRowSettings = $aggridConfigHelpers->getRowSettings($aggridRowSettings, $headers, $pinnedTopRowData, 't-');
         
         // Pinned Top Rows.
-        $table_render .= $this->createAggridRowData($pinnedTopRowSettings, $headers, $pinnedTopRowData);
+        $table_render .= $this->createAggridRowData($pinnedTopRowSettings, $columns, $headers, $pinnedTopRowData);
 
         // (Data) Row Settings.
         $rowSettings = $aggridConfigHelpers->getRowSettings($aggridRowSettings, $headers, $rowData, '');
         
         // Data rows.
-        $table_render .= $this->createAggridRowData($rowSettings, $headers, $rowData);
+        $table_render .= $this->createAggridRowData($rowSettings, $columns, $headers, $rowData);
         // Set the row suppression from after the actual rowData is run
         $rowSuppression = $this->rowSuppression;
         
@@ -301,7 +329,7 @@ class HtmlFormatterType extends FormatterBase {
         $pinnedBottomRowSettings = $aggridConfigHelpers->getRowSettings($aggridRowSettings, $headers, $pinnedBottomRowData, 'b-');
         
         // Pinned Bottom Rows.
-        $table_render .= $this->createAggridRowData($pinnedBottomRowSettings, $headers, $pinnedBottomRowData);
+        $table_render .= $this->createAggridRowData($pinnedBottomRowSettings, $columns, $headers, $pinnedBottomRowData);
         
         // Close up the table.
         $table_render .= '</tbody></table>';

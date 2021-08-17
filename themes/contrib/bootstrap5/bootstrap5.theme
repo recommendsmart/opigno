@@ -8,56 +8,15 @@
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Drupal\Core\Render\Element;
 
 /**
- * Implements hook_preprocess_HOOK() for menu-local-tasks templates.
- *
- * Use preprocess hook to set #attached to child elements
- * because they will be processed by Twig and drupal_render will
- * be invoked.
+ * Implements hook_theme_suggestions_HOOK_alter().
  */
-function bootstrap5_preprocess_menu_local_tasks(&$variables) {
-  if (!empty($variables['primary'])) {
-    $variables['primary']['#attached'] = [
-      'library' => [
-        'bootstrap5/drupal.nav-tabs',
-      ],
-    ];
-  }
-  elseif (!empty($variables['secondary'])) {
-    $variables['secondary']['#attached'] = [
-      'library' => [
-        'bootstrap5/drupal.nav-tabs',
-      ],
-    ];
-  }
+function bootstrap5_theme_suggestions_page_alter(array &$suggestions, array $variables) {
 
-  foreach (Element::children($variables['primary']) as $key) {
-    $variables['primary'][$key]['#level'] = 'primary';
-  }
-  foreach (Element::children($variables['secondary']) as $key) {
-    $variables['secondary'][$key]['#level'] = 'secondary';
-  }
-}
-
-/**
- * Implements hook_preprocess_HOOK() for menu-local-task templates.
- */
-function bootstrap5_preprocess_menu_local_task(&$variables) {
-  // Ensure is-active class is set when the tab is active. The generic active
-  // link handler applies stricter comparison rules than what is necessary for
-  // tabs.
-  if (isset($variables['is_active']) && $variables['is_active'] === TRUE) {
-    $variables['link']['#options']['attributes']['class'][] = 'active is-active';
-  }
-  else {
-    $variables['link']['#options']['attributes']['class'][] = 'nav-link';
-  }
-
-  if (isset($variables['element']['#level'])) {
-    $variables['level'] = $variables['element']['#level'];
+  if (isset($_GET['styleguide'])) {
+    $suggestions[] = 'page__styleguide';
   }
 }
 
@@ -70,13 +29,13 @@ function bootstrap5_form_system_theme_settings_alter(&$form, FormStateInterface 
     return;
   }
 
-  $themePath = '/' . \Drupal::theme()->getActiveTheme()->getPath() . '/style-guide';
-  if (file_exists(DRUPAL_ROOT . $themePath . '/index.html')) {
+  $styleguidePath = '/' . \Drupal::theme()->getActiveTheme()->getPath() . '/style-guide/index.html';
+  if (file_exists(DRUPAL_ROOT . $styleguidePath)) {
     $form['styleguide'] = [
       '#type' => 'details',
       '#title' => t('Style guide'),
       '#description' => t("Style guide demonstrates abilities of bootstrap framework. Open <a  target='_blank' href='@sglink'>style guide</a> in a new window.", [
-        '@sglink' => $themePath,
+        '@sglink' => $styleguidePath,
       ]),
       '#open' => TRUE,
     ];
@@ -113,7 +72,7 @@ function bootstrap5_form_system_theme_settings_alter(&$form, FormStateInterface 
   $form['body_details'] = [
     '#type' => 'details',
     '#title' => t('Body options'),
-    '#description' => t("Combination of theme/background colour may affect background colour/text colour contrast. To fix any contrast issues, override corresponding variables in scss(refer to dist/boostrap/scss/_variables.scss)"),
+    '#description' => t('Combination of theme/background colour may affect background colour/text colour contrast. To fix any contrast issues, override corresponding variables in scss file: <code>[bootstrap 5 theme]/dist/boostrap/[version]/scss/_variables.scss</code>'),
     '#open' => TRUE,
   ];
 
@@ -194,6 +153,20 @@ function bootstrap5_form_system_theme_settings_alter(&$form, FormStateInterface 
     '#options' => $options_colour,
   ];
 
+  $form['text_formats'] = [
+    '#type' => 'details',
+    '#title' => t('Text formats and CKEditor'),
+    '#description' => t("Configuration for text formats and editors."),
+    '#open' => TRUE,
+  ];
+
+  /*$form['text_formats']['b5_ckeditor_enable'] = [
+    '#type' => 'checkbox',
+    '#title' => t('CKEditor with bootstrap support'),
+    '#default_value' => theme_get_setting('b5_ckeditor_enable'),
+    '#description' => t("Enable bootstrap support inside bootstrap editor. If enabled, containers, cards and other styles will be rendered inside CKEditor."),
+  ];*/
+
   $form['subtheme'] = [
     '#type' => 'details',
     '#title' => t('Subtheme'),
@@ -213,12 +186,14 @@ function bootstrap5_form_system_theme_settings_alter(&$form, FormStateInterface 
   $form['subtheme']['subtheme_name'] = [
     '#type' => 'textfield',
     '#title' => t('Subtheme name'),
+    '#default_value' => 'B5 subtheme',
     '#description' => t("If name is empty, machine name will be used."),
   ];
 
   $form['subtheme']['subtheme_machine_name'] = [
     '#type' => 'textfield',
     '#title' => t('Subtheme machine name'),
+    '#default_value' => 'b5subtheme',
     '#description' => t("Use lowercase characters, numbers and underscores. Name must start with a letter."),
   ];
 
@@ -240,8 +215,9 @@ function bootstrap5_form_system_theme_settings_alter(&$form, FormStateInterface 
  */
 function bootstrap5_form_system_theme_settings_subtheme_validate(array &$form, FormStateInterface $form_state) {
 
+  $subthemePathValue = $form_state->getValue('subtheme_folder');
   // Check for empty values.
-  if (!$form_state->getValue('subtheme_folder')) {
+  if (!$subthemePathValue) {
     $form_state->setErrorByName('subtheme_folder', t('Subtheme folder is empty.'));
   }
   if (!$form_state->getValue('subtheme_machine_name')) {
@@ -252,7 +228,7 @@ function bootstrap5_form_system_theme_settings_subtheme_validate(array &$form, F
   }
 
   // Check for path trailing slash.
-  if (strrev(trim($form_state->getValue('subtheme_folder')))[0] === '/') {
+  if (strrev(trim($subthemePathValue))[0] === '/') {
     $form_state->setErrorByName('subtheme_folder', t('Subtheme folder should be without trailing slash.'));
   }
   // Check for name validity.
@@ -264,13 +240,14 @@ function bootstrap5_form_system_theme_settings_subtheme_validate(array &$form, F
   }
 
   // Check for writable path.
-  $directory = DRUPAL_ROOT . '/' . $form_state->getValue('subtheme_folder');
+
+  $directory = DRUPAL_ROOT . '/' . $subthemePathValue;
   if (\Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS) === FALSE) {
     $form_state->setErrorByName('subtheme_folder', t('Subtheme cannot be created. Check permissions.'));
   }
   // Check for common theme names.
   if (in_array($form_state->getValue('subtheme_machine_name'), [
-    'bootstrap', 'bootstrap5', 'claro', 'bartik', 'seven',
+    'bootstrap', 'bootstrap4', 'bootstrap5', 'claro', 'bartik', 'seven',
   ])) {
     $form_state->setErrorByName('subtheme_machine_name', t('Subtheme name should not match existing themes.'));
   }
@@ -291,49 +268,140 @@ function bootstrap5_form_system_theme_settings_subtheme_validate(array &$form, F
  * @see bootstrap5_form_system_theme_settings_alter()
  */
 function bootstrap5_form_system_theme_settings_subtheme_submit($form, FormStateInterface $form_state) {
-  $fs = new Filesystem();
+  $fs = \Drupal::service('file_system');
 
-  // Duplicate subtheme.
+  // Create subtheme.
   $themeMName = $form_state->getValue('subtheme_machine_name');
   $themeName = $form_state->getValue('subtheme_name');
   if (empty($themeName)) {
     $themeName = $themeMName;
   }
 
-  $themePath = DRUPAL_ROOT . '/' . $form_state->getValue('subtheme_folder') . '/' . $themeMName;
+  $subthemePathValue = $form_state->getValue('subtheme_folder');
+  $themePath = DRUPAL_ROOT . DIRECTORY_SEPARATOR . $subthemePathValue . DIRECTORY_SEPARATOR . $themeMName;
   if (!is_dir($themePath)) {
-    $fs->mirror(drupal_get_path('theme', 'bootstrap5') . '/_SUBTHEME', $themePath);
     // Copy CSS file replace empty one.
-    // Will be replaced after SCSS compilation is done.
-    $fs->copy(drupal_get_path('theme', 'bootstrap5') . '/css/style.css', $themePath . '/css/style.css', TRUE);
-    // Copy style guide.
-    $fs->mirror(drupal_get_path('theme', 'bootstrap5') . '/style-guide', $themePath . '/style-guide');
+    $subforders = ['css', 'style-guide'];
+    foreach ($subforders as $subforder) {
+      $directory = $themePath . DIRECTORY_SEPARATOR . $subforder . DIRECTORY_SEPARATOR;
+      $fs->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
 
+      $files = $fs->scanDirectory(
+        drupal_get_path('theme', 'bootstrap5') . DIRECTORY_SEPARATOR . $subforder . DIRECTORY_SEPARATOR, '/.*/');
+      foreach ($files as $file) {
+        //dump($file);
+        $fileName = $file->filename;
+        $fs->copy(
+          drupal_get_path('theme', 'bootstrap5') . DIRECTORY_SEPARATOR . $subforder . DIRECTORY_SEPARATOR . $fileName,
+          $themePath . DIRECTORY_SEPARATOR . $subforder . DIRECTORY_SEPARATOR . $fileName, TRUE);
+      }
+    }
+
+    // Copy image files.
     $files = [
-      'SUBTHEME.info._yml' => $themeMName . '.info.yml',
-      'SUBTHEME.libraries.yml' => $themeMName . '.libraries.yml',
-      'SUBTHEME.breakpoints.yml' => $themeMName . '.breakpoints.yml',
-      'SUBTHEME.theme' => $themeMName . '.theme',
+      'favicon.ico',
+      'logo.svg',
+      'screenshot.png',
     ];
+    foreach ($files as $fileName) {
+      $fs->copy(drupal_get_path('theme', 'bootstrap5') . DIRECTORY_SEPARATOR . $fileName,
+        $themePath . DIRECTORY_SEPARATOR . $fileName, TRUE);
+    }
 
-    foreach ($files as $before => $after) {
-      if ($before === 'SUBTHEME.info._yml') {
-        $infoYml = Yaml::decode(file_get_contents($themePath . '/' . $before));
-        $infoYml['name'] = $themeName;
-        $infoYml['description'] = $themeName . ' subtheme based on Bootstrap 5 theme.';
-        $infoYml['libraries'] = [];
-        $infoYml['libraries'][] = $themeMName . '/global-styling';
-        $fs->dumpFile($themePath . '/' . $after, Yaml::encode($infoYml));
+    // Copy files and rename content (array of lines of copy existing).
+    $files = [
+      'bootstrap5.breakpoints.yml' => -1,
+      'bootstrap5.libraries.yml' => [
+        'global-styling:',
+        '  css:',
+        '    theme:',
+        '      css/style.css: {}',
+        '',
+      ],
+      'bootstrap5.theme' => [
+        '<?php',
+        '',
+        '/**',
+        ' * @file',
+        ' * ' . $themeName .' theme file.',
+        ' */',
+        '',
+      ],
+      'README.md' => [
+        '# ' . $themeName . ' theme',
+        '',
+        '[Bootstrap 5](https://www.drupal.org/project/bootstrap5) subtheme.',
+        '',
+        '## Development.',
+        '',
+        '### CSS compilation.',
+        '',
+        'Prerequisites: install [sass](https://sass-lang.com/install).',
+        '',
+        'To compile, run from subtheme directory: `sass scss/style.scss css/style.css`',
+        '',
+      ],
+    ];
+    foreach ($files as $fileName => $lines) {
+      // Get file content.
+      $content = str_replace('bootstrap4', $themeMName, file_get_contents(drupal_get_path('theme', 'bootstrap5') . DIRECTORY_SEPARATOR . $fileName));
+      if (is_array($lines)) {
+        $content = implode(PHP_EOL, $lines);
       }
-      elseif ($before === 'SUBTHEME.breakpoints.yml') {
-        $breakpointsYml = file_get_contents($themePath . '/' . $before);
-        $breakpointsYml = str_replace('SUBTHEME', $themeMName, $breakpointsYml);
-        $fs->dumpFile($themePath . '/' . $after, $breakpointsYml);
+      file_put_contents($themePath . DIRECTORY_SEPARATOR . str_replace('bootstrap5', $themeMName, $fileName),
+        $content);
+    }
+
+    // Info yml file generation.
+    $infoYml = Yaml::decode(file_get_contents(drupal_get_path('theme', 'bootstrap5') . DIRECTORY_SEPARATOR . 'bootstrap5.info.yml'));
+    $infoYml['name'] = $themeName;
+    $infoYml['description'] = $themeName . ' subtheme based on Bootstrap 5 theme.';
+    $infoYml['base theme'] = 'bootstrap5';
+    $infoYml['stylesheets-remove'] = [];
+    $infoYml['stylesheets-remove'][] = '@bootstrap5/css/style.css';
+    $infoYml['libraries'] = [];
+    $infoYml['libraries'][] = $themeMName . '/global-styling';
+
+    foreach (['ckeditor_stylesheets', 'version', 'project', 'datestamp'] as $value) {
+      if (isset($infoYml[$value])) {
+        unset($infoYml[$value]);
       }
-      else {
-        $fs->copy($themePath . '/' . $before, $themePath . '/' . $after);
+    }
+
+    file_put_contents($themePath . DIRECTORY_SEPARATOR . $themeMName . '.info.yml',
+      Yaml::encode($infoYml));
+
+    // SCSS files generation.
+    $scssPath = $themePath . DIRECTORY_SEPARATOR . 'scss';
+    $b5ScssPath = drupal_get_path('theme', 'bootstrap5') . DIRECTORY_SEPARATOR . 'scss' . DIRECTORY_SEPARATOR;
+    $fs->prepareDirectory($scssPath, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+    $files = [
+      'style.scss' => [
+        "// Sub theme styling.",
+        "@import 'variables_theme';",
+        '',
+        "// Bootstrap overriden variables.",
+        "// @see https://getbootstrap.com/docs/5.0/customize/sass/#variable-defaults.",
+        "@import 'variables_bootstrap';",
+        '',
+        "// Include bootstrap.",
+        "@import '" .
+        str_repeat('../', count(explode(DIRECTORY_SEPARATOR, $subthemePathValue)) + 2) .
+        drupal_get_path('theme', 'bootstrap5') . "/scss/style';",
+        '',
+      ],
+      '_variables_theme.scss' => $b5ScssPath . '_variables_theme.scss',
+      '_variables_bootstrap.scss' => $b5ScssPath . '_variables_bootstrap.scss',
+    ];
+    foreach ($files as $fileName => $lines) {
+      // Get file content.
+      if (is_array($lines)) {
+        $content = implode(PHP_EOL, $lines);
+        file_put_contents($scssPath . DIRECTORY_SEPARATOR . $fileName, $content);
       }
-      $fs->remove($themePath . '/' . $before);
+      elseif (is_string($lines)) {
+        $fs->copy($lines, $scssPath . DIRECTORY_SEPARATOR . $fileName, TRUE);
+      }
     }
 
     \Drupal::messenger()->addStatus(t('Subtheme created at %subtheme', [
@@ -346,6 +414,15 @@ function bootstrap5_form_system_theme_settings_subtheme_submit($form, FormStateI
     ]));
   }
 
+}
+
+/**
+ * Implements theme_preprocess_html().
+ */
+function bootstrap5_preprocess_html(&$variables) {
+  // Body colour theme.
+  $variables['b5_body_schema'] = theme_get_setting('b5_body_schema');
+  $variables['b5_body_bg_schema'] = theme_get_setting('b5_body_bg_schema');
 }
 
 /**
@@ -364,12 +441,52 @@ function bootstrap5_preprocess_page(&$variables) {
 }
 
 /**
- * Implements hook_theme_suggestions_HOOK_alter().
+ * Implements hook_preprocess_HOOK() for menu-local-tasks templates.
+ *
+ * Use preprocess hook to set #attached to child elements
+ * because they will be processed by Twig and drupal_render will
+ * be invoked.
  */
-function bootstrap5_theme_suggestions_page_alter(array &$suggestions, array $variables) {
+function bootstrap5_preprocess_menu_local_tasks(&$variables) {
+  if (!empty($variables['primary'])) {
+    $variables['primary']['#attached'] = [
+      'library' => [
+        'bootstrap5/drupal.nav-tabs',
+      ],
+    ];
+  }
+  elseif (!empty($variables['secondary'])) {
+    $variables['secondary']['#attached'] = [
+      'library' => [
+        'bootstrap5/drupal.nav-tabs',
+      ],
+    ];
+  }
 
-  if (isset($_GET['styleguide'])) {
-    $suggestions[] = 'page__styleguide';
+  foreach (Element::children($variables['primary']) as $key) {
+    $variables['primary'][$key]['#level'] = 'primary';
+  }
+  foreach (Element::children($variables['secondary']) as $key) {
+    $variables['secondary'][$key]['#level'] = 'secondary';
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for menu-local-task templates.
+ */
+function bootstrap5_preprocess_menu_local_task(&$variables) {
+  // Ensure is-active class is set when the tab is active. The generic active
+  // link handler applies stricter comparison rules than what is necessary for
+  // tabs.
+  if (isset($variables['is_active']) && $variables['is_active'] === TRUE) {
+    $variables['link']['#options']['attributes']['class'][] = 'active is-active';
+  }
+  else {
+    $variables['link']['#options']['attributes']['class'][] = 'nav-link';
+  }
+
+  if (isset($variables['element']['#level'])) {
+    $variables['level'] = $variables['element']['#level'];
   }
 }
 
@@ -415,10 +532,22 @@ function bootstrap5_preprocess_datetime_form(&$variables) {
 }
 
 /**
- * Implements theme_preprocess_html().
+ * Implements theme_preprocess_views_ui_display_tab_setting().
  */
-function bootstrap5_preprocess_html(&$variables) {
-  // Body colour theme.
-  $variables['b5_body_schema'] = theme_get_setting('b5_body_schema');
-  $variables['b5_body_bg_schema'] = theme_get_setting('b5_body_bg_schema');
+function bootstrap5_preprocess_views_ui_display_tab_setting(&$variables) {
+  $variables['attributes']['class'][] = 'my-1';
+}
+
+/**
+ * Implements theme_preprocess_views_ui_display_tab_bucket().
+ */
+function bootstrap5_preprocess_views_ui_display_tab_bucket(&$variables) {
+  $variables['attributes']['class'][] = 'my-2';
+}
+
+/**
+ * Implements theme_preprocess_image().
+ */
+function bootstrap5_preprocess_image(&$variables) {
+  $variables['attributes']['class'][] = 'img-fluid';
 }

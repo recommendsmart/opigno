@@ -5,6 +5,9 @@ namespace Drupal\graphql\PersistedQuery;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\graphql\Plugin\PersistedQueryPluginInterface;
 
+/**
+ * Base class persisted query plugins that represent a GraphQL persisted query.
+ */
 abstract class PersistedQueryPluginBase extends PluginBase implements PersistedQueryPluginInterface {
 
   /**
@@ -17,7 +20,7 @@ abstract class PersistedQueryPluginBase extends PluginBase implements PersistedQ
   /**
    * {@inheritDoc}
    */
-  public function setConfiguration(array $configuration) {
+  public function setConfiguration(array $configuration): void {
     $this->configuration = $configuration + $this->defaultConfiguration();
   }
 
@@ -57,9 +60,8 @@ abstract class PersistedQueryPluginBase extends PluginBase implements PersistedQ
   /**
    * {@inheritdoc}
    */
-  public function setWeight($weight) {
+  public function setWeight($weight): void {
     $this->configuration['weight'] = $weight;
-    return $this;
   }
 
 }

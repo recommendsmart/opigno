@@ -122,7 +122,7 @@ class Database extends BackendBase implements SupportsDeletingJobsInterface, Sup
   public function enqueueJobs(array $jobs, $delay = 0) {
     if (count($jobs) > 1) {
       // Make the inserts atomic, and improve performance on certain engines.
-      $transaction = $this->connection->startTransaction();
+      $this->connection->startTransaction();
     }
 
     /** @var \Drupal\advancedqueue\Job $job */

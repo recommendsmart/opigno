@@ -14,6 +14,8 @@ use GraphQL\Deferred;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
+ * Loads the entity associated with the current URL.
+ *
  * @DataProducer(
  *   id = "route_entity",
  *   name = @Translation("Load entity by uuid"),
@@ -94,9 +96,16 @@ class RouteEntity extends DataProducerPluginBase implements ContainerFactoryPlug
   }
 
   /**
-   * {@inheritdoc}
+   * Resolver.
+   *
+   * @param \Drupal\Core\Url|mixed $url
+   *   The URL to get the route entity from.
+   * @param string|null $language
+   *   The language code to get a translation of the entity.
+   * @param \Drupal\graphql\GraphQL\Execution\FieldContext $context
+   *   The GraphQL field context.
    */
-  public function resolve($url, $language, FieldContext $context) {
+  public function resolve($url, ?string $language, FieldContext $context): ?Deferred {
     if ($url instanceof Url) {
       list(, $type) = explode('.', $url->getRouteName());
       $parameters = $url->getRouteParameters();
@@ -129,6 +138,7 @@ class RouteEntity extends DataProducerPluginBase implements ContainerFactoryPlug
         return NULL;
       });
     }
+    return NULL;
   }
 
 }

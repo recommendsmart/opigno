@@ -13,7 +13,7 @@ dependencies:
   - drupal:text
   - drupal:user
 
-# Information added by Drupal.org packaging script on 2021-01-12
-version: '8.x-1.0-alpha44'
+# Information added by Drupal.org packaging script on 2021-06-07
+version: '8.x-1.0-alpha45'
 project: 'aggrid'
-datestamp: 1610492295
+datestamp: 1623090383

@@ -9,6 +9,9 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Queue form.
+ */
 class QueueForm extends EntityForm {
 
   /**
@@ -120,8 +123,8 @@ class QueueForm extends EntityForm {
     $form['processing_time'] = [
       '#type' => 'number',
       '#title' => $this->t('Processing time'),
-      '#description' => t('How long the queue is processed. 0 means "unlimited", and requires processing via daemon.'),
-      '#field_suffix' => t('seconds'),
+      '#description' => $this->t('How long the queue is processed. 0 means "unlimited", and requires processing via daemon.'),
+      '#field_suffix' => $this->t('seconds'),
       '#default_value' => $queue->getProcessingTime(),
       '#min' => 0,
     ];

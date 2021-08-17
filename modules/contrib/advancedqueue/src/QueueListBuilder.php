@@ -50,7 +50,7 @@ class QueueListBuilder extends ConfigEntityListBuilder {
 
     if ($entity->getBackendId() === 'database') {
       $operations['jobs'] = [
-        'title' => t('List jobs'),
+        'title' => $this->t('List jobs'),
         'weight' => -20,
         'url' => Url::fromRoute('view.advancedqueue_jobs.page_1', ['arg_0' => $entity->id()]),
       ];

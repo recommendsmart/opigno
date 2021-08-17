@@ -2,21 +2,21 @@
 
 ## INTRODUCTION
 
-This is a very non-prescriptive vanilla Bootstrap 5 theme 
-with simple configuration. It can be used out of the box or 
-as a subtheme for creating very flexible web designs with 
-minimal changes (just override Bootstrap 5 variables.scss 
-and recompile css!)
+This is a very non-prescriptive vanilla Bootstrap 5 theme
+with simple configuration. It can be used out of the box or
+as a subtheme for creating very flexible web designs with
+minimal changes (just override Bootstrap 5 _variables.scss
+or this theme's _variables_theme.scss and recompile css!)
 
 ## FEATURES
 
-* Bootstrap 5 library (5.0.1) included
+* Bootstrap 5 library (5.0.2) included
 * Bootstrap 5 style guide (view all Bootstrap 5 components on one page)
 * Bootstrap 5 breakpoints
 * Bootstrap 5 integration with CKEditor
 * Bootstrap 5 configuration within admin user interface
 * Interface for creating subtheme
-* Can be used as is (subtheme is required for template overrides)
+* Can be used as is (subtheme is required for template and CSS overrides)
 * Drupal 8 and 9 compatible
 
 ## SASS compilation:
@@ -38,8 +38,10 @@ Head to `Appearance` and clicking bootstrap5 `settings`.
 
 ### Subtheme
 
-* If you require subtheme (usually if you want to override templates), 
-    see [subtheme docs](_SUBTHEME/README.md).
+* Enable theme.
+* Head to `/admin/appearance/settings/bootstrap5`.
+* Scroll down to `Subtheme` section.
+* Name your subtheme and click `Create`.
 
 ## Development and patching
 
@@ -54,20 +56,20 @@ Head to `Appearance` and clicking bootstrap5 `settings`.
 
 ### FAQ - Menu subnesting
 
-Nesting is considered bad practice in Bootstrap 5. It is bad for UX, mobile 
+Nesting is considered bad practice in Bootstrap 5. It is bad for UX, mobile
 usage and accessibility.
 
 Hence, there are no examples in the [current documentation](https://getbootstrap.com/docs/5.0/components/dropdowns/#menu-items).
 
-Read more: 
+Read more:
 
 * https://github.com/twbs/bootstrap/issues/27659
 * https://github.com/twbs/bootstrap/issues/16387#issuecomment-97153831
 
-Theme developers need to implement their own solution if they are catering 
+Theme developers need to implement their own solution if they are catering
 for multi level menus.
 
-To get started copy `templates/navigation/menu--main.html.twig` to your 
+To get started copy `templates/navigation/menu--main.html.twig` to your
 subtheme and modify as follows:
 
 ```

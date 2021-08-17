@@ -232,6 +232,11 @@
   margin-bottom: 0;
 }
 
+.socialblue--sky .card__info-user--about-address .field {
+  max-width: 100%;
+  margin-bottom: 0;
+}
+
 .socialblue--sky .card__counter {
   padding-bottom: 1.25rem;
 }

@@ -3,8 +3,9 @@ Advanced Queue
 
 Provides a better queue API for Drupal 8.
 
-Queues are configuration entities with an associated backend plugin. The backend plugin is responsible
-for enqueueing and manipulating jobs. Each job has a type (JobType plugin), responsible for processing it.
+Queues are configuration entities with an associated backend plugin.  The
+backend plugin is responsible for enqueueing and manipulating jobs.  Each
+job has a type (JobType plugin), responsible for processing it.
 
 Example:
 ```

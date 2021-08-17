@@ -12,16 +12,16 @@ use Drupal\Tests\graphql\Kernel\GraphQLTestBase;
 class PersistedQueriesTest extends GraphQLTestBase {
 
   /**
-   * @var string[]
+   * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'graphql_persisted_queries_test',
   ];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $schema = <<<GQL
       schema {
@@ -58,7 +58,7 @@ GQL;
    *
    * @dataProvider persistedQueriesDataProvider
    */
-  public function testPersistedQueries($instanceIds, $queryId, $expected) {
+  public function testPersistedQueries(array $instanceIds, string $queryId, array $expected): void {
     // Before adding the persisted query plugins to the server, we want to make
     // sure that there are no existing plugins already there.
     $this->server->removeAllPersistedQueryInstances();
@@ -77,7 +77,7 @@ GQL;
   /**
    * Data provider for testPersistedQueries().
    */
-  public function persistedQueriesDataProvider() {
+  public function persistedQueriesDataProvider(): array {
     return [
       // This is the most usual case, all the three plugins are enabled.
       [

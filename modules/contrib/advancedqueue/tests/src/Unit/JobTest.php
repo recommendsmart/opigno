@@ -30,7 +30,7 @@ class JobTest extends UnitTestCase {
   public function testIncompleteDefinition() {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('Missing property "type"');
-    $job = new Job([
+    new Job([
       'payload' => ['123456'],
       'state' => Job::STATE_QUEUED,
     ]);
@@ -42,7 +42,7 @@ class JobTest extends UnitTestCase {
   public function testInvalidState() {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('Invalid state "INVALID" given');
-    $job = new Job([
+    new Job([
       'type' => 'test',
       'payload' => ['123456'],
       'state' => 'INVALID',

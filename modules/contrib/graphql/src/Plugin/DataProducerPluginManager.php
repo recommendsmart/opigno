@@ -9,19 +9,28 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\graphql\Plugin\GraphQL\DataProducer\DataProducerProxy;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * Collects data producer plugins that are composed to read and write data.
+ */
 class DataProducerPluginManager extends DefaultPluginManager {
 
   /**
+   * The request stack later used to get the request time.
+   *
    * @var \Symfony\Component\HttpFoundation\RequestStack
    */
   protected $requestStack;
 
   /**
+   * The cache context manager for calculating cache keys.
+   *
    * @var \Drupal\Core\Cache\Context\CacheContextsManager
    */
   protected $contextsManager;
 
   /**
+   * The cache backend to cache results in.
+   *
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $resultCacheBackend;
@@ -77,6 +86,10 @@ class DataProducerPluginManager extends DefaultPluginManager {
   }
 
   /**
+   * Creates a data producer proxy that lazy forwards resolve requests.
+   *
+   * The data producer with the given ID is wrapped.
+   *
    * @param string $id
    * @param array $mapping
    * @param array $config

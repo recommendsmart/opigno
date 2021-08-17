@@ -2,7 +2,7 @@
 
 namespace Drupal\ajax_comments\Tests;
 
-use Drupal\comment\Tests\CommentTestBase;
+use Drupal\Tests\comment\Functional\CommentTestBase;
 use Drupal\user\Entity\Role;
 
 /**
@@ -24,6 +24,11 @@ class AjaxCommentsSettingsFormTest extends CommentTestBase {
     'node',
     'ajax_comments',
   ];
+
+   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -52,9 +57,9 @@ class AjaxCommentsSettingsFormTest extends CommentTestBase {
     $this->assertResponse(200);
 
     // Open comment settings.
-    $this->drupalPostAjaxForm(NULL, [], 'comment_settings_edit');
+    $this->drupalPostForm(NULL, [], 'comment_settings_edit');
     // Disable ajax comments.
-    $this->drupalPostAjaxForm(NULL, ['fields[comment][settings_edit_form][third_party_settings][ajax_comments][enable_ajax_comments]' => '0'], 'comment_plugin_settings_update');
+    $this->drupalPostForm(NULL, ['fields[comment][settings_edit_form][third_party_settings][ajax_comments][enable_ajax_comments]' => '0'], 'comment_plugin_settings_update');
     // Save display mode.
     $this->drupalPostForm(NULL, [], t('Save'));
     $this->assertResponse(200);

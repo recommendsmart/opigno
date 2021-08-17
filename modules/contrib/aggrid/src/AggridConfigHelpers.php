@@ -40,12 +40,12 @@ class AggridConfigHelpers {
     return $aggridDefault;
   }
 
-  public function getHeaders($columnDefs) {
+  public function getHeaders($columnDefs, $dataHeaderSettings = null) {
 
     $getHeaders = [];
 
     $columns = [];
-    $columnFields = "";
+    $headers = [];
 
     // Build table.
     $rowIndex = 0;
@@ -55,72 +55,72 @@ class AggridConfigHelpers {
       $rowIndex = $rowIndex > 1 ? $rowIndex : 1;
       $colIndex++;
 
-      $columns[1][$colIndex][$colIndex][$column->headerName] = [];
-      $columns[1][$colIndex][$colIndex][$column->headerName]['headerName'] = $column->headerName;
-      $columns[1][$colIndex][$colIndex][$column->headerName]['field'] = isset($column->field) ? $column->field : NULL;
-      $columns[1][$colIndex][$colIndex][$column->headerName]['width'] = isset($column->width) ? $column->width : NULL;
-      $columns[1][$colIndex][$colIndex][$column->headerName]['minWidth'] = isset($column->minWidth) ? $column->minWidth : NULL;
-
-      // Set the field if available.
-      if (isset($column->field)) {
-        $columnFields .= $column->field . ",";
-      }
+      $columns[1][$colIndex][$colIndex] = [];
+      $columns[1][$colIndex][$colIndex]['headerName'] = $column->headerName;
+      $columns[1][$colIndex][$colIndex]['headerNameFull'] = $column->headerName;
+      $columns[1][$colIndex][$colIndex]['field'] = isset($column->field) ? $column->field : NULL;
+      $columns[1][$colIndex][$colIndex]['width'] = isset($column->width) ? $column->width : NULL;
+      $columns[1][$colIndex][$colIndex]['minWidth'] = isset($column->minWidth) ? $column->minWidth : NULL;
+      $columns[1][$colIndex][$colIndex]['viewHide'] = isset($column->viewHide) ? $column->viewHide : false;
 
       // If children, then dive down for headers, otherwise establish column.
       if (isset($column->children)) {
-        $columns[1][$colIndex][$colIndex][$column->headerName]['colspan'] = count($column->children);
+        $colCount = count($column->children);
+        $columns[1][$colIndex][$colIndex]['colspan'] = $colCount;
         $count2 = 0;
         foreach ($column->children as $child) {
+          // If column is hidden on view, reduce previous colspan by one
+          if (isset($child->viewHide)
+            && $child->viewHide) {
+            $colCount = $columns[1][$colIndex][$colIndex]['colspan'];
+            $columns[1][$colIndex][$colIndex]['colspan'] = $colCount - 1;
+          }
+
           $rowIndex = $rowIndex > 2 ? $rowIndex : 2;
           $count2++;
 
-          $columns[2][$colIndex][$count2][$column->headerName . ' - ' . $child->headerName] = [];
-          $columns[2][$colIndex][$count2][$column->headerName . ' - ' . $child->headerName]['headerName'] = $child->headerName;
-          $columns[2][$colIndex][$count2][$column->headerName . ' - ' . $child->headerName]['field'] = isset($child->field) ? $child->field : NULL;
-          $columns[2][$colIndex][$count2][$column->headerName . ' - ' . $child->headerName]['width'] = isset($child->width) ? $child->width : NULL;
-          $columns[2][$colIndex][$count2][$column->headerName . ' - ' . $child->headerName]['minWidth'] = isset($child->minWidth) ? $child->minWidth : NULL;
+          $columns[2][$colIndex][$count2] = [];
+          $columns[2][$colIndex][$count2]['headerName'] = $child->headerName;
+          $columns[2][$colIndex][$count2]['headerNameFull'] = $column->headerName . ' - ' . $child->headerName;
+          $columns[2][$colIndex][$count2]['field'] = isset($child->field) ? $child->field : NULL;
+          $columns[2][$colIndex][$count2]['width'] = isset($child->width) ? $child->width : NULL;
+          $columns[2][$colIndex][$count2]['minWidth'] = isset($child->minWidth) ? $child->minWidth : NULL;
+          $columns[2][$colIndex][$count2]['viewHide'] = isset($child->viewHide) ? $child->viewHide : false;
+
+          // if the viewhide is true viewHide as true for this child
+          if ($columns[1][$colIndex][$colIndex]['viewHide']) {
+            $columns[2][$colIndex][$count2]['viewHide'] = true;
+          }
 
           // Set the field if available.
           if (isset($child->field)) {
-            $columnFields .= $child->field . ",";
+            $headers[] = $child->field;
+            $columns[0][$child->field] = [];
+            $columns[0][$child->field]['viewHide'] = $columns[2][$colIndex][$count2]['viewHide'];
           }
 
-          if (isset($child->children)) {
-            $columns[2][$colIndex][$count2][$column->headerName . ' - ' . $column->headerName]['colspan'] = count($child->children);
-            $count3 = 0;
-            foreach ($child->children as $subchild) {
-              $rowIndex = $rowIndex > 3 ? $rowIndex : 3;
-              $count3++;
-
-              $columns[3][$colIndex][$count3][$column->headerName . ' - ' . $child->headerName . ' - ' . $subchild->headerName] = [];
-              $columns[3][$colIndex][$count3][$column->headerName . ' - ' . $child->headerName . ' - ' . $subchild->headerName]['headerName'] = $subchild->headerName;
-              $columns[3][$colIndex][$count3][$column->headerName . ' - ' . $child->headerName . ' - ' . $subchild->headerName]['field'] = isset($subchild->field) ? $subchild->field : NULL;
-              $columns[3][$colIndex][$count3][$column->headerName . ' - ' . $child->headerName . ' - ' . $subchild->headerName]['colspan'] = 1;
-              $columns[3][$colIndex][$count3][$column->headerName . ' - ' . $child->headerName . ' - ' . $subchild->headerName]['width'] = isset($subchild->width) ? $subchild->width : NULL;
-              $columns[3][$colIndex][$count3][$column->headerName . ' - ' . $child->headerName . ' - ' . $subchild->headerName]['minWidth'] = isset($subchild->minWidth) ? $subchild->minWidth : NULL;
-
-              // Set the field if available.
-              if (isset($subchild->field)) {
-                $columnFields .= $subchild->field . ",";
-              }
-            }
-          }
-          else {
-            // Just one for colspan.
-            $columns[2][$colIndex][$count2][$column->headerName . ' - ' . $child->headerName]['colspan'] = 1;
-          }
+          // Just one for colspan.
+          $columns[2][$colIndex][$count2]['colspan'] = 1;
         }
+
       }
       else {
         // Just one for colspan.
-        $columns[1][$colIndex][$colIndex][$column->headerName]['colspan'] = 1;
+        $columns[1][$colIndex][$colIndex]['colspan'] = 1;
+      }
+
+      // If the parent column colspan is now 0, then default viewHide to true (all children are hidden)
+      if ($columns[1][$colIndex][$colIndex]['colspan'] <= 0) {
+        $columns[1][$colIndex][$colIndex]['viewHide'] = true;
+      }
+
+      // Set the field if available.
+      if (isset($column->field)) {
+        $headers[] = $column->field;
+        $columns[0][$column->field] = [];
+        $columns[0][$column->field]['viewHide'] = $columns[1][$colIndex][$colIndex]['viewHide'];
       }
     }
-
-    // Put columnFields to headers, trim comma, and put to array.
-    $headers = $columnFields;
-    $headers = substr($headers, 0, strlen($headers) - 1);
-    $headers = str_getcsv($headers);
 
     // Set return
     $getHeaders['rowIndex'] = $rowIndex;
@@ -145,11 +145,11 @@ class AggridConfigHelpers {
           if (isset($aggridRowSettings[$rowPrefix . $i]['rowDefault'])) {
             $rowSettings[$i][$field] = $rowSettings[$i][$field] + $aggridRowSettings[$rowPrefix . $i]['rowDefault'];
           }
-          if (isset($aggridRowSettings['default'][$field])) {
-            $rowSettings[$i][$field] = $rowSettings[$i][$field] + $aggridRowSettings['default'][$field];
+          if (isset($aggridRowSettings[$rowPrefix . 'default'][$field])) {
+            $rowSettings[$i][$field] = $rowSettings[$i][$field] + $aggridRowSettings[$rowPrefix . 'default'][$field];
           }
-          if (isset($aggridRowSettings['default']['rowDefault'])) {
-            $rowSettings[$i][$field] = $rowSettings[$i][$field] + $aggridRowSettings['default']['rowDefault'];
+          if (isset($aggridRowSettings[$rowPrefix . 'default']['rowDefault'])) {
+            $rowSettings[$i][$field] = $rowSettings[$i][$field] + $aggridRowSettings[$rowPrefix . 'default']['rowDefault'];
           }
         }
       }

@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 // @codingStandardsIgnoreEnd
 
 /**
- * Class QueueListCommand.
+ * Queue list command.
  *
  * @package Drupal\advancedqueue
  *
@@ -75,7 +75,7 @@ class QueueListCommand extends Command {
       $rows[] = [
         'id' => $queue->id(),
         'label' => $queue->label(),
-        'jobs' => implode($jobs, ' | '),
+        'jobs' => implode(' | ', $jobs),
       ];
     }
 

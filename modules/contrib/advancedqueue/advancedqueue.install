@@ -82,6 +82,7 @@ function advancedqueue_schema() {
     'indexes' => [
       'queue' => ['queue_id', 'state', 'available', 'expires'],
       'queue_state' => ['state'],
+      'queue_expires' => ['expires'],
     ],
   ];
 
@@ -95,4 +96,13 @@ function advancedqueue_update_8101() {
   $spec = advancedqueue_schema();
   $schema = Database::getConnection()->schema();
   $schema->addIndex('advancedqueue', 'queue_state', ['state'], $spec['advancedqueue']);
+}
+
+/**
+ * Add an index to the expires column.
+ */
+function advancedqueue_update_8102() {
+  $spec = advancedqueue_schema();
+  $schema = Database::getConnection()->schema();
+  $schema->addIndex('advancedqueue', 'queue_expires', ['expires'], $spec['advancedqueue']);
 }

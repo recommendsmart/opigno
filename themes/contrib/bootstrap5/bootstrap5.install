@@ -14,3 +14,13 @@ function bootstrap5_update_8100() {
     ->set('b5_top_container_config', '')
     ->save(TRUE);
 }
+
+/**
+ * Adding CKEditor configurable CSS styling.
+ */
+function bootstrap5_update_8101() {
+  \Drupal::configFactory()
+    ->getEditable('bootstrap5.settings')
+    ->set('b5_ckeditor_enable', TRUE)
+    ->save(TRUE);
+}

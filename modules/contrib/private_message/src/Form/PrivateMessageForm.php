@@ -237,8 +237,8 @@ class PrivateMessageForm extends ContentEntityForm {
     // Retrieve any members submitted on the form.
     $members = [];
     foreach ($form_state->getValue('members') as $info) {
-      if (is_array($info) && is_numeric($info[0]['target_id'])) {
-        $user = $this->userManager->load($info[0]['target_id']);
+      if (is_array($info) && isset($info['target_id']) && is_numeric($info['target_id'])) {
+        $user = $this->userManager->load($info['target_id']);
         if ($user) {
           $members[] = $user;
         }
@@ -294,7 +294,7 @@ class PrivateMessageForm extends ContentEntityForm {
 
       $members = [$current_user];
       foreach ($form_state->getValue('members') as $info) {
-        $user = $this->userManager->load($info[0]['target_id']);
+        $user = $this->userManager->load($info['target_id']);
         if ($user) {
           $members[] = $user;
         }

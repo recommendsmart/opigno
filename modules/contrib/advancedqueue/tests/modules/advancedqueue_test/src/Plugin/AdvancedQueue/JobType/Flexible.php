@@ -7,6 +7,8 @@ use Drupal\advancedqueue\JobResult;
 use Drupal\advancedqueue\Plugin\AdvancedQueue\JobType\JobTypeBase;
 
 /**
+ * Flexible job type.
+ *
  * @AdvancedQueueJobType(
  *   id = "flexible",
  *   label = @Translation("Flexible"),

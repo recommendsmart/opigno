@@ -1,16 +1,32 @@
 // Import breakpoint
 @import "node_modules/breakpoint-sass/stylesheets/breakpoint";
 
-@import "_vars";
-@import "coffee";
-@import "toolbar";
+// Helpers
+@import "helpers/**/*";
+
+// Settings
+@import "settings/**/*";
+
+// Components
+@import "components/coffee";
+@import "components/toolbar";
+@import "components/responsive-preview";
+@import "components/node-preview";
+
+// Scroll Offset
+:root {
+  --ginScrollOffset: 72px;
+
+  @include mq($breakpointLarge) {
+    --ginScrollOffset: 200px;
+  }
+}
 
 // Toolbar
 .toolbar {
   font-family: Inter, -apple-system, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 
   .toolbar-bar {
-    $breakpoint: 576px;
     background: #100f10;
     box-shadow: none;
   }
@@ -39,7 +55,9 @@
 }
 
 .toolbar-tray a,
-.toolbar .toolbar-menu .toolbar-menu a {
+.toolbar-tray span,
+.toolbar .toolbar-menu .toolbar-menu a,
+.toolbar .toolbar-menu .toolbar-menu span {
   color: var(--colorGinText);
 
   &:hover {
@@ -93,28 +111,20 @@
   }
 
   table.sticky-header {
-    @include mq(1024px) {
+    @include mq($breakpointLarge) {
       margin-top: 0;
     }
   }
 }
 
-.toolbar-bar {
-  .toolbar-icon {
-    &.toolbar-icon-escape-admin,
-    &.toolbar-icon-edit,
-    &.toolbar-icon-local-tasks,
-    &.toolbar-icon-menu,
-    &.toolbar-icon-shortcut,
-    &.toolbar-icon-coffee,
-    &.toolbar-icon-devel,
-    &.toolbar-icon-user,
-    &#toolbar-item-administration-search {
-      &:hover:before,
-      &.is-active:before {
-        background-color: #fff;
-      }
-    }
+.toolbar-menu .menu-item > span {
+  padding-left: 2.75em;
+}
+
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-icon {
+  &:hover:before,
+  &.is-active:before {
+    background-color: #fff;
   }
 }
 
@@ -128,7 +138,7 @@
     mask-size: 21px 21px;
   }
 
-  @include mq(976px) {
+  @include mq($breakpointMedium) {
     &:before {
       left: 16px;
     }
@@ -140,7 +150,7 @@
 
   .toolbar-logo {
     img {
-      @include breakpoint(1024px) {
+      @include mq($breakpointLarge) {
         max-height: 21px;
       }
     }
@@ -157,8 +167,8 @@
   }
 }
 
-.toolbar-tray-open.path-node .page-wrapper__node-edit-form .layout-region-node-secondary {
-  @include breakpoint(1024px) {
+.toolbar-tray-open.gin--edit-form .page-wrapper__node-edit-form .layout-region-node-secondary {
+  @include mq($breakpointLarge) {
     top: $topBar;
     height: calc(100% - #{$topBar});
   }

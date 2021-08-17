@@ -1,4 +1,4 @@
-@mixin b4-make-link(
+@mixin b5-make-link(
   $a-link-color: $link-color,
   $a-link-decoration: $link-decoration,
   $a-link-hover-color: $link-hover-color,
@@ -14,10 +14,3 @@
     }
   }
 }
-
-// @content
-// @mixin b4-make-fixed-container {
-//     margin: 0 auto;
-//     @include make-container;
-//     @include make-container-max-widths();
-// }

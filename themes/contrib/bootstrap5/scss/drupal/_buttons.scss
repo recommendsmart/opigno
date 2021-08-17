@@ -12,14 +12,14 @@ a {
   }
 }
 
-// todo - all div a should be updated in b4 theme for drupal
+// @todo - all div a should be updated in b5 theme for drupal
 @each $color, $value in $theme-colors {
   .btn-#{$color} {
     a {
-      color: color-yiq($value);
+      color: color-contrast($value);
 
       &:hover {
-        color: color-yiq($value);
+        color: color-contrast($value);
         text-decoration: none;
       }
     }
@@ -30,13 +30,13 @@ a {
   .btn-outline-#{$color} {
     &:hover {
       a {
-        color: color-yiq($value);
+        color: color-contrast($value);
       }
     }
 
     a {
       &:hover {
-        color: color-yiq($value);
+        color: color-contrast($value);
         text-decoration: none;
       }
     }

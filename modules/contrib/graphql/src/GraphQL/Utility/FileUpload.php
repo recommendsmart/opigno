@@ -12,6 +12,8 @@ use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
+use Drupal\Core\Render\RenderContext;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\Token;
@@ -86,6 +88,13 @@ class FileUpload {
   protected $systemFileConfig;
 
   /**
+   * The renderer service.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructor.
    */
   public function __construct(
@@ -96,7 +105,8 @@ class FileUpload {
     LoggerChannelInterface $logger,
     Token $token,
     LockBackendInterface $lock,
-    ConfigFactoryInterface $config_factory
+    ConfigFactoryInterface $config_factory,
+    RendererInterface $renderer
   ) {
     /** @var \Drupal\file\FileStorageInterface $file_storage */
     $file_storage = $entityTypeManager->getStorage('file');
@@ -108,6 +118,7 @@ class FileUpload {
     $this->token = $token;
     $this->lock = $lock;
     $this->systemFileConfig = $config_factory->get('system.file');
+    $this->renderer = $renderer;
   }
 
   /**
@@ -271,6 +282,47 @@ class FileUpload {
   }
 
   /**
+   * Validates uploaded files, saves them and returns a file upload response.
+   *
+   * @param \Symfony\Component\HttpFoundation\File\UploadedFile[] $uploaded_files
+   *   The file entities to upload.
+   * @param array $settings
+   *   File settings as specified in regular file field config. Contains keys:
+   *   - file_directory: Where to upload the file
+   *   - uri_scheme: Uri scheme to upload the file to (eg public://, private://)
+   *   - file_extensions: List of valid file extensions (eg [xml, pdf])
+   *   - max_filesize: Maximum allowed size of uploaded file.
+   *
+   * @return \Drupal\graphql\GraphQL\Response\FileUploadResponse
+   *   The file upload response containing file entities or list of violations.
+   */
+  public function saveMultipleFileUploads(array $uploaded_files, array $settings): FileUploadResponse {
+    $response = new FileUploadResponse();
+    foreach ($uploaded_files as $uploaded_file) {
+      if (!$uploaded_file instanceof UploadedFile) {
+        continue;
+      }
+      $file_upload_response = $this->saveFileUpload($uploaded_file, $settings);
+      $file_entity = $file_upload_response->getFileEntity();
+      if ($file_entity) {
+        $response->setFileEntity($file_entity);
+      }
+      else {
+        // If one file upload fails we need to delete any other uploaded files
+        // before that. Avoids file orphans that don't belong to any entity.
+        foreach ($response->getFileEntities() as $saved_file_entity) {
+          $saved_file_entity->delete();
+        }
+        // Reset list of file entities as this is a violation response.
+        $response->setFileEntities([]);
+        $response->mergeViolations($file_upload_response);
+        return $response;
+      }
+    }
+    return $response;
+  }
+
+  /**
    * Validates the file.
    *
    * @param \Drupal\file\FileInterface $file
@@ -374,9 +426,17 @@ class FileUpload {
   protected function getUploadLocation(array $settings): string {
     $destination = trim($settings['file_directory'], '/');
 
-    // Replace tokens. As the tokens might contain HTML we convert it to plain
-    // text.
-    $destination = PlainTextOutput::renderFromHtml($this->token->replace($destination, []));
+    // Replace tokens first. This might produce cacheable metadata if tokens
+    // are used in the path. As this service is intended to be used in mutations
+    // which are not cached at all, it's enough to just catch leaked metadata
+    // and skip including them in current GraphQL field's context.
+    $context = new RenderContext();
+    $destination = $this->renderer->executeInRenderContext($context, function () use ($destination): string {
+      return $this->token->replace($destination, []);
+    });
+
+    // As the tokens might contain HTML we convert it to plain text.
+    $destination = PlainTextOutput::renderFromHtml($destination);
     return $settings['uri_scheme'] . '://' . $destination;
   }
 

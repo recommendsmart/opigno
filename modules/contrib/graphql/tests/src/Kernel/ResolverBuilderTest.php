@@ -6,6 +6,8 @@ use GraphQL\Deferred;
 use Drupal\graphql\GraphQL\Resolver\ResolverInterface;
 
 /**
+ * Tests that the resolver builder behaves correctly.
+ *
  * @coversDefaultClass \Drupal\graphql\GraphQL\ResolverBuilder
  *
  * @group graphql
@@ -15,12 +17,12 @@ class ResolverBuilderTest extends GraphQLTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['graphql_resolver_builder_test'];
+  protected static $modules = ['graphql_resolver_builder_test'];
 
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $schema = <<<GQL
@@ -52,7 +54,7 @@ GQL;
    * @param string $input
    * @param string $expected
    */
-  public function testBuilderProducing($input, $expected) {
+  public function testBuilderProducing($input, $expected): void {
     $plugin = $this->builder->produce($input, []);
     $this->assertInstanceOf($expected, $plugin);
   }
@@ -60,7 +62,7 @@ GQL;
   /**
    * @return array
    */
-  public function testBuilderProducingProvider() {
+  public function testBuilderProducingProvider(): array {
     return [
       ['entity_load', ResolverInterface::class],
       ['entity_id', ResolverInterface::class],
@@ -71,7 +73,7 @@ GQL;
   /**
    * @covers ::fromValue
    */
-  public function testFromValue() {
+  public function testFromValue(): void {
     $this->mockResolver('Query', 'me', $this->builder->fromValue('some me'));
 
     $query = <<<GQL
@@ -86,7 +88,7 @@ GQL;
   /**
    * @covers ::fromParent
    */
-  public function testFromParent() {
+  public function testFromParent(): void {
     $this->mockResolver('Query', 'tree', $this->builder->fromValue('Some string value'));
     $this->mockResolver('Tree', 'name', $this->builder->fromParent());
 
@@ -104,7 +106,7 @@ GQL;
   /**
    * @covers ::fromArgument
    */
-  public function testFromArgument() {
+  public function testFromArgument(): void {
     $this->mockResolver('Query', 'tree', $this->builder->fromValue([
       'name' => 'some tree',
       'id' => 5,
@@ -125,7 +127,7 @@ GQL;
   /**
    * @covers ::fromPath
    */
-  public function testFromPath() {
+  public function testFromPath(): void {
     $manager = $this->container->get('typed_data_manager');
     $tree_definition = $manager->createDataDefinition('tree');
     /** @var \Drupal\graphql_resolver_builder_test\Plugin\DataType\Tree $right */
@@ -155,7 +157,7 @@ GQL;
   /**
    * @covers ::compose
    */
-  public function testCompose() {
+  public function testCompose(): void {
     $this->mockResolver('Query', 'tree', $this->builder->fromValue([
       'name' => 'some tree',
       'id' => 5,
@@ -180,7 +182,7 @@ GQL;
   /**
    * @covers ::compose
    */
-  public function testComposeNullValue() {
+  public function testComposeNullValue(): void {
     $this->mockResolver('Query', 'tree', $this->builder->fromValue([
       'name' => 'some tree',
       'id' => 5,
@@ -206,7 +208,7 @@ GQL;
    * @covers ::context
    * @covers ::fromContext
    */
-  public function testFromContext() {
+  public function testFromContext(): void {
     $this->mockResolver('Query', 'tree', $this->builder->fromValue('some value'));
 
     $this->mockResolver('Tree', 'context', $this->builder->compose(
@@ -232,7 +234,7 @@ GQL;
   /**
    * @covers ::cond
    */
-  public function testSimpleCond() {
+  public function testSimpleCond(): void {
     $this->mockResolver('Query', 'tree', $this->builder->fromValue([
       'name' => 'some tree',
       'id' => 5,
@@ -266,7 +268,7 @@ GQL;
   /**
    * @covers ::cond
    */
-  public function testDeferredCond() {
+  public function testDeferredCond(): void {
     $this->mockResolver('Query', 'tree', $this->builder->fromValue([
       'name' => 'some tree',
       'id' => 5,
@@ -304,7 +306,7 @@ GQL;
   /**
    * @covers ::cond
    */
-  public function testParentCond() {
+  public function testParentCond(): void {
     $this->mockResolver('Query', 'tree', ['name' => 'some tree', 'id' => 5]);
     $this->mockResolver('Tree', 'name', $this->builder->cond([
       [
@@ -335,7 +337,7 @@ GQL;
   /**
    * @covers ::defaultValue
    */
-  public function testSimpleDefaultValue() {
+  public function testSimpleDefaultValue(): void {
     $this->mockResolver('Query', 'tree', ['name' => 'some tree', 'id' => 5]);
     $this->mockResolver('Tree', 'name', $this->builder->defaultValue(
       $this->builder->fromValue(NULL),
@@ -367,7 +369,7 @@ GQL;
   /**
    * Tests the composite default value resolver.
    */
-  public function testCompositeDefaultValue() {
+  public function testCompositeDefaultValue(): void {
 
     $this->mockResolver('Query', 'tree', ['name' => 'some tree', 'id' => 5]);
     $this->mockResolver('Tree', 'name', $this->builder->defaultValue(
@@ -406,7 +408,7 @@ GQL;
   /**
    * @covers ::defaultValue
    */
-  public function testDeferredDefaultValue() {
+  public function testDeferredDefaultValue(): void {
     $this->mockResolver('Query', 'tree', ['name' => 'some tree', 'id' => 5]);
     $this->mockResolver('Tree', 'name', $this->builder->defaultValue(
       $this->builder->callback(function () {

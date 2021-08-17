@@ -7,6 +7,7 @@ use Drupal\bootstrap\Utility\Element;
 use Drupal\bootstrap\Utility\Variables;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\node\NodeInterface;
 
 /**
@@ -82,7 +83,9 @@ class Node extends PreprocessBase {
             // the array that gets returned from loading GroupContent.
             $group = reset($group_content)->getGroup();
 
-            if (!empty($group)) {
+            if ($group instanceof GroupInterface) {
+              // Get translated group entity.
+              $group = \Drupal::service('entity.repository')->getTranslationFromContext($group);
               $variables['content']['group_name'] = $group->label();
             }
           }

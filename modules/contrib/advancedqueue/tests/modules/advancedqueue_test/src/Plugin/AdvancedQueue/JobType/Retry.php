@@ -7,6 +7,8 @@ use Drupal\advancedqueue\JobResult;
 use Drupal\advancedqueue\Plugin\AdvancedQueue\JobType\JobTypeBase;
 
 /**
+ * Retry job type.
+ *
  * @AdvancedQueueJobType(
  *   id = "retry",
  *   label = @Translation("Retry"),

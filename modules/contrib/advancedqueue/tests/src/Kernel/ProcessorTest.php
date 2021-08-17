@@ -63,9 +63,11 @@ class ProcessorTest extends KernelTestBase {
    */
   public function testProcessor() {
     $first_job = Job::create('simple', ['test' => '1']);
-    $second_job = Job::create('flexible', ['expected_state' => Job::STATE_SUCCESS, 'expected_message' => 'Done!']);
+    $second_job = Job::create('flexible',
+      ['expected_state' => Job::STATE_SUCCESS, 'expected_message' => 'Done!']);
     $third_job = Job::create('flexible', ['expected_exception' => 'DB down!']);
-    $fourth_job = Job::create('flexible', ['expected_state' => Job::STATE_FAILURE, 'expected_message' => 'Failed!']);
+    $fourth_job = Job::create('flexible',
+      ['expected_state' => Job::STATE_FAILURE, 'expected_message' => 'Failed!']);
 
     $this->queue->enqueueJob($first_job);
     $this->queue->enqueueJob($second_job);

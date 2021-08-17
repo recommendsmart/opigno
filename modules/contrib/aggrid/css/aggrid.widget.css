@@ -92,6 +92,12 @@ div.ag-root .aggrid-cell-hidden {
   visibility: hidden;
 }
 
+table.aggrid-html-widget .aggrid-htmlcell-viewhide {
+  display: none;
+  visibility: hidden;
+  width: 0;
+}
+
 div.ag-root .aggrid-cell-indent
 , table.aggrid-html-widget .aggrid-htmlcell-indent {
   padding-left: 15px;

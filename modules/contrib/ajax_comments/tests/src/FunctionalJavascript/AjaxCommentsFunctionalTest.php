@@ -7,7 +7,7 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 
@@ -16,7 +16,7 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
  *
  * @group ajax_comments
  */
-class AjaxCommentsFunctionalTest extends JavascriptTestBase {
+class AjaxCommentsFunctionalTest extends WebDriverTestBase {
 
   use CommentTestTrait;
 
@@ -32,6 +32,11 @@ class AjaxCommentsFunctionalTest extends JavascriptTestBase {
     'ckeditor',
     'filter',
   ];
+
+   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -103,7 +108,7 @@ class AjaxCommentsFunctionalTest extends JavascriptTestBase {
       'type' => 'article',
       'comment' => CommentItemInterface::OPEN,
     ]);
-    $this->drupalGet($node->toUrl()->toString());
+    $this->drupalGet($node->toUrl());
 
     // Set up JavaScript to track errors.
     $onerror_javascript = <<<JS
@@ -326,7 +331,7 @@ JS;
     }
 
     // Reload the page.
-    $this->drupalGet($node->toUrl()->toString());
+    $this->drupalGet($node->toUrl());
 
     // Revoke the user's permission to post comments, again.
     /** @var \Drupal\user\RoleInterface[] $roles */
@@ -361,7 +366,7 @@ JS;
     }
 
     // Reload the page.
-    $this->drupalGet($node->toUrl()->toString());
+    $this->drupalGet($node->toUrl());
 
     // Click the link to reply to a comment.
     $reply_link = $page->findLink('Reply');

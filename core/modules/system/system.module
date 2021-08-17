@@ -10,6 +10,7 @@ use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
@@ -18,6 +19,8 @@ use Drupal\Core\Extension\Dependency;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldWidget\EntityReferenceAutocompleteWidget;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
@@ -29,6 +32,7 @@ use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\Queue\QueueGarbageCollectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\path_alias\PathAliasInterface;
@@ -1474,4 +1478,17 @@ function system_path_alias_presave(PathAliasInterface $path_alias) {
     $args = ['@path' => $path_alias->getPath(), '@alias' => $path_alias->getAlias()];
     throw new \LogicException(new FormattableMarkup($message, $args));
   }
+}
+
+/**
+ * Implements hook_entity_field_access().
+ */
+function system_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+  if ($items) {
+    $entity_type = $items->getEntity()->getEntityType();
+    if ($entity_type->hasKey('langcode') && $entity_type->getKey('langcode') === $field_definition->getName()) {
+      return AccessResult::forbidden();
+    }
+  }
+  return AccessResult::neutral();
 }

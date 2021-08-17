@@ -85,7 +85,7 @@ summary.card__title {
   margin-top: -1.25rem;
   padding: 1.25rem;
   position: relative;
-  z-index: 2;
+  z-index: 1;
 }
 
 .card__actionbar:before, .card__actionbar:after {

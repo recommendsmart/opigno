@@ -10,9 +10,14 @@ use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\graphql\Plugin\PersistedQueryPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Admin form to set up persisted GraphQL queries.
+ */
 class PersistedQueriesForm extends EntityForm {
 
   /**
+   * Plugin manager for persisted query plugins.
+   *
    * @var \Drupal\graphql\Plugin\PersistedQueryPluginManager
    */
   protected $persistedQueryPluginManager;
@@ -36,7 +41,7 @@ class PersistedQueriesForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): self {
     return new static(
       $container->get('plugin.manager.graphql.persisted_query')
     );
@@ -52,7 +57,7 @@ class PersistedQueriesForm extends EntityForm {
   /**
    * {@inheritDoc}
    */
-  public function form(array $form, FormStateInterface $form_state) {
+  public function form(array $form, FormStateInterface $form_state): array {
     $form = parent::form($form, $form_state);
 
     /** @var \Drupal\graphql\Plugin\PersistedQueryPluginInterface[] $plugins */
@@ -165,7 +170,7 @@ class PersistedQueriesForm extends EntityForm {
   /**
    * {@inheritDoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     parent::submitForm($form, $form_state);
     $values = $form_state->getValues();
 

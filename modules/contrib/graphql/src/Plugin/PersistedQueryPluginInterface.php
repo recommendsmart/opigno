@@ -6,9 +6,19 @@ use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use GraphQL\Server\OperationParams;
 
+/**
+ * Defines plugins that represent persisted GraphQL queries.
+ */
 interface PersistedQueryPluginInterface extends ConfigurableInterface, PluginInspectionInterface {
 
   /**
+   * Returns a query if this plugin has it.
+   *
+   * @param string $id
+   *   ID of the persisted query.
+   * @param \GraphQL\Server\OperationParams $operation
+   *   The operation with parameters.
+   *
    * @return string|null
    *   The actual GraphQL query, or NULL if this plugin does not support a query
    *   with that ID.

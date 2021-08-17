@@ -12,6 +12,9 @@ use Drupal\graphql\Entity\Server;
 use Drupal\graphql\GraphQL\ResolverRegistry;
 use Drupal\Tests\RandomGeneratorTrait;
 
+/**
+ * Contains helpers for setting up mock servers and schemas for testing.
+ */
 trait MockingTrait {
   use RandomGeneratorTrait;
 
@@ -79,7 +82,7 @@ trait MockingTrait {
    *   Schema id.
    * @param array $values
    */
-  protected function setUpSchema($schema, $id = 'test', array $values = []) {
+  protected function setUpSchema($schema, $id = 'test', array $values = []): void {
     $this->mockSchema($id, $schema);
     $this->mockSchemaPluginManager($id);
     $this->createTestServer($id, '/graphql/' . $id, $values);
@@ -100,7 +103,7 @@ trait MockingTrait {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function createTestServer($schema, $endpoint, array $values = []) {
+  protected function createTestServer($schema, $endpoint, array $values = []): void {
     $this->server = Server::create([
       'schema' => $schema,
       'name' => $this->randomGenerator->name(),
@@ -120,7 +123,7 @@ trait MockingTrait {
    * @param \Drupal\graphql\Plugin\SchemaExtensionPluginInterface[] $extensions
    *   An array of schema extension plugins.
    */
-  protected function mockSchema($id, $schema, array $extensions = []) {
+  protected function mockSchema($id, $schema, array $extensions = []): void {
     /** @var \PHPUnit\Framework\MockObject\MockObject $extensionManager */
     $extensionManager = $this->getMockBuilder(SchemaExtensionPluginManager::class)
       ->disableOriginalConstructor()
@@ -159,7 +162,7 @@ trait MockingTrait {
    *
    * @param string $id
    */
-  protected function mockSchemaPluginManager($id) {
+  protected function mockSchemaPluginManager($id): void {
     $this->schemaPluginManager = $this->getMockBuilder(SchemaPluginManager::class)
       ->disableOriginalConstructor()
       ->getMock();
@@ -186,7 +189,7 @@ trait MockingTrait {
    * @param mixed|\Drupal\graphql\GraphQL\Resolver\ResolverInterface $resolver
    *   Resolver.
    */
-  protected function mockResolver($type, $field, $resolver = NULL) {
+  protected function mockResolver($type, $field, $resolver = NULL): void {
     if (is_callable($resolver)) {
       $resolver = new Callback($resolver);
     }
@@ -206,7 +209,7 @@ trait MockingTrait {
    * @param callable $resolver
    *   Type resolver.
    */
-  protected function mockTypeResolver($type, callable $resolver) {
+  protected function mockTypeResolver($type, callable $resolver): void {
     $this->registry->addTypeResolver($type, $resolver);
   }
 

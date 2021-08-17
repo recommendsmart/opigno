@@ -185,13 +185,19 @@
 
 // Popover styles if gin vertical toolbar is active.
 .gin--vertical-toolbar {
-  @media (min-width: 976px) {
-    .popover {
-      margin-left: 90px;
+
+
+  .popover {
+    @media (min-width: 976px) {
+      margin-left: 72px;
 
       > .arrow {
         margin-left: -103px;
       }
+    }
+
+    @media(min-width: 976px) and (max-width: 1199px) {
+      left: 0 !important;
     }
   }
 }

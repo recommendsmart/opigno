@@ -105,7 +105,7 @@ class AdvancedQueueCommands extends DrushCommands {
       $rows[] = [
         'id' => $queue->id(),
         'label' => $queue->label(),
-        'jobs' => implode($jobs, ' | '),
+        'jobs' => implode(' | ', $jobs),
       ];
     }
 

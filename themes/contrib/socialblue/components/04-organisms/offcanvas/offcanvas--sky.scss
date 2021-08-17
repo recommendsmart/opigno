@@ -12,7 +12,8 @@
     }
   }
 
-  &[class*='path-all'] {
+  &[class*='path-all'],
+  &.path-birthday {
     [data-class='exposed-filter-block'] {
       @include for-tablet-landscape-down {
         padding: 0;
