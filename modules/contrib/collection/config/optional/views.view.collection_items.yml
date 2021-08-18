@@ -9,7 +9,7 @@ label: 'Collection items'
 module: views
 description: 'Find and manage collection items for a collection.'
 tag: ''
-base_table: collection_item
+base_table: collection_item_field_data
 base_field: id
 display:
   default:
@@ -123,7 +123,7 @@ display:
           plugin_id: bulk_form
         name:
           id: name
-          table: collection_item
+          table: collection_item_field_data
           field: name
           relationship: none
           group_type: group
@@ -188,7 +188,7 @@ display:
           plugin_id: field
         item__target_id:
           id: item__target_id
-          table: collection_item
+          table: collection_item_field_data
           field: item__target_id
           relationship: none
           group_type: group
@@ -353,7 +353,7 @@ display:
           plugin_id: collection_item_collected_item_status
         canonical:
           id: canonical
-          table: collection_item
+          table: collection_item_field_data
           field: canonical
           relationship: none
           group_type: group
@@ -420,7 +420,7 @@ display:
           plugin_id: field
         weight:
           id: weight
-          table: collection_item
+          table: collection_item_field_data
           field: weight
           relationship: none
           group_type: group
@@ -537,7 +537,7 @@ display:
           plugin_id: entity_operations
         collection:
           id: collection
-          table: collection_item
+          table: collection_item_field_data
           field: collection
           relationship: none
           group_type: group
@@ -603,7 +603,7 @@ display:
       filters:
         name:
           id: name
-          table: collection_item
+          table: collection_item_field_data
           field: name
           relationship: none
           group_type: group
@@ -650,7 +650,7 @@ display:
       sorts:
         weight:
           id: weight
-          table: collection_item
+          table: collection_item_field_data
           field: weight
           relationship: none
           group_type: group
@@ -664,7 +664,7 @@ display:
           plugin_id: standard
         changed:
           id: changed
-          table: collection_item
+          table: collection_item_field_data
           field: changed
           relationship: none
           group_type: group
@@ -679,7 +679,7 @@ display:
           plugin_id: date
         name:
           id: name
-          table: collection_item
+          table: collection_item_field_data
           field: name
           relationship: none
           group_type: group
@@ -706,13 +706,12 @@ display:
           tokenize: false
           content:
             value: 'There are no collection item entities yet.'
-            format: basic_formatting
           plugin_id: text
       relationships: {  }
       arguments:
         collection:
           id: collection
-          table: collection_item
+          table: collection_item_field_data
           field: collection
           relationship: none
           group_type: group

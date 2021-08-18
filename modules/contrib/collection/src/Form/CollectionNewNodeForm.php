@@ -191,8 +191,8 @@ class CollectionNewNodeForm extends FormBase {
     foreach ($allowed_bundles['node'] as $bundle) {
       $access = $this->entityTypeManager->getAccessControlHandler('node')->createAccess($bundle, NULL, [], TRUE);
 
-      if ($access->isAllowed()) {
-        $bundle_options[$bundle] = $this->entityTypeManager->getStorage('node_type')->load($bundle)->label();
+      if ($access->isAllowed() && $type = $this->entityTypeManager->getStorage('node_type')->load($bundle)) {
+        $bundle_options[$bundle] = $type->label();
       }
     }
 

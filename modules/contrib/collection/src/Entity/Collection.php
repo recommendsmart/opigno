@@ -314,7 +314,6 @@ class Collection extends EditorialContentEntityBase implements CollectionInterfa
       ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
       ->setSetting('target_type', 'user')
       ->setSetting('handler', 'default')
-      ->setTranslatable(TRUE)
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'author',
@@ -337,6 +336,7 @@ class Collection extends EditorialContentEntityBase implements CollectionInterfa
       ->setLabel(t('Name'))
       ->setDescription(t('The name of the Collection entity.'))
       ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE)
       ->setSettings([
         'max_length' => 50,
         'text_processing' => 0,
@@ -367,6 +367,7 @@ class Collection extends EditorialContentEntityBase implements CollectionInterfa
       ->setComputed(TRUE);
 
     $fields['status']
+      ->setTranslatable(TRUE)
       ->setDisplayOptions('form', [
         'type' => 'boolean_checkbox',
         'settings' => [
@@ -379,12 +380,14 @@ class Collection extends EditorialContentEntityBase implements CollectionInterfa
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
       ->setDescription(t('The time that the entity was created.'))
-      ->setRevisionable(TRUE);
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE);
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the entity was last edited.'))
-      ->setRevisionable(TRUE);
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE);
 
     return $fields;
   }
