@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '885b7ace14c320a96a7e6272e23c141ff3a5d2e2',
+    'reference' => '8922b1c8af3dd1a7c3f466de0c3c4d4d97f50bac',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -391,6 +391,33 @@
       ),
       'reference' => '8.x-2.24',
     ),
+    'drupal/commerce_cart' => 
+    array (
+      'pretty_version' => '2.26.0',
+      'version' => '2.26.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => NULL,
+    ),
+    'drupal/commerce_number_pattern' => 
+    array (
+      'pretty_version' => '2.26.0',
+      'version' => '2.26.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => NULL,
+    ),
+    'drupal/commerce_order' => 
+    array (
+      'pretty_version' => '2.26.0',
+      'version' => '2.26.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => NULL,
+    ),
     'drupal/commerce_price' => 
     array (
       'pretty_version' => '2.26.0',
@@ -409,6 +436,16 @@
       ),
       'reference' => NULL,
     ),
+    'drupal/commerce_product_restriction' => 
+    array (
+      'pretty_version' => 'dev-1.0.x',
+      'version' => 'dev-1.0.x',
+      'aliases' => 
+      array (
+        0 => '1.0.x-dev',
+      ),
+      'reference' => '4529645ab40dc897a429e045b014f50f48e9ee9d',
+    ),
     'drupal/commerce_product_taxonomy_filter' => 
     array (
       'pretty_version' => '1.0.4',
@@ -417,6 +454,15 @@
       array (
       ),
       'reference' => '1.0.4',
+    ),
+    'drupal/commerce_promotion' => 
+    array (
+      'pretty_version' => '2.26.0',
+      'version' => '2.26.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => NULL,
     ),
     'drupal/commerce_store' => 
     array (
@@ -982,6 +1028,15 @@
       array (
       ),
       'reference' => '5.1.1',
+    ),
+    'drupal/gcommerce' => 
+    array (
+      'pretty_version' => '1.0.0-beta6',
+      'version' => '1.0.0.0-beta6',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-1.0-beta6',
     ),
     'drupal/geocoder' => 
     array (
@@ -1929,7 +1984,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '885b7ace14c320a96a7e6272e23c141ff3a5d2e2',
+      'reference' => '8922b1c8af3dd1a7c3f466de0c3c4d4d97f50bac',
     ),
     'guzzlehttp/guzzle' => 
     array (

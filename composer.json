@@ -31,7 +31,9 @@
         "drupal/description_list_field": "^1.0@alpha",
         "drupal/entity_version": "^1.0@beta",
         "drupal/group_flex": "^1.0@beta",
-        "drupal/form_display_visibility": "^1.0@beta"
+        "drupal/form_display_visibility": "^1.0@beta",
+        "drupal/gcommerce": "^1.0@beta",
+        "drupal/commerce_product_restriction": "1.0.x-dev"
     },
     "repositories": [
         {
