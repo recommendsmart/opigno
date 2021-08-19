@@ -1,0 +1,4 @@
+services:
+  plugin.manager.form_display_visibility_condition:
+    class: Drupal\form_display_visibility\Plugin\FormDisplayVisibilityConditionPluginManager
+    parent: default_plugin_manager
