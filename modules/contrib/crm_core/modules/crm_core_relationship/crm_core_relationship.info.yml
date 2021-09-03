@@ -8,3 +8,8 @@ dependencies:
   - drupal:options
   - crm_core:crm_core_contact
   - relation:relation
+
+# Information added by Drupal.org packaging script on 2021-09-02
+version: '8.x-3.x-dev'
+project: 'crm_core'
+datestamp: 1630555628

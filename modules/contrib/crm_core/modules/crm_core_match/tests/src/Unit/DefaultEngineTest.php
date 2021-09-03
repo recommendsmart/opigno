@@ -75,7 +75,7 @@ class DefaultEngineTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->pluginManager = $this->getMock('\Drupal\Core\Entity\EntityTypeManagerInterface');
+    $this->pluginManager = $this->createMock('\Drupal\Core\Entity\EntityTypeManagerInterface');
 
     $this->entityTypeManager = $this->getMockBuilder('\Drupal\Core\Entity\EntityTypeManagerInterface')
       ->disableOriginalConstructor()
@@ -99,7 +99,7 @@ class DefaultEngineTest extends UnitTestCase {
       ->method('status')
       ->will($this->returnValue(TRUE));
 
-    $storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
+    $storage = $this->createMock('Drupal\Core\Entity\EntityStorageInterface');
     $storage->expects($this->any())
       ->method('load')
       ->with('dogs')
@@ -109,9 +109,9 @@ class DefaultEngineTest extends UnitTestCase {
       ->method('getStorage')
       ->will($this->returnValue($storage));
 
-    $this->field = $this->getMock('Drupal\Core\Field\FieldDefinitionInterface');
+    $this->field = $this->createMock('Drupal\Core\Field\FieldDefinitionInterface');
 
-    $this->matchHandler = $this->getMock('Drupal\crm_core_match\Plugin\crm_core_match\field\FieldHandlerInterface');
+    $this->matchHandler = $this->createMock('Drupal\crm_core_match\Plugin\crm_core_match\field\FieldHandlerInterface');
     $this->matchHandler->expects($this->any())
       ->method('getPropertyNames')
       ->will($this->returnValue(['value']));

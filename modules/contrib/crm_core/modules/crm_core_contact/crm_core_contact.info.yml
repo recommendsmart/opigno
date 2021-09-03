@@ -2,7 +2,7 @@ name: CRM Core Contact
 type: module
 description: 'Allows content to be submitted to the site and displayed on pages.'
 package: CRM Core
-core: 8.x
+core_version_requirement: ^8.7.7 || ^9
 
 configure: entity.crm_core_contact_type.collection
 
@@ -22,3 +22,8 @@ test_dependencies:
   # To be removed once we have crm_core_relationship ported.
   - relation:relation
   - relation:relation_endpoint
+
+# Information added by Drupal.org packaging script on 2021-09-02
+version: '8.x-3.x-dev'
+project: 'crm_core'
+datestamp: 1630555628

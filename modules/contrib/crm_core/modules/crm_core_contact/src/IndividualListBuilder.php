@@ -79,7 +79,7 @@ class IndividualListBuilder extends EntityListBuilder {
     $row['label']['data'] = [
       '#type' => 'link',
       '#title' => $entity->label(),
-      '#url' => $entity->urlInfo(),
+      '#url' => $entity->toUrl(),
     ];
 
     $row['type'] = $entity->get('type')->entity->label();

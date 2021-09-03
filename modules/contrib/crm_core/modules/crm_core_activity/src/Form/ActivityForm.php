@@ -18,7 +18,7 @@ class ActivityForm extends ContentEntityForm {
 
     $status = $activity->save();
 
-    $t_args = ['@title' => $activity->label(), 'link' => $activity->url()];
+    $t_args = ['@title' => $activity->label()];
 
     if ($status === SAVED_UPDATED) {
       $this->messenger()->addStatus($this->t('Activity @title edited.', $t_args));
@@ -31,7 +31,7 @@ class ActivityForm extends ContentEntityForm {
     }
     elseif ($status === SAVED_NEW) {
       $this->messenger()->addStatus($this->t('Activity @title created.', $t_args));
-      \Drupal::logger('crm_core_contact')->notice('Activity @title created.', $t_args);
+      $this->logger('crm_core_contact')->notice('Activity @title created.', $t_args);
       $form_state->setRedirect('entity.crm_core_contact.collection');
     }
 

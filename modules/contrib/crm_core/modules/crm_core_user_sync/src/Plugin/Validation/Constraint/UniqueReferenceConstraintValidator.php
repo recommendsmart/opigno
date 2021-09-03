@@ -36,7 +36,7 @@ class UniqueReferenceConstraintValidator extends ConstraintValidator {
     if ($value_taken) {
       $this->context->addViolation($constraint->message, [
         '@id' => $target_id,
-        '@entity_type' => $entity->getEntityType()->getLowercaseLabel(),
+        '@entity_type' => $entity->getEntityType()->getSingularLabel(),
         '@field_name' => mb_strtolower($items->getFieldDefinition()->getLabel()),
       ]);
     }

@@ -2,17 +2,18 @@
 
 namespace Drupal\crm_core_match\Plugin\crm_core_match\engine;
 
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\crm_core_contact\ContactInterface;
+use Drupal\Component\Plugin\ConfigurableInterface;
+use Drupal\Component\Plugin\DependentPluginInterface;
 
 /**
  * Interface for matching engines.
  *
  * CRM Core matching engines can implement this interface.
  */
-interface MatchEngineInterface extends PluginInspectionInterface, PluginFormInterface, ConfigurablePluginInterface {
+interface MatchEngineInterface extends PluginInspectionInterface, PluginFormInterface, ConfigurableInterface, DependentPluginInterface {
 
   /**
    * Finds matches for given contact.

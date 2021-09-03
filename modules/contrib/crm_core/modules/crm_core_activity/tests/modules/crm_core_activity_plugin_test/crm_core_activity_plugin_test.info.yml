@@ -2,6 +2,11 @@ name: CRM Core Activity plugin test
 type: module
 description: "Provides test activity plugin."
 package: CRM Core
-core: 8.x
+core_version_requirement: ^8.7.7 || ^9
 dependencies:
   - crm_core:crm_core_activity
+
+# Information added by Drupal.org packaging script on 2021-09-02
+version: '8.x-3.x-dev'
+project: 'crm_core'
+datestamp: 1630555628

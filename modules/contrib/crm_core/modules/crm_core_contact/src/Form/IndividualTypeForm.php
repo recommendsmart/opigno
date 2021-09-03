@@ -5,7 +5,6 @@ namespace Drupal\crm_core_contact\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 
 /**
  * Form for edit individual types.
@@ -124,7 +123,6 @@ class IndividualTypeForm extends EntityForm {
 
     $arguments = [
       '%name' => $this->entity->label(),
-      'link' => Url::fromRoute('entity.crm_core_individual_type.collection'),
     ];
 
     if ($status == SAVED_UPDATED) {

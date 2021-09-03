@@ -39,7 +39,7 @@ class ActivityTypeListBuilder extends ConfigEntityListBuilder {
     $row = [];
 
     $row['title'] = [
-      'data' => $this->getLabel($entity),
+      'data' => $entity->label(),
       'class' => ['menu-label'],
     ];
 

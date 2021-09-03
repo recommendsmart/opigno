@@ -104,14 +104,14 @@ class ActivityTypeForm extends EntityForm {
 
     $status = $type->save();
 
-    $t_args = ['%name' => $type->label(), 'link' => \Drupal::url('entity.crm_core_activity_type.collection')];
+    $t_args = ['%name' => $type->label()];
 
     if ($status == SAVED_UPDATED) {
       $this->messenger->addMessage($this->t('The activity type %name has been updated.', $t_args));
     }
     elseif ($status == SAVED_NEW) {
       $this->messenger->addMessage($this->t('The activity type %name has been added.', $t_args));
-      \Drupal::logger('crm_core_activity')->notice('Added activity type %name.', $t_args);
+      $this->logger('crm_core_activity')->notice('Added activity type %name.', $t_args);
     }
 
     $form_state->setRedirect('entity.crm_core_activity_type.collection');

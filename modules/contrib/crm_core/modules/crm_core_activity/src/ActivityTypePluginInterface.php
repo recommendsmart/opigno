@@ -2,12 +2,13 @@
 
 namespace Drupal\crm_core_activity;
 
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Plugin\ConfigurableInterface;
+use Drupal\Component\Plugin\DependentPluginInterface;
 
 /**
  * Defines the interface for activity type plugins.
  */
-interface ActivityTypePluginInterface extends ConfigurablePluginInterface {
+interface ActivityTypePluginInterface extends ConfigurableInterface, DependentPluginInterface {
 
   /**
    * Displays the contents of the label field on the activity entity.

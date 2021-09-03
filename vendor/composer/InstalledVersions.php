@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '8922b1c8af3dd1a7c3f466de0c3c4d4d97f50bac',
+    'reference' => '4c8517b46abb217736a1ea93d9e149ef7f070b96',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -733,16 +733,6 @@ private static $installed = array (
         0 => '8.9.18',
       ),
     ),
-    'drupal/crm_core' => 
-    array (
-      'pretty_version' => 'dev-3.x',
-      'version' => 'dev-3.x',
-      'aliases' => 
-      array (
-        0 => '3.x-dev',
-      ),
-      'reference' => '56f7055903e46f671befe20d84824092ddcf8a93',
-    ),
     'drupal/crop' => 
     array (
       'pretty_version' => '1.5.0',
@@ -1045,12 +1035,12 @@ private static $installed = array (
     ),
     'drupal/fullcalendar_view' => 
     array (
-      'pretty_version' => '5.1.1',
-      'version' => '5.1.1.0',
+      'pretty_version' => '5.1.2',
+      'version' => '5.1.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => '5.1.1',
+      'reference' => '5.1.2',
     ),
     'drupal/gcommerce' => 
     array (
@@ -1635,7 +1625,7 @@ private static $installed = array (
     array (
       'replaced' => 
       array (
-        0 => '10.2.2',
+        0 => '10.2.5',
       ),
     ),
     'drupal/social_course' => 
@@ -1667,21 +1657,21 @@ private static $installed = array (
     ),
     'drupal/socialbase' => 
     array (
-      'pretty_version' => '1.3.0',
-      'version' => '1.3.0.0',
+      'pretty_version' => '1.2.3',
+      'version' => '1.2.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => '1.3.0',
+      'reference' => '1.2.3',
     ),
     'drupal/socialblue' => 
     array (
-      'pretty_version' => '1.3.0',
-      'version' => '1.3.0.0',
+      'pretty_version' => '1.2.2',
+      'version' => '1.2.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => '1.3.0',
+      'reference' => '1.2.2',
     ),
     'drupal/standard' => 
     array (
@@ -1816,12 +1806,12 @@ private static $installed = array (
     ),
     'drupal/type_tray' => 
     array (
-      'pretty_version' => '1.1.0',
-      'version' => '1.1.0.0',
+      'pretty_version' => '1.1.1',
+      'version' => '1.1.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '1.1.0',
+      'reference' => '1.1.1',
     ),
     'drupal/typed_data' => 
     array (
@@ -1993,12 +1983,12 @@ private static $installed = array (
     ),
     'goalgorilla/open_social' => 
     array (
-      'pretty_version' => '10.2.2',
-      'version' => '10.2.2.0',
+      'pretty_version' => '10.2.5',
+      'version' => '10.2.5.0',
       'aliases' => 
       array (
       ),
-      'reference' => '2a22b558545d1649727aebd88682bb4b15978364',
+      'reference' => '4628b2b940e6224f457e0118df97693d2d41216b',
     ),
     'goalgorilla/social_template' => 
     array (
@@ -2007,7 +1997,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '8922b1c8af3dd1a7c3f466de0c3c4d4d97f50bac',
+      'reference' => '4c8517b46abb217736a1ea93d9e149ef7f070b96',
     ),
     'guzzlehttp/guzzle' => 
     array (
@@ -2065,12 +2055,12 @@ private static $installed = array (
     ),
     'laminas/laminas-escaper' => 
     array (
-      'pretty_version' => '2.8.0',
-      'version' => '2.8.0.0',
+      'pretty_version' => '2.9.0',
+      'version' => '2.9.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '2d6dce99668b413610e9544183fa10392437f542',
+      'reference' => '891ad70986729e20ed2e86355fcf93c9dc238a5f',
     ),
     'laminas/laminas-feed' => 
     array (
@@ -2083,12 +2073,12 @@ private static $installed = array (
     ),
     'laminas/laminas-stdlib' => 
     array (
-      'pretty_version' => '3.5.0',
-      'version' => '3.5.0.0',
+      'pretty_version' => '3.6.0',
+      'version' => '3.6.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'c8ac6a76a133e682acfabc821d4a2ec646934b12',
+      'reference' => 'c53d8537f108fac3fae652677a19735db730ba46',
     ),
     'laminas/laminas-zendframework-bridge' => 
     array (
@@ -2236,8 +2226,8 @@ private static $installed = array (
     ),
     'npm-asset/fortawesome--fontawesome-free' => 
     array (
-      'pretty_version' => '5.15.3',
-      'version' => '5.15.3.0',
+      'pretty_version' => '5.15.4',
+      'version' => '5.15.4.0',
       'aliases' => 
       array (
       ),
@@ -2873,12 +2863,12 @@ private static $installed = array (
     ),
     'symfony/var-dumper' => 
     array (
-      'pretty_version' => 'v4.4.27',
-      'version' => '4.4.27.0',
+      'pretty_version' => 'v4.4.30',
+      'version' => '4.4.30.0',
       'aliases' => 
       array (
       ),
-      'reference' => '391d6d0e7a06ab54eb7c38fab29b8d174471b3ba',
+      'reference' => '7f65c44c2ce80d3a0fcdb6385ee0ad535e45660c',
     ),
     'symfony/yaml' => 
     array (
@@ -2918,8 +2908,8 @@ private static $installed = array (
     ),
     'web-token/jwt-core' => 
     array (
-      'pretty_version' => 'v2.2.10',
-      'version' => '2.2.10.0',
+      'pretty_version' => 'v2.2.11',
+      'version' => '2.2.11.0',
       'aliases' => 
       array (
       ),
@@ -2927,8 +2917,8 @@ private static $installed = array (
     ),
     'web-token/jwt-key-mgmt' => 
     array (
-      'pretty_version' => 'v2.2.10',
-      'version' => '2.2.10.0',
+      'pretty_version' => 'v2.2.11',
+      'version' => '2.2.11.0',
       'aliases' => 
       array (
       ),
@@ -2936,8 +2926,8 @@ private static $installed = array (
     ),
     'web-token/jwt-signature' => 
     array (
-      'pretty_version' => 'v2.2.10',
-      'version' => '2.2.10.0',
+      'pretty_version' => 'v2.2.11',
+      'version' => '2.2.11.0',
       'aliases' => 
       array (
       ),
@@ -2945,8 +2935,8 @@ private static $installed = array (
     ),
     'web-token/jwt-signature-algorithm-ecdsa' => 
     array (
-      'pretty_version' => 'v2.2.10',
-      'version' => '2.2.10.0',
+      'pretty_version' => 'v2.2.11',
+      'version' => '2.2.11.0',
       'aliases' => 
       array (
       ),
@@ -2954,8 +2944,8 @@ private static $installed = array (
     ),
     'web-token/jwt-util-ecc' => 
     array (
-      'pretty_version' => 'v2.2.10',
-      'version' => '2.2.10.0',
+      'pretty_version' => 'v2.2.11',
+      'version' => '2.2.11.0',
       'aliases' => 
       array (
       ),
@@ -2993,13 +2983,6 @@ private static $installed = array (
       'replaced' => 
       array (
         0 => '~1.8.7.0',
-      ),
-    ),
-    'zendframework/zend-escaper' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '^2.6.1',
       ),
     ),
     'zendframework/zend-feed' => 

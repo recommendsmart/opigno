@@ -12,3 +12,8 @@ dependencies:
 stylesheets:
   all:
     crm_core_relationship_ui.css
+
+# Information added by Drupal.org packaging script on 2021-09-02
+version: '8.x-3.x-dev'
+project: 'crm_core'
+datestamp: 1630555628

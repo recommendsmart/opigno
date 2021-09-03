@@ -10,9 +10,8 @@ use Drupal\crm_core_activity\Entity\Activity;
 use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\relation\Entity\Relation;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Path\AliasStorage;
+use Drupal\path_alias\PathAliasStorage;
 use Drupal\Core\Extension\ModuleHandler;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\StringTranslation\TranslationManager;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\EntityFieldManager;
@@ -34,7 +33,7 @@ class MergeContactsAction extends ConfigurableActionBase implements ContainerFac
   /**
    * The path alias storage.
    *
-   * @var \Drupal\Core\Path\AliasStorage
+   * @var \Drupal\path_alias\PathAliasStorage
    */
   protected $pathAliasStorage;
 
@@ -44,13 +43,6 @@ class MergeContactsAction extends ConfigurableActionBase implements ContainerFac
    * @var \Drupal\Core\Mail\MailManagerInterface
    */
   protected $moduleHandler;
-
-  /**
-   * The entity query.
-   *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
-   */
-  protected $entityQuery;
 
   /**
    * The translation manager.
@@ -96,12 +88,10 @@ class MergeContactsAction extends ConfigurableActionBase implements ContainerFac
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Path\AliasStorage $path_alias_storage
+   * @param \Drupal\path_alias\PathAliasStorage $path_alias_storage
    *   The path alias storage.
    * @param \Drupal\Core\Extension\ModuleHandler $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query
-   *   The entity query.
    * @param \Drupal\Core\StringTranslation\TranslationManager $translation_manager
    *   The translation manager.
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
@@ -113,11 +103,10 @@ class MergeContactsAction extends ConfigurableActionBase implements ContainerFac
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The Messenger service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, AliasStorage $path_alias_storage, ModuleHandler $module_handler, QueryFactory $entity_query, TranslationManager $translation_manager, EntityTypeManager $entity_type_manager, EntityFieldManager $entity_field_manager, Renderer $renderer, MessengerInterface $messenger) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, PathAliasStorage $path_alias_storage, ModuleHandler $module_handler, TranslationManager $translation_manager, EntityTypeManager $entity_type_manager, EntityFieldManager $entity_field_manager, Renderer $renderer, MessengerInterface $messenger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->pathAliasStorage = $path_alias_storage;
     $this->moduleHandler = $module_handler;
-    $this->entityQuery = $entity_query;
     $this->translationManager = $translation_manager;
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
@@ -132,7 +121,6 @@ class MergeContactsAction extends ConfigurableActionBase implements ContainerFac
     return new static($configuration, $plugin_id, $plugin_definition,
       $container->get('path.alias_storage'),
       $container->get('module_handler'),
-      $container->get('entity.query'),
       $container->get('string_translation'),
       $container->get('entity_type.manager'),
       $container->get('entity_field.manager'),
@@ -152,6 +140,13 @@ class MergeContactsAction extends ConfigurableActionBase implements ContainerFac
    * {@inheritdoc}
    */
   public function executeMultiple(array $objects) {
+
+    $crm_core_activity_storage = $this->entityTypeManager->getStorage('crm_core_activity');
+    $crm_core_activity_query = $storage->getQuery();
+
+    $relation_storage = $this->entityTypeManager->getStorage('relation');
+    $relation_query = $storage->getQuery();
+
     $primary_contact = reset($objects);
     foreach ($objects as $cid => $contact) {
       if ($contact->id() == $this->configuration['data']['contact_id']) {
@@ -165,7 +160,7 @@ class MergeContactsAction extends ConfigurableActionBase implements ContainerFac
     foreach ($objects as $contact) {
       $wrappers[$contact->id()] = $contact;
     }
-    // Updating contact fields from other selected contacts.
+    // Updating contact fields from other selected+    contacts.
     foreach ($this->configuration['data'] as $field_name => $contact_id) {
       if ($primary_contact->id() != $contact_id) {
         $primary_contact->set($field_name, $wrappers[key($contact_id)]->get($field_name)->getValue());
@@ -177,8 +172,7 @@ class MergeContactsAction extends ConfigurableActionBase implements ContainerFac
       $this->pathAliasStorage->save('/crm-core/contact/' . $primary_contact->id(), '/crm-core/contact/' . $contact_id);
       if ($this->moduleHandler->moduleExists('crm_core_activity')) {
         // Replacing participant in existing activities.
-        $query = $this->entityQuery->get('crm_core_activity');
-        $activities = $query->condition('activity_participants.target_id', $contact_id)
+        $activities = $crm_core_activity_query->condition('activity_participants.target_id', $contact_id)
           ->condition('activity_participants.target_type', 'crm_core_contact')
           ->execute();
         if (is_array($activities)) {
@@ -194,8 +188,7 @@ class MergeContactsAction extends ConfigurableActionBase implements ContainerFac
       }
       if ($this->moduleHandler->moduleExists('relation')) {
         // Replacing existing relations for contacts been deleted with new ones.
-        $query = $this->entityQuery->get('relation');
-        $relations = $query->condition('endpoints.entity_type', 'crm_core_contact', '=')
+        $relations = $relation_query->condition('endpoints.entity_type', 'crm_core_contact', '=')
           ->condition('endpoints.entity_id', $contact_id, '=')
           ->execute();
         foreach ($relations as $relation_info) {

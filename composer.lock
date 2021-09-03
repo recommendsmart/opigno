@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f626a60c44f9b4a612035cb38859da28",
+    "content-hash": "89a005a9c6c8fdcfd845e8e8eff874bc",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2951,95 +2951,6 @@
             "time": "2020-08-07T22:30:13+00:00"
         },
         {
-            "name": "drupal/crm_core",
-            "version": "dev-3.x",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/crm_core.git",
-                "reference": "56f7055903e46f671befe20d84824092ddcf8a93"
-            },
-            "require": {
-                "drupal/core": "^8.9.13"
-            },
-            "require-dev": {
-                "drupal/address": "*",
-                "drupal/crm_core_activity": "*",
-                "drupal/crm_core_contact": "*",
-                "drupal/crm_core_relationship": "*",
-                "drupal/dynamic_entity_reference": "*",
-                "drupal/entity": "*",
-                "drupal/name": "*",
-                "drupal/relation": "*",
-                "drupal/relation_endpoint": "*",
-                "drupal/search_api": "*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "branch-alias": {
-                    "dev-3.x": "3.x-dev"
-                },
-                "drupal": {
-                    "version": "8.x-3.x-dev",
-                    "datestamp": "1614939995",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Dev releases are not covered by Drupal security advisories."
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Berdir",
-                    "homepage": "https://www.drupal.org/user/214652"
-                },
-                {
-                    "name": "Morbus Iff",
-                    "homepage": "https://www.drupal.org/user/9034"
-                },
-                {
-                    "name": "RoSk0",
-                    "homepage": "https://www.drupal.org/user/325151"
-                },
-                {
-                    "name": "cr0ss",
-                    "homepage": "https://www.drupal.org/user/432492"
-                },
-                {
-                    "name": "dealancer",
-                    "homepage": "https://www.drupal.org/user/243418"
-                },
-                {
-                    "name": "grahl",
-                    "homepage": "https://www.drupal.org/user/146040"
-                },
-                {
-                    "name": "miro_dietiker",
-                    "homepage": "https://www.drupal.org/user/227761"
-                },
-                {
-                    "name": "pingers",
-                    "homepage": "https://www.drupal.org/user/56282"
-                },
-                {
-                    "name": "slashrsm",
-                    "homepage": "https://www.drupal.org/user/744628"
-                },
-                {
-                    "name": "vlkff",
-                    "homepage": "https://www.drupal.org/user/320057"
-                }
-            ],
-            "description": "CRM Core is a set of modules that provide contact management functionality within Drupal web sites.",
-            "homepage": "https://www.drupal.org/project/crm_core",
-            "support": {
-                "source": "https://git.drupalcode.org/project/crm_core"
-            }
-        },
-        {
             "name": "drupal/crop",
             "version": "1.5.0",
             "source": {
@@ -4607,17 +4518,17 @@
         },
         {
             "name": "drupal/fullcalendar_view",
-            "version": "5.1.1",
+            "version": "5.1.2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/fullcalendar_view.git",
-                "reference": "5.1.1"
+                "reference": "5.1.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/fullcalendar_view-5.1.1.zip",
-                "reference": "5.1.1",
-                "shasum": "7279d55b7d542c0d9f9dd13077ade902aa70b0e6"
+                "url": "https://ftp.drupal.org/files/projects/fullcalendar_view-5.1.2.zip",
+                "reference": "5.1.2",
+                "shasum": "52309d725a9e6dc80b03fd883ba78fb675dec947"
             },
             "require": {
                 "drupal/core": "^8 || ^9"
@@ -4625,8 +4536,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "5.1.1",
-                    "datestamp": "1623998023",
+                    "version": "5.1.2",
+                    "datestamp": "1629420252",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -4638,6 +4549,10 @@
                 "GPL-2.0+"
             ],
             "authors": [
+                {
+                    "name": "KarinG",
+                    "homepage": "https://www.drupal.org/user/787114"
+                },
                 {
                     "name": "Mingsong",
                     "homepage": "https://www.drupal.org/user/2986445"
@@ -7124,17 +7039,17 @@
         },
         {
             "name": "drupal/socialbase",
-            "version": "1.3.0",
+            "version": "1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/socialbase.git",
-                "reference": "1.3.0"
+                "reference": "1.2.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/socialbase-1.3.0.zip",
-                "reference": "1.3.0",
-                "shasum": "535707a65a0c063a66134f09e079839f6423cc4f"
+                "url": "https://ftp.drupal.org/files/projects/socialbase-1.2.3.zip",
+                "reference": "1.2.3",
+                "shasum": "0a07f871a0645558994c65736d961dcf25d24244"
             },
             "require": {
                 "drupal/bootstrap": "3.20",
@@ -7143,8 +7058,8 @@
             "type": "drupal-theme",
             "extra": {
                 "drupal": {
-                    "version": "1.3.0",
-                    "datestamp": "1629125025",
+                    "version": "1.2.3",
+                    "datestamp": "1630416155",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -7189,27 +7104,27 @@
         },
         {
             "name": "drupal/socialblue",
-            "version": "1.3.0",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/socialblue.git",
-                "reference": "1.3.0"
+                "reference": "1.2.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/socialblue-1.3.0.zip",
-                "reference": "1.3.0",
-                "shasum": "1688a32729c45b73efb69a7c583b04735a09bbd6"
+                "url": "https://ftp.drupal.org/files/projects/socialblue-1.2.2.zip",
+                "reference": "1.2.2",
+                "shasum": "09105f7c6e1d54f671b55ed06eb5d9cfbb86bc64"
             },
             "require": {
                 "drupal/core": "^8.8 || ^9",
-                "drupal/socialbase": ">=1.1"
+                "drupal/socialbase": ">=1.2 <1.3"
             },
             "type": "drupal-theme",
             "extra": {
                 "drupal": {
-                    "version": "1.3.0",
-                    "datestamp": "1629127198",
+                    "version": "1.2.2",
+                    "datestamp": "1630418974",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -7629,17 +7544,17 @@
         },
         {
             "name": "drupal/type_tray",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/type_tray.git",
-                "reference": "1.1.0"
+                "reference": "1.1.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/type_tray-1.1.0.zip",
-                "reference": "1.1.0",
-                "shasum": "1fa75940dab3f74b828d453e81ed6793bbbd4814"
+                "url": "https://ftp.drupal.org/files/projects/type_tray-1.1.1.zip",
+                "reference": "1.1.1",
+                "shasum": "c47d75485f8c6e81e1caeee0272fe29ee9598cc6"
             },
             "require": {
                 "drupal/core": "^8.9 || ^9"
@@ -7647,8 +7562,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "1.1.0",
-                    "datestamp": "1627653317",
+                    "version": "1.1.1",
+                    "datestamp": "1629375382",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -8615,16 +8530,16 @@
         },
         {
             "name": "goalgorilla/open_social",
-            "version": "10.2.2",
+            "version": "10.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/goalgorilla/open_social.git",
-                "reference": "2a22b558545d1649727aebd88682bb4b15978364"
+                "reference": "4628b2b940e6224f457e0118df97693d2d41216b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/goalgorilla/open_social/zipball/2a22b558545d1649727aebd88682bb4b15978364",
-                "reference": "2a22b558545d1649727aebd88682bb4b15978364",
+                "url": "https://api.github.com/repos/goalgorilla/open_social/zipball/4628b2b940e6224f457e0118df97693d2d41216b",
+                "reference": "4628b2b940e6224f457e0118df97693d2d41216b",
                 "shasum": ""
             },
             "require": {
@@ -8674,7 +8589,7 @@
                 "drupal/search_api": "1.19",
                 "drupal/select2": "1.8",
                 "drupal/shariff": "1.5",
-                "drupal/socialblue": "^1.0",
+                "drupal/socialblue": ">=1.2 <1.3",
                 "drupal/swiftmailer": "2.0-beta1",
                 "drupal/token": "1.5",
                 "drupal/ultimate_cron": "^2.0@alpha",
@@ -8820,9 +8735,9 @@
             ],
             "description": "Open Social is a distribution for building social communities and intranets.",
             "support": {
-                "source": "https://github.com/goalgorilla/open_social/tree/10.2.2"
+                "source": "https://github.com/goalgorilla/open_social/tree/10.2.5"
             },
-            "time": "2021-08-10T09:51:34+00:00"
+            "time": "2021-09-01T14:36:46+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -9200,24 +9115,23 @@
         },
         {
             "name": "laminas/laminas-escaper",
-            "version": "2.8.0",
+            "version": "2.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-escaper.git",
-                "reference": "2d6dce99668b413610e9544183fa10392437f542"
+                "reference": "891ad70986729e20ed2e86355fcf93c9dc238a5f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-escaper/zipball/2d6dce99668b413610e9544183fa10392437f542",
-                "reference": "2d6dce99668b413610e9544183fa10392437f542",
+                "url": "https://api.github.com/repos/laminas/laminas-escaper/zipball/891ad70986729e20ed2e86355fcf93c9dc238a5f",
+                "reference": "891ad70986729e20ed2e86355fcf93c9dc238a5f",
                 "shasum": ""
             },
             "require": {
-                "laminas/laminas-zendframework-bridge": "^1.0",
-                "php": "^7.3 || ~8.0.0"
+                "php": "^7.3 || ~8.0.0 || ~8.1.0"
             },
-            "replace": {
-                "zendframework/zend-escaper": "^2.6.1"
+            "conflict": {
+                "zendframework/zend-escaper": "*"
             },
             "require-dev": {
                 "laminas/laminas-coding-standard": "~2.3.0",
@@ -9259,7 +9173,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2021-06-26T14:26:08+00:00"
+            "time": "2021-09-02T17:10:53+00:00"
         },
         {
             "name": "laminas/laminas-feed",
@@ -9343,20 +9257,20 @@
         },
         {
             "name": "laminas/laminas-stdlib",
-            "version": "3.5.0",
+            "version": "3.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-stdlib.git",
-                "reference": "c8ac6a76a133e682acfabc821d4a2ec646934b12"
+                "reference": "c53d8537f108fac3fae652677a19735db730ba46"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-stdlib/zipball/c8ac6a76a133e682acfabc821d4a2ec646934b12",
-                "reference": "c8ac6a76a133e682acfabc821d4a2ec646934b12",
+                "url": "https://api.github.com/repos/laminas/laminas-stdlib/zipball/c53d8537f108fac3fae652677a19735db730ba46",
+                "reference": "c53d8537f108fac3fae652677a19735db730ba46",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.3 || ^8.0"
+                "php": "^7.3 || ~8.0.0 || ~8.1.0"
             },
             "conflict": {
                 "zendframework/zend-stdlib": "*"
@@ -9398,7 +9312,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2021-08-03T13:40:40+00:00"
+            "time": "2021-09-02T16:11:32+00:00"
         },
         {
             "name": "laminas/laminas-zendframework-bridge",
@@ -10088,10 +10002,10 @@
         },
         {
             "name": "npm-asset/fortawesome--fontawesome-free",
-            "version": "5.15.3",
+            "version": "5.15.4",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-5.15.3.tgz"
+                "url": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-5.15.4.tgz"
             },
             "type": "npm-asset",
             "license": [
@@ -13318,16 +13232,16 @@
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v4.4.27",
+            "version": "v4.4.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "391d6d0e7a06ab54eb7c38fab29b8d174471b3ba"
+                "reference": "7f65c44c2ce80d3a0fcdb6385ee0ad535e45660c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/391d6d0e7a06ab54eb7c38fab29b8d174471b3ba",
-                "reference": "391d6d0e7a06ab54eb7c38fab29b8d174471b3ba",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/7f65c44c2ce80d3a0fcdb6385ee0ad535e45660c",
+                "reference": "7f65c44c2ce80d3a0fcdb6385ee0ad535e45660c",
                 "shasum": ""
             },
             "require": {
@@ -13387,7 +13301,7 @@
                 "dump"
             ],
             "support": {
-                "source": "https://github.com/symfony/var-dumper/tree/v4.4.27"
+                "source": "https://github.com/symfony/var-dumper/tree/v4.4.30"
             },
             "funding": [
                 {
@@ -13403,7 +13317,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-23T15:41:52+00:00"
+            "time": "2021-08-04T20:31:23+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -13664,7 +13578,7 @@
         },
         {
             "name": "web-token/jwt-core",
-            "version": "v2.2.10",
+            "version": "v2.2.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-core.git",
@@ -13728,7 +13642,7 @@
                 "symfony"
             ],
             "support": {
-                "source": "https://github.com/web-token/jwt-core/tree/v2.2.10"
+                "source": "https://github.com/web-token/jwt-core/tree/v2.2.11"
             },
             "funding": [
                 {
@@ -13740,7 +13654,7 @@
         },
         {
             "name": "web-token/jwt-key-mgmt",
-            "version": "v2.2.10",
+            "version": "v2.2.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-key-mgmt.git",
@@ -13805,7 +13719,7 @@
                 "symfony"
             ],
             "support": {
-                "source": "https://github.com/web-token/jwt-key-mgmt/tree/v2.2.10"
+                "source": "https://github.com/web-token/jwt-key-mgmt/tree/v2.2.11"
             },
             "funding": [
                 {
@@ -13817,7 +13731,7 @@
         },
         {
             "name": "web-token/jwt-signature",
-            "version": "v2.2.10",
+            "version": "v2.2.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-signature.git",
@@ -13881,7 +13795,7 @@
                 "symfony"
             ],
             "support": {
-                "source": "https://github.com/web-token/jwt-signature/tree/v2.2.10"
+                "source": "https://github.com/web-token/jwt-signature/tree/v2.2.11"
             },
             "funding": [
                 {
@@ -13893,7 +13807,7 @@
         },
         {
             "name": "web-token/jwt-signature-algorithm-ecdsa",
-            "version": "v2.2.10",
+            "version": "v2.2.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-signature-algorithm-ecdsa.git",
@@ -13950,7 +13864,7 @@
                 "symfony"
             ],
             "support": {
-                "source": "https://github.com/web-token/jwt-signature-algorithm-ecdsa/tree/v2.2.10"
+                "source": "https://github.com/web-token/jwt-signature-algorithm-ecdsa/tree/v2.2.11"
             },
             "funding": [
                 {
@@ -13962,7 +13876,7 @@
         },
         {
             "name": "web-token/jwt-util-ecc",
-            "version": "v2.2.10",
+            "version": "v2.2.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-util-ecc.git",
@@ -14022,7 +13936,7 @@
                 "symfony"
             ],
             "support": {
-                "source": "https://github.com/web-token/jwt-util-ecc/tree/v2.2.10"
+                "source": "https://github.com/web-token/jwt-util-ecc/tree/v2.2.11"
             },
             "funding": [
                 {
@@ -14217,7 +14131,6 @@
         "drupal/places": 20,
         "drupal/feeds": 15,
         "drupal/book_pdf": 15,
-        "drupal/crm_core": 20,
         "drupal/friggeri_cv": 15,
         "drupal/laces": 5,
         "drupal/custom_pub": 10,

@@ -15,6 +15,11 @@ use Drupal\Tests\BrowserTestBase;
 class ActivityUiTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -196,11 +201,11 @@ class ActivityUiTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Operations');
     $this->assertSession()->pageTextContains('Activity preview');
 
-    $elements = $this->xpath('//form[@class="views-exposed-form"]/div/div/label[text()="Title"]');
+    $elements = $this->xpath('//form[@class="views-exposed-form"]/div/label[text()="Title"]');
     // Title is an exposed filter.
     $this->assertCount(1, $elements);
 
-    $elements = $this->xpath('//form[@class="views-exposed-form"]/div/div/label[text()="Type"]');
+    $elements = $this->xpath('//form[@class="views-exposed-form"]/div/label[text()="Type"]');
     // Activity type is an exposed filter.
     $this->assertCount(1, $elements);
 
@@ -309,14 +314,16 @@ class ActivityUiTest extends BrowserTestBase {
    * Generate random Date for form element input.
    */
   protected function randomDate() {
-    return \Drupal::service('date.formatter')->format(REQUEST_TIME + rand(0, 100000), 'custom', 'Y-m-d');
+    $request_time = \Drupal::time()->getRequestTime();
+    return \Drupal::service('date.formatter')->format($request_time + rand(0, 100000), 'custom', 'Y-m-d');
   }
 
   /**
    * Generate random Time for form element input.
    */
   protected function randomTime() {
-    return \Drupal::service('date.formatter')->format(REQUEST_TIME + rand(0, 100000), 'custom', 'H:m:s');
+    $request_time = \Drupal::time()->getRequestTime();
+    return \Drupal::service('date.formatter')->format($request_time + rand(0, 100000), 'custom', 'H:m:s');
   }
 
 }

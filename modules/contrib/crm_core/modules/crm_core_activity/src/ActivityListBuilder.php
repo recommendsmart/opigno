@@ -48,7 +48,7 @@ class ActivityListBuilder extends EntityListBuilder {
     $row['title']['data'] = [
       '#type' => 'link',
       '#title' => $entity->label(),
-      '#url' => $entity->urlInfo(),
+      '#url' => $entity->toUrl(),
     ];
 
     $row['type'] = $entity->get('type')->entity->label();
