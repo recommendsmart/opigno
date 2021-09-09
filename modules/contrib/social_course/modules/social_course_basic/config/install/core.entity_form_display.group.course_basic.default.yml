@@ -18,6 +18,7 @@ dependencies:
     - image_widget_crop
     - link
     - text
+    - path
 third_party_settings:
   field_group:
     group_information:
@@ -42,6 +43,7 @@ third_party_settings:
         - field_course_order
         - status
         - field_course_redirect_url
+        - path
       parent_name: ''
       weight: 3
       format_type: details
@@ -184,7 +186,12 @@ content:
     third_party_settings: { }
     type: options_buttons
     region: content
+  path:
+    type: path
+    weight: 30
+    settings: { }
+    third_party_settings: { }
+    region: content
 hidden:
   field_course_opening_status: true
-  path: true
   uid: true

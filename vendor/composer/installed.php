@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '4c8517b46abb217736a1ea93d9e149ef7f070b96',
+    'reference' => '5db8062afcfad3ae7b1016dd62b1078dfb4b957b',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -1607,12 +1607,12 @@
     ),
     'drupal/social_course' => 
     array (
-      'pretty_version' => '3.1.1',
-      'version' => '3.1.1.0',
+      'pretty_version' => '3.1.2',
+      'version' => '3.1.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => '3.1.1',
+      'reference' => '3.1.2',
     ),
     'drupal/social_geolocation' => 
     array (
@@ -1974,7 +1974,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '4c8517b46abb217736a1ea93d9e149ef7f070b96',
+      'reference' => '5db8062afcfad3ae7b1016dd62b1078dfb4b957b',
     ),
     'guzzlehttp/guzzle' => 
     array (
@@ -2059,12 +2059,12 @@
     ),
     'laminas/laminas-zendframework-bridge' => 
     array (
-      'pretty_version' => '1.3.0',
-      'version' => '1.3.0.0',
+      'pretty_version' => '1.4.0',
+      'version' => '1.4.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '13af2502d9bb6f7d33be2de4b51fb68c6cdb476e',
+      'reference' => 'bf180a382393e7db5c1e8d0f2ec0c4af9c724baf',
     ),
     'league/csv' => 
     array (
@@ -2588,12 +2588,12 @@
     ),
     'spatie/color' => 
     array (
-      'pretty_version' => '1.2.4',
-      'version' => '1.2.4.0',
+      'pretty_version' => 'v1.3.0',
+      'version' => '1.3.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'a82a3080bd6ddc4914a6960d0a590c1c8b601e81',
+      'reference' => 'fafbf8900541230e10abb2b165990e4758c28024',
     ),
     'spomky-labs/base64url' => 
     array (

@@ -7,7 +7,7 @@ dependencies:
   - social:social_group_request
 package: Social
 
-# Information added by Drupal.org packaging script on 2021-07-22
-version: '3.1.1'
+# Information added by Drupal.org packaging script on 2021-09-08
+version: '3.1.2'
 project: 'social_course'
-datestamp: 1626954153
+datestamp: 1631109909

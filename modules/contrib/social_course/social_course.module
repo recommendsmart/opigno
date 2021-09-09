@@ -18,6 +18,7 @@ use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\node\Entity\Node;
 use Drupal\search_api\Query\QueryInterface;
@@ -698,6 +699,8 @@ function social_course_form_alter(&$form, FormStateInterface $form_state, $form_
           '#type' => 'item',
           '#markup' => t('You will be able to follow this course by enrolling.'),
         ];
+
+        $form['actions']['submit']['#submit'][] = '_social_course_redirect_users_on_join';
         break;
 
       case 'group_content_course_basic-group_membership_group-leave_form':
@@ -740,6 +743,20 @@ function social_course_form_alter(&$form, FormStateInterface $form_state, $form_
         unset($form['group_settings']['group_type']['#options'][$excluded_group]);
       }
     }
+  }
+}
+
+/**
+ * Redirects users after joining to the course.
+ */
+function _social_course_redirect_users_on_join($form, FormStateInterface $form_state) {
+  $group = \Drupal::routeMatch()->getParameter('group');
+
+  // Redirect user back to the group they joined.
+  if ($group instanceof GroupInterface) {
+    $form_state->setRedirect('entity.group.canonical', [
+      'group' => $group->id(),
+    ]);
   }
 }
 
@@ -928,9 +945,11 @@ function social_course_preprocess_group(&$variables) {
       }
     }
     // Add teaser tag variable.
-    $variables['title_prefix']['teaser_tag'] = [
-      '#markup' => '<div class="teaser__tag">' . t('Course') . '</div>',
-    ];
+    if (in_array($variables['view_mode'], ['teaser', 'featured'])) {
+      $variables['title_prefix']['teaser_tag'] = [
+        '#markup' => '<div class="teaser__tag">' . t('Course') . '</div>',
+      ];
+    }
 
     if (
       $group->hasField('field_flexible_group_visibility') &&
@@ -2026,4 +2045,13 @@ function social_course_get_destination() {
     }
   }
   return $url;
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function social_course_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  if ($view->id() === 'newest_groups') {
+    $query->addWhere(1, 'groups_field_data.type', 'course_%', 'NOT LIKE');
+  }
 }

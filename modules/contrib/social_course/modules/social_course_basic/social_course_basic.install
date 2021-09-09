@@ -98,3 +98,17 @@ function social_course_basic_update_8901() {
     field_group_delete_field_group($group);
   }
 }
+
+/**
+ * Configuration update: add path alias field.
+ */
+function social_course_basic_update_8902() {
+  /** @var \Drupal\update_helper\Updater $updateHelper */
+  $updateHelper = \Drupal::service('update_helper.updater');
+
+  // Execute configuration update definitions with logging of success.
+  $updateHelper->executeUpdate('social_course_basic', 'social_course_basic_update_8902');
+
+  // Output logged messages to related channel of update execution.
+  return $updateHelper->logger()->output();
+}
