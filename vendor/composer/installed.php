@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '5db8062afcfad3ae7b1016dd62b1078dfb4b957b',
+    'reference' => 'a7448e1f8ba2e1cb3edd809d99d2ba8764b83db9',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -46,6 +46,24 @@
       array (
       ),
       'reference' => '90b4f75c4917927a1960c0dcaa002a91ab97f5d5',
+    ),
+    'commercie/currency' => 
+    array (
+      'pretty_version' => '1.1.2',
+      'version' => '1.1.2.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '64812cb8d5e8cdbc406c2f7c114399c814e2d898',
+    ),
+    'commercie/currency-exchange' => 
+    array (
+      'pretty_version' => '1.2.0',
+      'version' => '1.2.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'bb6a0c3b682aaed2eda205ceda5582673cb444af',
     ),
     'composer/ca-bundle' => 
     array (
@@ -736,6 +754,15 @@
       array (
       ),
       'reference' => '8.x-3.7',
+    ),
+    'drupal/currency' => 
+    array (
+      'pretty_version' => '3.3.0',
+      'version' => '3.3.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-3.3',
     ),
     'drupal/custom_pub' => 
     array (
@@ -1447,6 +1474,15 @@
       ),
       'reference' => 'dd5c5ceac387af688b7d117e8ff9a252a7fee010',
     ),
+    'drupal/plugin' => 
+    array (
+      'pretty_version' => '2.8.0',
+      'version' => '2.8.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-2.8',
+    ),
     'drupal/private_message' => 
     array (
       'pretty_version' => '1.3.0',
@@ -1974,7 +2010,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '5db8062afcfad3ae7b1016dd62b1078dfb4b957b',
+      'reference' => 'a7448e1f8ba2e1cb3edd809d99d2ba8764b83db9',
     ),
     'guzzlehttp/guzzle' => 
     array (
