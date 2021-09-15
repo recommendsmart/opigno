@@ -1,0 +1,72 @@
+services:
+  product.route_subscriber:
+    class: Drupal\arch_product\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
+
+  product.grant_storage:
+    class: Drupal\arch_product\Access\ProductGrantDatabaseStorage
+    arguments:
+      - '@database'
+      - '@module_handler'
+      - '@language_manager'
+    tags:
+      - { name: backend_overridable }
+
+  access_check.product.revision:
+    class: Drupal\arch_product\Access\ProductRevisionAccessCheck
+    arguments:
+      - '@entity_type.manager'
+    tags:
+      - { name: access_check, applies_to: _access_product_revision }
+
+  access_check.product.add:
+    class: Drupal\arch_product\Access\ProductAddAccessCheck
+    arguments:
+      - '@entity_type.manager'
+    tags:
+      - { name: access_check, applies_to: _product_add_access }
+
+  access_check.product.preview:
+    class: Drupal\arch_product\Access\ProductPreviewAccessCheck
+    arguments:
+      - '@entity_type.manager'
+    tags:
+      - { name: access_check, applies_to: _product_preview_access }
+
+  arch.admin_path.route_subscriber:
+    class: Drupal\arch_product\Routing\ProductAdminRouteSubscriber
+    arguments:
+      - '@config.factory'
+    tags:
+      - { name: event_subscriber }
+
+  product_preview:
+    class: Drupal\arch_product\ParamConverter\ProductPreviewConverter
+    arguments:
+      - '@tempstore.private'
+    tags:
+      - { name: paramconverter }
+    lazy: true
+
+  arch.page_cache_response_policy.deny_product_preview:
+    class: Drupal\arch_product\PageCache\DenyProductPreview
+    arguments: ['@current_route_match']
+    public: false
+    tags:
+      - { name: page_cache_response_policy }
+
+  cache_context.user.product_grants:
+    class: Drupal\arch_product\Cache\ProductAccessGrantsCacheContext
+    arguments:
+      - '@current_user'
+      - '@module_handler'
+    tags:
+      - { name: cache.context }
+
+  product.product_route_context:
+    class: Drupal\arch_product\ContextProvider\ProductRouteContext
+    arguments:
+      - '@current_route_match'
+    tags:
+      - { name: 'context_provider' }

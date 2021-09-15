@@ -1,0 +1,56 @@
+# Schema for the configuration files of the Taxonomy module.
+
+arch_price.price_type.*:
+  type: config_entity
+  label: 'Price type'
+  mapping:
+    name:
+      type: label
+      label: 'Name'
+    id:
+      type: string
+      label: 'Machine name'
+    description:
+      type: label
+      label: 'Description'
+    weight:
+      type: integer
+      label: 'Weight'
+    currency:
+      type: string
+      translatable: false
+    base:
+      type: string
+      translatable: false
+    vat_category:
+      type: string
+      translatable: false
+    locked:
+      type: boolean
+      label: ''
+
+arch_price.vat_category.*:
+  type: config_entity
+  label: 'VAT category'
+  mapping:
+    name:
+      type: label
+      label: 'Name'
+    id:
+      type: string
+      label: 'Machine name'
+    description:
+      type: label
+      label: 'Description'
+    weight:
+      type: integer
+      label: 'Weight'
+    rate:
+      type: float
+      label: 'Rate'
+    custom:
+      type: boolean
+      label: 'Custom rate'
+    locked:
+      type: boolean
+      label: ''

@@ -1,0 +1,40 @@
+services:
+  price_type.manager:
+    class: Drupal\arch_price\Manager\PriceTypeManager
+    arguments:
+      - '@keyvalue'
+      - '@config.factory'
+      - '@module_handler'
+
+  vat_category.manager:
+    class: Drupal\arch_price\Manager\VatCategoryManager
+    arguments:
+      - '@keyvalue'
+      - '@config.factory'
+
+  price_factory:
+    class: Drupal\arch_price\Price\PriceFactory
+    calls:
+      - [setContainer, ['@service_container']]
+
+  price_formatter:
+    class: Drupal\arch_price\Price\PriceFormatter
+    arguments:
+      - '@entity_type.manager'
+      - '@plugin.manager.currency.amount_formatter'
+      - '@module_handler'
+      - '@renderer'
+
+  price.currency_locale_subscriber:
+    class: Drupal\arch_price\EventSubscriber\CurrencyLocaleSubscriber
+    arguments:
+      - '@config.factory'
+    tags:
+      - { name: event_subscriber }
+
+  price.negotiation:
+    class: Drupal\arch_price\Negotiation\PriceNegotiation
+    arguments:
+      - '@current_user'
+      - '@price_factory'
+      - '@module_handler'

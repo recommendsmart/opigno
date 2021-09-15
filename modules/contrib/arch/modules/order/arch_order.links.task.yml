@@ -1,0 +1,41 @@
+entity.user.orders:
+  route_name: view.user_orders.my_orders
+  base_route: entity.user.canonical
+  title: 'My orders'
+  weight: 10
+
+entity.order.canonical:
+  route_name: entity.order.canonical
+  base_route: entity.order.canonical
+  title: 'View'
+
+entity.order.edit_form:
+  route_name: entity.order.edit_form
+  base_route: entity.order.canonical
+  title: Edit
+
+entity.order.version_history:
+  route_name: entity.order.version_history
+  base_route: entity.order.canonical
+  title: 'Revisions'
+  weight: 20
+
+entity.order_type.collection:
+  title: List
+  route_name: entity.order_type.collection
+  base_route: entity.order_type.collection
+
+entity.order_status.collection:
+  title: 'List'
+  route_name: entity.order_status.collection
+  base_route: entity.order_status.collection
+
+entity.order_status.edit_form:
+  title: 'Edit'
+  route_name: entity.order_status.edit_form
+  base_route: entity.order_status.edit_form
+
+order.order_settings_tab:
+  route_name: entity.order.admin_form
+  title: 'Settings'
+  base_route: entity.order.admin_form

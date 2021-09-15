@@ -1,0 +1,93 @@
+<?php
+/**
+ * @file
+ * Arch onepage module file.
+ */
+
+use Drupal\arch_product\Entity\Product;
+
+/**
+ * Implements hook_theme().
+ */
+function arch_onepage_theme() {
+  return [
+    'arch_checkout_op' => [
+      'variables' => [
+        'checkoutform' => NULL,
+        'billing' => NULL,
+        'shipping' => NULL,
+      ],
+    ],
+    'arch_checkout_op_summary' => [
+      'variables' => [
+        'attributes' => NULL,
+        'cart' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Preprocess arch checkout summary theme.
+ *
+ * @param array $variables
+ *   Variables array.
+ */
+function arch_checkout_preprocess_arch_checkout_op_summary(array &$variables) {
+  $variables['attributes']['class'][] = 'checkout-cart-sidebar';
+  $products = [];
+  /** @var \Drupal\arch_cart\Cart\CartInterface $cart */
+  $cart =& $variables['cart'];
+
+  /** @var \Drupal\Core\Render\Renderer $renderer */
+  $renderer = \Drupal::service('renderer');
+  /** @var \Drupal\arch_price\Price\PriceFormatterInterface $price_formatter */
+  $price_formatter = \Drupal::service('price_formatter');
+
+  /** @var \Drupal\Core\Entity\EntityViewBuilder $media_view_builder */
+  $media_view_builder = \Drupal::entityTypeManager()->getViewBuilder('media');
+
+  foreach ($cart->getProducts() as $key => $product_data) {
+    /** @var \Drupal\arch_product\Entity\Product $product */
+    $product = Product::load($product_data['id']);
+    if (empty($product)) {
+      continue;
+    }
+
+    $image = NULL;
+    if (
+      $product->hasField('field_gallery')
+      && !$product->get('field_gallery')->isEmpty()
+    ) {
+      try {
+        /** @var \Drupal\media\Entity\Media $image_media */
+        $image_media = $product->get('field_gallery')
+          ->first()
+          ->get('entity')
+          ->getTarget()
+          ->getValue('entity');
+        $image_render_array = $media_view_builder->view($image_media, 'cart');
+        $image = $renderer->render($image_render_array);
+      }
+      catch (\Exception $e) {
+        // Do nothing. $image is NULL by default.
+      }
+    }
+
+    $price = $product->getActivePrice();
+
+    $products[$key]['name'] = $product->label();
+    $products[$key]['img'] = $image;
+    $products[$key]['price'] = $price->getGrossPrice();
+    $products[$key]['qty'] = $product_data['quantity'];
+    $products[$key]['line_sum'] = $price->getGrossPrice() * $product_data['quantity'];
+  }
+
+  $variables['products'] = $products;
+  $products_total = $cart->getTotal();
+  $variables['products_total'] = $products_total['gross'];
+  $shipping_price = $cart->getShippingPrice();
+  $variables['shipping'] = $price_formatter->buildGross($shipping_price);
+  $grand_total = $cart->getGrandTotal();
+  $variables['grand_total'] = $grand_total['gross_total'];
+}

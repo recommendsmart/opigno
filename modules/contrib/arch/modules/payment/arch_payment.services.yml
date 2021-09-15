@@ -1,0 +1,4 @@
+services:
+  plugin.manager.payment_method:
+    class: Drupal\arch_payment\PaymentMethodManager
+    parent: default_plugin_manager

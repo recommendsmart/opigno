@@ -1,0 +1,7 @@
+<div class="add-to-cart add-to-api-cart">
+  {% if available_for_sell and has_price %}
+    <a {{ attributes }}><i class="add-to-cart-icon"></i>{{ text }}<span {{ icon_attributes }}><i{{ throbber_attributes }}></i></span></a>
+  {% else %}
+    <span{{ attributes }}>{{ not_available_text }}</span>
+  {% endif %}
+</div>

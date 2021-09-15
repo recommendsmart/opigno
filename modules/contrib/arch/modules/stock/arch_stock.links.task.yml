@@ -1,0 +1,17 @@
+
+arch_stock.stock.config:
+  title: 'Stock settings'
+  title_context: arch_stock
+  route_name: arch_stock.stock.config
+  base_route: arch_stock.stock.config
+
+entity.warehouse.collection:
+  title: 'Warehouses'
+  title_context: arch_stock
+  route_name: entity.warehouse.collection
+  base_route: arch_stock.stock.config
+
+entity.warehouse.edit_form:
+  title: 'Edit'
+  route_name: entity.warehouse.edit_form
+  base_route: entity.warehouse.overview_form

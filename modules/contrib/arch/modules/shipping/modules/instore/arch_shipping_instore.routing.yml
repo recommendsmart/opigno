@@ -1,0 +1,45 @@
+
+arch_shipping_instore.address.overview:
+  path: '/admin/store/settings/shipping-methods/instore/address'
+  defaults:
+    _form: '\Drupal\arch_shipping_instore\Form\AddressOverviewForm'
+    _title: 'Addresses'
+    _title_context: arch_shipping_instore
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer shipping methods'
+
+arch_shipping_instore.address.add:
+  path: '/admin/store/settings/shipping-methods/instore/address/add'
+  defaults:
+    _form: '\Drupal\arch_shipping_instore\Form\AddressForm'
+    _title: 'Add address'
+    _title_context: arch_shipping_instore
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer shipping methods'
+
+arch_shipping_instore.address.edit:
+  path: '/admin/store/settings/shipping-methods/instore/address/{address_id}'
+  defaults:
+    _form: '\Drupal\arch_shipping_instore\Form\AddressForm'
+    _title: 'Edit address'
+    _title_context: arch_shipping_instore
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer shipping methods'
+
+
+arch_shipping_instore.address.delete:
+  path: '/admin/store/settings/shipping-methods/instore/address/{address_id}/delete'
+  defaults:
+    _form: '\Drupal\arch_shipping_instore\Form\AddressDeleteForm'
+    _title: 'Delete address'
+    _title_context: arch_shipping_instore
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer shipping methods'

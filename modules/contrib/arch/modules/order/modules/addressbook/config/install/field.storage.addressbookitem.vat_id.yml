@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - arch_addressbook
+id: addressbookitem.vat_id
+field_name: vat_id
+entity_type: addressbookitem
+type: string
+settings:
+  max_length: 150
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: true
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

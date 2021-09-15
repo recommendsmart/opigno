@@ -1,0 +1,31 @@
+<div{{ attributes }}>
+  <label>{% trans with {'context': 'arch_onepage'} %}Your order{% endtrans %}</label>
+  {% for p in products %}
+  <div class="product-summary-items clearfix">
+    <div class="product-image pull-left">
+      {{ p.img }}
+    </div>
+    <div class="product-properties pull-left">
+      <div class="product-name">{{ p.name }}</div>
+      <span class="product-price">{{ p.price | raw }}</span>
+      <span class="product-quantity">x{{ p.qty }}</span>
+      <span class="product-line-sum">{{ p.line_sum | raw }}</span>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  {% endfor %}
+  <table class="order-summary">
+    <tr class="subtotal">
+      <td class="order-summary-label order-summary-subtotal-label">{% trans with {'context': 'arch_onepage'} %}Subtotal{% endtrans %}</td>
+      <td class="order-summary-value order-summary-subtotal-value">{{ products_total|raw }}</td>
+    </tr>
+    <tr class="shipping-cost">
+      <td class="order-summary-label order-summary-shipping-label">{% trans with {'context': 'arch_onepage'} %}Shipping{% endtrans %}</td>
+      <td class="order-summary-value order-summary-shipping-value">{{ shipping|raw }}</td>
+    </tr>
+    <tr class="grand-total">
+      <td class="order-summary-label order-summary-grand-total-label">{% trans with {'context': 'arch_onepage'} %}Grand total{% endtrans %}</td>
+      <td class="order-summary-value order-summary-grand-total-value">{{ grand_total|raw }}</td>
+    </tr>
+  </table>
+</div>

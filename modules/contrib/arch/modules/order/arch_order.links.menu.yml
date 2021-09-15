@@ -1,0 +1,47 @@
+entity.order.collection:
+  title: 'Orders'
+  title_context: arch_order__menu
+  parent: arch.store
+  route_name: entity.order.collection
+  weight: -30
+
+order.add:
+  title: 'Add order'
+  title_context: arch_order
+  route_name: order.add
+
+# entity.order.list_orders:
+#   title: 'List orders'
+#   title_context: arch_order_menu
+#   route_name: entity.order.collection
+#   parent: entity.order.collection
+#   weight: -12
+
+arch_order.order.config:
+  title: 'Order settings'
+  title_context: arch_order
+  parent: arch.settings
+  route_name: arch_order.order.config
+
+entity.order_status.collection:
+  title: 'Order statuses'
+  title_context: arch_order_menu
+  description: 'Configure order statuses for Arch Commerce.'
+  route_name: entity.order_status.collection
+  parent: arch_order.order.config
+  weight: -11
+
+entity.order.admin_form:
+  title: 'Order settings'
+  title_context: arch_order_menu
+  parent: arch_order.order.config
+  description: 'Configure default order settings, fields.'
+  weight: -10
+  route_name: entity.order.admin_form
+
+arch_order_mail.settings:
+  title: 'Mail settings'
+  title_context: arch_order_menu
+  parent: arch_order.order.config
+  description: 'Configure order mails.'
+  route_name: arch_order_mail.list

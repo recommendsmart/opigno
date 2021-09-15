@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies: {  }
+id: processing
+label: Processing
+weight: -9
+description: 'Typically, while the payment is in progress, or collecting the items for the order.'
+default: false
+locked: true

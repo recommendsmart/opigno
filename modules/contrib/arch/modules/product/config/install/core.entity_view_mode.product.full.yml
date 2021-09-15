@@ -1,0 +1,9 @@
+langcode: en
+status: false
+dependencies:
+  module:
+    - arch_product
+id: product.full
+label: 'Full product'
+targetEntityType: product
+cache: true

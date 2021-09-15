@@ -1,0 +1,98 @@
+<div id="mini-cart-wrapper" class="mini-cart-wrapper">
+  <!-- Placeholder -->
+</div>
+
+<script type="x-tmpl-mustache" id="arch-cart--api-cart--count">
+  <% if (count === 1) { %>
+    {% trans with {'context': 'arch_cart'} %}
+      <b class="count-item"><%= count %></b> product in cart.
+    {% endtrans %}
+  <% } else if (count > 1) { %>
+    {% trans with {'context': 'arch_cart'} %}
+      <b class="count-item"><%= count %></b> products in cart.
+    {% endtrans %}
+  <% } %>
+</script>
+
+{#
+  @see api-cart.js renderCart() function for details.
+#}
+<script type="x-tmpl-mustache" id="arch-cart--api-cart">
+  <div class="mini-cart-wrapper-title">{{ title }}</div>
+
+  <% if (messages) { %>
+    <%= messages %>
+  <% } %>
+
+  <table class="mini-cart-product-list">
+    <tbody>
+      <%= items %>
+    </tbody>
+  </table>
+
+  <div class="mini-cart-wrapper-total">
+    <div class="grand-total-label total-label">{{ grand_total_label }}</div>
+    <div class="grand-total-value">
+      <%= grand_total.formatted %>
+    </div>
+  </div>
+  <div class="mini-cart-buttons row">
+    <div class="col-md-6 cart-col">{{ cart_link }}</div>
+    <div class="col-md-6 checkout-col">{{ checkout_link }}</div>
+  </div>
+</script>
+
+<script type="x-tmpl-mustache" id="arch-cart--api-cart--item">
+  <tr class="mini-cart-item">
+    <td class="mini-cart-item-col mini-cart-product-image">
+      <% if (image) { %>
+        <%= image.formatted %>
+      <% } %>
+    </td>
+
+    <td class="mini-cart-item-col mini-cart-product-quantity"><%= formatted_quantity %> &times;</td>
+
+    <td class="mini-cart-item-col mini-cart-product-link"><a href="<%= url %>" class="mini-cart-product-link"><%= title %></a></td>
+    <td class="mini-cart-item-col mini-cart-product-price">
+      <%= total.formatted %>
+    </td>
+    <% if (remove) { %>
+      <td class="mini-cart-item-col mini-cart-product-remove">
+        <%= remove %>
+      </td>
+    <% } %>
+  </tr>
+</script>
+
+<script type="x-tmpl-mustache" id="arch-cart--message">
+  <%= message %>
+</script>
+
+<script type="x-tmpl-mustache" id="arch-cart--api-cart--item--quantity">
+  {% if settings and settings.allow_modify_quantity %}
+    <input
+      class="mini-cart-item-quantity"
+      type="number"
+      value="<%= quantity %>"
+      min="0"
+      <% if (input_max !== false) { print('max="' + input_max + '"') } %>
+      data-key="<%= key %>"
+      data-type="<%= type %>"
+      data-id="<%= id %>"
+    />
+  {% else %}
+    <%= quantity %>
+  {% endif %}
+</script>
+
+<script type="x-tmpl-mustache" id="arch-cart--api-cart--item--remove">
+  {% if settings and settings.allow_remove %}
+    <a
+      title="{{ remove_title }}"
+      class="mini-cart-item-remove"
+      data-key="<%= key %>"
+      data-type="<%= type %>"
+      data-id="<%= id %>"
+    >X</a>
+  {% endif %}
+</script>

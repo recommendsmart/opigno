@@ -1,0 +1,148 @@
+# Schema for the views plugins of the Arch module.
+
+views.area.product_listing_empty:
+  type: views_area
+  label: 'Product link'
+
+views.argument.product_pid:
+  type: views_argument
+  label: 'Product ID'
+  mapping:
+    break_phrase:
+      type: boolean
+      label: 'Allow multiple values'
+    not:
+      type: boolean
+      label: 'Exclude'
+
+views.argument.product_type:
+  type: views_argument
+  label: 'Product type'
+  mapping:
+    glossary:
+      type: boolean
+      label: 'Glossary mode'
+    limit:
+      type: integer
+      label: 'Character limit'
+    case:
+      type: string
+      label: 'Case'
+    path_case:
+      type: string
+      label: 'Case in path'
+    transform_dash:
+      type: boolean
+      label: 'Transform spaces to dashes in URL'
+    break_phrase:
+      type: boolean
+      label: 'Allow multiple values'
+    add_table:
+      type: boolean
+      label: 'Allow multiple filter values to work together'
+    require_value:
+      type: boolean
+      label: 'Do not display items with no value in summary'
+
+views.argument.product_uid_revision:
+  type: views_argument
+  label: 'Product user ID'
+  mapping:
+    break_phrase:
+      type: boolean
+      label: 'Allow multiple values'
+    not:
+      type: boolean
+      label: 'Exclude'
+
+views.argument.product_vid:
+  type: views_argument
+  label: 'Product revision ID'
+  mapping:
+    break_phrase:
+      type: boolean
+      label: 'Allow multiple values'
+    not:
+      type: boolean
+      label: 'Exclude'
+
+views.field.product:
+  type: views_field
+  label: 'Product'
+  mapping:
+    link_to_product:
+      type: boolean
+      label: 'Link this field to the original piece of product'
+
+views.field.product_bulk_form:
+  type: views_field_bulk_form
+  label: 'Product bulk form'
+
+views.field.product_path:
+  type: views_field
+  label: 'Product path'
+  mapping:
+    absolute:
+      type: boolean
+      label: 'Use absolute link (begins with "http://")'
+
+views.field.product_revision_link:
+  type: views_field
+  label: 'Link to a product revision'
+  mapping:
+    text:
+      type: label
+      label: 'Text to display'
+
+views.field.product_revision_link_delete:
+  type: views_field
+  label: 'Link to delete a product revision'
+  mapping:
+    text:
+      type: label
+      label: 'Text to display'
+
+views.field.product_revision_link_revert:
+  type: views_field
+  label: 'Link to revert a product to a revision'
+  mapping:
+    text:
+      type: label
+      label: 'Text to display'
+
+views.filter.product_access:
+  type: views_filter
+  label: 'Product access'
+
+views.filter.product_status:
+  type: views_filter
+  label: 'Product status'
+
+views.filter.product_uid_revision:
+  type: views_filter
+  label: 'Product revisions of an user'
+  mapping:
+    operator:
+      type: string
+      label: 'Operator'
+    value:
+      type: sequence
+      label: 'Values'
+      sequence:
+        type: string
+        label: 'Value'
+    expose:
+      type: mapping
+      label: 'Expose'
+      mapping:
+        reduce:
+          type: boolean
+          label: 'Reduce'
+
+views.filter_value.product_access:
+  type: string
+  label: 'Access'
+
+views.filter_value.product_status:
+  type: boolean
+  label: 'Status'

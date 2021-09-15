@@ -1,0 +1,8 @@
+
+views.filter.arch_stock_search_api:
+  type: views.filter.search_api_numeric
+  label: 'Stock filter'
+
+views.filter_value.arch_stock_search_api:
+  type: views.filter_value.search_api_numeric
+  label: 'Stock filter'

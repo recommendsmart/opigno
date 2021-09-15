@@ -1,0 +1,4 @@
+administer checkout settings:
+  title: 'Administer Checkout Settings'
+  description: 'Manage which type of checkout should be used on the UI.'
+  restrict access: true

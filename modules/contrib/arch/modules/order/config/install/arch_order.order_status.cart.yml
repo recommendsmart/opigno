@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies: {  }
+id: cart
+label: Cart
+weight: -10
+description: 'Default order status the order gets.'
+default: true
+locked: true

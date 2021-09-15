@@ -1,0 +1,30 @@
+
+arch.store:
+  title: Store
+  title_context: arch__menu
+  route_name: arch.dashboard
+  parent: system.admin
+  weight: -9
+
+arch.dashboard:
+  title: Dashboard
+  title_context: arch__menu
+  route_name: arch.dashboard
+  description: 'Dashboard'
+  parent: arch.store
+  weight: -1000
+
+arch.settings:
+  title: Settings
+  title_context: arch__menu
+  route_name: arch.settings
+  description: 'Settings'
+  parent: arch.store
+  weight: 1000
+
+arch.content.settings:
+  title: 'Content settings'
+  title_context: arch__menu
+  route_name: arch.content.settings
+  parent: arch.settings
+  weight: 1000

@@ -1,0 +1,38 @@
+# Schema for the configuration files of the stock.
+
+arch_stock.warehouse.*:
+  type: config_entity
+  label: 'Warehouse'
+  mapping:
+    name:
+      type: label
+      label: 'Name'
+    id:
+      type: string
+      label: 'Machine name'
+    description:
+      type: label
+      label: 'Description'
+    weight:
+      type: integer
+      label: 'Weight'
+    allow_negative:
+      type: boolean
+      label: 'Allow over booking'
+    overbooked_availability:
+      type: string
+      label: 'Change product Availability when overbooked'
+    locked:
+      type: boolean
+      label: ''
+
+arch_product.type.*.third_party.arch_stock:
+  type: mapping
+  label: 'Stock settings'
+  mapping:
+    stock_enable:
+      type: boolean
+      label: 'Stock is enabled for type'
+    out_of_stock:
+      type: label
+      label: 'Out of stock message'

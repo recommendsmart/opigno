@@ -1,0 +1,43 @@
+arch_payment.payment_method.overview:
+  path: '/admin/store/settings/payment-methods'
+  defaults:
+    _form: '\Drupal\arch_payment\Form\OverviewForm'
+    _title: 'Payment methods'
+    _title_context: arch_payment_menu
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer payment settings'
+
+arch_payment.configure_plugin:
+  path: '/admin/store/settings/payment-methods/{payment_method}'
+  defaults:
+    _title: 'Configure shipping method'
+    _title_context: arch_payment_menu
+    _controller: '\Drupal\arch_payment\Controller\PaymentMethodConfigureController::settings'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer payment settings'
+
+arch_payment.disable_method:
+  path: '/admin/store/settings/payment-methods/{payment_method}/disable'
+  defaults:
+    _title: 'Disable payment method'
+    _title_context: arch_payment_menu
+    _controller: '\Drupal\arch_payment\Controller\PaymentMethodConfigureController::disable'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer payment methods'
+
+arch_payment.enable_method:
+  path: '/admin/store/settings/payment-methods/{payment_method}/enable'
+  defaults:
+    _title: 'Enable payment method'
+    _title_context: arch_payment_menu
+    _controller: '\Drupal\arch_payment\Controller\PaymentMethodConfigureController::enable'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer payment methods'

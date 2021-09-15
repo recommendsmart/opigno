@@ -1,0 +1,22 @@
+
+views.filter.arch_price_search_api:
+  type: views.filter.search_api_numeric
+  label: 'Price filter'
+  mapping:
+    base:
+      type: string
+      label: 'Price base'
+    currency_expose:
+      type: boolean
+      label: 'Currency expose'
+    currency:
+      type: string
+      label: 'Currency'
+
+views.filter_value.arch_price_search_api:
+  type: views.filter_value.search_api_numeric
+  label: 'Price filter'
+  mapping:
+    currency:
+      type: string
+      label: 'Currency'

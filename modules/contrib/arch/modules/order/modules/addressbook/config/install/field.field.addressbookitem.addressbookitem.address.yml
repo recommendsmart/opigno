@@ -1,0 +1,40 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.addressbookitem.address
+  module:
+    - address
+    - arch_addressbook
+id: addressbookitem.addressbookitem.address
+field_name: address
+entity_type: addressbookitem
+bundle: addressbookitem
+label: Address
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  available_countries: {  }
+  langcode_override: ''
+  field_overrides:
+    givenName:
+      override: optional
+    additionalName:
+      override: hidden
+    familyName:
+      override: optional
+    organization:
+      override: optional
+    addressLine1:
+      override: required
+    addressLine2:
+      override: optional
+    postalCode:
+      override: required
+    locality:
+      override: required
+  fields: {  }
+field_type: address

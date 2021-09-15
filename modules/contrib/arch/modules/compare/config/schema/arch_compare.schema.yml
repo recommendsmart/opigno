@@ -1,0 +1,13 @@
+arch_compare.settings:
+  type: config_object
+  label: 'Compare settings'
+  mapping:
+    limit:
+      type: integer
+      label: 'Limit of comparable elements'
+    compare_selection_preservation_time:
+      type: integer
+      label: 'Preservation time for keeping selection in seconds'
+    view_mode:
+      type: string
+      label: 'View mode for display compare items'

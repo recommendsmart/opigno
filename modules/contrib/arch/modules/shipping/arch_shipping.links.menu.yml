@@ -1,0 +1,6 @@
+
+arch_shipping.shipping_method.overview:
+  title: 'Shipping methods'
+  title_context: arch_shipping
+  parent: arch.settings
+  route_name: arch_shipping.shipping_method.overview

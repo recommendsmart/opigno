@@ -1,0 +1,40 @@
+compare_storage:
+  js:
+    assets/js/compare-storage.js: {}
+  dependencies:
+    - core/drupalSettings
+
+compare_selectors:
+  js:
+    assets/js/compare-selectors.js: {}
+  dependencies:
+    - core/drupalSettings
+
+compare_item:
+  js:
+    assets/js/compare-item.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery
+    - arch_compare/compare_storage
+    - arch_compare/compare_selectors
+
+compare_block:
+  css:
+      theme:
+        assets/css/compare.css: {}
+  js:
+    assets/js/compare-block.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery
+    - arch_compare/compare_storage
+    - arch_compare/compare_selectors
+
+compare_products:
+  js:
+    assets/js/compare-products.js: {}
+  dependencies:
+    - core/jquery

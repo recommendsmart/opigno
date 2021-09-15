@@ -1,0 +1,185 @@
+<?php
+/**
+ * @file
+ * Arch base module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\Entity\Node;
+
+/**
+ * Implements hook_theme().
+ */
+function arch_theme($existing, $type, $theme, $path) {
+  return [
+    'arch_terms_of_use' => [
+      'render element' => 'elements',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function arch_theme_suggestions_arch_terms_of_use(array $variables) {
+  $settings = _arch_content_settings();
+
+  $suggestions = [];
+  $suggestions[] = 'arch_terms_of_use__' . strtolower($settings['mode']);
+
+  return $suggestions;
+}
+
+/**
+ * Preprocess arch terms of use theme.
+ */
+function template_preprocess_arch_terms_of_use(array &$variables) {
+  $variables += [
+    'settings' => [],
+    'mode' => '_none',
+    'tc_link' => NULL,
+    'node_tc' => NULL,
+    'pp_link' => NULL,
+    'node_pp' => NULL,
+    'content' => '',
+  ];
+  $settings = _arch_content_settings();
+  $variables['settings'] = $settings['settings'];
+  $variables['mode'] = $settings['mode'];
+  if (!empty($settings['mode']) && $settings['mode'] != '_none') {
+
+    $variables['tc_link'] = NULL;
+    $variables['node_tc'] = $settings['node_tc'];
+    if (!empty($settings['node_tc'])) {
+      $variables['tc_link'] = $settings['node_tc']->toLink()->toRenderable();
+    }
+
+    $variables['pp_link'] = NULL;
+    $variables['node_pp'] = $settings['node_pp'];
+    if (!empty($settings['node_pp'])) {
+      $variables['pp_link'] = $settings['node_pp']->toLink()->toRenderable();
+    }
+
+    $template = t('I accept the Terms of Use', [], ['context' => 'arch_terms_of_use']);
+    if ($variables['mode'] === 'TCPP') {
+      $template = t('I accept the {{ tc_link }} and the {{ pp_link }}', [], ['context' => 'arch_terms_of_use']);
+    }
+    elseif ($variables['mode'] === 'TC') {
+      $template = t('I accept the {{ tc_link }}', [], ['context' => 'arch_terms_of_use']);
+    }
+    elseif ($variables['mode'] === 'PP') {
+      $template = t('I accept the {{ pp_link }}', [], ['context' => 'arch_terms_of_use']);
+    }
+
+    $variables['content'] = [
+      '#type' => 'inline_template',
+      '#template' => (string) $template,
+      '#context' => [
+        'tc_link' => $variables['tc_link'],
+        'pp_link' => $variables['pp_link'],
+      ],
+    ];
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Alters the theme form to use the admin theme on node editing.
+ *
+ * @see arch_form_system_themes_admin_form_submit()
+ */
+function arch_form_system_themes_admin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['admin_theme']['use_admin_theme_arch'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Use the administration theme when administrating store', [], ['context' => 'arch']),
+    '#default_value' => \Drupal::configFactory()->getEditable('arch.settings')->get('use_admin_theme'),
+  ];
+  $form['#submit'][] = 'arch_form_system_themes_admin_form_submit';
+}
+
+/**
+ * Form submission handler for system_themes_admin_form().
+ *
+ * @see node_form_system_themes_admin_form_alter()
+ */
+function arch_form_system_themes_admin_form_submit($form, FormStateInterface $form_state) {
+  \Drupal::configFactory()->getEditable('node.settings')
+    ->set('use_admin_theme', $form_state->getValue('use_admin_theme_arch'))
+    ->save();
+  \Drupal::service('router.builder')->setRebuildNeeded();
+}
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function arch_library_info_alter(&$libraries, $extension) {
+  if ($extension == 'toolbar_themes') {
+    if (isset($libraries['toolbar_seven.icons'])) {
+      $libraries['toolbar_seven.icons']['dependencies'][] = 'arch/toolbar_themes.seven.icons';
+    }
+    if (isset($libraries['toolbar_admin_menu.icons'])) {
+      $libraries['toolbar_admin_menu.icons']['dependencies'][] = 'arch/toolbar_themes.admin_menu.icons';
+    }
+  }
+}
+
+/**
+ * Get content settings.
+ *
+ * @return array
+ *   All settings with keys:
+ *   - settings: stored settings.
+ *   - mode: selected mode.
+ *   - node_tc: Terms&Conditions node.
+ *   - node_pp: PrivacyPolicy node.
+ */
+function _arch_content_settings() {
+  $settings = drupal_static(__FUNCTION__);
+  if (!isset($settings)) {
+    $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $config = \Drupal::keyValue('arch.content_settings');
+    $settings['settings'] = $config->getAll();
+    $settings['mode'] = $config->get('mode', '_none');
+
+    if ($settings['mode'] != '_none') {
+      foreach (['tc', 'pp'] as $item) {
+        $key = 'node_' . $item;
+        $settings[$key] = NULL;
+        if (!in_array($settings['mode'], [strtoupper($item), 'TCPP'])) {
+          continue;
+        }
+
+        $nid = $config->get('nodes.' . $item);
+        if (!$nid) {
+          continue;
+        }
+        /** @var \Drupal\node\NodeInterface $node */
+        $node = Node::load($nid);
+        if (!$node || !$node->isPublished()) {
+          continue;
+        }
+
+        if ($node->hasTranslation($langcode)) {
+          $node = $node->getTranslation($langcode);
+        }
+
+        $settings[$key] = $node;
+      }
+    }
+
+    if (
+      ($settings['mode'] == 'TC' && empty($settings['node_tc']))
+      || ($settings['mode'] == 'PP' && empty($settings['node_pp']))
+    ) {
+      $settings['mode'] = '_none';
+    }
+    elseif ($settings['mode'] == 'TCPP' && empty($settings['node_tc'])&& !empty($settings['node_pp'])) {
+      $settings['mode'] = 'PP';
+    }
+    elseif ($settings['mode'] == 'TCPP' && empty($settings['node_pp']) && !empty($settings['node_tc'])) {
+      $settings['mode'] = 'TC';
+    }
+  }
+  return $settings;
+}

@@ -1,0 +1,12 @@
+name: 'Grouped product'
+description: 'Allow to manage product groups'
+core_version_requirement: ^8.8 || ^9
+type: module
+package: 'Arch product'
+dependencies:
+  - arch:arch_product
+
+# Information added by Drupal.org packaging script on 2021-09-14
+version: '8.x-1.0-alpha10'
+project: 'arch'
+datestamp: 1631635065

@@ -1,0 +1,11 @@
+services:
+  arch_payment_saferpay_handler:
+    class: Drupal\arch_payment_saferpay\Saferpay\SaferpayHandler
+    arguments:
+      - '@config.factory'
+      - '@entity_type.manager'
+      - '@current_user'
+      - '@request_stack'
+      - '@state'
+      - '@language_manager'
+      - '@http_client'

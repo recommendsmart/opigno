@@ -1,0 +1,22 @@
+order.add:
+  route_name: order.add
+  title: 'Add order'
+  title_context: arch_order
+  appears_on:
+    - arch.dashboard
+    - entity.order.collection
+    - view.orders.page
+
+order_status_add_local_action:
+  route_name: order_status.add
+  title: 'Add order status'
+  title_context: arch_order
+  appears_on:
+   - entity.order_status.collection
+
+arch_order_mail.new_translation:
+  route_name: arch_order_mail.new_translation
+  title: 'Add translation'
+  title_context: arch_order_mail
+  appears_on:
+    - arch_order_mail.view

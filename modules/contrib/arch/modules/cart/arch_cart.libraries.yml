@@ -1,0 +1,28 @@
+api-request:
+  js:
+    assets/js/api-cart-request.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupalSettings
+
+add-to-api-cart:
+  js:
+    assets/js/add-to-api-cart.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery
+    - arch_cart/api-request
+
+api-cart:
+  css:
+    theme:
+      assets/css/api-cart.css: {}
+  js:
+    assets/js/api-cart.js: {}
+  dependencies:
+    - core/underscore
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery
+    - arch_cart/api-request

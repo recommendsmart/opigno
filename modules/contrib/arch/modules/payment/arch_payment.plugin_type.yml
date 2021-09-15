@@ -1,0 +1,4 @@
+arch_payment_methods:
+  label: Payment methods
+  plugin_manager_service_id: plugin.manager.payment_method
+  plugin_definition_decorator_class: \Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator

@@ -1,0 +1,43 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display an addressbookitem.
+ *
+ * Available variables:
+ * - addressbookitem: The addressbookitem entity.
+ * - label: The title of the addressbookitem.
+ * - content: All addressbookitem items. Use {{ content }} to print them all,
+ *   or print a subset such as {{ content.field_example }}. Use
+ *   {{ content|without('field_example') }} to temporarily suppress the printing
+ *   of a given child element.
+ * - date: Themed creation date field.
+ * - url: Direct URL of the current addressbookitem.
+ * - attributes: HTML attributes for the containing element.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ * - view_mode: View mode; for example, "teaser" or "full" or "address".
+ * - teaser: Flag for the teaser state. Will be true if view_mode is 'teaser'.
+ * - page: Flag for the full page state. Will be true if view_mode is 'full'.
+ *
+ * @see template_preprocess_addressbookitem()
+ */
+#}
+<div{{ attributes }}>
+
+  {{ title_prefix }}
+  {% if not page %}
+    <h3>{{ title }}</h3>
+  {% endif %}
+  {{ title_suffix }}
+
+  <div{{ content_attributes }}>
+    {{ content }}
+  </div>
+
+  {% if display_edit_link %}
+    <a href="{{ url }}">{{ 'Edit'|t }}</a>
+  {% endif %}
+
+</div>

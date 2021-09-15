@@ -1,0 +1,18 @@
+
+arch_price.price.config:
+  title: 'Price settings'
+  title_context: arch_price
+  parent: arch.settings
+  route_name: arch_price.price.config
+
+entity.price_type.collection:
+  title: 'Price types'
+  title_context: arch_price
+  parent: arch_price.price.config
+  route_name: entity.price_type.collection
+
+entity.vat_category.collection:
+  title: 'VAT categories'
+  title_context: arch_price__menu
+  parent: arch_price.price.config
+  route_name: entity.vat_category.collection

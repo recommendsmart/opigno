@@ -1,0 +1,15 @@
+product.type_add:
+  route_name: product.type_add
+  title: 'Add product type'
+  title_context: arch_product
+  appears_on:
+    - entity.product_type.collection
+
+product.add_page:
+  route_name: product.add_page
+  title: 'Add product'
+  title_context: arch_product
+  appears_on:
+    - arch.dashboard
+    - entity.product.collection
+    - view.products.page

@@ -1,0 +1,33 @@
+
+arch_price.price.config:
+  path: '/admin/store/price'
+  defaults:
+    _form: '\Drupal\arch_price\Form\PriceSettingsForm'
+    _title: 'Price settings'
+    _title_context: arch_price
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer prices'
+
+entity.price_type.delete_form:
+  path: '/admin/store/price/type/{price_type}/delete'
+  defaults:
+    _entity_form: 'price_type.delete'
+    _title: 'Delete price type'
+    _title_context: arch_price
+  options:
+    _admin_route: TRUE
+  requirements:
+    _entity_access: 'price_type.delete'
+
+entity.vat_category.delete_form:
+  path: '/admin/store/price/vat-category/{vat_category}/delete'
+  defaults:
+    _entity_form: 'vat_category.delete'
+    _title: 'Delete VAT category'
+    _title_context: arch_vat_category
+  options:
+    _admin_route: TRUE
+  requirements:
+    _entity_access: 'vat_category.delete'

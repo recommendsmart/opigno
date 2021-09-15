@@ -1,0 +1,13 @@
+entity.price_type.add_form:
+  route_name: entity.price_type.add_form
+  title: 'Add price type'
+  title_context: arch_price_type
+  appears_on:
+    - entity.price_type.collection
+
+entity.vat_category.add_form:
+  route_name: entity.vat_category.add_form
+  title: 'Add VAT category'
+  title_context: arch_vat_category
+  appears_on:
+  - entity.vat_category.collection

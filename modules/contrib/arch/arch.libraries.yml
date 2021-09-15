@@ -1,0 +1,14 @@
+dashboard:
+  css:
+    theme:
+      assets/css/dashboard.css: {}
+
+toolbar_themes.seven.icons:
+  css:
+    theme:
+      assets/css/toolbar_themes/seven.css: {}
+
+toolbar_themes.admin_menu.icons:
+  css:
+    theme:
+      assets/css/toolbar_themes/admin_menu.css: {}

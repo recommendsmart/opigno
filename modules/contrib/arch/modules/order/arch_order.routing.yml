@@ -1,0 +1,169 @@
+entity.order.collection:
+  path: '/admin/store/orders'
+  defaults:
+    _entity_list: 'order'
+    _title: 'Orders'
+    _title_context: arch_order__menu
+  requirements:
+    _permission: 'administer orders'
+
+order.add:
+  path: '/order/add'
+  defaults:
+    _title: 'Add order'
+    _title_context: arch_order
+    _controller: '\Drupal\arch_order\Controller\OrderController::add'
+  options:
+    _order_operation_route: TRUE
+  requirements:
+    _order_add_access: 'order'
+
+entity.order.version_history:
+  path: '/order/{order}/revisions'
+  defaults:
+    _title: 'Revisions'
+    _controller: '\Drupal\arch_order\Controller\OrderController::revisionOverview'
+  requirements:
+    _access_order_revision: 'view'
+    order: \d+
+  options:
+    _order_operation_route: TRUE
+
+entity.order.revision:
+  path: '/order/{order}/revisions/{order_revision}/view'
+  defaults:
+    _controller: '\Drupal\arch_order\Controller\OrderController::revisionShow'
+    _title_callback: '\Drupal\arch_order\Controller\OrderController::revisionPageTitle'
+  requirements:
+    _access_order_revision: 'view'
+    order: \d+
+
+order.revision_revert_confirm:
+  path: '/order/{order}/revisions/{order_revision}/revert'
+  defaults:
+    _form: '\Drupal\arch_order\Form\OrderRevisionRevertForm'
+    _title: 'Revert to earlier revision'
+  requirements:
+    _access_order_revision: 'update'
+    order: \d+
+  options:
+    _order_operation_route: TRUE
+
+order_status.add:
+  path: '/admin/store/order-status/add'
+  defaults:
+    _entity_form: 'order_status.add'
+    _title: 'Add order status'
+    _title_context: arch_order
+  requirements:
+    _entity_create_access: 'order_status'
+
+entity.order_status.edit_form:
+  path: '/admin/store/order-status/edit/{order_status}'
+  defaults:
+    _entity_form: 'order_status.edit'
+    _title: 'Edit order status'
+    _title_context: arch_order__menu
+  requirements:
+    _entity_access: 'order_status.update'
+
+entity.order_status.collection:
+  path: '/admin/store/order-statuses'
+  defaults:
+    _entity_list: 'order_status'
+    _title: 'Order statuses'
+    _title_context: arch_order__menu
+  requirements:
+    _permission: 'administer order statuses'
+
+entity.order_status.delete_form:
+  path: '/admin/store/order-status/delete/{order_status}'
+  defaults:
+    _entity_form: 'order_status.delete'
+    _title: 'Delete order status'
+    _title_context: arch_order__menu
+  requirements:
+    _entity_access: 'order_status.delete'
+
+entity.order.admin_form:
+  path: '/admin/store/orders/settings'
+  defaults:
+    _form: '\Drupal\arch_order\Form\OrderSettingsForm'
+    _title: 'Order settings'
+    _title_context: arch_order__menu
+  requirements:
+    _permission: 'administer order settings'
+
+arch_order_mail.list:
+  path: '/admin/store/settings/mail'
+  defaults:
+    _title: 'Mail settings'
+    _title_context: arch_order__menu
+    _controller: '\Drupal\arch_order\OrderMail\Controller\ListController::main'
+  requirements:
+    _permission: 'administer order email settings'
+
+arch_order_mail.view:
+  path: '/admin/store/settings/mail/{plugin_id}'
+  defaults:
+    _title: 'Mail details'
+    _title_context: arch_order__menu
+    _controller: '\Drupal\arch_order\OrderMail\Controller\ViewController::main'
+  requirements:
+    _permission: 'administer order email settings'
+
+arch_order_mail.change_status:
+  path: '/admin/store/settings/mail/{plugin_id}/change_status'
+  defaults:
+    _title: 'Change mail status'
+    _title_context: arch_order__menu
+    _controller: '\Drupal\arch_order\OrderMail\Controller\ViewController::changeStatus'
+  requirements:
+    _permission: 'administer order email settings'
+
+arch_order_mail.new_translation:
+  path: '/admin/store/settings/mail/{plugin_id}/translate'
+  defaults:
+    _form: '\Drupal\arch_order\OrderMail\Form\MailForm'
+    _title: 'Add new mail translation'
+    _title_context: arch_order__menu
+  requirements:
+    _permission: 'administer order email settings'
+
+arch_order_mail.edit_translation:
+  path: '/admin/store/settings/mail/{plugin_id}/{lang_code}'
+  defaults:
+    _form: '\Drupal\arch_order\OrderMail\Form\MailForm'
+    _title: 'Edit mail translation'
+    _title_context: arch_order__menu
+  requirements:
+    _permission: 'administer order email settings'
+
+arch_order_mail.delete_translation:
+  path: '/admin/store/settings/mail/{plugin_id}/{lang_code}/delete'
+  defaults:
+    _title: 'Confirm deleting a mail translation'
+    _title_context: arch_order__menu
+    _controller: '\Drupal\arch_order\OrderMail\Controller\DeleteController::confirm'
+  requirements:
+    _permission: 'administer order email settings'
+
+arch_order_mail.delete_translation_confirmed:
+  path: '/admin/store/settings/mail/{plugin_id}/{lang_code}/delete_confirmed'
+  defaults:
+    _title: 'Delete mail translation'
+    _title_context: arch_order__menu
+    _controller: '\Drupal\arch_order\OrderMail\Controller\DeleteController::delete'
+  requirements:
+    _permission: 'administer order email settings'
+
+arch_order.order.config:
+  path: '/admin/store/settings/order'
+  defaults:
+    _title: 'Order settings'
+    _title_context: arch_price
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'administer store'

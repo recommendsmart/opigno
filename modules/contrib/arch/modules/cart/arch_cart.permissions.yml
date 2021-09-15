@@ -1,0 +1,3 @@
+administer cart settings:
+  title: 'Administer Cart Configurations'
+  restrict access: true

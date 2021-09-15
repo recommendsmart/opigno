@@ -1,0 +1,24 @@
+# Schema for the configuration files of the arch_order module.
+
+arch_order.order_status.*:
+  type: config_entity
+  label: 'Order Status'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    description:
+      type: string
+      label: 'Description'
+    weight:
+      type: integer
+      label: 'Weight'
+    default:
+      type: boolean
+      label: 'Default'
+    locked:
+      type: boolean
+      label: 'Locked'

@@ -1,0 +1,246 @@
+<?php
+/**
+ * @file
+ * Downloadable product.
+ */
+
+use Drupal\arch_product\Entity\ProductTypeInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Entity\FieldConfig;
+
+/**
+ * Implements hook_form_alter().
+ */
+function arch_downloadable_product_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (!in_array($form_id, ['product_type_add_form', 'product_type_edit_form'])) {
+    return;
+  }
+  /** @var \Drupal\arch_product\Form\ProductTypeForm $form_object */
+  $form_object = $form_state->getFormObject();
+  /** @var \Drupal\arch_product\Entity\ProductType $product_type */
+  $product_type = $form_object->getEntity();
+
+  $form['downloadable'] = [
+    '#type' => 'details',
+    '#title' => t('Downloadable', [], ['context' => 'arch_downloadable_product']),
+    '#group' => 'product_type_features',
+    '#weight' => -90,
+  ];
+
+  $form['downloadable']['is_downloadable'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Downloadable product', [], ['context' => 'arch_downloadable_product']),
+    '#default_value' => $product_type->getThirdPartySetting('arch_downloadable_product', 'is_downloadable'),
+  ];
+
+  if (_arch_downloadable_product_type_has_file_data($product_type)) {
+    $form['downloadable']['is_downloadable']['#disabled'] = TRUE;
+    $form['downloadable']['is_downloadable']['#description'] = t('There are products with files in this type.', [], ['context' => 'arch_stock']);
+  }
+
+  $form['#entity_builders'][] = 'arch_downloadable_product_form_product_type_form_builder';
+}
+
+/**
+ * Check if there is any product with files with given type.
+ *
+ * @param \Drupal\arch_product\Entity\ProductTypeInterface $product_type
+ *   Product type.
+ *
+ * @return bool
+ *   Return TRUE if any.
+ */
+function _arch_downloadable_product_type_has_file_data(ProductTypeInterface $product_type) {
+  /** @var \Drupal\field\Entity\FieldConfig $file_field */
+  $file_field = FieldConfig::load('product.' . $product_type->id() . '.product_file');
+  if (empty($file_field)) {
+    return FALSE;
+  }
+
+  $db = \Drupal::database();
+
+  $select = $db->select('product__product_file', 'f');
+  $select->condition('bundle', $product_type->id());
+  $count = (int) $select->countQuery()->execute()->fetchField();
+  return $count > 0;
+}
+
+/**
+ * Entity builder for downloadable product type options.
+ *
+ * @see arch_downloadable_product_form_alter()
+ */
+function arch_downloadable_product_form_product_type_form_builder($entity_type, ProductTypeInterface $type, &$form, FormStateInterface $form_state) {
+  if ($form_state->getValue('is_downloadable')) {
+    $type->setThirdPartySetting('arch_downloadable_product', 'is_downloadable', TRUE);
+  }
+  else {
+    $type->unsetThirdPartySetting('arch_downloadable_product', 'is_downloadable');
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function arch_downloadable_product_entity_insert(EntityInterface $entity) {
+  if (\Drupal::isConfigSyncing()) {
+    // Do not change data while config import in progress.
+    return;
+  }
+
+  if ($entity->getEntityTypeId() == 'product_type') {
+    /** @var \Drupal\arch_product\Entity\ProductTypeInterface $entity */
+    if ($entity->getThirdPartySetting('arch_downloadable_product', 'is_downloadable')) {
+      _arch_downloadable_product_add_file_field($entity);
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function arch_downloadable_product_entity_update(EntityInterface $entity) {
+  if (\Drupal::isConfigSyncing()) {
+    // Do not change data while config import in progress.
+    return;
+  }
+
+  if ($entity->getEntityTypeId() == 'product_type') {
+    /** @var \Drupal\arch_product\Entity\ProductTypeInterface $entity */
+    if ($entity->getThirdPartySetting('arch_downloadable_product', 'is_downloadable')) {
+      _arch_downloadable_product_add_file_field($entity);
+    }
+    else {
+      _arch_downloadable_product_remove_file_field($entity);
+    }
+  }
+  elseif ($entity->getEntityTypeId() == 'order') {
+    /** @var \Drupal\arch_order\Entity\OrderInterface $entity */
+    _arch_stock_handle_stock_change_on_order_update($entity);
+  }
+}
+
+/**
+ * Add file field to product type.
+ *
+ * @param \Drupal\arch_product\Entity\ProductTypeInterface $product_type
+ *   Product type.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function _arch_downloadable_product_add_file_field(ProductTypeInterface $product_type) {
+  $definition = [
+    'name' => 'product_file',
+    'form_display' => [
+      'type' => 'file_generic',
+    ],
+    'display' => [
+      'default' => [
+        'type' => 'arch_downloadable_product',
+      ],
+    ],
+  ];
+  // Add or remove the description field, as needed.
+  $field_storage = FieldStorageConfig::loadByName('product', $definition['name']);
+  if (!$field_storage) {
+    $field_storage = FieldStorageConfig::create([
+      'status' => TRUE,
+      'dependencies' => [
+        'module' => [
+          'arch_product',
+          'file',
+        ],
+      ],
+      'id' => 'product.product_file',
+      'field_name' => 'product_file',
+      'entity_type' => 'product',
+      'type' => 'file',
+      'settings' => [
+        'display_field' => FALSE,
+        'display_default' => FALSE,
+        'uri_scheme' => 'private',
+        'target_type' => 'file',
+      ],
+      'module' => 'file',
+      'locked' => FALSE,
+      'cardinality' => -1,
+      'translatable' => FALSE,
+    ]);
+    $field_storage->save();
+  }
+  $field = FieldConfig::loadByName('product', $product_type->id(), $definition['name']);
+  if (empty($field)) {
+    $field = FieldConfig::create([
+      'label' => 'File',
+      'field_storage' => $field_storage,
+      'bundle' => $product_type->id(),
+    ]);
+    $field->save();
+
+    $entity_form_display = \Drupal::entityTypeManager()->getStorage('entity_form_display')
+      ->load('product.' . $product_type->id() . '.default');
+    if (empty($entity_form_display)) {
+      $entity_form_display = EntityFormDisplay::create([
+        'targetEntityType' => 'product',
+        'bundle' => $product_type->id(),
+        'mode' => 'default',
+        'status' => TRUE,
+      ]);
+    }
+
+    // Assign widget settings for the 'default' form mode.
+    $entity_form_display
+      ->setComponent($definition['name'], $definition['form_display'])
+      ->save();
+
+    // The teaser view mode is created by the Standard profile and therefore
+    // might not exist.
+    $view_modes = \Drupal::service('entity_display.repository')->getViewModes('product');
+    // Assign display settings for the 'default' and 'teaser' view modes.
+    foreach ($definition['display'] as $view_mode => $config) {
+      if (isset($view_modes[$view_mode]) || 'default' == $view_mode) {
+        $entity_display = \Drupal::entityTypeManager()->getStorage('entity_view_display')
+          ->load('product.' . $product_type->id() . '.' . $view_mode);
+        if (!$entity_display) {
+          $entity_display = EntityViewDisplay::create([
+            'targetEntityType' => 'product',
+            'bundle' => $product_type->id(),
+            'mode' => $view_mode,
+            'status' => TRUE,
+          ]);
+        }
+        $entity_display
+          ->setComponent($definition['name'], $definition['display'][$view_mode])
+          ->save();
+      }
+    }
+  }
+}
+
+/**
+ * Remove file field from product type.
+ *
+ * @param \Drupal\arch_product\Entity\ProductTypeInterface $product_type
+ *   Product type.
+ *
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function _arch_downloadable_product_remove_file_field(ProductTypeInterface $product_type) {
+  $field = FieldConfig::loadByName('product', $product_type->id(), 'product_file');
+  if ($field) {
+    $field->delete();
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function arch_downloadable_product_form_field_config_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['actions']['delete']['#access'] = FALSE;
+}

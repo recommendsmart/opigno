@@ -1,0 +1,16 @@
+<?php
+/**
+ * @file
+ * Grouped product module install/update hooks.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function arch_product_group_install() {
+  $db = \Drupal::database();
+
+  $update = $db->update('arch_product_field_data');
+  $update->expression('group_id', 'pid');
+  $update->execute();
+}

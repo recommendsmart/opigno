@@ -1,0 +1,8 @@
+arch_payment_cod.success:
+  path: '/payment/cod/success'
+  defaults:
+    _controller: '\Drupal\arch_payment_cod\Controller\CodPaymentController::paymentSuccess'
+    _title: 'Successful Payment'
+    _title_context: 'arch_payment_cod'
+  requirements:
+    _permission: 'access content'

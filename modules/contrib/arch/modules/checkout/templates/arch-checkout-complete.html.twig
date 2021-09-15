@@ -1,0 +1,35 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a region.
+ * Variables:
+ * - order: Order entity.
+ * - message: Completion message (as TranslatableMarkup)
+ * - message_extra: Extra completion message (as TranslatableMarkup)
+ * - checkout_complete_info: Render array with possible extra info from other
+ *   modules that are altered the checkout complete page's output.
+ *
+ * @see template_preprocess_arch_checkout_complete()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set buttonClasses = [
+    'btn',
+    'btn-success',
+    'btn-returnto',
+  ]
+%}
+{% set buttonAttributes = create_attribute() %}
+<div {{ attributes }}>
+  <div class="message">
+    {{ message }}
+    <br>
+    {{ message_extra }}
+  </div>
+  <div class="checkout-complete-info">{{ checkout_complete_info }}</div>
+  <div class="form-actions text-center">
+    <a href="{{ path('<front>') }}" {{ buttonAttributes.addClass(buttonClasses) }}>{% trans with {'context': 'arch_checkout'} %}Back to homepage{% endtrans %}</a>
+  </div>
+</div>

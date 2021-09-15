@@ -1,0 +1,366 @@
+<?php
+/**
+ * @file
+ * Compare module.
+ */
+
+use Drupal\arch_product\Entity\ProductInterface;
+use Drupal\arch_product\Entity\ProductTypeInterface;
+use Drupal\arch_product\Entity\ProductType;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\field\Entity\FieldConfig;
+
+/**
+ * Implements hook_theme().
+ */
+function arch_compare_theme() {
+  return [
+    'compare_item' => [
+      'variables' => [
+        'product' => NULL,
+      ],
+    ],
+    'compare_page' => [
+      'variables' => [
+        'products' => NULL,
+        'limit' => NULL,
+        'view_mode' => NULL,
+      ],
+    ],
+    'compare_block' => [
+      'variables' => [
+        'title' => NULL,
+        'list' => NULL,
+        'url' => NULL,
+        'link' => NULL,
+        'limit' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Compare item theme function.
+ *
+ * @param array $variables
+ *   Variables.
+ *
+ * @throws \Drupal\Core\Entity\EntityMalformedException
+ */
+function template_preprocess_compare_item(array &$variables) {
+  if (empty($variables['product'])) {
+    return;
+  }
+
+  /** @var \Drupal\arch_product\Entity\ProductInterface $product */
+  $product = $variables['product'];
+  $variables['element'] = [
+    '#type' => 'container',
+    '#attributes' => [
+      'class' => [
+        'compare-item',
+      ],
+    ],
+    'checkbox' => [
+      '#type' => 'checkbox',
+      '#title' => t('Compare', [], ['context' => 'arch_compare']),
+      '#return_value' => $product->id(),
+      '#id' => 'compare-product-' . $product->id(),
+      '#required' => FALSE,
+      '#attributes' => [
+        'data-pid' => $product->id(),
+        'data-title' => $product->getTitle(),
+        'data-url' => $product->toUrl()->toString(),
+      ],
+    ],
+  ];
+}
+
+/**
+ * Compare item theme function.
+ *
+ * @param array $variables
+ *   Variables.
+ */
+function template_preprocess_compare_block(array &$variables) {
+  $variables['title'] = [
+    '#type' => 'html_tag',
+    '#tag' => 'h3',
+    '#value' => t('Compare products', [], ['context' => 'arch_compare']),
+    '#attributes' => [
+      'class' => 'title',
+    ],
+  ];
+  $variables['list'] = [
+    '#type' => 'html_tag',
+    '#tag' => 'ul',
+    '#attributes' => [
+      'class' => 'product-list',
+    ],
+  ];
+  $variables['link'] = [
+    '#type' => 'link',
+    '#title' => t('Compare', [], ['context' => 'arch_compare']),
+    '#url' => !empty($variables['url']) ? $variables['url'] : NULL,
+    '#attributes' => [
+      'class' => 'compare-link',
+    ],
+  ];
+}
+
+/**
+ * Compare item theme function.
+ *
+ * @param array $variables
+ *   Variables.
+ */
+function template_preprocess_compare_page(array &$variables) {
+  /** @var \Drupal\arch_product\Entity\ProductInterface[] $products */
+  $products = $variables['products'];
+  $settings = new stdClass();
+  $settings->entity_type = 'product';
+  $settings->view_mode = $variables['view_mode'];
+  $settings->count = count($products);
+
+  if (
+    empty($settings->entity_type)
+    || empty($settings->view_mode)
+  ) {
+    return;
+  }
+
+  $header = [NULL];
+  $rows = [];
+
+  foreach ($products as $key => $product) {
+    _arch_compare_product_build_table_rows($header, $rows, $key, $settings, $product);
+  }
+
+  $empty_group = TRUE;
+  $groupkey = NULL;
+  // Add css classes for different, same or empty columns.
+  foreach ($rows as $key => $row) {
+    if (in_array('group-header-row', $row['class'])) {
+      if ($empty_group && $key !== 0) {
+        $rows[$groupkey]['class'][] = 'empty-group';
+      }
+      $groupkey = $key;
+      $empty_group = TRUE;
+    }
+
+    if (!in_array('field-value-row', $row['class'])) {
+      continue;
+    }
+
+    $values = array_values($row['data']);
+    array_shift($values);
+    $same_values = TRUE;
+    $null_values = FALSE;
+    $previous_value = current($values)['data'];
+    foreach ($values as $column) {
+      if ($column['data'] !== $previous_value) {
+        $same_values = FALSE;
+      }
+
+      $previous_value = $column['data'];
+    }
+
+    if (empty($previous_value)) {
+      $null_values = TRUE;
+    }
+
+    if ($same_values) {
+      $rows[$key]['class'][] = ($null_values ? 'empty' : 'same') . '-values';
+    }
+    else {
+      $rows[$key]['class'][] = 'different-values';
+    }
+
+    if (!$null_values) {
+      $empty_group = FALSE;
+    }
+  }
+
+  $variables['compare_table'] = [
+    '#type' => 'container',
+    '#attributes' => [
+      'class' => [
+        'compare-table',
+      ],
+    ],
+    'table' => [
+      '#type' => 'table',
+      '#header' => $header,
+      '#rows' => $rows,
+      '#empty' => t('There are no products selected.', [], ['context' => 'arch_compare']),
+    ],
+  ];
+}
+
+/**
+ * Prepare product values.
+ */
+function _arch_compare_product_build_table_rows(&$header, &$rows, $col, $settings, ProductInterface $product) {
+  if (empty($product)) {
+    return;
+  }
+  $header[$col] = $product->getTitle();
+  $bundle = $product->bundle();
+  /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display */
+  $display = EntityViewDisplay::load($settings->entity_type . '.' . $bundle . '.' . $settings->view_mode);
+  if (empty($display)) {
+    return;
+  }
+
+  $params = _arch_compare_get_product_group_structure($display);
+  $row = 0;
+  // Build table.
+  foreach ($params->groups as $group) {
+    // @codingStandardsIgnoreStart
+    $rows[$row]['data'][0] = [
+      'data' => t($group->label, [], ['context' => 'arch_compare_group']),
+      'colspan' => $settings->count + 1,
+    ];
+    // @codingStandardsIgnoreEnd
+    $rows[$row]['class'][0] = 'group-header-row';
+    $row++;
+    foreach ($group->children as $field_name) {
+      $field_config = FieldConfig::loadByName($display->getTargetEntityTypeId(), $bundle, $field_name);
+      if (empty($field_config)) {
+        continue;
+      }
+
+      $value = NULL;
+      if (
+        $product->hasField($field_name)
+        && ($items = $product->get($field_name))
+        && !$items->isEmpty()
+      ) {
+        $render_array = $product->get($field_name)->first()->view($settings->view_mode);
+        $value = $render_array;
+      }
+
+      $rows[$row]['data'][0]['data'] = $field_config->getLabel();
+      $rows[$row]['data'][0]['class'] = 'field-label field--name-' . Html::cleanCssIdentifier($field_name);
+      $rows[$row]['class'][0] = 'field-value-row';
+      $rows[$row]['data'][$col]['data'] = $value;
+      $rows[$row]['data'][$col]['class'] = 'field-value';
+
+      $row++;
+    }
+  }
+}
+
+/**
+ * Get product group structure.
+ *
+ * @param Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
+ *   Display.
+ *
+ * @return object
+ *   Group structure.
+ */
+function _arch_compare_get_product_group_structure(EntityViewDisplayInterface $display) {
+  $params = new stdClass();
+  $params->entity_type = $display->getTargetEntityTypeId();
+  $params->bundle = $display->getTargetBundle();
+  $params->mode = $display->getMode();
+  $params->context = 'view';
+
+  $params->groups = [];
+  $params->groups = field_group_info_groups($params->entity_type, $params->bundle, $params->context, $params->mode);
+
+  $params->parents = [];
+  foreach ($params->groups as $name => $group) {
+    foreach ($group->children as $child) {
+      if ($child !== $group->parent_name) {
+        $params->parents[$child] = $name;
+      }
+    }
+  }
+  return $params;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function arch_compare_form_product_type_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\arch_product\Form\ProductTypeForm $form_object */
+  $form_object = $form_state->getFormObject();
+  /** @var \Drupal\arch_product\Entity\ProductType $product_type */
+  $product_type = $form_object->getEntity();
+
+  $form['compare'] = [
+    '#type' => 'details',
+    '#title' => t('Compare settings', [], ['context' => 'arch_compare']),
+    '#group' => 'product_type_features',
+    '#weight' => 200,
+  ];
+
+  $form['compare']['comparable'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Comparable', [], ['context' => 'arch_compare']),
+    '#default_value' => $product_type->getThirdPartySetting('arch_compare', 'comparable'),
+  ];
+
+  $form['#entity_builders'][] = 'arch_compare_form_product_type_form_builder';
+}
+
+/**
+ * Entity builder for the product type form with compare options.
+ *
+ * @see arch_compare_form_product_type_edit_form_alter()
+ */
+function arch_compare_form_product_type_form_builder($entity_type, ProductTypeInterface $type, &$form, FormStateInterface $form_state) {
+  if ($form_state->getValue('comparable')) {
+    $type->setThirdPartySetting('arch_compare', 'comparable', TRUE);
+  }
+  else {
+    $type->unsetThirdPartySetting('arch_compare', 'comparable');
+  }
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function arch_compare_entity_extra_field_info() {
+  $extra = [];
+
+  /** @var \Drupal\arch_product\Entity\ProductTypeInterface $bundle */
+  foreach (ProductType::loadMultiple() as $bundle) {
+    if (!$bundle->getThirdPartySetting('arch_compare', 'comparable')) {
+      continue;
+    }
+    $extra['product'][$bundle->id()]['display']['compare_item'] = [
+      'label' => t('Compare action', [], ['context' => 'arch_compare']),
+      'visible' => FALSE,
+    ];
+  }
+
+  return $extra;
+}
+
+/**
+ * Implements hook_entity_view().
+ */
+function arch_compare_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if ($entity->getEntityTypeId() !== 'product') {
+    return;
+  }
+
+  if ($display->getComponent('compare_item')) {
+    $build['compare_item'] = [
+      '#theme' => 'compare_item',
+      '#product' => $entity,
+      '#attached' => [
+        'library' => [
+          'arch_compare/compare_item',
+        ],
+      ],
+    ];
+  }
+}

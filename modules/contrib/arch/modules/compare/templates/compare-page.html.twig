@@ -1,0 +1,10 @@
+<div class="compare-info-block">
+  <h2 class="page-title">{% trans 'See a detailed comparison for your products.' with {'context': 'arch_compare_page'} %}</h2>
+  <select name="compare-settings" class="compare-page-filter">
+    <option value="all" selected="selected">{% trans 'All details' with {'context': 'arch_compare_page'} %}</option>
+    <option value="differences">{% trans 'Differences only' with {'context': 'arch_compare_page'} %}</option>
+    <option value="similarities">{% trans 'Similarities only' with {'context': 'arch_compare_page'} %}</option>
+  </select>
+</div>
+
+{{ compare_table }}

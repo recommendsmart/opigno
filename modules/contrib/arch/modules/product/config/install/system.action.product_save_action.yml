@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - arch_product
+id: product_save_action
+label: 'Save product'
+type: product
+plugin: entity:save_action:product
+configuration: {  }

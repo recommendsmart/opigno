@@ -1,0 +1,16 @@
+name: Order
+description: 'Allow to handle orders, collect and store data about customers and purchased items.'
+core_version_requirement: ^8.8 || ^9
+type: module
+package: 'Arch'
+dependencies:
+  - drupal:entity
+  - drupal:views
+  - arch:arch
+  - arch:arch_product
+  - editor
+
+# Information added by Drupal.org packaging script on 2021-09-14
+version: '8.x-1.0-alpha10'
+project: 'arch'
+datestamp: 1631635065

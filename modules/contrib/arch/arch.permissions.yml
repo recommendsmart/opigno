@@ -1,0 +1,5 @@
+
+administer store:
+  title: 'Administer store'
+  description: 'Access store admin pages.'
+  restrict access: true

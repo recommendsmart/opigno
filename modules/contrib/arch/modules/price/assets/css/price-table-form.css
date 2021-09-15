@@ -1,0 +1,49 @@
+.price-edit-table tbody td {
+  vertical-align: top;
+}
+
+.price-edit-table tbody td.col-narrow {
+  width: 1em;
+}
+
+.price-edit-table tbody td .form-item {
+  margin: 0;
+}
+
+.price-edit-table tbody td .form-item + .form-item {
+  margin-top: 0.75em;
+}
+
+.price-edit-table tbody td.value--price,
+.price-edit-table tbody td.value--vat {
+  max-width: 8em;
+}
+
+.price-edit-table tbody td.value--vat .price--value--vat-rate {
+  max-width: 80%;
+}
+
+.price-edit-table tbody .value--type .form-no-label,
+.price-edit-table tbody .value--currency .form-no-label {
+  padding-top: 20px;
+  margin-top: 0.1em;
+}
+
+
+.price-edit-table tbody td .container-inline {
+  white-space: nowrap;
+}
+.price-edit-table tbody td .container-inline .form-item {
+  white-space: nowrap;
+  margin-top: 0;
+}
+
+.price-edit-table tbody td .form-date {
+  max-width: 12em;
+  display: inline-block;
+}
+
+.price-edit-table tbody td .form-time {
+  max-width: 8.5em;
+  display: inline-block;
+}

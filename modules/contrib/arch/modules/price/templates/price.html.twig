@@ -1,0 +1,23 @@
+{#
+  Available variables:
+  - wrapper_element: Describes an HTML Node element which contains this price.
+  - attributes: Attributes object.
+  - label: Price label.
+  - label_display: Boolean field which allows or not to display field label.
+  - title_attributes: Title (price label) attributes object.
+  - price: Formatted price as string.
+  - vat_info: VAT info, if given.
+  - original_price: Boolean field which indicates whether this is an original
+    price or not.
+  - modified_price: Boolean field which indicates whether this is a modified
+    price or not.
+  - has_modified_price: Boolean field which indicates if this price field has a
+    modified price or not.
+  - show_original: Boolean field which indicates whether to display the original
+    price or not.
+#}
+<{{ wrapper_element }}{{ attributes }}>
+  {% if label_display %}<span{{ title_attributes }}>{{ label }}</span>{% endif %}
+  {{ price }}
+  {{ vat_info }}
+</{{ wrapper_element }}>

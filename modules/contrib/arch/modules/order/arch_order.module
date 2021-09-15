@@ -1,0 +1,647 @@
+<?php
+/**
+ * @file
+ * Arch Order module.
+ */
+
+use Drupal\arch_order\Entity\OrderInterface;
+use Drupal\arch_order\Services\OrderAddressServiceInterface;
+use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Template\Attribute;
+
+/**
+ * Implements hook_theme().
+ */
+function arch_order_theme() {
+  return [
+    'order' => [
+      'render element' => 'elements',
+    ],
+    'order_line_items__advanced' => [
+      'render element' => 'elements',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function arch_order_entity_extra_field_info() {
+  $extra = [];
+
+  $extra['order']['order']['display']['shipping_price'] = [
+    'label' => t('Shipping price', [], ['context' => 'arch_order']),
+    'weight' => 100,
+    'visible' => TRUE,
+  ];
+
+  $extra['order']['order']['display']['payment_fee'] = [
+    'label' => t('Payment fee', [], ['context' => 'arch_order']),
+    'weight' => 110,
+    'visible' => TRUE,
+  ];
+
+  $extra['order']['order']['display']['exchange_rate'] = [
+    'label' => t('Exchange rate', [], ['context' => 'arch_order']),
+    'weight' => 120,
+    'visible' => TRUE,
+  ];
+
+  return $extra;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view_alter().
+ */
+function arch_order_order_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  $order_data = [];
+  if (
+    !$entity->get('data')->isEmpty()
+    && $entity->get('data')->count() > 0
+  ) {
+    $order_data = $entity->get('data')->first()->getValue();
+  }
+
+  $shipping_price = NULL;
+  $payment_fee = NULL;
+  foreach ($entity->get('line_items') as $line_item) {
+    /** @var \Drupal\arch_order\Plugin\Field\FieldType\OrderLineItemFieldItem $line_item */
+
+    if ($line_item->isShipping()) {
+      $shipping_price = $line_item;
+    }
+    elseif ($line_item->isPaymentFee()) {
+      $payment_fee = $line_item;
+    }
+  }
+
+  /** @var \Drupal\arch_price\Price\PriceFactoryInterface $price_factory */
+  $price_factory = \Drupal::service('price_factory');
+  /** @var \Drupal\arch_price\Price\PriceFormatterInterface $price_formatter */
+  $price_formatter = \Drupal::service('price_formatter');
+  $formatter_defaults = [
+    'vat_info' => FALSE,
+    'label' => FALSE,
+    'wrapper_element' => 'span',
+  ];
+
+  if (
+    $display->getComponent('shipping_price')
+    && !empty($shipping_price)
+    && (float) $shipping_price->get('calculated_gross')->getValue() > 0
+  ) {
+    $price = $price_factory->getInstance([
+      'base' => 'gross',
+      'net' => $shipping_price->get('calculated_net')->getValue(),
+      'gross' => $shipping_price->get('calculated_gross')->getValue(),
+      'vat_rate' => $shipping_price->get('calculated_vat_rate')->getValue(),
+      'vat_category' => $shipping_price->get('calculated_vat_cat_name')->getValue(),
+      'vat_amount' => $shipping_price->get('calculated_vat_amount')->getValue(),
+      'currency' => $entity->get('currency')->getString(),
+    ]);
+
+    $display_shipping_price = $display->getComponent('shipping_price');
+    $build['shipping_price'] = [
+      '#weight' => $display_shipping_price['weight'],
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => [
+          'field',
+          'field--name-shipping-price',
+          'field--type-string',
+          'field--label-inline',
+        ],
+      ],
+      'label' => [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => t('Shipping price', [], ['context' => 'arch_order']),
+        '#attributes' => [
+          'class' => [
+            'field--label',
+          ],
+        ],
+      ],
+      'value' => [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => $price_formatter->formatGross($price, $formatter_defaults),
+        '#attributes' => [
+          'class' => [
+            'field--item',
+          ],
+        ],
+      ],
+    ];
+  }
+
+  if (
+    $display->getComponent('payment_fee')
+    && !empty($payment_fee)
+    && (float) $payment_fee->get('calculated_gross')->getValue() > 0
+  ) {
+    $price = $price_factory->getInstance([
+      'base' => 'gross',
+      'net' => $payment_fee->get('calculated_net')->getValue(),
+      'gross' => $payment_fee->get('calculated_gross')->getValue(),
+      'vat_rate' => $payment_fee->get('calculated_vat_rate')->getValue(),
+      'vat_category' => $payment_fee->get('calculated_vat_cat_name')->getValue(),
+      'vat_amount' => $payment_fee->get('calculated_vat_amount')->getValue(),
+      'currency' => $entity->get('currency')->getString(),
+    ]);
+
+    $build['payment_fee'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => [
+          'field',
+          'field--name-payment-fee',
+          'field--type-string',
+          'field--label-inline',
+        ],
+      ],
+      'label' => [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => t('Payment fee', [], ['context' => 'arch_order']),
+        '#attributes' => [
+          'class' => [
+            'field--label',
+          ],
+        ],
+      ],
+      'value' => [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => $price_formatter->formatGross($price, $formatter_defaults),
+        '#attributes' => [
+          'class' => [
+            'field--item',
+          ],
+        ],
+      ],
+    ];
+  }
+
+  if (
+    $display->getComponent('exchange_rate')
+    && isset($order_data['exchange_rate'])
+    && !empty($order_data['exchange_rate'])
+  ) {
+    $exchange_currency = NULL;
+    if (isset($order_data['exchange_currency'])) {
+      $exchange_currency = '<span class="exchange-currency"><b>' . t('Source currency', [], ['context' => 'arch_order'])->render() . '</b>: ' . $order_data['exchange_currency'] . '</span>';
+    }
+
+    $build['exchange_rate'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => [
+          'field',
+          'field--name-exchange-rate',
+          'field--type-string',
+          'field--label-inline',
+        ],
+      ],
+      'label' => [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => t('Exchange rate', [], ['context' => 'arch_order']),
+        '#attributes' => [
+          'class' => [
+            'field--label',
+          ],
+        ],
+      ],
+      'value' => [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => $order_data['exchange_rate'] . ($exchange_currency ?: ''),
+        '#attributes' => [
+          'class' => [
+            'field--item',
+          ],
+        ],
+      ],
+    ];
+  }
+}
+
+/**
+ * Add english translation for the order mails.
+ */
+function _arch_order_install_english_order_mails() {
+  /** @var \Drupal\arch_order\OrderMail\OrderMailManagerInterface $mail_manager */
+  $mail_manager = \Drupal::service('arch_order_mail');
+
+  $langcode = 'en';
+  $mail_list = [
+    'order_confirmation_to_user' => [
+      'subject' => 'Thanks for your order!',
+      'body' => 'Thank you for your purchase!',
+    ],
+    'order_confirmation_to_shop' => [
+      'subject' => 'New order',
+      'body' => 'New order received!',
+    ],
+    'order_modification' => [
+      'subject' => 'Order modified',
+      'body' => 'The order has changed!',
+    ],
+    'order_status_change' => [
+      'subject' => 'Order status changed',
+      'body' => 'Order status has been updated!',
+    ],
+  ];
+
+  foreach ($mail_list as $plugin_id => $item) {
+    /** @var \Drupal\arch_order\OrderMail\OrderMailBase $plugin */
+    $plugin = $mail_manager->get($plugin_id);
+    if (!$plugin) {
+      continue;
+    }
+
+    $plugin->setTranslation(
+      $langcode,
+      $item['subject'],
+      [
+        'format' => 'basic_html',
+        'value' => $item['body'],
+      ]
+    );
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function arch_order_theme_suggestions_order(array $variables) {
+  $suggestions = [];
+  /** @var \Drupal\arch_order\Entity\OrderInterface $order */
+  $order = $variables['elements']['#order'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+
+  $suggestions[] = 'order__' . $sanitized_view_mode;
+  $suggestions[] = 'order__' . $order->id();
+  $suggestions[] = 'order__' . $order->id() . '__' . $sanitized_view_mode;
+
+  return $suggestions;
+}
+
+/**
+ * Implements hook_menu_links_discovered_alter().
+ */
+function arch_order_menu_links_discovered_alter(&$links) {
+  if (\Drupal::moduleHandler()->moduleExists('field_ui')) {
+    $links['entity.order.field_ui_fields_'] = [
+      'title' => t('Manage fields'),
+      'route_name' => 'entity.order.field_ui_fields',
+      'menu_name' => 'admin',
+      'parent' => 'entity.order.admin_form',
+    ];
+    $links['entity.entity_form_display.order.default_'] = [
+      'title' => t('Manage form display'),
+      'route_name' => 'entity.entity_form_display.order.default',
+      'menu_name' => 'admin',
+      'parent' => 'entity.order.admin_form',
+    ];
+    $links['entity.entity_view_display.order.default_'] = [
+      'title' => t('Manage display'),
+      'route_name' => 'entity.entity_view_display.order.default',
+      'menu_name' => 'admin',
+      'parent' => 'entity.order.admin_form',
+    ];
+  }
+}
+
+/**
+ * Fetches an array of permission IDs granted to the given user ID.
+ *
+ * The implementation here provides only the universal "all" grant. A produc
+ * access module should implement hook_order_grants() to provide a grant list
+ * for the user.
+ *
+ * After the default grants have been loaded, we allow modules to alter the
+ * grants array by reference. This hook allows for complex business logic to be
+ * applied when integrating multiple order access modules.
+ *
+ * @param string $op
+ *   The operation that the user is trying to perform.
+ * @param \Drupal\Core\Session\AccountInterface $account
+ *   The account object for the user performing the operation.
+ *
+ * @return array
+ *   An associative array in which the keys are realms, and the values are
+ *   arrays of grants for those realms.
+ */
+function order_access_grants($op, AccountInterface $account) {
+  // Fetch order access grants from other modules.
+  $grants = \Drupal::moduleHandler()->invokeAll('order_grants', [$account, $op]);
+  // Allow modules to alter the assigned grants.
+  \Drupal::moduleHandler()->alter('order_grants', $grants, $account, $op);
+
+  return array_merge(['all' => [0]], $grants);
+}
+
+/**
+ * Implements hook_entity_operation().
+ */
+function arch_order_entity_operation(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() === 'order') {
+    $operations = [];
+    $has_view_access = $entity->access('view');
+
+    if ($has_view_access) {
+      $operations['view'] = [
+        'title' => t('View'),
+        'weight' => 20,
+        'url' => $entity->toUrl(),
+      ];
+    }
+
+    $has_revision_view_access = $entity->access('view all order revisions');
+
+    if ($has_revision_view_access && $entity->hasLinkTemplate('version-history')) {
+      $operations['revisions'] = [
+        'title' => t('Revisions'),
+        'weight' => 50,
+        'url' => $entity->toUrl('version-history'),
+      ];
+    }
+
+    return $operations;
+  }
+}
+
+/**
+ * Implements hook_entity_operation_alter().
+ */
+function arch_order_entity_operation_alter(array &$operations, EntityInterface $entity) {
+  if ($entity->getEntityTypeId() === 'order') {
+    $current_language = \Drupal::languageManager()->getCurrentLanguage();
+
+    foreach ($operations as $key => $operation) {
+      $operations[$key]['url']->setOption('language', $current_language);
+    }
+  }
+}
+
+/**
+ * Implements hook_element_info_alter().
+ *
+ * @see \Drupal\arch_order\Element\OrderStatusesSelect
+ */
+function arch_order_element_info_alter(array &$info) {
+  // Alter the order_statuses_select element so that it will be rendered like a
+  // select field.
+  if (isset($info['order_statuses_select'])) {
+    if (!isset($info['order_statuses_select']['#process'])) {
+      $info['order_statuses_select']['#process'] = [];
+    }
+    if (!isset($info['order_statuses_select']['#theme_wrappers'])) {
+      $info['order_statuses_select']['#theme_wrappers'] = [];
+    }
+    $info['order_statuses_select']['#process'] = array_merge(
+      $info['order_statuses_select']['#process'],
+      [
+        'arch_order_process_order_statuses_select',
+        ['Drupal\Core\Render\Element\Select', 'processSelect'],
+        ['Drupal\Core\Render\Element\RenderElement', 'processAjaxForm'],
+      ]
+    );
+    $info['order_statuses_select']['#theme'] = 'select';
+    $info['order_statuses_select']['#theme_wrappers'] = array_merge($info['order_statuses_select']['#theme_wrappers'], ['form_element']);
+    $info['order_statuses_select']['#multiple'] = FALSE;
+  }
+}
+
+/**
+ * Processes a order statuses select list form element.
+ *
+ * @param array $element
+ *   The form element to process.
+ *
+ * @return array
+ *   The processed form element.
+ */
+function arch_order_process_order_statuses_select(array $element) {
+  if (!isset($element['#options'])) {
+    /** @var \Drupal\arch_order\Entity\OrderStatusInterface[] $order_statuses */
+    $order_statuses = \Drupal::service('order.statuses')->getOrderStatuses();
+    foreach ($order_statuses as $id => $order_status) {
+      $element['#options'][$id] = $order_status->getLabel();
+    }
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_local_tasks_alter().
+ */
+function arch_order_local_tasks_alter(&$local_tasks) {
+  if (isset($local_tasks['entity.revisions_overview:order'])) {
+    unset($local_tasks['entity.revisions_overview:order']);
+  }
+}
+
+/**
+ * Implements hook_entity_load().
+ */
+function arch_order_entity_load(array $entities, $entity_type_id) {
+  if ($entity_type_id !== 'order') {
+    return;
+  }
+
+  /** @var \Drupal\arch_order\Services\OrderAddressServiceInterface $order_address_service */
+  $order_address_service = \Drupal::service('order.address');
+
+  /** @var \Drupal\arch_payment\PaymentMethodManagerInterface $payment_method_manager */
+  $payment_method_manager = \Drupal::service('plugin.manager.payment_method');
+
+  /** @var \Drupal\arch_order\Entity\OrderInterface $entity */
+  foreach ($entities as $entity) {
+    $entity->setOrderAddressService($order_address_service);
+    $addresses = $order_address_service->getAddresses($entity->id());
+    if (!empty($addresses)) {
+      foreach ($addresses as $address) {
+        if ($address->address_type == OrderAddressServiceInterface::TYPE_BILLING) {
+          $entity->setBillingAddress($address);
+        }
+        elseif ($address->address_type == OrderAddressServiceInterface::TYPE_SHIPPING) {
+          $entity->setShippingAddress($address);
+        }
+      }
+    }
+
+    $payment_method = $entity->get('payment_method');
+    if (!empty($payment_method)) {
+      $payment_method_plugin_id = $payment_method->getString();
+      try {
+        $payment_method = $payment_method_manager->createInstance($payment_method_plugin_id);
+        $entity->setPaymentMethod($payment_method);
+      }
+      catch (PluginException $e) {
+        // @todo Handle error.
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_checkout_completed().
+ */
+function arch_order_checkout_completed(OrderInterface $order) {
+  if ($order->getEntityTypeId() !== 'order') {
+    return;
+  }
+
+  /** @var \Drupal\arch_order\OrderMail\OrderMailManagerInterface $order_mail_manager */
+  $order_mail_manager = \Drupal::service('arch_order_mail');
+
+  $order_mail_manager->send('order_confirmation_to_user', $order);
+  $order_mail_manager->send('order_confirmation_to_shop', $order);
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function arch_order_entity_update(EntityInterface $entity) {
+  if (\Drupal::isConfigSyncing()) {
+    // Do not change data while config import in progress.
+    return;
+  }
+
+  if ($entity->getEntityTypeId() !== 'order' || !isset($entity->original)) {
+    return;
+  }
+
+  /** @var \Drupal\arch_order\OrderMail\OrderMailManagerInterface $order_mail_manager */
+  $order_mail_manager = \Drupal::service('arch_order_mail');
+
+  $old_status = $entity->original->get('status')->getValue()[0]['value'];
+  $new_status = $entity->get('status')->getValue()[0]['value'];
+
+  if ($old_status !== $new_status) {
+    $order_mail_manager->send('order_status_change', $entity);
+  }
+  else {
+    $order_mail_manager->send('order_modification', $entity);
+  }
+}
+
+/**
+ * Checks if the current page is the full page view of the passed-in order.
+ *
+ * @param Drupal\arch_order\Entity\OrderInterface $order
+ *   A order entity.
+ *
+ * @return int|false
+ *   The ID of the order if this is a full page view, otherwise FALSE.
+ */
+function order_is_page(OrderInterface $order) {
+  $route_match = \Drupal::routeMatch();
+  if ($route_match->getRouteName() == 'entity.order.canonical') {
+    $page = $route_match->getParameter('order');
+  }
+  return (!empty($page) ? $page->id() == $order->id() : FALSE);
+}
+
+/**
+ * Prepares variables for order templates.
+ *
+ * Default template: order.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An array of elements to display in view mode.
+ *   - order: The order object.
+ *   - view_mode: View mode; e.g., 'full', 'teaser', etc.
+ */
+function template_preprocess_order(array &$variables) {
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  // Provide a distinct $teaser boolean.
+  $variables['teaser'] = $variables['view_mode'] == 'teaser';
+  $variables['order'] = $variables['elements']['#order'];
+  /** @var \Drupal\arch_order\Entity\OrderInterface $order */
+  $order = $variables['order'];
+  $variables['date'] = \Drupal::service('renderer')->render($variables['elements']['created']);
+  unset($variables['elements']['created']);
+  $variables['author_name'] = \Drupal::service('renderer')->render($variables['elements']['uid']);
+  unset($variables['elements']['uid']);
+
+  $variables['url'] = $order->toUrl('canonical');
+  $variables['label'] = $order->get($order->getEntityType()->getKey('label'))->getString();
+  // The 'page' variable is set to TRUE if:
+  // - The view mode is 'full' and we are on the 'order.view' route.
+  $variables['page'] = (
+    $variables['view_mode'] == 'full'
+    && order_is_page($order)
+  );
+
+  // Helpful $content variable for templates.
+  $variables += ['content' => []];
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+
+  // Used by RDF to add attributes around the author and date submitted.
+  $variables['author_attributes'] = new Attribute();
+
+  // Add article ARIA role.
+  $variables['attributes']['role'] = 'article';
+}
+
+/**
+ * Prepares variables for order templates.
+ *
+ * Default template: order-line-items--advanced.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An array of elements to display in view mode.
+ *   - order: The order object.
+ *   - products: Product entities object.
+ */
+function template_preprocess_order_line_items__advanced(array &$variables) {
+  // Add table ARIA role.
+  $variables['attributes']['role'] = 'table';
+  $variables['attributes']['class'][] = 'order--line-items';
+  $variables['attributes']['class'][] = 'advanced';
+
+  $variables['order'] = $variables['elements']['#order'];
+  $variables['products'] = $variables['elements']['#products'];
+  $variables['rows'] = $variables['elements']['#rows'];
+  $variables['url'] = $variables['elements']['#url'];
+}
+
+/**
+ * Implements hook_mail().
+ */
+function arch_order_mail($key, &$message, $params) {
+  switch ($key) {
+    case 'arch_order_mail_manager':
+      if (isset($params['from'])) {
+        $message['from'] = $params['from'];
+      }
+      else {
+        $message['from'] = \Drupal::config('system.site')->get('mail');
+      }
+      $message['subject'] = $params['subject'];
+      $html = check_markup($params['message'], 'basic_html');
+      $message['body'][] = new FormattableMarkup($html, []);
+
+      // Set HTML Header.
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed; delsp=yes';
+      $message['params']['format'] = 'text/html';
+      $message['params']['plain'] = NULL;
+
+      break;
+
+  }
+}

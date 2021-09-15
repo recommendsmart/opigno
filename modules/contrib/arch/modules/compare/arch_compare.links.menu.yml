@@ -1,0 +1,5 @@
+arch_compare.compare.config:
+  title: 'Compare settings'
+  title_context: arch_compare
+  parent: arch.settings
+  route_name: arch_compare.compare.config

@@ -1,0 +1,30 @@
+arch_checkout.checkout:
+  path: '/checkout'
+  defaults:
+    _title: 'Checkout'
+    _title_context: arch_checkout
+    _controller: '\Drupal\arch_checkout\Controller\CheckoutController::checkout'
+  requirements:
+    _custom_access: '\Drupal\arch_checkout\Controller\CheckoutController::checkoutAccess'
+
+arch_checkout.complete:
+  path: '/checkout/complete/{order_id}'
+  defaults:
+    _controller: '\Drupal\arch_checkout\Controller\CheckoutController::complete'
+    _title_callback: '\Drupal\arch_checkout\Controller\CheckoutController::completeTitle'
+  options:
+    parameters:
+      order_id:
+        type: 'arch_checkout_order_id'
+  requirements:
+    _permission: 'access content'
+    order_id: '[a-zA-Z0-9_-]+'
+
+arch_checkout.admin_settings:
+  path: '/admin/store/settings/checkout'
+  defaults:
+    _title: 'Settings'
+    _title_context: arch_checkout
+    _form: '\Drupal\arch_checkout\Form\CheckoutSettingsForm'
+  requirements:
+    _permission: 'administer checkout settings'

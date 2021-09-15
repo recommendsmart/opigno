@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - arch_stock
+    - arch_product
+id: product.stock
+field_name: stock
+entity_type: product
+type: stock
+settings: {  }
+module: arch_stock
+locked: true
+cardinality: -1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

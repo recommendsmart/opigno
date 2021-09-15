@@ -1,0 +1,9 @@
+
+product_matrix_ajax:
+  js:
+    assets/js/product-matrix-ajax.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.ajax

@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - arch_product
+id: product_make_sticky_action
+label: 'Make product sticky'
+type: product
+plugin: product_make_sticky_action
+configuration: {  }

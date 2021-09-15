@@ -1,0 +1,14 @@
+name: 'Arch dashboard'
+description: 'Store dashboard'
+core_version_requirement: ^8.8 || ^9
+type: module
+package: 'Arch'
+dependencies:
+  - drupal:entity
+  - arch:arch_product
+  - arch:arch_order
+
+# Information added by Drupal.org packaging script on 2021-09-14
+version: '8.x-1.0-alpha10'
+project: 'arch'
+datestamp: 1631635065

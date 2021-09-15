@@ -1,0 +1,32 @@
+services:
+  warehouse.manager:
+    class: Drupal\arch_stock\Manager\WarehouseManager
+    arguments:
+      - '@warehouse.default'
+      - '@config.factory'
+      - '@module_handler'
+
+  warehouse.default:
+    class: Drupal\arch_stock\WarehouseDefault
+
+  arch_stock.info:
+    class: Drupal\arch_stock\StockInfo
+    arguments:
+      - '@database'
+      - '@entity_type.manager'
+
+  stock_cart.info:
+    class: Drupal\arch_stock\StockCartInfo
+    arguments:
+      - '@current_user'
+      - '@keyvalue.expirable'
+      - '@tempstore.shared'
+
+  arch_stock.stock_keeper:
+    class: Drupal\arch_stock\StockKeeper
+    arguments:
+      - '@entity_type.manager'
+      - '@warehouse.manager'
+      - '@module_handler'
+      - '@cache_tags.invalidator'
+      - '@lock'

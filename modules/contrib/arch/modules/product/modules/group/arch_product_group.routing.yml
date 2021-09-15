@@ -1,0 +1,7 @@
+product_matrix.product:
+  path: '/api/product-matrix/{group_id}/{product}'
+  defaults:
+    _controller: '\Drupal\arch_product_group\Controller\ProductMatrixApiController::product'
+  requirements:
+    _entity_access: 'product.view'
+    product: \d+

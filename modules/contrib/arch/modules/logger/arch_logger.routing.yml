@@ -1,0 +1,23 @@
+entity.order.history:
+  path: '/order/{order}/log'
+  defaults:
+    _title: 'Logs'
+    _controller: '\Drupal\arch_logger\Controller\LogController::listView'
+  requirements:
+    _permission: 'view order history'
+    _access_order_revision: 'view'
+    order: \d+
+  options:
+    _order_operation_route: TRUE
+
+entity.order.history_item:
+  path: '/order/{order}/log/{log_id}'
+  defaults:
+    _title: 'Log'
+    _controller: '\Drupal\arch_logger\Controller\LogController::view'
+  requirements:
+    _permission: 'view order history'
+    _access_order_revision: 'view'
+    order: \d+
+  options:
+    _order_operation_route: TRUE

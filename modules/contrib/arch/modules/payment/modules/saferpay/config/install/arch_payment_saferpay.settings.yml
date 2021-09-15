@@ -1,0 +1,6 @@
+customer_id: ''
+terminal_id: ''
+username: ''
+password: ''
+spec_version: '1.20'
+force_sca: true

@@ -1,0 +1,387 @@
+<?php
+/**
+ * @file
+ * Cart module file.
+ */
+
+use Drupal\arch_product\Entity\ProductType;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
+use Drupal\Component\Utility\NestedArray;
+
+/**
+ * Implements hook_theme().
+ */
+function arch_cart_theme($existing, $type, $theme, $path) {
+  return [
+    'add_to_api_cart' => [
+      'variables' => [
+        'product' => NULL,
+        'text' => NULL,
+        'not_available_text' => NULL,
+        'attributes' => [],
+        'icon_attributes' => [],
+        'throbber_attributes' => [],
+      ],
+    ],
+    'api_cart_template' => [
+      'variables' => [
+        'title' => NULL,
+        'grand_total_label' => NULL,
+        'cart_link' => NULL,
+        'checkout_link' => NULL,
+        'settings' => NULL,
+      ],
+    ],
+
+    'mini_cart' => [
+      'variables' => [
+        'attributes' => NULL,
+        'count' => NULL,
+        'url' => NULL,
+        'text' => NULL,
+        'link_attributes' => NULL,
+        'templates' => NULL,
+        'settings' => NULL,
+      ],
+    ],
+
+    'cart_page_totals' => [
+      'variables' => [
+        'price_format_settings' => [],
+
+        'cart' => NULL,
+        'total_price' => NULL,
+        'grand_total_price' => NULL,
+
+        'subtotal_price' => NULL,
+        'subtotal_vat_price' => NULL,
+        'grandtotal_price' => NULL,
+        'grandtotal_vat_price' => NULL,
+
+        'hide_subtotal' => NULL,
+        'hide_subtotal_vat' => NULL,
+        'hide_grandtotal' => NULL,
+        'hide_grandtotal_vat' => TRUE,
+
+        'subtotal_label' => NULL,
+        'subtotal_vat_label' => NULL,
+        'grandtotal_label' => NULL,
+        'grandtotal_vat_label' => NULL,
+
+        'attributes' => [],
+        'subtotal_attributes' => [],
+        'subtotal_vat_attributes' => [],
+        'grandtotal_attributes' => [],
+        'grandtotal_vat_attributes' => [],
+
+        'subtotal_label_attributes' => [],
+        'subtotal_vat_label_attributes' => [],
+        'grandtotal_label_attributes' => [],
+        'grandtotal_vat_label_attributes' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function template_preprocess_add_to_api_cart(&$variables) {
+  /** @var \Drupal\arch_product\Entity\ProductInterface $product */
+  $product = &$variables['product'];
+
+  $is_available = $product->availableForSell($variables['user']);
+  $has_price = TRUE;
+  if (
+    !$product->hasPrice()
+    || $product->getActivePrice()->getNetPrice() <= 0
+  ) {
+    $has_price = FALSE;
+  }
+
+  $variables['attributes']['class'][] = 'button';
+  $variables['attributes']['class'][] = 'form-submit';
+  $variables['attributes']['class'][] = 'add-to-api-cart--button';
+  $variables['attributes']['data-quantity'] = 1;
+  $variables['attributes']['data-product-id'] = $product->id();
+
+  if ($has_price && $is_available) {
+    $variables['attributes']['data-enabled'] = TRUE;
+  }
+  else {
+    $variables['attributes']['disabled'] = TRUE;
+    $variables['attributes']['data-disabled'] = TRUE;
+  }
+
+  $variables['has_price'] = $has_price;
+  $variables['available_for_sell'] = $is_available;
+
+  if (!$has_price) {
+    $variables['has_price'] = FALSE;
+    $variables['attributes']['class'][] = 'add-to-api-cart--button--no-price';
+  }
+
+  if (!$is_available) {
+    $variables['available_for_sell'] = FALSE;
+    $variables['attributes']['class'][] = 'add-to-api-cart--button--not-available-for-sell';
+  }
+
+  if (empty($variables['text'])) {
+    $variables['text'] = t('Add to cart', [], ['context' => 'arch_cart']);
+  }
+  if (empty($variables['not_available_text'])) {
+    $variables['not_available_text'] = t('Not available', [], ['context' => 'arch_cart']);
+  }
+
+  if (empty($variables['icon_attributes'])) {
+    $variables['icon_attributes']['class'][] = 'ajax-progress';
+    $variables['icon_attributes']['class'][] = 'ajax-progress-throbber';
+  }
+  if (empty($variables['throbber_attributes'])) {
+    $variables['throbber_attributes']['class'][] = 'throbber';
+  }
+
+  $variables['attributes'] = new Attribute($variables['attributes']);
+  $variables['icon_attributes'] = new Attribute($variables['icon_attributes']);
+  $variables['throbber_attributes'] = new Attribute($variables['throbber_attributes']);
+
+  $variables['#attached']['library'][] = 'arch_cart/add-to-api-cart';
+  $variables['#attached']['drupalSettings']['arch_api_cart']['api'] = _arch_cart_api_cart_endpoints();
+
+  $variables['#cache']['tags'][] = 'product';
+  $variables['#cache']['tags'][] = 'product:' . $product->id();
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function template_preprocess_api_cart_template(&$variables) {
+  if (empty($variables['title'])) {
+    $variables['title'] = t('Cart', [], ['context' => 'arch_cart']);
+  }
+  if (empty($variables['grand_total_label'])) {
+    $variables['grand_total_label'] = t('Grand total', [], ['context' => 'arch_cart']);
+  }
+  if (empty($variables['remove_title'])) {
+    $variables['remove_title'] = t('Remove', [], ['context' => 'arch_cart']);
+  }
+
+  if (empty($variables['cart_link'])) {
+    $variables['cart_link'] = [
+      '#type' => 'link',
+      '#url' => Url::fromRoute('arch_cart.content'),
+      '#title' => t('Cart', [], ['context' => 'arch_cart']),
+      '#attributes' => [
+        'class' => [
+          'btn',
+          'btn-default',
+        ],
+      ],
+    ];
+  }
+
+  if (empty($variables['checkout_link'])) {
+    $variables['checkout_link'] = [
+      '#type' => 'link',
+      '#url' => Url::fromRoute('arch_checkout.checkout'),
+      '#title' => t('Checkout', [], ['context' => 'arch_cart']),
+      '#attributes' => [
+        'class' => [
+          'btn',
+          'btn-default',
+        ],
+      ],
+    ];
+  }
+
+  $variables['#attached']['drupalSettings']['arch_api_cart']['templates'] = [
+    'cart' => '#arch-cart--api-cart',
+    'message' => '#arch-cart--message',
+    'item' => '#arch-cart--api-cart--item',
+    'itemQuantity' => '#arch-cart--api-cart--item--quantity',
+    'itemRemove' => '#arch-cart--api-cart--item--remove',
+    'count' => '#arch-cart--api-cart--count',
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function template_preprocess_mini_cart(&$variables) {
+  if (!isset($variables['text'])) {
+    $variables['text'] = t('Cart', [], ['context' => 'arch_cart']);
+  }
+
+  $variables['link_attributes'] = new Attribute($variables['link_attributes']);
+  $variables['#attached']['library'][] = 'arch_cart/api-cart';
+  $variables['#attached']['drupalSettings']['arch_api_cart']['api'] = _arch_cart_api_cart_endpoints();
+  $variables['#attached']['drupalSettings']['arch_api_cart']['settings'] = [
+    'theme' => !empty($variables['settings']['theme']) ? $variables['settings']['theme'] : NULL,
+    'allow_modify_quantity' => !empty($variables['settings']['allow_modify_quantity']),
+    'allow_remove' => !empty($variables['settings']['allow_remove']),
+    'show_cart_item_count' => !empty($variables['settings']['show_cart_item_count']),
+    'click_event' => !empty($variables['settings']['click_event']) ? $variables['settings']['click_event'] : 'open',
+  ];
+  $variables['templates']['#settings'] = (array) $variables['settings'];
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function template_preprocess_cart_page_totals(&$variables) {
+  $labels = [
+    'subtotal_label' => t('Subtotal', [], ['context' => 'arch_cart']),
+    'subtotal_vat_label' => t('VAT', [], ['context' => 'arch_price']),
+    'grandtotal_label' => t('Grand total', [], ['context' => 'arch_cart']),
+    'grandtotal_vat_label' => t('Grand total VAT', [], ['context' => 'arch_cart']),
+  ];
+  foreach ($labels as $variable => $label) {
+    if (empty($variables[$variable])) {
+      $variables[$variable] = $label;
+    }
+  }
+
+  /** @var \Drupal\arch_price\Price\PriceFormatterInterface $price_formatter */
+  $price_formatter = \Drupal::service('price_formatter');
+
+  /** @var \Drupal\arch_price\Price\PriceInterface $total_cart_price */
+  $total_cart_price = $variables['total_price'];
+  /** @var \Drupal\arch_price\Price\PriceInterface $grand_total_price */
+  $grand_total_price = $variables['grand_total_price'];
+  $price_format_settings = $variables['price_format_settings'];
+
+  $variables['subtotal_price'] = $price_formatter->buildNet($total_cart_price, $price_format_settings);
+  $variables['subtotal_vat_price'] = $price_formatter->buildVat($total_cart_price, $price_format_settings);
+  $variables['grandtotal_price'] = $price_formatter->buildGross($grand_total_price, $price_format_settings);
+  $variables['grandtotal_vat_price'] = $price_formatter->buildVat($grand_total_price, $price_format_settings);
+
+  $attributes = [
+    'attributes' => [
+      'class' => [
+        'totals',
+      ],
+    ],
+    'subtotal_attributes' => [
+      'class' => [
+        'total-item',
+        'total-item--subtotal',
+        'clearfix',
+      ],
+    ],
+    'subtotal_vat_attributes' => [
+      'class' => [
+        'total-item',
+        'total-item--subtotal-vat',
+        'clearfix',
+      ],
+    ],
+    'grandtotal_attributes' => [
+      'class' => [
+        'total-item',
+        'total-item--grandtotal',
+        'clearfix',
+      ],
+    ],
+    'grandtotal_vat_attributes' => [
+      'class' => [
+        'total-item',
+        'total-item--grandtotal-vat',
+        'clearfix',
+      ],
+    ],
+
+    'subtotal_label_attributes' => [
+      'class' => [
+        'total-item-label',
+        'total-item-label--subtotal',
+        'clearfix',
+      ],
+    ],
+    'subtotal_vat_label_attributes' => [
+      'class' => [
+        'total-item-label',
+        'total-item-label--subtotal-vat',
+        'clearfix',
+      ],
+    ],
+    'grandtotal_label_attributes' => [
+      'class' => [
+        'total-item-label',
+        'total-item-label--grandtotal',
+        'clearfix',
+      ],
+    ],
+    'grandtotal_vat_label_attributes' => [
+      'class' => [
+        'total-item-label',
+        'total-item-label--grandtotal-vat',
+        'clearfix',
+      ],
+    ],
+  ];
+  foreach ($attributes as $variable => $defaults) {
+    $attribute = NestedArray::mergeDeep($defaults, $variables[$variable]);
+    $variables[$variable] = new Attribute($attribute);
+  }
+}
+
+/**
+ * Get list of API endpoints.
+ *
+ * @return array
+ *   Endpoints.
+ */
+function _arch_cart_api_cart_endpoints() {
+  $endpoints = [];
+
+  $cart = Url::fromRoute('arch_cart.api.cart');
+  $endpoints['cart'] = $cart->toString();
+
+  $cart_add = Url::fromRoute('arch_cart.api.cart_add');
+  $endpoints['add'] = $cart_add->toString();
+
+  $quantity = Url::fromRoute('arch_cart.api.cart_quantity');
+  $endpoints['quantity'] = $quantity->toString();
+
+  $remove = Url::fromRoute('arch_cart.api.cart_remove');
+  $endpoints['remove'] = $remove->toString();
+
+  return $endpoints;
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function arch_cart_entity_extra_field_info() {
+  $extra = [];
+
+  /** @var \Drupal\arch_product\Entity\ProductTypeInterface $bundle */
+  foreach (ProductType::loadMultiple() as $bundle) {
+    $extra['product'][$bundle->id()]['display']['add_to_api_cart'] = [
+      'label' => t('Cart API: Add to cart', [], ['context' => 'arch_cart']),
+      'visible' => FALSE,
+    ];
+  }
+
+  return $extra;
+}
+
+/**
+ * Implements hook_entity_view().
+ */
+function arch_cart_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if ($entity->getEntityTypeId() !== 'product') {
+    return;
+  }
+
+  /** @var \Drupal\arch_product\Entity\ProductInterface $entity */
+  if ($display->getComponent('add_to_api_cart')) {
+    $build['add_to_api_cart'] = [
+      '#theme' => 'add_to_api_cart',
+      '#product' => $entity,
+    ];
+  }
+}

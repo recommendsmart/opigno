@@ -1,0 +1,50 @@
+services:
+  order.grant_storage:
+    class: Drupal\arch_order\Access\OrderGrantDatabaseStorage
+    arguments:
+    - '@database'
+    - '@module_handler'
+    - '@language_manager'
+    tags:
+    - { name: backend_overridable }
+
+  access_check.order.add:
+    class: Drupal\arch_order\Access\OrderAddAccessCheck
+    arguments:
+    - '@entity_type.manager'
+    tags:
+    - { name: access_check, applies_to: _order_add_access }
+
+  order.statuses:
+    class: Drupal\arch_order\Services\OrderStatusService
+    arguments:
+    - '@entity_type.manager'
+
+  order.admin_path.route_subscriber:
+    class: Drupal\arch_order\Routing\OrderAdminRouteSubscriber
+    arguments:
+    - '@config.factory'
+    tags:
+    - { name: event_subscriber }
+
+  access_check.order.revision:
+    class: Drupal\arch_order\Access\OrderRevisionAccessCheck
+    arguments:
+    - '@entity_type.manager'
+    tags:
+    - { name: access_check, applies_to: _access_order_revision }
+
+  arch_order_mail:
+    class: Drupal\arch_order\OrderMail\OrderMailManager
+    parent: default_plugin_manager
+    arguments:
+      - '@language_manager'
+      - '@config.factory'
+      - '@token'
+      - '@plugin.manager.mail'
+      - '@request_stack'
+
+  order.address:
+    class: Drupal\arch_order\Services\OrderAddressService
+    arguments:
+      - '@database'

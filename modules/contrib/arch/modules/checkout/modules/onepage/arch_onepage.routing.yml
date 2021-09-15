@@ -1,0 +1,8 @@
+arch_onepage.checkout:
+  path: '/checkout/onepage'
+  defaults:
+    _title: 'Checkout'
+    _title_context: arch_onepage
+    _controller: '\Drupal\arch_onepage\Controller\OnepageController::checkout'
+  requirements:
+    _permission: 'access content'

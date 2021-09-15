@@ -1,0 +1,16 @@
+{
+  "name": "drupal/arch",
+  "type": "drupal-module",
+  "license": "GPL-2.0+",
+  "description": "Arch is an e-commerce Drupal module",
+  "require": {
+    "php": "^7.2",
+    "ext-bcmath": "*",
+    "ext-intl": "*",
+    "ext-json": "*",
+
+    "drupal/core": "^8.8 || ^9",
+    "drupal/address": "^1.4",
+    "drupal/currency": "~3.1"
+  }
+}

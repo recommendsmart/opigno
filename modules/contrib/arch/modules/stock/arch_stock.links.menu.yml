@@ -1,0 +1,12 @@
+
+arch_stock.warehouse.config:
+  title: 'Stock settings'
+  title_context: arch_stock
+  parent: arch.settings
+  route_name: arch_stock.stock.config
+
+entity.warehouse.collection:
+  title: 'Warehouses'
+  title_context: arch_stock
+  parent: arch_stock.warehouse.config
+  route_name: entity.warehouse.collection

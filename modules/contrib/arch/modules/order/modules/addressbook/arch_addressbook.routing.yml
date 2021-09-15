@@ -1,0 +1,85 @@
+entity.addressbookitem.canonical:
+  path: '/address/{addressbookitem}'
+  defaults:
+    _entity_view: 'addressbookitem'
+    _title: 'Address'
+    _title_context: 'arch_addressbook'
+  requirements:
+    _entity_access: 'addressbookitem.view'
+
+entity.addressbookitem.collection:
+  path: '/admin/store/settings/addressbook/list'
+  defaults:
+    _entity_list: addressbookitem
+    _title: 'Address list'
+    _title_context: 'arch_addressbook'
+  requirements:
+    _permission: 'administer addressbookitem entity'
+
+addressbookitem.add:
+  path: '/address/add'
+  defaults:
+    _entity_form: addressbookitem.add
+    _title: 'Add Address'
+    _title_context: 'arch_addressbook'
+  requirements:
+    _entity_create_access: 'addressbookitem'
+
+entity.addressbookitem.edit_form:
+  path: '/address/{addressbookitem}/edit'
+  defaults:
+    _entity_form: addressbookitem.edit
+    _title: 'Edit Address'
+    _title_context: 'arch_addressbook'
+  requirements:
+    _entity_access: 'addressbookitem.edit'
+
+entity.addressbookitem.delete_form:
+  path: '/address/{addressbookitem}/delete'
+  defaults:
+    _entity_form: addressbookitem.delete
+    _title: 'Delete Address'
+    _title_context: 'arch_addressbook'
+  requirements:
+    _entity_access: 'addressbookitem.delete'
+
+addressbookitem.settings:
+  path: '/admin/store/settings/addressbook'
+  defaults:
+    _form: '\Drupal\arch_addressbook\Form\AddressbookitemSettingsForm'
+    _title: 'Address Book Settings'
+    _title_context: 'arch_addressbook'
+  requirements:
+    _permission: 'administer addressbookitem entity'
+
+entity.addressbookitem.version_history:
+  path: '/address/{addressbookitem}/revisions'
+  defaults:
+    _title: 'Revisions'
+    _controller: '\Drupal\arch_addressbook\Controller\AddressbookController::revisionOverview'
+  requirements:
+    _access_addressbookitem_revision: 'view'
+    addressbookitem: \d+
+  options:
+    _addressbookitem_operation_route: TRUE
+
+entity.addressbookitem.revision:
+  path: '/address/{addressbookitem}/revisions/{addressbookitem_revision}/view'
+  defaults:
+    _controller: '\Drupal\arch_addressbook\Controller\AddressbookController::revisionShow'
+    _title_callback: '\Drupal\arch_addressbook\Controller\AddressbookController::revisionPageTitle'
+  requirements:
+    _access_addressbookitem_revision: 'view'
+    addressbookitem: \d+
+
+addressbookitem.revision_revert_confirm:
+  path: '/address/{addressbookitem}/revisions/{addressbookitem_revision}/revert'
+  defaults:
+    _form: '\Drupal\arch_addressbook\Form\AddressbookitemRevisionRevertForm'
+    _title: 'Revert to earlier revision'
+    _title_context: 'arch_addressbook'
+  requirements:
+    _access_addressbookitem_revision: 'update'
+    addressbookitem: \d+
+  options:
+    _addressbookitem_operation_route: TRUE

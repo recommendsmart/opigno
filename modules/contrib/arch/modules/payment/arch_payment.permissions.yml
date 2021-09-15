@@ -1,0 +1,4 @@
+administer payment settings:
+  title: 'Administer payment settings'
+  description: 'Manage settings for each payment method.'
+  restrict access: true

@@ -1,0 +1,11 @@
+administer stock:
+  title: 'Administer warehouses'
+  restrict access: true
+
+access warehouse overview:
+  title: 'Access the warehouse overview page'
+  description: 'Get an overview of all warehouses.'
+  restrict access: true
+
+permission_callbacks:
+  - Drupal\arch_stock\Access\StockPermissions::permissions

@@ -1,0 +1,53 @@
+arch_cart.content:
+  path: '/cart'
+  defaults:
+    _controller: '\Drupal\arch_cart\Controller\CartController::content'
+    _title: 'Cart'
+    _title_context: arch_cart
+  requirements:
+    _access_arch_cart: 'TRUE'
+
+arch_cart.settings:
+  path: '/admin/store/settings/cart'
+  defaults:
+    _form: '\Drupal\arch_cart\Form\CartConfigForm'
+    _title: 'Cart settings'
+    _title_context: arch_cart__menu
+  requirements:
+    _permission: 'administer cart settings'
+
+arch_cart.api.cart:
+  path: '/api/cart'
+  defaults:
+    _controller: '\Drupal\arch_cart\Controller\Api\ApiController::cart'
+    _title: 'Add to cart API Endpoint'
+    _title_context: arch_cart__menu
+  requirements:
+    _permission: 'access content'
+
+arch_cart.api.cart_add:
+  path: '/api/cart/add'
+  defaults:
+    _controller: '\Drupal\arch_cart\Controller\Api\ApiController::addItem'
+    _title: 'Add to cart API Endpoint'
+    _title_context: arch_cart__menu
+  requirements:
+    _permission: 'access content'
+
+arch_cart.api.cart_quantity:
+  path: '/api/cart/quantity'
+  defaults:
+    _controller: '\Drupal\arch_cart\Controller\Api\ApiController::quantity'
+    _title: 'Add to cart API Endpoint'
+    _title_context: arch_cart__menu
+  requirements:
+    _permission: 'access content'
+
+arch_cart.api.cart_remove:
+  path: '/api/cart/remove'
+  defaults:
+    _controller: '\Drupal\arch_cart\Controller\Api\ApiController::removeItem'
+    _title: 'Add to cart API Endpoint'
+    _title_context: arch_cart__menu
+  requirements:
+    _permission: 'access content'
