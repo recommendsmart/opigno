@@ -43,13 +43,14 @@ class AjaxResponse extends JsonResponse implements AttachmentsInterface {
       $this->commands[] = $command->render();
     }
     if ($command instanceof CommandWithAttachedAssetsInterface) {
-      $assets = $command->getAttachedAssets();
-      $attachments = [
-        'library' => $assets->getLibraries(),
-        'drupalSettings' => $assets->getSettings(),
-      ];
-      $attachments = BubbleableMetadata::mergeAttachments($this->getAttachments(), $attachments);
-      $this->setAttachments($attachments);
+      if ($assets = $command->getAttachedAssets()) {
+        $attachments = [
+          'library' => $assets->getLibraries(),
+          'drupalSettings' => $assets->getSettings(),
+        ];
+        $attachments = BubbleableMetadata::mergeAttachments($this->getAttachments(), $attachments);
+        $this->setAttachments($attachments);
+      }
     }
 
     return $this;

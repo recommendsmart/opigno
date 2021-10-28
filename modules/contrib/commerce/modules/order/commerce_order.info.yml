@@ -2,7 +2,7 @@ name: Commerce Order
 type: module
 description: 'Defines the Order entity and associated features.'
 package: Commerce
-core_version_requirement: ^8.8 || ^9
+core_version_requirement: ^8.9 || ^9
 configure: commerce_order.configuration
 dependencies:
   - commerce:commerce
@@ -14,7 +14,7 @@ dependencies:
   - state_machine:state_machine
   - drupal:options
 
-# Information added by Drupal.org packaging script on 2021-02-08
-version: '8.x-2.24'
+# Information added by Drupal.org packaging script on 2021-09-21
+version: '8.x-2.27'
 project: 'commerce'
-datestamp: 1612808409
+datestamp: 1632248845

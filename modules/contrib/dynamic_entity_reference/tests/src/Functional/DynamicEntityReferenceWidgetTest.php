@@ -34,7 +34,7 @@ class DynamicEntityReferenceWidgetTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'dynamic_entity_reference',
     'field_ui',
     'node',
@@ -54,9 +54,14 @@ class DynamicEntityReferenceWidgetTest extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Sets up a Drupal site for running functional and integration tests.
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create default content type.
@@ -120,7 +125,10 @@ class DynamicEntityReferenceWidgetTest extends BrowserTestBase {
     $assert_session->fieldNotExists($field_name . '[0][target_type]');
     $this->submitForm($edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($title);
-    $assert_session->responseContains(t('@type %title has been created.', ['@type' => 'reference_content', '%title' => $node->toLink($node->label())->toString()]));
+    $assert_session->responseContains(t('@type %title has been created.', [
+      '@type' => 'reference_content',
+      '%title' => $node->toLink($node->label())->toString(),
+    ]));
     $nodes = \Drupal::entityTypeManager()
       ->getStorage('node')
       ->loadByProperties(['title' => $title]);
@@ -151,7 +159,10 @@ class DynamicEntityReferenceWidgetTest extends BrowserTestBase {
     $this->drupalGet(Url::fromRoute('node.add', ['node_type' => 'reference_content']));
     $this->submitForm($edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($title);
-    $assert_session->responseContains(t('@type %title has been created.', ['@type' => 'reference_content', '%title' => $node->toLink($node->label())->toString()]));
+    $assert_session->responseContains(t('@type %title has been created.', [
+      '@type' => 'reference_content',
+      '%title' => $node->toLink($node->label())->toString(),
+    ]));
     $nodes = \Drupal::entityTypeManager()
       ->getStorage('node')
       ->loadByProperties(['title' => $title]);
@@ -186,7 +197,10 @@ class DynamicEntityReferenceWidgetTest extends BrowserTestBase {
     $assert_session->elementNotContains('css', '[name=' . $field_name . ']', 'optgroup');
     $this->submitForm($edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($title);
-    $assert_session->responseContains(t('@type %title has been created.', ['@type' => 'reference_content', '%title' => $node->toLink($node->label())->toString()]));
+    $assert_session->responseContains(t('@type %title has been created.', [
+      '@type' => 'reference_content',
+      '%title' => $node->toLink($node->label())->toString(),
+    ]));
     $nodes = \Drupal::entityTypeManager()
       ->getStorage('node')
       ->loadByProperties(['title' => $title]);

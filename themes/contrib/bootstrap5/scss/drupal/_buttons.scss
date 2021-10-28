@@ -1,6 +1,26 @@
+button {
+  &.link {
+    @extend .btn;
+    @extend .btn-link;
+  }
+}
+
+.button {
+    @extend .btn;
+}
+
+.button--small {
+  @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-border-radius-sm);
+}
+
 a {
   &.button {
     @extend .btn;
+    text-decoration: none;
+
+    &.button--primary {
+      @include button-variant($primary, $primary);
+    }
 
     &.button--danger {
       @include button-variant($danger, $danger);
@@ -8,6 +28,10 @@ a {
 
     &.button-action {
       @include button-variant($info, $info);
+    }
+
+    &.button--small {
+      @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-border-radius-sm);
     }
   }
 }
@@ -40,5 +64,26 @@ a {
         text-decoration: none;
       }
     }
+  }
+}
+
+// Override: '@classy/css/components/button.css'
+.btn,
+.button {
+  margin: 0 $spacer * .5;
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+// If link has ONLY button class, make it a light button.
+a {
+  &[class="button"] {
+      @include button-variant($light, $light);
   }
 }

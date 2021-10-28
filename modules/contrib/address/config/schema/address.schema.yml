@@ -144,6 +144,10 @@ field.field_settings.address_zone:
 field.widget.settings.address_default:
   type: mapping
   label: 'Default address widget settings'
+  mapping:
+    default_country:
+      type: string
+      label: 'Default country'
 
 field.widget.settings.address_zone_default:
   type: mapping

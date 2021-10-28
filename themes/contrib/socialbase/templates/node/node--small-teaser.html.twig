@@ -72,10 +72,10 @@
   ]
 %}
 
-<div {{ attributes.addClass(classes) }}>
+<div {{ attributes.addClass(classes).removeAttribute('dir') }}>
 
   {% block teaser_image %}
-    <div class="teaser--small__media" aria-hidden="true">
+    <div class="teaser--small__media">
       {% if content['field_' ~ node.bundle ~ '_image'] | render | striptags('<img>') is not empty %}
           {{ content['field_' ~ node.bundle ~ '_image'] }}
       {% else %}

@@ -15,39 +15,32 @@
  * @see template_preprocess_details()
  */
 #}
-{% set collapseId = attributes.id ~ '-collapse' %}
-{% set headingId = attributes.id ~ '-heading' %}
-<div{{ attributes.addClass('accordion') }}>
-  <div class="accordion-item">
-    {%- if title -%}
-      {% set summary_classes = [
-        'accordion-button',
-        not attributes.open ? 'collapsed',
+<details{{ attributes.addClass('card') }}>
+  {%- if title -%}
+    {%
+      set summary_classes = [
         required ? 'js-form-required',
-        required ? 'form-required',
-      ] %}
-      <h2 class="accordion-header" id="{{ headingId }}">
-        <button {{ summary_attributes.addClass(summary_classes) }} type="button" data-bs-toggle="collapse" data-bs-target="#{{ collapseId }}"
-                aria-controls="{{ collapseId }}">{{ title }}</button>
-      </h2>
-    {%- endif -%}
-    <div id="{{ collapseId }}" class="accordion-collapse collapse {{ attributes.open ? 'show' }}" aria-labelledby="{{ headingId }}">
-      <div class="accordion-body">
-        {% if errors %}
-          <div class="alert alert-danger" role="alert">
-            <strong>{{ errors }}</strong>
-          </div>
-        {% endif %}
-        {%- if description -%}
-          <div class="alert alert-info">{{ description }}</div>
-        {%- endif -%}
-        {%- if children -%}
-          {{ children }}
-        {%- endif -%}
-        {%- if value -%}
-          {{ value }}
-        {%- endif -%}
+        required ? 'form-required invalid-feedback',
+        'card-header bg-light',
+      ]
+    %}
+
+    <summary{{ summary_attributes.addClass(summary_classes) }}>{{ title }}</summary>
+  {%- endif -%}
+  <div class="details-wrapper card-body">
+    {% if errors %}
+      <div class="alert alert-danger" role="alert">
+        <strong>{{ errors }}</strong>
       </div>
-    </div>
+    {% endif %}
+    {%- if description -%}
+      <div class="alert alert-info">{{ description }}</div>
+    {%- endif -%}
+    {%- if children -%}
+      {{ children }}
+    {%- endif -%}
+    {%- if value -%}
+      {{ value }}
+    {%- endif -%}
   </div>
-</div>
+</details>

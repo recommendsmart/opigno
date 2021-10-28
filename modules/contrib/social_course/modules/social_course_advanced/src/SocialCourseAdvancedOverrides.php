@@ -37,6 +37,24 @@ class SocialCourseAdvancedOverrides implements ConfigFactoryOverrideInterface {
       ];
     }
 
+    $config_name = 'message.template.create_topic_gc';
+
+    if (in_array($config_name, $names, FALSE)) {
+      $overrides[$config_name]['third_party_settings']['activity_logger']['activity_bundle_entities'] =
+        [
+          'group_content-course_advanced-group_node-topic' => 'group_content-course_advanced-group_node-topic',
+        ];
+    }
+
+    $config_name = 'message.template.create_event_gc';
+
+    if (in_array($config_name, $names, FALSE)) {
+      $overrides[$config_name]['third_party_settings']['activity_logger']['activity_bundle_entities'] =
+        [
+          'group_content-course_advanced-group_node-event' => 'group_content-course_advanced-group_node-event',
+        ];
+    }
+
     return $overrides;
   }
 

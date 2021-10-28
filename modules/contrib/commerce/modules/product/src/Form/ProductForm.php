@@ -77,7 +77,7 @@ class ProductForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
-    /* @var \Drupal\commerce_product\Entity\Product $product */
+    /** @var \Drupal\commerce_product\Entity\ProductInterface $product */
     $product = $this->entity;
     $form = parent::form($form, $form_state);
 

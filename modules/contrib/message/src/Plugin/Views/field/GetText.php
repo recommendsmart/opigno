@@ -33,7 +33,7 @@ class GetText extends FieldPluginBase {
    */
   public function render(ResultRow $values) {
     $delta = is_numeric($this->options['delta']) ? $this->options['delta'] : NULL;
-    return new FormattableMarkup(implode($values->_entity->getText(NULL, $delta), "\n"), []);
+    return new FormattableMarkup(implode("\n", $values->_entity->getText(NULL, $delta)), []);
   }
 
   /**

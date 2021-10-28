@@ -5,6 +5,7 @@
     {{ content.field_group_image }}
     <div class="teaser__teaser-type">
       <svg class="teaser__teaser-type-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <title>{% trans %}Course:{% endtrans %} &nbsp;{{- label|render|striptags|trim -}}</title>
         <path d="M0 0h24v24H0z" fill="none"/>
         <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
       </svg>
@@ -21,6 +22,7 @@
       {{ title_suffix }}
       <div class="teaser__content-line">
         <svg class="teaser__content-type-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+           <title>{{ 'Course status'|t }}</title>
           <path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/>
           <path fill="none" d="M0 0h24v24H0z"/>
         </svg>
@@ -30,6 +32,7 @@
       {% if content.field_course_type|render is not empty %}
         {% embed "node--teaser__field.html.twig" %}
           {%- block field_icon -%} label {%- endblock -%}
+          {% block svg_title %} <title>{{ 'Course type'|t }}</title> {% endblock %}
           {%- block field_value -%} {{ content.field_course_type }} {%- endblock -%}
         {% endembed %}
       {% endif %}
@@ -37,8 +40,9 @@
     </div>
 
     <div class="card__actionbar">
-      <div class="badge teaser__badge" title="{% trans %}The visibility of this content is set to community {% endtrans %}">
+      <div class="badge teaser__badge">
         <svg class="badge__icon">
+          <title>{% trans %}Visibility{% endtrans %}</title>
           <use xlink:href="#icon-community"></use>
         </svg>
       </div>

@@ -11,6 +11,7 @@
 
   {% if style == 'asc' -%}
     <svg class="icon-tablesort">
+      <title>{% trans %} Sort ascending {% endtrans %}</title>
       <use xlink:href="#icon-arrow_drop_down"></use>
     </svg>
     <span class="visually-hidden">
@@ -20,6 +21,7 @@
   {% else -%}
 
     <svg class="icon-tablesort">
+      <title>{% trans %} Sort descending {% endtrans %}</title>
       <use xlink:href="#icon-arrow_drop_up"></use>
     </svg>
     <span class="visually-hidden">

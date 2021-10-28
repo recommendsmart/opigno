@@ -64,6 +64,10 @@ summary.card__title {
   padding: 1.25rem;
 }
 
+[dir='rtl'] .card__body {
+  text-align: right;
+}
+
 .card__body .twitter-tweet,
 .card__body .fb_iframe_widget,
 .card__body iframe {
@@ -103,6 +107,12 @@ summary.card__title {
   float: right;
   -webkit-transition: color .3s ease;
   transition: color .3s ease;
+}
+
+[dir='rtl'] .card__link {
+  float: left;
+  margin-left: 0;
+  margin-right: 24px;
 }
 
 .card__text {

@@ -1,6 +1,6 @@
 @import 'variables_bootstrap';
-@import 'variables_theme';
-@import '../dist/bootstrap/5.0.2/scss/bootstrap';
+@import 'variables_drupal';
+@import '../dist/bootstrap/5.1.2/scss/bootstrap';
 @import 'mixins';
-@import 'theme';
+@import 'drupal';
 @import 'bootstrap_fix';

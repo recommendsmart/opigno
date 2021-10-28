@@ -3,8 +3,10 @@
 namespace Drupal\Tests\commerce_promotion\FunctionalJavascript;
 
 use Drupal\commerce_promotion\Entity\Promotion;
+use Drupal\commerce_promotion\Plugin\Commerce\PromotionOffer\CombinationOffer;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\commerce\FunctionalJavascript\CommerceWebDriverTestBase;
 
 /**
@@ -24,7 +26,39 @@ class PromotionTest extends CommerceWebDriverTestBase {
     'path',
     'commerce_product',
     'commerce_promotion',
+    'language',
+    'locale',
   ];
+
+  /**
+   * A test product.
+   *
+   * @var \Drupal\commerce_product\Entity\Product
+   */
+  protected $product;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    $variation = $this->createEntity('commerce_product_variation', [
+      'type' => 'default',
+      'sku' => $this->randomMachineName(),
+      'price' => [
+        'number' => 222,
+        'currency_code' => 'USD',
+      ],
+    ]);
+    $this->product = $this->createEntity('commerce_product', [
+      'type' => 'default',
+      'title' => $this->randomMachineName(),
+      'stores' => [$this->store],
+      'variations' => [$variation],
+    ]);
+    ConfigurableLanguage::createFromLangcode('fr')->save();
+  }
 
   /**
    * {@inheritdoc}
@@ -98,6 +132,8 @@ class PromotionTest extends CommerceWebDriverTestBase {
 
     /** @var \Drupal\commerce_promotion\Entity\PromotionInterface $promotion */
     $promotion = Promotion::load(1);
+    $this->assertNotEmpty($promotion->getCreatedTime());
+    $this->assertNotEmpty($promotion->getChangedTime());
     $this->assertEquals($name, $promotion->getName());
     $this->assertEquals('Discount', $promotion->getDisplayName());
     $offer = $promotion->getOffer();
@@ -118,6 +154,63 @@ class PromotionTest extends CommerceWebDriverTestBase {
     $this->assertSession()->fieldExists('usage_limit_customer[0][limit_customer]');
     $this->assertSession()->fieldValueEquals('usage_limit_customer[0][limit_customer]', 1);
     $this->assertTrue($this->getSession()->getDriver()->isVisible($customer_usage_limit_xpath));
+  }
+
+  /**
+   * Tests creating a promotion on a non English admin.
+   */
+  public function testCreatePromotionOnTranslatedAdmin() {
+    $this->config('system.site')->set('default_langcode', 'fr')->save();
+    /** @var \Drupal\locale\StringStorageInterface $storage */
+    $storage = $this->container->get('locale.storage');
+    // Translate the 'Products' string which is used when building the offer
+    // conditions.
+    $source_string = $storage->createString(['source' => 'Products'])->save();
+    $storage->createTranslation([
+      'lid' => $source_string->lid,
+      'language' => 'fr',
+      'translation' => 'Produits',
+    ])->save();
+    $this->adminUser->set('preferred_langcode', 'fr')->save();
+    $this->drupalGet('admin/commerce/promotions');
+    $this->getSession()->getPage()->clickLink('Add promotion');
+    $this->assertSession()->fieldExists('name[0][value]');
+    $this->assertSession()->fieldExists('display_name[0][value]');
+    $name = $this->randomMachineName(8);
+    $this->getSession()->getPage()->fillField('name[0][value]', $name);
+    $this->getSession()->getPage()->fillField('display_name[0][value]', 'Discount');
+    $this->getSession()->getPage()->selectFieldOption('offer[0][target_plugin_id]', 'order_buy_x_get_y');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->getSession()->getPage()->fillField('offer[0][target_plugin_configuration][order_buy_x_get_y][offer][percentage]', '100');
+    $this->getSession()->getPage()->checkField('offer[0][target_plugin_configuration][order_buy_x_get_y][get][conditions][products][order_item_product][enable]');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->getSession()->getPage()->fillField('offer[0][target_plugin_configuration][order_buy_x_get_y][get][conditions][products][order_item_product][configuration][form][products]', $this->product->label() . ' (' . $this->product->id() . ')');
+    $this->getSession()->getPage()->checkField('offer[0][target_plugin_configuration][order_buy_x_get_y][get][auto_add]');
+    $this->submitForm([], t('Save'));
+
+    /** @var \Drupal\commerce_promotion\Entity\PromotionInterface $promotion */
+    $promotion = Promotion::load(1);
+    $this->assertNotEmpty($promotion->getCreatedTime());
+    $this->assertNotEmpty($promotion->getChangedTime());
+    $this->assertEquals($name, $promotion->getName());
+    $this->assertEquals('Discount', $promotion->getDisplayName());
+    $offer_configuration = $promotion->getOffer()->getConfiguration();
+    $this->assertEquals('percentage', $offer_configuration['offer_type']);
+    $this->assertEquals('1', $offer_configuration['offer_percentage']);
+    $this->assertEquals('1', $offer_configuration['buy_quantity']);
+    $this->assertNotEmpty($offer_configuration['get_auto_add']);
+    $this->assertEquals([
+      [
+        'plugin' => 'order_item_product',
+        'configuration' => [
+          'products' => [
+            [
+              'product' => $this->product->uuid(),
+            ],
+          ],
+        ],
+      ],
+    ], $offer_configuration['get_conditions']);
   }
 
   /**
@@ -164,7 +257,7 @@ class PromotionTest extends CommerceWebDriverTestBase {
       'name[0][value]' => $name,
       'offer[0][target_plugin_configuration][order_percentage_off][percentage]' => '10.0',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->submitForm($edit, t('Save'));
     $this->assertSession()->pageTextContains("Saved the $name promotion.");
 
     $rows = $this->getSession()->getPage()->findAll('xpath', '//table/tbody/tr/td[text()="' . $name . '"]');
@@ -378,6 +471,58 @@ class PromotionTest extends CommerceWebDriverTestBase {
     $this->assertSession()->pageTextContains('There are no enabled promotions yet.');
     $this->assertSession()->pageTextNotContains('There are no disabled promotions.');
     $this->assertTrue($this->getSession()->getPage()->hasLink('Enable'));
+  }
+
+  /**
+   * Tests creating a combination offer promotion.
+   */
+  public function testCombinationOffer() {
+    $this->drupalGet('admin/commerce/promotions');
+    $this->getSession()->getPage()->clickLink('Add promotion');
+
+    // Check the integrity of the form.
+    $this->assertSession()->fieldExists('name[0][value]');
+    $this->assertSession()->fieldExists('display_name[0][value]');
+    $name = $this->randomMachineName(8);
+    $this->getSession()->getPage()->fillField('name[0][value]', $name);
+    $this->getSession()->getPage()->fillField('display_name[0][value]', 'Discount');
+    $this->getSession()->getPage()->selectFieldOption('offer[0][target_plugin_id]', 'combination_offer');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->getSession()->getPage()->selectFieldOption('offer[0][target_plugin_configuration][combination_offer][offers][0][target_plugin_id]', 'order_item_percentage_off');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->buttonNotExists('remove_offer0');
+    $this->getSession()->getPage()->fillField('offer[0][target_plugin_configuration][combination_offer][offers][0][target_plugin_configuration][order_item_percentage_off][percentage]', 10);
+    $this->getSession()->getPage()->pressButton('Add another offer');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->buttonExists('remove_offer1');
+    $this->getSession()->getPage()->selectFieldOption('offer[0][target_plugin_configuration][combination_offer][offers][1][target_plugin_id]', 'order_percentage_off');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->getSession()->getPage()->fillField('offer[0][target_plugin_configuration][combination_offer][offers][1][target_plugin_configuration][order_percentage_off][percentage]', 10);
+    $this->getSession()->getPage()->pressButton('Add another offer');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->fieldExists('offer[0][target_plugin_configuration][combination_offer][offers][2][target_plugin_id]');
+    $this->getSession()->getPage()->pressButton('remove_offer2');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->fieldNotExists('offer[0][target_plugin_configuration][combination_offer][offers][2][target_plugin_id]');
+    $this->submitForm([], t('Save'));
+    $this->assertSession()->pageTextContains("Saved the $name promotion.");
+
+    /** @var \Drupal\commerce_promotion\Entity\PromotionInterface $promotion */
+    $promotion = Promotion::load(1);
+    $this->assertEquals($name, $promotion->getName());
+    $this->assertEquals('Discount', $promotion->getDisplayName());
+    $offer = $promotion->getOffer();
+    $this->assertInstanceOf(CombinationOffer::class, $offer);
+    $configuration = $offer->getConfiguration();
+    $this->assertCount(2, $configuration['offers']);
+    $this->assertEquals('order_item_percentage_off', $configuration['offers'][0]['target_plugin_id']);
+    $this->assertEquals([
+      'display_inclusive' => TRUE,
+      'percentage' => '0.1',
+      'conditions' => [],
+    ], $configuration['offers'][0]['target_plugin_configuration']);
+    $this->assertEquals('order_percentage_off', $configuration['offers'][1]['target_plugin_id']);
+    $this->assertEquals(['percentage' => '0.1'], $configuration['offers'][1]['target_plugin_configuration']);
   }
 
 }

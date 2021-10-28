@@ -82,10 +82,12 @@ class MessageTest extends KernelTestBase {
    */
   public function testGetText() {
     // Test with missing message template.
+    /** @var \Drupal\message\Entity\Message $message */
     $message = $this->entityTypeManager->getStorage('message')->create(['template' => 'no_exists']);
     $this->assertEmpty($message->getText());
 
     // Non-existent delta.
+    /** @var \Drupal\message\Entity\Message $message */
     $message = $this->entityTypeManager->getStorage('message')->create(['template' => $this->messageTemplate->id()]);
     $this->assertEmpty($message->getText(Language::LANGCODE_NOT_SPECIFIED, 123));
 
@@ -103,7 +105,7 @@ class MessageTest extends KernelTestBase {
       ],
     ]);
     $this->messageTemplate->save();
-
+    /** @var \Drupal\message\Entity\Message $message */
     $message = $this->entityTypeManager->getStorage('message')->create([
       'template' => $this->messageTemplate->id(),
     ]);
@@ -119,6 +121,7 @@ class MessageTest extends KernelTestBase {
       ],
     ]);
     $this->messageTemplate->save();
+    /** @var \Drupal\message\Entity\Message $message */
     $message = $this->entityTypeManager->getStorage('message')->create([
       'template' => $this->messageTemplate->id(),
     ]);
@@ -170,6 +173,7 @@ class MessageTest extends KernelTestBase {
       ],
     ]);
     $this->messageTemplate->save();
+    /** @var \Drupal\message\Entity\Message $message */
     $message = $this->entityTypeManager->getStorage('message')->create([
       'template' => $this->messageTemplate->id(),
       'arguments' => [
@@ -193,6 +197,7 @@ class MessageTest extends KernelTestBase {
     $this->assertEquals('<p>some bar other bar_replacement_' . $message->id() . "</p>\n", $text[1]);
 
     // Do not pass the message.
+    /** @var \Drupal\message\Entity\Message $message */
     $message = $this->entityTypeManager->getStorage('message')->create([
       'template' => $this->messageTemplate->id(),
       'arguments' => [

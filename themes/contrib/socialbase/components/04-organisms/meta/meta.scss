@@ -11,6 +11,11 @@
 .metainfo__avatar {
   margin-right: 12px;
 
+  [dir='rtl'] & {
+    margin-right: 0;
+    margin-left: 12px;
+  }
+
   .img-metainfo__avatar {
     width: 44px;
     height: auto;
@@ -54,8 +59,16 @@
   flex-wrap: wrap;
   justify-content: space-between;
 
+  [dir='rtl'] & {
+    flex-direction: row-reverse;
+  }
+
   @include for-tablet-landscape-down {
     flex-direction: column;
+
+    [dir='rtl'] & {
+      flex-direction: column-reverse;
+    }
   }
 
   .badge + .badge,
@@ -81,6 +94,10 @@
     flex-wrap: wrap;
     align-items: center;
     margin-bottom: 1rem;
+
+    [dir='rtl'] & {
+      flex-direction: row-reverse;
+    }
   }
 
   .meta-engage--buttons {
@@ -99,6 +116,9 @@
   border-top: 1px solid $gray-lighter;
 
   .article__special-field {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     margin-bottom: 15px;
 
     &:last-child {
@@ -114,6 +134,11 @@
     vertical-align: middle;
     fill: $gray-darker;
     margin-right: 12px;
+
+    [dir='rtl'] & {
+      margin-right: 0;
+      margin-left: 12px;
+    }
   }
 }
 

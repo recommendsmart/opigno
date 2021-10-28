@@ -25,6 +25,11 @@
   text-overflow: ellipsis;
 }
 
+[dir='rtl'] .socialblue--sky .teaser__tag {
+  margin-right: 0;
+  margin-left: .5rem;
+}
+
 .socialblue--sky .teaser__tag a {
   font-weight: 700;
   -webkit-transition: .3s ease-out;

@@ -15,7 +15,8 @@
   <div class="container">
     <div class="cover-wrap cover-wrap--course-statistic">
       <a href="{{ back_link_url }}"  title="{{ back_link_title }}" class="back-link">
-        <svg>
+        <svg aria-hidden="true">
+          <title>{{ back_link_title }}</title>
           <use xlink:href="#icon-navigate_before"></use>
         </svg>
         {{ back_link_title }}

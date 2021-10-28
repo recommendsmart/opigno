@@ -7,6 +7,7 @@
 var importOnce    = require('node-sass-import-once'),
     notify        = require("gulp-notify"),
     gulp          = require('gulp'),
+    babel         = require('gulp-babel'),
     $             = require('gulp-load-plugins')(),
     browserSync   = require('browser-sync').create(),
     del           = require('del'),
@@ -104,10 +105,12 @@ gulp.task('styles', ['clean:css'], function () {
 
 gulp.task('scripts', ['clean:js'], function () {
   return gulp.src(options.basetheme.components + '**/*.js')
-    .pipe($.uglify())
     .pipe($.flatten())
     .pipe($.rename({
       suffix: ".min"
+    }))
+    .pipe(babel({
+      presets: ['@babel/preset-env']
     }))
     .pipe(gulp.dest(options.basetheme.js))
     .pipe(browserSync.reload({stream:true}));

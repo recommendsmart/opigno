@@ -20,7 +20,8 @@
   {%- if title -%}
     <summary{{ summary_attributes.addClass('card__title') }}>
       {{ title }}
-      <svg class="icon-summary-arrow">
+      <svg class="icon-summary-arrow" aria-hidden="true">
+        <title>{% trans %} Collapsible {% endtrans %}</title>
         <use xlink:href="#icon-expand_more"></use>
       </svg>
     </summary>

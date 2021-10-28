@@ -23,6 +23,11 @@
   min-width: 10px;
   max-width: 100%;
 
+  [dir='rtl'] & {
+    margin-right: 0;
+    margin-left: 3px;
+  }
+
   // Empty badges collapse automatically (not available in IE8)
   &:empty {
     display: none;
@@ -99,6 +104,11 @@ a .badge {
   ~ .badge__label {
     padding-left: 2px;
     font-weight: lighter;
+
+    [dir='rtl'] & {
+      padding-right: 2px;
+      padding-left: 0;
+    }
 
     &:first-of-type {
       padding-left: 4px;

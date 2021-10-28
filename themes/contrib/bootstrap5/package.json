@@ -6,7 +6,7 @@
   "scripts": {
     "static:start": "http-server . -a localhost -p 8088",
     "lint:sass": "sass-lint -c .sass-lint.yml --verbose",
-    "build:sass": "sass scss/style.scss css/style.css",
+    "build:sass": "sass scss/style.scss css/style.css && sass scss/style-50.scss css/style-50.css",
     "build:js": "cross-env BABEL_ENV=legacy node ./bin/babel/babel-es6-build.js",
     "lint:js": "eslint --no-eslintrc -c=./.eslintrc.json js/**.es6.js"
   },
@@ -25,7 +25,6 @@
     "glob": "^7.1.2",
     "http-server": "^0.12.3",
     "minimist": "^1.2.2",
-    "node-sass": "^4.14.1",
     "prettier": "^1.19.1",
     "sass-lint": "^1.13.1"
   },

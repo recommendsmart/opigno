@@ -68,6 +68,11 @@
             top: -2px;
             left: 150px;
             right: auto;
+
+            [dir='rtl'] & {
+              left: auto;
+              right: -35px;
+            }
           }
         }
 
@@ -99,6 +104,11 @@
     flex: 0 1 auto;
     margin-left: .5rem;
     align-self: flex-end;
+
+    [dir='rtl'] & {
+      margin-left: 0;
+      margin-right: .5rem;
+    }
 
     @include for-tablet-portrait-up {
       flex-grow: 0;

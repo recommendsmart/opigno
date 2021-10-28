@@ -1,9 +1,10 @@
 {% extends "node--teaser.html.twig" %}
 
 {% block card_teaser_type %}
-  <a href="{{ url }}">
+  <a href="{{ url }}" aria-hidden="true" title="{% trans %}Event: &nbsp;{% endtrans %}{{- label|render|striptags|trim -}}">
     <div class="teaser__teaser-type">
-      <svg class="teaser__teaser-type-icon">
+      <svg class="teaser__teaser-type-icon" aria-hidden="true">
+        <title>{% trans %}Event: &nbsp;{% endtrans %}{{- label|render|striptags|trim -}}</title>
         {% if event_type_icon %}
           <use xlink:href="#{{- event_type_icon -}}"></use>
         {% else %}
@@ -18,6 +19,7 @@
 
   {% embed "node--teaser__field.html.twig" %}
     {%- block field_icon -%} event {%- endblock -%}
+    {%- block svg_title -%} <title>{% trans %}Event date{% endtrans %}</title> {%- endblock -%}
     {%- block field_value %}
       <span class="sr-only">{% trans %}Event date{% endtrans %} </span>
       {{ event_date }}
@@ -27,6 +29,7 @@
   {% if content.field_event_location|render is not empty %}
     {% embed "node--teaser__field.html.twig" %}
       {%- block field_icon -%} location {%- endblock -%}
+      {%- block svg_title -%} <title>{% trans %}Located at: {% endtrans %}</title> {%- endblock -%}
       {%- block field_value -%}
         <span class="sr-only">{% trans %}The event will take place at the{% endtrans %} </span>
         {{ content.field_event_location }}
@@ -37,6 +40,7 @@
   {% if event_type %}
     {% embed "node--teaser__field.html.twig" %}
       {%- block field_icon -%} label {%- endblock -%}
+      {%- block svg_title -%} <title>{% trans %}Event type {% endtrans %}</title> {%- endblock -%}
       {%- block field_value -%}
         <span class="sr-only">{% trans %}This event has type{% endtrans %} </span>
         {{ event_type }}
@@ -47,6 +51,7 @@
   {% if content.group_name %}
     {% embed "node--teaser__field.html.twig" %}
       {%- block field_icon -%} group {%- endblock -%}
+      {%- block svg_title -%} <title>{% trans %}Group{% endtrans %}</title> {%- endblock -%}
       {%- block field_value -%}
         <span class="sr-only">{% trans %}This event is posted in{% endtrans %} </span>
         {{ content.group_name }}
@@ -59,10 +64,10 @@
 {% block card_actionbar %}
 
   {% if visibility_icon and visibility_label %}
-    <div class="badge teaser__badge"
-         title="{% trans %}The visibility of this content is set to {{ visibility_label }}{% endtrans %} ">
+    <div class="badge teaser__badge">
       <span class="badge__container">
         <svg class="badge__icon">
+           <title>{% trans %}Visibility{% endtrans %}</title>
           <use xlink:href="#icon-{{ visibility_icon }}"></use>
         </svg>
         <span class="badge__label text-gray">{{ visibility_label|capitalize }}</span>
@@ -71,9 +76,10 @@
   {% endif %}
 
   {% if content.enrollments_count is not empty %}
-    <div class="badge teaser__badge" title="{% trans %}Total amount of enrollments{% endtrans %}">
+    <div class="badge teaser__badge">
       <span class="badge__container">
-        <svg class="badge__icon" aria-hidden="true">
+        <svg class="badge__icon">
+          <title>{% trans %}Total amount of enrollments{% endtrans %}</title>
           <use xlink:href="#icon-person"></use>
         </svg>
         <span class="badge__label text-gray">

@@ -27,6 +27,10 @@ caption {
 // Matches default `<td>` alignment
 th {
   text-align: left;
+
+  [dir='rtl'] & {
+    text-align: right;
+  }
 }
 
 
@@ -111,6 +115,11 @@ th {
           padding-left: 1.75rem;
           padding-right: .25rem;
           text-align: center;
+
+          [dir='rtl'] & {
+            padding-right: 1.75rem;
+            padding-left: .25rem;
+          }
 
           .tabledrag-handle {
             position: static;
@@ -216,7 +225,7 @@ form:not(.layout-builder-add-block) {
 
     ~ .form-managed-file {
       display: block;
-      padding-left: 24px;
+      margin-left: 24px;
     }
   }
 }
@@ -254,14 +263,25 @@ form:not(.layout-builder-add-block) {
 // For VBO manage members.
 .right-auto {
   margin-right: auto;
+
+  [dir='rtl'] & {
+    margin-left: auto;
+    margin-right: 0;
+  }
+
   @include for-phone-only {
-    margin-left: 0.5rem;
+    margin-left: .5rem;
+
+    [dir='rtl'] & {
+      margin-left: 0;
+      margin-right: .5rem;
+    }
   }
 }
 
 .view-group-manage-members {
   padding: 0 10px;
-  
+
   @include for-desktop-up {
     padding: 0;
   }
@@ -338,21 +358,46 @@ form:not(.layout-builder-configure-block) .select-all.checkbox {
   }
 }
 
-#vbo-action-form-wrapper .btn-group.dropdown {
-  position: absolute;
-  right: 1rem;
-  padding: 10px 0;
+#vbo-action-form-wrapper {
+  .btn-group.dropdown {
+    position: absolute;
+    right: 1rem;
+    padding: 10px 0;
 
-  @include for-phone-only {
-    position: static;
-    width: 100%;
-
-    button {
-      margin-right: 0.5rem;
+    [dir='rtl'] & {
+      right: auto;
+      left: 1rem;
     }
 
-    .dropdown-menu.dropdown-menu-right {
+
+    @include for-phone-only {
+      position: static;
       width: 100%;
+
+      button {
+        margin-right: .5rem;
+
+        [dir='rtl'] & {
+          margin-right: 0;
+          margin-left: .5rem;
+        }
+      }
+
+      .dropdown-menu.dropdown-menu-right {
+        width: 100%;
+      }
+    }
+  }
+
+  .form-type-checkbox {
+    left: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    [dir='rtl'] & {
+      label {
+        //padding-right: 50px;
+      }
     }
   }
 }
@@ -361,7 +406,7 @@ form:not(.layout-builder-configure-block) .select-all.checkbox {
   padding: 0;
 
   .panel-heading {
-    padding: 1.25rem 0 1.25rem 1.25rem;
+    padding: 1.25rem ;
   }
 
   .vbo-multipage-selector ul {
@@ -434,10 +479,20 @@ form:not(.layout-builder-configure-block) .select-all.checkbox {
         td {
           &:first-child {
             padding-left: 2.5rem;
+
+            [dir='rtl'] & {
+              padding-right: 2.5rem;
+              padding-left: 1.875rem;
+            }
           }
 
           &:last-child {
             padding-right: 2.5rem;
+
+            [dir='rtl'] & {
+              padding-right: 1.875rem;
+              padding-left: 2.5rem;
+            }
           }
         }
       }

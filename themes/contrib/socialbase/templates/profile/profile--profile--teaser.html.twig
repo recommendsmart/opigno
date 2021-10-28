@@ -33,9 +33,10 @@
   {% endblock %}
 
   {% block card_teaser_type %}
-    <a href="{{ profile_home }}" aria-hidden="true">
+    <a href="{{ profile_home }}" aria-hidden="true" title="{% trans %}Profile: &nbsp;{% endtrans %}{{- profile_name|render|striptags|trim -}} {{- profile_name_extra|render|striptags|trim -}}">
       <div class="teaser__teaser-type">
         <svg class="teaser__teaser-type-icon">
+          <title>{% trans %}Profile: &nbsp;{% endtrans %}{{- profile_name|render|striptags|trim -}} {{- profile_name_extra|render|striptags|trim -}}</title>
           <use xlink:href="#icon-account_circle"></use>
         </svg>
       </div>
@@ -56,7 +57,8 @@
       {% block card_body %}
         {% if content.field_profile_function|render or content.field_profile_organization|render %}
         <div class="teaser__content-line">
-          <svg class="teaser__content-type-icon" aria-hidden="true">
+          <svg class="teaser__content-type-icon">
+            <title>{% trans %}User function and organization{% endtrans %}</title>
             <use xlink:href="#icon-business_center"></use>
           </svg>
           <span class="teaser__content-text">

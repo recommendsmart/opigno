@@ -36,8 +36,8 @@
   <div class="hero__bgimage-overlay"></div>
   {% if group_edit_url %}
     <div class="hero-action-button">
-      <a href="{{ group_edit_url }}"  title="{% trans %}Edit group{% endtrans %}" class="btn btn-default btn-floating">
-        <svg class="icon-gray icon-medium">
+      <a href="{{ group_edit_url }}" title="{% trans %}Edit group{% endtrans %}" class="btn btn-default btn-floating">
+        <svg class="icon-gray icon-medium" aria-hidden="true">
           <title>{% trans %}Edit group{% endtrans %}</title>
           <use xlink:href="#icon-edit"></use>
         </svg>
@@ -48,11 +48,13 @@
     <header class="page-title">
       <h1>
           {% if closed_group_lock %}
-              <svg class="icon-white icon-medium">
+              <svg class="icon-white icon-medium" aria-hidden="true">
+                <title>{% trans %} Closed group {% endtrans %}</title>
                   <use xlink:href="#icon-lock"></use>
               </svg>
           {% elseif secret_group_shield %}
-              <svg class="icon-white icon-medium">
+              <svg class="icon-white icon-medium" aria-hidden="true">
+                <title>{% trans %} Secret group {% endtrans %}</title>
                   <use xlink:href="#icon-shield"></use>
               </svg>
           {% endif %}
@@ -74,6 +76,7 @@
       <div class="hero-footer__text">
         {% if content.field_group_location|render is not empty and content.field_group_address|render is not empty %}
           <svg class="hero-footer-icon">
+            <title>{% trans %} Located at {% endtrans %}</title>
             <use xlink:href="#icon-location"></use>
           </svg>
         {% endif %}
@@ -98,6 +101,9 @@
               <button type="button" autocomplete="off" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-accent btn-lg btn-raised dropdown-toggle">{% trans with {'context': 'Is a member'} %}Joined{% endtrans %}<span class="caret"></span></button>
               <ul class="dropdown-menu dropdown-menu-right">
                 <li><a href="{{ group_operations_url }}">{% trans %}Leave group{% endtrans %}</a></li>
+                {% if content.flag_mute_group_notifications|render is not empty and logged_in %}
+                  <li>{{ content.flag_mute_group_notifications }}</li>
+                {% endif %}
               </ul>
             {% elseif closed_group %}
               {% if allow_request %}

@@ -54,3 +54,21 @@ td {
 #search-block-form {
   display: flex;
 }
+
+.js {
+  td {
+    .dropbutton-wrapper {
+      min-height: 2.25rem;
+    }
+  }
+}
+.dropbutton-widget {
+  @include border-radius($form-select-border-radius, 0);
+  @include box-shadow($form-select-box-shadow);
+
+  .dropbutton {
+    .dropbutton-action > * {
+      padding: $form-select-padding-y $form-select-padding-x;
+    }
+  }
+}

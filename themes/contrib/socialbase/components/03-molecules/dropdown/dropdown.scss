@@ -78,6 +78,10 @@
     top: 100%;
   }
 
+  [dir='rtl'] & {
+    text-align: right; // Ensures proper alignment if parent has it changed (e.g., modal footer)
+  }
+
   // Aligns the dropdown menu to right
   //
   // Deprecated as of 3.1.0 in favor of `.dropdown-menu-[dir]`
@@ -189,6 +193,11 @@
 .dropdown-menu-right {
   left: auto; // Reset the default from `.dropdown-menu`
   right: 0;
+
+  [dir='rtl'] & {
+    right: auto;
+    left: 0;
+  }
 }
 
 // With v3, we enabled auto-flipping if you have a dropdown within a right
@@ -226,6 +235,11 @@
 .pull-right > .dropdown-menu {
   right: 0;
   left: auto;
+
+  [dir='rtl'] & {
+    right: auto;
+    left: 0;
+  }
 }
 
 // Allow for dropdowns to go bottom up (aka, dropup-menu)
@@ -260,6 +274,11 @@
     .dropdown-menu {
       right: 0;
       left: auto;
+
+      [dir='rtl'] & {
+        right: auto;
+        left: 0;
+      }
     }
     // Necessary for overrides of the default right aligned menu.
     // Will remove come v4 in all likelihood.

@@ -140,8 +140,8 @@ interface QueryInterface extends AlterableInterface {
   public function pager($limit = 10, $element = NULL);
 
   /**
-   * @param null $start
-   * @param null $length
+   * @param int|null $start
+   * @param int|null $length
    * @return $this
    *   The called object.
    */

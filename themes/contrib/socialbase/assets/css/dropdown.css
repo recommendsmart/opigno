@@ -51,6 +51,10 @@
   background-clip: padding-box;
 }
 
+[dir='rtl'] .dropdown-menu {
+  text-align: right;
+}
+
 .dropdown-menu.pull-right {
   right: 0;
   left: auto;
@@ -115,6 +119,11 @@
   right: 0;
 }
 
+[dir='rtl'] .dropdown-menu-right {
+  right: auto;
+  left: 0;
+}
+
 .dropdown-menu-left {
   left: 0;
   right: auto;
@@ -141,6 +150,11 @@
 .pull-right > .dropdown-menu {
   right: 0;
   left: auto;
+}
+
+[dir='rtl'] .pull-right > .dropdown-menu {
+  right: auto;
+  left: 0;
 }
 
 .dropup .caret,
@@ -307,6 +321,10 @@ html:not(.js) .dropdown .dropdown-toggle {
   .navbar-right .dropdown-menu {
     right: 0;
     left: auto;
+  }
+  [dir='rtl'] .navbar-right .dropdown-menu {
+    right: auto;
+    left: 0;
   }
   .navbar-right .dropdown-menu-left {
     left: 0;

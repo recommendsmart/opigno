@@ -13,6 +13,7 @@ use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Render\Element;
+use Drupal\field_group\FormatterHelper;
 use Drupal\paragraphs\ParagraphInterface;
 use Drupal\paragraphs\Traits\FieldWidgetTrait;
 use Symfony\Component\Validator\ConstraintViolationInterface;
@@ -421,6 +422,9 @@ class InlineParagraphsWidget extends WidgetBase {
             '#prefix' => '<li class="remove dropbutton__item  dropbutton__item--extrasmall">',
             '#suffix' => '</li>',
             '#paragraphs_mode' => 'remove',
+            '#attributes' => [
+              'class' => ['button--small'],
+            ],
           ];
 
         }
@@ -648,10 +652,13 @@ class InlineParagraphsWidget extends WidgetBase {
         ];
 
         field_group_attach_groups($element['subform'], $context);
-        if (function_exists('field_group_form_pre_render')) {
+        if (method_exists(FormatterHelper::class, 'formProcess')) {
+          $element['subform']['#process'][] = [FormatterHelper::class, 'formProcess'];
+        }
+        elseif (function_exists('field_group_form_pre_render')) {
           $element['subform']['#pre_render'][] = 'field_group_form_pre_render';
         }
-        if (function_exists('field_group_form_process')) {
+        elseif (function_exists('field_group_form_process')) {
           $element['subform']['#process'][] = 'field_group_form_process';
         }
       }
@@ -1055,7 +1062,7 @@ class InlineParagraphsWidget extends WidgetBase {
         '#type' => 'submit',
         '#name' => strtr($this->fieldIdPrefix, '-', '_') . '_' . $machine_name . '_add_more',
         '#value' => $this->t('Add @type', ['@type' => $label]),
-        '#attributes' => ['class' => ['field-add-more-submit']],
+        '#attributes' => ['class' => ['field-add-more-submit', 'button--small']],
         '#limit_validation_errors' => [array_merge($this->fieldParents, [$field_name, 'add_more'])],
         '#submit' => [[get_class($this), 'addMoreSubmit']],
         '#ajax' => [
@@ -1241,7 +1248,7 @@ class InlineParagraphsWidget extends WidgetBase {
   protected function isContentReferenced() {
     $target_type = $this->getFieldSetting('target_type');
     $target_type_info = \Drupal::entityTypeManager()->getDefinition($target_type);
-    return $target_type_info->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface');
+    return $target_type_info->entityClassImplements('\Drupal\Core\Entity\ContentEntityInterface');
   }
 
   /**
@@ -1301,7 +1308,7 @@ class InlineParagraphsWidget extends WidgetBase {
     $widget_state = static::getWidgetState($form['#parents'], $field_name, $form_state);
     $element = NestedArray::getValue($form_state->getCompleteForm(), $widget_state['array_parents']);
 
-    foreach ($values as $delta => &$item) {
+    foreach ($values as &$item) {
       if (isset($widget_state['paragraphs'][$item['_original_delta']]['entity'])
         && $widget_state['paragraphs'][$item['_original_delta']]['mode'] != 'remove') {
         $paragraphs_entity = $widget_state['paragraphs'][$item['_original_delta']]['entity'];
@@ -1503,7 +1510,7 @@ class InlineParagraphsWidget extends WidgetBase {
     $target_type = $field_definition->getSetting('target_type');
     $paragraph_type = \Drupal::entityTypeManager()->getDefinition($target_type);
     if ($paragraph_type) {
-      return $paragraph_type->isSubclassOf(ParagraphInterface::class);
+      return $paragraph_type->entityClassImplements(ParagraphInterface::class);
     }
 
     return FALSE;

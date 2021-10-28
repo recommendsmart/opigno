@@ -21,7 +21,7 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['dynamic_entity_reference'];
+  protected static $modules = ['dynamic_entity_reference'];
 
   /**
    * The entity type used in this test.
@@ -68,7 +68,7 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('entity_test_rev');
@@ -126,6 +126,7 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
     $this->queryResults = $this->container->get('entity_type.manager')
       ->getStorage('entity_test')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition("field_test.0.entity:entity_test_rev.name", 'Foobar')
       ->condition("field_test.1.entity:entity_test_rev.name", 'Barfoo')
       ->execute();

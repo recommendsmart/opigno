@@ -423,7 +423,7 @@ function social_core_update_8005(&$sandbox) {
         // Only crop if this uri is not yet cropped for this crop style already.
         if (!$crops) {
 
-          [$ratio_width, $ratio_height] = explode(':', $crop_type->aspect_ratio);
+          list($ratio_width, $ratio_height) = explode(':', $crop_type->aspect_ratio);
           $ratio = $ratio_width / $ratio_height;
 
           if ($ratio > 1) {
@@ -1368,43 +1368,15 @@ function social_core_update_10105() {
 }
 
 /**
- * Resets the update hooks to 10201 for following modules.
- *
- * 1. Social Book
- * 2. Social Event
- * 3. Social Landing page
- * 4. Social Page
- * 5. Social Profile
- * 6. Social Topic.
- *
- * These update hooks were added in cherry-pick accidentally.
- *
- * @see https://github.com/goalgorilla/open_social/commit/6a0007a8adf813a4cff1fc77528865d55c3805c0
+ * Add translation support for custom blocks fields.
  */
-function social_core_update_10201(&$sandbox) {
-  // Prepare the range of update hook numbers which needs to be removed.
-  $update_numbers = [
-    '10301',
-    '10302',
-    '10303',
-  ];
+function social_core_update_10300() {
+  /** @var \Drupal\update_helper\Updater $updateHelper */
+  $updateHelper = \Drupal::service('update_helper.updater');
 
-  // The modules whose schema needs to be reset.
-  $modules = [
-    'social_book',
-    'social_event',
-    'social_landing_page',
-    'social_page',
-    'social_profile',
-    'social_topic',
-  ];
+  // Execute configuration update definitions with logging of success.
+  $updateHelper->executeUpdate('social_core', __FUNCTION__);
 
-  // Check if the update hook number already exists in schema and then
-  // reset.
-  foreach ($modules as $module) {
-    $latest_schema = \Drupal::keyValue('system.schema')->get($module);
-    if (in_array($latest_schema, $update_numbers)) {
-      \Drupal::keyValue('system.schema')->set($module, '10201');
-    }
-  }
+  // Output logged messages to related channel of update execution.
+  return $updateHelper->logger()->output();
 }

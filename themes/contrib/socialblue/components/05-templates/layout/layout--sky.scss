@@ -12,6 +12,11 @@
       @include for-desktop-up {
         padding-right: 1rem;
         padding-left: 0;
+
+        [dir='rtl'] & {
+          padding-right: 0;
+          padding-left: 1rem;
+        }
       }
     }
 
@@ -19,6 +24,11 @@
       @include for-desktop-up {
         padding-left: 1rem;
         padding-right: 0;
+
+        [dir='rtl'] & {
+          padding-right: 1rem;
+          padding-left: 0;
+        }
       }
     }
   }
@@ -51,6 +61,11 @@
           margin: -44px 0 0;
           padding-left: 2rem;
           padding-right: 1rem;
+
+          [dir='rtl'] & {
+            padding-right: 2rem;
+            padding-left: 1rem;
+          }
         }
 
         @include for-desktop-up {

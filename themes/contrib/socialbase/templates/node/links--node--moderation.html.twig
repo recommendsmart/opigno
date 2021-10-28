@@ -34,8 +34,9 @@
 #}
 {% if links -%}
   <div class="comment__actions pull-right">
-    <button type="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true" class="btn btn-icon-toggle dropdown-toggle">
-      <svg class="btn-icon icon-gray">
+    <button type="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true" class="btn btn-icon-toggle dropdown-toggle" aria-label="{% trans %}More options{% endtrans %}">
+      <svg class="btn-icon icon-gray" aria-hidden="true">
+        <title>{% trans %} More options {% endtrans %}</title>
         <use xlink:href="#icon-expand_more"></use>
       </svg>
     </button>

@@ -113,6 +113,10 @@ summary.card__title {
   position: relative;
   padding: $card-spacer-x;
 
+  [dir='rtl'] & {
+    text-align: right;
+  }
+
   @include for-tablet-landscape-up {
     padding: $card-spacer-xl;
   }
@@ -148,6 +152,12 @@ summary.card__title {
   margin-left: 24px;
   float: right;
   transition: color .3s ease;
+
+  [dir='rtl'] & {
+    float: left;
+    margin-left: 0;
+    margin-right: 24px;
+  }
 }
 
 .card__text {

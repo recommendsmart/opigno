@@ -5,8 +5,8 @@ template: example_create_comment
 label: 'Example - Create comment'
 description: 'A user created comment.'
 text:
-  - "<p><a href='[message:user-url]'>[message:user-name]</a>&nbsp;<a href='[message:comment-url]'>commented</a> on&nbsp;[message:node-title]</p>\r\n"
-  - "<p>[message:node-render]</p>\r\n"
+  - value: "<p><a href='[message:user-url]'>[message:user-name]</a>&nbsp;<a href='[message:comment-url]'>commented</a> on&nbsp;[message:node-title]</p>\r\n <p>[message:node-render]</p>\r\n"
+  - format: 'basic_html'
 data:
   'token options':
     clear: 0

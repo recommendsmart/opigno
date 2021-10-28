@@ -115,6 +115,11 @@ label {
     margin-left: 8px;
     margin-bottom: 5px;
 
+    [dir='rtl'] & {
+      margin-left: 0;
+      margin-right: 8px;
+    }
+
     // Safari fix
     flex-shrink: 0;
   }
@@ -217,6 +222,11 @@ span.form-required {
     margin-left: auto;
     margin-right: 0;
     order: 10;
+
+    [dir='rtl'] & {
+      margin-left: 0;
+      margin-right: auto;
+    }
   }
 }
 
@@ -357,6 +367,11 @@ details {
       right: 1.25rem;
       margin-right: 0;
       top: .75rem;
+
+      [dir='rtl'] & {
+        right: auto;
+        left: 1.25rem;
+      }
     }
   }
 

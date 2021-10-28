@@ -132,12 +132,13 @@
 
 .popover-title {
   margin: 0;
-  padding: 8px 14px;
+  padding: 21px 1rem 11px;
   font-size: 0.875rem;
+  font-weight: 700;
 }
 
 .popover-content {
-  padding: 9px 14px;
+  padding: 10px 1rem;
 }
 
 .popover > .arrow, .popover > .arrow:after {
@@ -218,17 +219,6 @@
   margin-right: 0.3em;
 }
 
-@media (min-width: 976px) {
-  .gin--vertical-toolbar .popover {
-    margin-left: 72px;
-  }
-  .gin--vertical-toolbar .popover > .arrow {
-    margin-left: -103px;
-  }
-}
-
-@media (min-width: 976px) and (max-width: 1199px) {
-  .gin--vertical-toolbar .popover {
-    left: 0 !important;
-  }
+.gin--vertical-toolbar .popover {
+  z-index: 10000;
 }

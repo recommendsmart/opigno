@@ -6,6 +6,11 @@
     border-top-left-radius: inherit;
     border-bottom-left-radius: inherit;
     background: $gray-lighter;
+
+    [dir='rtl'] & {
+      border-top-left-radius: initial;
+      border-bottom-left-radius: initial;
+    }
   }
 
 }

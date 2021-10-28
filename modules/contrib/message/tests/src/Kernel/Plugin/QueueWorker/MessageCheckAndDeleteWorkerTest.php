@@ -130,13 +130,13 @@ class MessageCheckAndDeleteWorkerTest extends KernelTestBase {
     $message->save();
 
     $this->plugin->processItem([$message->id() => [$field_name]]);
-    $this->assertTrue(Message::load($message->id()), 'Message exists after deleting one of two referenced nodes.');
+    $this->assertNotEmpty(Message::load($message->id()), 'Message exists after deleting one of two referenced nodes.');
 
     // If there are no valid references left, then the message should be
     // deleted.
     $node->delete();
     $this->plugin->processItem([$message->id() => [$field_name]]);
-    $this->assertFalse(Message::load($message->id()), 'Message deleted after deleting all referenced nodes.');
+    $this->assertEmpty(Message::load($message->id()), 'Message deleted after deleting all referenced nodes.');
   }
 
   /**

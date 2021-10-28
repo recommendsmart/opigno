@@ -67,6 +67,11 @@ label {
       flex-shrink: 0;
 }
 
+[dir='rtl'] .form-group-inline .btn {
+  margin-left: 0;
+  margin-right: 8px;
+}
+
 .form-group-inline--right {
   -webkit-box-pack: end;
       -ms-flex-pack: end;
@@ -167,6 +172,12 @@ span.form-required {
           order: 10;
 }
 
+[dir='rtl'] .form--default .form-actions .btn-group--primary, [dir='rtl']
+.form--default .form-actions .btn-primary {
+  margin-left: 0;
+  margin-right: auto;
+}
+
 .form-item--error-message {
   margin-top: 10px;
   position: relative;
@@ -253,6 +264,11 @@ details summary svg.icon-summary-arrow {
   right: 1.25rem;
   margin-right: 0;
   top: .75rem;
+}
+
+[dir='rtl'] details summary svg.icon-summary-arrow {
+  right: auto;
+  left: 1.25rem;
 }
 
 details[open] summary {

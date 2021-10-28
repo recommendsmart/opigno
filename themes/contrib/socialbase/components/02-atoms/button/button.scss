@@ -388,6 +388,11 @@ input[type="button"] {
   .btn-group + .btn,
   .btn-group + .btn-group {
     margin-left: -1px;
+
+    [dir='rtl'] & {
+      margin-left: 0;
+      margin-right: -1px;
+    }
   }
 }
 
@@ -417,6 +422,11 @@ input[type="button"] {
   margin-left: 0;
   &:not(:last-of-type):not(.dropdown-toggle) {
     @include border-right-radius(0);
+
+    [dir='rtl'] & {
+      @include border-right-radius(10px);
+      @include border-left-radius(0)
+    }
   }
 }
 
@@ -424,6 +434,11 @@ input[type="button"] {
 .btn-group > .btn:last-child:not(:first-child),
 .btn-group > .dropdown-toggle:not(:first-child) {
   @include border-left-radius(0);
+
+  [dir='rtl'] & {
+    @include border-left-radius(10px);
+    @include border-right-radius(0)
+  }
 }
 
 // Custom edits for including btn-groups within btn-groups (useful for including dropdown buttons within a btn-group)

@@ -85,6 +85,28 @@ function _socialbase_get_visibility_icon($title) {
   return $icon;
 }
 
+function _socialbase_get_join_method_icon($title) {
+  // Set the materialize icon.
+  switch ($title) {
+    case 'Open to join':
+      $icon = 'join_open';
+      break;
+
+    case 'Request to join':
+      $icon = 'join_close';
+      break;
+
+    case 'Invite only':
+      $icon = 'invite';
+      break;
+
+    default:
+      $icon = strtolower(Html::escape($title));
+  }
+
+  return $icon;
+}
+
 /**
  * Get comment count for a node.
  */

@@ -6,6 +6,7 @@ use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Language\Language;
+use Drupal\filter\FilterFormatInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\message\MessageTemplateInterface;
 
@@ -342,6 +343,53 @@ class MessageTemplate extends ConfigEntityBundleBase implements MessageTemplateI
     }
 
     parent::preSave($storage);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+
+    $text_format_ids = [];
+    foreach ($this->text as $item) {
+      if (!empty($item['format']) && !in_array($item['format'], $text_format_ids, TRUE)) {
+        $text_format_ids[] = $item['format'];
+      }
+    }
+
+    // The template depends on the text text format config entities, if any.
+    if ($text_format_ids) {
+      $text_format_storage = $this->entityTypeManager()->getStorage('filter_format');
+      foreach ($text_format_storage->loadMultiple($text_format_ids) as $id => $text_format) {
+        $this->addDependency($text_format->getConfigDependencyKey(), $text_format->getConfigDependencyName());
+      }
+    }
+
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onDependencyRemoval(array $dependencies) {
+    $changed = parent::onDependencyRemoval($dependencies);
+
+    foreach ($dependencies['config'] as $text_format) {
+      if ($text_format instanceof FilterFormatInterface) {
+        foreach ($this->text as &$item) {
+          if (!empty($item['format']) && $item['format'] === $text_format->id()) {
+            // If a text format, in use by this template, is removed, prevent
+            // deleting the whole message template and replace the deleted text
+            // format with the fallback format.
+            $item['format'] = filter_fallback_format();
+            $changed = TRUE;
+          }
+        }
+      }
+    }
+
+    return $changed;
   }
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\storage_rabbit_hole\Plugin\RabbitHoleEntityPlugin;
+namespace Drupal\storage\Plugin\RabbitHoleEntityPlugin;
 
 use Drupal\rabbit_hole\Plugin\RabbitHoleEntityPluginBase;
 

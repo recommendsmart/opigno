@@ -86,6 +86,10 @@ body {
   padding-top: 0;
 }
 
+.navbar-default {
+  position: relative;
+}
+
 .navbar {
   position: relative;
   min-height: $navbar-height; // Ensure a navbar always shows (e.g., without a .navbar-brand in collapsed mode)
@@ -127,6 +131,16 @@ body {
     }
   }
 
+  .dropdown-menu {
+    right: 0;
+    left: auto;
+
+    [dir='rtl'] & {
+      right: auto;
+      left: 0;
+    }
+  }
+
 }
 
 
@@ -134,13 +148,14 @@ body {
 .block-language {
   order: 4;
 
+  a.dropdown-toggle {
+    height: 50px;
+    padding-top: .875rem;
+  }
+
   // Move the language switcher left of the user menu.
   @include for-tablet-landscape-up {
     margin-left: auto;
-
-    a.dropdown-toggle {
-      height: 50px;
-    }
 
     // Disable spacing between user menu and social language block.
     ~ .navbar-user {
@@ -162,7 +177,6 @@ body {
 .navbar-nav {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
 
   > li > a, > li > button {
     padding-top: 10px;
@@ -184,9 +198,15 @@ body {
   &.main {
     @include for-tablet-landscape-up {
       margin-bottom: $navbar-padding-vertical;
+    }
 
-      // Add negative margin-bottom for the menu items on the desktop screen.
-      > li {
+    > li {
+      max-width: 100%;
+
+      @include for-tablet-landscape-up {
+        max-width: none;
+
+        // Add negative margin-bottom for the menu items on the desktop screen.
         margin-bottom: -$navbar-padding-vertical;
       }
     }
@@ -214,6 +234,13 @@ body {
           top: 44%;
           right: 10px;
           transform: rotate(-90deg) translateY(-50%);
+
+          [dir='rtl'] & {
+            right: auto;
+            left: 10px;
+
+            transform: rotate(90deg) translateY(-50%);
+          }
         }
       }
 
@@ -226,6 +253,11 @@ body {
           top: 0;
           left: 100%;
           padding-top: 0;
+
+          [dir='rtl'] & {
+            right: 100%;
+            left: auto;
+          }
         }
 
         @media(max-width: 1024px) {
@@ -349,11 +381,6 @@ body {
     }
   }
 
-  .navbar-user .dropdown-menu {
-    right: 0;
-    left: auto;
-  }
-
   @include for-tablet-landscape-up {
 
     .navbar-nav {
@@ -448,7 +475,7 @@ body {
 @include for-tablet-landscape-down {
   // Dropdowns get same display when collapsed
   // This is an override of bootstrap navbar line 241
-  .navbar-fixed-top .navbar-nav .open .dropdown-menu {
+  .navbar-nav .open .dropdown-menu {
     background-color: $dropdown-bg;
     border: 0;
     @include z-depth-4;
@@ -724,6 +751,10 @@ body {
       transform: none;
       opacity: 1;
       pointer-events: all;
+    }
+
+    .navbar-default {
+      z-index: 1030;
     }
 
   }

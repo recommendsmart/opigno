@@ -64,11 +64,21 @@
 }
 
 .input-group-addon:first-child {
-  border-right: 0;
+  border-right-width: 0;
+}
+
+[dir='rtl'] .input-group-addon:first-child {
+  border-right-width: 1px;
+  border-left-width: 0;
 }
 
 .input-group-addon:last-child {
-  border-left: 0;
+  border-left-width: 0;
+}
+
+[dir='rtl'] .input-group-addon:last-child {
+  border-left-width: 1px;
+  border-right-width: 0;
 }
 
 .input-group .form-control:first-child,

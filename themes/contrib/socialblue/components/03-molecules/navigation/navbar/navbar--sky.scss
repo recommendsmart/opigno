@@ -101,6 +101,11 @@
           @include for-tablet-landscape-up {
             display: table;
             overflow: visible;
+
+            [dir='rtl'] & {
+              padding-right: 0;
+              padding-left: 40px;
+            }
           }
 
           li {
@@ -120,6 +125,11 @@
               border-top-color: #fff;
               transform: translateY(-50%);
               cursor: pointer;
+
+              [dir='rtl'] & {
+                right: auto;
+                left: 15px;
+              }
 
               &.active {
                 transform: translateY(-50%) rotate(180deg);
@@ -149,9 +159,18 @@
               border-top-left-radius: 0 !important;
               border-top-right-radius: 0 !important;
 
+              [dir='rtl'] & {
+                right: auto;
+                left: 0;
+              }
+
               li {
                 display: block;
                 text-align: left;
+
+                [dir='rtl'] & {
+                  text-align: right;
+                }
 
                 a, button {
                   display: block;

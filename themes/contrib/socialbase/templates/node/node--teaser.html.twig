@@ -83,21 +83,21 @@
   ]
 %}
 
-<div{{ attributes.addClass(classes) }}>
+<div{{ attributes.addClass(classes).removeAttribute('dir') }}>
   {% if status_label %}
     <div class="node--unpublished__label">
       {{ status_label }}
     </div>
   {% endif %}
 
-  <div class='teaser__image' aria-hidden="true">
+  <div class='teaser__image'>
 
     {% if view_mode == 'teaser' or no_image %}
       {% block card_teaser_type %}
-        <a href="{{ url }}" title="{{- node.bundle|clean_class|capitalize -}} : &nbsp; {{- label|render|striptags|trim -}}">
+        <a href="{{ url }}" aria-hidden="true" title="{{- node.bundle|clean_class|capitalize -}}: &nbsp; {{- label|render|striptags|trim -}}">
           <div class="teaser__teaser-type">
             <svg class="teaser__teaser-type-icon">
-              <title>{{- node.bundle|clean_class|capitalize -}} : &nbsp; {{- label|render|striptags|trim -}}</title>
+              <title>{{- node.bundle|clean_class|capitalize -}}: &nbsp; {{- label|render|striptags|trim -}}</title>
               {% if topic_type_icon %}
                 <use xlink:href="#{{- topic_type_icon -}}"></use>
               {% else %}
@@ -131,6 +131,7 @@
         {% if display_submitted %}
           {% embed "node--teaser__field.html.twig" %}
             {%- block field_icon -%} account_circle {%- endblock -%}
+            {%- block svg_title -%} {% trans %}Author name{% endtrans %} {%- endblock -%}
             {%- block field_value %}
               <div class="teaser__published">
                 <span class="sr-only">{% trans %}Created on{% endtrans %} </span>
@@ -145,6 +146,7 @@
         {% if topic_type %}
           {% embed "node--teaser__field.html.twig" %}
             {%- block field_icon -%} label {%- endblock -%}
+            {%- block svg_title -%} {% trans %}Topic type:{% endtrans %} {%- endblock -%}
             {%- block field_value -%}
               <span class="sr-only">{% trans %}Topic type:{% endtrans %}</span>
               {{ topic_type }}
@@ -155,6 +157,7 @@
         {% if content.group_name %}
           {% embed "node--teaser__field.html.twig" %}
             {%- block field_icon -%} group {%- endblock -%}
+            {%- block svg_title -%} {% trans %}Group{% endtrans %} {%- endblock -%}
             {%- block field_value -%}
               <span class="sr-only">{% trans %}This content is posted in{% endtrans %} </span>
               {{ content.group_name }}
@@ -173,10 +176,10 @@
       {% block card_actionbar %}
 
         {% if visibility_icon and visibility_label %}
-          <div class="badge teaser__badge"
-               title="{% trans %}The visibility of this content is set to {{ visibility_label }}{% endtrans %}">
+          <div class="badge teaser__badge">
             <span class="badge__container">
-                <svg class="badge__icon" aria-hidden="true">
+                <svg class="badge__icon">
+                  <title>{% trans %} Visibility {% endtrans %}</title>
                   <use xlink:href="#icon-{{ visibility_icon }}"></use>
                 </svg>
                 <span class="badge__label text-gray">{{ visibility_label|capitalize }}</span>
@@ -186,9 +189,10 @@
 
 
         {% if likes_count is not empty %}
-          <div class="badge teaser__badge" title="{% trans %}Total amount of likes{% endtrans %}">
+          <div class="badge teaser__badge">
             <span class="badge__container">
-              <svg class="badge__icon" aria-hidden="true">
+              <svg class="badge__icon">
+                <title>{% trans %} Total amount of likes {% endtrans %}</title>
                 <use xlink:href="#icon-like"></use>
               </svg>
               <span class="badge__label text-gray">
@@ -203,6 +207,7 @@
              title="{% trans %}Total amount of comments{% endtrans %}">
             <span class="badge__container">
               <svg class="badge__icon" aria-hidden="true">
+                <title>{% trans %} Total amount of comments {% endtrans %}</title>
                 <use xlink:href="#icon-comment"></use>
               </svg>
               <span class="badge__label text-gray">{{ comment_count }}</span>

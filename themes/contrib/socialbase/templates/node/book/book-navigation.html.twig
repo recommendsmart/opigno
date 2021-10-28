@@ -43,6 +43,7 @@
                 {% if prev_url %}
                     <a class="pager__item pager__item--previous btn btn-flat btn-iconized" href="{{ prev_url }}" rel="prev" title="{{ 'Go to previous page'|t }}" role="button">
                       <svg class="icon-inline icon-navigate_before" aria-hidden="true">
+                        <title>{% trans %} Previous page {% endtrans %}</title>
                         <use xlink:href="#icon-navigate_before"></use>
                       </svg>
                       <span>{{ prev_title }}</span>
@@ -51,6 +52,7 @@
                 {% if next_url %}
                     <a class="pager__item pager__item--next btn btn-flat btn-iconized" href="{{ next_url }}" rel="next" title="{{ 'Go to next page'|t }}" role="button">
                       <svg class="icon-inline icon-navigate_next" aria-hidden="true">
+                        <title>{% trans %} Next page {% endtrans %}</title>
                         <use xlink:href="#icon-navigate_next"></use>
                       </svg>
                       <span>{{ next_title }}</span>

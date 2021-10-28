@@ -2,17 +2,17 @@
   font-weight: $font-weight-bold;
 }
 
-.field--widget-paragraphs {
-  .paragraphs-dropdown-action {
-    &.button {
-      @include button-variant($secondary, $secondary);
-    }
-  }
-}
-
 .field--widget-paragraphs,
 .field--widget-entity-reference-paragraphs {
   .field-add-more-submit {
     margin: 0;
+  }
+}
+
+.js {
+  .field--widget-entity-reference-paragraphs {
+    td {
+      padding: $spacer;
+    }
   }
 }

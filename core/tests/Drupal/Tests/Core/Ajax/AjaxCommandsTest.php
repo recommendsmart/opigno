@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\Core\Ajax;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Render\Renderer;
 use Drupal\Core\Ajax\AnnounceCommand;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Tests\UnitTestCase;
@@ -351,6 +353,74 @@ class AjaxCommandsTest extends UnitTestCase {
    * @covers \Drupal\Core\Ajax\OpenDialogCommand
    */
   public function testOpenDialogCommand() {
+    $renderer = $this->getMockBuilder(Renderer::class)
+      ->disableOriginalConstructor()
+      ->setMethods(['renderPlain', 'renderRoot'])
+      ->getMock();
+
+    $container = new ContainerBuilder();
+    $container->set('renderer', $renderer);
+    \Drupal::setContainer($container);
+
+    $title = [
+      '#markup' => 'Title (in a render array)',
+      '#attached' => [
+        'library' => ['foo/bar'],
+        'drupalSettings' => [
+          'myModule' => [
+            'bar' => 'baz',
+          ],
+        ],
+      ],
+    ];
+    $content = [
+      '#markup' => '<p>Text!</p>',
+      '#attached' => [
+        'library' => ['bar/baz'],
+        'drupalSettings' => [
+          'myModule' => [
+            'foo' => 'bar',
+          ],
+          'anotherModule' => [],
+        ],
+      ],
+    ];
+    $renderer->expects($this->once())
+      ->method('renderPlain')
+      ->willReturn($title['#markup']);
+    $renderer->expects($this->once())
+      ->method('renderRoot')
+      ->willReturn($content['#markup']);
+    $command = new OpenDialogCommand('#some-dialog', $title, $content, [
+      'url' => FALSE,
+      'width' => 500,
+    ]);
+
+    $expected = [
+      'command' => 'openDialog',
+      'selector' => '#some-dialog',
+      'settings' => NULL,
+      'data' => '<p>Text!</p>',
+      'dialogOptions' => [
+        'url' => FALSE,
+        'width' => 500,
+        'title' => 'Title (in a render array)',
+        'modal' => FALSE,
+      ],
+    ];
+    $this->assertEquals($expected, $command->render());
+    $this->assertEquals([
+      'myModule' => [
+        'foo' => 'bar',
+        'bar' => 'baz',
+      ],
+      'anotherModule' => [],
+    ], $command->getAttachedAssets()->getSettings());
+    $this->assertEquals([
+      'foo/bar',
+      'bar/baz',
+    ], $command->getAttachedAssets()->getLibraries());
+
     $command = new OpenDialogCommand('#some-dialog', 'Title', '<p>Text!</p>', [
       'url' => FALSE,
       'width' => 500,

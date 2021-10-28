@@ -6,11 +6,11 @@ This is a very non-prescriptive vanilla Bootstrap 5 theme
 with simple configuration. It can be used out of the box or
 as a subtheme for creating very flexible web designs with
 minimal changes (just override Bootstrap 5 _variables.scss
-or this theme's _variables_theme.scss and recompile css!)
+or this theme's _variables_drupal.scss and recompile css!)
 
 ## FEATURES
 
-* Bootstrap 5 library (5.0.2) included
+* Bootstrap 5 library (5.1.2 and 5.0.2) included
 * Bootstrap 5 style guide (view all Bootstrap 5 components on one page)
 * Bootstrap 5 breakpoints
 * Bootstrap 5 integration with CKEditor

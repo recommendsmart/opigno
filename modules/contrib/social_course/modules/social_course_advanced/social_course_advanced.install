@@ -136,3 +136,22 @@ function social_course_advanced_update_8903() {
   // Output logged messages to related channel of update execution.
   return $updateHelper->logger()->output();
 }
+
+/**
+ * Add a new view mode for group content for "Advanced Course" group type.
+ */
+function social_course_advanced_update_8904() {
+  // Install new configs.
+  $config_path = drupal_get_path('module', 'social_course_advanced') . '/config/install';
+  $source = new FileStorage($config_path);
+  $config_storage = \Drupal::service('config.storage');
+
+  $config_names = [
+    'core.entity_view_display.group_content.course_advanced-group_node-event.activity',
+    'core.entity_view_display.group_content.course_advanced-group_node-topic.activity',
+  ];
+
+  foreach ($config_names as $name) {
+    $config_storage->write($name, $source->read($name));
+  }
+}

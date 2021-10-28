@@ -176,7 +176,7 @@ form:not(.layout-builder-configure-block) [type="radio"]:checked,
 form:not(.layout-builder-configure-block) [type="checkbox"]:not(:checked),
 form:not(.layout-builder-configure-block) [type="checkbox"]:checked {
   position: absolute;
-  left: -9999px;
+  left: 0;
   opacity: 0;
 }
 
@@ -205,6 +205,12 @@ form:not(.layout-builder-configure-block) .radio label {
   margin-bottom: 0;
 }
 
+[dir='rtl'] form:not(.layout-builder-configure-block) .checkbox label, [dir='rtl']
+form:not(.layout-builder-configure-block) .radio label {
+  padding-left: 0;
+  padding-right: 30px;
+}
+
 form:not(.layout-builder-configure-block) .radio label:before,
 form:not(.layout-builder-configure-block) .radio label:after {
   content: '';
@@ -217,6 +223,12 @@ form:not(.layout-builder-configure-block) .radio label:after {
   z-index: 0;
   -webkit-transition: .28s ease;
   transition: .28s ease;
+}
+
+[dir='rtl'] form:not(.layout-builder-configure-block) .radio label:before, [dir='rtl']
+form:not(.layout-builder-configure-block) .radio label:after {
+  left: auto;
+  right: 0;
 }
 
 form:not(.layout-builder-configure-block) [type="radio"]:not(:checked) + label:before {
@@ -286,6 +298,12 @@ form:not(.layout-builder-configure-block) [type="checkbox"] + label:after {
   z-index: 1;
 }
 
+[dir='rtl'] form:not(.layout-builder-configure-block) [type="checkbox"] + label:before, [dir='rtl']
+form:not(.layout-builder-configure-block) [type="checkbox"] + label:after {
+  left: auto;
+  right: 0;
+}
+
 form:not(.layout-builder-configure-block) [type="checkbox"]:not(:checked) + label:before {
   width: 0;
   height: 0;
@@ -296,6 +314,10 @@ form:not(.layout-builder-configure-block) [type="checkbox"]:not(:checked) + labe
           transform: rotateZ(37deg);
   -webkit-transform-origin: 20% 40%;
   transform-origin: 100% 100%;
+}
+
+[dir='rtl'] form:not(.layout-builder-configure-block) [type="checkbox"]:not(:checked) + label:before {
+  right: 6px;
 }
 
 form:not(.layout-builder-configure-block) [type="checkbox"]:not(:checked) + label:after {
@@ -327,6 +349,11 @@ form:not(.layout-builder-configure-block) [type="checkbox"]:checked + label:befo
   transition: .2s;
   -webkit-transform-origin: 100% 100%;
           transform-origin: 100% 100%;
+}
+
+[dir='rtl'] form:not(.layout-builder-configure-block) [type="checkbox"]:checked + label:before {
+  left: auto;
+  right: 10px;
 }
 
 form:not(.layout-builder-configure-block) [type="checkbox"]:checked + label:after {
@@ -375,11 +402,6 @@ form:not(.layout-builder-configure-block) .form-inline {
 }
 
 form:not(.layout-builder-configure-block).group-form .field--widget-options-buttons .fieldgroup .fieldset-wrapper, form:not(.layout-builder-configure-block).node-form .field--widget-options-buttons .fieldgroup .fieldset-wrapper {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
   margin: 5px -.75rem -8px;
 }
 
@@ -391,11 +413,6 @@ form:not(.layout-builder-configure-block).group-form .field--widget-options-butt
 form:not(.layout-builder-configure-block).group-form .field--widget-options-buttons .fieldgroup#edit-field-group-allowed-visibility--wrapper #edit-field-group-allowed-visibility,
 form:not(.layout-builder-configure-block).group-form .field--widget-options-buttons .fieldgroup#edit-field-social-idea-phases--wrapper #edit-field-social-idea-phases, form:not(.layout-builder-configure-block).node-form .field--widget-options-buttons .fieldgroup#edit-field-group-allowed-visibility--wrapper #edit-field-group-allowed-visibility,
 form:not(.layout-builder-configure-block).node-form .field--widget-options-buttons .fieldgroup#edit-field-social-idea-phases--wrapper #edit-field-social-idea-phases {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
   margin: 5px -.75rem -8px;
   padding: 0 .75rem;
 }
@@ -412,14 +429,6 @@ form:not(.layout-builder-configure-block).group-form .field--widget-options-butt
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-}
-
-form:not(.layout-builder-configure-block).group-form .field--widget-options-buttons .fieldgroup#edit-field-group-allowed-visibility--wrapper #edit-field-group-allowed-visibility, form:not(.layout-builder-configure-block).node-form .field--widget-options-buttons .fieldgroup#edit-field-group-allowed-visibility--wrapper #edit-field-group-allowed-visibility {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
 }
 
 form:not(.layout-builder-configure-block) .switch * {

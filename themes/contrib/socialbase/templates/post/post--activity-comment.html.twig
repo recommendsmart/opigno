@@ -41,6 +41,7 @@
         <div class="post-date">{{ date }}
             {% if visibility_icon and visibility_label %}
               <svg class="margin-left-s icon-visibility">
+                <title>{% trans %} Visibility {% endtrans %}</title>
                 <use xlink:href="#icon-{{ visibility_icon }}"></use>
               </svg>
               <strong>{{ visibility_label }}</strong>

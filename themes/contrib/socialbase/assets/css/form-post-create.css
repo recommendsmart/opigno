@@ -85,6 +85,11 @@
       align-self: flex-end;
 }
 
+[dir='rtl'] .form--post-create .btn-primary {
+  margin-left: 0;
+  margin-right: .5rem;
+}
+
 .page-node-type-album .form--post-create #edit-cancel {
   margin-left: .5rem;
 }
@@ -95,6 +100,10 @@
     top: -2px;
     left: 150px;
     right: auto;
+  }
+  [dir='rtl'] .form--post-create .field--name-field-post-image .image-widget.hidden .form-submit {
+    left: auto;
+    right: -35px;
   }
   .form--post-create .field--name-field-post-image {
     -ms-flex-preferred-size: auto;

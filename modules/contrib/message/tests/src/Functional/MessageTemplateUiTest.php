@@ -31,6 +31,13 @@ class MessageTemplateUiTest extends MessageTestBase {
   protected $account;
 
   /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() {
@@ -40,6 +47,7 @@ class MessageTemplateUiTest extends MessageTestBase {
       'translate configuration',
       'use text format filtered_html',
     ]);
+    $this->entityTypeManager = $this->container->get('entity_type.manager');
   }
 
   /**
@@ -122,7 +130,7 @@ class MessageTemplateUiTest extends MessageTestBase {
       'template' => 'dummy_message',
     ]);
     /** @var \Drupal\message\MessageViewBuilder $builder */
-    $builder = \Drupal::service('entity_type.manager')->getViewBuilder('message');
+    $builder = $this->entityTypeManager->getViewBuilder('message');
     $this->assertEquals(['<p>This is a dummy message with translated text to Hebrew</p>'], $message->getText('he'), 'The text in hebrew pulled correctly.');
     $this->assertEquals(['<p>This is a dummy message with some edited dummy text</p>'], $message->getText(), 'The text in english pulled correctly.');
     $build = $builder->view($message);

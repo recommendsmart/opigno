@@ -57,3 +57,15 @@ Empty language (langcode) field wrapper inserted into contact form
 Source: https://www.drupal.org/files/issues/2020-03-06/empty-langcode-field-wrapper-2842405-17.patch
 
 
+Broken title in modal dialog when title is a render array
+Source: https://www.drupal.org/files/issues/2019-10-21/2663316-76.drupal.Broken-title-in-modal-dialog-when-title-is-a-render-array.patch
+
+
+PHPDocs with wrong parameters
+Source: https://www.drupal.org/files/issues/2019-09-03/queryinterface-range-updated-phpdocs.patch
+
+
+Post update hook naming convention patch
+Source: https://git.drupalcode.org/project/drupal/-/merge_requests/1215.patch
+
+

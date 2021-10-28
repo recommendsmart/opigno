@@ -18,9 +18,8 @@
 
       {% if comment_attachments_count %}
         <div class="attachments">
-
           <svg class="icon-gray">
-            <title>{% trans %}Attachments{% endtrans %}</title>
+            <title>{% trans %}Total amount of attachments{% endtrans %}</title>
             <use xlink:href="#icon-attachment"></use>
           </svg>
           {% trans %}
@@ -36,9 +35,10 @@
         {{ content.like_and_dislike }}
 
         {% if comment_count > 0 %}
-          <a href="{{ comment_url }}" class="badge badge--pill badge--post">
+          <a href="{{ comment_url }}" class="badge badge--pill badge--post" title="{% trans %}Total amount of comments{% endtrans %}">
             <span class="badge__container">
-              <svg class="badge__icon">
+              <svg class="badge__icon" aria-hidden="true">
+                <title>{% trans %}Total amount of comments{% endtrans %}</title>
                 <use xlink:href="#icon-comment"></use>
               </svg>
               <span class="badge__label">

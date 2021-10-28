@@ -15,6 +15,7 @@ class BrandingGraphQLTest extends SocialGraphQLTestBase {
    */
   public static $modules = [
     "social_branding",
+    "social_branding_test",
   ];
 
   /**
@@ -46,12 +47,18 @@ class BrandingGraphQLTest extends SocialGraphQLTestBase {
       ->getEditable('system.theme')
       ->set('default', 'socialblue')
       ->save();
+    $this->container
+      ->get('config.factory')
+      ->getEditable('system.site')
+      ->set('name', 'Open Social')
+      ->save();
   }
 
   /**
-   * Ensure the platform branding fields are properly added to the endpoint.
+   * Ensure the community branding fields are properly added to the endpoint.
    */
-  public function testPlatformBrandingFieldsPresence() : void {
+  public function testCommunityBrandingFieldsPresence() : void {
+    $system_information = $this->config('system.site');
     $system_theme = $this->config('system.theme');
     $config = $this->config('socialblue.settings');
     // Prepare logo url.
@@ -63,9 +70,12 @@ class BrandingGraphQLTest extends SocialGraphQLTestBase {
     $this->assertResults(
       '
         query {
-          platformBranding {
+          about {
+            name
+          }
+          branding {
             logoUrl
-            brandingColors {
+            colorScheme {
               primary {
                 css
                 hexRGB
@@ -178,13 +188,19 @@ class BrandingGraphQLTest extends SocialGraphQLTestBase {
               }
             }
           }
+          preferredFeatures {
+            machineName
+          }
         }
       ',
       [],
       [
-        'platformBranding' => [
+        'about' => [
+          'name' => $system_information->get('name'),
+        ],
+        'branding' => [
           'logoUrl' => $expected_logo_url,
-          'brandingColors' => [
+          'colorScheme' => [
             'primary' => [
               'css' => $this->getColor($config->get('color_primary'))->css(),
               'hexRGB' => $this->getColor($config->get('color_primary'))->hexRgb(),
@@ -297,8 +313,14 @@ class BrandingGraphQLTest extends SocialGraphQLTestBase {
             ],
           ],
         ],
+        'preferredFeatures' => [
+          ['machineName' => 'feature1'],
+          ['machineName' => 'feature2'],
+          ['machineName' => 'feature0'],
+        ],
       ],
       $this->defaultCacheMetaData()
+        ->addCacheableDependency($system_information)
         ->addCacheableDependency($system_theme)
         ->addCacheableDependency($config)
     );
@@ -315,14 +337,14 @@ class BrandingGraphQLTest extends SocialGraphQLTestBase {
     $this->assertResults(
       '
         query {
-          platformBranding {
+          branding {
             logoUrl
           }
         }
       ',
       [],
       [
-        'platformBranding' => [
+        'branding' => [
           'logoUrl' => NULL,
         ],
       ],
@@ -332,9 +354,9 @@ class BrandingGraphQLTest extends SocialGraphQLTestBase {
   }
 
   /**
-   * Test that the platform branding colors can return null.
+   * Test that the community color scheme can return null.
    */
-  public function testBrandingColorsCanReturnNull(): void {
+  public function testBrandingColorSchemeCanReturnNull(): void {
     $system_theme = $this->config('system.theme');
     // Change default theme.
     $system_theme->set('default', 'bootstrap')->save();
@@ -344,8 +366,8 @@ class BrandingGraphQLTest extends SocialGraphQLTestBase {
     $this->assertResults(
       '
         query {
-          platformBranding {
-            brandingColors {
+          branding {
+            colorScheme {
               primary {
                 hexRGB
                 css
@@ -362,12 +384,40 @@ class BrandingGraphQLTest extends SocialGraphQLTestBase {
       ',
       [],
       [
-        'platformBranding' => [
-          'brandingColors' => NULL,
+        'branding' => [
+          'colorScheme' => NULL,
         ],
       ],
       $this->defaultCacheMetaData()
         ->addCacheableDependency($system_theme)
+    );
+  }
+
+  /**
+   * Test that the preferred features can return an empty array.
+   */
+  public function testPreferredFeaturesReturnEmptyArray(): void {
+    $system_theme = $this->config('system.theme');
+    // Set anonymous user.
+    $this->setUpCurrentUser();
+    // Uninstall social_branding_test to clean the provided preferred features.
+    \Drupal::service('module_installer')->uninstall(['social_branding_test'], FALSE);
+    $this->assertFalse(\Drupal::moduleHandler()->moduleExists('social_branding_test'), 'Test preferred features module is disabled.');
+
+    $this->assertResults(
+      '
+        query {
+          preferredFeatures {
+            machineName
+          }
+        }
+      ',
+      [],
+      [
+        'preferredFeatures' => [],
+      ],
+      $this->defaultCacheMetaData()
+        ->addCacheContexts(['languages:language_interface'])
     );
   }
 

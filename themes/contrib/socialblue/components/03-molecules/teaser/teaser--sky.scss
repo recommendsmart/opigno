@@ -37,6 +37,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
 
+    [dir='rtl'] & {
+      margin-right: 0;
+      margin-left: .5rem;
+    }
+
     a {
       font-weight: 700;
       transition: .3s ease-out;

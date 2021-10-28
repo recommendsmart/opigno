@@ -123,6 +123,10 @@
   padding-bottom: 1em;
   width: 80%;
 
+  [dir='rtl'] & {
+    text-align: right;
+  }
+
   @include for-tablet-portrait-up {
     max-width: 900px;
   }
@@ -154,10 +158,19 @@
   display: flex;
   justify-content: flex-end;
 
+  [dir='rtl'] & {
+    justify-content: flex-start;
+  }
+
   @include for-tablet-landscape-up {
     padding-left: 1rem;
     flex: 0 0 25%;
     max-width: 25%;
+
+    [dir='rtl'] & {
+      padding-left: 0;
+      padding-right: 1rem;
+    }
 
   }
 }

@@ -20,7 +20,8 @@
         <a class="btn btn-flat" href="{{ items.next.href }}" title="{{ 'Go to next page'|t }}" rel="next"{{ items.next.attributes|without('href', 'title', 'rel') }}>
           <span>{{ options.button_text }}</span>
           <span aria-hidden="true">
-            <svg class="icon-small">
+            <svg class="icon-small" aria-hidden="true">
+              <title>{{ 'Go to next page'|t }}</title>
               <use xlink:href="#icon-expand_more"> </use>
             </svg>
           </span>

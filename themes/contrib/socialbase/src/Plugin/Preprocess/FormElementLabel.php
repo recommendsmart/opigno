@@ -19,17 +19,23 @@ class FormElementLabel extends BaseFormElementLabel {
    * {@inheritdoc}
    */
   public function preprocessElement(Element $element, Variables $variables) {
-
     if (isset($element['#id'])) {
       if ((isset($element['#render_icon']) && $element['#render_icon']) ||
-      strpos($element['#id'], 'field-visibility') !== FALSE) {
+      strpos($element['#id'], 'field-visibility') !== FALSE ||
+      strpos($element['#id'], 'field-join-method') !== FALSE) {
+
         if (isset($element['#attributes']['title'])) {
           $description = $element['#attributes']['title'];
           $element['#attributes'] = [];
           $variables['description'] = $description;
         }
         // Set the materialize icon.
-        $variables['icon'] = _socialbase_get_visibility_icon($element['#title']);
+        if (strpos($element['#id'], 'join-method') !== FALSE) {
+          $variables['icon'] = _socialbase_get_join_method_icon($element['#title']);
+        }
+        else {
+          $variables['icon'] = _socialbase_get_visibility_icon($element['#title']);
+        }
       }
 
       if ($element['#id'] == 'edit-message-0-value') {

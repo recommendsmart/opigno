@@ -142,8 +142,16 @@
   .layout--with-complementary > .region--content {
     padding-left: 0;
   }
+  [dir='rtl'] .layout--with-complementary > .region--content {
+    padding-right: 0;
+    padding-left: 1rem;
+  }
   .region--complementary {
     padding-right: 0;
+  }
+  [dir='rtl'] .region--complementary {
+    padding-right: 1em;
+    padding-left: 0;
   }
   .layout--with-two-columns .region--content {
     padding-left: 0;

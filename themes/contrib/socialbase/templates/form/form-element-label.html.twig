@@ -32,7 +32,7 @@
 {%- if title is not empty -%}
   <label{{ attributes.addClass(classes) }}>
     {%- if icon is not empty -%}
-      <svg class="icon-small">
+      <svg class="icon-small" aria-hidden="true">
         <use xlink:href="#icon-{{ icon }}"></use>
       </svg>
       <span>{{ title }}</span>

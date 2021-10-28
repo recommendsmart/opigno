@@ -49,8 +49,9 @@
 
 <div{{ attributes }} data-class="exposed-filter-block">
   <div class="btn--offcanvas-trigger">
-    <a href="#block-filter" class="btn btn-default btn-raised ">
-      <svg class="btn-icon">
+    <a href="#block-filter" class="btn btn-default btn-raised" title="{{ 'Click to open filter'|t }}">
+      <svg class="btn-icon" aria-hidden="true">
+        <title>{% trans %} Open filter {% endtrans %}</title>
         <use xlink:href="#icon-filter_list"></use>
       </svg>
       {{ label }}
@@ -66,9 +67,9 @@
     {{ title_suffix }}
 
       <div class="offcanvas-tools">
-        <a href="#" class="btn btn-icon-toggle pull-right">
-          <svg class="pull-left btn-icon icon-black">
-            <title>Close</title>
+        <a href="#" class="btn btn-icon-toggle pull-right" title="{{ 'Click to close search box'|t }}">
+          <svg class="pull-left btn-icon icon-black" aria-hidden="true">
+            <title>{% trans %} Close filter {% endtrans %}</title>
             <use xlink:href="#icon-close"></use>
           </svg>
         </a>

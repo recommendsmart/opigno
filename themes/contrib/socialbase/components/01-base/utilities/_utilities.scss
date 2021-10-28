@@ -13,7 +13,15 @@
 
 .no-margin {    margin: 0; }
 .margin-left-s {margin-left: 5px;}
-.margin-left-m {margin-left: 10px;}
+.margin-left-m {
+  margin-left: 10px;
+
+  [dir='rtl'] & {
+    margin-left: 0;
+    margin-right: 10px;
+  }
+
+}
 .margin-left-l {margin-left: 20px;}
 .margin-left-xl {margin-left: 30px;}
 
@@ -139,9 +147,17 @@ img.align-center {
 }
 .pull-right {
   float: right !important;
+
+  [dir='rtl'] & {
+    float: left !important;
+  }
 }
 .pull-left {
   float: left !important;
+
+  [dir='rtl'] & {
+    float: right !important;
+  }
 }
 
 

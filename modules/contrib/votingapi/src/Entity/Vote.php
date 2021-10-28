@@ -18,6 +18,13 @@ use Drupal\votingapi\VoteInterface;
  * @ContentEntityType(
  *   id = "vote",
  *   label = @Translation("Vote"),
+ *   label_collection = @Translation("Votes"),
+ *   label_singular = @Translation("vote"),
+ *   label_plural = @Translation("votes"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count vote",
+ *     plural = "@count votes",
+ *   ),
  *   bundle_label = @Translation("Vote type"),
  *   bundle_entity_type = "vote_type",
  *   handlers = {

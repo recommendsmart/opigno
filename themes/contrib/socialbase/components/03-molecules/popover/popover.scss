@@ -94,12 +94,13 @@
 
 .popover-title {
   margin: 0; // reset heading margin
-  padding: 8px 14px;
+  padding: 21px 1rem 11px;
   font-size: 0.875rem;
+  font-weight: 700;
 }
 
 .popover-content {
-  padding: 9px 14px;
+  padding: 10px 1rem;
 }
 
 // Arrows
@@ -185,19 +186,7 @@
 
 // Popover styles if gin vertical toolbar is active.
 .gin--vertical-toolbar {
-
-
   .popover {
-    @media (min-width: 976px) {
-      margin-left: 72px;
-
-      > .arrow {
-        margin-left: -103px;
-      }
-    }
-
-    @media(min-width: 976px) and (max-width: 1199px) {
-      left: 0 !important;
-    }
+    z-index: 10000;
   }
 }

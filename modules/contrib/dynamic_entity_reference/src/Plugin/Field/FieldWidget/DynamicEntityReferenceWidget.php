@@ -33,7 +33,8 @@ class DynamicEntityReferenceWidget extends EntityReferenceAutocompleteWidget {
   public static function defaultSettings() {
     return [
       'match_operator' => 'CONTAINS',
-      'size' => '40',
+      'match_limit' => 10,
+      'size' => 40,
       'placeholder' => '',
     ] + parent::defaultSettings();
   }
@@ -45,17 +46,23 @@ class DynamicEntityReferenceWidget extends EntityReferenceAutocompleteWidget {
     $entity = $items->getEntity();
     $referenced_entities = $items->referencedEntities();
 
-    $settings = $this->getFieldSettings();
+    $settings = $this->getFieldSettings() + DynamicEntityReferenceItem::defaultFieldSettings();
     $labels = \Drupal::service('entity_type.repository')->getEntityTypeLabels();
     $available = DynamicEntityReferenceItem::getTargetTypes($settings);
     $cardinality = $items->getFieldDefinition()->getFieldStorageDefinition()->getCardinality();
     $target_type = $items->get($delta)->target_type ?: reset($available);
 
+    // Append the match operation to the selection settings.
+    $selection_settings = $settings[$target_type]['handler_settings'] + [
+      'match_operator' => $this->getSetting('match_operator'),
+      'match_limit' => $this->getSetting('match_limit'),
+    ];
+
     $element += [
       '#type' => 'entity_autocomplete',
       '#target_type' => $target_type,
       '#selection_handler' => $settings[$target_type]['handler'],
-      '#selection_settings' => $settings[$target_type]['handler_settings'],
+      '#selection_settings' => $selection_settings,
       // Dynamic entity reference field items are handling validation themselves
       // via the 'ValidDynamicReference' constraint.
       '#validate_reference' => FALSE,
@@ -144,7 +151,7 @@ class DynamicEntityReferenceWidget extends EntityReferenceAutocompleteWidget {
   public static function processFormElement(array &$element, FormStateInterface $form_state, array &$complete_form) {
     $name = implode('-', $element['#parents']);
     $js_class = Html::cleanCssIdentifier("js-dynamic-entity-reference-{$name}-target_type");
-    $element['target_type']['#attributes']['class'][] = $js_class;
+    $element['target_type']['#attributes']['data-dynamic-entity-reference'] = $element['target_type']['#attributes']['class'][] = $js_class;
     $auto_complete_paths = $element['#attached']['drupalSettings']['dynamic_entity_reference']['auto_complete_paths'];
     unset($element['#attached']['drupalSettings']['dynamic_entity_reference']['auto_complete_paths']);
     $element['#attached']['drupalSettings']['dynamic_entity_reference'][$js_class] = $auto_complete_paths;
@@ -170,7 +177,7 @@ class DynamicEntityReferenceWidget extends EntityReferenceAutocompleteWidget {
         array_pop($parents);
         $values = $form_state->getValue($parents);
       }
-      $settings = $this->getFieldSettings();
+      $settings = $this->getFieldSettings() + DynamicEntityReferenceItem::defaultFieldSettings();
       $element['#target_type'] = $values['target_type'];
       $element['#selection_handler'] = $settings[$values['target_type']]['handler'];
       $element['#selection_settings'] = $settings[$values['target_type']]['handler_settings'];
@@ -204,7 +211,7 @@ class DynamicEntityReferenceWidget extends EntityReferenceAutocompleteWidget {
     if ($target_type === NULL) {
       return parent::getSelectionHandlerSetting($setting_name);
     }
-    $settings = $this->getFieldSettings();
+    $settings = $this->getFieldSettings() + DynamicEntityReferenceItem::defaultFieldSettings();
     return isset($settings[$target_type]['handler_settings'][$setting_name]) ? $settings[$target_type]['handler_settings'][$setting_name] : NULL;
   }
 
@@ -245,11 +252,15 @@ class DynamicEntityReferenceWidget extends EntityReferenceAutocompleteWidget {
    */
   protected function createAutoCompletePaths(array $target_types) {
     $auto_complete_paths = [];
-    $settings = $this->getFieldSettings();
+    $settings = $this->getFieldSettings() + DynamicEntityReferenceItem::defaultFieldSettings();
     foreach ($target_types as $target_type) {
       // Store the selection settings in the key/value store and pass a hashed
       // key in the route parameters.
       $selection_settings = $settings[$target_type]['handler_settings'] ?: [];
+      $selection_settings += [
+        'match_operator' => $this->getSetting('match_operator'),
+        'match_limit' => $this->getSetting('match_limit'),
+      ];
       $data = serialize($selection_settings) . $target_type . $settings[$target_type]['handler'];
       $selection_settings_key = Crypt::hmacBase64($data, Settings::getHashSalt());
       $key_value_storage = \Drupal::keyValue('entity_autocomplete');

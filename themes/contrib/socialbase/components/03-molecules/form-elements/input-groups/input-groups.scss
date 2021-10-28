@@ -73,6 +73,12 @@
     font-size: .875rem;
     line-height: 21px;
 
+    @include for-phone-only {
+      padding-right: .125rem;
+      padding-left: .125rem;
+      font-size: .75rem;
+    }
+
     + .form-control {
       max-width: 240px;
       height: 48px;
@@ -81,11 +87,21 @@
 }
 
 .input-group-addon:first-child {
-  border-right: 0;
+  border-right-width: 0;
+
+  [dir='rtl'] & {
+    border-right-width: 1px;
+    border-left-width: 0;
+  }
 }
 
 .input-group-addon:last-child {
-  border-left: 0;
+  border-left-width: 0;
+
+  [dir='rtl'] & {
+    border-left-width: 1px;
+    border-right-width: 0;
+  }
 }
 
 // Reset rounded corners

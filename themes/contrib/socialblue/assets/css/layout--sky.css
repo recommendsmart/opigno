@@ -47,6 +47,10 @@
     padding-left: 2rem;
     padding-right: 1rem;
   }
+  [dir='rtl'] .socialblue--sky.path-user .layout--with-complementary .region--secondary-navigation, [dir='rtl'] .socialblue--sky.path-group .layout--with-complementary .region--secondary-navigation {
+    padding-right: 2rem;
+    padding-left: 1rem;
+  }
   .socialblue--sky.path-user .sidebar-left .region--complementary, .socialblue--sky.path-group .sidebar-left .region--complementary {
     top: -60px;
   }
@@ -57,9 +61,17 @@
     padding-right: 1rem;
     padding-left: 0;
   }
+  [dir='rtl'] .socialblue--sky .layout--with-complementary.sidebar-left > .region--complementary {
+    padding-right: 0;
+    padding-left: 1rem;
+  }
   .socialblue--sky .layout--with-complementary.sidebar-left > .region--content {
     padding-left: 1rem;
     padding-right: 0;
+  }
+  [dir='rtl'] .socialblue--sky .layout--with-complementary.sidebar-left > .region--content {
+    padding-right: 1rem;
+    padding-left: 0;
   }
   .socialblue--sky.path-user .layout--with-complementary .region--secondary-navigation, .socialblue--sky.path-group .layout--with-complementary .region--secondary-navigation {
     max-width: 1200px;

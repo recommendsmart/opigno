@@ -11,6 +11,11 @@
   max-width: 100%;
 }
 
+[dir='rtl'] .badge {
+  margin-right: 0;
+  margin-left: 3px;
+}
+
 .badge:empty {
   display: none;
 }
@@ -63,6 +68,11 @@ a .badge {
 .badge__icon ~ .badge__label {
   padding-left: 2px;
   font-weight: lighter;
+}
+
+[dir='rtl'] .badge__icon ~ .badge__label {
+  padding-right: 2px;
+  padding-left: 0;
 }
 
 .badge__icon ~ .badge__label:first-of-type {

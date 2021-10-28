@@ -553,6 +553,10 @@ th {
   text-align: left;
 }
 
+[dir='rtl'] th {
+  text-align: right;
+}
+
 .table,
 .path-node .body-text table,
 .comment .comment__text table {
@@ -656,6 +660,13 @@ th {
   text-align: center;
 }
 
+[dir='rtl'] .page-node-edit form .table tbody td.field-multiple-drag, [dir='rtl']
+.path-group form .table tbody td.field-multiple-drag, [dir='rtl']
+.page-node form .table tbody td.field-multiple-drag {
+  padding-right: 1.75rem;
+  padding-left: .25rem;
+}
+
 .page-node-edit form .table tbody td.field-multiple-drag .tabledrag-handle,
 .path-group form .table tbody td.field-multiple-drag .tabledrag-handle,
 .page-node form .table tbody td.field-multiple-drag .tabledrag-handle {
@@ -731,7 +742,7 @@ form:not(.layout-builder-add-block) .tabledrag-handle {
 
 form:not(.layout-builder-add-block) .tabledrag-handle ~ .form-managed-file {
   display: block;
-  padding-left: 24px;
+  margin-left: 24px;
 }
 
 .table-responsive {
@@ -749,6 +760,11 @@ form:not(.layout-builder-add-block) .tabledrag-handle ~ .form-managed-file {
 
 .right-auto {
   margin-right: auto;
+}
+
+[dir='rtl'] .right-auto {
+  margin-left: auto;
+  margin-right: 0;
 }
 
 .view-group-manage-members {
@@ -820,12 +836,23 @@ form:not(.layout-builder-configure-block) .select-all.checkbox {
   padding: 10px 0;
 }
 
+[dir='rtl'] #vbo-action-form-wrapper .btn-group.dropdown {
+  right: auto;
+  left: 1rem;
+}
+
+#vbo-action-form-wrapper .form-type-checkbox {
+  left: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
 #vbo-action-form-wrapper.card__block {
   padding: 0;
 }
 
 #vbo-action-form-wrapper.card__block .panel-heading {
-  padding: 1.25rem 0 1.25rem 1.25rem;
+  padding: 1.25rem;
 }
 
 #vbo-action-form-wrapper.card__block .vbo-multipage-selector ul {
@@ -1158,6 +1185,11 @@ sub {
   margin-left: 10px;
 }
 
+[dir='rtl'] .margin-left-m {
+  margin-left: 0;
+  margin-right: 10px;
+}
+
 .margin-left-l {
   margin-left: 20px;
 }
@@ -1341,8 +1373,16 @@ img.align-center {
   float: right !important;
 }
 
+[dir='rtl'] .pull-right {
+  float: left !important;
+}
+
 .pull-left {
   float: left !important;
+}
+
+[dir='rtl'] .pull-left {
+  float: right !important;
 }
 
 .js .js-hide,
@@ -1597,9 +1637,19 @@ button.close {
   .card__block--table table tr td:first-child {
     padding-left: 2.5rem;
   }
+  [dir='rtl'] .card__block--table table tr th:first-child, [dir='rtl']
+  .card__block--table table tr td:first-child {
+    padding-right: 2.5rem;
+    padding-left: 1.875rem;
+  }
   .card__block--table table tr th:last-child,
   .card__block--table table tr td:last-child {
     padding-right: 2.5rem;
+  }
+  [dir='rtl'] .card__block--table table tr th:last-child, [dir='rtl']
+  .card__block--table table tr td:last-child {
+    padding-right: 1.875rem;
+    padding-left: 2.5rem;
   }
   .card__block--table table tbody td {
     padding-top: 1.875rem;
@@ -1651,7 +1701,11 @@ button.close {
     margin-bottom: 0;
   }
   .right-auto {
-    margin-left: 0.5rem;
+    margin-left: .5rem;
+  }
+  [dir='rtl'] .right-auto {
+    margin-left: 0;
+    margin-right: .5rem;
   }
   .view-group-manage-members .form-group-inline--right {
     display: block;
@@ -1667,7 +1721,11 @@ button.close {
     width: 100%;
   }
   #vbo-action-form-wrapper .btn-group.dropdown button {
-    margin-right: 0.5rem;
+    margin-right: .5rem;
+  }
+  [dir='rtl'] #vbo-action-form-wrapper .btn-group.dropdown button {
+    margin-right: 0;
+    margin-left: .5rem;
   }
   #vbo-action-form-wrapper .btn-group.dropdown .dropdown-menu.dropdown-menu-right {
     width: 100%;

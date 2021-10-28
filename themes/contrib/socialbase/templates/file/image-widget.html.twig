@@ -38,8 +38,8 @@
   {% if in_post %}
     {# Render a "fake" remove button that triggers the actual (hidden) remove button. #}
     <div class="hidden">{{ data.remove_button }}</div>
-    <button type="button" id="post-photo-remove" class="btn--post-remove-image">
-      <svg class="btn-icon">
+    <button type="button" id="post-photo-remove" class="btn--post-remove-image" title="{% trans %}Remove image{% endtrans %}">
+      <svg class="btn-icon" aria-hidden="true">
         <title>{% trans %}Remove image{% endtrans %}</title>
         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-close"></use>
       </svg>
@@ -61,6 +61,7 @@
     </div>
     <button type="button" id="post-photo-add" class="btn btn-default">
       <svg class="btn-icon" aria-hidden="true">
+        <title>{% trans %}Add image{% endtrans %}</title>
         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-plus"></use>
       </svg>
       <span>

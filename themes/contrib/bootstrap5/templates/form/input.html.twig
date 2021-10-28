@@ -12,7 +12,13 @@
 #}
 
 {% if attributes.hasClass('button') and not attributes.hasClass('field-add-more-submit') %}
-  <input{{ attributes.addClass('btn btn-primary') }} />
+  {%
+    set classes = [
+      'btn',
+      attributes.hasClass('button--danger') ? 'btn-danger' : 'btn-primary',
+    ]
+  %}
+  <input{{ attributes.addClass(classes) }} />
 {% else %}
   <input{{ attributes }} />
 {% endif %}

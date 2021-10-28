@@ -2,9 +2,8 @@
 
 namespace Drupal\Tests\flag\FunctionalJavascript;
 
-use Drupal\flag\Tests\FlagCreateTrait;
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
-use Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\flag\Traits\FlagCreateTrait;
 use Drupal\Tests\flag\Traits\FlagPermissionsTrait;
 
 /**
@@ -13,12 +12,19 @@ use Drupal\Tests\flag\Traits\FlagPermissionsTrait;
  * When a user clicks on an AJAX link a salvo of AJAX commands is issued in
  * response which update the DOM with a new link and a short lived message.
  *
+ * @see ActionLinkController
+ *
  * @group flag
  */
-class AjaxLinkTest extends JavascriptTestBase {
+class AjaxLinkTest extends WebDriverTestBase {
 
   use FlagCreateTrait;
   use FlagPermissionsTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -63,7 +69,7 @@ class AjaxLinkTest extends JavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $minkDefaultDriverClass = DrupalSelenium2Driver::class;
+  protected $disableCssAnimations = FALSE;
 
   /**
    * {@inheritdoc}
@@ -105,6 +111,7 @@ class AjaxLinkTest extends JavascriptTestBase {
     $node_path = '/node/' . $this->node->id();
     $this->drupalGet($node_path);
     $session = $this->getSession();
+    $assert_session = $this->assertSession();
 
     // Verify initially flag link is on the page.
     $page = $session->getPage();
@@ -115,8 +122,11 @@ class AjaxLinkTest extends JavascriptTestBase {
 
     // Verify flags message appears.
     $flag_message = $this->flag->getMessage('flag');
-    $p_flash = $this->assertSession()->waitForElementVisible('css', 'p.js-flag-message');
-    $this->assertEquals($flag_message, $p_flash->getText(), 'DOM update: The flag message is flashed.');
+    $p_flash = $assert_session->waitForElementVisible('css', 'p.js-flag-message');
+    $this->assertEquals($flag_message, $p_flash->getText(), 'DOM update(1): The flag message is flashed.');
+
+    $assert_session->assertNoElementAfterWait('css', 'p.js-flag-message');
+    $assert_session->pageTextNotContains($flag_message);
 
     // Verify new link.
     $unflag_link = $session->getPage()->findLink($this->flag->getShortText('unflag'));
@@ -127,7 +137,10 @@ class AjaxLinkTest extends JavascriptTestBase {
     // Verfy unflag message appears.
     $unflag_message = $this->flag->getMessage('unflag');
     $p_flash2 = $this->assertSession()->waitForElementVisible('css', 'p.js-flag-message');
-    $this->assertEquals($unflag_message, $p_flash2->getText(), 'DOM update: The unflag message is flashed.');
+    $this->assertEquals($unflag_message, $p_flash2->getText(), 'DOM update(3): The unflag message is flashed.');
+
+    $assert_session->assertNoElementAfterWait('css', 'p.js-flag-message');
+    $assert_session->pageTextNotContains($unflag_message);
 
     // Verify the cycle completes and flag returns.
     $flag_link2 = $session->getPage()->findLink($this->flag->getShortText('flag'));

@@ -125,6 +125,11 @@
 
     @include for-desktop-up {
       padding-left: 0;
+
+      [dir='rtl'] & {
+        padding-right: 0;
+        padding-left: 1rem;
+      }
     }
 
   }
@@ -146,6 +151,11 @@
 
   @include for-desktop-up {
     padding-right: 0;
+
+    [dir='rtl'] & {
+      padding-right: 1em;
+      padding-left: 0;
+    }
   }
 
 }

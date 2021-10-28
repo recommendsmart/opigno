@@ -19,7 +19,7 @@
         <li {{ item.attributes }}>
           {% if item.url %}
             <a href="{{ item.url }}">{{ item.text }}</a>
-            <svg class="icon-gray icon-small">
+            <svg class="icon-gray icon-small" aria-hidden="true">
               <use xlink:href="#icon-navigate_next"></use>
             </svg>
           {% else %}

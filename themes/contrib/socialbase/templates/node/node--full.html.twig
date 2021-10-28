@@ -154,7 +154,8 @@
             {% if comment_field_status is not empty %}
               <a href="#section-comments" class="badge badge-default badge--large badge--pill badge--comment-count" title="{% trans %}Total amount of comments{% endtrans %}">
                 <span class="badge__container">
-                  <svg class="badge__icon">
+                  <svg class="badge__icon" aria-hidden="true">
+                    <title>{% trans %} Total amount of comments {% endtrans %}</title>
                     <use xlink:href="#icon-comment"></use>
                   </svg>
                   <span class="badge__label">
@@ -172,9 +173,10 @@
             {% endif %}
 
             {% if likes_count is not empty %}
-              <div class="badge badge-default badge--large badge--pill" title="{% trans %}Total amount of likes{% endtrans %}">
+              <div class="badge badge-default badge--large badge--pill">
                 <span class="badge__container">
                   <svg class="badge__icon">
+                    <title>{% trans %} Total amount of likes {% endtrans %}</title>
                     <use xlink:href="#icon-like"></use>
                   </svg>
                   <span class="badge__label">
@@ -192,9 +194,10 @@
             {% endif %}
 
             {% if visibility_icon and visibility_label %}
-              <div class="badge badge-default badge--large badge--pill" title="{% trans %}The visibility of this content is set to {{ visibility_label }}{% endtrans %} ">
+              <div class="badge badge-default badge--large badge--pill">
                 <span class="badge__container">
                   <svg class="badge__icon">
+                    <title>{% trans %} Visibility {% endtrans %}</title>
                     <use xlink:href="#icon-{{ visibility_icon }}"></use>
                   </svg>
                   <span class="badge__label">&nbsp;</span>
@@ -204,9 +207,10 @@
             {% endif %}
 
             {% if views_count is not empty and views_label %}
-              <div class="badge badge-default badge--large badge--pill" title="{% trans %}Total amount of views{% endtrans %}">
+              <div class="badge badge-default badge--large badge--pill">
               <span class="badge__container">
                 <svg class="badge__icon">
+                  <title>{% trans %}Total amount of views{% endtrans %}</title>
                   <use xlink:href="#icon-views"></use>
                 </svg>
                 <span class="badge__label">

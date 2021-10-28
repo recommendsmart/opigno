@@ -119,8 +119,7 @@ svg[class^="icon-vote"] {
   .vote-like a:hover .icon-vote {
     stroke: black;
     fill: transparent;
-    -webkit-transform: scale(1.3);
-            transform: scale(1.3);
+    width: 20px;
     -webkit-transition: 0.3s;
     transition: 0.3s;
   }

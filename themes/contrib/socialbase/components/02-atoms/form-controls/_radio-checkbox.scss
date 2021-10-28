@@ -58,7 +58,7 @@
 [type="checkbox"]:not(:checked),
 [type="checkbox"]:checked {
   position: absolute;
-  left: -9999px;
+  left: 0;
   opacity: 0;
 }
 
@@ -83,6 +83,11 @@
   transition: .28s ease;
   user-select: none;
   margin-bottom: 0;
+
+  [dir='rtl'] & {
+    padding-left: 0;
+    padding-right: $radio-width;
+  }
 }
 
 
@@ -97,6 +102,11 @@
   height: 16px;
   z-index: 0;
   transition: .28s ease;
+
+  [dir='rtl'] & {
+    left: auto;
+    right: 0;
+  }
 }
 
 /* Unchecked styles */
@@ -168,6 +178,11 @@
     /* .1s delay is for check animation */
     transition: border .25s, background-color .25s, width .20s .1s, height .20s .1s, top .20s .1s, left .20s .1s;
     z-index: 1;
+
+    [dir='rtl'] & {
+      left: auto;
+      right: 0;
+    }
   }
 
   // Unchecked style
@@ -180,6 +195,10 @@
     transform: rotateZ(37deg);
     -webkit-transform-origin: 20% 40%;
     transform-origin: 100% 100%;
+
+    [dir='rtl'] & {
+      right: 6px;
+    }
   }
 
   &:not(:checked) + label:after {
@@ -209,6 +228,11 @@
         margin-top: 2px;
         transition: .2s;
         transform-origin: 100% 100%;
+
+        [dir='rtl'] & {
+          left: auto;
+          right: 10px;
+        }
       }
     }
 
@@ -283,8 +307,6 @@
   .field--widget-options-buttons {
     .fieldgroup {
       .fieldset-wrapper {
-        display: flex;
-        flex-wrap: wrap;
         margin: 5px -.75rem -8px;
 
         > .radio {
@@ -295,8 +317,6 @@
 
       &#edit-field-group-allowed-visibility--wrapper #edit-field-group-allowed-visibility,
       &#edit-field-social-idea-phases--wrapper #edit-field-social-idea-phases {
-        display: flex;
-        flex-wrap: wrap;
         margin: 5px -.75rem -8px;
         padding: 0 .75rem;
 
@@ -308,11 +328,6 @@
 
       &#edit-field-social-idea-phases--wrapper #edit-field-social-idea-phases {
         flex-direction: column;
-      }
-
-      &#edit-field-group-allowed-visibility--wrapper #edit-field-group-allowed-visibility {
-        display: flex;
-        flex-wrap: wrap;
       }
     }
   }

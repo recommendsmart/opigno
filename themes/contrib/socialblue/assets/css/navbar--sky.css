@@ -85,6 +85,10 @@
     display: table;
     overflow: visible;
   }
+  [dir='rtl'] .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav, [dir='rtl'] .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav {
+    padding-right: 0;
+    padding-left: 40px;
+  }
   .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav li, .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav li {
     display: table-cell;
   }
@@ -97,6 +101,10 @@
     -webkit-transform: translateY(-50%);
             transform: translateY(-50%);
     cursor: pointer;
+  }
+  [dir='rtl'] .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav .caret, [dir='rtl'] .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav .caret {
+    right: auto;
+    left: 15px;
   }
   .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav .caret.active, .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav .caret.active {
     -webkit-transform: translateY(-50%) rotate(180deg);
@@ -129,9 +137,16 @@
     border-top-left-radius: 0 !important;
     border-top-right-radius: 0 !important;
   }
+  [dir='rtl'] .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list, [dir='rtl'] .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list {
+    right: auto;
+    left: 0;
+  }
   .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list li, .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list li {
     display: block;
     text-align: left;
+  }
+  [dir='rtl'] .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list li, [dir='rtl'] .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list li {
+    text-align: right;
   }
   .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list li a, .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list li button, .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list li a, .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list li button {
     display: block;
