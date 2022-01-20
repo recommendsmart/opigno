@@ -35,6 +35,7 @@
       <div class="hero-footer__text">
         {% if content.field_group_location|render is not empty and content.field_group_address|render is not empty %}
           <svg class="hero-footer-icon">
+            <title>{% trans %}Located at: {% endtrans %}</title>
             <use xlink:href="#icon-location"></use>
           </svg>
         {% endif %}

@@ -58,6 +58,56 @@ pre {
   border-radius: 10px;
 }
 
+.field--name-field-introduction-text a:not(.btn),
+.field--name-field-featured-items-description a:not(.btn),
+.field--name-field-featured-description a:not(.btn),
+.field--name-field-accord-description a:not(.btn),
+.field--name-field-accord-item-description a:not(.btn),
+.paragraph--type--image-text .field--name-field-text a:not(.btn),
+.paragraph--type--text-image .field--name-field-text a:not(.btn),
+.paragraph--type--text .field--name-field-text a:not(.btn),
+.course-full .card__body p a:not(.btn),
+.teaser--course p a:not(.btn),
+.comment__text p a:not(.btn),
+.body-text a:not(.btn),
+.block--intro-text .block--intro-text__content a:not(.btn),
+.basic-block .field--name-field-text-block a:not(.btn),
+.hero--dashboard .field--name-field-text-block a:not(.btn) {
+  text-decoration: underline;
+}
+
+.field--name-field-introduction-text a:not(.btn):hover, .field--name-field-introduction-text a:not(.btn):focus,
+.field--name-field-featured-items-description a:not(.btn):hover,
+.field--name-field-featured-items-description a:not(.btn):focus,
+.field--name-field-featured-description a:not(.btn):hover,
+.field--name-field-featured-description a:not(.btn):focus,
+.field--name-field-accord-description a:not(.btn):hover,
+.field--name-field-accord-description a:not(.btn):focus,
+.field--name-field-accord-item-description a:not(.btn):hover,
+.field--name-field-accord-item-description a:not(.btn):focus,
+.paragraph--type--image-text .field--name-field-text a:not(.btn):hover,
+.paragraph--type--image-text .field--name-field-text a:not(.btn):focus,
+.paragraph--type--text-image .field--name-field-text a:not(.btn):hover,
+.paragraph--type--text-image .field--name-field-text a:not(.btn):focus,
+.paragraph--type--text .field--name-field-text a:not(.btn):hover,
+.paragraph--type--text .field--name-field-text a:not(.btn):focus,
+.course-full .card__body p a:not(.btn):hover,
+.course-full .card__body p a:not(.btn):focus,
+.teaser--course p a:not(.btn):hover,
+.teaser--course p a:not(.btn):focus,
+.comment__text p a:not(.btn):hover,
+.comment__text p a:not(.btn):focus,
+.body-text a:not(.btn):hover,
+.body-text a:not(.btn):focus,
+.block--intro-text .block--intro-text__content a:not(.btn):hover,
+.block--intro-text .block--intro-text__content a:not(.btn):focus,
+.basic-block .field--name-field-text-block a:not(.btn):hover,
+.basic-block .field--name-field-text-block a:not(.btn):focus,
+.hero--dashboard .field--name-field-text-block a:not(.btn):hover,
+.hero--dashboard .field--name-field-text-block a:not(.btn):focus {
+  text-decoration: none;
+}
+
 blockquote {
   border-left: 3px solid #29abe2;
 }

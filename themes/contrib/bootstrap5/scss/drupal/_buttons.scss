@@ -68,6 +68,7 @@ a {
 }
 
 // Override: '@classy/css/components/button.css'
+
 .btn,
 .button {
   margin: 0 $spacer * .5;
@@ -78,6 +79,13 @@ a {
 
   &:last-child {
     margin-right: 0;
+  }
+}
+
+.btn-group {
+  .btn,
+  .button {
+    margin: 0;
   }
 }
 

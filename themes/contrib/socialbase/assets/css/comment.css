@@ -40,7 +40,6 @@ a[id^="comment-"] {
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
-  max-width: calc(100% - 50px);
 }
 
 .comment__author {
@@ -118,7 +117,7 @@ a[id^="comment-"] {
 
 .comment__reply-btn {
   background-color: transparent;
-  border-color: transparent;
+  border: none;
   padding: 0;
   font-size: 0.75rem;
   margin-right: 10px;
@@ -252,13 +251,16 @@ details[open] .details__close-icon {
     margin-right: 0;
     margin-left: 12px;
   }
+  .comment__content {
+    max-width: calc(100% - 50px);
+  }
   .comment__text .vote-widget {
     position: relative;
     padding-left: 23px;
   }
   .comment__text .vote-widget .icon-vote {
     position: absolute;
-    top: 1px;
+    top: 0;
     left: 0;
   }
   .comment__avatar {
@@ -287,5 +289,16 @@ details[open] .details__close-icon {
   }
   .main-container.open-keyboard {
     padding-bottom: 270px;
+  }
+  .comment-comment-form > .form-group-inline {
+    -webkit-box-pack: end;
+        -ms-flex-pack: end;
+            justify-content: flex-end;
+  }
+  .comment-comment-form .media-body {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 0 100%;
+            flex: 0 0 100%;
+    max-width: 100%;
   }
 }

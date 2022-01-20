@@ -129,6 +129,7 @@ fieldset {
         > .form-group {
           display: flex;
           align-items: center;
+          flex-wrap: wrap;
           margin: 0 -.25rem;
 
           > * {
@@ -144,10 +145,26 @@ fieldset {
         .form-type-select {
           flex: 0 0 104px;
           max-width: 104px;
+
+          @include for-phone-only {
+            flex: 0 0 100%;
+            max-width: 100%;
+            margin-bottom: 1rem;
+
+            + .form-item {
+              flex: 0 0 100%;
+              max-width: 100%;
+            }
+          }
         }
 
         .input-group {
           max-width: 240px;
+
+          @include for-phone-only {
+            flex: 0 0 100%;
+            max-width: 100%;
+          }
         }
       }
     }
@@ -241,6 +258,11 @@ fieldset {
   .form-inline {
     display: flex;
     margin: 0 -.5rem;
+    flex-wrap: wrap;
+
+    @include for-phone-only {
+      flex-direction: column;
+    }
 
     label {
       margin-bottom: .5rem;
@@ -250,9 +272,19 @@ fieldset {
       flex: 1;
       padding: 0 .5rem;
 
+      @include for-phone-only {
+        flex: 0 0 auto;
+        max-width: 276px;
+      }
+
       &:nth-child(1) {
         flex: 0 0 240px;
         max-width: 240px;
+
+        @include for-phone-only {
+          flex: 0 0 auto;
+          max-width: 276px;
+        }
       }
     }
 
@@ -293,14 +325,29 @@ fieldset {
     display: flex;
     margin: 0 -.5rem;
 
+    @include for-phone-only {
+      flex-wrap: wrap;
+    }
+
     > * {
       flex: 0 0 50%;
       max-width: 50%;
       padding: 0 .5rem;
 
-      .form-inline > * {
-        flex: 1;
+      @include for-phone-only {
+        flex: 0 0 100%;
         max-width: 100%;
+      }
+
+      .form-inline {
+        @include for-phone-only {
+          margin-bottom: 0;
+        }
+
+        > * {
+          flex: 1;
+          max-width: 100%;
+        }
       }
     }
 

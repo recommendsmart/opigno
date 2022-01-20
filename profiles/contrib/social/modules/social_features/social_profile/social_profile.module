@@ -336,7 +336,13 @@ function social_profile_preprocess_profile(array &$variables) {
   // The actual label text should be changeable in the template.
   // Disable for the LU's own profile.
   $variables['profile_contact_label'] = 'profile_info';
-  if (\Drupal::moduleHandler()->moduleExists('social_private_message') && $current_user->id() != $profile->getOwnerId() && $current_user->hasPermission('use private messaging system') && User::load($profile->getOwnerId())->hasPermission('use private messaging system')) {
+  if (
+    \Drupal::moduleHandler()->moduleExists('social_private_message') &&
+    $current_user->id() != $profile->getOwnerId() &&
+    $current_user->hasPermission('use private messaging system') &&
+    $current_user->hasPermission('create private messages thread') &&
+    User::load($profile->getOwnerId())->hasPermission('use private messaging system')
+  ) {
     $variables['profile_contact_label'] = 'private_message';
     $variables['#cache']['contexts'][] = 'user';
   }
@@ -531,8 +537,23 @@ function social_profile_form_user_form_alter(&$form, FormStateInterface $form_st
     $show_email = $profile->field_profile_show_email->value;
     $form['profile_privacy'] = [
       '#type' => 'fieldset',
-      '#title' => t('Privacy settings'),
+      '#title' => [
+        'text' => [
+          '#markup' => t('Privacy settings'),
+        ],
+        'icon' => [
+          '#markup' => '<svg class="icon icon-expand_less"><use xlink:href="#icon-expand-less" /></svg>',
+          '#allowed_tags' => ['svg', 'use'],
+        ],
+      ],
       '#tree' => TRUE,
+      '#collapsible' => TRUE,
+      '#collapsed' => FALSE,
+      '#attributes' => [
+        'class' => [
+          'form-collapse',
+        ],
+      ],
     ];
     $form['profile_privacy']['social_profile_show_email'] = [
       '#type' => 'checkbox',

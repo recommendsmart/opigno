@@ -9,3 +9,7 @@ Improve how the module deals with non-embeddable URLs & WSODs (See: https://www.
 Source: https://www.drupal.org/files/issues/2021-01-22/urlembed-non-embeddable-urls-2761187-opensocial-combined-21.patch
 
 
+Support for Facebook/Instagram API changes - add access token settings
+Source: https://www.drupal.org/files/issues/2021-07-14/url_embed-add-facebook-access-token-config-3177860-opensocial-2.patch
+
+

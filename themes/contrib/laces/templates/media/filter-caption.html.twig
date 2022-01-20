@@ -15,21 +15,21 @@
 {{ attach_library('laces/laces-images') }}
 {% set figure_attributes = create_attribute() %}
 {% set figure_classes = classes|split(' ') %}
-{% set figure_attributes = figure_attributes.addClass('figure', 'figure-img--child-img', 'img-fluid--child-img', figure_classes).setAttribute('role', 'group') %}
+{% set figure_attributes = figure_attributes.addClass('figure-table', 'figure-img--child-img', 'img-fluid--child-img', figure_classes).setAttribute('role', 'group') %}
 {% if figure_attributes.hasClass('align-center') %}
-  <figure{{ figure_attributes.removeClass('align-center').addClass('mx-auto', 'd-table') }}>
+  <figure{{ figure_attributes.removeClass('align-center').addClass('mx-auto') }}>
     {{ node }}
-    <figcaption class="figure-caption text-start">{{ caption }}</figcaption>
+    <figcaption class="figure-caption  text-start">{{ caption }}</figcaption>
   </figure>
 {% elseif figure_attributes.hasClass('align-left') %}
-  <figure{{ figure_attributes.removeClass('align-left').addClass('d-block', 'float-start', 'me-sm-3') }}>
+  <figure{{ figure_attributes.removeClass('align-left').addClass('float-start', 'me-sm-3') }}>
     {{ node }}
     <figcaption class="figure-caption text-start">{{ caption }}</figcaption>
   </figure>
 {% elseif figure_attributes.hasClass('align-right') %}
-  <figure{{ figure_attributes.removeClass('align-right').addClass('d-block', 'float-end', 'ms-sm-3') }}>
+  <figure{{ figure_attributes.removeClass('align-right').addClass('float-end', 'ms-sm-3') }}>
     {{ node }}
-    <figcaption class="figure-caption text-start">{{ caption }}</figcaption>
+    <figcaption class="figure-caption  text-start">{{ caption }}</figcaption>
   </figure>
 {% else %}
   <figure{{ figure_attributes }}>

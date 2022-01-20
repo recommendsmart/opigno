@@ -5,9 +5,10 @@
 {% block card_actionbar %}
 
   {% if images_count %}
-    <div class="badge teaser__badge" title="{{ 'Total amount of images'| t }}">
+    <div class="badge teaser__badge">
       <span class="badge__container">
         <svg class="badge__icon">
+          <title>{{ 'Total amount of images'| t }}</title>
           <use xlink:href="#icon-image"></use>
         </svg>
         <span class="badge__label">

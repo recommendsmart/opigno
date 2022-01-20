@@ -76,8 +76,9 @@
 {% extends "node--hero--sky.html.twig" %}
 
 {% block card_prefix %}
-  <a href="{{ albums }}" class="back-link">
-    <svg>
+  <a href="{{ albums }}" class="back-link" title="{% trans %} Back to {{ owner }}'s Albums {% endtrans %}">
+    <svg aria-hidden="true">
+      <title>{% trans %}Back to owner's albums{% endtrans %}</title>
       <use xlink:href="#icon-navigate_before"></use>
     </svg>
     {% trans %}{{ owner }}'s Albums{% endtrans %}

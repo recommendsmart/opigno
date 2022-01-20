@@ -66,7 +66,7 @@
   overflow-x: hidden;
   overflow-y: auto;
   position: absolute;
-  max-width: 100%;
+  max-width: 100% !important;
   top: 0;
   margin-left: 0.5rem;
   margin-right: 0.5rem;
@@ -93,32 +93,40 @@
   }
 
   .ui-dialog-titlebar .ui-dialog-titlebar-close {
-    font-size: 1.5rem;
-    font-weight: 400;
-    line-height: 1;
-    color: #000;
-    text-shadow: 0 1px 0 #fff;
-    opacity: .5;
+    font-size: 0;
     cursor: pointer;
     background: 0 0;
     border: none;
     outline: none;
-    -webkit-appearance: none;
-    transition: 0.3s;
+    appearance: none;
+    opacity: 1;
     margin-top: 3px;
 
-    &:before {
-      content: 'x';
-      display: block;
-      position: absolute;
-      text-indent: 0;
-      right: 0;
-      left: 0;
-      margin: auto;
+    > span {
+      display: none;
     }
 
-    &:hover {
-      opacity: .75;
+    &:before {
+      content: '';
+      display: block;
+      width: 1.75rem;
+      height: 1.75rem;
+      margin: auto;
+
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-image: url('../images/icons/icon-close_white.svg');
+
+      text-indent: 0;
+      transform: scale(1);
+      transition: 0.3s;
+    }
+
+    &:hover:before {
+      transform: scale(1.2);
     }
   }
 }
@@ -139,10 +147,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 1rem;
-}
-
-.ui-dialog-titlebar-close {
-
 }
 
 .ui-button-icon-only {

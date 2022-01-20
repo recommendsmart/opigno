@@ -114,7 +114,7 @@ class OrderForm extends ContentEntityForm {
       $form['meta']['date'] = $this->fieldAsReadOnly($this->t('Placed'), $date);
     }
     // Show the order's store only if there are multiple available.
-    $store_query = $this->entityTypeManager->getStorage('commerce_store')->getQuery();
+    $store_query = $this->entityTypeManager->getStorage('commerce_store')->getQuery()->accessCheck(TRUE);
     $store_count = $store_query->count()->execute();
     if ($store_count > 1) {
       $store_link = $order->getStore()->toLink()->toString();

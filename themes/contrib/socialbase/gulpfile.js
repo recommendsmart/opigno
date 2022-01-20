@@ -110,7 +110,8 @@ gulp.task('scripts', ['clean:js'], function () {
       suffix: ".min"
     }))
     .pipe(babel({
-      presets: ['@babel/preset-env']
+      sourceType: "script",
+      presets: ["@babel/preset-env"]
     }))
     .pipe(gulp.dest(options.basetheme.js))
     .pipe(browserSync.reload({stream:true}));

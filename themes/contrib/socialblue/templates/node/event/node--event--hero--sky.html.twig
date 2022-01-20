@@ -12,10 +12,10 @@
 
       {% if visibility_icon and visibility_label %}
         &bullet;
-        <div class="badge badge--large"
-             title="{% trans %}The visibility of this content is set to {{ visibility_label }}{% endtrans %} ">
+        <div class="badge badge--large">
             <span class="badge__container">
               <svg class="badge__icon">
+                <title>{% trans %}Visibility: {% endtrans %}</title>
                 <use xlink:href="#icon-{{ visibility_icon }}"></use>
               </svg>
               <span class="badge__label">&nbsp;</span>
@@ -52,7 +52,8 @@
       <div class="article__special-fields">
 
         <div class="article__special-field">
-          <svg class="article__special-fields-icon">
+          <svg class="article__special-fields-icon" aria-hidden="true">
+            <title>{% trans %}Event date{% endtrans %}</title>
             <use xlink:href="#icon-schedule"></use>
           </svg>
           <span class="sr-only">{% trans %}Event date{% endtrans %}</span>
@@ -62,6 +63,7 @@
         {% if content.field_event_address|render or content.field_event_location|render %}
           <div class="article__special-field">
             <svg class="article__special-fields-icon">
+              <title>{% trans %}Event location{% endtrans %}</title>
               <use xlink:href="#icon-location"></use>
             </svg>
             <span class="sr-only">{% trans %}Event location{% endtrans %}</span>

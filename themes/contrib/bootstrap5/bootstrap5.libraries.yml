@@ -1,9 +1,7 @@
 bootstrap5-js-latest:
-  version: '5.1.2'
+  version: '5.1.3'
   js:
-    dist/bootstrap/5.1.2/dist/js/bootstrap.bundle.min.js: { minified: true }
-  dependencies:
-    - core/jquery
+    dist/bootstrap/5.1.3/dist/js/bootstrap.bundle.js: {}
 
 global-styling:
   css:
@@ -11,7 +9,7 @@ global-styling:
       css/style.css: {}
 
 drupal.nav-tabs:
-  version: VERSION
+  version: '5.1.3'
   js:
     js/nav-tabs.js: {}
   dependencies:
@@ -21,3 +19,13 @@ drupal.nav-tabs:
     - core/jquery.once
     - core/drupal.debounce
     - core/collapse
+
+style-guide:
+  version: '5.1.3'
+  js:
+    dist/bootstrap/5.1.3/site/content/docs/5.1/examples/cheatsheet/cheatsheet.js: {}
+  css:
+    theme:
+      dist/bootstrap/5.1.3/site/content/docs/5.1/examples/cheatsheet/cheatsheet.css: {}
+  dependencies:
+    - bootstrap5/bootstrap5-js-latest

@@ -26,10 +26,6 @@
       justify-content: flex-end;
       align-items: center;
 
-      [dir='rtl'] & {
-        flex-direction: row-reverse;
-      }
-
       @include for-phone-only {
         justify-content: flex-start;
       }
@@ -148,20 +144,16 @@
         margin-bottom: 0;
         flex-wrap: wrap;
 
-        > *:first-child {
-          padding-left: 0;
-        }
-
         @include for-tablet-landscape-down {
           align-items: flex-start;
-
-          [dir='rtl'] & {
-            align-items: flex-end;
-          }
 
           > * {
             padding: 0;
           }
+        }
+
+        > *:first-child {
+          padding-left: 0;
         }
 
         .badge--large {
@@ -178,30 +170,21 @@
           [dir='rtl'] & {
             padding-right: 0;
             padding-left: 1rem;
+
+            @include for-tablet-landscape-down {
+              padding-left: 0;
+            }
           }
 
           &:last-child {
             padding-right: 0;
-
-            [dir='rtl'] & {
-              padding-left: 0;
-            }
           }
 
           @include for-tablet-landscape-up {
             padding-right: 15px;
 
-            [dir='rtl'] & {
-              padding-right: 0;
-              padding-left: 15px;
-            }
-
             &:last-child {
               padding-right: 0;
-
-              [dir='rtl'] & {
-                padding-left: 0;
-              }
             }
           }
         }
@@ -211,6 +194,12 @@
 
           [dir='rtl'] & {
             margin-bottom: 0;
+
+            @include for-phone-only {
+              > * + * {
+                padding-left: .5rem;
+              }
+            }
           }
 
           @include for-tablet-landscape-up {
@@ -245,25 +234,24 @@
           padding-left: 0;
           padding-right: 0;
 
-          [dir='rtl'] & {
-            flex-direction: row-reverse;
-          }
-
           @include for-tablet-landscape-up {
             padding-left: 15px;
             margin-bottom: 0;
 
             [dir='rtl'] & {
-              padding-left: 0;
-              padding-right: 15px;
               margin-bottom: 0;
             }
           }
 
-          @include for-phone-only {
+          @include for-tablet-landscape-down {
             width: 100%;
             justify-content: space-between;
-            margin: 0 0 -10px;
+            margin: 0 -10px -10px;
+
+            [dir='rtl'] & {
+              margin: 0 -10px 1rem;
+              justify-content: flex-end;
+            }
           }
 
           > * {
@@ -405,10 +393,6 @@
       margin-right: -5px;
       line-height: 2;
 
-      [dir='rtl'] & {
-        flex-direction: row-reverse;
-      }
-
       a {
         text-decoration: none;
 
@@ -486,10 +470,6 @@
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-
-        [dir='rtl'] & {
-          flex-direction: row-reverse;
-        }
       }
 
       > * {
@@ -634,11 +614,6 @@
       margin-bottom: 1.25rem;
       border-bottom: 1px solid #d5d6d2;
 
-      [dir='rtl'] & {
-        width: 100%;
-        flex-direction: column-reverse;
-      }
-
       @include for-tablet-portrait-up {
         flex-direction: row;
         align-items: flex-end;
@@ -675,7 +650,17 @@
       letter-spacing: .4px;
 
       .article__special-field {
+        position: relative;
         margin-bottom: 10px;
+        padding-left: 30px;
+
+        [dir='rtl'] & {
+          justify-content: flex-end;
+
+          @include for-phone-only {
+            justify-content: flex-start;
+          }
+        }
 
         &:last-child {
           margin-bottom: 0;
@@ -683,17 +668,27 @@
       }
 
       .article__special-fields-icon {
+        position: absolute;
+        top: -2px;
+        left: 0;
+
         @include for-tablet-portrait-up {
           width: 20px;
           height: 20px;
+          top: -3px;
         }
       }
     }
 
     .hero-footer__cta {
-      .btn:not(#edit-decline-invite) {
-        min-width: 195px;
-        color: inherit;
+      .btn {
+        &:not(#edit-decline-invite):not(.btn-accent) {
+          color: inherit;
+        }
+
+        &:not(#edit-decline-invite) {
+          min-width: 195px;
+        }
       }
     }
   }

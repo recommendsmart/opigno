@@ -6,6 +6,7 @@ use Drupal\bootstrap\Plugin\Preprocess\PreprocessBase;
 use Drupal\bootstrap\Utility\Element;
 use Drupal\bootstrap\Utility\Variables;
 use Drupal\node\Entity\Node;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 
 /**
  * Pre-processes variables for the "field" theme hook.
@@ -72,6 +73,16 @@ class Field extends PreprocessBase {
         $comment_count = _socialbase_node_get_comment_count($node);
         // Add it to the title.
         $variables['comment_count'] = $comment_count;
+
+        // Check on our node if we have the comment type field somewhere.
+        $comment_field_name = '';
+        $fields_on_node = $node->getFieldDefinitions();
+        foreach ($fields_on_node as $field) {
+          if ($field->getType() == 'comment') {
+            $comment_field_name = $field->getName();
+          }
+        }
+        $variables['comment_open'] = $node->$comment_field_name->status == CommentItemInterface::OPEN;
       }
     }
 

@@ -9,7 +9,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class StorageTypeForm.
+ * The form class for a Storage type.
  */
 class StorageTypeForm extends BundleEntityFormBase {
 
@@ -21,7 +21,7 @@ class StorageTypeForm extends BundleEntityFormBase {
   protected $entityFieldManager;
 
   /**
-   * Constructs the NodeTypeForm object.
+   * Constructs the StorageTypeForm object.
    *
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
@@ -45,21 +45,23 @@ class StorageTypeForm extends BundleEntityFormBase {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
+    /** @var \Drupal\storage\Entity\StorageTypeInterface $storage_type */
     $storage_type = $this->entity;
     if ($this->operation == 'add') {
       $form['#title'] = $this->t('Add storage type');
       $fields = $this->entityFieldManager->getBaseFieldDefinitions('storage');
-    } else {
+    }
+    else {
       $form['#title'] = $this->t('Edit %label storage type', ['%label' => $storage_type->label()]);
       $fields = $this->entityFieldManager->getFieldDefinitions('storage', $storage_type->id());
     }
 
     $form['label'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Name'),
+      '#title' => $this->t('Type label'),
       '#maxlength' => 255,
       '#default_value' => $storage_type->label(),
-      '#description' => $this->t('The human-readable name of this storage type. This text will be displayed as part of the list on the <em>storage date</em> page. This name must be unique.'),
+      '#description' => $this->t('The human-readable label of this storage type. This text will be displayed as part of the list on the <em><a href="/storage/add" target="_blank">Add storage</a></em> page. This name must be unique.'),
       '#required' => TRUE,
     ];
 
@@ -81,15 +83,49 @@ class StorageTypeForm extends BundleEntityFormBase {
       '#title' => $this->t('Description'),
       '#type' => 'textarea',
       '#default_value' => $storage_type->getDescription(),
-      '#description' => $this->t('This text will be displayed on the <em>Add new storage</em> page.'),
+      '#description' => $this->t('This description text will be displayed on the <em><a href="/storage/add" target="_blank">Add storage</a></em> page.'),
     ];
 
-    $form['title_label'] = [
-      '#title' => $this->t('Title field label'),
+    $form['name_label'] = [
+      '#title' => $this->t('Form label for name field'),
       '#type' => 'textfield',
       '#default_value' => $fields['name']->getLabel(),
-      '#description' => $this->t('This text will be used as the label for the title field when creating or editing data of this storage type.'),
+      '#description' => $this->t('This text will be used as the form label for the name field when creating or editing data of this storage type.'),
       '#required' => TRUE,
+    ];
+
+    $form['name_pattern'] = [
+      '#title' => $this->t('Pattern for automatic name generation'),
+      '#type' => 'textfield',
+      '#description' => $this->t('Instead of manually entering a name on each Storage entity within a form, you can define a name pattern here for auto-generating a value for it. This pattern will be applied everytime a Storage entity is being saved. Tokens are allowed, e.g. [storage:string-representation]. Leave empty to not use a name pattern for entities of this Storage type. If a name pattern is being used, you may optionally hide the name field in the <em>Manage form display</em> settings.'),
+      '#default_value' => $storage_type->getNamePattern(),
+      '#attributes' => [
+        'style' => ['width: 100%'],
+      ],
+      '#maxlength' => 255,
+    ];
+
+    // Display the list of available placeholders if token module is installed.
+    if ($this->moduleHandler->moduleExists('token')) {
+      $form['name_pattern_help'] = [
+        // Put token replacement link inside a container so it can be used with #states.
+        '#type' => 'container',
+        'token_link' => [
+          '#theme' => 'token_tree_link',
+          '#token_types' => ['storage'],
+          '#dialog' => TRUE,
+        ],
+      ];
+    }
+    else {
+      $form['name_pattern']['#description'] .= ' ' . $this->t('To get a list of available tokens, install the <a href=":drupal-token" target="blank">Token</a> module.', [':drupal-token' => 'https://www.drupal.org/project/token']);
+    }
+
+    $form['status'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Published'),
+      '#default_value' => $storage_type->getStatus(),
+      '#description' => t('Whether Storage items should be published by default.'),
     ];
 
     $form['new_revision'] = [
@@ -126,7 +162,9 @@ class StorageTypeForm extends BundleEntityFormBase {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\storage\Entity\StorageTypeInterface $storage_type */
     $storage_type = $this->entity;
+    $storage_type->setStatus((bool) $form_state->getValue('status'));
     $status = $storage_type->save();
 
     switch ($status) {
@@ -143,12 +181,21 @@ class StorageTypeForm extends BundleEntityFormBase {
     }
 
     $fields = $this->entityFieldManager->getFieldDefinitions('storage', $storage_type->id());
-    // Update title field definition.
-    $title_field = $fields['name'];
-    $title_label = $form_state->getValue('title_label');
-    if ($title_field && $title_field->getLabel() != $title_label) {
-      $title_field->getConfig($storage_type->id())->setLabel($title_label)->save();
+    // Update name field definition.
+    $name_field = $fields['name'];
+    $name_label = $form_state->getValue('name_label');
+    if ($name_field && $name_field->getLabel() != $name_label) {
+      $name_field->getConfig($storage_type->id())->setLabel($name_label)->save();
     }
+    // Update the status field definition.
+    // @todo Make it possible to get default values without an entity.
+    //   https://www.drupal.org/node/2318187
+    /** @var \Drupal\storage\Entity\StorageInterface $storage */
+    $storage = $this->entityTypeManager->getStorage('storage')->create(['type' => $storage_type->id()]);
+    if ($storage->isPublished() != $storage_type->getStatus()) {
+      $fields['status']->getConfig($storage_type->id())->setDefaultValue($storage_type->getStatus())->save();
+    }
+    $this->entityFieldManager->clearCachedFieldDefinitions();
     $form_state->setRedirectUrl($storage_type->toUrl('collection'));
   }
 

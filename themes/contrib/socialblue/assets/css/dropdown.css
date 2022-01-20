@@ -23,6 +23,9 @@
 }
 
 @media (max-width: 599px) {
+  .dropdown-menu.dropdown-menu--visibility {
+    left: 0;
+  }
   .dropdown.has-alert > a:before {
     color: #4d4d4d;
     background-color: #ffc142;

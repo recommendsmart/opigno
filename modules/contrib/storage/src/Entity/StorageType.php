@@ -36,7 +36,8 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "uuid" = "uuid",
+ *     "status" = "status",
  *   },
  *   links = {
  *     "canonical" = "/admin/structure/storage_types/{storage_type}",
@@ -53,6 +54,8 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "new_revision",
  *     "revision_expose",
  *     "revision_log",
+ *     "name_pattern",
+ *     "status",
  *   }
  * )
  */
@@ -73,11 +76,18 @@ class StorageType extends ConfigEntityBundleBase implements StorageTypeInterface
   protected $label;
 
   /**
-   * A brief description of this node type.
+   * A brief description of this Storage type.
    *
    * @var string
    */
   protected $description;
+
+  /**
+   * Whether Storage items should be published by default.
+   *
+   * @var bool
+   */
+  protected $status = TRUE;
 
   /**
    * Help information shown to the user when creating storage data of this type.
@@ -108,18 +118,17 @@ class StorageType extends ConfigEntityBundleBase implements StorageTypeInterface
   protected $revision_log = FALSE;
 
   /**
-   * {@inheritdoc}
+   * A pattern for creating the name of the Storage entity (supports tokens).
+   *
+   * @var string
    */
-  public function id() {
-    return $this->id;
-  }
+  protected $name_pattern = '';
 
   /**
    * {@inheritdoc}
    */
-  public function isLocked() {
-    $locked = \Drupal::state()->get('node.type.locked');
-    return isset($locked[$this->id()]) ? $locked[$this->id()] : FALSE;
+  public function id() {
+    return $this->id;
   }
 
   /**
@@ -176,7 +185,7 @@ class StorageType extends ConfigEntityBundleBase implements StorageTypeInterface
   public static function postDelete(EntityStorageInterface $storage, array $entities) {
     parent::postDelete($storage, $entities);
 
-    // Clear the node type cache to reflect the removal.
+    // Clear the Storage type cache to reflect the removal.
     $storage->resetCache(array_keys($entities));
   }
 
@@ -200,4 +209,34 @@ class StorageType extends ConfigEntityBundleBase implements StorageTypeInterface
   public function shouldShowRevisionLog() {
     return $this->revision_log;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getStatus() {
+    return $this->status;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setStatus($status) {
+    $this->status = (bool) $status;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getNamePattern() {
+    return $this->name_pattern;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setNamePattern($pattern) {
+    $this->name_pattern = $pattern;
+  }
+
 }

@@ -95,4 +95,33 @@ interface StorageInterface extends ContentEntityInterface, RevisionLogInterface,
    */
   public function setRevisionUserId($uid);
 
+  /**
+   * Get a brief string representation of this Storage item.
+   *
+   * The returned string has a maximum length of 255 characters.
+   * Warning: This might expose undesired field content.
+   *
+   * This method is not implemented as __toString(). Instead it is this method
+   * name, to guarantee compatibility with future changes of the Entity API.
+   * Another reason is, that this method is kind of a last resort for generating
+   * the Storage name, and is not supposed to be used for other purposes
+   * like serialization.
+   *
+   * Modules may implement hook_storage_get_string_representation() to
+   * change the final result, which will be returned by this method.
+   *
+   * @return string
+   *   The string representation of this Storage item.
+   */
+  public function getStringRepresentation();
+
+  /**
+   * Applies a pattern to update the name property.
+   *
+   * Developers may define a custom name pattern by setting a public
+   * "name_pattern" as string property or field. If it is not set, then the
+   * configured name pattern in the corresponding type config will be used.
+   */
+  public function applyNamePattern();
+
 }

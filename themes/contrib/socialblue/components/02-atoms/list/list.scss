@@ -36,6 +36,10 @@
 .dropdown-menu--visibility .list-item--active:hover > a {
   color: inherit;
   border-color: inherit;
+
+  @include for-phone-only {
+    white-space: normal;
+  }
 }
 
 .list-item--active,

@@ -778,7 +778,7 @@ function _filter_html_image_secure_process($text) {
   $base_path_length = mb_strlen($base_path);
 
   // Find the private path.
-  $private_path = '/system/files/';
+  $private_path = $base_path . 'system/files/';
   $private_path_length = mb_strlen($private_path);
 
   // Find the directory on the server where index.php resides.

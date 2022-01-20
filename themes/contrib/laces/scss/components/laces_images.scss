@@ -2,6 +2,7 @@
  * @file
  * Patches for images.
  */
+@use "sass:math";
 @import "../variables-override";
 @import "../../../../../../vendor/twbs/bootstrap/scss/functions";
 @import "../../../../../../vendor/twbs/bootstrap/scss/variables";
@@ -31,8 +32,25 @@
 // Figures
 //
 
+// Use figure-table instead  of bootstrap's figure to wrap text if figcaption
+// Add caption bottom to figcaption to have the caption at the bottom.
+.figure-table {
+  display: table;
+}
+
+.figure-table > * {
+  display: block;
+  max-width: 100%;
+}
+
+.figure-table > figcaption {
+  display: table-caption;
+  max-width: none;
+  caption-side: bottom;
+}
+
 .figure-img--child-img img.child-img {
-  margin-bottom: $spacer / 2;
+  margin-bottom: math.div($spacer , 2);
   line-height: 1;
 }
 

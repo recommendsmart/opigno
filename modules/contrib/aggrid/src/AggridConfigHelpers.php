@@ -114,8 +114,8 @@ class AggridConfigHelpers {
         $columns[1][$colIndex][$colIndex]['viewHide'] = true;
       }
 
-      // Set the field if available.
-      if (isset($column->field)) {
+      // If no children, set the field if available.
+      if (!isset($column->children) && isset($column->field)) {
         $headers[] = $column->field;
         $columns[0][$column->field] = [];
         $columns[0][$column->field]['viewHide'] = $columns[1][$colIndex][$colIndex]['viewHide'];

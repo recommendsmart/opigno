@@ -70,8 +70,8 @@ class StorageController extends ControllerBase implements ContainerInjectionInte
   public function revisionPageTitle($storage_revision) {
     $storage = $this->entityTypeManager()->getStorage('storage')
       ->loadRevision($storage_revision);
-    return $this->t('Revision of %title from %date', [
-      '%title' => $storage->label(),
+    return $this->t('Revision of %name from %date', [
+      '%name' => $storage->label(),
       '%date' => $this->dateFormatter->format($storage->getRevisionCreationTime()),
     ]);
   }
@@ -93,7 +93,7 @@ class StorageController extends ControllerBase implements ContainerInjectionInte
     $langname = $storage->language()->getName();
     $languages = $storage->getTranslationLanguages();
     $has_translations = (count($languages) > 1);
-    $build['#title'] = $has_translations ? $this->t('@langname revisions for %title', ['@langname' => $langname, '%title' => $storage->label()]) : $this->t('Revisions for %title', ['%title' => $storage->label()]);
+    $build['#title'] = $has_translations ? $this->t('@langname revisions for %name', ['@langname' => $langname, '%name' => $storage->label()]) : $this->t('Revisions for %name', ['%name' => $storage->label()]);
 
     $header = [$this->t('Revision'), $this->t('Operations')];
     $revert_permission = (($account->hasPermission("revert all storage revisions") || $account->hasPermission('administer storage entities')));

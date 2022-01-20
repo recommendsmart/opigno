@@ -48,3 +48,10 @@
 .list-item__avatar img {
   border-radius: 50%;
 }
+
+@media (max-width: 599px) {
+  .dropdown-menu--visibility .list-item--active > a,
+  .dropdown-menu--visibility .list-item--active:hover > a {
+    white-space: normal;
+  }
+}

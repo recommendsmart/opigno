@@ -154,8 +154,7 @@
 }
 
 .stream-item .node--unpublished__label {
-  top: -1.25rem;
-  right: -1.25rem;
+  border-top-right-radius: 0;
 }
 
 @media (min-width: 600px) {

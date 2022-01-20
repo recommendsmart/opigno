@@ -1,1 +1,1 @@
-{"version":3,"sources":["../../scss/components/laces_alert.scss","../../../../../../vendor/twbs/bootstrap/scss/_variables.scss","../../scss_postprocess/components/laces_alert.css"],"names":[],"mappings":"AAKA;EACE,gBC4a4B;AChb9B","file":"laces_alert.css"}
+{"version":3,"sources":["../../scss/components/laces_alert.scss","../../../../../../vendor/twbs/bootstrap/scss/_variables.scss","../../scss_postprocess/components/laces_alert.css"],"names":[],"mappings":"AAKA;EACE,gBC0kB4B;AC9kB9B","file":"laces_alert.css"}

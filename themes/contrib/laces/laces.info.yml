@@ -68,7 +68,7 @@ ckeditor_stylesheets:
   - css/components/laces_images.css
 
 
-# Information added by Drupal.org packaging script on 2021-08-01
-version: '1.3.0-rc1'
+# Information added by Drupal.org packaging script on 2021-11-25
+version: '1.3.0-rc2'
 project: 'laces'
-datestamp: 1627780354
+datestamp: 1637800083

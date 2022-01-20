@@ -9,6 +9,7 @@ use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityPublishedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\field\FieldConfigInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -93,6 +94,10 @@ class Storage extends EditorialContentEntityBase implements StorageInterface {
     $values += [
       'user_id' => \Drupal::currentUser()->id(),
     ];
+    if (isset($values['name']) && $values['name'] !== '') {
+      // Disable the name pattern when a name is already there.
+      $values['name_pattern'] = '';
+    }
   }
 
   /**
@@ -131,6 +136,8 @@ class Storage extends EditorialContentEntityBase implements StorageInterface {
     if (!$this->getRevisionUser()) {
       $this->setRevisionUserId($this->getOwnerId());
     }
+
+    $this->applyNamePattern();
   }
 
   /**
@@ -191,6 +198,106 @@ class Storage extends EditorialContentEntityBase implements StorageInterface {
   public function setOwner(UserInterface $account) {
     $this->set('user_id', $account->id());
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function applyNamePattern() {
+    if (isset($this->name_pattern)) {
+      $name_pattern = $this->hasField('name_pattern') ? $this->get('name_pattern')->getString() : $this->name_pattern;
+    }
+    elseif ($config_id = $this->bundle()) {
+      /** @var \Drupal\storage\Entity\StorageTypeInterface $config */
+      if ($config = \Drupal::entityTypeManager()->getStorage('storage_type')->load($config_id)) {
+        $name_pattern = $config->getNamePattern();
+      }
+    }
+    if (!empty($name_pattern)) {
+      $this->name->value = \Drupal::token()->replace($name_pattern, ['storage' => $this], ['langcode' => $this->language()->getId()]);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getStringRepresentation() {
+    $string = '';
+    $module_handler = \Drupal::moduleHandler();
+    $hook = 'storage_get_string_representation';
+
+    foreach ($module_handler->getImplementations($hook) as $module) {
+      $string = $module_handler->invoke($module, $hook, [$this, $string]);
+    }
+
+    if (empty($string)) {
+      $string = $this->generateFallbackStringRepresentation();
+    }
+
+    if (strlen($string) > 255) {
+      $string = substr($string, 0, 252) . '...';
+    }
+
+    return $string;
+  }
+
+  /**
+   * Implements the magic __toString() method.
+   *
+   * When a string representation is explicitly needed, consider directly using
+   * ::getStringRepresentation() instead.
+   */
+  public function __toString() {
+    return $this->getStringRepresentation();
+  }
+
+  /**
+   * Fallback method for generating a string representation.
+   *
+   * @see ::getStringRepresentation()
+   *
+   * @return string
+   *   The fallback value for the string representation.
+   */
+  protected function generateFallbackStringRepresentation() {
+    $components = \Drupal::service('entity_display.repository')->getFormDisplay('storage', $this->bundle())->getComponents();
+
+    // The name is available in the form, thus the user is required to enter
+    // a value for it. For this case, use the name directly and return it.
+    if (!empty($components['name'])) {
+      return $this->label();
+    }
+
+    uasort($components, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
+    $values = [];
+
+    foreach (array_keys($components) as $field_name) {
+      // Components can be extra fields, check if the field really exists.
+      if (!$this->hasField($field_name)) {
+        continue;
+      }
+      $field_definition = $this->getFieldDefinition($field_name);
+
+      // Only take care for accessible string fields.
+      if (!($field_definition instanceof FieldConfigInterface) || $field_definition->getType() !== 'string' || !$this->get($field_name)->access('view')) {
+        continue;
+      }
+
+      if ($this->get($field_name)->isEmpty()) {
+        continue;
+      }
+
+      foreach ($this->get($field_name) as $field_item) {
+        $values[] = $field_item->value;
+      }
+
+      // Stop after two value items were received.
+      if (count($values) > 2) {
+        return implode(' ', array_slice($values, 0, 2)) . '...';
+      }
+    }
+
+    return implode(' ', $values);
   }
 
   /**

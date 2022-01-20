@@ -20,6 +20,21 @@
   height: auto;
 }
 
+.figure-table {
+  display: table;
+}
+
+.figure-table > * {
+  display: block;
+  max-width: 100%;
+}
+
+.figure-table > figcaption {
+  display: table-caption;
+  max-width: none;
+  caption-side: bottom;
+}
+
 .figure-img--child-img img.child-img {
   margin-bottom: 0.5rem;
   line-height: 1;

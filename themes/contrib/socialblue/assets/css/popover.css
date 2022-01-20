@@ -21,71 +21,84 @@
 }
 
 .popover {
-  border-radius: 10px;
+  border-radius: 5px;
   background-color: #fff;
-  border: 1px solid #ccc;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+          box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .popover-title {
-  background-color: #f7f7f7;
-  border-bottom: 1px solid #ebebeb;
-  border-radius: 11px 11px 0 0;
+  background-color: #f3f3f3;
+  border-radius: 5px 5px 0 0;
 }
 
 .popover.top > .arrow {
-  border-top-color: #999999;
-  border-top-color: rgba(0, 0, 0, 0.25);
+  border-top-color: #f3f3f3;
+  border-top-color: #f3f3f3;
 }
 
 .popover.top > .arrow:after {
-  border-top-color: #fff;
+  border-top-color: #f3f3f3;
 }
 
 .popover.right > .arrow {
-  border-right-color: #999999;
-  border-right-color: rgba(0, 0, 0, 0.25);
+  border-right-color: #f3f3f3;
+  border-right-color: #f3f3f3;
 }
 
 .popover.right > .arrow:after {
-  border-right-color: #fff;
+  border-right-color: #f3f3f3;
 }
 
 .popover.bottom > .arrow {
-  border-bottom-color: #999999;
-  border-bottom-color: rgba(0, 0, 0, 0.25);
+  border-bottom-color: #f3f3f3;
+  border-bottom-color: #f3f3f3;
 }
 
 .popover.bottom > .arrow:after {
-  border-bottom-color: #fff;
+  border-bottom-color: #f3f3f3;
 }
 
 .popover.left > .arrow {
-  border-left-color: #999999;
-  border-left-color: rgba(0, 0, 0, 0.25);
+  border-left-color: #f3f3f3;
+  border-left-color: #f3f3f3;
 }
 
 .popover.left > .arrow:after {
-  border-left-color: #fff;
+  border-left-color: #f3f3f3;
 }
 
 .popover.bottom {
-  max-width: 525px !important;
+  max-width: 380px !important;
   width: 100%;
 }
 
-.popover.bottom .popover-content [id*='visibility'] svg {
+.popover.bottom .popover-content [id*='visibility'],
+.popover.bottom .popover-content [id*='enroll-method'] {
+  margin-top: .625rem;
+  margin-bottom: .75rem;
+}
+
+.popover.bottom .popover-content [id*='visibility'] svg,
+.popover.bottom .popover-content [id*='enroll-method'] svg {
   margin-right: 10px;
 }
 
-.popover.bottom .popover-content [id*='visibility'] p {
-  margin-bottom: 1.25rem;
+.popover.bottom .popover-content [id*='visibility'] strong,
+.popover.bottom .popover-content [id*='enroll-method'] strong {
+  font-weight: 700;
+}
+
+.popover.bottom .popover-content [id*='visibility'] p,
+.popover.bottom .popover-content [id*='enroll-method'] p {
+  margin-bottom: 1rem;
   font-size: 14px;
   font-weight: 300;
   line-height: 21px;
 }
 
-.popover.bottom .popover-content [id*='visibility'] p:last-child {
+.popover.bottom .popover-content [id*='visibility'] p:last-child,
+.popover.bottom .popover-content [id*='enroll-method'] p:last-child {
   margin-bottom: 0;
 }
 

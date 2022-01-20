@@ -7,10 +7,10 @@
     {{ title_prefix.teaser_tag }}
 
     {% if visibility_icon and visibility_label %}
-      <div class="badge teaser__badge no-padding"
-           title="{% trans %}The visibility of this content is set to {{ visibility_label }}{% endtrans %} ">
+      <div class="badge teaser__badge no-padding">
         <span class="badge__container">
           <svg class="badge__icon">
+            <title>{% trans %}Visibility: {% endtrans %}</title>
             <use xlink:href="#icon-{{ visibility_icon }}"></use>
           </svg>
           <span class="badge__label text-gray">{{ visibility_label|capitalize }}</span>
@@ -32,6 +32,7 @@
 
     {% embed "node--teaser__field.html.twig" %}
       {%- block field_icon -%} schedule {%- endblock -%}
+      {%- block svg_title -%} <title> {% trans %}Event schedule{% endtrans %} </title> {%- endblock -%}
       {%- block field_value %}
         <span class="sr-only">{% trans %}Event date{% endtrans %} </span>
         {{ event_date }}
@@ -41,6 +42,7 @@
     {% if content.field_event_location|render %}
       {% embed "node--teaser__field.html.twig" %}
         {%- block field_icon -%} location {%- endblock -%}
+        {%- block svg_title -%} <title> {% trans %}Event location{% endtrans %} </title> {%- endblock -%}
         {%- block field_value -%}
           <span class="sr-only">{% trans %}The event will take place at the{% endtrans %} </span>
           {{ content.field_event_location }}
@@ -65,10 +67,10 @@
 {% block card_actionbar %}
 
   {% if comment_count %}
-    <a href="{{ url }}#section-comments" class="badge teaser__badge"
-       title="{% trans %}Total amount of comments{% endtrans %}">
+    <a href="{{ url }}#section-comments" class="badge teaser__badge" title="{% trans %}Total amount of comments{% endtrans %}">
       <span class="badge__container">
         <svg class="badge__icon" aria-hidden="true">
+          <title>{% trans %}Total amount of comments{% endtrans %}</title>
           <use xlink:href="#icon-comment"></use>
         </svg>
         <span class="badge__label">{{ comment_count }}</span>
@@ -77,9 +79,10 @@
   {% endif %}
 
   {% if content.enrollments_count is not empty %}
-    <div class="badge teaser__badge" title="{% trans %}Total amount of enrollments{% endtrans %}">
+    <div class="badge teaser__badge">
       <span class="badge__container">
-        <svg class="badge__icon" aria-hidden="true">
+        <svg class="badge__icon">
+          <title>{% trans %}Total amount of enrollments{% endtrans %}</title>
           <use xlink:href="#icon-person"></use>
         </svg>
         <span class="badge__label">

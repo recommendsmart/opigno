@@ -38,6 +38,8 @@
 }
 
 .navbar-brand {
+  white-space: unset;
+
   .site-slogan {
     display: none;
     font-size: $navbar-brand-site-slogan-font-size;
@@ -69,9 +71,5 @@
 .footer-dark {
   .navbar-brand {
     @include b5-make-link($light, none, $light, none, '.site-title');
-
-    img {
-      filter: invert(1);
-    }
   }
 }

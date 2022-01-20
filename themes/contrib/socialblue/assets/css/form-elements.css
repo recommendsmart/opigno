@@ -139,6 +139,8 @@ fieldset strong {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
   margin: 0 -.25rem;
 }
 
@@ -363,6 +365,8 @@ fieldset strong {
   display: -ms-flexbox;
   display: flex;
   margin: 0 -.5rem;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
 }
 
 #edit-author-info .form-inline label,
@@ -490,4 +494,94 @@ fieldset strong {
 
 .enrollment-methods .panel-body .panel-heading header {
   font-weight: 300;
+}
+
+@media (max-width: 599px) {
+  .field--name-field-social-collaboration-editors table tbody td .form-type-select,
+  .field--name-field-event-managers table tbody td .form-type-select,
+  .field--name-field-social-idea-coauthors table tbody td .form-type-select,
+  .field--name-field-discussion-moderator table tbody td .form-type-select,
+  .field--name-field-course-related-courses table tbody td .form-type-select {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 0 100%;
+            flex: 0 0 100%;
+    max-width: 100%;
+    margin-bottom: 1rem;
+  }
+  .field--name-field-social-collaboration-editors table tbody td .form-type-select + .form-item,
+  .field--name-field-event-managers table tbody td .form-type-select + .form-item,
+  .field--name-field-social-idea-coauthors table tbody td .form-type-select + .form-item,
+  .field--name-field-discussion-moderator table tbody td .form-type-select + .form-item,
+  .field--name-field-course-related-courses table tbody td .form-type-select + .form-item {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 0 100%;
+            flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .field--name-field-social-collaboration-editors table tbody td .input-group,
+  .field--name-field-event-managers table tbody td .input-group,
+  .field--name-field-social-idea-coauthors table tbody td .input-group,
+  .field--name-field-discussion-moderator table tbody td .input-group,
+  .field--name-field-course-related-courses table tbody td .input-group {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 0 100%;
+            flex: 0 0 100%;
+    max-width: 100%;
+  }
+  #edit-author-info .form-inline,
+  #edit-tab-settings .form-inline,
+  #edit-menu .form-inline,
+  #edit-content-translation .form-inline,
+  .field--name-field-event-date .form-inline,
+  .field--name-field-event-date-end .form-inline,
+  .field--type-address .form-inline,
+  .enrollment-methods .form-inline,
+  .field--name-field-discussion-date .form-inline {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+  #edit-author-info .form-inline > *,
+  #edit-tab-settings .form-inline > *,
+  #edit-menu .form-inline > *,
+  #edit-content-translation .form-inline > *,
+  .field--name-field-event-date .form-inline > *,
+  .field--name-field-event-date-end .form-inline > *,
+  .field--type-address .form-inline > *,
+  .enrollment-methods .form-inline > *,
+  .field--name-field-discussion-date .form-inline > * {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 0 auto;
+            flex: 0 0 auto;
+    max-width: 276px;
+  }
+  #edit-author-info .form-inline > *:nth-child(1),
+  #edit-tab-settings .form-inline > *:nth-child(1),
+  #edit-menu .form-inline > *:nth-child(1),
+  #edit-content-translation .form-inline > *:nth-child(1),
+  .field--name-field-event-date .form-inline > *:nth-child(1),
+  .field--name-field-event-date-end .form-inline > *:nth-child(1),
+  .field--type-address .form-inline > *:nth-child(1),
+  .enrollment-methods .form-inline > *:nth-child(1),
+  .field--name-field-discussion-date .form-inline > *:nth-child(1) {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 0 auto;
+            flex: 0 0 auto;
+    max-width: 276px;
+  }
+  .field--name-field-discussion-date .card__block {
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+  }
+  .field--name-field-discussion-date .card__block > * {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 0 100%;
+            flex: 0 0 100%;
+    max-width: 100%;
+    margin-bottom: 0;
+  }
+  .field--name-field-discussion-date .card__block > * .form-inline {
+    margin-bottom: 0;
+  }
 }

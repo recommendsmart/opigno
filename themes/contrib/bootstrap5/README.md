@@ -10,8 +10,7 @@ or this theme's _variables_drupal.scss and recompile css!)
 
 ## FEATURES
 
-* Bootstrap 5 library (5.1.2 and 5.0.2) included
-* Bootstrap 5 style guide (view all Bootstrap 5 components on one page)
+* Bootstrap 5 library (5.1.3 and 5.0.2) included
 * Bootstrap 5 breakpoints
 * Bootstrap 5 integration with CKEditor
 * Bootstrap 5 configuration within admin user interface
@@ -19,9 +18,13 @@ or this theme's _variables_drupal.scss and recompile css!)
 * Can be used as is (subtheme is required for template and CSS overrides)
 * Drupal 8 and 9 compatible
 
-## SASS compilation:
+## Compainion module:
 
-* SASS compilation is no longer in the theme.
+Use [Bootstrap 5 tools](https://www.drupal.org/project/twbstools) companion module for
+better content editor and developer experience. Features:
+
+* Bootstrap 5 style guide (view all Bootstrap 5 components on one page)
+
 
 ## REQUIREMENTS
 

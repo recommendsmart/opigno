@@ -22,61 +22,67 @@
 }
 
 .popover {
-  border-radius: $border-radius-base;
+  border-radius: $border-radius-extrasmall;
   background-color: $popover-bg;
-  border: 1px solid $popover-fallback-border-color;
-  border: 1px solid $popover-border-color;
+  box-shadow: 0 4px 4px rgba($gray-base, .25);
 }
 
 .popover-title {
-  background-color: $popover-title-bg;
-  border-bottom: 1px solid darken($popover-title-bg, 5%);
-  border-radius: ($border-radius-large - 1) ($border-radius-large - 1) 0 0;
+  background-color: $gray-lightest;
+  border-radius: $border-radius-extrasmall $border-radius-extrasmall 0 0;
 }
 
 .popover {
   &.top > .arrow {
-    border-top-color: $popover-arrow-outer-fallback-color; // IE8 fallback
-    border-top-color: $popover-arrow-outer-color;
+    border-top-color: $gray-lightest; // IE8 fallback
+    border-top-color: $gray-lightest;
     &:after {
-      border-top-color: $popover-arrow-color;
+      border-top-color: $gray-lightest;
     }
   }
   &.right > .arrow {
-    border-right-color: $popover-arrow-outer-fallback-color; // IE8 fallback
-    border-right-color: $popover-arrow-outer-color;
+    border-right-color: $gray-lightest; // IE8 fallback
+    border-right-color: $gray-lightest;
     &:after {
-      border-right-color: $popover-arrow-color;
+      border-right-color: $gray-lightest;
     }
   }
   &.bottom > .arrow {
-    border-bottom-color: $popover-arrow-outer-fallback-color; // IE8 fallback
-    border-bottom-color: $popover-arrow-outer-color;
+    border-bottom-color: $gray-lightest; // IE8 fallback
+    border-bottom-color: $gray-lightest;
     &:after {
-      border-bottom-color: $popover-arrow-color;
+      border-bottom-color: $gray-lightest;
     }
   }
 
   &.left > .arrow {
-    border-left-color: $popover-arrow-outer-fallback-color; // IE8 fallback
-    border-left-color: $popover-arrow-outer-color;
+    border-left-color: $gray-lightest; // IE8 fallback
+    border-left-color: $gray-lightest;
     &:after {
-      border-left-color: $popover-arrow-color;
+      border-left-color: $gray-lightest;
     }
   }
 
   &.bottom {
-    max-width: 525px !important;
+    max-width: 380px !important;
     width: 100%;
 
     .popover-content {
-      [id*='visibility'] {
+      [id*='visibility'],
+      [id*='enroll-method'] {
+        margin-top: .625rem;
+        margin-bottom: .75rem;
+
         svg {
           margin-right: 10px;
         }
 
+        strong {
+          font-weight: 700;
+        }
+
         p {
-          margin-bottom: 1.25rem;
+          margin-bottom: 1rem;
           font-size: 14px;
           font-weight: 300;
           line-height: 21px;
@@ -103,7 +109,6 @@
       line-height: 24px;
       border: none;
       background: #f3f3f3 url('../../components/03-molecules/popover/icon-cog.svg') no-repeat 20px center/24px 24px
-
     }
 
     .popover-content {

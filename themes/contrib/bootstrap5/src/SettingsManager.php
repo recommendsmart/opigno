@@ -48,17 +48,28 @@ class SettingsManager {
       return;
     }
 
-    $styleguidePath = '/' . $this->themeManager->getActiveTheme()->getPath() . '/style-guide/index.html';
-    if (file_exists(DRUPAL_ROOT . $styleguidePath)) {
-      $form['styleguide'] = [
-        '#type' => 'details',
-        '#title' => t('Style guide'),
-        '#description' => t("Style guide demonstrates abilities of bootstrap framework. Open <a  target='_blank' href='@sglink'>style guide</a> in a new window.", [
-          '@sglink' => $styleguidePath,
-        ]),
-        '#open' => TRUE,
-      ];
+    // Integrate with styleguide from twbstools module.
+    $description = '';
+    if (\Drupal::moduleHandler()
+      ->moduleExists('twbstools')) {
+      $styleguidePath = '/admin/appearance/styleguide';
+      $description = t("Style guide demonstrates abilities of bootstrap framework. Open <a target='_blank' href='@sglink'>style guide</a> in a new window.", [
+        '@sglink' => $styleguidePath,
+      ]);
     }
+    else {
+      $styleguidePath = 'https://www.drupal.org/project/twbstools';
+      $description = t("Style guide demonstrates abilities of bootstrap framework. Style guide is now part of <a target='_blank' href='@sglink'>bootstrap tools</a> module. Install and enable to the module to enhance content editor and developer workflows.", [
+        '@sglink' => $styleguidePath,
+      ]);
+    }
+
+    $form['styleguide'] = [
+      '#type' => 'details',
+      '#title' => t('Style guide'),
+      '#description' => $description,
+      '#open' => TRUE,
+    ];
 
     $options_theme = [
       'none' => 'do not apply theme',

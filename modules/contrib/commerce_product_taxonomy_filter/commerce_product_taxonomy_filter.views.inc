@@ -34,7 +34,7 @@ function commerce_product_taxonomy_filter_views_data_alter(&$data) {
       'field' => 'tid',
     ],
     'commerce_product_field_data' => [
-      // Links directly to node via nid.
+      // Links directly to commerce_product via product_id.
       'left_field' => 'product_id',
       'field' => 'product_id',
     ],

@@ -8,6 +8,9 @@ storage.storage_type.*:
     label:
       type: label
       label: 'Label'
+    status:
+      type: boolean
+      label: 'Whether Storage items should be published by default'
     new_revision:
       type: boolean
       label: 'Whether a new revision should be created by default'
@@ -19,3 +22,6 @@ storage.storage_type.*:
       label: 'Whether to show the revision log text field'
     uuid:
       type: string
+    name_pattern:
+      type: string
+      label: 'A pattern to use for creating the name of the Storage entity'

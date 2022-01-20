@@ -6,7 +6,7 @@ Source: https://www.drupal.org/files/issues/color-optional-html-preview-2844190-
 
 
 Restrict images to this site blocks image style derivatives
-Source: https://www.drupal.org/files/issues/2018-10-26/2528214-47.patch
+Source: https://www.drupal.org/files/issues/2019-05-10/2528214-54.patch
 
 
 Optimize getCommentedEntity()

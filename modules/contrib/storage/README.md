@@ -51,12 +51,15 @@ CONFIGURATION
 Additional notes:
  * The "Published" toggle and author information are hidden from the form by
    default, but can be configured to display if necessary.
-
+ * The contrib Entity API (https://www.drupal.org/project/entity) can be
+   installed to make automatically use of its query access handler, so that
+   views can filter for accessible storage entities on database level.
 
 MAINTAINERS
 -----------
 
  * Martin Anderson-Clutz - https://www.drupal.org/u/mandclu
+ * Maximilian Haupt - https://www.drupal.org/u/mxh
 
 Supporting organization:
 

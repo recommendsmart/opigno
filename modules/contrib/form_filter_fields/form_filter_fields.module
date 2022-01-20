@@ -10,7 +10,6 @@ function form_filter_fields_form_alter(&$form, FormStateInterface $form_state, $
 {
 	// i don't think this will ever be false but you never know with Drupal
 	if (isset($form["#form_id"])) {
-
 		// get the configuration for this module
 		$config = \Drupal::service("config.factory")->getEditable("form_filter_fields.settings");
 		$all_form_filter_field_dependencies = $config->get("form_filter_fields_settings");
@@ -33,7 +32,8 @@ function form_filter_fields_form_alter(&$form, FormStateInterface $form_state, $
 					_form_filter_fields_work($form, $form_state, $all_form_filter_field_dependencies, "content", $current_content_type_modifying);
 				}
 
-			} else if ((preg_match("/^media_.*_form$/", $form_id)) && isset($all_form_filter_field_dependencies["media"])) {
+			}
+			else if ((preg_match("/^media_.*_form$/", $form_id)) && isset($all_form_filter_field_dependencies["media"])) {
 				// *************************************
 				// it's a media add/edit form
 				// *************************************
@@ -48,14 +48,8 @@ function form_filter_fields_form_alter(&$form, FormStateInterface $form_state, $
 					_form_filter_fields_work($form, $form_state, $all_form_filter_field_dependencies, "media", $current_media_type_modifying);
 				}
 			}
-
-			// end if not empty $all_form_filter_field_dependencies
 		}
-
-		// end if isset $form["#form_id"]
 	}
-
-	// end of form_filter_fields_form_alter
 }
 
 // -------------------------------------------------------------------
@@ -65,7 +59,6 @@ function form_filter_fields_form_alter(&$form, FormStateInterface $form_state, $
 function form_filter_fields_inline_entity_form_entity_form_alter(&$form, &$form_state)
 {
 	if (isset($form["#id"])) {
-
 		$config = \Drupal::service("config.factory")->getEditable("form_filter_fields.settings");
 		$all_form_filter_field_dependencies = $config->get("form_filter_fields_settings");
 
@@ -79,15 +72,12 @@ function form_filter_fields_inline_entity_form_entity_form_alter(&$form, &$form_
 			}
 		}
 	}
-
-	// end of form_filter_fields_inline_entity_form_entity_form_alter
 }
 
 // -------------------------------------------------------------------
 
 // all this function does is return the form; the actual work is done in form_filter_fields_form_alter
 function _form_filter_fields_callback(&$form, FormStateInterface $form_state) {
-	
 	// call our cool hook just in case the people want to alter the form even further!
 	\Drupal::moduleHandler()->invokeAll("form_filter_fields_callback_alter", array(&$form, &$form_state));
 
@@ -101,7 +91,6 @@ function _form_filter_fields_callback(&$form, FormStateInterface $form_state) {
 function _form_filter_fields_populate_form(&$form, $control_field_config, $control_field_value) {
 	// loop through all the control field configuration
 	foreach ($control_field_config as $target_field => $view_id) {
-								
 		$target_field_options = array();
 
 		// if it's a select, we want to add a none option
@@ -111,6 +100,15 @@ function _form_filter_fields_populate_form(&$form, $control_field_config, $contr
 
 		// call the function that gets all the options for the targeted field(s)
 		$target_field_options = $target_field_options + _form_filter_fields_get_target_field_options($view_id, array($control_field_value));
+
+		// if it's a radio button an error could be thrown on edits so we want to unset the default value
+		if ($form[$target_field]["widget"]["#type"] == "radios") {
+			if (isset($form[$target_field]["widget"]["#default_value"]) && !is_array($form[$target_field]["widget"]["#default_value"])) {
+				if (!array_key_exists($form[$target_field]["widget"]["#default_value"], $target_field_options)) {
+					unset($form[$target_field]["widget"]["#default_value"]);
+				}
+			}
+		}
 
 		// now finally assign it to its rightful element
 		$form[$target_field]["widget"]["#options"] = $target_field_options;
@@ -156,8 +154,6 @@ function _form_filter_fields_get_target_field_options($view_info_string, array $
 	}
 
 	return $target_field_items;
-
-	// end of _form_filter_fields_get_target_field_options
 }
 
 // -------------------------------------------------------------------
@@ -204,11 +200,7 @@ function _form_filter_fields_work(&$form, &$form_state, $all_form_filter_field_d
 
 			$form = _form_filter_fields_populate_form($form, $all_form_filter_field_dependencies[$entity_type][$entity_bundle][$control_field], $control_field_value);
 		}
-
-		// end if we have config for this content type
 	}
-
-	// end of _form_filter_fields_work
 }
 
 // -------------------------------------------------------------------

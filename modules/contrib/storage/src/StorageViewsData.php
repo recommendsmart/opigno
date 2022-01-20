@@ -5,7 +5,7 @@ namespace Drupal\storage;
 use Drupal\views\EntityViewsData;
 
 /**
- * Provides the views data for the storage entity type.
+ * Provides the views data for the Storage entity type.
  */
 class StorageViewsData extends EntityViewsData {
 
@@ -21,14 +21,14 @@ class StorageViewsData extends EntityViewsData {
 
     $data['storage_field_data']['id']['argument'] = [
       'id' => 'storage_id',
-      'name field' => 'title',
+      'name field' => 'name',
       'numeric' => TRUE,
       'validate type' => 'id',
     ];
 
-    $data['storage_field_data']['title']['field']['default_formatter_settings'] = ['link_to_entity' => TRUE];
+    $data['storage_field_data']['name']['field']['default_formatter_settings'] = ['link_to_entity' => TRUE];
 
-    $data['storage_field_data']['title']['field']['link_to_storage default'] = TRUE;
+    $data['storage_field_data']['name']['field']['link_to_storage default'] = TRUE;
 
     $data['storage_field_data']['type']['argument']['id'] = 'storage_type';
 

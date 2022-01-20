@@ -61,6 +61,7 @@
       <a href="{{ url }}">
         <div class="teaser__teaser-type">
           <svg class="teaser__teaser-type-icon">
+            <title>{% trans %}Group{% endtrans %}</title>
           {% if group_type_icon %}
               <use xlink:href="#{{- group_type_icon -}}"></use>
           {% else %}
@@ -79,11 +80,13 @@
         {{ title_prefix }}
         <h4{{ title_attributes }} class="teaser__title">
           {% if closed_group_lock %}
-            <svg class="icon-gray icon-small">
+            <svg class="icon-gray icon-small" aria-hidden="true">
+              <title>{% trans %}Closed group{% endtrans %}</title>
               <use xlink:href="#icon-lock"></use>
             </svg>
           {% elseif secret_group_shield %}
-            <svg class="icon-gray icon-small">
+            <svg class="icon-gray icon-small" aria-hidden="true">
+              <title>{% trans %}Secret group{% endtrans %}</title>
               <use xlink:href="#icon-shield"></use>
             </svg>
           {% endif %}
@@ -95,9 +98,10 @@
       {% block card_body %}
         <div class="teaser__content-line">
         {% if group_members is not empty %}
-            <div class="badge teaser__badge">
+          <div class="badge teaser__badge">
             <span class="badge__container">
-              <svg class="badge__icon" aria-hidden="true" title="{% trans %}Number of group members{% endtrans %}">
+              <svg class="badge__icon">
+                <title>{% trans %}Number of group members{% endtrans %}</title>
                 <use xlink:href="#icon-group"></use>
               </svg>
               <span class="badge__label">
@@ -109,12 +113,13 @@
         </div>
         {% if content.field_group_location|render or content.field_group_address|render %}
           <div class="teaser__content-line">
-              <svg class="teaser__content-type-icon" aria-hidden="true" title="{% trans %}Event location{% endtrans %}">
-                  <use xlink:href="#icon-location"></use>
-              </svg>
+            <svg class="teaser__content-type-icon" aria-hidden="true">
+              <title>{% trans %}Located at: {% endtrans %}</title>
+              <use xlink:href="#icon-location"></use>
+            </svg>
             <span class="teaser__content-text">
-          <span class="sr-only">{% trans %}located at: {% endtrans %} </span>
-          {{ content.field_group_location }}
+              <span class="sr-only">{% trans %}located at: {% endtrans %} </span>
+              {{ content.field_group_location }}
               {% if content.field_group_location|render is not empty and content.field_group_address|render is not empty %}
                 <span class="sr-only">, </span>
                 <span aria-hidden="true"> &bullet; </span>

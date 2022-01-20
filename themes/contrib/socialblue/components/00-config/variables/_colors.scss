@@ -92,6 +92,8 @@ $brand-danger:          #d9534f;
 
 $brand-primary-dark:    mix($gray-base, $brand-primary, 30%);
 
+$brand-link:            #33b5e5;
+
 $state-success-text:    #3c763d;
 $state-success-bg:      #dff0d8;
 $state-success-border:  darken(adjust-hue($state-success-bg, -10), 5%);

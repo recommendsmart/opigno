@@ -11,6 +11,10 @@
   }
 }
 
+.form-select {
+  min-width: 5rem;
+}
+
 input {
   &[type='search'] {
     box-sizing: border-box;
@@ -46,7 +50,7 @@ input {
 }
 
 td {
-  .form-item {
+  >.form-item {
     margin: 0;
   }
 }
@@ -70,5 +74,43 @@ td {
     .dropbutton-action > * {
       padding: $form-select-padding-y $form-select-padding-x;
     }
+  }
+}
+
+fieldset {
+  &.form-item {
+    @extend .card;
+    > legend {
+      @extend .card-header;
+    }
+
+    > .fieldset-wrapper {
+      @extend .card-body;
+    }
+  }
+}
+
+.form-item-upload {
+  @extend .card;
+  margin-bottom: $spacer;
+
+  label {
+    @extend .card-header;
+  }
+
+  > div {
+    @extend .card-body;
+  }
+}
+
+.form-type-managed-file {
+  @extend .card;
+
+  > label {
+    @extend .card-header;
+  }
+
+  > div {
+    @extend .card-body;
   }
 }

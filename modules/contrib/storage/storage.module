@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field_ui\FieldUI;
@@ -97,8 +98,8 @@ function storage_form_storage_type_add_form_submit($form, FormStateInterface $fo
 function storage_views_query_substitutions(ViewExecutable $view) {
   $account = \Drupal::currentUser();
   return [
-    '***VIEW_OWN_UNPUBLISHED_STORAGE***' => (int) $account->hasPermission('view own unpublished storage'),
-    '***ADMINISTER_STORAGE***' => (int) $account->hasPermission('administer storage'),
+    '***VIEW_OWN_UNPUBLISHED_STORAGE***' => (int) $account->hasPermission('view own unpublished storage entities'),
+    '***ADMINISTER_STORAGE_ENTITIES***' => (int) $account->hasPermission('administer storage entities'),
   ];
 }
 
@@ -109,5 +110,50 @@ function storage_entity_base_field_info(EntityTypeInterface $entity_type) {
   if ($entity_type->id() == 'storage' && \Drupal::hasService('rabbit_hole.entity_extender')) {
     return \Drupal::service('rabbit_hole.entity_extender')
       ->getRabbitHoleFields('storage');
+  }
+}
+
+/**
+ * Implements hook_inline_entity_form_entity_form_alter().
+ */
+function storage_inline_entity_form_entity_form_alter(array &$entity_form, FormStateInterface &$form_state) {
+  if (isset($entity_form['#entity_type']) && $entity_form['#entity_type'] === 'storage') {
+    /** @var \Drupal\storage\Entity\StorageInterface $storage */
+    $storage = $entity_form['#entity'];
+    $form_class = $storage->getEntityType()->getFormClass('default');
+    $entity_form['#entity_builders']['apply_name_pattern'] = [
+      $form_class,
+      'applyNamePattern',
+    ];
+  }
+}
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function storage_entity_type_build(array &$entity_types) {
+  if (!isset($entity_types['storage'])) {
+    return;
+  }
+  /** @var \Drupal\Core\Entity\EntityTypeInterface $entity_type */
+  $entity_type = $entity_types['storage'];
+  $module_handler = \Drupal::moduleHandler();
+
+  if ($module_handler->moduleExists('entity')) {
+    // Use contrib Entity API's query access handler.
+    if (is_subclass_of($entity_type->getStorageClass(), SqlEntityStorageInterface::class)) {
+      // Query access only works for SQL storages.
+      $entity_type->setHandlerClass('query_access', 'Drupal\storage\QueryAccess\StorageQueryAccessHandler');
+    }
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter() for Site Studio compatibility.
+ */
+function storage_theme_suggestions_storage_alter(array &$suggestions, array &$variables) {
+  // @todo Test if this can be moved into storage_theme_suggestions_storage().
+  if (function_exists('cohesion_templates_suggestions')) {
+    cohesion_templates_suggestions($suggestions, $variables['elements']['#storage'], $variables['elements']['#view_mode'], 'storage');
   }
 }

@@ -90,7 +90,7 @@
         <div class="hero-action-button">
           <a href="{{ node_edit_url }}" title="{% trans %}Edit content{% endtrans %}"
              class="btn btn-raised btn-default btn-floating">
-            <svg class="icon-gray icon-medium">
+            <svg class="icon-gray icon-medium" aria-hidden="true">
               <title>{% trans %}Edit content{% endtrans %}</title>
               <use xlink:href="#icon-edit"></use>
             </svg>
@@ -109,9 +109,9 @@
 
       {% block card_title %}
         {{ title_prefix }}
-        <h2{{ title_attributes }} class="teaser__title">
+        <h1{{ title_attributes }} class="teaser__title">
           <a href="{{ url }}" rel="bookmark">{{ label }}</a>
-        </h2>
+        </h1>
         {{ title_suffix }}
       {% endblock %}
 
@@ -129,15 +129,15 @@
 
               {% if visibility_icon and visibility_label %}
                 &bullet;
-                <div class="badge badge--large"
-                     title="{% trans %}The visibility of this content is set to {{ visibility_label }}{% endtrans %} ">
-                    <span class="badge__container">
-                      <svg class="badge__icon">
-                        <use xlink:href="#icon-{{ visibility_icon }}"></use>
-                      </svg>
-                      <span class="badge__label">&nbsp;</span>
-                      <span class="badge__label badge__label--description">{{ visibility_label|capitalize }}</span>
-                    </span>
+                <div class="badge badge--large">
+                  <span class="badge__container">
+                    <svg class="badge__icon">
+                      <title>{% trans %}The visibility of this content is set to {{ visibility_label }}{% endtrans %} </title>
+                      <use xlink:href="#icon-{{ visibility_icon }}"></use>
+                    </svg>
+                    <span class="badge__label">&nbsp;</span>
+                    <span class="badge__label badge__label--description">{{ visibility_label|capitalize }}</span>
+                  </span>
                 </div>
               {% endif %}
 
@@ -174,7 +174,8 @@
                   <a href="{{ url }}#section-comments" class="badge badge--large"
                      title="{% trans %}Total amount of comments{% endtrans %}">
                     <span class="badge__container">
-                      <svg class="badge__icon">
+                      <svg class="badge__icon" aria-hidden="true">
+                        <title>{% trans %}Total amount of comments{% endtrans %}</title>
                         <use xlink:href="#icon-comment"></use>
                       </svg>
                       <span class="badge__label">
@@ -194,17 +195,19 @@
                 {{ content.like_and_dislike }}
 
                 {% if views_count is not empty and views_label %}
-                  <div class="badge badge--large"
-                       title="{% trans %}Total amount of views{% endtrans %}">
-                  <span class="badge__container">
-                    <svg class="badge__icon">
-                      <use xlink:href="#icon-views"></use>
-                    </svg>
-                    <span class="badge__label">
-                      {{ views_count }}
+                  <div class="badge badge--large">
+                    <span class="badge__container">
+                      <svg class="badge__icon">
+                        <title>{% trans %}Total amount of views{% endtrans %}</title>
+                        <use xlink:href="#icon-views"></use>
+                      </svg>
+                      <span class="badge__label">
+                        {{ views_count }}
+                      </span>
+                      <span class="badge__label badge__label--description">
+                        {{ views_label }}
+                      </span>
                     </span>
-                    <span class="badge__label badge__label--description">{{ views_label }}</span>
-                  </span>
                   </div>
                 {% endif %}
               </div>

@@ -20,6 +20,10 @@ class StorageAccessControlHandler extends EntityAccessControlHandler {
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     /** @var \Drupal\storage\Entity\StorageInterface $entity */
 
+    if ($account->hasPermission('administer storage entities')) {
+      return AccessResult::allowed()->cachePerPermissions();
+    }
+
     switch ($operation) {
 
       case 'view':
@@ -27,87 +31,121 @@ class StorageAccessControlHandler extends EntityAccessControlHandler {
         if (!$entity->isPublished()) {
           $permission = $this->checkOwn($entity, 'view unpublished', $account);
           if (!empty($permission)) {
-            return AccessResult::allowed();
+            return AccessResult::allowed()
+              ->cachePerPermissions()
+              ->cachePerUser()
+              ->addCacheableDependency($entity);
           }
 
-          return AccessResult::allowedIfHasPermission($account, 'view unpublished storage entities');
+          return AccessResult::allowedIfHasPermission($account, 'view unpublished storage entities')
+            ->cachePerPermissions()
+            ->addCacheableDependency($entity);
         }
 
-        $permission = $this->checkOwn($entity, $operation, $account);
-        if (!empty($permission)) {
-          return AccessResult::allowed();
-        }
-
-        return AccessResult::allowedIfHasPermission($account, 'view published storage entities');
+        return AccessResult::allowedIfHasPermission($account, 'view published storage entities')
+          ->cachePerPermissions()
+          ->addCacheableDependency($entity);
 
       case 'update':
 
         $permission = $this->checkOwn($entity, $operation, $account);
         if (!empty($permission)) {
-          return AccessResult::allowed();
+          return AccessResult::allowed()
+            ->cachePerPermissions()
+            ->cachePerUser()
+            ->addCacheableDependency($entity);
         }
-        return AccessResult::allowedIfHasPermission($account, 'edit storage entities');
+        return AccessResult::allowedIfHasPermissions(
+          $account,
+          [
+            'edit storage entities',
+            'edit any ' . $entity->bundle() . ' storage entities',
+          ],
+          'OR'
+        )
+          ->cachePerPermissions()
+          ->addCacheableDependency($entity);
 
       case 'delete':
 
         $permission = $this->checkOwn($entity, $operation, $account);
         if (!empty($permission)) {
-          return AccessResult::allowed();
+          return AccessResult::allowed()
+            ->cachePerPermissions()
+            ->cachePerUser()
+            ->addCacheableDependency($entity);
         }
-        return AccessResult::allowedIfHasPermission($account, 'delete storage entities');
+        return AccessResult::allowedIfHasPermissions(
+          $account,
+          [
+            'delete storage entities',
+            'delete any ' . $entity->bundle() . ' storage entities',
+          ],
+          'OR'
+        )
+          ->cachePerPermissions()
+          ->addCacheableDependency($entity);
     }
 
     // Unknown operation, no opinion.
-    return AccessResult::neutral();
+    return AccessResult::neutral()->cachePerPermissions();
   }
 
   /**
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return AccessResult::allowedIfHasPermission($account, 'add storage entities');
+    return AccessResult::allowedIfHasPermissions(
+      $account,
+      [
+        'add storage entities',
+        'add ' . (string) $entity_bundle . ' storage entities',
+      ],
+      'OR'
+    );
   }
 
   /**
-   * Test for given 'own' permission.
+   * Check for given 'own' permissions.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
-   * @param $operation
+   *   The entity to check for.
+   * @param string $operation
+   *   The operation to perform.
    * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user account.
    *
    * @return string|null
    *   The permission string indicating it's allowed.
    */
   protected function checkOwn(EntityInterface $entity, $operation, AccountInterface $account) {
-    $status = $entity->isPublished();
+    /** @var \Drupal\storage\Entity\StorageInterface $entity */
     $uid = $entity->getOwnerId();
 
     $is_own = $account->isAuthenticated() && $account->id() == $uid;
     if (!$is_own) {
-      return;
+      return NULL;
     }
 
-    $bundle = $entity->bundle();
-
-    $ops = [
-      'create' => '%bundle add own %bundle entities',
-      'view unpublished' => '%bundle view own unpublished %bundle entities',
-      'view' => '%bundle view own entities',
-      'update' => '%bundle edit own entities',
-      'delete' => '%bundle delete own entities',
+    $entity_ops = [
+      'view unpublished' => 'view own unpublished storage entities',
+      'update' => 'edit own storage entities',
+      'delete' => 'delete own storage entities',
     ];
-    $permission = strtr($ops[$operation], ['%bundle' => $bundle]);
-
-    if ($operation === 'view unpublished') {
-      if (!$status && $account->hasPermission($permission)) {
-        return $permission;
-      }
-      else {
-        return NULL;
-      }
+    $entity_permission = $entity_ops[$operation];
+    if ($account->hasPermission($entity_permission)) {
+      return $entity_permission;
     }
-    if ($account->hasPermission($permission)) {
-      return $permission;
+
+    $bundle_ops = [
+      'view unpublished' => 'view own unpublished %bundle storage entities',
+      'update' => 'edit own %bundle storage entities',
+      'delete' => 'delete own %bundle storage entities',
+    ];
+    $bundle_permission = strtr($bundle_ops[$operation], ['%bundle' => $entity->bundle()]);
+
+    if ($account->hasPermission($bundle_permission)) {
+      return $bundle_permission;
     }
 
     return NULL;

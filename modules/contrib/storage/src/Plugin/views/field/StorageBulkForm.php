@@ -5,7 +5,7 @@ namespace Drupal\storage\Plugin\views\field;
 use Drupal\views\Plugin\views\field\BulkForm;
 
 /**
- * Defines a node operations bulk form element.
+ * Defines a Storage operations bulk form element.
  *
  * @ViewsField("storage_bulk_form")
  */

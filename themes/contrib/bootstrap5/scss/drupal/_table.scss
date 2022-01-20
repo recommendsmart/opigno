@@ -6,3 +6,9 @@ a {
     }
   }
 }
+
+// Bootstrap reboots table caption to bottom, but it's controlled in twig.
+// Revert reboot.
+table {
+  caption-side: unset;
+}

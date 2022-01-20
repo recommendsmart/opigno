@@ -1,0 +1,25 @@
+.field--name-field-introduction-text,
+.field--name-field-featured-items-description,
+.field--name-field-featured-description,
+.field--name-field-accord-description,
+.field--name-field-accord-item-description,
+.paragraph--type--image-text .field--name-field-text,
+.paragraph--type--text-image .field--name-field-text,
+.paragraph--type--text .field--name-field-text,
+.course-full .card__body p,
+.teaser--course p,
+.comment__text p,
+.body-text,
+.block--intro-text .block--intro-text__content,
+.basic-block .field--name-field-text-block,
+.hero--dashboard .field--name-field-text-block {
+
+  a:not(.btn) {
+    text-decoration: underline;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+  }
+}

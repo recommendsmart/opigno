@@ -2,6 +2,7 @@
 
 namespace Drupal\commerce_product_taxonomy_filter\Plugin\views\argument_default;
 
+use Drupal\commerce_product\Entity\ProductInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -10,7 +11,6 @@ use Drupal\taxonomy\TermInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
-use Drupal\commerce_product\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\taxonomy\VocabularyStorageInterface;
 
@@ -18,8 +18,8 @@ use Drupal\taxonomy\VocabularyStorageInterface;
  * Taxonomy tid default argument.
  *
  * @ViewsArgumentDefault(
- *   id = "taxonomy_tid",
- *   title = @Translation("Taxonomy term ID from URL")
+ *   id = "commerce_product_taxonomy_filter__taxonomy_tid",
+ *   title = @Translation("Taxonomy term ID from URL (Commerce Product)")
  * )
  */
 class Tid extends ArgumentDefaultPluginBase implements CacheableDependencyInterface {
@@ -126,7 +126,7 @@ class Tid extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
       '#default_value' => $this->options['limit'],
       '#states' => [
         'visible' => [
-          ':input[name="options[argument_default][taxonomy_tid][commerce_product]"]' => ['checked' => TRUE],
+          ':input[name="options[argument_default][commerce_product_taxonomy_filter__taxonomy_tid][commerce_product]"]' => ['checked' => TRUE],
         ],
       ],
     ];
@@ -144,8 +144,8 @@ class Tid extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
       '#default_value' => $this->options['vids'],
       '#states' => [
         'visible' => [
-          ':input[name="options[argument_default][taxonomy_tid][limit]"]' => ['checked' => TRUE],
-          ':input[name="options[argument_default][taxonomy_tid][commerce_product]"]' => ['checked' => TRUE],
+          ':input[name="options[argument_default][commerce_product_taxonomy_filter__taxonomy_tid][limit]"]' => ['checked' => TRUE],
+          ':input[name="options[argument_default][commerce_product_taxonomy_filter__taxonomy_tid][commerce_product]"]' => ['checked' => TRUE],
         ],
       ],
     ];
@@ -160,7 +160,7 @@ class Tid extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
       ],
       '#states' => [
         'visible' => [
-          ':input[name="options[argument_default][taxonomy_tid][commerce_product]"]' => ['checked' => TRUE],
+          ':input[name="options[argument_default][commerce_product_taxonomy_filter__taxonomy_tid][commerce_product]"]' => ['checked' => TRUE],
         ],
       ],
     ];
@@ -187,7 +187,7 @@ class Tid extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
     // Load default argument from commerce_product.
     if (!empty($this->options['commerce_product'])) {
       // Just check, if a commerce_product could be detected.
-      if (($commerce_product = $this->routeMatch->getParameter('commerce_product')) && $commerce_product instanceof NodeInterface) {
+      if (($commerce_product = $this->routeMatch->getParameter('commerce_product')) && $commerce_product instanceof ProductInterface) {
         $taxonomy = [];
         foreach ($commerce_product->getFieldDefinitions() as $field) {
           if ($field->getType() == 'entity_reference' && $field->getSetting('target_type') == 'taxonomy_term') {

@@ -75,7 +75,7 @@
   overflow-x: hidden;
   overflow-y: auto;
   position: absolute;
-  max-width: 100%;
+  max-width: 100% !important;
   top: 0;
   margin-left: 0.5rem;
   margin-right: 0.5rem;
@@ -105,34 +105,44 @@
 }
 
 .ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close {
-  font-size: 1.5rem;
-  font-weight: 400;
-  line-height: 1;
-  color: #000;
-  text-shadow: 0 1px 0 #fff;
-  opacity: .5;
+  font-size: 0;
   cursor: pointer;
   background: 0 0;
   border: none;
   outline: none;
   -webkit-appearance: none;
-  -webkit-transition: 0.3s;
-  transition: 0.3s;
+     -moz-appearance: none;
+          appearance: none;
+  opacity: 1;
   margin-top: 3px;
 }
 
-.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close:before {
-  content: 'x';
-  display: block;
-  position: absolute;
-  text-indent: 0;
-  right: 0;
-  left: 0;
-  margin: auto;
+.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close > span {
+  display: none;
 }
 
-.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close:hover {
-  opacity: .75;
+.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close:before {
+  content: '';
+  display: block;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url("../images/icons/icon-close_white.svg");
+  text-indent: 0;
+  -webkit-transform: scale(1);
+          transform: scale(1);
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+}
+
+.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close:hover:before {
+  -webkit-transform: scale(1.2);
+          transform: scale(1.2);
 }
 
 .ui-dialog-titlebar {

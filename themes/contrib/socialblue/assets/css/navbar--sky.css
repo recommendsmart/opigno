@@ -15,6 +15,19 @@
   height: 44px;
 }
 
+.socialblue--sky .navbar-secondary .navbar-nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  overflow-x: scroll;
+  width: 100%;
+  text-align: center;
+}
+
+.socialblue--sky .navbar-secondary .navbar-nav li {
+  position: relative;
+}
+
 .socialblue--sky .navbar-secondary .navbar-nav li a, .socialblue--sky .navbar-secondary .navbar-nav li button {
   position: relative;
   padding: 10px 20px;
@@ -46,19 +59,6 @@
   border-bottom-color: #fff;
 }
 
-.socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav, .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  overflow-x: scroll;
-  width: 100%;
-  text-align: center;
-}
-
-.socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav li, .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav li {
-  position: relative;
-}
-
 @media (min-width: 900px) {
   .socialblue--sky .navbar-fixed-top .navbar-nav {
     padding-right: 1.625rem;
@@ -71,28 +71,18 @@
     border-radius: 0 5px 0 0;
     overflow: hidden;
   }
-  .socialblue--sky.path-user .layout--with-complementary .navbar-secondary, .socialblue--sky.path-group .layout--with-complementary .navbar-secondary {
-    -webkit-box-flex: 0;
-        -ms-flex: 0 0 66.66667%;
-            flex: 0 0 66.66667%;
-    max-width: 66.66667%;
-    border-radius: 5px 5px 0 0;
-    -webkit-box-ordinal-group: 2;
-        -ms-flex-order: 1;
-            order: 1;
-  }
-  .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav, .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav {
+  .socialblue--sky .navbar-secondary .navbar-nav {
     display: table;
     overflow: visible;
   }
-  [dir='rtl'] .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav, [dir='rtl'] .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav {
+  [dir='rtl'] .socialblue--sky .navbar-secondary .navbar-nav {
     padding-right: 0;
     padding-left: 40px;
   }
-  .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav li, .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav li {
+  .socialblue--sky .navbar-secondary .navbar-nav li {
     display: table-cell;
   }
-  .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav .caret, .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav .caret {
+  .socialblue--sky .navbar-secondary .navbar-nav .caret {
     position: absolute;
     top: 50%;
     right: 15px;
@@ -102,15 +92,15 @@
             transform: translateY(-50%);
     cursor: pointer;
   }
-  [dir='rtl'] .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav .caret, [dir='rtl'] .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav .caret {
+  [dir='rtl'] .socialblue--sky .navbar-secondary .navbar-nav .caret {
     right: auto;
     left: 15px;
   }
-  .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav .caret.active, .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav .caret.active {
+  .socialblue--sky .navbar-secondary .navbar-nav .caret.active {
     -webkit-transform: translateY(-50%) rotate(180deg);
             transform: translateY(-50%) rotate(180deg);
   }
-  .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav .visible-list, .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav .visible-list {
+  .socialblue--sky .navbar-secondary .navbar-nav .visible-list {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -123,10 +113,10 @@
             justify-content: center;
     padding: 0 25px;
   }
-  .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav .visible-list a, .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav .visible-list a {
+  .socialblue--sky .navbar-secondary .navbar-nav .visible-list a {
     display: block;
   }
-  .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list, .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list {
+  .socialblue--sky .navbar-secondary .navbar-nav .hidden-list {
     display: none;
     position: absolute;
     top: 100%;
@@ -137,24 +127,34 @@
     border-top-left-radius: 0 !important;
     border-top-right-radius: 0 !important;
   }
-  [dir='rtl'] .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list, [dir='rtl'] .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list {
+  [dir='rtl'] .socialblue--sky .navbar-secondary .navbar-nav .hidden-list {
     right: auto;
     left: 0;
   }
-  .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list li, .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list li {
+  .socialblue--sky .navbar-secondary .navbar-nav .hidden-list li {
     display: block;
     text-align: left;
   }
-  [dir='rtl'] .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list li, [dir='rtl'] .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list li {
+  [dir='rtl'] .socialblue--sky .navbar-secondary .navbar-nav .hidden-list li {
     text-align: right;
   }
-  .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list li a, .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list li button, .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list li a, .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list li button {
+  .socialblue--sky .navbar-secondary .navbar-nav .hidden-list li a, .socialblue--sky .navbar-secondary .navbar-nav .hidden-list li button {
     display: block;
     width: 100%;
     padding: .5rem 2rem;
     color: #9b9b9b;
   }
-  .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list li a:focus, .socialblue--sky.path-user .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list li button:focus, .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list li a:focus, .socialblue--sky.path-group .layout--with-complementary .navbar-secondary .navbar-nav .hidden-list li button:focus {
+  .socialblue--sky .navbar-secondary .navbar-nav .hidden-list li a:focus, .socialblue--sky .navbar-secondary .navbar-nav .hidden-list li button:focus {
     background: transparent;
+  }
+  .socialblue--sky.path-user .layout--with-complementary .navbar-secondary, .socialblue--sky.path-group .layout--with-complementary .navbar-secondary {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 0 66.66667%;
+            flex: 0 0 66.66667%;
+    max-width: 66.66667%;
+    border-radius: 5px 5px 0 0;
+    -webkit-box-ordinal-group: 2;
+        -ms-flex-order: 1;
+            order: 1;
   }
 }

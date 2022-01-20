@@ -84,22 +84,22 @@ class StorageRevisionAccessCheck implements AccessInterface {
    *   A user object representing the user for whom the operation is to be
    *   performed.
    * @param string $op
-   *   (optional) The specific operation being checked. Defaults to 'view.'
+   *   (Optional) The specific operation being checked. Defaults to 'view'.
    *
    * @return bool
    *   TRUE if the operation may be performed, FALSE otherwise.
    */
   public function checkAccess(StorageInterface $storage, AccountInterface $account, $op = 'view') {
     $map = [
-      'view' => 'view all revisions',
-      'update' => 'revert all revisions',
-      'delete' => 'delete all revisions',
+      'view' => 'view all storage revisions',
+      'update' => 'revert all storage revisions',
+      'delete' => 'delete all storage revisions',
     ];
     $bundle = $storage->bundle();
     $type_map = [
-      'view' => "view $bundle revisions",
-      'update' => "revert $bundle revisions",
-      'delete' => "delete $bundle revisions",
+      'view' => "view $bundle storage revisions",
+      'update' => "revert $bundle storage revisions",
+      'delete' => "delete $bundle storage revisions",
     ];
 
     if (!$storage || !isset($map[$op]) || !isset($type_map[$op])) {
@@ -115,7 +115,7 @@ class StorageRevisionAccessCheck implements AccessInterface {
 
     if (!isset($this->access[$cid])) {
       // Perform basic permission checks first.
-      if (!$account->hasPermission($map[$op]) && !$account->hasPermission($type_map[$op]) && !$account->hasPermission('administer storages')) {
+      if (!$account->hasPermission($map[$op]) && !$account->hasPermission($type_map[$op]) && !$account->hasPermission('administer storage entities')) {
         $this->access[$cid] = FALSE;
         return FALSE;
       }
@@ -125,17 +125,20 @@ class StorageRevisionAccessCheck implements AccessInterface {
       $bundle_entity = \Drupal::entityTypeManager()->getStorage($bundle_entity_type)->load($bundle);
       if ($bundle_entity->shouldCreateNewRevision() && $op === 'view') {
         $this->access[$cid] = TRUE;
-      } else {
-        // There should be at least two revisions. If the vid of the given storage
-        // and the vid of the default revision differ, then we already have two
-        // different revisions so there is no need for a separate database
-        // check. Also, if you try to revert to or delete the default revision,
-        // that's not good.
+      }
+      else {
+        // There should be at least two revisions. If the vid of the given
+        // storage and the vid of the default revision differ, then we already
+        // have two different revisions so there is no need for a separate
+        // database check. Also, if you try to revert to or delete the default
+        // revision, that's not good.
         if ($storage->isDefaultRevision() && ($this->storageStorage->countDefaultLanguageRevisions($storage) == 1 || $op === 'update' || $op === 'delete')) {
           $this->access[$cid] = FALSE;
-        } elseif ($account->hasPermission('administer storages')) {
+        }
+        elseif ($account->hasPermission('administer storage entities')) {
           $this->access[$cid] = TRUE;
-        } else {
+        }
+        else {
           // First check the access to the default revision and finally, if the
           // storage passed in is not the default revision then check access to
           // that, too.
@@ -146,4 +149,5 @@ class StorageRevisionAccessCheck implements AccessInterface {
 
     return $this->access[$cid];
   }
+
 }

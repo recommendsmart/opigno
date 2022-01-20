@@ -8,7 +8,7 @@ dependencies:
   - drupal:field
   - drupal:node
 
-# Information added by Drupal.org packaging script on 2021-06-07
-version: '8.x-1.0-alpha45'
+# Information added by Drupal.org packaging script on 2021-10-28
+version: '8.x-1.0-alpha46'
 project: 'aggrid'
-datestamp: 1623090383
+datestamp: 1635464983

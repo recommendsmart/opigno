@@ -123,7 +123,7 @@ class SubthemeManager {
     $themePath = DRUPAL_ROOT . DIRECTORY_SEPARATOR . $subthemePathValue . DIRECTORY_SEPARATOR . $themeMName;
     if (!is_dir($themePath)) {
       // Copy CSS file replace empty one.
-      $subforders = ['css', 'style-guide'];
+      $subforders = ['css'];
       foreach ($subforders as $subforder) {
         $directory = $themePath . DIRECTORY_SEPARATOR . $subforder . DIRECTORY_SEPARATOR;
         $fs->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
@@ -184,9 +184,10 @@ class SubthemeManager {
           '',
         ],
       ];
+
       foreach ($files as $fileName => $lines) {
         // Get file content.
-        $content = str_replace('bootstrap4', $themeMName, file_get_contents(drupal_get_path('theme', 'bootstrap5') . DIRECTORY_SEPARATOR . $fileName));
+        $content = str_replace('bootstrap5', $themeMName, file_get_contents(drupal_get_path('theme', 'bootstrap5') . DIRECTORY_SEPARATOR . $fileName));
         if (is_array($lines)) {
           $content = implode(PHP_EOL, $lines);
         }
@@ -244,6 +245,24 @@ class SubthemeManager {
         }
         elseif (is_string($lines)) {
           $fs->copy($lines, $scssPath . DIRECTORY_SEPARATOR . $fileName, TRUE);
+        }
+      }
+
+      // Add block config to subtheme.
+      $orig_config_path = drupal_get_path('theme', 'bootstrap5') . DIRECTORY_SEPARATOR . 'config/optional';
+      $config_path = $themePath . DIRECTORY_SEPARATOR . 'config/optional';
+      $files = scandir($orig_config_path);
+      $fs->prepareDirectory($config_path, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+      foreach ($files as $filename) {
+        if (substr($filename, 0, 5) === 'block') {
+          $confYml = Yaml::decode(file_get_contents($orig_config_path . DIRECTORY_SEPARATOR . $filename));
+          $confYml['dependencies']['theme'] = [];
+          $confYml['dependencies']['theme'][] = $themeMName;
+          $confYml['id'] = str_replace('bootstrap5', $themeMName, $confYml['id']);
+          $confYml['theme'] = $themeMName;
+          $file_name = str_replace('bootstrap5', $themeMName, $filename);
+          file_put_contents($config_path . DIRECTORY_SEPARATOR . $file_name,
+            Yaml::encode($confYml));
         }
       }
 

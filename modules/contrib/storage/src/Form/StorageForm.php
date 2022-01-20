@@ -4,6 +4,7 @@ namespace Drupal\storage\Form;
 
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\storage\Entity\StorageInterface;
 use Drupal\storage\Entity\StorageType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -35,16 +36,15 @@ class StorageForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    /* @var \Drupal\storage\Entity\Storage $entity */
     $form = parent::buildForm($form, $form_state);
 
-    /** @var \Drupal\node\NodeInterface $node */
+    /** @var \Drupal\storage\Entity\StorageInterface $entity */
     $entity = $this->entity;
 
     if ($this->operation == 'edit') {
-      $form['#title'] = $this->t('<em>Edit @type</em> @title', [
+      $form['#title'] = $this->t('<em>Edit @type</em> @name', [
         '@type' => $entity->bundle(),
-        '@title' => $entity->label(),
+        '@name' => $entity->label(),
       ]);
     }
     $fields = \Drupal::service('entity_field.manager')->getFieldDefinitions('storage', $entity->bundle());
@@ -77,6 +77,18 @@ class StorageForm extends ContentEntityForm {
       ];
     }
 
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function form(array $form, FormStateInterface $form_state) {
+    $form = parent::form($form, $form_state);
+    $form['#entity_builders']['apply_name_pattern'] = [
+      static::class,
+      'applyNamePattern',
+    ];
     return $form;
   }
 
@@ -128,6 +140,30 @@ class StorageForm extends ContentEntityForm {
     }
 
     return $element;
+  }
+
+  /**
+   * Entity builder callback that applies the name pattern.
+   *
+   * @param string $entity_type_id
+   *   The entity type identifier.
+   * @param \Drupal\storage\Entity\StorageInterface $entity
+   *   The entity updated with the submitted values.
+   * @param array $form
+   *   The complete form array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  public static function applyNamePattern($entity_type_id, StorageInterface $entity, array $form, FormStateInterface $form_state) {
+    $entity->applyNamePattern();
+    // Disable the name pattern afterwards, in order to avoid redundant
+    // rebuilds during the save operation chain.
+    if ($entity->hasField('name_pattern')) {
+      $entity->get('name_pattern')->setValue('');
+    }
+    else {
+      $entity->name_pattern = '';
+    }
   }
 
 }
