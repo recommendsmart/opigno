@@ -32,7 +32,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'a9f19c68d09ae01b58413db2ecc8181437db0e82',
+    'reference' => '4b6668941186fab7bf23b39b055de239e83ab863',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -2036,7 +2036,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'a9f19c68d09ae01b58413db2ecc8181437db0e82',
+      'reference' => '4b6668941186fab7bf23b39b055de239e83ab863',
     ),
     'guzzlehttp/guzzle' => 
     array (
