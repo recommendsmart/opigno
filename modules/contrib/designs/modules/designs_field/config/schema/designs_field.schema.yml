@@ -1,0 +1,10 @@
+field.widget.third_party.designs_field:
+  type: design_object
+  label: Designs field widget wrapper
+
+field.formatter.third_party.designs_field:
+  type: design_object
+  label: Designs field formatter wrapper
+
+field.formatter.settings.design_formatter:
+  type: design_object

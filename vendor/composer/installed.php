@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '4bb541f9529d5f986bce1f50773fd6eed81de936',
+    'reference' => 'dcf59cd6ab7803a2cc65ac2e5a6073c7e2c7d52f',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -364,6 +364,15 @@
       array (
         0 => '8.9.20',
       ),
+    ),
+    'drupal/charts' => 
+    array (
+      'pretty_version' => '3.3.0',
+      'version' => '3.3.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-3.3',
     ),
     'drupal/ckeditor' => 
     array (
@@ -811,6 +820,15 @@
       array (
       ),
       'reference' => '1.0.0-alpha2',
+    ),
+    'drupal/designs' => 
+    array (
+      'pretty_version' => '1.0.1',
+      'version' => '1.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1.0.1',
     ),
     'drupal/devel' => 
     array (
@@ -1958,6 +1976,33 @@
         0 => '8.9.20',
       ),
     ),
+    'drupal/yasm' => 
+    array (
+      'pretty_version' => '2.0.3',
+      'version' => '2.0.3.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '2.0.3',
+    ),
+    'drupal/yasm_blocks' => 
+    array (
+      'pretty_version' => '2.0.3',
+      'version' => '2.0.3.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => NULL,
+    ),
+    'drupal/yasm_charts' => 
+    array (
+      'pretty_version' => '2.0.3',
+      'version' => '2.0.3.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => NULL,
+    ),
     'easyrdf/easyrdf' => 
     array (
       'pretty_version' => '0.9.1',
@@ -2019,7 +2064,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '4bb541f9529d5f986bce1f50773fd6eed81de936',
+      'reference' => 'dcf59cd6ab7803a2cc65ac2e5a6073c7e2c7d52f',
     ),
     'guzzlehttp/guzzle' => 
     array (

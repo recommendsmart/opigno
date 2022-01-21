@@ -11,7 +11,6 @@ description: 'Find and manage re-usable content fragments.'
 tag: ''
 base_table: fragment_field_data
 base_field: id
-core: 8.x
 display:
   default:
     display_plugin: default
@@ -187,15 +186,13 @@ display:
           batch_size: 50
           form_step: true
           buttons: false
-          clear_on_exposed: 0
+          clear_on_exposed: false
           action_title: Actie
           selected_actions:
-            views_bulk_operations_delete_entity: views_bulk_operations_delete_entity
-            pathauto_update_alias: 0
-            'entity:save_action:fragment': 0
-          preconfiguration:
-            views_bulk_operations_delete_entity:
-              label_override: Delete
+            -
+              action_id: views_bulk_operations_delete_entity
+              preconfiguration:
+                label_override: Delete
           plugin_id: views_bulk_operations_bulk_form
         title:
           id: title
@@ -466,7 +463,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: Publishing status
+          label: 'Publishing status'
           exclude: false
           alter:
             alter_text: false
@@ -602,6 +599,8 @@ display:
             remember_roles:
               authenticated: authenticated
             placeholder: ''
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -641,6 +640,8 @@ display:
             remember_roles:
               authenticated: authenticated
             reduce: false
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -680,6 +681,8 @@ display:
             remember_roles:
               authenticated: authenticated
             reduce: false
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -708,7 +711,7 @@ display:
           exposed: true
           expose:
             operator_id: ''
-            label: Publishing status
+            label: 'Publishing status'
             description: ''
             use_operator: false
             operator: status_op
@@ -718,6 +721,8 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''

@@ -1,0 +1,19 @@
+services:
+  plugin.manager.design:
+    class: Drupal\designs\DesignManager
+    arguments:
+      - '@container.namespaces'
+      - '@cache.discovery'
+      - '@module_handler'
+      - '@theme_handler'
+      - '@plugin.manager.design_source'
+      - '@file_system'
+  plugin.manager.design_content:
+    class: Drupal\designs\DesignContentManager
+    parent: default_plugin_manager
+  plugin.manager.design_setting:
+    class: Drupal\designs\DesignSettingManager
+    parent: default_plugin_manager
+  plugin.manager.design_source:
+    class: Drupal\designs\DesignSourceManager
+    parent: default_plugin_manager

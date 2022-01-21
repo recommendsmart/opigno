@@ -2198,6 +2198,73 @@
             "install-path": "../../themes/contrib/bootstrap5"
         },
         {
+            "name": "drupal/charts",
+            "version": "3.3.0",
+            "version_normalized": "3.3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/charts.git",
+                "reference": "8.x-3.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/charts-8.x-3.3.zip",
+                "reference": "8.x-3.3",
+                "shasum": "dd67bd5764a766525777d83b8963655f0e0bf8c3"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-3.3",
+                    "datestamp": "1636438364",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Pierre.Vriens",
+                    "homepage": "https://www.drupal.org/user/1689304"
+                },
+                {
+                    "name": "andileco",
+                    "homepage": "https://www.drupal.org/user/2054544"
+                },
+                {
+                    "name": "brmassa",
+                    "homepage": "https://www.drupal.org/user/67164"
+                },
+                {
+                    "name": "kenorb",
+                    "homepage": "https://www.drupal.org/user/191974"
+                },
+                {
+                    "name": "quicksketch",
+                    "homepage": "https://www.drupal.org/user/35821"
+                },
+                {
+                    "name": "rashad612",
+                    "homepage": "https://www.drupal.org/user/319686"
+                }
+            ],
+            "description": "A charting API for Drupal that provides chart elements and integration with Views.",
+            "homepage": "https://www.drupal.org/project/charts",
+            "support": {
+                "source": "https://git.drupalcode.org/project/charts"
+            },
+            "install-path": "../../modules/contrib/charts"
+        },
+        {
             "name": "drupal/commerce",
             "version": "2.28.0",
             "version_normalized": "2.28.0.0",
@@ -3649,6 +3716,53 @@
                 "source": "https://git.drupalcode.org/project/description_list_field"
             },
             "install-path": "../../modules/contrib/description_list_field"
+        },
+        {
+            "name": "drupal/designs",
+            "version": "1.0.1",
+            "version_normalized": "1.0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/designs.git",
+                "reference": "1.0.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/designs-1.0.1.zip",
+                "reference": "1.0.1",
+                "shasum": "895c92da6664f6005d9bf64e6c586e7075d69b25"
+            },
+            "require": {
+                "drupal/core": "^8.8.0 || ^9.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.1",
+                    "datestamp": "1630558868",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "rhys",
+                    "homepage": "https://www.drupal.org/user/133285"
+                }
+            ],
+            "description": "Allows theme templates to be replaced with designs.",
+            "homepage": "https://www.drupal.org/project/designs",
+            "support": {
+                "source": "https://git.drupalcode.org/project/designs"
+            },
+            "install-path": "../../modules/contrib/designs"
         },
         {
             "name": "drupal/devel",
@@ -8881,6 +8995,147 @@
                 "source": "https://git.drupalcode.org/project/weight"
             },
             "install-path": "../../modules/contrib/weight"
+        },
+        {
+            "name": "drupal/yasm",
+            "version": "2.0.3",
+            "version_normalized": "2.0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/yasm.git",
+                "reference": "2.0.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/yasm-2.0.3.zip",
+                "reference": "2.0.3",
+                "shasum": "99ab45c6dfdbbd5f18287048910adf2d045bb1fa"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "require-dev": {
+                "drupal/charts": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.3",
+                    "datestamp": "1642159307",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Oriol Roselló Castells",
+                    "homepage": "https://www.drupal.org/u/oriol_e9g",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "oriol_e9g",
+                    "homepage": "https://www.drupal.org/user/66422"
+                }
+            ],
+            "description": "Statistics about your site contents, files and users.",
+            "homepage": "https://www.drupal.org/project/yasm",
+            "support": {
+                "source": "http://cgit.drupalcode.org/yasm",
+                "issues": "https://www.drupal.org/project/issues/yasm"
+            },
+            "install-path": "../../modules/contrib/yasm"
+        },
+        {
+            "name": "drupal/yasm_blocks",
+            "version": "2.0.3",
+            "version_normalized": "2.0.3.0",
+            "require": {
+                "drupal/core": "^8 || ^9",
+                "drupal/yasm": "^2.0"
+            },
+            "type": "metapackage",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.3",
+                    "datestamp": "1642159307",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Oriol Roselló Castells",
+                    "homepage": "https://www.drupal.org/u/oriol_e9g",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "oriol_e9g",
+                    "homepage": "https://www.drupal.org/user/66422"
+                }
+            ],
+            "description": "YASM Bloks for YASM module.",
+            "homepage": "https://www.drupal.org/project/yasm",
+            "support": {
+                "source": "http://cgit.drupalcode.org/yasm",
+                "issues": "https://www.drupal.org/project/issues/yasm"
+            },
+            "install-path": null
+        },
+        {
+            "name": "drupal/yasm_charts",
+            "version": "2.0.3",
+            "version_normalized": "2.0.3.0",
+            "require": {
+                "drupal/charts": "^3.0",
+                "drupal/core": "^8 || ^9",
+                "drupal/yasm": "^2.0"
+            },
+            "type": "metapackage",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.3",
+                    "datestamp": "1642159307",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Oriol Roselló Castells",
+                    "homepage": "https://www.drupal.org/u/oriol_e9g",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "oriol_e9g",
+                    "homepage": "https://www.drupal.org/user/66422"
+                }
+            ],
+            "description": "YASM Charts for YASM module.",
+            "homepage": "https://www.drupal.org/project/yasm",
+            "support": {
+                "source": "http://cgit.drupalcode.org/yasm",
+                "issues": "https://www.drupal.org/project/issues/yasm"
+            },
+            "install-path": null
         },
         {
             "name": "easyrdf/easyrdf",
