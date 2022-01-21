@@ -33,7 +33,8 @@
         "drupal/form_display_visibility": "^1.0@beta",
         "drupal/gcommerce": "^1.0@beta",
         "drupal/commerce_product_restriction": "1.0.x-dev",
-        "drupal/currency": "^3.3"
+        "drupal/currency": "^3.3",
+        "drupal/entity_field_condition": "^1.3"
     },
     "repositories": [
         {

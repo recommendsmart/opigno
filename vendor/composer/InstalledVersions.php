@@ -32,7 +32,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'a9c6bb8dba2f99c5870eed9c912a425897bfd903',
+    'reference' => '4bb541f9529d5f986bce1f50773fd6eed81de936',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -896,6 +896,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '8.x-1.2',
+    ),
+    'drupal/entity_field_condition' => 
+    array (
+      'pretty_version' => '1.3.0',
+      'version' => '1.3.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-1.3',
     ),
     'drupal/entity_reference' => 
     array (
@@ -2036,7 +2045,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'a9c6bb8dba2f99c5870eed9c912a425897bfd903',
+      'reference' => '4bb541f9529d5f986bce1f50773fd6eed81de936',
     ),
     'guzzlehttp/guzzle' => 
     array (
