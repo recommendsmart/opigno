@@ -32,7 +32,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '4b6668941186fab7bf23b39b055de239e83ab863',
+    'reference' => 'a9c6bb8dba2f99c5870eed9c912a425897bfd903',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -1664,7 +1664,7 @@ private static $installed = array (
     array (
       'replaced' => 
       array (
-        0 => '10.3.5',
+        0 => '10.3.6',
       ),
     ),
     'drupal/social_course' => 
@@ -2022,12 +2022,12 @@ private static $installed = array (
     ),
     'goalgorilla/open_social' => 
     array (
-      'pretty_version' => '10.3.5',
-      'version' => '10.3.5.0',
+      'pretty_version' => '10.3.6',
+      'version' => '10.3.6.0',
       'aliases' => 
       array (
       ),
-      'reference' => '01a7cecdba1bd10bd87418bee0a5488e97a03877',
+      'reference' => '97f2c2b19df363148d04a2eddcb4e1509aeedd42',
     ),
     'goalgorilla/social_template' => 
     array (
@@ -2036,7 +2036,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '4b6668941186fab7bf23b39b055de239e83ab863',
+      'reference' => 'a9c6bb8dba2f99c5870eed9c912a425897bfd903',
     ),
     'guzzlehttp/guzzle' => 
     array (
@@ -2978,12 +2978,12 @@ private static $installed = array (
     ),
     'webonyx/graphql-php' => 
     array (
-      'pretty_version' => 'v14.11.3',
-      'version' => '14.11.3.0',
+      'pretty_version' => 'v14.11.4',
+      'version' => '14.11.4.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'a7192e7a2b0487dc5e185feb4f4df1fc24d35d86',
+      'reference' => 'd8d6307399df7246f09a1e9cc05e1574214ca67c',
     ),
     'willdurand/geocoder' => 
     array (
