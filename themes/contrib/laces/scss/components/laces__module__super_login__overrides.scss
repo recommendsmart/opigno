@@ -2,13 +2,11 @@
 @import "../../../../../../vendor/twbs/bootstrap/scss/functions";
 @import "../../../../../../vendor/twbs/bootstrap/scss/variables";
 @import "../../../../../../vendor/twbs/bootstrap/scss/mixins";
-
 #user-login-form,
 #user-pass {
   #capslockdiv {
     height: 1em;
   }
-
   #capslockdiv p {
     display: none;
     color: #c61414;
@@ -22,7 +20,6 @@
     position: relative;
     top: -15px;
   }
-
   /* Field Icons */
   #edit-name {
     background: #fff url("../../images/login-icon.svg") no-repeat 5px center;
@@ -30,21 +27,18 @@
     text-indent: 2em;
     border: 1px solid #aaa;
   }
-
   #edit-pass {
     background: #fff url("../../images/password-icon.svg") no-repeat 5px center;
     background-size: 1em 1em;
     text-indent: 2em;
     border: 1px solid #aaa;
   }
-
   .actions-suffix {
     float: right;
     position: relative;
     bottom: 2.5rem;
     right: 1.0rem;
   }
-
   p.login-title {
     line-height: 40px;
     font-size: 15px;
@@ -59,17 +53,14 @@
     box-shadow: 0 1px whitesmoke;
     margin: 0 0 $spacer 0;
   }
-
   p.forgot-password {
     display: inline-block;
     position: relative;
     top: -.5rem;
   }
-
   p.forgot-password a {
     border: none;
   }
-
   > * {
     margin-left: $spacer;
     margin-right: $spacer;

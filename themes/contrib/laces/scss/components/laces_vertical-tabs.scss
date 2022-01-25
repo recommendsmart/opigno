@@ -6,15 +6,12 @@
 @import "../../../../../../vendor/twbs/bootstrap/scss/functions";
 @import "../../../../../../vendor/twbs/bootstrap/scss/variables";
 @import "../../../../../../vendor/twbs/bootstrap/scss/mixins";
-
 .vertical-tabs * {
   box-sizing: content-box;
 }
-
 .vertical-tabs textarea {
   box-sizing: border-box;
 }
-
 .vertical-tabs {
   position: relative;
   margin: 10px 0;
@@ -75,7 +72,6 @@
 .vertical-tabs__menu-item:last-child a {
   border-bottom: 0;
 }
-
 .vertical-tabs__menu-item.is-selected a,
 .vertical-tabs__menu-item a:hover,
 .vertical-tabs__menu-item a:focus {

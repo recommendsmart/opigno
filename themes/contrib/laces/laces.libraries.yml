@@ -511,17 +511,11 @@ laces-super-login:
     - laces/laces-forms
     - laces/bootstrap-card
 
-laces-tabledrag:
+laces-tables:
   version: VERSION
   css:
     component:
-      css/components/laces_tabledrag.css: { }
+      css/components/laces_tables.css: { }
   dependencies:
     - core/drupal.tabledrag
     - laces/bootstrap-tables
-
-laces-utilities:
-  version: VERSION
-  css:
-    component:
-      css/components/laces_utilities.css: { }

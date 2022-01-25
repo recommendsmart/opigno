@@ -2,10 +2,18 @@
 @import "../../../../../../vendor/twbs/bootstrap/scss/functions";
 @import "../../../../../../vendor/twbs/bootstrap/scss/variables";
 @import "../../../../../../vendor/twbs/bootstrap/scss/mixins";
-
 #drupal-off-canvas,
 #layout-builder-modal {
   #bs_nav-tabs {
     width: calc(100% + 30px);
   }
 }
+#drupal-off-canvas .field-text-alignment .fieldset-wrapper > div > div input + label .input-icon[class*="start"],
+#layout-builder-modal .field-text-alignment .fieldset-wrapper > div > div input + label .input-icon[class*="start"] {
+  background-image: url("../../images/bootstrap_styles/text-left.svg");
+}
+#drupal-off-canvas .field-text-alignment .fieldset-wrapper > div > div input + label .input-icon[class*="end"],
+#layout-builder-modal .field-text-alignment .fieldset-wrapper > div > div input + label .input-icon[class*="end"] {
+  background-image: url("../../images/bootstrap_styles/text-right.svg");
+}
+

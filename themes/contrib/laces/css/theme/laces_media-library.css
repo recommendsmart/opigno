@@ -35,6 +35,7 @@
  */
 .media-library-menu li {
   display: block;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
@@ -218,7 +219,7 @@
 .media-library-view .media-library-view--form-actions {
   clear: left;
   align-self: flex-end;
-  margin: 0.75em 0;
+  margin: 0;
 }
 
 /**
@@ -501,7 +502,7 @@
   bottom: 0;
   display: block;
   overflow: hidden;
-  max-width: calc(100% - 10px);
+  max-width: 100%;
   max-height: calc(100% - 50px);
   padding: 5px;
   background: white;
@@ -592,7 +593,7 @@
 .media-library-item__remove.button:focus {
   position: absolute;
   z-index: 1;
-  top: 10px;
+  top: 1rem;
   overflow: hidden;
   width: 21px;
   height: 21px;

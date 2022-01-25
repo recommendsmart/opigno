@@ -6,7 +6,6 @@
 @import "../../../../../../vendor/twbs/bootstrap/scss/functions";
 @import "../../../../../../vendor/twbs/bootstrap/scss/variables";
 @import "../../../../../../vendor/twbs/bootstrap/scss/mixins";
-
 button.link {
   display: inline;
   margin: 0;
@@ -22,19 +21,16 @@ button.link:hover {
   color: $link-hover-color;
   text-decoration: $link-hover-decoration;
 }
-
 label button.link {
   font-weight: bold;
 }
 .text-format-wrapper > .form-item {
   margin-bottom: 0;
 }
-
 .filter-help a {
   position: relative;
   margin: 0 20px 0 0;
 }
-
 .filter-help a:after {
   position: absolute;
   top: 0;

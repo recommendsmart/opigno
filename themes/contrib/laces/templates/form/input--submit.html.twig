@@ -12,12 +12,11 @@
 #}
 {# Use bootstrap styles #}
 {{ attach_library('laces/bootstrap-buttons') }}
-{% if attributes.hasClass('button') %}
-  {% set attributes = attributes.addClass('btn', 'align-self-end') %}
-{% endif %}
-{% if not attributes.hasClass('search-form', 'submit') %}
-  {% set attributes = attributes.addClass('my-3', 'me-2') %}
-{% endif %}
+{% set classes = [
+  attributes.hasClass('button') ? 'btn',
+  attributes.hasClass('button') ? 'align-self-end',
+  not attributes.hasClass('search-form') ? 'mb-3',
+] %}
 {% if attributes.hasClass('button--primary') %}
   {% set attributes = attributes.addClass('btn-outline-primary', 'btn-sm') %}
 {% elseif attributes.hasClass('button--danger') %}
@@ -26,5 +25,4 @@
   {% set attributes = attributes.addClass('btn-outline-secondary', 'btn-sm') %}
 {% endif %}
 
-<input{{ attributes }}>{{ children }}
-
+<input{{ attributes.addClass(classes) }}>{{ children }}

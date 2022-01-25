@@ -1,7 +1,6 @@
 /**
  * Presentational styles for Drupal dialogs.
  */
-
 .ui-dialog {
   position: absolute;
   z-index: 1260;
@@ -9,7 +8,6 @@
   border: 0;
   background: transparent;
 }
-
 @media all and (max-width: 48em) { /* 768px */
   .ui-dialog {
     min-width: 92%;
@@ -56,6 +54,10 @@
   right: auto;
   left: 20px;
 }
+.ui-dialog .ui-icon.ui-icon-closethick {
+  margin-top: -8px;
+  background: url(../../images/ffffff/ex.svg) 0 0 no-repeat;
+}
 .ui-dialog .ui-widget-content.ui-dialog-content {
   overflow: auto;
   padding: 1em;
@@ -83,7 +85,6 @@
 .ui-dialog .ui-dialog-content {
   position: static;
 }
-
 /* Form action buttons are moved in dialogs. Remove empty space. */
 .ui-dialog .ui-dialog-content .form-actions {
   margin: 0;

@@ -349,14 +349,21 @@ function laces_theme_suggestions_page_alter(array &$suggestions, array $variable
   if ($node instanceof Drupal\node\Entity\Node) {
     // Get the content type. $path_args[2] should be 'add' or 'edit'.
     $type = $node->getType();
-    $suggestions[] = 'page__node__' . $type;
+
     $path_args = explode('/', Url::fromRoute('<current>')->getInternalPath());
     if (isset($path_args[2])) {
+      $suggestions[] = 'page__node__' . $path_args[2] . '__' . $type;
       if ($path_args[2] == 'add' || $path_args[2] == 'edit') {
         $suggestions[] = 'page__node__modify';
         $suggestions[] = 'page__node__modify__' . $type;
       }
-      $suggestions[] = 'page__node__' . $path_args[2] . '__' . $type;
+      if ($path_args[2] == 'devel') {
+        $suggestions[] = 'page__node__devel';
+        $suggestions[] = 'page__node_devel__' . $type;
+      }
+    }
+    else {
+      $suggestions[] = 'page__node__' . $type;
     }
   }
 }
@@ -450,7 +457,7 @@ function laces_preprocess_block_content_add_list(array &$variables) {
  */
 function laces_preprocess_field(&$variables) {
   if ($variables['element']['#field_name'] == "field_laces_image" &&
-   $variables['element']['#view_mode'] = 'teaser') {
+    $variables['element']['#view_mode'] = 'teaser') {
     $variables['element']['0']['#field_view_mode'] = "card-img-top";
   }
 }
@@ -474,6 +481,7 @@ function laces_preprocess_fieldset__media_library_widget(array &$variables) {
       'media-library-open-button';
   }
 }
+
 /**
  * Implements hook_preprocess_HOOK() for form.
  *
@@ -562,6 +570,7 @@ function laces_preprocess_item_list__media_library_add_form_media_list(array &$v
     }
   }
 }
+
 /**
  * Implements hook_preprocess_HOOK() for HTML document templates.
  *

@@ -77,9 +77,13 @@
 
 <main role="main">
   <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
-  <div class="layout-content">
-    {{ page.content }}
-  </div>{# /.layout-content #}
+  <div class="layout-content container mb-3">
+    <div class="row gx-0">
+      <div class="col">
+        {{ page.content }}
+      </div>
+    </div>
+  </div>
 </main>
 
 {% if page.footer %}

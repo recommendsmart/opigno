@@ -2,7 +2,6 @@
 @import "../../../../../../vendor/twbs/bootstrap/scss/functions";
 @import "../../../../../../vendor/twbs/bootstrap/scss/variables";
 @import "../../../../../../vendor/twbs/bootstrap/scss/mixins";
-
 /**
  @TODO Bootstap 5 has removed text hide. Evaluate alternatives.
  */
@@ -14,3 +13,4 @@
   text-indent: -9999px;
   background: url(../../../../../core/misc/feed.svg) no-repeat;
 }
+

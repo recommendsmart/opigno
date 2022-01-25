@@ -63,6 +63,11 @@
   left: 20px;
 }
 
+.ui-dialog .ui-icon.ui-icon-closethick {
+  margin-top: -8px;
+  background: url(../../images/ffffff/ex.svg) 0 0 no-repeat;
+}
+
 .ui-dialog .ui-widget-content.ui-dialog-content {
   overflow: auto;
   padding: 1em;

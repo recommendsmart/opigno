@@ -5,7 +5,6 @@
 @import "../../../../../../vendor/twbs/bootstrap/scss/functions";
 @import "../../../../../../vendor/twbs/bootstrap/scss/variables";
 @import "../../../../../../vendor/twbs/bootstrap/scss/mixins";
-
 .form-required:after {
   display: inline-block;
   width: 7px;
@@ -18,7 +17,6 @@
   background-repeat: no-repeat;
   background-size: 7px 7px;
 }
-
 .contact-message-feedback-form #edit-actions {
   margin-top: $spacer;
 }
@@ -26,7 +24,6 @@
   margin-top: $spacer;
   margin-bottom: $spacer;
 }
-
 .button--danger {
   color: #dc3545;
 }

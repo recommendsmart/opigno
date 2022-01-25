@@ -1,0 +1,24 @@
+name: Laces sub-theme
+type: theme
+base theme: laces
+description: 'Sub-theme for Laces theme. Used for custom theming of site.'
+core_version_requirement: ^8.9 || ^9
+logo: logo.svg
+
+package: laces
+
+libraries:
+  - sublaces/global-styling
+
+regions:
+  header: 'Header'
+  navigation: 'Navigation'
+  navigation_collapsible: 'Navigation (Collapsible)'
+  highlighted: 'Highlighted'
+  content: 'Content'
+  footer: 'Footer'
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+
+ckeditor_stylesheets:
+  - css/theme/sublaces_typography.css

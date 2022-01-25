@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'dcf59cd6ab7803a2cc65ac2e5a6073c7e2c7d52f',
+    'reference' => 'abdbd0d3a3caf52201f278ece39fa3a523c3b034',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -1093,8 +1093,8 @@
     ),
     'drupal/geocoder_field' => 
     array (
-      'pretty_version' => '3.24.0',
-      'version' => '3.24.0.0',
+      'pretty_version' => '3.25.0',
+      'version' => '3.25.0.0',
       'aliases' => 
       array (
       ),
@@ -1269,12 +1269,12 @@
     ),
     'drupal/laces' => 
     array (
-      'pretty_version' => '1.3.0-rc2',
-      'version' => '1.3.0.0-RC2',
+      'pretty_version' => '1.3.1',
+      'version' => '1.3.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '1.3.0-rc2',
+      'reference' => '1.3.1',
     ),
     'drupal/language' => 
     array (
@@ -1665,7 +1665,7 @@
     array (
       'replaced' => 
       array (
-        0 => '10.3.6',
+        0 => '10.3.7',
       ),
     ),
     'drupal/social_course' => 
@@ -2050,12 +2050,12 @@
     ),
     'goalgorilla/open_social' => 
     array (
-      'pretty_version' => '10.3.6',
-      'version' => '10.3.6.0',
+      'pretty_version' => '10.3.7',
+      'version' => '10.3.7.0',
       'aliases' => 
       array (
       ),
-      'reference' => '97f2c2b19df363148d04a2eddcb4e1509aeedd42',
+      'reference' => 'a5c157ce79add08dbe14e4c1080e4bc197bca96f',
     ),
     'goalgorilla/social_template' => 
     array (
@@ -2064,7 +2064,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'dcf59cd6ab7803a2cc65ac2e5a6073c7e2c7d52f',
+      'reference' => 'abdbd0d3a3caf52201f278ece39fa3a523c3b034',
     ),
     'guzzlehttp/guzzle' => 
     array (
@@ -2140,12 +2140,12 @@
     ),
     'laminas/laminas-stdlib' => 
     array (
-      'pretty_version' => '3.7.0',
-      'version' => '3.7.0.0',
+      'pretty_version' => '3.7.1',
+      'version' => '3.7.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'cba75fad2053bb5dc8d3e7f5e62b61d75eecfaf1',
+      'reference' => 'bcd869e2fe88d567800057c1434f2380354fe325',
     ),
     'laminas/laminas-zendframework-bridge' => 
     array (
@@ -2158,12 +2158,12 @@
     ),
     'league/csv' => 
     array (
-      'pretty_version' => '9.8.0',
-      'version' => '9.8.0.0',
+      'pretty_version' => '9.7.4',
+      'version' => '9.7.4.0',
       'aliases' => 
       array (
       ),
-      'reference' => '9d2e0265c5d90f5dd601bc65ff717e05cec19b47',
+      'reference' => '002f55f649e7511710dc7154ff44c7be32c8195c',
     ),
     'lsolesen/pel' => 
     array (
@@ -2581,12 +2581,12 @@
     ),
     'psr/container' => 
     array (
-      'pretty_version' => '1.1.2',
-      'version' => '1.1.2.0',
+      'pretty_version' => '1.1.1',
+      'version' => '1.1.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '513e0666f7216c7459170d56df27dfcefe1689ea',
+      'reference' => '8622567409010282b7aeebe4bb841fe98b58dcaf',
     ),
     'psr/container-implementation' => 
     array (
@@ -3006,12 +3006,12 @@
     ),
     'webonyx/graphql-php' => 
     array (
-      'pretty_version' => 'v14.11.4',
-      'version' => '14.11.4.0',
+      'pretty_version' => 'v14.11.5',
+      'version' => '14.11.5.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'd8d6307399df7246f09a1e9cc05e1574214ca67c',
+      'reference' => 'ffa431c0821821839370a68dab3c2597c06bf7f0',
     ),
     'willdurand/geocoder' => 
     array (
