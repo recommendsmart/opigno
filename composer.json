@@ -38,7 +38,14 @@
         "drupal/designs": "^1.0",
         "drupal/yasm": "^2.0",
         "drupal/yasm_charts": "^2.0",
-        "drupal/yasm_blocks": "^2.0"
+        "drupal/yasm_blocks": "^2.0",
+        "drupal/personal_notes": "^2.1",
+        "drupal/digital_signage_framework": "^2.4",
+        "drupal/file_de_duplicator": "^1.0",
+        "drupal/private_taxonomy": "^2.5",
+        "drupal/entity_list": "^2.0@alpha",
+        "drupal/collapsible_fields": "^1.0@beta",
+        "drupal/node_singles": "^3.0"
     },
     "repositories": [
         {

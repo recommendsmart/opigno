@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'abdbd0d3a3caf52201f278ece39fa3a523c3b034',
+    'reference' => 'a3fcb45718ecfcd608e776a160a729f3d2f93025',
     'name' => 'goalgorilla/social_template',
   ),
   'versions' => 
@@ -417,6 +417,15 @@ private static $installed = array (
       array (
         0 => '8.9.20',
       ),
+    ),
+    'drupal/collapsible_fields' => 
+    array (
+      'pretty_version' => '1.0.0-beta4',
+      'version' => '1.0.0.0-beta4',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1.0.0-beta4',
     ),
     'drupal/color' => 
     array (
@@ -862,6 +871,24 @@ private static $installed = array (
       ),
       'reference' => '8.x-2.1',
     ),
+    'drupal/digital_signage_framework' => 
+    array (
+      'pretty_version' => '2.4.7',
+      'version' => '2.4.7.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '2.4.7',
+    ),
+    'drupal/dimension' => 
+    array (
+      'pretty_version' => '2.0.0',
+      'version' => '2.0.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '2.0.0',
+    ),
     'drupal/dynamic_entity_reference' => 
     array (
       'pretty_version' => '1.12.0',
@@ -921,6 +948,15 @@ private static $installed = array (
       ),
       'reference' => '8.x-1.3',
     ),
+    'drupal/entity_list' => 
+    array (
+      'pretty_version' => '2.0.0-alpha1',
+      'version' => '2.0.0.0-alpha1',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-2.0-alpha1',
+    ),
     'drupal/entity_reference' => 
     array (
       'replaced' => 
@@ -954,6 +990,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '8.x-1.1',
+    ),
+    'drupal/expose_actions' => 
+    array (
+      'pretty_version' => '2.0.3',
+      'version' => '2.0.3.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '2.0.3',
     ),
     'drupal/features' => 
     array (
@@ -1009,6 +1054,15 @@ private static $installed = array (
       array (
         0 => '8.9.20',
       ),
+    ),
+    'drupal/file_de_duplicator' => 
+    array (
+      'pretty_version' => '1.0.1',
+      'version' => '1.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1.0.1',
     ),
     'drupal/file_mdm' => 
     array (
@@ -1459,6 +1513,15 @@ private static $installed = array (
         0 => '8.9.20',
       ),
     ),
+    'drupal/node_singles' => 
+    array (
+      'pretty_version' => '3.0.1',
+      'version' => '3.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '3.0.1',
+    ),
     'drupal/options' => 
     array (
       'replaced' => 
@@ -1514,6 +1577,15 @@ private static $installed = array (
       ),
       'reference' => '8.x-1.8',
     ),
+    'drupal/personal_notes' => 
+    array (
+      'pretty_version' => '2.1.1',
+      'version' => '2.1.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '2.1.1',
+    ),
     'drupal/places' => 
     array (
       'pretty_version' => 'dev-1.0.x',
@@ -1541,6 +1613,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '8.x-1.3',
+    ),
+    'drupal/private_taxonomy' => 
+    array (
+      'pretty_version' => '2.5.0',
+      'version' => '2.5.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-2.5',
     ),
     'drupal/profile' => 
     array (
@@ -1999,6 +2080,15 @@ private static $installed = array (
         0 => '8.9.20',
       ),
     ),
+    'drupal/yaml_editor' => 
+    array (
+      'pretty_version' => '1.1.0',
+      'version' => '1.1.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8.x-1.1',
+    ),
     'drupal/yasm' => 
     array (
       'pretty_version' => '2.0.3',
@@ -2087,7 +2177,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'abdbd0d3a3caf52201f278ece39fa3a523c3b034',
+      'reference' => 'a3fcb45718ecfcd608e776a160a729f3d2f93025',
     ),
     'guzzlehttp/guzzle' => 
     array (
@@ -2133,6 +2223,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '170ded831f49abc6a6061f655aba9bdbcf7b8111',
+    ),
+    'jawira/plantuml-encoding' => 
+    array (
+      'pretty_version' => 'v1.0.9',
+      'version' => '1.0.9.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'e7a0213a3813df97887975767c132c67f69595ef',
     ),
     'laminas/laminas-diactoros' => 
     array (
