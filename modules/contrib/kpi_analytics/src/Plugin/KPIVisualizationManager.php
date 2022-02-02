@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\kpi_analytics\Annotation\KPIVisualization;
 
 /**
  * Provides the KPI Visualization plugin manager.
@@ -24,7 +25,7 @@ class KPIVisualizationManager extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/KPIVisualization', $namespaces, $module_handler, 'Drupal\kpi_analytics\Plugin\KPIVisualizationInterface', 'Drupal\kpi_analytics\Annotation\KPIVisualization');
+    parent::__construct('Plugin/KPIVisualization', $namespaces, $module_handler, KPIVisualizationInterface::class, KPIVisualization::class);
 
     $this->alterInfo('kpi_analytics_kpi_visualization_info');
     $this->setCacheBackend($cache_backend, 'kpi_analytics_kpi_visualization_plugins');
@@ -37,7 +38,7 @@ class KPIVisualizationManager extends DefaultPluginManager {
    *   An associative array mapping the IDs of all available tracker plugins to
    *   their labels.
    */
-  public function getOptionsList() {
+  public function getOptionsList(): array {
     $options = [];
     foreach ($this->getDefinitions() as $plugin_id => $plugin_definition) {
       $options[$plugin_id] = Html::escape($plugin_definition['label']);

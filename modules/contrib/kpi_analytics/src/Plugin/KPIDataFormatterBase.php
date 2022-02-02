@@ -15,17 +15,13 @@ abstract class KPIDataFormatterBase extends PluginBase implements KPIDataFormatt
 
   /**
    * The date formatter.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
-  protected $dateFormatter;
+  protected DateFormatterInterface $dateFormatter;
 
   /**
    * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * KPIDataFormatterBase constructor.
@@ -51,7 +47,7 @@ abstract class KPIDataFormatterBase extends PluginBase implements KPIDataFormatt
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): self {
     return new static(
       $configuration,
       $plugin_id,
@@ -64,7 +60,7 @@ abstract class KPIDataFormatterBase extends PluginBase implements KPIDataFormatt
   /**
    * {@inheritdoc}
    */
-  public function format(array $data) {
+  public function format(array $data, $block = NULL): array {
     return $data;
   }
 

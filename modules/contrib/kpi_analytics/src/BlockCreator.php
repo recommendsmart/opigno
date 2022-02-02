@@ -2,12 +2,15 @@
 
 namespace Drupal\kpi_analytics;
 
+use Drupal\Core\Config\Entity\ConfigEntityStorage;
+use Drupal\block\Entity\Block;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Class BlockCreator.
+ * The BlockCreator class.
  *
  * @package Drupal\kpi_analytics
  */
@@ -15,17 +18,13 @@ class BlockCreator {
 
   /**
    * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The configuration factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $configFactory;
+  protected ConfigFactoryInterface $configFactory;
 
   /**
    * The block entity.
@@ -36,31 +35,25 @@ class BlockCreator {
 
   /**
    * Path to directory with the file source.
-   *
-   * @var string
    */
-  protected $path;
+  protected ?string $path;
 
   /**
    * Identifier of a block. Should be equal to filename.
-   *
-   * @var string
    */
-  protected $id;
+  protected ?string $id;
 
   /**
    * Cache for the parsed data.
    *
-   * @var array
+   * @var array|null
    */
   protected $data;
 
   /**
    * The block storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $blockStorage;
+  protected ConfigEntityStorage $blockStorage;
 
   /**
    * BlockCreator constructor.
@@ -84,9 +77,10 @@ class BlockCreator {
    * @param string $id
    *   Identifier of a block.
    */
-  public function setSource($path, $id) {
+  public function setSource(string $path, string $id): void {
     $this->path = $path;
     $this->id = $id;
+    $this->data = NULL;
   }
 
   /**
@@ -98,7 +92,7 @@ class BlockCreator {
    * @return array
    *   Data.
    */
-  protected function getData($reset = FALSE) {
+  protected function getData(bool $reset = FALSE) {
     if (!$this->data || $reset) {
       $source = "{$this->path}/{$this->id}.yml";
       $content = file_get_contents($source);
@@ -111,7 +105,7 @@ class BlockCreator {
   /**
    * Get created entity.
    */
-  public function getEntity() {
+  public function getEntity(): Block {
     return $this->entity;
   }
 
@@ -121,7 +115,7 @@ class BlockCreator {
    * @param string $plugin_id
    *   Plugin ID.
    */
-  public function setPluginId($plugin_id) {
+  public function setPluginId(string $plugin_id): void {
     $this->getData(TRUE);
     $this->data['plugin'] = $plugin_id;
   }
@@ -129,7 +123,7 @@ class BlockCreator {
   /**
    * Create entity with values defined in a yaml file.
    */
-  public function create() {
+  public function create(): EntityInterface {
     $values = $this->getData();
 
     // If block already exists, skip creating and return an existing entity.
@@ -157,7 +151,7 @@ class BlockCreator {
   /**
    * Delete block.
    */
-  public function delete() {
+  public function delete(): void {
     $values = $this->getData();
 
     if ($block = $this->blockStorage->load($values['id'])) {

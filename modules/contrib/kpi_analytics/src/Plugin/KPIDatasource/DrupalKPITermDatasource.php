@@ -20,7 +20,7 @@ class DrupalKPITermDatasource extends KPIDatasourceBase {
   /**
    * {@inheritdoc}
    */
-  public function query(BlockContentInterface $entity, $block) {
+  public function query(BlockContentInterface $entity, $block): array {
     $data = [];
     $args = [];
 

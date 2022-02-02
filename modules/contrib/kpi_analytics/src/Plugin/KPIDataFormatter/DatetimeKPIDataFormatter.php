@@ -17,7 +17,7 @@ class DatetimeKPIDataFormatter extends KPIDataFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function format(array $data) {
+  public function format(array $data, $block = NULL): array {
     $formatted_data = [];
 
     usort($data, $this->sortByField('created'));
@@ -38,17 +38,15 @@ class DatetimeKPIDataFormatter extends KPIDataFormatterBase {
    * @param string $field
    *   Field name.
    *
-   * @return \Closure
    *   Sorting callback.
    */
-  public function sortByField($field) {
-    return function ($a, $b) use ($field) {
+  public function sortByField(string $field): callable {
+    return static function ($a, $b) use ($field) {
       if ($a[$field] == $b[$field]) {
         return 0;
       }
-      else {
-        return ($a[$field] < $b[$field]) ? -1 : 1;
-      }
+
+      return ($a[$field] < $b[$field]) ? -1 : 1;
     };
   }
 

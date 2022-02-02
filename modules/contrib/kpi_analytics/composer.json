@@ -2,13 +2,11 @@
     "name": "drupal/kpi_analytics",
     "type": "drupal-module",
     "description": "KPI Analytics.",
-    "homepage": "http://drupal.org/project/kpi_analytics",
+    "homepage": "https://www.drupal.org/project/kpi_analytics",
     "minimum-stability": "dev",
     "require": {
-        "drupal/select2": "1.8"
-    },
-    "conflict": {
-        "goalgorilla/open_social": "<9.5",
-        "drupal/social": "<9.5"
+        "php": "^7.4",
+        "goalgorilla/open_social": "^10 || ^11",
+        "drupal/select2": "^1.13"
     }
 }

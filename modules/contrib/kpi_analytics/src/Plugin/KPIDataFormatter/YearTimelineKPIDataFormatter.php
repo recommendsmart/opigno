@@ -17,7 +17,7 @@ class YearTimelineKPIDataFormatter extends KPIDataFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function format(array $data) {
+  public function format(array $data, $block = NULL): array {
     $months = [];
     $current_month = $data ? date('n') : 12;
 

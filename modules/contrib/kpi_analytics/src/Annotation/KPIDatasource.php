@@ -2,6 +2,7 @@
 
 namespace Drupal\kpi_analytics\Annotation;
 
+use Drupal\Core\Annotation\Translation;
 use Drupal\Component\Annotation\Plugin;
 
 /**
@@ -16,18 +17,15 @@ class KPIDatasource extends Plugin {
 
   /**
    * The plugin ID.
-   *
-   * @var string
    */
-  public $id;
+  public string $id;
 
   /**
    * The label of the plugin.
    *
-   * @var \Drupal\Core\Annotation\Translation
    *
    * @ingroup plugin_translatable
    */
-  public $label;
+  public Translation $label;
 
 }

@@ -2,6 +2,7 @@
 
 namespace Drupal\kpi_analytics\Plugin;
 
+use Drupal\block\BlockInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 
 /**
@@ -14,10 +15,12 @@ interface KPIDataFormatterInterface extends PluginInspectionInterface {
    *
    * @param array $data
    *   Input array.
+   * @param \Drupal\block\BlockInterface|null $block
+   *   The 'block' entity.
    *
    * @return array
    *   Output array.
    */
-  public function format(array $data);
+  public function format(array $data, BlockInterface $block);
 
 }

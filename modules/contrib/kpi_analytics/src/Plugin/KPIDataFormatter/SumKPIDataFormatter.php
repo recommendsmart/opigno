@@ -17,15 +17,14 @@ class SumKPIDataFormatter extends KPIDataFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function format(array $data) {
+  public function format(array $data, $block = NULL): array {
     $formatted_data = [];
 
     // Sum the first value if it does not exist already.
     foreach ($data as $value) {
       $key = $value['created'];
-      // TODO: Might to improve this code so it works with older PHP versions.
       if (isset($formatted_data[$key])) {
-        if (!in_array($value['uid'], $formatted_data[$key]['uids'])) {
+        if (!in_array($value['uid'], $formatted_data[$key]['uids'], TRUE)) {
           $formatted_data[$key]['uids'][] = $value['uid'];
         }
       }

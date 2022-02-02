@@ -1,14 +1,16 @@
-name: KPI Analytics
+name: 'KPI Analytics'
 type: module
-description: KPI Analytics architecture used in the Open Social Drupal 8 distribution.
-core: 8.x
-package: Custom
+description: 'KPI Analytics architecture used in the Open Social Drupal distribution.'
+core_version_requirement: ^8.8 || ^9
+package: Social
+php: 7.4
 dependencies:
-  - text
-  - layout_builder
+  - drupal:text
+  - drupal:layout_builder
   - select2:select2
+  - field_group:field_group
 
-# Information added by Drupal.org packaging script on 2021-02-24
-version: '8.x-1.0-alpha6'
+# Information added by Drupal.org packaging script on 2022-01-21
+version: '2.0.0-beta2'
 project: 'kpi_analytics'
-datestamp: 1614185109
+datestamp: 1642765149

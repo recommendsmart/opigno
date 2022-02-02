@@ -18,7 +18,7 @@ class DrupalKPIDatasource extends KPIDatasourceBase {
   /**
    * {@inheritdoc}
    */
-  public function query(BlockContentInterface $entity, $block) {
+  public function query(BlockContentInterface $entity, $block): array {
     $data = [];
     // TODO: check if we can use Views module.
     if (!$entity->get('field_kpi_query')->isEmpty()) {

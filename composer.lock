@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8415ca44c2f7e16cc31930372735c293",
+    "content-hash": "85a70630bdb01091a0504af8abfbe38c",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5755,6 +5755,66 @@
                 "source": "https://www.drupal.org/project/jquery_ui_touch_punch",
                 "issues": "https://www.drupal.org/project/issues/jquery_ui_touch_punch",
                 "irc": "irc://irc.freenode.org/drupal-contribute"
+            }
+        },
+        {
+            "name": "drupal/kpi_analytics",
+            "version": "2.0.0-beta2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/kpi_analytics.git",
+                "reference": "2.0.0-beta2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/kpi_analytics-2.0.0-beta2.zip",
+                "reference": "2.0.0-beta2",
+                "shasum": "cfd22c0da9fc5283f00d41ed3d358d82f10ee209"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9",
+                "drupal/field_group": "*",
+                "drupal/select2": "^1.13",
+                "goalgorilla/open_social": "^10 || ^11",
+                "php": "^7.4"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.0-beta2",
+                    "datestamp": "1642765147",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Open Social",
+                    "homepage": "https://www.drupal.org/user/272162"
+                },
+                {
+                    "name": "bramtenhove",
+                    "homepage": "https://www.drupal.org/user/1549848"
+                },
+                {
+                    "name": "ribel",
+                    "homepage": "https://www.drupal.org/user/1449610"
+                },
+                {
+                    "name": "robertragas",
+                    "homepage": "https://www.drupal.org/user/2723261"
+                }
+            ],
+            "description": "KPI Analytics.",
+            "homepage": "https://www.drupal.org/project/kpi_analytics",
+            "support": {
+                "source": "https://git.drupalcode.org/project/kpi_analytics"
             }
         },
         {
@@ -15108,7 +15168,8 @@
         "drupal/description_list_field": 15,
         "drupal/entity_version": 10,
         "drupal/group_flex": 10,
-        "drupal/collapsible_fields": 10
+        "drupal/collapsible_fields": 10,
+        "drupal/kpi_analytics": 10
     },
     "prefer-stable": true,
     "prefer-lowest": false,

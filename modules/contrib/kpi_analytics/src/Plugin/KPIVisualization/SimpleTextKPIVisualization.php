@@ -17,7 +17,7 @@ class SimpleTextKPIVisualization extends KPIVisualizationBase {
   /**
    * {@inheritdoc}
    */
-  public function render(array $data) {
+  public function render(array $data): array {
     $render_array = [];
     $value = $data[0];
     $render_array['kpi_analytics']['#markup'] = array_shift($value) . ' registered users on the platform';

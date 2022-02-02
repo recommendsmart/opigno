@@ -23,6 +23,6 @@ interface KPIBuilderInterface {
    *   A render array for the action link, empty if the user does not have
    *   access.
    */
-  public function build($entity_type_id, $entity_id, $block_id);
+  public function build(string $entity_type_id, $entity_id, ?string $block_id): array;
 
 }

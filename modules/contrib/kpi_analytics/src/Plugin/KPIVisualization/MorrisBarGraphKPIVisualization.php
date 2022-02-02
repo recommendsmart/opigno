@@ -17,7 +17,7 @@ class MorrisBarGraphKPIVisualization extends KPIVisualizationBase {
   /**
    * {@inheritdoc}
    */
-  public function render(array $data) {
+  public function render(array $data): array {
     $uuid = $this->uuid->generate();
 
     $xkey = 'x';

@@ -42,7 +42,8 @@
         "drupal/entity_list": "^1.7",
         "drupal/collapsible_fields": "^1.0@beta",
         "drupal/node_singles": "^3.0",
-        "drupal/user_bundle": "^1.1"
+        "drupal/user_bundle": "^1.1",
+        "drupal/kpi_analytics": "^2.0@beta"
     },
     "repositories": [
         {

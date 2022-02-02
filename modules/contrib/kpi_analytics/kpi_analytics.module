@@ -8,22 +8,17 @@
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\kpi_analytics\Plugin\Block\KPIBlockContentBlock;
 
 /**
  * Implements hook_help().
  */
-function kpi_analytics_help($route_name, RouteMatchInterface $route_match) {
-  switch ($route_name) {
-    // Main module help for the kpi_analytics module.
-    case 'help.page.kpi_analytics':
-      $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('Architecture for making Key Performance Indicators for your website.') . '</p>';
-      return $output;
-
-    default:
+function kpi_analytics_help($route_name) {
+  if ($route_name === 'help.page.kpi_analytics') {
+    $output = '';
+    $output .= '<h3>' . t('About') . '</h3>';
+    $output .= '<p>' . t('Architecture for making Key Performance Indicators for your website.') . '</p>';
+    return $output;
   }
 }
 
@@ -31,40 +26,32 @@ function kpi_analytics_help($route_name, RouteMatchInterface $route_match) {
  * Retrieve the Datasource plugins.
  */
 function _kpi_datasource_allowed_values(FieldStorageDefinitionInterface $definition, FieldableEntityInterface $entity = NULL) {
-  $kpi_datasources = \Drupal::service('plugin.manager.kpi_datasource.processor')
-    ->getOptionsList();
-  return $kpi_datasources;
+  return \Drupal::service('plugin.manager.kpi_datasource.processor')->getOptionsList();
 }
 
 /**
  * Retrieve the Data formatter plugins.
  */
 function _kpi_data_formatter_allowed_values(FieldStorageDefinitionInterface $definition, FieldableEntityInterface $entity = NULL) {
-  $kpi_datasources = \Drupal::service('plugin.manager.kpi_data_formatter.processor')
-    ->getOptionsList();
-  return $kpi_datasources;
+  return \Drupal::service('plugin.manager.kpi_data_formatter.processor')->getOptionsList();
 }
 
 /**
  * Retrieve the Data visualization plugins.
  */
 function _kpi_visualization_allowed_values(FieldStorageDefinitionInterface $definition, FieldableEntityInterface $entity = NULL) {
-  $kpi_datasources = \Drupal::service('plugin.manager.kpi_visualization.processor')
-    ->getOptionsList();
-  return $kpi_datasources;
+  return \Drupal::service('plugin.manager.kpi_visualization.processor')->getOptionsList();
 }
 
 /**
  * Implements hook_preprocess_block().
  */
 function kpi_analytics_preprocess_block(&$variables) {
-
   if (
     isset($variables['content']['#block_content']) &&
     $variables['base_plugin_id'] === 'block_content' &&
     $variables['content']['#block_content']->bundle() === 'kpi_analytics'
   ) {
-
     // TODO: Work on caching and preferable use the hook below for render.
     // TODO: See how we can render this in the template without moving this.
     if (isset($variables['elements']['kpi_analytics']) && !isset($variables['content']['kpi_analytics'])) {
@@ -105,10 +92,8 @@ function _kpi_analytics_is_kpi_block(BlockPluginInterface $block) {
     $block_entities = \Drupal::entityTypeManager()
       ->getStorage('block_content')
       ->loadByProperties(['uuid' => $uuid]);
-    if ($block_entity = array_pop($block_entities)) {
-      if ($block_entity->bundle() === 'kpi_analytics') {
-        return $block_entity;
-      }
+    if (($block_entity = array_pop($block_entities)) && $block_entity->bundle() === 'kpi_analytics') {
+      return $block_entity;
     }
   }
   return FALSE;
@@ -117,7 +102,7 @@ function _kpi_analytics_is_kpi_block(BlockPluginInterface $block) {
 /**
  * Implements hook_theme().
  */
-function kpi_analytics_theme($existing, $type, $theme, $path) {
+function kpi_analytics_theme($existing, $type, $theme, $path): array {
   return [
     'kpi_analytics_morris_chart' => [
       'template' => 'morris-chart',
@@ -150,9 +135,7 @@ function kpi_analytics_theme($existing, $type, $theme, $path) {
 function kpi_analytics_block_alter(array &$definitions) {
   $block_content_definitions = array_filter(
     $definitions,
-    static function ($key) {
-      return strpos($key, 'block_content') === 0;
-    },
+    static fn($key): bool => strpos($key, 'block_content') === 0,
     ARRAY_FILTER_USE_KEY
   );
   $block_content_ids = array_keys($block_content_definitions);
@@ -178,7 +161,7 @@ function kpi_analytics_block_alter(array &$definitions) {
       continue;
     }
 
-    if (in_array($block_content->field_kpi_datasource->value, $datasource_with_terms)) {
+    if (in_array($block_content->field_kpi_datasource->value, $datasource_with_terms, TRUE)) {
       $definitions[$block_content_id]['class'] = KPIBlockContentBlock::class;
     }
   }

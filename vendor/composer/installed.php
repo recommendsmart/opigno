@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '1842abc92ff8a5570bbf5d4ff2133b1a11b51842',
+        'reference' => '8f0945f14c76e54e0e130e1fcaaf004623987919',
         'name' => 'goalgorilla/social_template',
         'dev' => true,
     ),
@@ -1218,6 +1218,15 @@
                 0 => '9.2.11',
             ),
         ),
+        'drupal/kpi_analytics' => array(
+            'pretty_version' => '2.0.0-beta2',
+            'version' => '2.0.0.0-beta2',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/kpi_analytics',
+            'aliases' => array(),
+            'reference' => '2.0.0-beta2',
+            'dev_requirement' => false,
+        ),
         'drupal/language' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -1974,7 +1983,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '1842abc92ff8a5570bbf5d4ff2133b1a11b51842',
+            'reference' => '8f0945f14c76e54e0e130e1fcaaf004623987919',
             'dev_requirement' => false,
         ),
         'guzzlehttp/guzzle' => array(

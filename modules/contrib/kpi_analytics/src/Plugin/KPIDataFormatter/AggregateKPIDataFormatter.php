@@ -17,7 +17,7 @@ class AggregateKPIDataFormatter extends KPIDataFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function format(array $data) {
+  public function format(array $data, $block = NULL): array {
     $formatted_data = [];
 
     // Combine multiple values in one value.

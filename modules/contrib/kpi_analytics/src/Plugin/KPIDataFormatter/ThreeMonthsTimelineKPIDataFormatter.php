@@ -17,11 +17,11 @@ class ThreeMonthsTimelineKPIDataFormatter extends KPIDataFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function format(array $data) {
+  public function format(array $data, $block = NULL): array {
     $months = [];
 
     for ($i = 0; $i < 4; $i++) {
-      $months[] = date('Y-m', strtotime('this month - ' . $i . ' month'));
+      $months[] = date('Y-m', strtotime('first day of this month - ' . $i . ' month'));
     }
 
     $formatted_data = [];

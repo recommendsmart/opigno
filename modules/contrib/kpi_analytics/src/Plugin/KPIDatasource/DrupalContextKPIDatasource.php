@@ -2,6 +2,7 @@
 
 namespace Drupal\kpi_analytics\Plugin\KPIDatasource;
 
+use Drupal\block_content\BlockContentInterface;
 use Drupal\kpi_analytics\Plugin\KPIDatasourceBase;
 
 /**
@@ -17,10 +18,17 @@ class DrupalContextKPIDatasource extends KPIDatasourceBase {
   /**
    * {@inheritdoc}
    */
-  public function query($query) {
+  public function query(BlockContentInterface $entity, $block): array {
     $data = [];
     $args = [];
 
+    if (!$entity->hasField('field_kpi_query')
+      || $entity->get('field_kpi_query')->isEmpty()
+    ) {
+      return $data;
+    }
+
+    $query = $entity->field_kpi_query->value;
     // Look for placeholders in query.
     preg_match_all('/:(\w+)/', $query, $placeholders);
 

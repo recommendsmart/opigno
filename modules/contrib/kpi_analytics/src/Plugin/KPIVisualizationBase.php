@@ -14,24 +14,18 @@ abstract class KPIVisualizationBase extends PluginBase implements KPIVisualizati
 
   /**
    * Contains a list with labels for chart.
-   *
-   * @var array
    */
-  protected $labels = [];
+  protected array $labels = [];
 
   /**
    * Contains a list with colors for chart.
-   *
-   * @var array
    */
-  protected $colors = [];
+  protected array $colors = [];
 
   /**
    * The uuid service.
-   *
-   * @var \Drupal\Component\Uuid\UuidInterface
    */
-  protected $uuid;
+  protected UuidInterface $uuid;
 
   /**
    * KPIVisualizationBase constructor.
@@ -54,7 +48,7 @@ abstract class KPIVisualizationBase extends PluginBase implements KPIVisualizati
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): self {
     return new static(
       $configuration,
       $plugin_id,

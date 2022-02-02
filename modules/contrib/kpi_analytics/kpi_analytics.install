@@ -40,3 +40,18 @@ function kpi_analytics_update_8801() {
 function kpi_analytics_update_8802() {
   Drupal::service('module_installer')->install(['layout_builder']);
 }
+
+/**
+ * Add translations support for custom block fields.
+ */
+function kpi_analytics_update_8803() {
+  $config_factory = \Drupal::configFactory();
+  // Make "KPI Chart labels" field translatable.
+  $config = $config_factory->getEditable('field.field.block_content.kpi_analytics.field_kpi_chart_labels');
+  $config->set('translatable', TRUE);
+  $config->save();
+  // Make "Body" field translatable.
+  $config = $config_factory->getEditable('field.field.block_content.kpi_analytics.body');
+  $config->set('translatable', TRUE);
+  $config->save();
+}

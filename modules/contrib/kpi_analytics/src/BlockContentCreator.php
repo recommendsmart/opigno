@@ -2,11 +2,14 @@
 
 namespace Drupal\kpi_analytics;
 
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\block_content\Entity\BlockContent;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Class BlockContentCreator.
+ * The BlockContentCreator class.
  *
  * @package Drupal\kpi_analytics
  */
@@ -14,45 +17,38 @@ class BlockContentCreator {
 
   /**
    * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The block creator service.
-   *
-   * @var \Drupal\kpi_analytics\BlockCreator
    */
-  protected $blockCreator;
+  protected BlockCreator $blockCreator;
 
   /**
    * The 'block_content' entity.
-   *
-   * @var \Drupal\block_content\Entity\BlockContent
    */
-  protected $entity;
+  protected BlockContent $entity;
 
   /**
    * Path to directory with the file source.
-   *
-   * @var string
    */
-  protected $path;
+  protected ?string $path;
 
   /**
    * Identifier of a block. Should be equal to filename.
-   *
-   * @var string
    */
-  protected $id;
+  protected ?string $id;
+
+  /**
+   * Cache for the parsed data.
+   */
+  protected ?array $data;
 
   /**
    * The block content storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $blockContentStorage;
+  protected EntityStorageInterface $blockContentStorage;
 
   /**
    * BlockContentCreator constructor.
@@ -76,18 +72,16 @@ class BlockContentCreator {
    * @param string $id
    *   Identifier of a block.
    */
-  public function setSource($path, $id) {
+  public function setSource(string $path, string $id): void {
     $this->path = $path;
     $this->id = $id;
+    $this->data = NULL;
   }
 
   /**
    * Parse data from a YAML file.
-   *
-   * @return array
-   *   Data.
    */
-  protected function getData($reset = FALSE) {
+  protected function getData($reset = FALSE): ?array {
     if (!$this->data || $reset) {
       $source = "{$this->path}/{$this->id}.yml";
       $content = file_get_contents($source);
@@ -100,14 +94,14 @@ class BlockContentCreator {
   /**
    * Get created entity.
    */
-  public function getEntity() {
+  public function getEntity(): BlockContent {
     return $this->entity;
   }
 
   /**
    * Create entity with values defined in a yaml file.
    */
-  public function create() {
+  public function create(): EntityInterface {
     $data = $this->getData();
     $values = $data['values'];
 
@@ -120,9 +114,8 @@ class BlockContentCreator {
     // Create base instance of the entity being created.
     $this->entity = $this->blockContentStorage->create($values);
 
-    $fields = isset($data['fields']) ? $data['fields'] : [];
     // Fill fields.
-    foreach ($fields as $field_name => $value) {
+    foreach ($data['fields'] ?? [] as $field_name => $value) {
       $this->entity->get($field_name)->setValue($value);
     }
 
@@ -141,9 +134,8 @@ class BlockContentCreator {
     if ($block_content = $this->blockContentStorage->loadByProperties(['uuid' => $values['uuid']])) {
       $this->entity = current($block_content);
 
-      $fields = isset($data['fields']) ? $data['fields'] : [];
       // Fill fields.
-      foreach ($fields as $field_name => $value) {
+      foreach ($data['fields'] ?? [] as $field_name => $value) {
         $this->entity->get($field_name)->setValue($value);
       }
 
@@ -156,7 +148,7 @@ class BlockContentCreator {
   /**
    * Delete block content.
    */
-  public function delete() {
+  public function delete(): void {
     $data = $this->getData();
     $values = $data['values'];
 
@@ -173,10 +165,9 @@ class BlockContentCreator {
    * @param string $id
    *   Identifier of block and filename without extension.
    *
-   * @return \Drupal\block\Entity\Block
    *   The block entity.
    */
-  public function createBlockInstance($path, $id) {
+  public function createBlockInstance(string $path, string $id): EntityInterface {
     $block_creator = clone $this->blockCreator;
     $block_creator->setSource($path, $id);
     $block_creator->setPluginId('block_content:' . $this->entity->get('uuid')->value);

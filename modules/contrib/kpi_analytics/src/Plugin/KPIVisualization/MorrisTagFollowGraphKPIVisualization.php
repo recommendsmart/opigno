@@ -2,7 +2,6 @@
 
 namespace Drupal\kpi_analytics\Plugin\KPIVisualization;
 
-use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\kpi_analytics\Plugin\KPIVisualizationBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -19,63 +18,50 @@ class MorrisTagFollowGraphKPIVisualization extends KPIVisualizationBase {
 
   /**
    * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
-   * MorrisTagFollowGraphKPIVisualization constructor.
-   *
-   * @param array $configuration
-   *   The plugin configuration.
-   * @param string $plugin_id
-   *   The plugin ID.
-   * @param mixed $plugin_definition
-   *   The plugin definition.
-   * @param \Drupal\Component\Uuid\UuidInterface $uuid
-   *   The uuid service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
+   * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, UuidInterface $uuid, EntityTypeManagerInterface $entity_type_manager) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $uuid);
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): KPIVisualizationBase {
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->entityTypeManager = $container->get('entity_type.manager');
 
-    $this->entityTypeManager = $entity_type_manager;
+    return $instance;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('uuid'),
-      $container->get('entity_type.manager')
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function render(array $data) {
+  public function render(array $data): array {
     $uuid = $this->uuid->generate();
 
     $xkey = 'label';
     $ykeys = ['current'];
 
-    $tids = array_map(function ($value) {
-      return $value['tid'];
-    }, $data);
+    $tids = array_map(fn($value) => $value['tid'], $data);
 
     $flagging_storage = $this->entityTypeManager->getStorage('flagging');
-    $flags = $flagging_storage->getAggregateQuery()
-      ->condition('entity_id', $tids, 'IN')
-      ->groupBy('uid')
-      ->count()
-      ->execute();
+
+    $flags = 0;
+    $new_followers = 0;
+    if (!empty($tids)) {
+      $flags = $flagging_storage->getAggregateQuery()
+        ->condition('entity_id', $tids, 'IN')
+        ->condition('entity_type', 'taxonomy_term')
+        ->groupBy('uid')
+        ->count()
+        ->execute();
+
+      $new_followers = $flagging_storage->getAggregateQuery()
+        ->condition('entity_id', $tids, 'IN')
+        ->condition('entity_type', 'taxonomy_term')
+        ->condition('created', strtotime('first day of this month'), '>=')
+        ->groupBy('uid')
+        ->count()
+        ->execute();
+    }
 
     $ymax = 0;
 
@@ -113,7 +99,7 @@ class MorrisTagFollowGraphKPIVisualization extends KPIVisualizationBase {
       '#type' => 'bar',
       '#uuid' => $uuid,
       '#followers' => $flags,
-      '#difference' => $diff,
+      '#difference' => $new_followers,
       '#attached' => [
         'library' => [
           'kpi_analytics/morris',

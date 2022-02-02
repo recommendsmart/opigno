@@ -16,10 +16,8 @@ class KPIAnalyticsEventSubscriber implements EventSubscriberInterface {
 
   /**
    * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * KPIAnalyticsEventSubscriber constructor.
@@ -34,7 +32,7 @@ class KPIAnalyticsEventSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return [
       LayoutBuilderEvents::SECTION_COMPONENT_BUILD_RENDER_ARRAY => [
         'onBuildRender',
@@ -48,8 +46,11 @@ class KPIAnalyticsEventSubscriber implements EventSubscriberInterface {
    *
    * @param \Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent $event
    *   The section component render event.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function onBuildRender(SectionComponentBuildRenderArrayEvent $event) {
+  public function onBuildRender(SectionComponentBuildRenderArrayEvent $event): void {
     /** @var  \Drupal\Core\Block\BlockPluginInterface $block */
     $block = $event->getPlugin();
     if ($block->getBaseId() !== 'block_content') {

@@ -15,10 +15,8 @@ abstract class KPIDatasourceBase extends PluginBase implements KPIDatasourceInte
 
   /**
    * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
    */
-  protected $database;
+  protected Connection $database;
 
   /**
    * KPIDatasourceBase constructor.
@@ -41,7 +39,7 @@ abstract class KPIDatasourceBase extends PluginBase implements KPIDatasourceInte
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): self {
     return new static(
       $configuration,
       $plugin_id,
@@ -53,7 +51,7 @@ abstract class KPIDatasourceBase extends PluginBase implements KPIDatasourceInte
   /**
    * {@inheritdoc}
    */
-  public function query(BlockContentInterface $entity, $block) {
+  public function query(BlockContentInterface $entity, $block): array {
     return [];
   }
 
