@@ -1,0 +1,144 @@
+<?php
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+use Drupal\node\Entity\NodeType;
+use Drupal\node_singles\Access\SingleNodeAccessControlHandler;
+
+/**
+ * Implements @see hook_entity_operation_alter().
+ */
+function node_singles_entity_operation_alter(array &$operations, EntityInterface $entity)
+{
+    /** @var EntityInterface|null $single */
+    $single = \Drupal::service('node_singles')->getSingleByBundle($entity->bundle());
+
+    if ($entity->getEntityTypeId() !== 'node' || !$single) {
+        return;
+    }
+
+    $operations['view'] = [
+        'title' => t('View'),
+        'weight' => 5,
+        'url' => Url::fromRoute('entity.node.canonical', ['node' => $entity->id()]),
+    ];
+
+    if (!empty($operations['edit'])) {
+        $operations['edit']['weight'] = 4;
+    }
+
+    if (!empty($operations['delete'])) {
+        $operations['delete']['weight'] = 15;
+    }
+
+    $nodeType = NodeType::load($entity->bundle());
+    $nodeTypeOperations = \Drupal::entityTypeManager()
+        ->getListBuilder('node_type')
+        ->getOperations($nodeType);
+
+    if (isset($nodeTypeOperations['edit'])) {
+        $nodeTypeOperations['edit']['title'] = t('Edit type');
+        $nodeTypeOperations['edit-type'] = $nodeTypeOperations['edit'];
+        unset($nodeTypeOperations['edit']);
+    }
+
+    $operations += $nodeTypeOperations;
+}
+
+/**
+ * Implements @see hook_menu_links_discovered_alter().
+ */
+function node_singles_menu_links_discovered_alter(array &$links)
+{
+    // Fix menu link not being visible if the user doesn't have the 'access content overview' permission
+    if (!\Drupal::currentUser()->hasPermission('access content overview')) {
+        $links['node_singles.content']['parent'] = 'system.admin';
+    }
+
+    // Remove single node add menu links added by modules like admin_toolbar_tools.
+    // The node access handler should deal with this, but it doesn't for user 1.
+    $singles = \Drupal::getContainer()->get('node_singles')->getAllSingles();
+    foreach ($links as $name => $link) {
+        if (
+            isset($link['route_name'])
+            && $link['route_name'] === 'node.add'
+            && isset($singles[$link['route_parameters']['node_type']])
+        ) {
+            unset($links[$name]);
+        }
+    }
+}
+
+/**
+ * Implements @see hook_entity_insert().
+ */
+function node_singles_entity_insert(EntityInterface $entity)
+{
+    \Drupal::getContainer()
+        ->get('node_singles.node_type_update.subscriber')
+        ->checkForSingles($entity);
+}
+
+/**
+ * Implements @see hook_entity_update().
+ */
+function node_singles_entity_update(EntityInterface $entity)
+{
+    \Drupal::getContainer()
+        ->get('node_singles.node_type_update.subscriber')
+        ->checkForSingles($entity);
+}
+
+/**
+ * Implements @see hook_form_BASE_FORM_ID_alter().
+ */
+function node_singles_form_node_type_form_alter(array &$form, FormStateInterface $formState)
+{
+    \Drupal::getContainer()
+        ->get('node_singles.node_type_form.subscriber')
+        ->alterNodeTypeForm($form, $formState);
+}
+
+/**
+ * Implements @see hook_form_BASE_FORM_ID_alter().
+ */
+function node_singles_form_node_form_alter(array &$form)
+{
+    \Drupal::getContainer()
+        ->get('node_singles.node_form.subscriber')
+        ->formAlter($form);
+}
+
+/**
+ * Implements @see hook_entity_type_alter().
+ */
+function node_singles_entity_type_alter(array &$entityTypes): void
+{
+    $entityTypes['node']->setHandlerClass('access', SingleNodeAccessControlHandler::class);
+}
+
+/**
+ * Implements @see hook_form_FORM_ID_alter().
+ * Hide some single node permissions since they aren't relevant.
+ */
+function node_singles_form_user_admin_permissions_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
+{
+    $singles = \Drupal::getContainer()->get('node_singles')->getAllSingles();
+
+    foreach ($singles as $single) {
+        $permissions = [
+            sprintf('create %s content', $single->id()),
+            sprintf('delete any %s content', $single->id()),
+            sprintf('delete own %s content', $single->id()),
+        ];
+
+        foreach ($permissions as $permission) {
+            if (isset($form['permissions'][$permission])) {
+                // Unsetting because #access = false doesn't work
+                // @see https://www.drupal.org/project/drupal/issues/3123459
+                unset($form['permissions'][$permission]);
+            }
+        }
+    }
+}

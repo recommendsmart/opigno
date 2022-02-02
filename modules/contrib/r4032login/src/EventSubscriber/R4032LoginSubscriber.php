@@ -155,7 +155,7 @@ class R4032LoginSubscriber extends HttpExceptionSubscriberBase {
 
       // Allow to alter the url or options before to redirect.
       $redirectEvent = new RedirectEvent($redirectPath, $options);
-      $this->eventDispatcher->dispatch(RedirectEvent::EVENT_NAME, $redirectEvent);
+      $this->eventDispatcher->dispatch($redirectEvent, RedirectEvent::EVENT_NAME);
       $redirectPath = $redirectEvent->getUrl();
       $options = $redirectEvent->getOptions();
 

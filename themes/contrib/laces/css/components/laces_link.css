@@ -1,0 +1,46 @@
+/**
+ * @file
+ * Style the "Edit summary" on a node edit form.
+ */
+button.link {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  color: #0d6efd;
+  border: 0;
+  background: transparent;
+  font-size: 1em;
+  text-decoration: underline;
+}
+
+button.link:hover {
+  color: #0a58ca;
+}
+
+label button.link {
+  font-weight: bold;
+}
+
+.text-format-wrapper > .form-item {
+  margin-bottom: 0;
+}
+
+.filter-help a {
+  position: relative;
+  margin: 0 20px 0 0;
+}
+
+.filter-help a:after {
+  position: absolute;
+  top: 0;
+  right: -20px;
+  /* LTR */
+  display: block;
+  width: 16px;
+  height: 16px;
+  content: "";
+  background: transparent url(../../images/help.png);
+}
+
+/*# sourceMappingURL=laces_link.css.map */

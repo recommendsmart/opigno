@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * Implements hook_theme().
+ */
+function dimension_theme() {
+  return [
+    'area_components_field_formatter' => [
+      'variables' => [
+        'width' => 0,
+        'height' => 0,
+      ],
+    ],
+    'volume_components_field_formatter' => [
+      'variables' => [
+        'width' => 0,
+        'height' => 0,
+        'length' => 0,
+      ],
+    ],
+  ];
+}

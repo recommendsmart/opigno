@@ -148,7 +148,7 @@ class ConfigurationUpdate extends BaseGenerator {
 
     // Get additional options provided by other modules.
     $event = new CommandInteractEvent($vars);
-    $this->eventDispatcher->dispatch(UpdateHelperEvents::COMMAND_GCU_INTERACT, $event);
+    $this->eventDispatcher->dispatch($event, UpdateHelperEvents::COMMAND_GCU_INTERACT);
 
     $vars = $this->collectVars($input, $output, $event->getQuestions());
 
@@ -159,7 +159,7 @@ class ConfigurationUpdate extends BaseGenerator {
 
       // Get additional options provided by other modules.
       $event = new CommandExecuteEvent($vars);
-      $this->eventDispatcher->dispatch(UpdateHelperEvents::COMMAND_GCU_EXECUTE, $event);
+      $this->eventDispatcher->dispatch($event, UpdateHelperEvents::COMMAND_GCU_EXECUTE);
 
       foreach ($event->getTemplatePaths() as $path) {
         $this->getHelper('dcg_renderer')->addPath($path);

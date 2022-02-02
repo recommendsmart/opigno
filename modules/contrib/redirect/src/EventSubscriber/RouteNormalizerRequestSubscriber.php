@@ -3,6 +3,8 @@
 namespace Drupal\redirect\EventSubscriber;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\Routing\RequestHelper;
 use Drupal\Core\Routing\TrustedRedirectResponse;
@@ -43,6 +45,13 @@ class RouteNormalizerRequestSubscriber implements EventSubscriberInterface {
   protected $pathMatcher;
 
   /**
+   * The language manager service
+   *
+   * @var Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
    * The redirect checker service.
    *
    * @var \Drupal\redirect\RedirectChecker
@@ -58,14 +67,17 @@ class RouteNormalizerRequestSubscriber implements EventSubscriberInterface {
    *   The path matcher service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   The config.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager service
    * @param \Drupal\redirect\RedirectChecker $redirect_checker
    *   The redirect checker service.
    *   The value of the route_normalizer_enabled container parameter.
    */
-  public function __construct(UrlGeneratorInterface $url_generator, PathMatcherInterface $path_matcher, ConfigFactoryInterface $config, RedirectChecker $redirect_checker) {
+  public function __construct(UrlGeneratorInterface $url_generator, PathMatcherInterface $path_matcher, ConfigFactoryInterface $config, LanguageManagerInterface $language_manager, RedirectChecker $redirect_checker) {
     $this->urlGenerator = $url_generator;
     $this->pathMatcher = $path_matcher;
     $this->redirectChecker = $redirect_checker;
+    $this->languageManager = $language_manager;
     $this->config = $config->get('redirect.settings');
   }
 
@@ -101,7 +113,11 @@ class RouteNormalizerRequestSubscriber implements EventSubscriberInterface {
 
       // Don't pass in the query here using $request->query->all()
       // since that can potentially modify the query parameters.
-      $options = ['absolute' => TRUE];
+      $options = [
+        'absolute' => TRUE,
+        'language' => $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_URL)
+
+      ];
       $redirect_uri = $this->urlGenerator->generateFromRoute($route_name, [], $options);
 
       // Strip off query parameters added by the route such as a CSRF token.

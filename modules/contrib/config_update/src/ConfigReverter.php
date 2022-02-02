@@ -113,7 +113,7 @@ class ConfigReverter implements ConfigRevertInterface, ConfigDeleteInterface {
 
     // Trigger an event notifying of this change.
     $event = new ConfigRevertEvent($type, $name);
-    $this->dispatcher->dispatch(ConfigRevertInterface::IMPORT, $event);
+    $this->dispatcher->dispatch($event, ConfigRevertInterface::IMPORT);
 
     return TRUE;
   }
@@ -165,7 +165,7 @@ class ConfigReverter implements ConfigRevertInterface, ConfigDeleteInterface {
 
     // Trigger an event notifying of this change.
     $event = new ConfigRevertEvent($type, $name);
-    $this->dispatcher->dispatch(ConfigRevertInterface::REVERT, $event);
+    $this->dispatcher->dispatch($event, ConfigRevertInterface::REVERT);
 
     return TRUE;
   }
@@ -190,7 +190,7 @@ class ConfigReverter implements ConfigRevertInterface, ConfigDeleteInterface {
 
     // Trigger an event notifying of this change.
     $event = new ConfigRevertEvent($type, $name);
-    $this->dispatcher->dispatch(ConfigDeleteInterface::DELETE, $event);
+    $this->dispatcher->dispatch($event, ConfigDeleteInterface::DELETE);
     return TRUE;
   }
 

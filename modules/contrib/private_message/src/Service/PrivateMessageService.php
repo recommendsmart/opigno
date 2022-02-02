@@ -80,7 +80,7 @@ class PrivateMessageService implements PrivateMessageServiceInterface {
   /**
    * Constructs a PrivateMessageService object.
    *
-   * @param Drupal\private_message\Mapper\PrivateMessageMapperInterface $mapper
+   * @param \Drupal\private_message\Mapper\PrivateMessageMapperInterface $mapper
    *   The private message mapper service.
    * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
    *   The current user.

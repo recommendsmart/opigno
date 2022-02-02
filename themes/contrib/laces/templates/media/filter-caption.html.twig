@@ -1,0 +1,39 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a filter caption.
+ *
+ * Returns HTML for a captioned image, audio, video or other tag.
+ *
+ * Available variables
+ * - string node: The complete HTML tag whose contents are being captioned.
+ * - string tag: The name of the HTML tag whose contents are being captioned.
+ * - string caption: The caption text.
+ * - string classes: The classes of the captioned HTML tag.
+ */
+#}
+{{ attach_library('laces/laces-images') }}
+{% set figure_attributes = create_attribute() %}
+{% set figure_classes = classes|split(' ') %}
+{% set figure_attributes = figure_attributes.addClass('figure-table', 'figure-img--child-img', 'img-fluid--child-img', figure_classes).setAttribute('role', 'group') %}
+{% if figure_attributes.hasClass('align-center') %}
+  <figure{{ figure_attributes.removeClass('align-center').addClass('mx-auto') }}>
+    {{ node }}
+    <figcaption class="figure-caption  text-start">{{ caption }}</figcaption>
+  </figure>
+{% elseif figure_attributes.hasClass('align-left') %}
+  <figure{{ figure_attributes.removeClass('align-left').addClass('float-start', 'me-sm-3') }}>
+    {{ node }}
+    <figcaption class="figure-caption text-start">{{ caption }}</figcaption>
+  </figure>
+{% elseif figure_attributes.hasClass('align-right') %}
+  <figure{{ figure_attributes.removeClass('align-right').addClass('float-end', 'ms-sm-3') }}>
+    {{ node }}
+    <figcaption class="figure-caption  text-start">{{ caption }}</figcaption>
+  </figure>
+{% else %}
+  <figure{{ figure_attributes }}>
+    {{ node }}
+    <figcaption class="figure-caption text-start">{{ caption }}</figcaption>
+  </figure>
+{% endif %}

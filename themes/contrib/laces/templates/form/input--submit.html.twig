@@ -1,0 +1,28 @@
+{#
+/**
+ * @file
+ * Theme override for an 'input' #type form element.
+ *
+ * Available variables:
+ * - attributes: A list of HTML attributes for the input element.
+ * - children: Optional additional rendered elements.
+ *
+ * @see template_preprocess_input()
+ */
+#}
+{# Use bootstrap styles #}
+{{ attach_library('laces/bootstrap-buttons') }}
+{% set classes = [
+  attributes.hasClass('button') ? 'btn',
+  attributes.hasClass('button') ? 'align-self-end',
+  not attributes.hasClass('search-form') ? 'mb-3',
+] %}
+{% if attributes.hasClass('button--primary') %}
+  {% set attributes = attributes.addClass('btn-outline-primary', 'btn-sm') %}
+{% elseif attributes.hasClass('button--danger') %}
+  {% set attributes = attributes.addClass('btn-outline-danger', 'btn-sm') %}
+{% else %}
+  {% set attributes = attributes.addClass('btn-outline-secondary', 'btn-sm') %}
+{% endif %}
+
+<input{{ attributes.addClass(classes) }}>{{ children }}

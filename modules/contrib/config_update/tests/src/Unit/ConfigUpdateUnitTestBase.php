@@ -344,7 +344,7 @@ abstract class ConfigUpdateUnitTestBase extends UnitTestCase {
    * For \Symfony\Component\EventDispatcher\EventDispatchInterface::dispatch().
    */
   public function mockDispatch($name, Event $event = NULL) {
-    $this->dispatchedEvents[] = [$name, $event];
+    $this->dispatchedEvents[] = [$event, $name];
   }
 
   /**

@@ -1,0 +1,8 @@
+@import "../variables-override";
+@import "../../../../../../vendor/twbs/bootstrap/scss/functions";
+@import "../../../../../../vendor/twbs/bootstrap/scss/variables";
+@import "../../../../../../vendor/twbs/bootstrap/scss/mixins";
+// Additional utility classes.
+.mw-text {
+  max-width: 50rem;
+}

@@ -14,7 +14,7 @@ use Drupal\Core\Url;
 use Drupal\ctools\Ajax\OpenModalWizardCommand;
 use Drupal\ctools\Event\WizardEvent;
 use Drupal\Core\TempStore\SharedTempStoreFactory;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Drupal\Component\EventDispatcher\Event;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -117,7 +117,7 @@ abstract class FormWizardBase extends FormBase implements FormWizardInterface {
   public function initValues() {
     $values = [];
     $event = new WizardEvent($this, $values);
-    $this->dispatcher->dispatch(FormWizardInterface::LOAD_VALUES, $event);
+    $this->dispatcher->dispatch($event, FormWizardInterface::LOAD_VALUES);
     return $event->getValues();
   }
 

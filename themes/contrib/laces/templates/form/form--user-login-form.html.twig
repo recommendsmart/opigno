@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a 'form' element.
+ *
+ * Available variables
+ * - attributes: A list of HTML attributes for the wrapper element.
+ * - children: The child elements of the form.
+ *
+ * @see template_preprocess_form()
+ *
+ * @ingroup themeable
+ */
+#}
+
+{{ attach_library('laces/laces-super-login') }}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+      <form{{ attributes.addClass("my-4", "border") }}>
+        {{ children }}
+      </form>
+    </div>
+  </div>
+</div>

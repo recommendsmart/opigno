@@ -1,0 +1,34 @@
+/**
+ * Form elements.
+ */
+.form-required:after {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin: 0 0.3em;
+  content: "";
+  vertical-align: super;
+  /* Use a background image to prevent screen readers from announcing the text. */
+  background-image: url(../../images/required.svg);
+  background-repeat: no-repeat;
+  background-size: 7px 7px;
+}
+
+.contact-message-feedback-form #edit-actions {
+  margin-top: 1rem;
+}
+
+.contact-message-feedback-form .form-type-email {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.button--danger {
+  color: #dc3545;
+}
+
+.button--danger:hover, .button--danger:focus {
+  color: #b02a37;
+}
+
+/*# sourceMappingURL=laces_forms.css.map */

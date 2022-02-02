@@ -158,7 +158,7 @@ namespace Drupal\Tests\r4032login\Unit {
         $r4032login,
         'on403',
       ]);
-      $dispatcher->dispatch(KernelEvents::EXCEPTION, $event);
+      $dispatcher->dispatch($event, KernelEvents::EXCEPTION);
 
       $response = $event->getResponse();
       $this->assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $response);
@@ -205,7 +205,7 @@ namespace Drupal\Tests\r4032login\Unit {
         $r4032login,
         'on403',
       ]);
-      $dispatcher->dispatch(KernelEvents::EXCEPTION, $event);
+      $dispatcher->dispatch($event, KernelEvents::EXCEPTION);
 
       $response = $event->getResponse();
       $this->assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $response);

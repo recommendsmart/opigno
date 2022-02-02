@@ -1,0 +1,24 @@
+{
+  "name": "drupal/social_geolocation",
+  "type": "drupal-module",
+  "description": "Provides geolocation functionality for groups, events and users in the Open Social distribution.",
+  "homepage": "http://drupal.org/project/social_geolocation",
+  "license": "GPL-2.0+",
+  "require": {
+    "commerceguys/addressing": "^1.0.7",
+    "drupal/address": "^1.0",
+    "drupal/geolocation": "^3.7",
+    "drupal/search_api_location": "^1.0"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-master"
+  },
+  "extra": {
+     "patches": {
+        "drupal/geolocation": {
+           "Exposed proximity filter breaks the exposed date/time filter": "https://www.drupal.org/files/issues/2021-12-24/geolocation_exposed_proximity_filter_3250268_d9_3.patch"
+        }
+     }
+  },
+  "minimum-stability": "dev"
+}

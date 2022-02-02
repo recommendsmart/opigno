@@ -8,7 +8,7 @@
 
   Drupal.behaviors.likeAndDislike = {
     attach: function(context, settings) {
-      $('.vote-widget--like-and-dislike', context).once('like-and-dislike').each(function () {
+      $('.vote-widget--like-and-dislike').once('like-and-dislike').each(function () {
         var $widget = $(this);
         $widget.find('.vote-like a').click(function() {
           var entity_id, entity_type;

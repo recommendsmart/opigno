@@ -146,7 +146,7 @@ class Updater implements UpdaterInterface {
 
     // Dispatch event after update has finished.
     $event = new ConfigurationUpdateEvent($module, $update_definition_name, $this->warningCount);
-    $this->eventDispatcher->dispatch(UpdateHelperEvents::CONFIGURATION_UPDATE, $event);
+    $this->eventDispatcher->dispatch($event, UpdateHelperEvents::CONFIGURATION_UPDATE);
 
     return $this->warningCount === 0;
   }

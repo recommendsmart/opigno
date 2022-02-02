@@ -1,0 +1,14 @@
+/**
+ * @file
+ * Visual styles for a resizable textarea.
+ */
+@import "../variables-override";
+@import "../../../../../../vendor/twbs/bootstrap/scss/functions";
+@import "../../../../../../vendor/twbs/bootstrap/scss/variables";
+@import "../../../../../../vendor/twbs/bootstrap/scss/mixins";
+.form-textarea-wrapper textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+}

@@ -4,6 +4,7 @@ namespace Drupal\socialbase\Plugin\Alter;
 
 use Drupal\Component\Utility\Html;
 use Drupal\bootstrap\Plugin\Alter\ThemeSuggestions as BaseThemeSuggestions;
+use Drupal\file\Entity\File;
 
 /**
  * Implements hook_theme_suggestions_alter().
@@ -191,10 +192,16 @@ class ThemeSuggestions extends BaseThemeSuggestions {
         // Get the route name for file links.
         $route_name = \Drupal::routeMatch()->getRouteName();
 
+        /** @var \Drupal\file\Entity\File $c_file */
+        $c_file = $context1['file'];
+
+        // Ensure that it is file.
+        if (!($c_file instanceof File)) {
+          return;
+        }
+
         // If the file link is part of a node field, suggest another template.
         if ($route_name == 'entity.node.canonical') {
-          /** @var \Drupal\file\Entity\File $c_file */
-          $c_file = $context1['file'];
           $file_id = $c_file->id();
           $node = \Drupal::routeMatch()->getParameter('node');
           // We do not know the name of the file fields. These can be custom.
@@ -203,10 +210,10 @@ class ThemeSuggestions extends BaseThemeSuggestions {
           // Loop over all fields and target only file fields.
           foreach ($field_definitions as $field_name => $field_definition) {
             /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
-            if ($field_definition->getType() == 'file') {
+            if ($field_definition->getType() === 'file') {
               $files = $node->get($field_name)->getValue();
               foreach ($files as $file) {
-                if ($file['target_id'] == $file_id) {
+                if ($file['target_id'] === $file_id) {
                   $suggestions[] = 'file_link__card';
                   break 2;
                 }
@@ -215,7 +222,7 @@ class ThemeSuggestions extends BaseThemeSuggestions {
           }
         }
         // If the file link is part of a group field, suggest another template.
-        if ($route_name == 'entity.group.canonical') {
+        if ($route_name === 'entity.group.canonical') {
           $suggestions[] = 'file_link__card';
         }
 

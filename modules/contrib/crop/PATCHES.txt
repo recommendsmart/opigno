@@ -5,3 +5,7 @@ Automated crop integration
 Source: https://www.drupal.org/files/issues/2018-12-16/2830768-crop-automated_crop_integration-45.patch
 
 
+3248169: Symfony 4.4 event dispatcher parameter order change
+Source: https://www.drupal.org/files/issues/2021-11-08/symfony-4-4-event-dispatcher-parameter-order-change-3248169-1.patch
+
+

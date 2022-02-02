@@ -1,0 +1,10 @@
+@import "../variables-override";
+@import "../../../../../../vendor/twbs/bootstrap/scss/functions";
+@import "../../../../../../vendor/twbs/bootstrap/scss/variables";
+@import "../../../../../../vendor/twbs/bootstrap/scss/mixins";
+img,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
