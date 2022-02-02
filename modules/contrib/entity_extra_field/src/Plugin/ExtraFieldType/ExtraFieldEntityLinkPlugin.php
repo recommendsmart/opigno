@@ -1,8 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\entity_extra_field\Plugin\ExtraFieldType;
 
+use Drupal\Core\Link;
+use Drupal\Core\Utility\Token;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Access\AccessManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -10,6 +20,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\entity_extra_field\ExtraFieldTypePluginBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Define the extra field entity link type.
@@ -22,20 +33,98 @@ use Drupal\entity_extra_field\ExtraFieldTypePluginBase;
 class ExtraFieldEntityLinkPlugin extends ExtraFieldTypePluginBase {
 
   /**
-   * {@inheritDoc}
+   * The access manager service.
+   *
+   * @var \Drupal\Core\Access\AccessManagerInterface
    */
-  public function defaultConfiguration() {
-    return [
-        'link_text' => NULL,
-        'link_template' => NULL,
-        'link_target' => NULL,
-      ] + parent::defaultConfiguration();
+  protected $accessManager;
+
+  /**
+   * Extra field type view constructor.
+   *
+   * @param array $configuration
+   *   The plugin configuration.
+   * @param string $plugin_id
+   *   The plugin identifier.
+   * @param mixed $plugin_definition
+   *   The plugin definition.
+   * @param \Drupal\Core\Utility\Token $token
+   *   The token service.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $current_route_match
+   *   The current route match service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager service.
+   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
+   *   The access manager service.
+   */
+  public function __construct(
+    array $configuration,
+    string $plugin_id,
+    $plugin_definition,
+    Token $token,
+    ModuleHandlerInterface $module_handler,
+    RouteMatchInterface $current_route_match,
+    EntityTypeManagerInterface $entity_type_manager,
+    EntityFieldManagerInterface $entity_field_manager,
+    AccessManagerInterface $access_manager
+  ) {
+    parent::__construct(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $token,
+      $module_handler,
+      $current_route_match,
+      $entity_type_manager,
+      $entity_field_manager
+    );
+    $this->accessManager = $access_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(
+    ContainerInterface $container,
+    array $configuration,
+    $plugin_id,
+    $plugin_definition
+  ) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('token'),
+      $container->get('module_handler'),
+      $container->get('current_route_match'),
+      $container->get('entity_type.manager'),
+      $container->get('entity_field.manager'),
+      $container->get('access_manager')
+    );
   }
 
   /**
    * {@inheritDoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function defaultConfiguration(): array {
+    return [
+      'link_text' => NULL,
+      'link_template' => NULL,
+      'link_target' => NULL,
+    ] + parent::defaultConfiguration();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function buildConfigurationForm(
+    array $form,
+    FormStateInterface $form_state
+  ): array {
     $form = parent::buildConfigurationForm($form, $form_state);
     $configuration = $this->getConfiguration();
 
@@ -46,7 +135,7 @@ class ExtraFieldEntityLinkPlugin extends ExtraFieldTypePluginBase {
       '#options' => $this->getEntityLinkTemplateOptions(),
       '#empty_option' => $this->t('- Select -'),
       '#required' => TRUE,
-      '#default_value' => $configuration['link_template']
+      '#default_value' => $configuration['link_template'],
     ];
     $form['link_text'] = [
       '#type' => 'textfield',
@@ -59,7 +148,7 @@ class ExtraFieldEntityLinkPlugin extends ExtraFieldTypePluginBase {
       '#type' => 'select',
       '#title' => $this->t('Link Target'),
       '#options' => [
-        '_blank'
+        '_blank',
       ],
       '#empty_option' => $this->t('- Default -'),
       '#default_value' => $configuration['link_target'],
@@ -81,11 +170,14 @@ class ExtraFieldEntityLinkPlugin extends ExtraFieldTypePluginBase {
    *
    * @throws \Drupal\Core\Entity\EntityMalformedException
    */
-  public function build(EntityInterface $entity, EntityDisplayInterface $display) {
+  public function build(
+    EntityInterface $entity,
+    EntityDisplayInterface $display
+  ): array {
     $link = $this->buildEntityLink($entity);
 
     // Link and Url seem not to have convenience methods for access including
-    // cacheability. So inlining a variant of \Drupal\Core\Url::access
+    // cacheability. So inlining a variant of \Drupal\Core\Url::access.
     $accessResult = $this->urlAccessResult($link->getUrl());
     $build = $accessResult->isAllowed() ? $link->toRenderable() : [];
     BubbleableMetadata::createFromObject($accessResult)->applyTo($build);
@@ -97,19 +189,26 @@ class ExtraFieldEntityLinkPlugin extends ExtraFieldTypePluginBase {
    *
    * @param \Drupal\Core\Url $url
    *   The url.
-   * @param \Drupal\Core\Session\AccountInterface $account
+   * @param \Drupal\Core\Session\AccountInterface|null $account
    *   (optional) Run access checks for this account. Defaults to the current
    *   user.
    *
-   * @return \Drupal\Core\Access\AccessResultInterface Returns url access result object.
+   * @return \Drupal\Core\Access\AccessResultInterface
    *   Returns url access result object.
    */
-  public function urlAccessResult(Url $url, AccountInterface $account = NULL) {
+  public function urlAccessResult(
+    Url $url,
+    AccountInterface $account = NULL
+  ): AccessResultInterface {
     if ($url->isRouted()) {
-      /** @var \Drupal\Core\Access\AccessManagerInterface $accessManager */
-      $accessManager = \Drupal::service('access_manager');
-      return $accessManager->checkNamedRoute($url->getRouteName(), $url->getRouteParameters(), $account, TRUE);
+      return $this->accessManager->checkNamedRoute(
+        $url->getRouteName(),
+        $url->getRouteParameters(),
+        $account,
+        TRUE
+      );
     }
+
     return AccessResult::allowed();
   }
 
@@ -124,7 +223,7 @@ class ExtraFieldEntityLinkPlugin extends ExtraFieldTypePluginBase {
    *
    * @throws \Drupal\Core\Entity\EntityMalformedException
    */
-  protected function buildEntityLink(EntityInterface $entity) {
+  protected function buildEntityLink(EntityInterface $entity): Link {
     $configuration = $this->getConfiguration();
 
     return $entity->toLink(
@@ -140,7 +239,7 @@ class ExtraFieldEntityLinkPlugin extends ExtraFieldTypePluginBase {
    * @return array
    *   An array of the link options.
    */
-  protected function getEntityLinkOptions() {
+  protected function getEntityLinkOptions(): array {
     $options = [];
     $configuration = $this->getConfiguration();
 
@@ -159,11 +258,12 @@ class ExtraFieldEntityLinkPlugin extends ExtraFieldTypePluginBase {
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function getEntityLinkTemplateOptions() {
+  protected function getEntityLinkTemplateOptions(): array {
     $templates = array_keys(
       $this->getTargetEntityTypeDefinition()->getLinkTemplates()
     );
 
     return array_combine($templates, $templates);
   }
+
 }

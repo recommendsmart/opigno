@@ -1,5 +1,0 @@
-ifthenelserule.add: 
-  route_name: entity.ifthenelse.add_form 
-  title: 'Add If Then Else'
-  appears_on: 
-    - entity.ifthenelserule.collection 

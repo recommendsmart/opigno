@@ -5,6 +5,8 @@
  * The hook implementation for the entity extra field UI module.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Url;
@@ -12,7 +14,7 @@ use Drupal\Core\Url;
 /**
  * Implements hook_entity_operation().
  */
-function entity_extra_field_ui_entity_operation(EntityInterface $entity) {
+function entity_extra_field_ui_entity_operation(EntityInterface $entity): array {
   $operations = [];
 
   if (entity_extra_field_ui_entity_has_field_ui($entity)) {
@@ -46,7 +48,9 @@ function entity_extra_field_ui_entity_operation(EntityInterface $entity) {
  *
  * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
  */
-function entity_extra_field_ui_entity_has_field_ui(EntityInterface $entity) {
+function entity_extra_field_ui_entity_has_field_ui(
+  EntityInterface $entity
+): bool {
   $entity_type = $entity->getEntityType();
 
   if (!$entity_type instanceof EntityTypeInterface

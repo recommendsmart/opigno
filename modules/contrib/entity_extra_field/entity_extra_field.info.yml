@@ -1,10 +1,11 @@
 type: module
 name: Entity Extra Field
 description: Expose various extra fields on any entity display.
-core: 8.x
+php: 7.2
+core_version_requirement: ^8.7.7 || ^9
 package: Field
 
-# Information added by Drupal.org packaging script on 2020-07-29
-version: '8.x-1.0-alpha5'
+# Information added by Drupal.org packaging script on 2021-04-21
+version: '2.0.0-alpha3'
 project: 'entity_extra_field'
-datestamp: 1596046671
+datestamp: 1618978110

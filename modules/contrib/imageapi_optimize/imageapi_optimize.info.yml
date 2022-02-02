@@ -2,12 +2,10 @@ name: Image Optimize (or ImageAPI Optimize)
 type: module
 package: Image Optimize
 description: 'Define pipelines for image optimization and provide integration with core image styles.'
-core: 8.x
-dependencies:
-  - drupal:system (>= 8.2)
+core_version_requirement: ^9
 configure: entity.imageapi_optimize_pipeline.collection
 
-# Information added by Drupal.org packaging script on 2020-02-11
-version: '8.x-2.0-beta1'
+# Information added by Drupal.org packaging script on 2021-10-15
+version: '4.0.0'
 project: 'imageapi_optimize'
-datestamp: 1581436168
+datestamp: 1634305799

@@ -20,7 +20,7 @@ interface ExtraFieldTypePluginInterface extends PluginFormInterface, ContainerFa
    * @return string
    *   Return the extra field plugin label.
    */
-  public function label();
+  public function label(): string;
 
   /**
    * Build the render array of the extra field type contents.
@@ -32,6 +32,9 @@ interface ExtraFieldTypePluginInterface extends PluginFormInterface, ContainerFa
    *
    * @return array
    *   The extra field renderable array.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
-  public function build(EntityInterface $entity, EntityDisplayInterface $display);
+  public function build(EntityInterface $entity, EntityDisplayInterface $display): array;
+
 }

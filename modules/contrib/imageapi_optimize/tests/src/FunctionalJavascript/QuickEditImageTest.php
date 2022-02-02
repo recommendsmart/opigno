@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\imageapi_optimize\FunctionalJavascript;
 
-use Drupal\Tests\image\FunctionalJavascript\QuickEditImageTest as OriginalQuickEditImageTest;
+use Drupal\Tests\quickedit\FunctionalJavascript\QuickEditImageTest as OriginalQuickEditImageTest;
 
 /**
  * Tests the JavaScript functionality of the "image" in-place editor.
@@ -15,6 +15,6 @@ class QuickEditImageTest extends OriginalQuickEditImageTest {
  /**
   * {@inheritdoc}
   */
-  public static $modules = ['imageapi_optimize'];
+  protected static $modules = ['imageapi_optimize'];
 
 }

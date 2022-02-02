@@ -1,7 +1,0 @@
-commerce_vendor.vendor_configuration:
-  path: '/admin/commerce/config/vendor'
-  defaults:
-    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
-    _title: 'Vendor'
-  requirements:
-    _permission: 'administer vendor entities'

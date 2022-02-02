@@ -2,12 +2,10 @@
 
 namespace Drupal\entity_extra_field\Plugin\ExtraFieldType;
 
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\entity_extra_field\Annotation\ExtraFieldType;
 use Drupal\entity_extra_field\ExtraFieldTypePluginBase;
 
 /**
@@ -23,7 +21,7 @@ class ExtraFieldTokenPlugin extends ExtraFieldTypePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration() {
+  public function defaultConfiguration(): array {
     return [
       'type' => NULL,
       'token' => NULL,
@@ -33,7 +31,10 @@ class ExtraFieldTokenPlugin extends ExtraFieldTypePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(
+    array $form,
+    FormStateInterface $form_state
+  ): array {
     $form = parent::buildConfigurationForm($form, $form_state);
 
     $type = $this->getPluginFormStateValue('type', $form_state);
@@ -61,8 +62,8 @@ class ExtraFieldTokenPlugin extends ExtraFieldTypePluginBase {
         '#type' => $type,
         '#title' => $this->t('Token Value'),
         '#default_value' => is_array($configuration['token'])
-          ? $configuration['token']['value']
-          : $configuration['token'],
+        ? $configuration['token']['value']
+        : $configuration['token'],
       ];
 
       if ($type === 'text_format'
@@ -74,7 +75,7 @@ class ExtraFieldTokenPlugin extends ExtraFieldTypePluginBase {
         $form['token_replacements'] = [
           '#theme' => 'token_tree_link',
           '#token_types' => $this->getEntityTokenTypes(
-            $this->getTargetEntityTypeId(),
+            $this->getTargetEntityTypeDefinition(),
             $this->getTargetEntityTypeBundle()->id()
           ),
         ];
@@ -87,23 +88,30 @@ class ExtraFieldTokenPlugin extends ExtraFieldTypePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function build(EntityInterface $entity, EntityDisplayInterface $display) {
+  public function build(
+    EntityInterface $entity,
+    EntityDisplayInterface $display
+  ): array {
     $build = [];
-    $token_value = $this->getProcessedTokenValue($entity);
 
-    switch ($this->getTokenTextType()) {
-      case 'textfield':
-        $build = [
-          '#plain_text' => $token_value
-        ];
-        break;
-      case 'text_format':
-        $build = [
-          '#type' => 'processed_text',
-          '#text' => $token_value,
-          '#format' => $this->getTokenTextFormat(),
-        ];
-        break;
+    if ($entity instanceof ContentEntityInterface) {
+      $token_value = $this->getProcessedTokenValue($entity);
+
+      switch ($this->getTokenTextType()) {
+        case 'textfield':
+          $build = [
+            '#plain_text' => $token_value,
+          ];
+          break;
+
+        case 'text_format':
+          $build = [
+            '#type' => 'processed_text',
+            '#text' => $token_value,
+            '#format' => $this->getTokenTextFormat(),
+          ];
+          break;
+      }
     }
 
     return $build;
@@ -115,10 +123,8 @@ class ExtraFieldTokenPlugin extends ExtraFieldTypePluginBase {
    * @return string
    *   The token text type.
    */
-  protected function getTokenTextType() {
-    $configuration = $this->getConfiguration();
-
-    return $configuration['type'];
+  protected function getTokenTextType(): ?string {
+    return $this->getConfiguration()['type'] ?? NULL;
   }
 
   /**
@@ -127,25 +133,24 @@ class ExtraFieldTokenPlugin extends ExtraFieldTypePluginBase {
    * @return string
    *   The token text format.
    */
-  protected function getTokenTextFormat() {
-    $configuration = $this->getConfiguration();
-
-    return isset($configuration['token']['format'])
-      ? $configuration['token']['format']
-      : NULL;
+  protected function getTokenTextFormat(): ?string {
+    return $this->getConfiguration()['token']['format'] ?? NULL;
   }
 
   /**
    * Get processed token value token.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The content entity.
    *
    * @return string
    *   The process token value.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function getProcessedTokenValue(ContentEntityInterface $entity) {
+  protected function getProcessedTokenValue(
+    ContentEntityInterface $entity
+  ): string {
     $configuration = $this->getConfiguration();
 
     $token_value = is_array($configuration['token'])
@@ -154,4 +159,5 @@ class ExtraFieldTokenPlugin extends ExtraFieldTypePluginBase {
 
     return $this->processEntityToken($token_value, $entity);
   }
+
 }

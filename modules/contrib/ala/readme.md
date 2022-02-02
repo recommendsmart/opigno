@@ -42,6 +42,7 @@ CONFIGURATION
      - Custom List
    - Icon Settings
    - User Role settings
+   - Custom Color & BG color
  
 Select Advance Link Attributes formatter and you have following options.
 

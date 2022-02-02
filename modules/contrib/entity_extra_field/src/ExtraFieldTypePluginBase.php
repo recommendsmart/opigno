@@ -2,7 +2,9 @@
 
 namespace Drupal\entity_extra_field;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -52,9 +54,9 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
    *
    * @param array $configuration
    *   The plugin configuration.
-   * @param $plugin_id
+   * @param string $plugin_id
    *   The plugin identifier.
-   * @param $plugin_definition
+   * @param array $plugin_definition
    *   The plugin definition.
    * @param \Drupal\Core\Utility\Token $token
    *   The token service.
@@ -68,8 +70,8 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
    */
   public function __construct(
     array $configuration,
-    $plugin_id,
-    $plugin_definition,
+    string $plugin_id,
+    array $plugin_definition,
     Token $token,
     ModuleHandlerInterface $module_handler,
     RouteMatchInterface $current_route_match,
@@ -93,7 +95,7 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
     $plugin_id,
     $plugin_definition
   ) {
-    return new static (
+    return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
@@ -108,7 +110,7 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
   /**
    * {@inheritdoc}
    */
-  public function label() {
+  public function label(): string {
     return $this->pluginDefinition['label'];
   }
 
@@ -116,8 +118,9 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
    * {@inheritdoc}
    */
   public function buildConfigurationForm(
-    array $form, FormStateInterface $form_state
-  ) {
+    array $form,
+    FormStateInterface $form_state
+  ): array {
     $form['#prefix'] = '<div id="extra-field-plugin">';
     $form['#suffix'] = '</div>';
 
@@ -132,7 +135,7 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
   public function validateConfigurationForm(
     array &$form,
     FormStateInterface $form_state
-  ) {
+  ) : void {
     // Intentionally left empty on base class.
   }
 
@@ -142,35 +145,35 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
   public function submitConfigurationForm(
     array &$form,
     FormStateInterface $form_state
-  ) {
+  ): void {
     $this->configuration = $form_state->cleanValues()->getValues();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setConfiguration(array $configuration) {
+  public function setConfiguration(array $configuration): void {
     $this->configuration = $configuration;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getConfiguration() {
+  public function getConfiguration(): array {
     return $this->configuration + $this->defaultConfiguration();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration() {
+  public function defaultConfiguration(): array {
     return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function calculateDependencies() {
+  public function calculateDependencies(): array {
     return $this->dependencies;
   }
 
@@ -188,7 +191,7 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
   public function extraFieldPluginAjaxCallback(
     array $form,
     FormStateInterface $form_state
-  ) {
+  ): array {
     return $form['field_type_config'];
   }
 
@@ -198,7 +201,7 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
    * @return array
    *   An array of common AJAX plugin properties.
    */
-  protected function extraFieldPluginAjax() {
+  protected function extraFieldPluginAjax(): array {
     return [
       'wrapper' => 'extra-field-plugin',
       'callback' => [$this, 'extraFieldPluginAjaxCallback'],
@@ -211,42 +214,38 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
    * @return string|null
    *   A target entity type identifier; otherwise NULL.
    */
-  protected function getTargetEntityTypeId() {
+  protected function getTargetEntityTypeId(): ?string {
     return $this->currentRouteMatch->getParameter('entity_type_id') ?: NULL;
   }
 
   /**
    * Get target entity type bundle.
    *
-   * @return \Drupal\Core\Entity\EntityTypeInterface|bool
-   *   The target entity type bundle; otherwise FALSE.
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   The target entity type bundle object.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function getTargetEntityTypeBundle() {
+  protected function getTargetEntityTypeBundle(): EntityInterface {
     $entity_type_id = $this->getTargetEntityTypeId();
 
     $bundle_entity_type = $bundle_entity_type = $this->entityTypeManager
       ->getDefinition($entity_type_id)
       ->getBundleEntityType();
 
-    if (!isset($bundle_entity_type)) {
-      return FALSE;
-    }
-
     return $this->currentRouteMatch
-      ->getParameter($bundle_entity_type) ?: FALSE;
+      ->getParameter($bundle_entity_type);
   }
 
   /**
    * Get target entity type definition.
    *
    * @return \Drupal\Core\Entity\EntityTypeInterface
-   *    The target entity type definition
+   *   The target entity type definition.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function getTargetEntityTypeDefinition() {
+  protected function getTargetEntityTypeDefinition(): EntityTypeInterface {
     return $this->entityTypeManager->getDefinition(
       $this->getTargetEntityTypeId()
     );
@@ -255,7 +254,7 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
   /**
    * Process the entity token text.
    *
-   * @param $text
+   * @param string $text
    *   The text that contains the token.
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The entity that's related to the text; references are based off this.
@@ -265,7 +264,10 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function processEntityToken($text, ContentEntityInterface $entity) {
+  protected function processEntityToken(
+    string $text,
+    ContentEntityInterface $entity
+  ): string {
     return $this->token->replace(
       $text,
       $this->getEntityTokenData($entity),
@@ -276,9 +278,9 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
   /**
    * Get entity token types.
    *
-   * @param $entity_type_id
-   *   The entity type identifier.
-   * @param $entity_bundle
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
+   * @param string $entity_bundle
    *   The entity bundle name.
    *
    * @return array
@@ -286,14 +288,17 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function getEntityTokenTypes($entity_type_id, $entity_bundle) {
-    $types = $this->getEntityFieldReferenceTypes(
-      $entity_type_id, $entity_bundle
-    );
-    $types = array_values($types);
+  protected function getEntityTokenTypes(
+    EntityTypeInterface $entity_type,
+    string $entity_bundle
+  ): array {
+    $types = array_values($this->getEntityFieldReferenceTypes(
+      $entity_type->id(), $entity_bundle
+    ));
+    $token_type = $entity_type->get('token_type') ?? $entity_type->id();
 
-    if (!in_array($entity_type_id, $types)) {
-      $types[] = $entity_type_id;
+    if (!in_array($token_type, $types, TRUE)) {
+      $types[] = $token_type;
     }
 
     return $types;
@@ -310,14 +315,18 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function getEntityTokenData(ContentEntityInterface $entity) {
+  protected function getEntityTokenData(ContentEntityInterface $entity): array {
+    $token_type = $entity->getEntityType()->get('token_type')
+      ?? $entity->getEntityTypeId();
+
+    $data[$token_type] = $entity;
+
     $field_references = $this->getEntityFieldReferenceTypes(
       $entity->getEntityTypeId(), $entity->bundle()
     );
-    $data[$entity->getEntityTypeId()] = $entity;
 
     foreach ($field_references as $field_name => $target_type) {
-      if (!$entity->hasField($field_name) || isset($data[$target_type])) {
+      if (isset($data[$target_type]) || !$entity->hasField($field_name)) {
         continue;
       }
       $data[$target_type] = $entity->{$field_name}->entity;
@@ -329,9 +338,9 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
   /**
    * Get entity field reference types.
    *
-   * @param $entity_type_id
+   * @param string $entity_type_id
    *   The entity type identifier.
-   * @param $entity_bundle
+   * @param string $entity_bundle
    *   The entity bundle name.
    *
    * @return array
@@ -339,7 +348,10 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function getEntityFieldReferenceTypes($entity_type_id, $entity_bundle) {
+  protected function getEntityFieldReferenceTypes(
+    string $entity_type_id,
+    string $entity_bundle
+  ): array {
     $types = [];
 
     $fields = $this->entityFieldManager->getFieldDefinitions(
@@ -354,16 +366,16 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
       $definition = $field->getFieldStorageDefinition();
       $target_type = $definition->getSetting('target_type');
 
-      if (!isset($target_type) || in_array($target_type, $types)) {
+      if (!isset($target_type) || in_array($target_type, $types, TRUE)) {
         continue;
       }
-      $type_definition = $this->entityTypeManager
-        ->getDefinition($target_type);
+      $type_definition = $this->entityTypeManager->getDefinition($target_type);
 
       if (!$type_definition instanceof ContentEntityTypeInterface) {
         continue;
       }
-      $types[$field_name] = $target_type;
+
+      $types[$field_name] = $type_definition->get('token_type') ?? $target_type;
     }
 
     return $types;
@@ -376,10 +388,10 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
    *   The element key.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state instance.
-   * @param null $default
+   * @param mixed $default
    *   The default value if nothing is found.
    *
-   * @return mixed|null
+   * @return mixed
    *   The form value; otherwise FALSE if the value can't be found.
    */
   protected function getPluginFormStateValue(
@@ -391,7 +403,7 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
 
     $inputs = [
       $form_state->cleanValues()->getValues(),
-      $this->getConfiguration()
+      $this->getConfiguration(),
     ];
 
     foreach ($inputs as $input) {
@@ -406,4 +418,5 @@ abstract class ExtraFieldTypePluginBase extends PluginBase implements ExtraField
 
     return $default;
   }
+
 }

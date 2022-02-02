@@ -5,15 +5,23 @@
  * The hook implementation for the entity extra field module.
  */
 
+declare(strict_types=1);
+
+use Drupal\Core\Plugin\Context\EntityContext;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\Display\EntityDisplayInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\ContentEntityFormInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Url;
+use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\entity_extra_field\Entity\EntityExtraFieldInterface;
 
 /**
  * Implements hook_entity_extra_field_info().
  */
-function entity_extra_field_entity_extra_field_info() {
+function entity_extra_field_entity_extra_field_info(): array {
   $field_info = [];
 
   foreach (entity_extra_field_storage()->loadMultiple() as $extra_field) {
@@ -34,7 +42,7 @@ function entity_extra_field_entity_extra_field_info() {
     $field_info[$entity_type_id][$entity_bundle_id][$display_type][$field_name] = [
       'label' => $extra_field->label(),
       'description' => $extra_field->description(),
-      'weight' => 0
+      'weight' => 0,
     ];
   }
 
@@ -46,10 +54,9 @@ function entity_extra_field_entity_extra_field_info() {
  */
 function entity_extra_field_entity_view(
   array &$build,
-  \Drupal\Core\Entity\EntityInterface $entity,
-  \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display,
-  $view_mode
-) {
+  EntityInterface $entity,
+  EntityViewDisplayInterface $display
+): void {
   entity_extra_field_display('view', $build, $entity, $display);
 }
 
@@ -57,10 +64,9 @@ function entity_extra_field_entity_view(
  * Implements hook_form_alter().
  */
 function entity_extra_field_form_alter(
-  &$form,
-  \Drupal\Core\Form\FormStateInterface $form_state,
-  $form_id
-) {
+  array &$form,
+  FormStateInterface $form_state
+): void {
   $form_object = $form_state->getFormObject();
 
   if (!$form_object instanceof ContentEntityFormInterface) {
@@ -75,23 +81,23 @@ function entity_extra_field_form_alter(
 /**
  * Implements hook_theme().
  */
-function entity_extra_field_theme($existing, $type, $theme, $path) {
+function entity_extra_field_theme($existing, $type, $theme, $path): array {
   return [
     'entity_extra_field' => [
       'render element' => 'element',
       'path' => $path . '/templates',
       'file' => 'entity_extra_field.theme',
-      'template' => 'entity-extra-field'
-    ]
+      'template' => 'entity-extra-field',
+    ],
   ];
 }
 
 /**
  * Entity extra field display.
  *
- * @param $type
+ * @param string $type
  *   The display type, (e.g. view, form).
- * @param $build
+ * @param array $build
  *   An array of elements to attach the extra field.
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   An entity instance.
@@ -103,12 +109,11 @@ function entity_extra_field_theme($existing, $type, $theme, $path) {
  * @throws \Drupal\Component\Plugin\Exception\PluginException
  */
 function entity_extra_field_display(
-  $type,
-  &$build,
-  \Drupal\Core\Entity\EntityInterface $entity,
-  \Drupal\Core\Entity\Display\EntityDisplayInterface $display
-) {
-  $contexts = [];
+  string $type,
+  array &$build,
+  EntityInterface $entity,
+  EntityDisplayInterface $display
+): void {
   $storage = entity_extra_field_storage();
 
   $extra_field_ids = $storage->getQuery()
@@ -118,27 +123,37 @@ function entity_extra_field_display(
     ->execute();
 
   if (!empty($extra_field_ids)) {
-    $contexts[$entity->getEntityTypeId()] = $entity;
+    $contexts = [
+      'entity_extra_field.target_entity' => EntityContext::fromEntity($entity)
+    ];
     $extra_fields = $storage->loadMultiple(array_values($extra_field_ids));
 
     /** @var \Drupal\entity_extra_field\Entity\EntityExtraField $extra_field */
     foreach ($extra_fields as $extra_field) {
-      $contexts[$extra_field->getEntityTypeId()] = $extra_field;
+      $all_conditions_pass = $extra_field->getFieldTypeConditionsAllPass();
+
       if (!$extra_field instanceof EntityExtraFieldInterface
         || !$extra_field->hasDisplayComponent($display)
-        || !$extra_field->hasConditionsBeenMet($contexts)) {
+        || !$extra_field->hasConditionsBeenMet($contexts, $all_conditions_pass)) {
         continue;
       }
-      $build[$extra_field->name()] = $extra_field->build($entity, $display);
+      $extra_field_build = $extra_field->build($entity, $display);
+
+      if (!isset($extra_field_build['content'])
+        || empty($extra_field_build['content'])) {
+        continue;
+      }
+      $build[$extra_field->name()] = $extra_field_build;
 
       if ($attachments = $extra_field->getBuildAttachments()) {
         $build[$extra_field->name()]['#attached'] = $attachments;
       }
 
-      $build[$extra_field->name()]['#cache']['tags'] = [
-        'entity_extra_field',
-        "entity_extra_field:{$type}.{$entity->getEntityTypeId()}.{$entity->bundle()}"
-      ];
+      (CacheableMetadata::createFromObject($extra_field))
+        ->addCacheTags([
+          'entity_extra_field',
+          "entity_extra_field:{$type}.{$entity->getEntityTypeId()}.{$entity->bundle()}",
+        ])->applyTo($build[$extra_field->name()]);
     }
   }
 }
@@ -152,6 +167,40 @@ function entity_extra_field_display(
  * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
  * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
  */
-function entity_extra_field_storage() {
+function entity_extra_field_storage(): EntityStorageInterface {
   return \Drupal::entityTypeManager()->getStorage('entity_extra_field');
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function entity_extra_field_theme_suggestions_entity_extra_field(
+  array $variables
+): array {
+  $original = $variables['theme_hook_original'];
+  $view_mode = $variables['element']['#view_mode'];
+
+  $field = $variables['element']['#field'];
+  $entity_type_id = $field->getBaseEntityTypeId();
+  $bundle_id = $field->getBaseBundleTypeId();
+  $field_name = $field->name();
+
+  $base_suggestion = $original . '__' . $entity_type_id . '__' . $bundle_id;
+
+  $suggestions = [];
+  $suggestions[] = $base_suggestion;
+  $suggestions[] = $base_suggestion . '__' . $field_name;
+  $suggestions[] = $base_suggestion . '__' . $field_name . '__' . $view_mode;
+
+  return $suggestions;
+}
+
+/**
+ * Get the context repository.
+ *
+ * @return \Drupal\Core\Plugin\Context\ContextRepositoryInterface
+ *   The context repository service.
+ */
+function contextRepository(): ContextRepositoryInterface {
+  return \Drupal::service('context.repository');
 }

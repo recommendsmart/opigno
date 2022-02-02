@@ -2,19 +2,22 @@
 
 namespace Drupal\entity_extra_field\Form;
 
-use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
-use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityForm;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Plugin\Context\Context;
-use Drupal\Core\Plugin\Context\ContextDefinition;
-use Drupal\Core\Plugin\Context\ContextDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Plugin\PluginFormInterface;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
+use Drupal\Core\Plugin\Context\EntityContextDefinition;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\Core\Plugin\Context\ContextDefinitionInterface;
+use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
+use Drupal\entity_extra_field\ExtraFieldTypePluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -23,26 +26,43 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityExtraFieldForm extends EntityForm {
 
   /**
+   * The cache discovery service.
+   *
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cacheDiscovery;
 
   /**
+   * The context repository service.
+   *
+   * @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface
+   */
+  protected $contextRepository;
+
+  /**
+   * The cache tags invalidator service.
+   *
    * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
    */
   protected $cacheTagsInvalidator;
 
   /**
+   * The extra field type manager.
+   *
    * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
   protected $extraFieldTypeManager;
 
   /**
+   * The condition plugin manager.
+   *
    * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
   protected $conditionPluginManager;
 
   /**
+   * The entity display repository service.
+   *
    * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
    */
   protected $entityDisplayRepository;
@@ -52,6 +72,8 @@ class EntityExtraFieldForm extends EntityForm {
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_discovery_backend
    *   The cache discovery backend service.
+   * @param \Drupal\Core\Plugin\Context\ContextRepositoryInterface $context_repository
+   *   The context repository service.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $extra_field_type_manager
    *   The extra field type plugin manager.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $condition_plugin_manager
@@ -63,14 +85,16 @@ class EntityExtraFieldForm extends EntityForm {
    */
   public function __construct(
     CacheBackendInterface $cache_discovery_backend,
+    ContextRepositoryInterface $context_repository,
     PluginManagerInterface $extra_field_type_manager,
     PluginManagerInterface $condition_plugin_manager,
     CacheTagsInvalidatorInterface $cache_tags_invalidator,
     EntityDisplayRepositoryInterface $entity_display_repository
   ) {
     $this->cacheDiscovery = $cache_discovery_backend;
+    $this->contextRepository = $context_repository;
     $this->cacheTagsInvalidator = $cache_tags_invalidator;
-    $this->extraFieldTypeManager  = $extra_field_type_manager;
+    $this->extraFieldTypeManager = $extra_field_type_manager;
     $this->conditionPluginManager = $condition_plugin_manager;
     $this->entityDisplayRepository = $entity_display_repository;
   }
@@ -78,9 +102,12 @@ class EntityExtraFieldForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
-    return new static (
+  public static function create(
+    ContainerInterface $container
+  ): EntityExtraFieldForm {
+    return new static(
       $container->get('cache.discovery'),
+      $container->get('context.repository'),
       $container->get('plugin.manager.extra_field_type'),
       $container->get('plugin.manager.condition'),
       $container->get('cache_tags.invalidator'),
@@ -91,7 +118,7 @@ class EntityExtraFieldForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, FormStateInterface $form_state) {
+  public function form(array $form, FormStateInterface $form_state): array {
     /** @var \Drupal\entity_extra_field\Entity\EntityExtraField $entity */
     $entity = $this->entity;
 
@@ -100,6 +127,10 @@ class EntityExtraFieldForm extends EntityForm {
     $form['#parents'] = [];
     $form['#prefix'] = '<div id="entity-extra-field">';
     $form['#suffix'] = '</div>';
+
+    $form_state->setTemporaryValue('gathered_contexts', [
+      'entity_extra_field.target_entity' => $entity->getBaseEntityContext(),
+    ] + $this->contextRepository->getAvailableContexts());
 
     $form['label'] = [
       '#type' => 'textfield',
@@ -130,7 +161,7 @@ class EntityExtraFieldForm extends EntityForm {
     $form['display']['type'] = [
       '#type' => 'select',
       '#title' => $this->t('Display Type'),
-      '#description' => $this->t('Select the extra field display type. <br/> 
+      '#description' => $this->t('Select the extra field display type. <br/>
         The <em>View</em> display will render within the entity view. <br/>
         The <em>Form</em> display will render within the entity edit form.'),
       '#required' => TRUE,
@@ -167,10 +198,11 @@ class EntityExtraFieldForm extends EntityForm {
     ];
 
     if (isset($field_type_id) && !empty($field_type_id)) {
-      $field_type_instance = $this->createFieldTypeInstance($field_type_id, $form_state);
+      $field_type_instance = $this->createFieldTypeInstance(
+        $field_type_id, $form_state
+      );
 
-      if ($field_type_instance !== FALSE
-        && $field_type_instance instanceof PluginFormInterface) {
+      if ($field_type_instance instanceof PluginFormInterface) {
         $subform = ['#parents' => ['field_type_config']];
 
         $form['field_type_config'] = [
@@ -188,7 +220,7 @@ class EntityExtraFieldForm extends EntityForm {
     $this->attachFieldTypeConditionForm(
       $form,
       $form_state,
-      ContextDefinition::create("entity:{$this->getExtraFieldBaseEntityTypeId()}")
+      EntityContextDefinition::create($this->getExtraFieldBaseEntityTypeId())
     );
 
     return $form;
@@ -197,17 +229,37 @@ class EntityExtraFieldForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(
+    array &$form,
+    FormStateInterface $form_state
+  ): void {
     parent::validateForm($form, $form_state);
 
     if ($field_type_id = $form_state->getValue('field_type_id')) {
-      $field_type_instance = $this->createFieldTypeInstance($field_type_id, $form_state);
+      $field_type_instance = $this->createFieldTypeInstance(
+        $field_type_id, $form_state
+      );
 
-      if ($field_type_instance !== FALSE
-        && $field_type_instance instanceof PluginFormInterface) {
+      if ($field_type_instance instanceof PluginFormInterface) {
         $subform = ['#parents' => ['field_type_config']];
 
         $field_type_instance->validateConfigurationForm(
+          $subform,
+          SubformState::createForSubform($subform, $form, $form_state)
+        );
+      }
+    }
+
+    if ($condition = $form_state->getValue(['field_type_condition'])) {
+      foreach ($condition as $plugin_id => $configuration) {
+        $subform_parents = array_merge(['field_type_condition'], [$plugin_id]);
+
+        /** @var \Drupal\Core\Condition\ConditionInterface $instance */
+        $instance = $this->conditionPluginManager
+          ->createInstance($plugin_id, $configuration);
+
+        $subform = ['#parents' => $subform_parents];
+        $instance->validateConfigurationForm(
           $subform,
           SubformState::createForSubform($subform, $form, $form_state)
         );
@@ -218,12 +270,16 @@ class EntityExtraFieldForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(
+    array &$form,
+    FormStateInterface $form_state
+  ): void {
     if ($field_type_id = $form_state->getValue('field_type_id')) {
-      $field_type_instance = $this->createFieldTypeInstance($field_type_id, $form_state);
+      $field_type_instance = $this->createFieldTypeInstance(
+        $field_type_id, $form_state
+      );
 
-      if ($field_type_instance !== FALSE
-        && $field_type_instance instanceof PluginFormInterface) {
+      if ($field_type_instance instanceof PluginFormInterface) {
         $subform = ['#parents' => ['field_type_config']];
 
         $field_type_instance->submitConfigurationForm(
@@ -247,20 +303,18 @@ class EntityExtraFieldForm extends EntityForm {
    *
    * @param array $form
    *   An array of form elements.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   A form state instance.
    *
    * @return array
    *   An array of the form elements.
    */
-  public function entityExtraFieldAjax(array $form, FormStateInterface $form_state) {
+  public function entityExtraFieldAjax(array $form): array {
     return $form;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, FormStateInterface $form_state) {
+  public function save(array $form, FormStateInterface $form_state): int {
     /** @var \Drupal\entity_extra_field\Entity\EntityExtraField $entity */
     $entity = $this->entity;
 
@@ -276,7 +330,10 @@ class EntityExtraFieldForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function getEntityFromRouteMatch(RouteMatchInterface $route_match, $entity_type_id) {
+  public function getEntityFromRouteMatch(
+    RouteMatchInterface $route_match,
+    $entity_type_id
+  ): EntityInterface {
     if ($route_match->getRawParameter($entity_type_id) !== NULL) {
       $entity = $route_match->getParameter($entity_type_id);
     }
@@ -285,16 +342,17 @@ class EntityExtraFieldForm extends EntityForm {
       $type_manager = $this->entityTypeManager;
 
       if ($base_entity_type_id = $route_match->getParameter('entity_type_id')) {
-        $definition = $type_manager->getDefinition(
-          $base_entity_type_id
-        );
         $values['base_entity_type_id'] = $base_entity_type_id;
 
-        $bundle_type = $definition->getBundleEntityType();
-        if ($base_bundle_type = $route_match->getParameter($bundle_type)) {
-          $values['base_bundle_type_id'] = $base_bundle_type->id();
+        if ($definition = $type_manager->getDefinition($base_entity_type_id)) {
+          $bundle_type = $definition->getBundleEntityType();
+
+          if ($base_bundle_type = $route_match->getParameter($bundle_type)) {
+            $values['base_bundle_type_id'] = $base_bundle_type->id();
+          }
         }
       }
+
       $entity = $type_manager->getStorage($entity_type_id)->create($values);
     }
 
@@ -304,25 +362,21 @@ class EntityExtraFieldForm extends EntityForm {
   /**
    * Create extra field type plugin instance.
    *
-   * @param $plugin_id
+   * @param string $plugin_id
    *   The field type plugin identifier.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state instance.
    *
-   * @return \Drupal\entity_extra_field\ExtraFieldTypePluginInterface|FALSE
-   *   Return the extra field type plugin instance; otherwise FALSE if it
-   *   doesn't exist.
+   * @return \Drupal\entity_extra_field\ExtraFieldTypePluginInterface
+   *   Return the extra field type plugin instance.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
-  protected function createFieldTypeInstance($plugin_id, FormStateInterface $form_state) {
-    $field_type_manager = $this->extraFieldTypeManager;
-
-    if (!$field_type_manager->hasDefinition($plugin_id)) {
-      return FALSE;
-    }
-
-    return $field_type_manager->createInstance(
+  protected function createFieldTypeInstance(
+    string $plugin_id,
+    FormStateInterface $form_state
+  ): ExtraFieldTypePluginInterface {
+    return $this->extraFieldTypeManager->createInstance(
       $plugin_id,
       $this->getEntityFormStateValue('field_type_config', $form_state, [])
     );
@@ -334,7 +388,7 @@ class EntityExtraFieldForm extends EntityForm {
    * @return string
    *   The extra field base entity type identifier.
    */
-  protected function getExtraFieldBaseEntityTypeId() {
+  protected function getExtraFieldBaseEntityTypeId(): string {
     /** @var \Drupal\entity_extra_field\Entity\EntityExtraField $entity_extra_field */
     $entity_extra_field = $this->entity;
 
@@ -352,11 +406,10 @@ class EntityExtraFieldForm extends EntityForm {
    */
   protected function getConditionDefinitionsByContext(
     ContextDefinitionInterface $context
-  ) {
-    return $this->conditionPluginManager
-      ->getDefinitionsForContexts([
-        new Context($context)
-      ]);
+  ): array {
+    return $this->conditionPluginManager->getDefinitionsForContexts([
+      new Context($context),
+    ]);
   }
 
   /**
@@ -370,6 +423,7 @@ class EntityExtraFieldForm extends EntityForm {
    *   The context definition.
    *
    * @return \Drupal\entity_extra_field\Form\EntityExtraFieldForm
+   *   The entity extra field form object.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
@@ -377,7 +431,7 @@ class EntityExtraFieldForm extends EntityForm {
     array &$form,
     FormStateInterface $form_state,
     ContextDefinitionInterface $context
-  ) {
+  ): self {
     $parents = ['field_type_condition'];
 
     $form['conditions'] = [
@@ -407,15 +461,21 @@ class EntityExtraFieldForm extends EntityForm {
         $subform,
         SubformState::createForSubform($subform, $form, $form_state)
       );
-
-      /**
-       * @todo Remove workaround once
-       * https://www.drupal.org/project/drupal/issues/2783897 is fixed.
-       */
+      // @todo Remove workaround once
+      // https://www.drupal.org/project/drupal/issues/2783897 is fixed.
       if ($plugin_id === 'current_theme') {
         $form['field_type_condition'][$plugin_id]['theme']['#empty_option'] = $this->t('- None -');
       }
     }
+    $form['field_conditions_all_pass'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('All Conditions Must Pass'),
+      '#description' => $this->t('If checked, then all conditions must evaluate true.'),
+      '#default_value' => $this->getEntityFormStateValue(
+        'field_conditions_all_pass',
+        $form_state
+      ),
+    ];
 
     return $this;
   }
@@ -429,10 +489,14 @@ class EntityExtraFieldForm extends EntityForm {
    *   The form state instance.
    *
    * @return \Drupal\entity_extra_field\Form\EntityExtraFieldForm
+   *   The entity extra field form object.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
-  protected function submitFieldTypeConditionForm(array &$form, FormStateInterface $form_state) {
+  protected function submitFieldTypeConditionForm(
+    array &$form,
+    FormStateInterface $form_state
+  ): self {
     $parents = ['field_type_condition'];
 
     if ($condition = $form_state->getValue($parents)) {
@@ -462,11 +526,11 @@ class EntityExtraFieldForm extends EntityForm {
   /**
    * Flush all caches related to this form.
    */
-  protected function flushAllCaches() {
+  protected function flushAllCaches(): self {
     /** @var \Drupal\entity_extra_field\Entity\EntityExtraField $entity */
     $entity = $this->entity;
 
-    $this->cacheDiscovery->delete($entity->getCacheDiscoveryId());
+    $this->cacheDiscovery->invalidateAll();
 
     $this->cacheTagsInvalidator->invalidateTags([
       $entity->getCacheRenderTag(),
@@ -481,7 +545,7 @@ class EntityExtraFieldForm extends EntityForm {
    * @return array
    *   An array of extra field type options.
    */
-  protected function getExtraFieldTypeOptions() {
+  protected function getExtraFieldTypeOptions(): array {
     $options = [];
 
     foreach ($this->extraFieldTypeManager->getDefinitions() as $plugin_id => $definition) {
@@ -501,13 +565,17 @@ class EntityExtraFieldForm extends EntityForm {
    *   The element key.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state instance.
-   * @param null $default
+   * @param mixed $default
    *   The default value if nothing is found.
    *
    * @return mixed|null
    *   The form value; otherwise FALSE if the value can't be found.
    */
-  protected function getEntityFormStateValue($key, FormStateInterface $form_state, $default = NULL) {
+  protected function getEntityFormStateValue(
+    $key,
+    FormStateInterface $form_state,
+    $default = NULL
+  ) {
     /** @var \Drupal\entity_extra_field\Entity\EntityExtraField $entity */
     $entity = $this->entity;
 
@@ -533,4 +601,5 @@ class EntityExtraFieldForm extends EntityForm {
 
     return $default;
   }
+
 }

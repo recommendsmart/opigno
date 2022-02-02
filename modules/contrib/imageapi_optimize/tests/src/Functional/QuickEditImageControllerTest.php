@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\imageapi_optimize\Functional;
 
-use Drupal\Tests\image\Functional\QuickEditImageControllerTest as OriginalQuickEditImageControllerTest;
+use Drupal\Tests\quickedit\Functional\QuickEditImageControllerTest as OriginalQuickEditImageControllerTest;
 
 /**
  * Tests the endpoints used by the "image" in-place editor.
@@ -14,6 +14,6 @@ class QuickEditImageControllerTest extends OriginalQuickEditImageControllerTest 
  /**
   * {@inheritdoc}
   */
-  public static $modules = ['imageapi_optimize'];
+  protected static $modules = ['imageapi_optimize'];
 
 }

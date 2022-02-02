@@ -16,7 +16,9 @@ class ExtraFieldType extends Plugin {
    */
   public $id;
 
-  /** @var string */
+  /**
+   * @var string
+   */
   public $label;
 
 }

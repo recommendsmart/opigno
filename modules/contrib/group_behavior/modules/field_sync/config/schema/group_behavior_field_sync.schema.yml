@@ -1,6 +1,0 @@
-group.type.*.third_party_settings.group_behavior.field_sync:
-  type: sequence
-  label: Fields to sync
-  sequence:
-    type: string
-    label: Field to sync

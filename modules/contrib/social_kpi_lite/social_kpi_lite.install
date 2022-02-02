@@ -156,3 +156,16 @@ function social_kpi_lite_update_8004() {
   ];
   _social_kpi_lite_update_blocks($blocks_update);
 }
+
+/**
+ * Use another KPI follow tag submodule.
+ */
+function social_kpi_lite_update_8901() {
+  $module_handler = \Drupal::moduleHandler();
+  /** @var \Drupal\Core\Extension\ModuleInstallerInterface $module_installer */
+  $module_installer = Drupal::service('module_installer');
+  if($module_handler->moduleExists('social_kpi_light_tag_followers')) {
+    $module_installer->uninstall(['social_kpi_light_tag_followers']);
+    $module_installer->install(['social_kpi_lite_tag_followers']);
+  }
+}

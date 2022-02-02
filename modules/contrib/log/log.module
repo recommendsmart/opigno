@@ -2,159 +2,122 @@
 
 /**
  * @file
- * Contains log.module..
+ * Hooks and customizations for the log module.
  */
 
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\log\LogInterface;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Url;
-use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\log\Entity\LogInterface;
+use Drupal\log\Event\LogEvent;
 
 /**
  * Implements hook_help().
  */
 function log_help($route_name, RouteMatchInterface $route_match) {
-  switch ($route_name) {
-    // Main module help for the log module.
-    case 'help.page.log':
-      $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('Provides Log entity') . '</p>';
-      return $output;
+  $output = '';
 
-    default:
+  // Main module help for the log module.
+  if ($route_name == 'help.page.log') {
+    $output = '';
+    $output .= '<h3>' . t('About') . '</h3>';
+    $output .= '<p>' . t('Provides Log entity') . '</p>';
   }
+
+  return $output;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function log_log_presave(LogInterface $log) {
+
+  // Dispatch an event on log presave.
+  // @todo Replace this with core event via https://www.drupal.org/node/2551893.
+  $event = new LogEvent($log);
+  $event_dispatcher = \Drupal::service('event_dispatcher');
+  $event_dispatcher->dispatch($event, LogEvent::PRESAVE);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function log_log_insert(LogInterface $log) {
+
+  // Dispatch an event on log insert.
+  // @todo Replace this with core event via https://www.drupal.org/node/2551893.
+  $event = new LogEvent($log);
+  $event_dispatcher = \Drupal::service('event_dispatcher');
+  $event_dispatcher->dispatch($event, LogEvent::INSERT);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function log_log_update(LogInterface $log) {
+
+  // Dispatch an event on log update.
+  // @todo Replace this with core event via https://www.drupal.org/node/2551893.
+  $event = new LogEvent($log);
+  $event_dispatcher = \Drupal::service('event_dispatcher');
+  $event_dispatcher->dispatch($event, LogEvent::UPDATE);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function log_log_delete(LogInterface $log) {
+
+  // Dispatch an event on log delete.
+  // @todo Replace this with core event via https://www.drupal.org/node/2551893.
+  $event = new LogEvent($log);
+  $event_dispatcher = \Drupal::service('event_dispatcher');
+  $event_dispatcher->dispatch($event, LogEvent::DELETE);
 }
 
 /**
  * Implements hook_theme().
  */
 function log_theme() {
-  $theme = [
-    'log' => array(
+  return [
+    'log' => [
       'render element' => 'elements',
-    ),
-    'log_add_list' => array(
-      'variables' => array('content' => NULL),
-    ),
+    ],
   ];
-
-  return $theme;
 }
 
 /**
- * Prepares variables for Log templates.
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function log_theme_suggestions_log(array $variables) {
+  $suggestions = [];
+  $log = $variables['elements']['#log'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+
+  $suggestions[] = 'log__' . $sanitized_view_mode;
+  $suggestions[] = 'log__' . $log->bundle();
+  $suggestions[] = 'log__' . $log->bundle() . '__' . $sanitized_view_mode;
+  $suggestions[] = 'log__' . $log->id();
+  $suggestions[] = 'log__' . $log->id() . '__' . $sanitized_view_mode;
+
+  return $suggestions;
+}
+
+/**
+ * Prepares variables for log templates.
  *
  * Default template: log.html.twig.
  *
  * @param array $variables
  *   An associative array containing:
- *   - elements: An associative array containing the user information and any
+ *   - elements: An associative array containing the log information and any
+ *     fields attached to the log. Properties used:
+ *     - #log: A \Drupal\log\Entity\Log object. The log entity.
  *   - attributes: HTML attributes for the containing element.
  */
-function template_preprocess_log(array &$variables) {
-  // Fetch Log Entity Object.
-  $log = $variables['elements']['#log'];
-
+function template_preprocess_log(&$variables) {
+  $variables['log'] = $variables['elements']['#log'];
   // Helpful $content variable for templates.
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
-}
-
-/**
- * Prepares variables for list of available log type templates.
- *
- * Default template: log-add-list.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - content: An array of content types.
- *
- * @see log_add_page()
- */
-function template_preprocess_log_add_list(array &$variables) {
-  $variables['types'] = array();
-  if (!empty($variables['content'])) {
-    foreach ($variables['content'] as $type) {
-      $variables['types'][$type->id()] = array(
-        'type' => $type->id(),
-        'add_link' => \Drupal::l($type->label(), new Url('log.add', array('log_type' => $type->id()))),
-      );
-    }
-  }
-}
-
-/**
- * Implements hook_log_access().
- */
-function log_log_access(LogInterface $log, $op, $account) {
-  $type = $log->bundle();
-  switch ($op) {
-    case 'view':
-      if ($account->hasPermission('view any ' . $type . ' log entities', $account)) {
-        return AccessResult::allowed()->cachePerPermissions();
-      }
-      else {
-        return AccessResult::allowedIf($account->hasPermission('view own ' . $type . ' log entities', $account) && ($account->id() == $log->getOwnerId()))->cachePerPermissions()->cachePerUser()->cacheUntilEntityChanges($log);
-      }
-
-    case 'update':
-      if ($account->hasPermission('edit any ' . $type . ' log entities', $account)) {
-        return AccessResult::allowed()->cachePerPermissions();
-      }
-      else {
-        return AccessResult::allowedIf($account->hasPermission('edit own ' . $type . ' log entities', $account) && ($account->id() == $log->getOwnerId()))->cachePerPermissions()->cachePerUser()->cacheUntilEntityChanges($log);
-      }
-
-    case 'delete':
-      if ($account->hasPermission('delete any ' . $type . ' log entities', $account)) {
-        return AccessResult::allowed()->cachePerPermissions();
-      }
-      else {
-        return AccessResult::allowedIf($account->hasPermission('delete own ' . $type . ' log entities', $account) && ($account->id() == $log->getOwnerId()))->cachePerPermissions()->cachePerUser()->cacheUntilEntityChanges($log);
-      }
-
-    default:
-      // No opinion.
-      return AccessResult::neutral();
-  }
-}
-
-/**
- * Implements hook_log_create_access().
- */
-function log_log_create_access(AccountInterface $account, array $context, $entity_bundle = NULL) {
-  return AccessResult::allowedIfHasPermission($account, 'create ' . $entity_bundle . ' log entities')->cachePerPermissions();
-}
-
-/**
- * Implements hook_form_FORM_ID_alter().
- *
- * Alters the theme form to use the admin theme on log editing.
- *
- * @see log_form_system_themes_admin_form_submit()
- */
-function log_form_system_themes_admin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $form['admin_theme']['log_use_admin_theme'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Use the administration theme when editing or creating log entity'),
-    '#default_value' => \Drupal::configFactory()->getEditable('log.settings')->get('log_use_admin_theme'),
-  );
-  $form['#submit'][] = 'log_form_system_themes_admin_form_submit';
-}
-
-/**
- * Form submission handler for system_themes_admin_form().
- *
- * @see log_form_system_themes_admin_form_alter()
- */
-function log_form_system_themes_admin_form_submit($form, FormStateInterface $form_state) {
-  \Drupal::configFactory()->getEditable('log.settings')
-    ->set('log_use_admin_theme', $form_state->getValue('log_use_admin_theme'))
-    ->save();
-  \Drupal::service('router.builder')->setRebuildNeeded();
 }

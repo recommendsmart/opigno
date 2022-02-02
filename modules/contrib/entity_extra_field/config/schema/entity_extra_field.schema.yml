@@ -35,6 +35,9 @@ entity_extra_field.extra_field.*.*.*:
       sequence:
         type: condition.plugin.[id]
         label: 'Condition plugin'
+    field_conditions_all_pass:
+      type: boolean
+      label: Extra field type conditions all pass
     display:
       type: mapping
       label: Extra field display information

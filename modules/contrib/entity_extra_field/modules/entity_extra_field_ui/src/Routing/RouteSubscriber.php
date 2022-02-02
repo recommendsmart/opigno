@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\entity_extra_field_ui\Routing;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -35,7 +37,7 @@ class RouteSubscriber extends RouteSubscriberBase {
    * @param \Symfony\Component\Routing\RouteCollection $collection
    *   The route collection for adding routes.
    */
-  protected function alterRoutes(RouteCollection $collection) {
+  protected function alterRoutes(RouteCollection $collection): void {
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $definition) {
       $base_route_name = $definition->get('field_ui_base_route');
 
@@ -61,9 +63,9 @@ class RouteSubscriber extends RouteSubscriberBase {
       $route->setDefaults([
         '_title' => 'Manage extra fields',
         '_entity_list' => 'entity_extra_field',
-        'entity_type_id' => $entity_type_id
+        'entity_type_id' => $entity_type_id,
       ])->setRequirements([
-        '_permission' => 'administer entity extra field'
+        '_permission' => 'administer entity extra field',
       ])->setOptions($entity_options);
 
       $collection->add("entity.{$entity_type_id}.extra_fields", $route);
@@ -72,9 +74,9 @@ class RouteSubscriber extends RouteSubscriberBase {
       $route->setDefaults([
         '_title' => 'Add extra field',
         '_entity_form' => 'entity_extra_field.add',
-        'entity_type_id' => $entity_type_id
+        'entity_type_id' => $entity_type_id,
       ])->setRequirements([
-        '_permission' => 'administer entity extra field'
+        '_permission' => 'administer entity extra field',
       ])->setOptions($entity_options);
 
       $collection->add("entity.{$entity_type_id}.extra_fields.add", $route);
@@ -83,9 +85,9 @@ class RouteSubscriber extends RouteSubscriberBase {
       $route->setDefaults([
         '_title' => 'Edit extra field',
         '_entity_form' => 'entity_extra_field.edit',
-        'entity_type_id' => $entity_type_id
+        'entity_type_id' => $entity_type_id,
       ])->setRequirements([
-        '_permission' => 'administer entity extra field'
+        '_permission' => 'administer entity extra field',
       ])->setOptions($entity_options);
 
       $collection->add("entity.{$entity_type_id}.extra_fields.edit", $route);
@@ -94,12 +96,13 @@ class RouteSubscriber extends RouteSubscriberBase {
       $route->setDefaults([
         '_title' => 'Delete extra field',
         '_entity_form' => 'entity_extra_field.delete',
-        'entity_type_id' => $entity_type_id
+        'entity_type_id' => $entity_type_id,
       ])->setRequirements([
-        '_permission' => 'administer entity extra field'
+        '_permission' => 'administer entity extra field',
       ])->setOptions($entity_options);
 
       $collection->add("entity.{$entity_type_id}.extra_fields.delete", $route);
     }
   }
+
 }

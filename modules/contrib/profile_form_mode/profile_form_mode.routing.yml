@@ -1,7 +1,0 @@
-entity.profile.type.user_profile_form.form_mode:
-  path: '/user/{user}/{profile_type}/{entity_form_mode}'
-  defaults:
-    _controller: '\Drupal\profile_form_mode\Controller\ProfileController::userProfileForm'
-    _title_callback: '\Drupal\profile_form_mode\Controller\ProfileController::userPageTitle'
-  requirements:
-    _profile_access_check: 'TRUE'

@@ -1,14 +1,8 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\log\Entity\LogType.
- */
-
 namespace Drupal\log\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
-use Drupal\log\LogTypeInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 
 /**
@@ -16,20 +10,26 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *
  * @ConfigEntityType(
  *   id = "log_type",
- *   label = @Translation("Log types"),
+ *   label = @Translation("Log type"),
+ *   label_collection = @Translation("Log types"),
+ *   label_singular = @Translation("log type"),
+ *   label_plural = @Translation("log types"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count log type",
+ *     plural = "@count log types",
+ *   ),
  *   handlers = {
- *     "access" = "Drupal\log\LogTypeAccessControlHandler",
+ *     "list_builder" = "Drupal\log\LogTypeListBuilder",
  *     "form" = {
  *       "add" = "Drupal\log\Form\LogTypeForm",
  *       "edit" = "Drupal\log\Form\LogTypeForm",
- *       "delete" = "Drupal\log\Form\LogTypeDeleteForm"
+ *       "delete" = "\Drupal\Core\Entity\EntityDeleteForm",
  *     },
  *     "route_provider" = {
- *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
+ *       "default" = "Drupal\entity\Routing\DefaultHtmlRouteProvider",
  *     },
- *     "list_builder" = "Drupal\log\LogTypeListBuilder",
  *   },
- *   admin_permission = "administer site configuration",
+ *   admin_permission = "administer log types",
  *   config_prefix = "type",
  *   bundle_of = "log",
  *   entity_keys = {
@@ -38,18 +38,18 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "uuid" = "uuid"
  *   },
  *   links = {
- *     "canonical" = "/admin/structure/log_type/{log_type}",
- *     "edit-form" = "/admin/structure/log_type/{log_type}/edit",
- *     "delete-form" = "/admin/structure/log_type/{log_type}/delete",
- *     "collection" = "/admin/structure/log_type"
+ *     "canonical" = "/admin/structure/log-type/{log_type}",
+ *     "add-form" = "/admin/structure/log-type/add",
+ *     "edit-form" = "/admin/structure/log-type/{log_type}/edit",
+ *     "delete-form" = "/admin/structure/log-type/{log_type}/delete",
+ *     "collection" = "/admin/structure/log-type"
  *   },
  *   config_export = {
  *     "id",
  *     "label",
  *     "description",
  *     "name_pattern",
- *     "name_edit",
- *     "done",
+ *     "workflow",
  *     "new_revision",
  *   }
  * )
@@ -85,18 +85,11 @@ class LogType extends ConfigEntityBundleBase implements LogTypeInterface {
   protected $name_pattern;
 
   /**
-   * Log name is user editable.
+   * The log type workflow ID.
    *
-   * @var bool
+   * @var string
    */
-  protected $name_edit = FALSE;
-
-  /**
-   * Automatically mark logs of this type as done.
-   *
-   * @var bool
-   */
-  protected $done = FALSE;
+  protected $workflow;
 
   /**
    * Default value of the 'Create new revision' checkbox of this log type.
@@ -115,29 +108,15 @@ class LogType extends ConfigEntityBundleBase implements LogTypeInterface {
   /**
    * {@inheritdoc}
    */
+  public function setDescription($description) {
+    return $this->set('description', $description);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getNamePattern() {
     return $this->name_pattern;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isNameEditable() {
-    return $this->name_edit;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isAutomaticallyDone() {
-    return $this->done;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isNewRevision() {
-    return $this->new_revision;
   }
 
   /**
@@ -146,32 +125,68 @@ class LogType extends ConfigEntityBundleBase implements LogTypeInterface {
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
+    // If the log type id changed, update all existing logs of that type.
     if ($update && $this->getOriginalId() != $this->id()) {
-      $update_count = node_type_update_nodes($this->getOriginalId(), $this->id());
+      $update_count = \Drupal::entityTypeManager()->getStorage('log')->updateType($this->getOriginalId(), $this->id());
       if ($update_count) {
-        drupal_set_message(\Drupal::translation()->formatPlural($update_count,
+        \Drupal::messenger()->addMessage(\Drupal::translation()->formatPlural($update_count,
           'Changed the log type of 1 post from %old-type to %type.',
           'Changed the log type of @count posts from %old-type to %type.',
-          array(
+          [
             '%old-type' => $this->getOriginalId(),
             '%type' => $this->id(),
-          )));
+          ]));
       }
     }
     if ($update) {
       // Clear the cached field definitions as some settings affect the field
       // definitions.
-      $this->entityManager()->clearCachedFieldDefinitions();
+      \Drupal::entityTypeManager()->clearCachedDefinitions();
+      \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function postDelete(EntityStorageInterface $storage, array $entities) {
-    parent::postDelete($storage, $entities);
-
-    // Clear the node type cache to reflect the removal.
-    $storage->resetCache(array_keys($entities));
+  public function getWorkflowId() {
+    return $this->workflow;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setWorkflowId($workflow_id) {
+    $this->workflow = $workflow_id;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+
+    // The log type must depend on the module that provides the workflow.
+    $workflow_manager = \Drupal::service('plugin.manager.workflow');
+    $workflow = $workflow_manager->createInstance($this->getWorkflowId());
+    $this->calculatePluginDependencies($workflow);
+
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function shouldCreateNewRevision() {
+    return $this->new_revision;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setNewRevision($new_revision) {
+    return $this->set('new_revision', $new_revision);
+  }
+
 }

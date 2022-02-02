@@ -1,6 +1,0 @@
-views_pretty_path.views_pretty_path_admin_form:
-  title: 'Views Pretty Path'
-  route_name: views_pretty_path.views_pretty_path_admin_form
-  description: 'A description for the menu entry'
-  parent: system.admin_config_system
-  weight: 99

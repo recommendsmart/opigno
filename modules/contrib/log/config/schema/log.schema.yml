@@ -1,12 +1,4 @@
 # Schema for the configuration files of the log module.
-log.settings:
-  type: config_object
-  label: 'Log settings'
-  mapping:
-    log_use_admin_theme:
-      type: boolean
-      label: 'Use admin theme when editing or creating log entity'
-
 log.type.*:
   type: config_entity
   label: 'Log type'
@@ -23,15 +15,12 @@ log.type.*:
     name_pattern:
       type: string
       label: 'Pattern for auto-generating the log name, using tokens.'
-    name_edit:
-      type: boolean
-      label: 'Boolean: log name is user editable.'
-    done:
-      type: boolean
-      label: 'Boolean: automatically mark logs of this type as done.'
+    workflow:
+      type: string
+      label: 'Workflow'
     new_revision:
       type: boolean
-      label: 'Whether a new revision should be created by default'
+      label: 'Create new revision'
 
 condition.plugin.log_type:
   type: condition.plugin
@@ -41,10 +30,30 @@ condition.plugin.log_type:
       sequence:
         type: string
 
-action.configuration.log_delete_action:
-  type: action_configuration_default
-  label: 'Delete log configuration'
+views.sort.log_standard:
+  type: views_sort
+  label: 'Timestamp sort'
+  mapping:
+    granularity:
+      type: string
+      label: 'Granularity'
 
-action.configuration.log_done_action:
+views.field.log_field:
+  type: views.field.field
+  label: 'Timestamp sort'
+
+action.configuration.log_clone_action:
   type: action_configuration_default
-  label: 'Mark log as done configuration'
+  label: 'Configuration for the log clone action'
+
+action.configuration.log_mark_as_done_action:
+  type: action_configuration_default
+  label: 'Configuration for the log mark as done action'
+
+action.configuration.log_mark_as_pending_action:
+  type: action_configuration_default
+  label: 'Configuration for the log mark as pending action'
+
+action.configuration.log_reschedule_action:
+  type: action_configuration_default
+  label: 'Configuration for the log reschedule action'

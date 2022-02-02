@@ -12,11 +12,10 @@ class SocialKPILiteController extends ControllerBase {
   /**
    * Empty page for the kpi analytics.
    */
-  public function analytics() {
-    $element = [
+  public function analytics(): array {
+    return [
       '#markup' => '',
     ];
-    return $element;
   }
 
 }

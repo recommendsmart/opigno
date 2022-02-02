@@ -1,3 +1,0 @@
-services:
-  profile_stat_sender.statistics_sender:
-    class: Drupal\profile_stat_sender\ProfileStatSender

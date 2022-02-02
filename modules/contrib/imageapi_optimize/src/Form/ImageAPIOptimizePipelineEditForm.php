@@ -39,7 +39,7 @@ class ImageAPIOptimizePipelineEditForm extends ImageAPIOptimizePipelineFormBase 
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')->getStorage('imageapi_optimize_pipeline'),
+      $container->get('entity_type.manager')->getStorage('imageapi_optimize_pipeline'),
       $container->get('plugin.manager.imageapi_optimize.processor')
     );
   }

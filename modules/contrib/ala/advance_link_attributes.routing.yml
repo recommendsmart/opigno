@@ -1,7 +1,0 @@
-advance_link_attributes.admin_settings:
-  path: '/admin/config/advance_link_attributes'
-  defaults:
-    _form: '\Drupal\advance_link_attributes\Form\ModuleConfigurationForm'
-    _title: 'Advance Link Attributes configuration screen'
-  requirements:
-    _permission: 'administer site configuration'

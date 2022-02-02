@@ -1,5 +1,0 @@
-ifthenelse.rule:
-  title: 'If Then Else'
-  parent: system.admin_config_system
-  description: 'Manage ifthenelse.'
-  route_name: entity.ifthenelserule.collection

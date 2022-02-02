@@ -59,11 +59,13 @@ class AdvanceLinkAttributesFieldWidget extends LinkWidget implements ContainerFa
    */
   public static function defaultSettings() {
     return [
-        'ala_link_class_settings' => '',
-        'ala_link_class' => '',
-        'ala_link_icon' => '',
-        'ala_link_roles' => 'all',
-      ] + parent::defaultSettings();
+      'ala_link_class_settings' => '',
+      'ala_link_class' => '',
+      'ala_link_icon' => '',
+      'ala_link_color' => '',
+      'ala_link_target' => 1,
+      'ala_link_roles' => 'all',
+    ] + parent::defaultSettings();
   }
 
   /**
@@ -83,15 +85,16 @@ class AdvanceLinkAttributesFieldWidget extends LinkWidget implements ContainerFa
       '_parent' => 'Parent window (_parent)',
       '_top' => 'Topmost window (_top)',
     ];
-    $default_value = !empty($options['attributes']['target']) ? $options['attributes']['target'] : '';
-    $element['options']['attributes']['target'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Select a target'),
-      '#options' => ['' => $this->t('- None -')] + $targets_available,
-      '#default_value' => $default_value,
-      '#description' => $this->t('Select a link behavior. <em>_self</em> will open the link in the current window. <em>_blank</em> will open the link in a new window or tab. <em>_parent</em> and <em>_top</em> will generally open in the same window or tab, but in some cases will open in a different window.'),
-    ];
-
+    if (($this->getSetting('ala_link_target'))) {
+      $default_value = !empty($options['attributes']['target']) ? $options['attributes']['target'] : '';
+      $element['options']['attributes']['target'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Select a target'),
+        '#options' => ['' => $this->t('- None -')] + $targets_available,
+        '#default_value' => $default_value,
+        '#description' => $this->t('Select a link behavior. <em>_self</em> will open the link in the current window. <em>_blank</em> will open the link in a new window or tab. <em>_parent</em> and <em>_top</em> will generally open in the same window or tab, but in some cases will open in a different window.'),
+      ];
+    }
     if (($this->getSetting('ala_link_icon'))) {
       $icon = !empty($options['icon']) ? $options['icon'] : '';
       $element['options']['icon'] = [
@@ -99,6 +102,24 @@ class AdvanceLinkAttributesFieldWidget extends LinkWidget implements ContainerFa
         '#title' => $this->t('Icon Class'),
         '#default_value' => $icon,
         '#description' => $this->t('Icon Class, fal fa-icon'),
+      ];
+    }
+
+    if (($this->getSetting('ala_link_color'))) {
+      $form['#attached']['library'][] = 'ala/color';
+      $color = !empty($options['color']) ? $options['color'] : '';
+      $element['options']['color'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Text Color'),
+        '#attributes' => ['class' => ['alaColorField']],
+        '#default_value' => $color,
+      ];
+      $bgColor = !empty($options['bgcolor']) ? $options['bgcolor'] : '';
+      $element['options']['bgcolor'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('BG Color'),
+        '#attributes' => ['class' => ['alaColorField']],
+        '#default_value' => $bgColor,
       ];
     }
 
@@ -115,9 +136,9 @@ class AdvanceLinkAttributesFieldWidget extends LinkWidget implements ContainerFa
         '#multiple' => TRUE,
         '#title' => $this->t('Visible for'),
         '#options' => [
-            'all' => $this->t('- Everyone -'),
-            'authenticated' => $this->t('- Logged -'),
-          ] + $system_roles,
+          'all' => $this->t('- Everyone -'),
+          'authenticated' => $this->t('- Logged -'),
+        ] + $system_roles,
         '#default_value' => $default_value,
       ];
     }
@@ -211,6 +232,16 @@ class AdvanceLinkAttributesFieldWidget extends LinkWidget implements ContainerFa
       '#type' => 'checkbox',
       '#title' => $this->t('Enable User Roles'),
       '#default_value' => $this->getSetting('ala_link_roles'),
+    ];
+    $element['ala_link_color'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enable Custom BG & Color'),
+      '#default_value' => $this->getSetting('ala_link_color'),
+    ];
+    $element['ala_link_target'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enable Target'),
+      '#default_value' => $this->getSetting('ala_link_target'),
     ];
 
     return $element;

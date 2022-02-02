@@ -1,31 +1,22 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\log\Entity\Log.
- */
-
 namespace Drupal\log;
 
-use Drupal\views\EntityViewsData;
-use Drupal\views\EntityViewsDataInterface;
+use Drupal\entity\EntityViewsData;
 
 /**
- * Provides Views data for Log entities.
+ * Provides views data for the file entity type.
  */
-class LogViewsData extends EntityViewsData implements EntityViewsDataInterface {
+class LogViewsData extends EntityViewsData {
+
   /**
    * {@inheritdoc}
    */
   public function getViewsData() {
     $data = parent::getViewsData();
-    $data['log']['log_bulk_form'] = array(
-      'title' => t('Log operations bulk form'),
-      'help' => t('Add a form element that lets you run operations on multiple log entities.'),
-      'field' => array(
-        'id' => 'log_bulk_form',
-      ),
-    );
+
+    $data['log_field_data']['timestamp']['sort']['id'] = 'log_standard';
+    $data['log_field_data']['timestamp']['field']['id'] = 'log_field';
 
     return $data;
   }

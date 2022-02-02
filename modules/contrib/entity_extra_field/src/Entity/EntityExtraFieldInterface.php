@@ -2,6 +2,8 @@
 
 namespace Drupal\entity_extra_field\Entity;
 
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -17,7 +19,7 @@ interface EntityExtraFieldInterface extends ConfigEntityInterface {
    * @return string
    *   The extra field machine name.
    */
-  public function name();
+  public function name(): ?string;
 
   /**
    * Get the extra field description.
@@ -25,15 +27,15 @@ interface EntityExtraFieldInterface extends ConfigEntityInterface {
    * @return string
    *   The extra field description.
    */
-  public function description();
+  public function description(): ?string;
 
   /**
    * Should display the extra field label.
    *
-   * @return boolean
+   * @return bool
    *   Return TRUE if the field label should be rendered; otherwise FALSE.
    */
-  public function displayLabel();
+  public function displayLabel(): bool;
 
   /**
    * Get extra field display.
@@ -41,7 +43,7 @@ interface EntityExtraFieldInterface extends ConfigEntityInterface {
    * @return array
    *   An array of display information.
    */
-  public function getDisplay();
+  public function getDisplay(): array;
 
   /**
    * Get extra field display type.
@@ -49,7 +51,7 @@ interface EntityExtraFieldInterface extends ConfigEntityInterface {
    * @return string
    *   Get the display type.
    */
-  public function getDisplayType();
+  public function getDisplayType(): ?string;
 
   /**
    * Get field type plugin label.
@@ -57,7 +59,7 @@ interface EntityExtraFieldInterface extends ConfigEntityInterface {
    * @return string
    *   The field type plugin label.
    */
-  public function getFieldTypeLabel();
+  public function getFieldTypeLabel(): string;
 
   /**
    * Get field type plugin identifier.
@@ -65,15 +67,15 @@ interface EntityExtraFieldInterface extends ConfigEntityInterface {
    * @return string
    *   The field type plugin identifier.
    */
-  public function getFieldTypePluginId();
+  public function getFieldTypePluginId(): string;
 
   /**
-   * Get field type plugin configuration
+   * Get field type plugin configuration.
    *
    * @return array
    *   An array of the plugin configuration.
    */
-  public function getFieldTypePluginConfig();
+  public function getFieldTypePluginConfig(): array;
 
   /**
    * Get field type condition.
@@ -81,7 +83,15 @@ interface EntityExtraFieldInterface extends ConfigEntityInterface {
    * @return array
    *   An array of condition plugin with configuration.
    */
-  public function getFieldTypeCondition();
+  public function getFieldTypeCondition(): array;
+
+  /**
+   * Get field type conditions all pass.
+   *
+   * @return bool
+   *   Return TRUE if all field type conditions need to pass; otherwise FALSE.
+   */
+  public function getFieldTypeConditionsAllPass(): bool;
 
   /**
    * Get base entity type id.
@@ -89,7 +99,7 @@ interface EntityExtraFieldInterface extends ConfigEntityInterface {
    * @return string
    *   The base entity type identifier.
    */
-  public function getBaseEntityTypeId();
+  public function getBaseEntityTypeId(): string;
 
   /**
    * Get base bundle type id.
@@ -97,7 +107,7 @@ interface EntityExtraFieldInterface extends ConfigEntityInterface {
    * @return string
    *   A base bundle type id.
    */
-  public function getBaseBundleTypeId();
+  public function getBaseBundleTypeId(): ?string;
 
   /**
    * Get base entity type instance.
@@ -107,7 +117,7 @@ interface EntityExtraFieldInterface extends ConfigEntityInterface {
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function getBaseEntityType();
+  public function getBaseEntityType(): EntityTypeInterface;
 
   /**
    * Get base entity type bundle instance.
@@ -117,7 +127,17 @@ interface EntityExtraFieldInterface extends ConfigEntityInterface {
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function getBaseEntityTypeBundle();
+  public function getBaseEntityTypeBundle(): EntityTypeInterface;
+
+  /**
+   * Get the base entity context.
+   *
+   * @return \Drupal\Core\Plugin\Context\EntityContext
+   *   The entity context.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getBaseEntityContext(): EntityContext;
 
   /**
    * Get the cache discovery identifier.
@@ -125,7 +145,15 @@ interface EntityExtraFieldInterface extends ConfigEntityInterface {
    * @return string
    *   The cache identifier in the cache_discovery table.
    */
-  public function getCacheDiscoveryId();
+  public function getCacheDiscoveryId(): string;
+
+  /**
+   * Get the cache render tag.
+   *
+   * @return string
+   *   The cache render tag.
+   */
+  public function getCacheRenderTag(): string;
 
   /**
    * Get active field type conditions.
@@ -133,7 +161,7 @@ interface EntityExtraFieldInterface extends ConfigEntityInterface {
    * @return array
    *   An array of active field type conditions.
    */
-  public function getActiveFieldTypeConditions();
+  public function getActiveFieldTypeConditions(): array;
 
   /**
    * Get the build attachments.
@@ -141,33 +169,31 @@ interface EntityExtraFieldInterface extends ConfigEntityInterface {
    * @return array
    *   An array of the build attachments.
    */
-  public function getBuildAttachments();
+  public function getBuildAttachments(): array;
 
   /**
    * Set a build attachment.
    *
-   * @param $type
+   * @param string $type
    *   The type of attachment (library, drupalSettings, etc)
    * @param array $attachment
    *   An array of attachment settings for the particular type.
-
-   * @return $this
    */
-  public function setBuildAttachment($type, array $attachment);
+  public function setBuildAttachment(string $type, array $attachment);
 
   /**
    * Check if entity identifier exist.
    *
-   * @param $name
+   * @param string $name
    *   The entity machine name.
    *
-   * @return int
+   * @return bool
    *   Return TRUE if machine name exist; otherwise FALSE.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function exists($name);
+  public function exists(string $name): bool;
 
   /**
    * Build the extra field.
@@ -180,7 +206,10 @@ interface EntityExtraFieldInterface extends ConfigEntityInterface {
    * @return array
    *   The extra field renderable array.
    */
-  public function build(EntityInterface $entity, EntityDisplayInterface $display);
+  public function build(
+    EntityInterface $entity,
+    EntityDisplayInterface $display
+  ): array;
 
   /**
    * Extra field has display component.
@@ -191,7 +220,7 @@ interface EntityExtraFieldInterface extends ConfigEntityInterface {
    * @return bool
    *   Return TRUE if the component exists in the display; otherwise FALSE.
    */
-  public function hasDisplayComponent(EntityDisplayInterface $display);
+  public function hasDisplayComponent(EntityDisplayInterface $display): bool;
 
   /**
    * Has extra field conditions been met.
@@ -206,5 +235,9 @@ interface EntityExtraFieldInterface extends ConfigEntityInterface {
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
-  public function hasConditionsBeenMet(array $contexts, $all_must_pass = FALSE);
+  public function hasConditionsBeenMet(
+    array $contexts,
+    bool $all_must_pass = FALSE
+  ): bool;
+
 }

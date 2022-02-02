@@ -19,7 +19,7 @@ class BananaDashboardController extends ControllerBase {
   public function getBananaDashboard() {
     $dashboard_menu = banana_dashboard_get('dashboard_menu', []);
     foreach ($dashboard_menu as $key => $value) {
-      if ($value['url'] == FALSE || !\Drupal::service('path.validator')->isValid(substr($value['url'], 1))) {
+      if (empty($value['url']) || !\Drupal::service('path.validator')->isValid(substr($value['url'], 1))) {
         unset($dashboard_menu[$key]);
       }
       unset($dashboard_menu['id']);

@@ -1,17 +1,17 @@
-
 CONTENTS OF THIS FILE
 ---------------------
 
  * Introduction
+ * Requirements
  * Installation
+ * Configuration
  * Maintainers
- * Usage
 
 
 INTRODUCTION
 ------------
 
-Currently the dragable field "User name and password" mashes together:
+Currently the draggable field "User name and password" mashes together:
 
  * Username
  * Current password
@@ -21,30 +21,34 @@ Currently the dragable field "User name and password" mashes together:
  * Status
  * Notify user about new account (when admin create new account)
 
-This module aims to fix that problem for site builders who want to manage that fields separately.
+Account Field Split aims to fix that problem for site builders who want to
+manage those fields separately.
+
+
+REQUIREMENTS
+------------
+
+This module requires no modules outside of Drupal core.
+
 
 INSTALLATION
 ------------
 
-Install as usual.
+ * Install as you would normally install a contributed Drupal module. Visit
+   https://www.drupal.org/docs/8/extending-drupal-8/installing-drupal-8-modules
+   for further information.
 
-Place the entirety of this directory in the /modules folder of your Drupal
-installation. Navigate to Administer > Extend. Check the 'Enabled' box next
-to the 'Account field split' and then click
-the 'Save Configuration' button at the bottom.
 
-For help regarding installation, visit:
-https://www.drupal.org/documentation/install/modules-themes/modules-8
+CONFIGURATION
+-------------
 
-USAGE
------
+    1. After enabling the module, the module adds new fields on the Account
+       Settings' Manage form display, located at Configuration > People >
+       Accounts > Form Display.
+    2. Manage or reorder the fields for your needs.
 
-After enabling of that module you will see a list of new fields on Account
-settings Manage form display (/admin/config/people/accounts/form-display).
-
-Manage or reorder them for your needs.
 
 MAINTAINERS
 -----------
 
- * Dima Storozhuk <dmytro.storozhuk@gmail.com>, site http://www.i4w.co/
+ * Dima Storozhuk (dstorozhuk) - https://www.drupal.org/u/dstorozhuk

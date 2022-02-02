@@ -2,13 +2,12 @@
 
 namespace Drupal\entity_extra_field\Plugin\ExtraFieldType;
 
-use Drupal\Core\Annotation\Translation;
+use Drupal\views\ViewEntityInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\entity_extra_field\Annotation\ExtraFieldType;
 use Drupal\entity_extra_field\ExtraFieldTypePluginBase;
-use Drupal\views\Entity\View;
 
 /**
  * Define extra field views plugin.
@@ -23,7 +22,7 @@ class ExtraFieldViewsPlugin extends ExtraFieldTypePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration() {
+  public function defaultConfiguration(): array {
     return [
       'display' => NULL,
       'view_name' => NULL,
@@ -34,7 +33,10 @@ class ExtraFieldViewsPlugin extends ExtraFieldTypePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(
+    array $form,
+    FormStateInterface $form_state
+  ): array {
     $form = parent::buildConfigurationForm($form, $form_state);
 
     $view_name = $this->getPluginFormStateValue('view_name', $form_state);
@@ -62,7 +64,7 @@ class ExtraFieldViewsPlugin extends ExtraFieldTypePluginBase {
         '#title' => $this->t('Display'),
         '#required' => TRUE,
         '#options' => $this->getViewDisplayOptions($view),
-        '#default_value' => $display
+        '#default_value' => $display,
       ];
       $form['arguments'] = [
         '#type' => 'textfield',
@@ -70,14 +72,14 @@ class ExtraFieldViewsPlugin extends ExtraFieldTypePluginBase {
         '#description' => $this->t('Input the views display arguments. If there
           are multiple, use a comma delimiter. <br/> <strong>Note:</strong>
           Tokens are supported.'),
-        '#default_value' => $this->getPluginFormStateValue('arguments', $form_state)
+        '#default_value' => $this->getPluginFormStateValue('arguments', $form_state),
       ];
 
       if ($this->moduleHandler->moduleExists('token')) {
         $form['token_replacements'] = [
           '#theme' => 'token_tree_link',
           '#token_types' => $this->getEntityTokenTypes(
-            $this->getTargetEntityTypeId(),
+            $this->getTargetEntityTypeDefinition(),
             $this->getTargetEntityTypeBundle()->id()
           ),
         ];
@@ -90,15 +92,17 @@ class ExtraFieldViewsPlugin extends ExtraFieldTypePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function build(EntityInterface $entity, EntityDisplayInterface $display) {
+  public function build(
+    EntityInterface $entity,
+    EntityDisplayInterface $display
+  ): array {
     return $this->renderView($entity);
   }
 
   /**
    * {@inheritDoc}
    */
-  public function calculateDependencies() {
-    /** @var \Drupal\views\ViewEntityInterface $view */
+  public function calculateDependencies(): array {
     if ($view = $this->getView()) {
       $this->addDependencies($view->getDependencies());
     }
@@ -117,7 +121,7 @@ class ExtraFieldViewsPlugin extends ExtraFieldTypePluginBase {
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function renderView(EntityInterface $entity) {
+  protected function renderView(EntityInterface $entity): ?array {
     $view_name = $this->getViewName();
 
     if (!isset($view_name)) {
@@ -135,20 +139,14 @@ class ExtraFieldViewsPlugin extends ExtraFieldTypePluginBase {
   /**
    * Get the view instance.
    *
-   * @return bool|\Drupal\Core\Entity\EntityInterface|null
+   * @return \Drupal\views\ViewEntityInterface
    *   The view instance.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function getView() {
-    $view_name = $this->getViewName();
-
-    if (!isset($view_name)) {
-      return FALSE;
-    }
-
-    return $this->loadView($view_name);
+  protected function getView(): ViewEntityInterface {
+    return $this->loadView($this->getViewName());
   }
 
   /**
@@ -157,7 +155,7 @@ class ExtraFieldViewsPlugin extends ExtraFieldTypePluginBase {
    * @return string|null
    *   The view name; otherwise NULL.
    */
-  protected function getViewName() {
+  protected function getViewName(): ?string {
     return $this->getConfiguration()['view_name'] ?? NULL;
   }
 
@@ -167,12 +165,8 @@ class ExtraFieldViewsPlugin extends ExtraFieldTypePluginBase {
    * @return string
    *   The view display name; otherwise default.
    */
-  protected function getViewDisplay() {
-    $configuration = $this->getConfiguration();
-
-    return isset($configuration['display'])
-      ? $configuration['display']
-      : 'default';
+  protected function getViewDisplay(): string {
+    return $this->getConfiguration()['display'] ?? 'default';
   }
 
   /**
@@ -186,13 +180,16 @@ class ExtraFieldViewsPlugin extends ExtraFieldTypePluginBase {
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function getViewArguments(EntityInterface $entity) {
+  protected function getViewArguments(EntityInterface $entity): array {
     $configuration = $this->getConfiguration();
 
-    if (!isset($configuration['arguments'])) {
+    if (
+      !isset($configuration['arguments'])
+      || empty($configuration['arguments'])
+    ) {
       return [];
     }
-    $arguments = explode(',', $configuration['arguments']);
+    $arguments = array_filter(explode(',', $configuration['arguments']));
 
     foreach ($arguments as &$argument) {
       $argument = $this->processEntityToken($argument, $entity);
@@ -210,7 +207,7 @@ class ExtraFieldViewsPlugin extends ExtraFieldTypePluginBase {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function getViewOptions() {
+  protected function getViewOptions(): array {
     $options = [];
 
     /** @var \Drupal\views\Entity\View $view */
@@ -224,13 +221,15 @@ class ExtraFieldViewsPlugin extends ExtraFieldTypePluginBase {
   /**
    * Get view display options.
    *
-   * @param \Drupal\views\Entity\View $view
+   * @param \Drupal\views\ViewEntityInterface $view
    *   The view instance.
    *
    * @return array
    *   An array of view display options.
+   *
+   * @throws \Exception
    */
-  protected function getViewDisplayOptions(View $view) {
+  protected function getViewDisplayOptions(ViewEntityInterface $view): array {
     $options = [];
 
     $exec = $view->getExecutable();
@@ -238,8 +237,7 @@ class ExtraFieldViewsPlugin extends ExtraFieldTypePluginBase {
 
     /** @var \Drupal\views\Plugin\views\display\DisplayPluginInterface $display */
     foreach ($exec->displayHandlers->getIterator() as $display_id => $display) {
-      if (!isset($display->display)
-        || !isset($display->display['display_title'])) {
+      if (!isset($display->display['display_title'])) {
         continue;
       }
       $options[$display_id] = $display->display['display_title'];
@@ -251,16 +249,16 @@ class ExtraFieldViewsPlugin extends ExtraFieldTypePluginBase {
   /**
    * Load view instance.
    *
-   * @param $view_name
+   * @param string $view_name
    *   The view name.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|null
+   * @return \Drupal\views\ViewEntityInterface
    *   The view instance.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function loadView($view_name) {
+  protected function loadView(string $view_name): ViewEntityInterface {
     return $this->getViewStorage()->load($view_name);
   }
 
@@ -273,7 +271,7 @@ class ExtraFieldViewsPlugin extends ExtraFieldTypePluginBase {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function getActiveViewList() {
+  protected function getActiveViewList(): array {
     return $this
       ->getViewStorage()
       ->loadByProperties(['status' => TRUE]);
@@ -288,7 +286,8 @@ class ExtraFieldViewsPlugin extends ExtraFieldTypePluginBase {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function getViewStorage() {
+  protected function getViewStorage(): EntityStorageInterface {
     return $this->entityTypeManager->getStorage('view');
   }
+
 }

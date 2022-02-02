@@ -1,15 +1,10 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\log\LogStorage.
- */
-
 namespace Drupal\log;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Render\BubbleableMetadata;
 
 /**
  * Defines the controller class for logs.
@@ -17,53 +12,84 @@ use Drupal\Core\Language\LanguageInterface;
  * This extends the base storage class, adding required special handling for
  * log entities.
  */
-class LogStorage extends SqlContentEntityStorage implements LogStorageInterface {
+class LogStorage extends SqlContentEntityStorage {
 
   /**
    * {@inheritdoc}
    */
-  public function revisionIds(LogInterface $log) {
-    return $this->database->query(
-      'SELECT vid FROM {log_revision} WHERE id=:id ORDER BY vid',
-      array(':id' => $log->id())
-    )->fetchCol();
+  protected function doPostSave(EntityInterface $entity, $update) {
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+
+    if ($update && $this->entityType->isTranslatable()) {
+      $this->invokeTranslationHooks($entity);
+    }
+
+    // Get the log's current name.
+    $current_name = $entity->get('name')->value;
+
+    // We will automatically set the log name under two conditions:
+    // 1. Saving new/existing logs without a name.
+    // 2. Updating existing logs that were saved using the naming pattern.
+    $set_name = FALSE;
+    if (empty($current_name)) {
+      $set_name = TRUE;
+    }
+    elseif ($update && !empty($entity->original)) {
+
+      // Generate a log name using the original entity.
+      $original_generated_name = $this->generateLogName($entity->original);
+
+      // Compare the current log name to what would have been the original
+      // auto-generated name, to determine if the name was auto-generated
+      // previously. If it was, we will regenerate it.
+      if ($current_name == $original_generated_name) {
+        $set_name = TRUE;
+      }
+    }
+
+    // We must run the parent method before we set the name, so that new logs
+    // have an ID that can be used in token replacements.
+    // Also, we must run the parent method after the logic above, because the
+    // parent method unsets $entity->original.
+    parent::doPostSave($entity, $update);
+
+    // Set the log name, if necessary.
+    if ($set_name) {
+
+      // Generate a new name.
+      $new_name = $this->generateLogName($entity);
+
+      // If the name has been changed, update the entity.
+      if ($current_name != $new_name) {
+        $entity->set('name', $new_name);
+        $entity->save();
+      }
+    }
   }
 
   /**
-   * {@inheritdoc}
+   * Helper method for generating a log name.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The log entity.
+   *
+   * @return string
+   *   Returns the generated log name.
    */
-  public function userRevisionIds(AccountInterface $account) {
-    return $this->database->query(
-      'SELECT vid FROM {log_field_revision} WHERE uid = :uid ORDER BY vid',
-      array(':uid' => $account->id())
-    )->fetchCol();
-  }
+  protected function generateLogName(EntityInterface $entity) {
 
-  /**
-   * {@inheritdoc}
-   */
-  public function countDefaultLanguageRevisions(LogInterface $log) {
-    return $this->database->query('SELECT COUNT(*) FROM {log_field_revision} WHERE id = :id AND default_langcode = 1', array(':id' => $log->id()))->fetchField();
-  }
+    // Get the log type's naming pattern.
+    $name_pattern = $entity->getTypeNamePattern();
 
-  /**
-   * {@inheritdoc}
-   */
-  public function updateType($old_type, $new_type) {
-    return $this->database->update('log')
-      ->fields(array('type' => $new_type))
-      ->condition('type', $old_type)
-      ->execute();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function clearRevisionsLanguage(LanguageInterface $language) {
-    return $this->database->update('log_revision')
-      ->fields(array('langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED))
-      ->condition('langcode', $language->getId())
-      ->execute();
+    // Pass in an empty bubbleable metadata object, so we can avoid starting a
+    // renderer, for example if this happens in a REST resource creating
+    // context.
+    return \Drupal::token()->replace(
+      $name_pattern,
+      ['log' => $entity],
+      [],
+      new BubbleableMetadata()
+    );
   }
 
 }

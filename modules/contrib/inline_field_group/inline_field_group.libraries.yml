@@ -1,5 +1,0 @@
-formatter.inline:
-  version: VERSION
-  css:
-    component:
-      css/inline.css: {}

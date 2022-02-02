@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\entity_extra_field_ui\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
@@ -34,7 +36,7 @@ class MenuLinksAction extends DeriverBase implements ContainerDeriverInterface {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, $base_plugin_id) {
-    return new static (
+    return new static(
       $container->get('entity_type.manager')
     );
   }
@@ -42,7 +44,7 @@ class MenuLinksAction extends DeriverBase implements ContainerDeriverInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinitions($base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_definition): array {
     $links = parent::getDerivativeDefinitions($base_plugin_definition);
 
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $definition) {
@@ -55,11 +57,12 @@ class MenuLinksAction extends DeriverBase implements ContainerDeriverInterface {
         'title' => $this->t('Add extra field'),
         'route_name' => "entity.{$entity_type_id}.extra_fields.add",
         'appears_on' => [
-          "entity.{$entity_type_id}.extra_fields"
+          "entity.{$entity_type_id}.extra_fields",
         ],
       ] + $base_plugin_definition;
     }
 
     return $links;
   }
+
 }

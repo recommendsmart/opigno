@@ -32,7 +32,7 @@ class EntityExtraFieldListBuilder extends EntityListBuilder {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
    * @param \Drupal\Core\Routing\RouteMatchInterface $current_route_match
-   *   The current route match service
+   *   The current route match service.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
@@ -67,29 +67,29 @@ class EntityExtraFieldListBuilder extends EntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function buildHeader() {
+  public function buildHeader(): array {
     return [
-        'label' => $this->t('Label'),
-        'field_type' => $this->t('Field Type'),
-        'display_type' => $this->t('Display Type')
-      ] + parent::buildHeader();
+      'label' => $this->t('Label'),
+      'field_type' => $this->t('Field Type'),
+      'display_type' => $this->t('Display Type'),
+    ] + parent::buildHeader();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildRow(EntityInterface $entity) {
+  public function buildRow(EntityInterface $entity): array {
     return [
-        'label' => $entity->label(),
-        'field_type' => $entity->getFieldTypeLabel(),
-        'display_type' => $entity->getDisplayType()
-      ] + parent::buildRow($entity);
+      'label' => $entity->label(),
+      'field_type' => $entity->getFieldTypeLabel(),
+      'display_type' => $entity->getDisplayType(),
+    ] + parent::buildRow($entity);
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getEntityIds() {
+  protected function getEntityIds(): array {
     $query = $this->getStorage()->getQuery();
 
     if ($base_entity_type_id = $this->getBaseEntityTypeId()) {
@@ -111,17 +111,17 @@ class EntityExtraFieldListBuilder extends EntityListBuilder {
   /**
    * Get base entity type identifier.
    *
-   * @return string|NULL
+   * @return string|null
    *   The base entity type identifier.
    */
-  protected function getBaseEntityTypeId() {
+  protected function getBaseEntityTypeId(): ?string {
     return $this->currentRouteMatch->getParameter('entity_type_id');
   }
 
   /**
    * Get base entity bundle type.
    *
-   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface|boolean
+   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface|bool
    *   The configuration entity; otherwise NULL if it doesn't exist.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
@@ -139,4 +139,5 @@ class EntityExtraFieldListBuilder extends EntityListBuilder {
 
     return $this->currentRouteMatch->getParameter($entity_bundle_type_id);
   }
+
 }

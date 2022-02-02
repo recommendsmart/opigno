@@ -2,12 +2,20 @@
 
 namespace Drupal\entity_extra_field\Entity;
 
-use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Cache\Cache;
+use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Core\Plugin\Context\EntityContext;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\Annotation\ConfigEntityType;
+use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\entity_extra_field\EntityExtraFieldContextTrait;
 use Drupal\entity_extra_field\ExtraFieldTypePluginInterface;
 
 /**
@@ -22,6 +30,20 @@ use Drupal\entity_extra_field\ExtraFieldTypePluginInterface;
  *     "id" = "id",
  *     "label" = "label"
  *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "display_label",
+ *     "name",
+ *     "description",
+ *     "base_entity_type_id",
+ *     "base_bundle_type_id",
+ *     "field_type_id",
+ *     "field_type_config",
+ *     "field_type_condition",
+ *     "field_conditions_all_pass",
+ *     "display"
+ *   },
  *   handlers = {
  *     "form" = {
  *       "add" = "\Drupal\entity_extra_field\Form\EntityExtraFieldForm",
@@ -33,6 +55,9 @@ use Drupal\entity_extra_field\ExtraFieldTypePluginInterface;
  * )
  */
 class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInterface {
+
+  use StringTranslationTrait;
+  use EntityExtraFieldContextTrait;
 
   /**
    * @var string
@@ -80,6 +105,11 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
   public $field_type_condition = [];
 
   /**
+   * @var bool
+   */
+  public $field_conditions_all_pass = FALSE;
+
+  /**
    * @var string
    */
   public $base_entity_type_id;
@@ -97,7 +127,7 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
   /**
    * {@inheritdoc}
    */
-  public function id() {
+  public function id(): ?string {
     if (empty($this->name)
       || empty($this->base_entity_type_id)
       || empty($this->base_bundle_type_id)) {
@@ -110,88 +140,91 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
   /**
    * {@inheritdoc}
    */
-  public function name() {
+  public function name(): ?string {
     return $this->name;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function description() {
+  public function description(): ?string {
     return $this->description;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function displayLabel() {
+  public function displayLabel(): bool {
     return $this->display_label;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getDisplay() {
+  public function getDisplay(): array {
     return $this->display;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getDisplayType() {
-    $display = $this->getDisplay();
-
-    return isset($display['type'])
-      ? $display['type']
-      : NULL;
+  public function getDisplayType(): ?string {
+    return $this->getDisplay()['type'] ?? NULL;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldTypeLabel() {
+  public function getFieldTypeLabel(): string {
     return $this->getFieldTypePlugin()->label();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldTypePluginId() {
+  public function getFieldTypePluginId(): string {
     return $this->field_type_id;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldTypePluginConfig() {
+  public function getFieldTypePluginConfig(): array {
     return $this->field_type_config;
   }
 
   /**
    * {@inheritDoc}
    */
-  public function getFieldTypeCondition() {
+  public function getFieldTypeCondition(): array {
     return $this->field_type_condition;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getFieldTypeConditionsAllPass(): bool {
+    return $this->field_conditions_all_pass;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getBaseEntityTypeId() {
+  public function getBaseEntityTypeId(): string {
     return $this->base_entity_type_id;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getBaseBundleTypeId() {
+  public function getBaseBundleTypeId(): ?string {
     return $this->base_bundle_type_id;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getBaseEntityType() {
+  public function getBaseEntityType(): EntityTypeInterface {
     return $this->entityTypeManager()->getDefinition(
       $this->getBaseEntityTypeId()
     );
@@ -200,7 +233,7 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
   /**
    * {@inheritdoc}
    */
-  public function getBaseEntityTypeBundle() {
+  public function getBaseEntityTypeBundle(): EntityTypeInterface {
     $entity_type = $this->getBaseEntityType();
 
     return $this->entityTypeManager()->getDefinition(
@@ -209,9 +242,26 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
   }
 
   /**
+   * {@inheritDoc}
+   */
+  public function getBaseEntityContext(): EntityContext {
+    $definition = $this->getBaseEntityType();
+
+    $label = $this->t('@entity being viewed', [
+      '@entity' => $definition->getLabel(),
+    ]);
+    $entity_context = EntityContext::fromEntityType($definition, $label);
+
+    $context_definition = $entity_context->getContextDefinition();
+    $context_definition->addConstraint('Bundle', [$this->getBaseBundleTypeId()]);
+
+    return $entity_context;
+  }
+
+  /**
    * {@inheritdoc}
    */
-  public function getCacheDiscoveryId() {
+  public function getCacheDiscoveryId(): string {
     $langcode = $this->languageManager()->getCurrentLanguage()->getId();
     return "entity_bundle_extra_fields:{$this->getBaseEntityTypeId()}:{$this->getBaseBundleTypeId()}:{$langcode}";
   }
@@ -219,31 +269,31 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
   /**
    * {@inheritdoc}
    */
-  public function getCacheRenderTag() {
+  public function getCacheRenderTag(): string {
     return "entity_extra_field:{$this->getDisplayType()}.{$this->getBaseEntityTypeId()}.{$this->getBaseBundleTypeId()}";
   }
 
   /**
    * {@inheritDoc}
    */
-  public function getBuildAttachments() {
+  public function getBuildAttachments(): array {
     return $this->build_attachments;
   }
 
   /**
    * {@inheritDoc}
    */
-  public function getActiveFieldTypeConditions() {
+  public function getActiveFieldTypeConditions(): array {
     return array_filter($this->getFieldTypeCondition(), function ($value) {
-      unset($value['id'], $value['negate']);
-      return !empty(array_filter($value));
+      unset($value['id'], $value['negate'], $value['context_mapping']);
+      return !$this->isArrayEmpty($value);
     });
   }
 
   /**
    * {@inheritDoc}
    */
-  public function setBuildAttachment($type, array $attachment) {
+  public function setBuildAttachment($type, array $attachment): self {
     if (!isset($this->build_attachments[$type])) {
       $this->build_attachments[$type] = [];
     }
@@ -258,7 +308,10 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
   /**
    * {@inheritdoc}
    */
-  public function build(EntityInterface $entity, EntityDisplayInterface $display) {
+  public function build(
+    EntityInterface $entity,
+    EntityDisplayInterface $display
+  ): array {
     $field_type_plugin = $this->getFieldTypePlugin();
 
     if (!$field_type_plugin instanceof ExtraFieldTypePluginInterface) {
@@ -267,27 +320,63 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
 
     return [
       '#field' => $this,
+      '#view_mode' => $display->getMode(),
       '#theme' => 'entity_extra_field',
       'label' => [
         '#plain_text' => $this->displayLabel()
-          ? $this->label()
-          : NULL
+        ? $this->label()
+        : NULL,
       ],
-      'content' => $field_type_plugin->build($entity, $display)
+      'content' => $field_type_plugin->build($entity, $display),
     ];
   }
 
   /**
    * {@inheritDoc}
    */
-  public function hasDisplayComponent(EntityDisplayInterface $display) {
+  public function hasDisplayComponent(EntityDisplayInterface $display): bool {
     return $display->getComponent($this->name()) !== NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts(): array {
+    $contexts = parent::getCacheContexts();
+
+    foreach ($this->getActiveFieldTypeConditions() as $plugin_id => $configuration) {
+      /** @var \Drupal\Core\Condition\ConditionPluginBase $condition */
+      $condition = $this->conditionPluginManager()
+        ->createInstance($plugin_id, $configuration);
+      $contexts = Cache::mergeContexts($contexts, $condition->getCacheContexts());
+    }
+
+    return $contexts;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTagsToInvalidate(): array {
+    $tags = parent::getCacheTagsToInvalidate();
+
+    foreach ($this->getActiveFieldTypeConditions() as $plugin_id => $configuration) {
+      /** @var \Drupal\Core\Condition\ConditionPluginBase $condition */
+      $condition = $this->conditionPluginManager()
+        ->createInstance($plugin_id, $configuration);
+      $tags = Cache::mergeTags($tags, $condition->getCacheTags());
+    }
+
+    return $tags;
   }
 
   /**
    * {@inheritDoc}
    */
-  public function hasConditionsBeenMet(array $contexts, $all_must_pass = FALSE) {
+  public function hasConditionsBeenMet(
+    array $contexts,
+    bool $all_must_pass = FALSE
+  ): bool {
     $conditions = $this->getActiveFieldTypeConditions();
 
     if (empty($conditions)) {
@@ -300,11 +389,12 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
       $condition = $this->conditionPluginManager()
         ->createInstance($plugin_id, $configuration);
 
-      if ($context_definitions = $condition->getContextDefinitions()) {
-        $condition_contexts = array_intersect_key($contexts, $context_definitions);
-
-        foreach ($condition_contexts as $name => $context) {
-          $condition->setContextValue($name, $context);
+      if ($condition instanceof ContextAwarePluginInterface) {
+        try {
+          $this->applyPluginRuntimeContexts($condition, $contexts);
+        }
+        catch (\Exception $exception) {
+          watchdog_exception('entity_extra_field', $exception);
         }
       }
       $verdict = $condition->evaluate();
@@ -322,7 +412,7 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
   /**
    * {@inheritdoc}
    */
-  public function exists($name) {
+  public function exists($name): bool {
     return (bool) $this->getQuery()
       ->condition('id', "{$this->getBaseEntityTypeId()}.{$this->getBaseBundleTypeId()}.{$name}")
       ->execute();
@@ -331,17 +421,20 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
   /**
    * {@inheritdoc}
    */
-  public function toUrl($rel = 'edit-form', array $options = []) {
+  public function toUrl($rel = 'edit-form', array $options = []): Url {
     $base_route_name = $this->getBaseRouteName();
     $route_parameters = $this->urlRouteParameters($rel);
 
     switch ($rel) {
       case 'collection':
         return URL::fromRoute($base_route_name, $route_parameters, $options);
+
       case 'add-form':
         return Url::fromRoute("{$base_route_name}.add", $route_parameters, $options);
+
       case 'edit-form':
         return Url::fromRoute("{$base_route_name}.edit", $route_parameters, $options);
+
       case 'delete-form':
         return Url::fromRoute("{$base_route_name}.delete", $route_parameters, $options);
     }
@@ -354,7 +447,7 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
   /**
    * {@inheritDoc}
    */
-  public function calculateDependencies() {
+  public function calculateDependencies(): self {
     parent::calculateDependencies();
 
     if ($field_type_plugin = $this->getFieldTypePlugin()) {
@@ -365,12 +458,35 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
   }
 
   /**
+   * Determine if the array is completely empty.
+   *
+   * @param array $array
+   *   A single or multidimensional array.
+   *
+   * @return bool
+   *   Return TRUE if empty, otherwise FALSE.
+   */
+  protected function isArrayEmpty(array $array): bool {
+    foreach (NestedArray::filter($array) as $value) {
+      if (!empty($value)) {
+        return FALSE;
+      }
+
+      if (is_array($value)) {
+        $this->isArrayEmpty($value);
+      }
+    }
+
+    return TRUE;
+  }
+
+  /**
    * Get field type plugin instance.
    *
-   * @return ExtraFieldTypePluginInterface
+   * @return \Drupal\entity_extra_field\ExtraFieldTypePluginInterface
    *   The extra field type plugin.
    */
-  protected function getFieldTypePlugin() {
+  protected function getFieldTypePlugin(): ExtraFieldTypePluginInterface {
     return \Drupal::service('plugin.manager.extra_field_type')
       ->createInstance($this->getFieldTypePluginId(), $this->getFieldTypePluginConfig());
   }
@@ -378,7 +494,7 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
   /**
    * {@inheritdoc}
    */
-  protected function urlRouteParameters($rel) {
+  protected function urlRouteParameters($rel): array {
     $base_bundle_type_id = $this->getBaseEntityTypeBundle()->id();
 
     $uri_route_parameters = [];
@@ -397,7 +513,7 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
   /**
    * {@inheritdoc}
    */
-  protected function linkTemplates() {
+  protected function linkTemplates(): array {
     $templates = [];
     $ui_base_path = $this->getBaseEntityBundleUiPath();
 
@@ -412,6 +528,7 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
           case 'add':
             $template_path = "{$template_path}/{$rel}";
             break;
+
           case 'edit':
           case 'delete':
             $template_path = "{$template_path}/{" . $entity_type->id() . "}/{$rel}";
@@ -428,10 +545,12 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
   /**
    * Get base entity bundle UI path.
    *
-   * @return bool|string|null
+   * @return string|null
+   *   The base entity bundle UI path.
+   *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function getBaseEntityBundleUiPath() {
+  protected function getBaseEntityBundleUiPath(): ?string {
     $base_route = $this
       ->getBaseEntityType()
       ->get('field_ui_base_route');
@@ -459,7 +578,7 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
    * @return string
    *   The base entity route.
    */
-  protected function getBaseRouteName() {
+  protected function getBaseRouteName(): string {
     return "entity.{$this->getBaseEntityTypeId()}.extra_fields";
   }
 
@@ -467,10 +586,12 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
    * Get entity storage query.
    *
    * @return \Drupal\Core\Entity\Query\QueryInterface
+   *   The entity storage query.
+   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function getQuery() {
+  protected function getQuery(): QueryInterface {
     return $this->getStorage()->getQuery();
   }
 
@@ -481,8 +602,9 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    *
    * @return \Drupal\Core\Entity\EntityStorageInterface
+   *   The entity storage interface.
    */
-  protected function getStorage() {
+  protected function getStorage(): EntityStorageInterface {
     return $this->entityTypeManager()
       ->getStorage($this->getEntityTypeId());
   }
@@ -493,7 +615,8 @@ class EntityExtraField extends ConfigEntityBase implements EntityExtraFieldInter
    * @return \Drupal\Component\Plugin\PluginManagerInterface
    *   The condition plugin manager service.
    */
-  protected function conditionPluginManager() {
+  protected function conditionPluginManager(): PluginManagerInterface {
     return \Drupal::service('plugin.manager.condition');
   }
+
 }

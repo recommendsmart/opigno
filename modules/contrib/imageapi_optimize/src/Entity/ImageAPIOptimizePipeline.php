@@ -7,6 +7,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\imageapi_optimize\ImageAPIOptimizeProcessorPluginCollection;
 use Drupal\imageapi_optimize\ImageAPIOptimizeProcessorInterface;
 use Drupal\imageapi_optimize\ImageAPIOptimizePipelineInterface;
@@ -182,7 +183,7 @@ class ImageAPIOptimizePipeline extends ConfigEntityBase implements ImageAPIOptim
 
     foreach ($this->getProcessors() as $processor) {
       // Create a copy of this image for the processor to work on.
-      $temp_image_uri = file_unmanaged_copy($image_uri, $temp_image_uri, FILE_EXISTS_RENAME);
+      $temp_image_uri = \Drupal::service('file_system')->copy($image_uri, $temp_image_uri, FileSystemInterface::EXISTS_RENAME);
       if ($temp_image_uri === FALSE) {
         return FALSE;
       }
@@ -200,7 +201,7 @@ class ImageAPIOptimizePipeline extends ConfigEntityBase implements ImageAPIOptim
 
       if ($image_changed) {
         // Copy the temporary file back over the original image.
-        file_unmanaged_move($temp_image_uri, $image_uri, FILE_EXISTS_REPLACE);
+        \Drupal::service('file_system')->move($temp_image_uri, $image_uri, FileSystemInterface::EXISTS_REPLACE);
       }
     }
 
@@ -297,7 +298,7 @@ class ImageAPIOptimizePipeline extends ConfigEntityBase implements ImageAPIOptim
   public function __destruct() {
     foreach ($this->temporaryFiles as $file) {
       if (file_exists($file)) {
-        file_unmanaged_delete($file);
+        \Drupal::service('file_system')->delete($file);
       }
     }
   }

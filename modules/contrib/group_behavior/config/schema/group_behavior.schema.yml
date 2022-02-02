@@ -1,7 +1,0 @@
-group.type.*.third_party_settings.group_behavior:
-  type: mapping
-  label: Group behavior settings
-  mapping:
-    content_plugin:
-      type: string
-      label: Content plugin

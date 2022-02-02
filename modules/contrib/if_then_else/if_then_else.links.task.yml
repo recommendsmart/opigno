@@ -1,9 +1,0 @@
-if_then_else.settings_tab:
-  route_name: ifthenelse.admin_settings_form
-  title: Settings
-  base_route: entity.ifthenelserule.collection
-
-if_then_else.list_tab:
-  route_name: entity.ifthenelserule.collection
-  title: List
-  base_route: entity.ifthenelserule.collection

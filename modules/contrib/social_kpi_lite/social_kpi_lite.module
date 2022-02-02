@@ -2,10 +2,9 @@
 
 /**
  * @file
- * Contains social_kpi_lite.module..
+ * Contains social_kpi_lite.module.
  */
 
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\block\Entity\Block;
@@ -13,16 +12,11 @@ use Drupal\block\Entity\Block;
 /**
  * Implements hook_help().
  */
-function social_kpi_lite_help($route_name, RouteMatchInterface $route_match) {
-  switch ($route_name) {
-    // Main module help for the social_kpi_lite module.
-    case 'help.page.social_kpi_lite':
-      $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('Implements KPI Analytics for Open Social distribution.') . '</p>';
-      return $output;
-
-    default:
+function social_kpi_lite_help($route_name) {
+  if ($route_name === 'help.page.social_kpi_lite') {
+    $output = '<h3>' . t('About') . '</h3>';
+    $output .= '<p>' . t('Implements KPI Analytics for Open Social distribution.') . '</p>';
+    return $output;
   }
 }
 

@@ -1,50 +1,20 @@
-log.add_page:
-  path: '/log/add'
+log.autocomplete.name:
+  path: '/log/{log_bundle}/autocomplete'
   defaults:
-    _title: 'Add content'
-    _controller: '\Drupal\log\Controller\LogController::addPage'
-  options:
-    _log_operation_route: TRUE
+    _controller: '\Drupal\log\Controller\LogAutocompleteController::autocomplete'
   requirements:
-    _log_add_access: 'log'
+    _entity_create_access: 'log:{log_bundle}'
 
-log.add:
-  path: '/log/add/{log_type}'
+log.log_clone_action_form:
+  path: '/admin/content/log/clone'
   defaults:
-    _controller: '\Drupal\log\Controller\LogController::add'
-    _title_callback: '\Drupal\log\Controller\LogController::addPageTitle'
+    _form: 'Drupal\log\Form\LogCloneActionForm'
   requirements:
-    _log_add_access: 'log:{log_type}'
-  options:
-    _log_operation_route: TRUE
-    parameters:
-      log_type:
-        with_config_overrides: TRUE
+    _entity_create_any_access: 'log'
 
-# LogType routing definition
-entity.log_type.collection:
-  path: '/admin/structure/logs'
+log.log_schedule_action_form:
+  path: '/admin/content/log/reschedule'
   defaults:
-    _entity_list: 'log_type'
-    _title: 'Log type'
+    _form: 'Drupal\log\Form\LogRescheduleActionForm'
   requirements:
-    _permission: 'administer log types'
-  options:
-    _admin_route: TRUE
-
-entity.log_type.add_form:
-  path: '/admin/structure/logs/add'
-  defaults:
-    _entity_form: 'log_type.add'
-    _title: 'Add Log type'
-  requirements:
-    _permission: 'administer log types'
-  options:
-    _admin_route: TRUE
-
-log.multiple_delete_confirm:
-  path: '/admin/content/log/delete'
-  defaults:
-    _form: '\Drupal\log\Form\DeleteMultiple'
-  requirements:
-    _custom_access: '\Drupal\log\Form\DeleteMultiple::access'
+    _user_is_logged_in: 'TRUE'

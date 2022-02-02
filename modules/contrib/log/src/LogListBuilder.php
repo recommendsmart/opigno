@@ -1,30 +1,23 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\log\LogListBuilder.
- */
-
 namespace Drupal\log;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityListBuilder;
-use Drupal\Core\Routing\LinkGeneratorTrait;
-use Drupal\Core\Url;
+use Drupal\entity\BulkFormEntityListBuilder;
 
 /**
  * Defines a class to build a listing of Log entities.
  *
  * @ingroup log
  */
-class LogListBuilder extends EntityListBuilder {
-  use LinkGeneratorTrait;
+class LogListBuilder extends BulkFormEntityListBuilder {
+
   /**
    * {@inheritdoc}
    */
   public function buildHeader() {
     $header['id'] = $this->t('Log ID');
-    $header['name'] = $this->t('Name');
+    $header['label'] = $this->t('Label');
     $header['type'] = $this->t('Type');
     return $header + parent::buildHeader();
   }
@@ -33,15 +26,10 @@ class LogListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /* @var $entity \Drupal\log\Entity\Log */
-    $row['id'] = $entity->id();
-    $row['name'] = $this->l(
-      $entity->label(),
-      $entity->toUrl('canonical')
-    );
-
-    // @todo Show type name.
-    $row['type'] = $entity->bundle();
+    /** @var \Drupal\log\Entity\LogInterface $entity */
+    $row['id'] = ['#markup' => $entity->id()];
+    $row['name'] = $entity->toLink($entity->label(), 'canonical')->toRenderable();
+    $row['type'] = ['#markup' => $entity->getBundleLabel()];
     return $row + parent::buildRow($entity);
   }
 
