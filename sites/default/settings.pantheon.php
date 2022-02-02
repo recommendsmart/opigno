@@ -71,12 +71,10 @@ $is_installer_url = (strpos($_SERVER['SCRIPT_NAME'], '/core/install.php') === 0)
  *
  */
 if ($is_installer_url) {
-  $settings['config_sync_directory'] = 'sites/default/files',
-  );
+  $settings['config_sync_directory'] = 'sites/default/files';
 }
 else {
-	$settings['config_sync_directory'] = 'sites/default/config',
-  );
+	$settings['config_sync_directory'] = 'sites/default/config';
 }
 
 
