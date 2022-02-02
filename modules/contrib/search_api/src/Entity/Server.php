@@ -219,7 +219,7 @@ class Server extends ConfigEntityBase implements ServerInterface {
         ->alterDeprecated($description, 'search_api_server_features', $this->features, $this);
       /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher */
       $eventDispatcher = \Drupal::getContainer()->get('event_dispatcher');
-      $eventDispatcher->dispatch(SearchApiEvents::DETERMINING_SERVER_FEATURES, new DeterminingServerFeaturesEvent($this->features, $this));
+      $eventDispatcher->dispatch(new DeterminingServerFeaturesEvent($this->features, $this), SearchApiEvents::DETERMINING_SERVER_FEATURES);
     }
 
     return $this->features;

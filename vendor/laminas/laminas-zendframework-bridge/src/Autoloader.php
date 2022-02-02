@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @see       https://github.com/laminas/laminas-zendframework-bridge for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-zendframework-bridge/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-zendframework-bridge/blob/master/LICENSE.md New BSD License
+ */
+
 namespace Laminas\ZendFrameworkBridge;
 
 use ArrayObject;
@@ -11,7 +17,6 @@ use function class_alias;
 use function class_exists;
 use function explode;
 use function file_exists;
-use function getenv;
 use function interface_exists;
 use function spl_autoload_register;
 use function strlen;
@@ -24,9 +29,6 @@ use function trait_exists;
  */
 class Autoloader
 {
-    private const UPSTREAM_COMPOSER_VENDOR_DIRECTORY = __DIR__ . '/../../..';
-    private const LOCAL_COMPOSER_VENDOR_DIRECTORY = __DIR__ . '/../vendor';
-
     /**
      * Attach autoloaders for managing legacy ZF artifacts.
      *
@@ -45,15 +47,10 @@ class Autoloader
     public static function load()
     {
         $loaded = new ArrayObject([]);
-        $classLoader = self::getClassLoader();
-
-        if ($classLoader === null) {
-            return;
-        }
 
         spl_autoload_register(self::createPrependAutoloader(
             RewriteRules::namespaceReverse(),
-            $classLoader,
+            self::getClassLoader(),
             $loaded
         ), true, true);
 
@@ -63,15 +60,25 @@ class Autoloader
         ));
     }
 
-    private static function getClassLoader(): ?ClassLoader
+    /**
+     * @return ClassLoader
+     * @throws RuntimeException
+     */
+    private static function getClassLoader()
     {
-        $composerVendorDirectory = getenv('COMPOSER_VENDOR_DIR');
-        if (is_string($composerVendorDirectory)) {
-            return self::getClassLoaderFromVendorDirectory($composerVendorDirectory);
+        if (getenv('COMPOSER_VENDOR_DIR') && file_exists(getenv('COMPOSER_VENDOR_DIR') . '/autoload.php')) {
+            return include getenv('COMPOSER_VENDOR_DIR') . '/autoload.php';
         }
 
-        return self::getClassLoaderFromVendorDirectory(self::UPSTREAM_COMPOSER_VENDOR_DIRECTORY)
-            ?? self::getClassLoaderFromVendorDirectory(self::LOCAL_COMPOSER_VENDOR_DIRECTORY);
+        if (file_exists(__DIR__ . '/../../../autoload.php')) {
+            return include __DIR__ . '/../../../autoload.php';
+        }
+
+        if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+            return include __DIR__ . '/../vendor/autoload.php';
+        }
+
+        throw new RuntimeException('Cannot detect composer autoload. Please run composer install');
     }
 
     /**
@@ -161,21 +168,5 @@ class Autoloader
                 class_alias($alias, $class);
             }
         };
-    }
-
-    private static function getClassLoaderFromVendorDirectory(string $composerVendorDirectory): ?ClassLoader
-    {
-        $filename = rtrim($composerVendorDirectory, '/') . '/autoload.php';
-        if (!file_exists($filename)) {
-            return null;
-        }
-
-        /** @psalm-suppress MixedAssignment */
-        $loader = include $filename;
-        if (!$loader instanceof ClassLoader) {
-            return null;
-        }
-
-        return $loader;
     }
 }

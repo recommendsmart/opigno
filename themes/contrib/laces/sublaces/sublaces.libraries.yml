@@ -1,5 +1,0 @@
-global-styling:
-  version: VERSION
-  css:
-    theme:
-      css/theme/sublaces_typography.css: { }

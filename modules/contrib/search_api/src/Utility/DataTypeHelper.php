@@ -143,7 +143,7 @@ class DataTypeHelper implements DataTypeHelperInterface {
       $this->moduleHandler->alterDeprecated($description, $hook, $mapping);
       $eventName = SearchApiEvents::MAPPING_FIELD_TYPES;
       $event = new MappingFieldTypesEvent($mapping);
-      $this->eventDispatcher->dispatch($eventName, $event);
+      $this->eventDispatcher->dispatch($event, $eventName);
 
       $this->fieldTypeMapping = $mapping;
     }

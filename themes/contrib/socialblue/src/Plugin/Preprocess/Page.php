@@ -62,6 +62,9 @@ class Page extends PageBase {
       $variables['content_attributes']->addClass('complementary-both');
     }
 
+    if (theme_get_setting('header_style') === 'two_lines') {
+      $variables['multi_line'] = TRUE;
+    }
   }
 
 }

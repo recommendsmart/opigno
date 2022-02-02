@@ -7,6 +7,7 @@ use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ModuleInstaller;
+use Drupal\Core\Database\Connection;
 
 /**
  * Class DataPolicyModuleInstaller.
@@ -38,13 +39,15 @@ class DataPolicyModuleInstaller extends ModuleInstaller {
    *   The module handler.
    * @param \Drupal\Core\DrupalKernelInterface $kernel
    *   The drupal kernel.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel, EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory) {
-    parent::__construct($root, $module_handler, $kernel);
+  public function __construct($root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel, Connection $connection, EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory) {
+    parent::__construct($root, $module_handler, $kernel, $connection);
 
     $this->storage = $entity_type_manager->getStorage('data_policy');
 
@@ -60,7 +63,7 @@ class DataPolicyModuleInstaller extends ModuleInstaller {
       $this->storage->load($this->entityId)->delete();
     }
 
-    parent::uninstall($module_list, $uninstall_dependents);
+    return parent::uninstall($module_list, $uninstall_dependents);
   }
 
 }

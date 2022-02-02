@@ -20,15 +20,13 @@ class BulkFormTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     parent::tearDown();
     $container = new ContainerBuilder();
     \Drupal::setContainer($container);
   }
 
   /**
-   * Tests the viewsForm method.
-   *
    * @covers ::viewsForm
    */
   public function testViewsForm() {
@@ -70,7 +68,9 @@ class BulkFormTest extends UnitTestCase {
     $form_state = $this->createMock(FormStateInterface::class);
     $form = [];
     $field->viewsForm($form, $form_state);
-    $this->assertNotEmpty($form, print_r($field->view->result, 1));
+    $this->assertNotEmpty($form);
+    $this->assertIsArray($form[$field->options['id']][0]);
+    $this->assertEmpty($form[$field->options['id']][0]);
   }
 
 }

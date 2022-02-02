@@ -19,5 +19,8 @@
     color: $default-color;
     border-color: $gray-light-1;
     background: $gray-lightest;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

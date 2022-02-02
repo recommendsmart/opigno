@@ -1,3 +1,7 @@
+video {
+  width: 100%;
+}
+
 .media-wrapper {
   position: relative;
   margin-top: 15px;

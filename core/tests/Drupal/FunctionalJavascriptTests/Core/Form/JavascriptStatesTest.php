@@ -2,7 +2,7 @@
 
 namespace Drupal\FunctionalJavascriptTests\Core\Form;
 
-use Behat\Mink\Element\TraversableElement;
+use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -15,249 +15,311 @@ class JavascriptStatesTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['form_test', 'ajax_forms_test'];
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected static $modules = ['form_test'];
 
   /**
-   * Tests the javascript functionality of form states.
+   * {@inheritdoc}
+   */
+  protected function setUp():void {
+    parent::setUp();
+    // Add text formats.
+    $filtered_html_format = FilterFormat::create([
+      'format' => 'filtered_html',
+      'name' => 'Filtered HTML',
+      'weight' => 0,
+      'filters' => [],
+    ]);
+    $filtered_html_format->save();
+    $full_html_format = FilterFormat::create([
+      'format' => 'full_html',
+      'name' => 'Full HTML',
+      'weight' => 1,
+      'filters' => [],
+    ]);
+    $full_html_format->save();
+    $normal_user = $this->drupalCreateUser([
+      'use text format filtered_html',
+      'use text format full_html',
+    ]);
+    $this->drupalLogin($normal_user);
+  }
+
+  /**
+   * Tests the JavaScript #states functionality of form elements.
+   *
+   * To avoid the large cost of a dataProvider in FunctionalJavascript tests,
+   * this is a single public test method that invokes a series of protected
+   * methods to do assertions on specific kinds of triggering elements.
    */
   public function testJavascriptStates() {
+    $this->doCheckboxTriggerTests();
+    $this->doCheckboxesTriggerTests();
+    $this->doTextfieldTriggerTests();
+    $this->doRadiosTriggerTests();
+    $this->doSelectTriggerTests();
+    $this->doMultipleTriggerTests();
+  }
+
+  /**
+   * Tests states of elements triggered by a checkbox element.
+   */
+  protected function doCheckboxTriggerTests() {
     $this->drupalGet('form-test/javascript-states-form');
     $page = $this->getSession()->getPage();
 
-    // Test states of elements triggered by a checkbox element.
+    // Find trigger and target elements.
     $trigger = $page->findField('checkbox_trigger');
-    /* Initial state: before the checkbox trigger is checked. */
-    // Test that the textfield is visible.
-    $this->assertFieldVisible('textfield_invisible_when_checkbox_trigger_checked');
-    // Test that the details element is collapsed so the textfield inside is not
-    // visible.
-    $this->assertFieldNotVisible('textfield_in_details');
-    // Test that the textfield is optional.
-    $this->assertFieldOptional('textfield_required_when_checkbox_trigger_checked');
+    $this->assertNotEmpty($trigger);
+    $textfield_invisible_element = $page->findField('textfield_invisible_when_checkbox_trigger_checked');
+    $this->assertNotEmpty($textfield_invisible_element);
+    $textfield_required_element = $page->findField('textfield_required_when_checkbox_trigger_checked');
+    $this->assertNotEmpty($textfield_required_element);
+    $details = $this->assertSession()->elementExists('css', '#edit-details-expanded-when-checkbox-trigger-checked');
+    $textfield_in_details = $details->findField('textfield_in_details');
+    $this->assertNotEmpty($textfield_in_details);
+    $checkbox_checked_element = $page->findField('checkbox_checked_when_checkbox_trigger_checked');
+    $this->assertNotEmpty($checkbox_checked_element);
+    $checkbox_unchecked_element = $page->findField('checkbox_unchecked_when_checkbox_trigger_checked');
+    $this->assertNotEmpty($checkbox_unchecked_element);
+    $checkbox_visible_element = $page->findField('checkbox_visible_when_checkbox_trigger_checked');
+    $this->assertNotEmpty($checkbox_visible_element);
+    $text_format_invisible_value = $page->findField('text_format_invisible_when_checkbox_trigger_checked[value]');
+    $this->assertNotEmpty($text_format_invisible_value);
+    $text_format_invisible_format = $page->findField('text_format_invisible_when_checkbox_trigger_checked[format]');
+    $this->assertNotEmpty($text_format_invisible_format);
+
+    // Verify initial state.
+    $this->assertTrue($textfield_invisible_element->isVisible());
+    $this->assertFalse($details->hasAttribute('open'));
+    $this->assertFalse($textfield_in_details->isVisible());
+    $this->assertFalse($textfield_required_element->hasAttribute('required'));
+    $this->assertFalse($checkbox_checked_element->isChecked());
+    $this->assertTrue($checkbox_unchecked_element->isChecked());
+    $this->assertFalse($checkbox_visible_element->isVisible());
+    $this->assertTrue($text_format_invisible_value->isVisible());
+    $this->assertTrue($text_format_invisible_format->isVisible());
+
     // Change state: check the checkbox.
     $trigger->check();
-    // Test that the textfield is not visible anymore.
-    $this->assertFieldNotVisible('textfield_invisible_when_checkbox_trigger_checked');
-    // Test that the details element is now open so the textfield inside is now
-    // visible.
-    $this->assertFieldVisible('textfield_in_details');
-    // Test that the textfield is now required.
-    $this->assertFieldRequired('textfield_required_when_checkbox_trigger_checked');
-    // Change back to the initial state to avoid issues running the next tests.
-    $trigger->uncheck();
-
-    // Test states of elements triggered by a textfield element.
-    $trigger = $page->findField('textfield_trigger');
-    $target = $page->findField('checkbox_unchecked_when_textfield_trigger_filled');
-    /* Initial state: before the textfield is filled. */
-    // Test that the checkbox is checked.
-    $this->assertTrue($target->isChecked());
-    // Change state: fill the textfield.
-    $trigger->setValue('filled');
-    // Test that the checkbox is not checked anymore.
-    $this->assertFalse($target->isChecked());
-    // Change back to the initial state to avoid issues running the next tests.
-    $trigger->setValue('');
-    // We need to send a backspace hit to trigger JS events.
-    $trigger->keyUp(8);
-
-    // Test states of elements triggered by a radios element.
-    $trigger = $page->findField('radios_trigger');
-    /* Initial state: before the radios is checked. */
-    // Test that the fieldset element is not visible so the textfield inside is
-    // not visible either.
-    $this->assertFieldNotVisible('textfield_in_fieldset');
-    // Change state: check the 'Value 2' radio.
-    $trigger->selectOption('value2');
-    // Test that the fieldset element is now visible so the textfield inside is
-    // also visible.
-    $this->assertFieldVisible('textfield_in_fieldset');
-    // Change back to the initial state to avoid issues running the next tests.
-    $trigger->selectOption('value1');
-
-    // Test states of elements triggered by a checkboxes element.
-    $trigger1 = $page->findField('checkboxes_trigger[value1]');
-    $trigger2 = $page->findField('checkboxes_trigger[value2]');
-    $trigger3 = $page->findField('checkboxes_trigger[value3]');
-    /* Initial state: before any of the checkboxes is checked. */
-    // Test that textfield dependant on checkbox 'value2' is not visible.
-    $this->assertFieldNotVisible('textfield_visible_when_checkboxes_trigger_value2_checked');
-    // Test that textfield dependant on checkbox 'value3' is not visible.
-    $this->assertFieldNotVisible('textfield_visible_when_checkboxes_trigger_value3_checked');
-    // Change state: check the 'Value 1' checkbox.
-    $trigger1->check();
-    // Test that textfield dependant on checkbox 'value2' is still not visible.
-    $this->assertFieldNotVisible('textfield_visible_when_checkboxes_trigger_value2_checked');
-    // Test that textfield dependant on checkbox 'value3' is still not visible.
-    $this->assertFieldNotVisible('textfield_visible_when_checkboxes_trigger_value3_checked');
-    // Change state: check the 'Value 2' checkbox.
-    $trigger2->check();
-    // Test that textfield dependant on checkbox 'value2' is now visible.
-    $this->assertFieldVisible('textfield_visible_when_checkboxes_trigger_value2_checked');
-    // Test that textfield dependant on checkbox 'value3' is still not visible.
-    $this->assertFieldNotVisible('textfield_visible_when_checkboxes_trigger_value3_checked');
-    // Change state: check the 'Value 3' checkbox.
-    $trigger3->check();
-    // Test that textfield dependant on checkbox 'value2' is still visible.
-    $this->assertFieldVisible('textfield_visible_when_checkboxes_trigger_value2_checked');
-    // Test that textfield dependant on checkbox 'value3' is now visible.
-    $this->assertFieldVisible('textfield_visible_when_checkboxes_trigger_value3_checked');
-    // Change state: uncheck the 'Value 2' checkbox.
-    $trigger2->uncheck();
-    // Test that textfield dependant on checkbox 'value2' is now invisible.
-    $this->assertFieldNotVisible('textfield_visible_when_checkboxes_trigger_value2_checked');
-    // Test that textfield dependant on checkbox 'value3' is still visible.
-    $this->assertFieldVisible('textfield_visible_when_checkboxes_trigger_value3_checked');
-    // Change back to the initial state to avoid issues running the next tests.
-    $trigger1->uncheck();
-    $trigger2->uncheck();
-    $trigger3->uncheck();
-
-    // Test states of elements triggered by a select element.
-    $trigger = $page->findField('select_trigger');
-    /* Initial state: before any option of the select box is selected. */
-    // Test that item element dependant on select 'Value 2' option is not
-    // visible.
-    $this->assertSession()->assertElementNotVisible('css', '#edit-item-visible-when-select-trigger-has-given-value');
-    // Test that textfield dependant on select 'Value 3' option is not visible.
-    $this->assertFieldNotVisible('textfield_visible_when_select_trigger_has_given_value');
-    // Test that textfield dependant on select 'Value 2' or 'Value 3' options is
-    // not visible.
-    $this->assertFieldNotVisible('textfield_visible_when_select_trigger_has_given_value_or_another');
-    // Change state: select the 'Value 2' option.
-    $trigger->setValue('value2');
-    // Test that item element dependant on select 'Value 2' option is now
-    // visible.
-    $this->assertSession()->assertElementVisible('css', '#edit-item-visible-when-select-trigger-has-given-value');
-    // Test that textfield dependant on select 'Value 3' option is not visible.
-    $this->assertFieldNotVisible('textfield_visible_when_select_trigger_has_given_value');
-    // Test that textfield dependant on select 'Value 2' or 'Value 3' options is
-    // now visible.
-    $this->assertFieldVisible('textfield_visible_when_select_trigger_has_given_value_or_another');
-    // Change state: select the 'Value 3' option.
-    $trigger->setValue('value3');
-    // Test that item element dependant on select 'Value 2' option is not
-    // visible anymore.
-    $this->assertSession()->assertElementNotVisible('css', '#edit-item-visible-when-select-trigger-has-given-value');
-    // Test that textfield dependant on select 'Value 3' option is now visible.
-    $this->assertFieldVisible('textfield_visible_when_select_trigger_has_given_value');
-    // Test that textfield dependant on select 'Value 2' or 'Value 3' options is
-    // still visible.
-    $this->assertFieldVisible('textfield_visible_when_select_trigger_has_given_value_or_another');
-    // Change back to the initial state to avoid issues running the next tests.
-    $trigger->setValue('_none');
-
-    // Test states of elements triggered by a more than one element.
-    $selectTrigger = $page->findField('select_trigger');
-    $textfieldTrigger = $page->findField('textfield_trigger');
-    /* Initial state: before any option of the select box is selected. */
-    // Test that item element dependant on select 'Value 2' option and textfield
-    // is not visible.
-    $this->assertSession()->assertElementNotVisible('css', '#edit-item-visible-when-select-trigger-has-given-value-and-textfield-trigger-filled');
-    // Change state: select the 'Value 2' option.
-    $selectTrigger->setValue('value2');
-    // Test that item element dependant on select 'Value 2' option and textfield
-    // is still not visible.
-    $this->assertSession()->assertElementNotVisible('css', '#edit-item-visible-when-select-trigger-has-given-value-and-textfield-trigger-filled');
-    // Change state: fill the textfield.
-    $textfieldTrigger->setValue('filled');
-    // Test that item element dependant on select 'Value 2' option and textfield
-    // is now visible.
-    $this->assertSession()->assertElementVisible('css', '#edit-item-visible-when-select-trigger-has-given-value-and-textfield-trigger-filled');
-    // Change back to the initial state to avoid issues running the next tests.
-    $selectTrigger->setValue('_none');
-    $textfieldTrigger->setValue('');
-    // We need to send a backspace hit to trigger JS events.
-    $textfieldTrigger->keyUp(8);
+    // Verify triggered state.
+    $this->assertFalse($textfield_invisible_element->isVisible());
+    $this->assertEquals('required', $textfield_required_element->getAttribute('required'));
+    $this->assertTrue($details->hasAttribute('open'));
+    $this->assertTrue($textfield_in_details->isVisible());
+    $this->assertTrue($checkbox_checked_element->isChecked());
+    $this->assertFalse($checkbox_unchecked_element->isChecked());
+    $this->assertTrue($checkbox_visible_element->isVisible());
+    $this->assertFalse($text_format_invisible_value->isVisible());
+    $this->assertFalse($text_format_invisible_format->isVisible());
   }
 
   /**
-   * Tests form states in form with ajax submit.
+   * Tests states of elements triggered by a checkboxes element.
    */
-  public function testAjaxJavascriptStates() {
-    $this->drupalGet('ajax_forms_test_states_form');
+  protected function doCheckboxesTriggerTests() {
+    $this->drupalGet('form-test/javascript-states-form');
     $page = $this->getSession()->getPage();
 
-    // Make sure that before ajax request behaviour is as expected.
-    $page->selectFieldOption('num', 'Second');
-    $page->selectFieldOption('color', 'Green');
-    // Field that is dependent on the above selections of radios is visible.
-    $this->assertFieldVisible('edit-textfield4');
-    // Another (random) field is invisible.
-    $this->assertFieldNotVisible('edit-textfield1');
+    // Find trigger and target elements.
+    $trigger_value1 = $page->findField('checkboxes_trigger[value1]');
+    $this->assertNotEmpty($trigger_value1);
+    $trigger_value2 = $page->findField('checkboxes_trigger[value2]');
+    $this->assertNotEmpty($trigger_value2);
+    $trigger_value3 = $page->findField('checkboxes_trigger[value3]');
+    $this->assertNotEmpty($trigger_value3);
+    $textfield_visible_value2 = $page->findField('textfield_visible_when_checkboxes_trigger_value2_checked');
+    $this->assertNotEmpty($textfield_visible_value2);
+    $textfield_visible_value3 = $page->findField('textfield_visible_when_checkboxes_trigger_value3_checked');
+    $this->assertNotEmpty($textfield_visible_value3);
 
-    // Now trigger AJAX submit.
-    $submit = $page->findButton('edit-submit');
-    $submit->click();
-    $this->assertSession()->assertWaitOnAjaxRequest();
-    // Change values on which state of textfields depends.
-    $page->selectFieldOption('num', 'First');
-    // Field that was visible should not be now.
-    $this->assertFieldNotVisible('edit-textfield4');
-    // According to state API rules for form fields, this one should be visible.
-    $this->assertFieldVisible('edit-textfield2');
+    // Verify initial state.
+    $this->assertFalse($textfield_visible_value2->isVisible());
+    $this->assertFalse($textfield_visible_value3->isVisible());
+    // Change state: check the 'Value 1' checkbox.
+    $trigger_value1->check();
+    $this->assertFalse($textfield_visible_value2->isVisible());
+    $this->assertFalse($textfield_visible_value3->isVisible());
+    // Change state: check the 'Value 2' checkbox.
+    $trigger_value2->check();
+    $this->assertTrue($textfield_visible_value2->isVisible());
+    $this->assertFalse($textfield_visible_value3->isVisible());
+    // Change state: check the 'Value 3' checkbox.
+    $trigger_value3->check();
+    $this->assertTrue($textfield_visible_value2->isVisible());
+    $this->assertTrue($textfield_visible_value3->isVisible());
+    // Change state: uncheck the 'Value 2' checkbox.
+    $trigger_value2->uncheck();
+    $this->assertFalse($textfield_visible_value2->isVisible());
+    $this->assertTrue($textfield_visible_value3->isVisible());
   }
 
   /**
-   * Asserts that the given field is visible.
-   *
-   * @param string $locator
-   *   One of id|name|label|value for the field.
-   * @param \Behat\Mink\Element\TraversableElement $container
-   *   (optional) The document to check against. Defaults to the current page.
+   * Tests states of elements triggered by a textfield element.
    */
-  public function assertFieldVisible($locator, TraversableElement $container = NULL) {
-    $this->assertSession()->assertElementVisible('named', ['field', $locator], $container);
+  protected function doTextfieldTriggerTests() {
+    $this->drupalGet('form-test/javascript-states-form');
+    $page = $this->getSession()->getPage();
+
+    // Find trigger and target elements.
+    $trigger = $page->findField('textfield_trigger');
+    $this->assertNotEmpty($trigger);
+    $checkbox_checked_target = $page->findField('checkbox_checked_when_textfield_trigger_filled');
+    $this->assertNotEmpty($checkbox_checked_target);
+    $checkbox_unchecked_target = $page->findField('checkbox_unchecked_when_textfield_trigger_filled');
+    $this->assertNotEmpty($checkbox_unchecked_target);
+    $select_invisible_target = $page->findField('select_invisible_when_textfield_trigger_filled');
+    $this->assertNotEmpty($select_invisible_target);
+    $select_visible_target = $page->findField('select_visible_when_textfield_trigger_filled');
+    $this->assertNotEmpty($select_visible_target);
+    $textfield_required_target = $page->findField('textfield_required_when_textfield_trigger_filled');
+    $this->assertNotEmpty($textfield_required_target);
+    $details = $this->assertSession()->elementExists('css', '#edit-details-expanded-when-textfield-trigger-filled');
+    $textfield_in_details = $details->findField('textfield_in_details');
+    $this->assertNotEmpty($textfield_in_details);
+
+    // Verify initial state.
+    $this->assertFalse($checkbox_checked_target->isChecked());
+    $this->assertTrue($checkbox_unchecked_target->isChecked());
+    $this->assertTrue($select_invisible_target->isVisible());
+    $this->assertFalse($select_visible_target->isVisible());
+    $this->assertFalse($textfield_required_target->hasAttribute('required'));
+    $this->assertFalse($details->hasAttribute('open'));
+    $this->assertFalse($textfield_in_details->isVisible());
+
+    // Change state: fill the textfield.
+    $trigger->setValue('filled');
+    // Verify triggered state.
+    $this->assertTrue($checkbox_checked_target->isChecked());
+    $this->assertFalse($checkbox_unchecked_target->isChecked());
+    $this->assertFalse($select_invisible_target->isVisible());
+    $this->assertTrue($select_visible_target->isVisible());
+    $this->assertEquals('required', $textfield_required_target->getAttribute('required'));
+    $this->assertTrue($details->hasAttribute('open'));
+    $this->assertTrue($textfield_in_details->isVisible());
   }
 
   /**
-   * Asserts that the given field is not visible.
-   *
-   * @param string $locator
-   *   One of id|name|label|value for the field.
-   * @param \Behat\Mink\Element\TraversableElement $container
-   *   (optional) The document to check against. Defaults to the current page.
-   *
-   * @throws \Behat\Mink\Exception\ElementNotFoundException
-   *   When the element doesn't exist.
+   * Tests states of elements triggered by a radios element.
    */
-  public function assertFieldNotVisible($locator, TraversableElement $container = NULL) {
-    $this->assertSession()->assertElementNotVisible('named', ['field', $locator], $container);
+  protected function doRadiosTriggerTests() {
+    $this->drupalGet('form-test/javascript-states-form');
+    $page = $this->getSession()->getPage();
+
+    // Find trigger and target elements.
+    $trigger = $page->findField('radios_trigger');
+    $this->assertNotEmpty($trigger);
+    $fieldset_visible_when_value2 = $this->assertSession()->elementExists('css', '#edit-fieldset-visible-when-radios-trigger-has-value2');
+    $textfield_in_fieldset = $fieldset_visible_when_value2->findField('textfield_in_fieldset');
+    $this->assertNotEmpty($textfield_in_fieldset);
+    $checkbox_checked_target = $page->findField('checkbox_checked_when_radios_trigger_has_value3');
+    $this->assertNotEmpty($checkbox_checked_target);
+    $checkbox_unchecked_target = $page->findField('checkbox_unchecked_when_radios_trigger_has_value3');
+    $this->assertNotEmpty($checkbox_unchecked_target);
+    $textfield_invisible_target = $page->findField('textfield_invisible_when_radios_trigger_has_value2');
+    $this->assertNotEmpty($textfield_invisible_target);
+    $select_required_target = $page->findField('select_required_when_radios_trigger_has_value2');
+    $this->assertNotEmpty($select_required_target);
+    $details = $this->assertSession()->elementExists('css', '#edit-details-expanded-when-radios-trigger-has-value3');
+    $textfield_in_details = $details->findField('textfield_in_details');
+    $this->assertNotEmpty($textfield_in_details);
+
+    // Verify initial state, both the fieldset and something inside it.
+    $this->assertFalse($fieldset_visible_when_value2->isVisible());
+    $this->assertFalse($textfield_in_fieldset->isVisible());
+    $this->assertFalse($checkbox_checked_target->isChecked());
+    $this->assertTrue($checkbox_unchecked_target->isChecked());
+    $this->assertTrue($textfield_invisible_target->isVisible());
+    $this->assertFalse($select_required_target->hasAttribute('required'));
+    $this->assertFalse($details->hasAttribute('open'));
+    $this->assertFalse($textfield_in_details->isVisible());
+
+    // Change state: select the value2 radios option.
+    $trigger->selectOption('value2');
+    // Verify triggered state.
+    $this->assertTrue($fieldset_visible_when_value2->isVisible());
+    $this->assertTrue($textfield_in_fieldset->isVisible());
+    $this->assertFalse($textfield_invisible_target->isVisible());
+    $this->assertTrue($select_required_target->hasAttribute('required'));
+    // Checkboxes and details should not have changed state, yet.
+    $this->assertFalse($checkbox_checked_target->isChecked());
+    $this->assertTrue($checkbox_unchecked_target->isChecked());
+    $this->assertFalse($details->hasAttribute('open'));
+    $this->assertFalse($textfield_in_details->isVisible());
+    // Change state: select the value3 radios option.
+    $trigger->selectOption('value3');
+    // Fieldset and contents should re-disappear.
+    $this->assertFalse($fieldset_visible_when_value2->isVisible());
+    $this->assertFalse($textfield_in_fieldset->isVisible());
+    // Textfield and select should revert to initial state.
+    $this->assertTrue($textfield_invisible_target->isVisible());
+    $this->assertFalse($select_required_target->hasAttribute('required'));
+    // Checkbox states should now change.
+    $this->assertTrue($checkbox_checked_target->isChecked());
+    $this->assertFalse($checkbox_unchecked_target->isChecked());
+    // Details should now be expanded.
+    $this->assertTrue($details->hasAttribute('open'));
+    $this->assertTrue($textfield_in_details->isVisible());
   }
 
   /**
-   * Asserts that the given field is required.
-   *
-   * @param string $locator
-   *   One of id|name|label|value for the field.
-   * @param \Behat\Mink\Element\TraversableElement $container
-   *   (optional) The document to check against. Defaults to the current page.
-   *
-   * @throws \Behat\Mink\Exception\ElementNotFoundException
-   *   When the element doesn't exist.
+   * Tests states of elements triggered by a select element.
    */
-  public function assertFieldRequired($locator, TraversableElement $container = NULL) {
-    $this->assertSession()->assertElementRequired('named', ['field', $locator], $container);
+  protected function doSelectTriggerTests() {
+    $this->drupalGet('form-test/javascript-states-form');
+    $page = $this->getSession()->getPage();
+
+    // Find trigger and target elements.
+    $trigger = $page->findField('select_trigger');
+    $this->assertNotEmpty($trigger);
+    $item_visible_value2 = $this->assertSession()->elementExists('css', '#edit-item-visible-when-select-trigger-has-value2');
+    $textfield_visible_value3 = $page->findField('textfield_visible_when_select_trigger_has_value3');
+    $this->assertNotEmpty($textfield_visible_value3);
+    $textfield_visible_value2_or_value3 = $page->findField('textfield_visible_when_select_trigger_has_value2_or_value3');
+    $this->assertNotEmpty($textfield_visible_value2_or_value3);
+
+    // Verify initial state.
+    $this->assertFalse($item_visible_value2->isVisible());
+    $this->assertFalse($textfield_visible_value3->isVisible());
+    $this->assertFalse($textfield_visible_value2_or_value3->isVisible());
+    // Change state: select the 'Value 2' option.
+    $trigger->setValue('value2');
+    $this->assertTrue($item_visible_value2->isVisible());
+    $this->assertFalse($textfield_visible_value3->isVisible());
+    $this->assertTrue($textfield_visible_value2_or_value3->isVisible());
+    // Change state: select the 'Value 3' option.
+    $trigger->setValue('value3');
+    $this->assertFalse($item_visible_value2->isVisible());
+    $this->assertTrue($textfield_visible_value3->isVisible());
+    $this->assertTrue($textfield_visible_value2_or_value3->isVisible());
   }
 
   /**
-   * Asserts that the given field is optional (not required).
-   *
-   * @param string $locator
-   *   One of id|name|label|value for the field.
-   * @param \Behat\Mink\Element\TraversableElement $container
-   *   (optional) The document to check against. Defaults to the current page.
-   *
-   * @throws \Behat\Mink\Exception\ElementNotFoundException
-   *   When the element doesn't exist.
+   * Tests states of elements triggered by multiple elements.
    */
-  public function assertFieldOptional($locator, TraversableElement $container = NULL) {
-    $this->assertSession()->assertElementOptional('named', ['field', $locator], $container);
+  protected function doMultipleTriggerTests() {
+    $this->drupalGet('form-test/javascript-states-form');
+    $page = $this->getSession()->getPage();
+
+    // Find trigger and target elements.
+    $select_trigger = $page->findField('select_trigger');
+    $this->assertNotEmpty($select_trigger);
+    $textfield_trigger = $page->findField('textfield_trigger');
+    $this->assertNotEmpty($textfield_trigger);
+    $item_visible_value2_and_textfield = $this->assertSession()->elementExists('css', '#edit-item-visible-when-select-trigger-has-value2-and-textfield-trigger-filled');
+
+    // Verify initial state.
+    $this->assertFalse($item_visible_value2_and_textfield->isVisible());
+    // Change state: select the 'Value 2' option.
+    $select_trigger->setValue('value2');
+    $this->assertFalse($item_visible_value2_and_textfield->isVisible());
+    // Change state: fill the textfield.
+    $textfield_trigger->setValue('filled');
+    $this->assertTrue($item_visible_value2_and_textfield->isVisible());
   }
 
 }

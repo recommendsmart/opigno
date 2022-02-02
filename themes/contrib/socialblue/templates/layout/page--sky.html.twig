@@ -26,6 +26,8 @@
  *   associated with the page and the node ID is the second argument in the
  *   page's path (e.g. node/12345 and node/12345/revisions, but not
  *   comment/reply/12345).
+ * - not_card: TRUE if the extra wrapper of the "Complementary top" and
+ *   "Complementary bottom" regions should be removed.
  *
  *
  * @see template_preprocess_page()
@@ -33,11 +35,15 @@
  */
 #}
 
+{% if page.header_top and multi_line %}
+  {{ page.header_top }}
+{% endif %}
+
 {% if page.header %}
   {{ page.header }}
 {% endif %}
 
-<main id="content" class="main-container" role="main">
+<main id="content" class="main-container {{ header_style ? 'main-container-no-padding-top' : '' }}" role="main">
 
   {% if page.hero %}
     {{ page.hero }}
@@ -61,14 +67,10 @@
 
       {% if page.complementary_top or page.complementary_bottom %}
         <aside class="region--complementary" role="complementary">
-          <div class="content-merged--sky--complementary card">
-            {% if page.complementary_top %}
-              {{ page.complementary_top }}
-            {% endif %}
-            {% if page.complementary_bottom %}
-              {{ page.complementary_bottom }}
-            {% endif %}
-          </div>
+          {% if not not_card %}<div class="content-merged--sky--complementary card">{% endif %}
+            {{ page.complementary_top }}
+            {{ page.complementary_bottom }}
+          {% if not not_card %}</div>{% endif %}
         </aside>
       {% endif %}
 

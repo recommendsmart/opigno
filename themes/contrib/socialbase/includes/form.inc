@@ -79,7 +79,7 @@ function socialbase_preprocess_form(&$variables) {
 
         $submitted = t('@time ago', ['@time' => $created_time_ago->getString()]);
         $variables['submitted'] = Link::fromTextAndUrl($submitted, $comment->toUrl('canonical'));
-        $variables['#cache']['max-age'] = $created_time_ago->getMaxAge();
+        $variables['#cache']['max-age'] = $created_time_ago->getCacheMaxAge();
 
         // Display author information.
         $account = $comment->getOwner();
@@ -121,7 +121,7 @@ function socialbase_preprocess_form(&$variables) {
         ->formatTimeDiffSince($post->getCreatedTime(), ['granularity' => 1, 'return_as_object' => TRUE]);
       $date = t('%time ago', ['%time' => $created_time_ago->getString()]);
       $variables['date']['#markup'] = $date;
-      $variables['#cache']['max-age'] = $created_time_ago->getMaxAge();
+      $variables['#cache']['max-age'] = $created_time_ago->getCacheMaxAge();
 
       // To change user picture settings (e.g. image style), edit the 'compact'
       // view mode on the User entity. Note that the 'compact' view mode might

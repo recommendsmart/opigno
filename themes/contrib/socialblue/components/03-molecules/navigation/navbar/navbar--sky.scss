@@ -1,9 +1,11 @@
 @import "settings";
 
 .socialblue--sky {
-  .container--navbar {
-    max-width: 100%;
-    padding: 0;
+  .navbar-default:not(.navbar-second-line) {
+    .container--navbar {
+      max-width: 100%;
+      padding: 0;
+    }
   }
 
   .navbar-fixed-top {

@@ -25,7 +25,7 @@ class EntityLinkTest extends UnitTestCase {
     $view = $this->createMock(ViewExecutable::class);
     $display = $this->createMock(DisplayPluginBase::class);
     $field->init($view, $display);
-    $this->assertEquals('', $field->render($row));
+    $this->assertEmpty($field->render($row));
   }
 
 }

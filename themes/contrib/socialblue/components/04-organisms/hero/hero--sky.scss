@@ -121,7 +121,9 @@
       }
 
       .dropdown-menu {
-        min-width: 100%;
+        &:not(.dropdown-menu--invite) {
+          min-width: 100%;
+        }
 
         a {
           font-size: .875rem;
@@ -246,16 +248,21 @@
           @include for-tablet-landscape-down {
             width: 100%;
             justify-content: space-between;
-            margin: 0 -10px -10px;
-
-            [dir='rtl'] & {
-              margin: 0 -10px 1rem;
-              justify-content: flex-end;
-            }
+            margin: 0;
           }
 
           > * {
             padding: 0 10px;
+
+            @include for-tablet-landscape-down {
+              flex: 0 0 100%;
+              max-width: 100%;
+              padding: 0;
+
+              + * {
+                margin-top: 1rem;
+              }
+            }
           }
 
           .btn {
@@ -267,6 +274,10 @@
 
             @include for-tablet-landscape-up {
               font-size: 1rem;
+            }
+
+            @include for-tablet-landscape-down {
+              width: 100%;
             }
 
             @include for-phone-only {
@@ -283,6 +294,10 @@
 
             .btn {
               margin: 0;
+
+              @include for-tablet-landscape-down {
+                width: 100%;
+              }
             }
           }
         }
@@ -328,6 +343,7 @@
     @include full-with-inside-container;
     background: #fff;
     padding: 60px 1em 0;
+    z-index: 100;
 
     @include for-tablet-portrait-up {
       padding-bottom: 25px;

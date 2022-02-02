@@ -225,6 +225,15 @@
                       {{ content.flag_follow_content }}
                     </div>
                   {% endif %}
+
+                  {% if users_allowed_to_invite %}
+                    <div class="meta-invite">
+                      <button type="button" autocomplete="off" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-default btn-block btn-sm dropdown-toggle">{% trans %}Invite{% endtrans %}<span class="caret"></span></button>
+                      <div class="dropdown-menu dropdown-menu--invite">
+                        {{ invite_content }}
+                      </div>
+                    </div>
+                  {% endif %}
                 </div>
               {% endif %}
 

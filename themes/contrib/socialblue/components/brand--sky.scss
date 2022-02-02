@@ -29,9 +29,8 @@
     }
   }
 
-  .block-profile-statistic-block,
-  .block-group-statistic-block {
-    .hero-footer__cta .btn-default {
+  .block-profile-statistic-block {
+    .hero-footer__cta.card__link .btn-default {
       color: $brand-primary;
     }
   }

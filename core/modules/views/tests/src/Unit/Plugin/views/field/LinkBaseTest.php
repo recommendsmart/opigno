@@ -25,7 +25,7 @@ class LinkBaseTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     parent::tearDown();
     $container = new ContainerBuilder();
     \Drupal::setContainer($container);

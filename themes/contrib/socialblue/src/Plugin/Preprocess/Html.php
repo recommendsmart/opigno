@@ -22,12 +22,13 @@ class Html extends HtmlBase {
 
     $variables['colors'] = [];
 
-    foreach (color_get_palette($variables['theme']['name']) as $key => $value) {
-      $key = str_replace('-', '_', $key);
-
-      $variables['colors'][$key] = $value;
+    $color_palette = color_get_palette($variables['theme']['name']);
+    if (!empty($color_palette)) {
+      foreach ($color_palette as $key => $value) {
+        $key = str_replace('-', '_', $key);
+        $variables['colors'][$key] = $value;
+      }
     }
-
   }
 
   /**

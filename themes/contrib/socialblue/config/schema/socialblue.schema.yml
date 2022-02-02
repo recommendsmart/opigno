@@ -51,6 +51,18 @@ socialblue.settings:
     color_navbar_sec_text':
       type: string
       label: 'Color navbar secondary text'
+    second_line_navbar_bg:
+      type: string
+      label: 'Second line navigation background'
+    second_line_navbar_text:
+      type: string
+      label: 'Second line navigation text'
+    second_line_navbar_active_bg:
+      type: string
+      label: 'Second line navigation active item background'
+    second_line_navbar_active_text:
+      type: string
+      label: 'Second line navigation active item text'
     content_entity_form_style:
       type: string
       label: 'Content entity form style'

@@ -56,6 +56,13 @@
     width: auto;
     padding-top: 0;
   }
+
+  + a .teaser__teaser-type {
+    @include for-phone-only {
+      width: 100%;
+      display: none;
+    }
+  }
 }
 
 // Icon parent to recognise type of teaser in for example the search results
@@ -120,9 +127,15 @@
 
 // Body of the teaser, contains the content and the actionbar. Shown on the right side next to the image
 .teaser__body {
-  flex: 1;
+  flex: 0 0 100%;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
+
+  @include for-tablet-portrait-up {
+    flex: 0 0 calc(100% - 220px);
+    max-width: calc(100% - 220px);
+  }
 }
 
 // Content of the teaser

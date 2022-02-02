@@ -162,6 +162,10 @@ body {
       margin-left: 0;
     }
   }
+
+  .dropdown > .dropdown-toggle {
+    white-space: nowrap;
+  }
 }
 
 .navbar-header {
@@ -562,6 +566,7 @@ body {
   height: 50px;
   position: relative;
   cursor: pointer;
+  z-index: 1;
 
   @include for-tablet-landscape-down {
     display: none;

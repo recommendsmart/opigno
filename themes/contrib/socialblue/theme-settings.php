@@ -28,7 +28,7 @@ function socialblue_form_system_theme_settings_alter(&$form, FormStateInterface 
 
   // If the default theme is either socialblue or socialsaas then extend
   // the form in the appearance section.
-  if (array_key_exists('socialbase', \Drupal::service('theme.manager')->getActiveTheme()->getBaseThemes())) {
+  if (array_key_exists('socialbase', \Drupal::service('theme.manager')->getActiveTheme()->getBaseThemeExtensions())) {
     if ($active_theme == $system_theme_settings) {
       $config = \Drupal::config($theme . '.settings');
 
@@ -169,6 +169,25 @@ function socialblue_form_system_theme_settings_alter(&$form, FormStateInterface 
           'open_social' => t('Open Social'),
         ],
         '#default_value' => $config->get('content_entity_form_style') ?? 'open_social',
+      ];
+
+      $form['os_header_settings'] = [
+        '#type' => 'details',
+        '#group' => 'open_social_settings',
+        '#title' => t('Header style'),
+        '#weight' => 50,
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+      ];
+
+      $form['os_header_settings']['header_style'] = [
+        '#type' => 'radios',
+        '#title' => t('Header style'),
+        '#default_value' => $config->get('header_style') ?? 'one_line',
+        '#options' => [
+          'one_line' => t('One line'),
+          'two_lines' => t('Two lines'),
+        ],
       ];
 
       // When GIN is our admin theme, update the GIN colors.

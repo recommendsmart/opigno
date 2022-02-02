@@ -6,10 +6,11 @@
  */
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\gnode\Plugin\NodeGroupContentAccessControlHandler;
 use Drupal\group\Access\CalculatedGroupPermissionsItemInterface as CGPII;
-use Drupal\group\Entity\GroupContentType;
 use Drupal\group\Entity\GroupRoleInterface;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
@@ -23,6 +24,41 @@ define('GNODE_MASTER_GRANT_ID', 1986);
  */
 function gnode_node_type_insert(NodeTypeInterface $node_type) {
   \Drupal::service('plugin.manager.group_content_enabler')->clearCachedDefinitions();
+}
+
+/**
+ * Implements hook_entity_operation().
+ */
+function gnode_entity_operation(EntityInterface $entity) {
+  $operations = [];
+
+  if ($entity->getEntityTypeId() == 'group' && \Drupal::moduleHandler()->moduleExists('views')) {
+    /** @var \Drupal\group\Entity\GroupInterface $entity */
+    if ($entity->hasPermission('access group_node overview', \Drupal::currentUser())) {
+      /** @var \Symfony\Component\Routing\RouterInterface $router */
+      $router = \Drupal::service('router.no_access_checks');
+      if ($router->getRouteCollection()->get('view.group_nodes.page_1') !== NULL) {
+        $operations['nodes'] = [
+          'title' => t('Nodes'),
+          'weight' => 20,
+          'url' => Url::fromRoute('view.group_nodes.page_1', ['group' => $entity->id()]),
+        ];
+      }
+    }
+  }
+
+  return $operations;
+}
+
+function gnode_group_content_info_alter(array &$groupContentInfo) {
+  // This allows us to fall back to normal node_access handling for users
+  // who aren't granted access via a group.
+  // See https://www.drupal.org/project/group/issues/3162511.
+  foreach ($groupContentInfo as &$info) {
+    if ($info['entity_type_id'] == 'node') {
+      $info['handlers']['access'] = NodeGroupContentAccessControlHandler::class;
+    }
+  }
 }
 
 /**
@@ -54,83 +90,6 @@ function gnode_group_role_update(GroupRoleInterface $group_role) {
       node_access_needs_rebuild(TRUE);
     }
   }
-}
-
-/**
- * Implements hook_node_access().
- *
- * When trying to view, update or delete a node it suffices to have the right to
- * do so in only one group the node belongs to. If you wish to prevent any such
- * action on your own terms, implement hook_node_access() in your module.
- */
-function gnode_node_access(NodeInterface $node, $op, AccountInterface $account) {
-  // We do not care about create access as we have our own wizard for that. Any
-  // operation aside from 'view', 'update' and 'delete' is also unsupported.
-  if (!in_array($op, ['view', 'update', 'delete'])) {
-    return AccessResult::neutral();
-  }
-
-  // Some modules, including the code in \Drupal\node\NodeForm::access() may
-  // check for 'view', 'update' or 'delete' access on new nodes, even though
-  // that makes little sense. We need to account for it to avoid crashes because
-  // we would otherwise query the DB with a non-existent node ID.
-  if ($node->isNew()) {
-    return AccessResult::neutral();
-  }
-
-  $plugin_id = 'group_node:' . $node->bundle();
-
-  // Load all of the group content for this node.
-  $group_contents = \Drupal::entityTypeManager()
-    ->getStorage('group_content')
-    ->loadByEntity($node);
-
-  // If the node does not belong to any group, we have nothing to say.
-  if (empty($group_contents)) {
-    return AccessResult::neutral();
-  }
-
-  /** @var \Drupal\group\Entity\GroupInterface[] $groups */
-  $groups = [];
-  foreach ($group_contents as $group_content) {
-    /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
-    $group = $group_content->getGroup();
-    $groups[$group->id()] = $group;
-  }
-
-  // From this point on you need group to allow you to perform the operation.
-  switch ($op) {
-    case 'view':
-      foreach ($groups as $group) {
-        if ($node->isPublished()) {
-          if ($group->hasPermission("view $plugin_id entity", $account)) {
-            return AccessResult::allowed();
-          }
-        }
-        elseif ($group->hasPermission("view unpublished $plugin_id entity", $account)) {
-          return AccessResult::allowed();
-        }
-      }
-      break;
-
-    case 'update':
-    case 'delete':
-      foreach ($groups as $group) {
-        if ($group->hasPermission("$op any $plugin_id entity", $account)) {
-          return AccessResult::allowed();
-        }
-        elseif ($account->id() == $node->getOwnerId() && $group->hasPermission("$op own $plugin_id entity", $account)) {
-          return AccessResult::allowed();
-        }
-      }
-      break;
-  }
-
-  // Instead of outright forbidding access when no group granted it, we return
-  // a neutral access result to play nice with other modules. If the end result
-  // is still neutral, Drupal will deny access anyway unless the node grants
-  // system allows the operation in a last ditch effort to determine access.
-  return AccessResult::neutral();
 }
 
 /**
@@ -210,6 +169,7 @@ function gnode_node_grants(AccountInterface $account, $op) {
   foreach ($calculated_permissions->getItemsByScope(CGPII::SCOPE_GROUP_TYPE) as $item) {
     // Get the IDs of all the groups the user is not part of for the group type.
     $query = $entity_type_manager->getStorage('group')->getQuery();
+    $query->accessCheck(FALSE);
     $query->condition('type', $item->getIdentifier());
     if (!empty($member_gids)) {
       $query->condition('id', $member_gids, 'NOT IN');
@@ -376,27 +336,4 @@ function gnode_node_access_records(NodeInterface $node) {
   $records[] = $anonymous_record;
 
   return $records;
-}
-
-/**
- * Implements hook_entity_operation().
- */
-function gnode_entity_operation($entity) {
-  $operations = [];
-
-  if ($entity->getEntityTypeId() == 'group' && \Drupal::moduleHandler()->moduleExists('views')) {
-    if ($entity->hasPermission('access group_node overview', \Drupal::currentUser())) {
-      /** @var \Symfony\Component\Routing\RouterInterface $router */
-      $router = \Drupal::service('router.no_access_checks');
-      if ($router->getRouteCollection()->get('view.group_nodes.page_1') !== NULL) {
-        $operations['nodes'] = [
-          'title' => t('Nodes'),
-          'weight' => 20,
-          'url' => Url::fromRoute('view.group_nodes.page_1', ['group' => $entity->id()]),
-        ];
-      }
-    }
-  }
-
-  return $operations;
 }

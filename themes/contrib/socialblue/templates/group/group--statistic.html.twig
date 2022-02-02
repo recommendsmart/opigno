@@ -61,6 +61,14 @@
           <a href="{{ group_operations_url }}" class="btn btn-accent btn-block" title="{% trans %}Join{% endtrans %}">{% trans %}Join{% endtrans %}</a>
         {% endif %}
       </div>
+      {% if members_allowed_to_invite %}
+        <div class="btn-group">
+          <button type="button" autocomplete="off" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-default btn-block dropdown-toggle">{% trans %}Invite{% endtrans %}<span class="caret"></span></button>
+          <div class="dropdown-menu dropdown-menu--invite">
+            {{ invite_content }}
+          </div>
+        </div>
+      {% endif %}
     </div>
   {% endif %}
 {% endblock %}

@@ -88,7 +88,7 @@ class Processor implements ProcessorInterface {
    * {@inheritdoc}
    */
   public function processJob(Job $job, QueueInterface $queue) {
-    $this->eventDispatcher->dispatch(AdvancedQueueEvents::PRE_PROCESS, new JobEvent($job));
+    $this->eventDispatcher->dispatch(new JobEvent($job), AdvancedQueueEvents::PRE_PROCESS);
 
     try {
       $job_type = $this->jobTypeManager->createInstance($job->getType());
@@ -104,7 +104,7 @@ class Processor implements ProcessorInterface {
     $job->setState($result->getState());
     $job->setMessage($result->getMessage());
 
-    $this->eventDispatcher->dispatch(AdvancedQueueEvents::POST_PROCESS, new JobEvent($job));
+    $this->eventDispatcher->dispatch(new JobEvent($job), AdvancedQueueEvents::POST_PROCESS);
     // Pass the job back to the backend.
     $queue_backend = $queue->getBackend();
     if ($job->getState() == Job::STATE_SUCCESS) {

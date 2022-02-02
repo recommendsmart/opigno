@@ -1,12 +1,15 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @see       https://github.com/laminas/laminas-stdlib for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-stdlib/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-stdlib/blob/master/LICENSE.md New BSD License
+ */
 
 namespace Laminas\Stdlib;
 
 use ArrayIterator;
 use ArrayObject as PhpArrayObject;
-use ReturnTypeWillChange;
 
 use function array_reverse;
 
@@ -23,7 +26,6 @@ class ArrayStack extends PhpArrayObject
      *
      * @return ArrayIterator
      */
-    #[ReturnTypeWillChange]
     public function getIterator()
     {
         $array = $this->getArrayCopy();

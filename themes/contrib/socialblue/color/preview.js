@@ -23,15 +23,28 @@
       var $colorPreview = $form.find('.color-preview');
       var $colorPalette = $form.find('.js-color-palette');
 
-      // Navbar background.
-      $colorPreview.find('.color-preview-header .navbar-default').css('backgroundColor', $colorPalette.find('input[name="palette[navbar-bg]"]').val());
-      // Navbar text.
-      $colorPreview.find('.color-preview-header .navbar-default .navbar-nav > li > a').css('color', $colorPalette.find('input[name="palette[navbar-text]"]').val());
+      function navbarColors(navBg, navText, navActiveBg, navActiveText) {
+        // Navbar background.
+        $colorPreview.find('.color-preview-header .navbar-default')
+          .css('backgroundColor', $colorPalette.find('input[name="palette['+navBg+']"]').val());
+        // Navbar text.
+        $colorPreview.find('.color-preview-header .navbar-default .navbar-nav > li > a')
+          .css('color', $colorPalette.find('input[name="palette['+navText+']"]').val());
 
-      // Navbar active background.
-      $colorPreview.find('.color-preview-header .navbar-default .navbar-nav > li > a.is-active').css('backgroundColor', $colorPalette.find('input[name="palette[navbar-active-bg]"]').val());
-      // Navbar active text.
-      $colorPreview.find('.color-preview-header .navbar-default .navbar-nav > li > a.is-active').css('color', $colorPalette.find('input[name="palette[navbar-active-text]"]').val());
+        // Navbar active background.
+        $colorPreview.find('.color-preview-header .navbar-default .navbar-nav > li > a.is-active')
+          .css('backgroundColor', $colorPalette.find('input[name="palette['+navActiveBg+']"]').val());
+        // Navbar active text.
+        $colorPreview.find('.color-preview-header .navbar-default .navbar-nav > li > a.is-active')
+          .css('color', $colorPalette.find('input[name="palette['+navActiveText+']"]').val());
+      }
+
+      navbarColors(
+        'navbar-bg',
+        'navbar-text',
+        'navbar-active-bg',
+        'navbar-active-text'
+      );
 
       // Section navbar background.
       $colorPreview.find('.color-preview-secondary .navbar-secondary').css('backgroundColor', $colorPalette.find('input[name="palette[navbar-sec-bg]"]').val());
@@ -90,6 +103,44 @@
           }
         }
       );
+
+      // Two rows of the header.
+      var oneRow = $('input[id="edit-header-style-one-line"]');
+      var twoRows = $('input[id="edit-header-style-two-lines"]');
+      var header = $('.color-preview-header');
+
+      function twoRowsSettings() {
+        if (twoRows.prop("checked")) {
+          header.addClass('navbar-second-line');
+
+          navbarColors(
+            'second-line-navbar-bg',
+            'second-line-navbar-text',
+            'second-line-navbar-active-bg',
+            'second-line-navbar-active-text'
+          );
+        }
+        else {
+          header.removeClass('navbar-second-line');
+
+          navbarColors(
+            'navbar-bg',
+            'navbar-text',
+            'navbar-active-bg',
+            'navbar-active-text'
+          );
+        }
+      }
+
+      twoRowsSettings();
+
+      oneRow.on('click', function () {
+        twoRowsSettings();
+      });
+
+      twoRows.on('click', function () {
+        twoRowsSettings();
+      });
     }
   };
 })(jQuery, Drupal, drupalSettings);

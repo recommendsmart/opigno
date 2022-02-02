@@ -95,6 +95,11 @@
   padding-top: .875rem;
 }
 
+.block-social-language .dropdown > .dropdown-toggle,
+.block-language .dropdown > .dropdown-toggle {
+  white-space: nowrap;
+}
+
 .navbar-header {
   -webkit-box-ordinal-group: 1;
       -ms-flex-order: 0;
@@ -240,6 +245,7 @@
   height: 50px;
   position: relative;
   cursor: pointer;
+  z-index: 1;
 }
 
 .navbar__open-search-block {

@@ -112,15 +112,6 @@ form--autocomplete:
       assets/css/ajax.css: {}
       assets/css/autocomplete.css: {}
 
-form--datepicker:
-  css:
-    component:
-      assets/css/datepicker.css: {}
-  js:
-    assets/js/date-picker-init.min.js: { minified: true }
-  dependencies:
-    - core/modernizr
-
 form--input-groups:
   css:
     component:
@@ -135,19 +126,6 @@ form--social-auth-buttons:
   css:
     component:
       assets/css/social-auth-buttons.css: {}
-
-form--timepicker:
-  remote: https://github.com/jonthornton/jquery-timepicker
-  version: "1.11.4"
-  license:
-    name: MIT
-    url: https://raw.githubusercontent.com/jonthornton/jquery-timepicker/master/README.md
-    gpl-compatible: true
-  css:
-    component:
-      assets/css/timepicker.css: {}
-  js:
-    /libraries/timepicker/jquery.timepicker.min.js: { minified: true }
 
 form--toolbar:
   css:

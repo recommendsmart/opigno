@@ -23,14 +23,14 @@ class ContactLinkTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     parent::tearDown();
     $container = new ContainerBuilder();
     \Drupal::setContainer($container);
   }
 
   /**
-   * Tests the render method.
+   * @covers ::render
    */
   public function testRender() {
     $row = new ResultRow();
@@ -41,7 +41,7 @@ class ContactLinkTest extends UnitTestCase {
     $view = $this->createMock(ViewExecutable::class);
     $display = $this->createMock(DisplayPluginBase::class);
     $field->init($view, $display);
-    $this->assertEquals('', $field->render($row));
+    $this->assertEmpty($field->render($row));
   }
 
 }

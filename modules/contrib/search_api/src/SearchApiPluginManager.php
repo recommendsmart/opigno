@@ -77,7 +77,7 @@ class SearchApiPluginManager extends DefaultPluginManager {
 
     if ($this->alterEventName) {
       $event = new GatheringPluginInfoEvent($definitions);
-      $this->eventDispatcher->dispatch($this->alterEventName, $event);
+      $this->eventDispatcher->dispatch($event, $this->alterEventName);
     }
   }
 

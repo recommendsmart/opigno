@@ -2,9 +2,9 @@
 
 namespace Drupal\views_bulk_operations\Form;
 
+use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Messenger\MessengerTrait;
 
 /**
  * Defines common methods for Views Bulk Operations forms.
@@ -66,7 +66,7 @@ trait ViewsBulkOperationsFormTrait {
       $form_data['entity_labels'] = $this->actionProcessor->getLabels($modified_form_data);
     }
     else {
-      $form_data['selected_count'] = $form_data['total_results'];
+      $form_data['selected_count'] = $form_data['total_results'] ?? 0;
     }
   }
 
@@ -83,7 +83,6 @@ trait ViewsBulkOperationsFormTrait {
     if (!empty($tempstore_data['list'])) {
       return empty($tempstore_data['exclude_mode']) ? $this->t('Items selected:') : $this->t('Selected all items except:');
     }
-    return $this->t('');
   }
 
   /**
@@ -114,7 +113,7 @@ trait ViewsBulkOperationsFormTrait {
     $renderable = [
       '#theme' => 'item_list',
       '#items' => $form_data['entity_labels'],
-      '#empty' => $this->t(''),
+      '#empty' => $this->t('No items'),
     ];
     if (!empty($form_data['entity_labels'])) {
       $more = count($form_data['list']) - count($form_data['entity_labels']);
@@ -126,12 +125,12 @@ trait ViewsBulkOperationsFormTrait {
           '#wrapper_attributes' => ['class' => ['more']],
         ];
       }
+      $renderable['#title'] = $this->getSelectionInfoTitle($form_data);
     }
     elseif (!empty($form_data['exclude_mode'])) {
-      $renderable['#empty'] = $this->t('All items');
+      $renderable['#empty'] = $this->t('Action will be executed on all items in the view.');
     }
 
-    $renderable['#title'] = $this->getSelectionInfoTitle($form_data);
     $renderable['#wrapper_attributes'] = ['class' => ['vbo-info-list-wrapper']];
 
     return $renderable;

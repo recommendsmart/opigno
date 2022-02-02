@@ -18,23 +18,23 @@ Source: https://www.drupal.org/files/issues/drupal-994360-74-states-checkboxes-c
 
 
 Multiple usages of FieldPluginBase::getEntity do not check for NULL, leading to WSOD
-Source: https://www.drupal.org/files/issues/2019-11-14/3007424-68.patch
+Source: https://www.drupal.org/files/issues/2021-01-06/3007424-108.patch
 
 
 Default role id causes issues with validation on VBO
 Source: https://www.drupal.org/files/issues/2018-05-24/2974925-default-rid-config-causes-illegal-error.patch
 
 
-Ensure views exposed form in a form block keeps contextual arguments
-Source: https://www.drupal.org/files/issues/2020-04-17/views-exposed-form-block-args-2821962-30-8.8-notest.patch
+Ensure views exposed form in a form block keeps contextual arguments (Updated)
+Source: https://www.drupal.org/files/issues/2020-06-17/views-exposed-form-block-args-2821962-39-8.9-notest.patch
 
 
 Display Bug when using #states (Forms API) with Ajax Request
-Source: https://www.drupal.org/files/issues/2019-11-19/1091852-104.patch
+Source: https://www.drupal.org/files/issues/2021-11-05/1091852-150.patch
 
 
 Can't specify the language in TermStorage::loadTree
-Source: https://www.drupal.org/files/issues/2020-09-08/drupal-termstorage-loadTree-lang-3123561-6-d8.patch
+Source: https://www.drupal.org/files/issues/2021-08-13/drupal-termstorage-loadTree-lang-3123561-10.patch
 
 
 Issue #3188258: Aggregation queries fail across entity references
@@ -54,22 +54,22 @@ Source: https://www.drupal.org/files/issues/2020-07-06/2842409-15.patch
 
 
 Empty language (langcode) field wrapper inserted into contact form
-Source: https://www.drupal.org/files/issues/2020-03-06/empty-langcode-field-wrapper-2842405-17.patch
+Source: https://www.drupal.org/files/issues/2021-11-04/empty-langcode-field-wrapper-2842405-20.patch
 
 
 Broken title in modal dialog when title is a render array
 Source: https://www.drupal.org/files/issues/2019-10-21/2663316-76.drupal.Broken-title-in-modal-dialog-when-title-is-a-render-array.patch
 
 
-PHPDocs with wrong parameters
-Source: https://www.drupal.org/files/issues/2019-09-03/queryinterface-range-updated-phpdocs.patch
-
-
 Post update hook naming convention patch
 Source: https://git.drupalcode.org/project/drupal/-/merge_requests/1215.patch
 
 
-Backport Drupal 9.x SA-CORE-2022-001 to Open Social 10.x versions
-Source: https://www.drupal.org/files/issues/2022-01-20/3259572-Backport-Drupal-9.x-SA-CORE-2022-001-1.patch
+Flood MemoryBackend::events[] key of micro time cannot guarantee uniqueness
+Source: https://www.drupal.org/files/issues/2021-12-12/2910000-33--floodmemorybackend-time-local.patch
+
+
+Issue #3251856: Incorrect typehint for FieldConfig::loadByName
+Source: https://www.drupal.org/files/issues/2021-12-12/drupal9-incorrect_typehint-3251856-7.patch
 
 

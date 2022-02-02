@@ -88,6 +88,12 @@
       <div class="node--unpublished__label">{% trans %} unpublished {% endtrans %}</div>
     {% endif %}
 
+    {% block metainfo %}
+      <header class="metainfo__node">
+        {{ content.links.moderation }}
+      </header>
+    {% endblock %}
+
     {% block nodefull_body %}
       {{ content|without('field_event_address', 'like_and_dislike', 'field_event_location', 'field_event_type', 'book_navigation', 'flag_follow_content', 'field_event_an_enroll', 'field_enrollment_status', 'enrolled', 'enrollments_count', 'links', 'ongoing', 'field_event_addtocal') }}
     {% endblock %}

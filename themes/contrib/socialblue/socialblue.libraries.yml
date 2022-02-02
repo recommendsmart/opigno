@@ -91,11 +91,6 @@ form-elements:
     theme:
       assets/css/form-elements.css: {}
 
-form--datepicker:
-  css:
-    theme:
-      assets/css/datepicker.css: {}
-
 form--input-groups:
   css:
     theme:
@@ -105,11 +100,6 @@ form--password:
   css:
     theme:
       assets/css/password.css: {}
-
-form--timepicker:
-  css:
-    theme:
-      assets/css/timepicker.css: {}
 
 like:
   css:
@@ -205,6 +195,7 @@ site-footer:
 layout:
   css:
     component:
+      assets/css/layout.css: {}
       assets/css/layout--sky.css: {}
 
 color.preview:

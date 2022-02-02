@@ -128,6 +128,11 @@
   width: 100%;
 }
 
+.socialblue--sky .block-profile-statistic-block .hero-footer__cta > * + *,
+.socialblue--sky .block-group-statistic-block .hero-footer__cta > * + * {
+  margin-top: 1rem;
+}
+
 .socialblue--sky .block-profile-statistic-block .card__actionbar,
 .socialblue--sky .block-group-statistic-block .card__actionbar {
   padding: 1.5rem 0;

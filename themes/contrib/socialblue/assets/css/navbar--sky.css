@@ -1,4 +1,4 @@
-.socialblue--sky .container--navbar {
+.socialblue--sky .navbar-default:not(.navbar-second-line) .container--navbar {
   max-width: 100%;
   padding: 0;
 }

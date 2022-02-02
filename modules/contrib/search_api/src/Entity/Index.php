@@ -968,7 +968,8 @@ class Index extends ConfigEntityBase implements IndexInterface {
     \Drupal::moduleHandler()->alterDeprecated($description, 'search_api_index_items', $this, $items);
     $event = new IndexingItemsEvent($this, $items);
     \Drupal::getContainer()->get('event_dispatcher')
-      ->dispatch(SearchApiEvents::INDEXING_ITEMS, $event);
+      ->dispatch($event, SearchApiEvents::INDEXING_ITEMS);
+    $items = $event->getItems();
     foreach ($items as $item) {
       // This will cache the extracted fields so processors, etc., can retrieve
       // them directly.
@@ -1009,7 +1010,7 @@ class Index extends ConfigEntityBase implements IndexInterface {
       \Drupal::moduleHandler()->invokeAllDeprecated($description, 'search_api_items_indexed', [$this, $processed_ids]);
 
       $dispatcher = \Drupal::getContainer()->get('event_dispatcher');
-      $dispatcher->dispatch(SearchApiEvents::ITEMS_INDEXED, new ItemsIndexedEvent($this, $processed_ids));
+      $dispatcher->dispatch(new ItemsIndexedEvent($this, $processed_ids), SearchApiEvents::ITEMS_INDEXED);
 
       // Clear search api list caches.
       Cache::invalidateTags(['search_api_list:' . $this->id]);
@@ -1124,7 +1125,7 @@ class Index extends ConfigEntityBase implements IndexInterface {
       \Drupal::moduleHandler()->invokeAllDeprecated($description, 'search_api_index_reindex', [$this, FALSE]);
       /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher */
       $dispatcher = \Drupal::getContainer()->get('event_dispatcher');
-      $dispatcher->dispatch(SearchApiEvents::REINDEX_SCHEDULED, new ReindexScheduledEvent($this, FALSE));
+      $dispatcher->dispatch(new ReindexScheduledEvent($this, FALSE), SearchApiEvents::REINDEX_SCHEDULED);
     }
   }
 
@@ -1153,7 +1154,7 @@ class Index extends ConfigEntityBase implements IndexInterface {
 
       /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher */
       $dispatcher = \Drupal::getContainer()->get('event_dispatcher');
-      $dispatcher->dispatch(SearchApiEvents::REINDEX_SCHEDULED, new ReindexScheduledEvent($this, !$this->isReadOnly()));
+      $dispatcher->dispatch(new ReindexScheduledEvent($this, !$this->isReadOnly()), SearchApiEvents::REINDEX_SCHEDULED);
     }
   }
 
@@ -1175,7 +1176,7 @@ class Index extends ConfigEntityBase implements IndexInterface {
       ->invokeAllDeprecated($description, 'search_api_index_reindex', [$this, FALSE]);
     /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher */
     $dispatcher = \Drupal::getContainer()->get('event_dispatcher');
-    $dispatcher->dispatch(SearchApiEvents::REINDEX_SCHEDULED, new ReindexScheduledEvent($this, FALSE));
+    $dispatcher->dispatch(new ReindexScheduledEvent($this, FALSE), SearchApiEvents::REINDEX_SCHEDULED);
     $index_task_manager->addItemsBatch($this);
   }
 
@@ -1227,6 +1228,7 @@ class Index extends ConfigEntityBase implements IndexInterface {
     $this->options += [
       'cron_limit' => $config->get('default_cron_limit'),
       'index_directly' => TRUE,
+      'track_changes_in_references' => TRUE,
     ];
   }
 
@@ -1269,6 +1271,7 @@ class Index extends ConfigEntityBase implements IndexInterface {
     $this->options += [
       'cron_limit' => $config->get('default_cron_limit'),
       'index_directly' => TRUE,
+      'track_changes_in_references' => TRUE,
     ];
 
     // Reset the static cache for getPropertyDefinitions() to make sure we don't

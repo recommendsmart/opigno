@@ -65,7 +65,6 @@
 
 .site-footer,
 .badge-secondary,
-.ui-datepicker-calendar > tbody > tr > td .ui-state-active,
 .stream-icon-new {
   background-color: #1f80aa;
 }
@@ -276,29 +275,107 @@ blockquote {
   background-color: #1f1f1f;
 }
 
+.navbar-default.navbar-second-line {
+  background-color: #004494;
+}
+
+.navbar-default.navbar-second-line .navbar-nav > li > a,
+.navbar-default.navbar-second-line .navbar-nav > li > button {
+  color: #fffff1;
+  fill: #fffff1;
+}
+
+.navbar-default.navbar-second-line .navbar-nav > li > a:hover, .navbar-default.navbar-second-line .navbar-nav > li > a:focus,
+.navbar-default.navbar-second-line .navbar-nav > li > button:hover,
+.navbar-default.navbar-second-line .navbar-nav > li > button:focus {
+  color: #002f67;
+  background-color: #f2f5f9;
+}
+
+.navbar-default.navbar-second-line .navbar-nav > li > a:hover .navbar-nav__icon, .navbar-default.navbar-second-line .navbar-nav > li > a:focus .navbar-nav__icon,
+.navbar-default.navbar-second-line .navbar-nav > li > button:hover .navbar-nav__icon,
+.navbar-default.navbar-second-line .navbar-nav > li > button:focus .navbar-nav__icon {
+  fill: #002f67;
+}
+
+.navbar-default.navbar-second-line .navbar-nav > .open > a, .navbar-default.navbar-second-line .navbar-nav > .open > a:hover, .navbar-default.navbar-second-line .navbar-nav > .open > a:focus,
+.navbar-default.navbar-second-line .navbar-nav > .open > button,
+.navbar-default.navbar-second-line .navbar-nav > .open > button:hover,
+.navbar-default.navbar-second-line .navbar-nav > .open > button:focus {
+  background-color: #f2f5f9;
+  color: #002f67;
+}
+
+.navbar-default.navbar-second-line .navbar-nav > li > a.is-active, .navbar-default.navbar-second-line .navbar-nav > li > a.is-active:hover, .navbar-default.navbar-second-line .navbar-nav > li > a.is-active:focus,
+.navbar-default.navbar-second-line .navbar-nav > li > button.is-active,
+.navbar-default.navbar-second-line .navbar-nav > li > button.is-active:hover,
+.navbar-default.navbar-second-line .navbar-nav > li > button.is-active:focus,
+.navbar-default.navbar-second-line .navbar-nav > .active > a,
+.navbar-default.navbar-second-line .navbar-nav > .active > a:hover,
+.navbar-default.navbar-second-line .navbar-nav > .active > a:focus,
+.navbar-default.navbar-second-line .navbar-nav > .active > button,
+.navbar-default.navbar-second-line .navbar-nav > .active > button:hover,
+.navbar-default.navbar-second-line .navbar-nav > .active > button:focus {
+  color: #002f67;
+  fill: #002f67;
+  background-color: #f2f5f9;
+}
+
+.navbar-default.navbar-second-line .navbar-nav > .dropdown > .dropdown-menu {
+  background-color: #f2f5f9;
+}
+
+.navbar-default.navbar-second-line .navbar-nav > .dropdown > .dropdown-menu a {
+  color: #002f67;
+}
+
+.navbar-default.navbar-second-line .navbar-nav__icon {
+  fill: #fffff1;
+}
+
+.header-top {
+  background-color: #333333;
+}
+
 .navbar-default .navbar-nav > li > a,
-.navbar-default .navbar-nav > li > button {
+.navbar-default .navbar-nav > li > button,
+.header-top .navbar-nav > li > a,
+.header-top .navbar-nav > li > button {
   color: #ffffff;
   fill: #ffffff;
 }
 
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus,
 .navbar-default .navbar-nav > li > button:hover,
-.navbar-default .navbar-nav > li > button:focus {
+.navbar-default .navbar-nav > li > button:focus,
+.header-top .navbar-nav > li > a:hover,
+.header-top .navbar-nav > li > a:focus,
+.header-top .navbar-nav > li > button:hover,
+.header-top .navbar-nav > li > button:focus {
   color: #f3f3f3;
   background-color: #1f1f1f;
 }
 
 .navbar-default .navbar-nav > li > a:hover .navbar-nav__icon, .navbar-default .navbar-nav > li > a:focus .navbar-nav__icon,
 .navbar-default .navbar-nav > li > button:hover .navbar-nav__icon,
-.navbar-default .navbar-nav > li > button:focus .navbar-nav__icon {
+.navbar-default .navbar-nav > li > button:focus .navbar-nav__icon,
+.header-top .navbar-nav > li > a:hover .navbar-nav__icon,
+.header-top .navbar-nav > li > a:focus .navbar-nav__icon,
+.header-top .navbar-nav > li > button:hover .navbar-nav__icon,
+.header-top .navbar-nav > li > button:focus .navbar-nav__icon {
   fill: #f3f3f3;
 }
 
 .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus,
 .navbar-default .navbar-nav > .open > button,
 .navbar-default .navbar-nav > .open > button:hover,
-.navbar-default .navbar-nav > .open > button:focus {
+.navbar-default .navbar-nav > .open > button:focus,
+.header-top .navbar-nav > .open > a,
+.header-top .navbar-nav > .open > a:hover,
+.header-top .navbar-nav > .open > a:focus,
+.header-top .navbar-nav > .open > button,
+.header-top .navbar-nav > .open > button:hover,
+.header-top .navbar-nav > .open > button:focus {
   background-color: #1f1f1f;
   color: #f3f3f3;
 }
@@ -312,10 +389,54 @@ blockquote {
 .navbar-default .navbar-nav > .active > a:focus,
 .navbar-default .navbar-nav > .active > button,
 .navbar-default .navbar-nav > .active > button:hover,
-.navbar-default .navbar-nav > .active > button:focus {
+.navbar-default .navbar-nav > .active > button:focus,
+.header-top .navbar-nav > li > a.is-active,
+.header-top .navbar-nav > li > a.is-active:hover,
+.header-top .navbar-nav > li > a.is-active:focus,
+.header-top .navbar-nav > li > button.is-active,
+.header-top .navbar-nav > li > button.is-active:hover,
+.header-top .navbar-nav > li > button.is-active:focus,
+.header-top .navbar-nav > .active > a,
+.header-top .navbar-nav > .active > a:hover,
+.header-top .navbar-nav > .active > a:focus,
+.header-top .navbar-nav > .active > button,
+.header-top .navbar-nav > .active > button:hover,
+.header-top .navbar-nav > .active > button:focus {
   color: #f3f3f3;
   fill: #f3f3f3;
   background-color: #1f1f1f;
+}
+
+.navbar-second-line + main .search-take-over .form-text,
+.navbar-second-line + main .search-take-over svg {
+  color: #fffff1;
+  fill: #fffff1;
+}
+
+.navbar-second-line + main .search-take-over .form-text::-webkit-input-placeholder {
+  color: #fffff1 !important;
+}
+
+.navbar-second-line + main .search-take-over .form-text::-moz-placeholder {
+  color: #fffff1 !important;
+}
+
+.navbar-second-line + main .search-take-over .form-text:-ms-input-placeholder {
+  color: #fffff1 !important;
+}
+
+.navbar-second-line + main .search-take-over .form-text:-moz-placeholder {
+  color: #fffff1 !important;
+}
+
+.navbar-second-line + main .search-take-over .form-text:focus {
+  border-color: #fffff1;
+  -webkit-box-shadow: 0 2px 0 0 #fffff1;
+          box-shadow: 0 2px 0 0 #fffff1;
+}
+
+.navbar-second-line + main .search--with-suggestions .spinner > div {
+  background-color: #fffff1;
 }
 
 html:not(.js) .navbar-default .dropdown:focus > a,
@@ -371,6 +492,10 @@ html:not(.js) .navbar-default .dropdown:hover > button .navbar-nav__icon {
 
 .navbar__open-search-block {
   background-color: #333333;
+}
+
+.navbar-second-line .navbar__open-search-block {
+  background-color: #004494;
 }
 
 .search--with-suggestions .spinner > div {
@@ -439,6 +564,33 @@ html:not(.js) .navbar-default .dropdown:hover > button .navbar-nav__icon {
 
 .social-gtranslate-list--desktop.open > a:focus .select-icon, .social-gtranslate-list--desktop.open > a:hover .select-icon {
   fill: #f3f3f3;
+}
+
+.navbar-second-line .social-gtranslate-list--desktop > a {
+  color: #fffff1;
+  background-color: #004494;
+}
+
+.navbar-second-line .social-gtranslate-list--desktop > a:after {
+  color: #fffff1;
+}
+
+.navbar-second-line .social-gtranslate-list--desktop > a .select-icon {
+  fill: #fffff1;
+}
+
+.navbar-second-line .social-gtranslate-list--desktop > a:focus, .navbar-second-line .social-gtranslate-list--desktop > a:hover {
+  color: #002f67;
+  fill: #002f67;
+  background-color: #f2f5f9;
+}
+
+.navbar-second-line .social-gtranslate-list--desktop > a:focus:after, .navbar-second-line .social-gtranslate-list--desktop > a:hover:after {
+  color: #002f67;
+}
+
+.navbar-second-line .social-gtranslate-list--desktop > a:focus .select-icon, .navbar-second-line .social-gtranslate-list--desktop > a:hover .select-icon {
+  fill: #002f67;
 }
 
 #sliding-popup {
@@ -595,6 +747,14 @@ html:not(.js) .navbar-default .dropdown:hover > button .navbar-nav__icon {
   fill: #1f80aa;
 }
 
+.poll-current-result .choice-result .bar {
+  border-color: #29abe2;
+}
+
+.poll-current-result .choice-result .bar .foreground {
+  background: #29abe2;
+}
+
 @media (min-width: 900px) {
   .search-take-over .form-text {
     color: #ffffff;
@@ -611,10 +771,20 @@ html:not(.js) .navbar-default .dropdown:hover > button .navbar-nav__icon {
 }
 
 @media (max-width: 899px) {
-  .navbar-default .navbar-nav li > ul > li.expanded > .dropdown-menu {
+  .navbar-default.navbar-second-line .navbar-nav li > ul > li.expanded > .dropdown-menu {
+    background-color: #f2f5f9;
+  }
+  .navbar-default.navbar-second-line .navbar-nav li > ul > li.expanded > .dropdown-menu > li:focus, .navbar-default.navbar-second-line .navbar-nav li > ul > li.expanded > .dropdown-menu > li:hover, .navbar-default.navbar-second-line .navbar-nav li > ul > li.expanded > .dropdown-menu > li.active {
+    background: #004494;
+  }
+  .navbar-default .navbar-nav li > ul > li.expanded > .dropdown-menu,
+  .header-top .navbar-nav li > ul > li.expanded > .dropdown-menu {
     background-color: #1f1f1f;
   }
-  .navbar-default .navbar-nav li > ul > li.expanded > .dropdown-menu > li:focus, .navbar-default .navbar-nav li > ul > li.expanded > .dropdown-menu > li:hover, .navbar-default .navbar-nav li > ul > li.expanded > .dropdown-menu > li.active {
+  .navbar-default .navbar-nav li > ul > li.expanded > .dropdown-menu > li:focus, .navbar-default .navbar-nav li > ul > li.expanded > .dropdown-menu > li:hover, .navbar-default .navbar-nav li > ul > li.expanded > .dropdown-menu > li.active,
+  .header-top .navbar-nav li > ul > li.expanded > .dropdown-menu > li:focus,
+  .header-top .navbar-nav li > ul > li.expanded > .dropdown-menu > li:hover,
+  .header-top .navbar-nav li > ul > li.expanded > .dropdown-menu > li.active {
     background: #333333;
   }
   .navbar-collapse .dropdown-menu li a {
@@ -623,6 +793,13 @@ html:not(.js) .navbar-default .dropdown:hover > button .navbar-nav__icon {
   .navbar-collapse .dropdown-menu li a:hover, .navbar-collapse .dropdown-menu li a:focus {
     color: #f3f3f3;
     background-color: #1f1f1f;
+  }
+  .navbar-collapse .dropdown-menu.navbar-second-line {
+    background-color: #004494;
+  }
+  .navbar-collapse .dropdown-menu.navbar-second-line li a:hover, .navbar-collapse .dropdown-menu.navbar-second-line li a:focus {
+    color: #002f67;
+    background-color: #f2f5f9;
   }
 }
 

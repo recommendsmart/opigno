@@ -38,12 +38,6 @@ libraries-extend:
     - socialbase/form--autocomplete
   core/drupal.tabledrag:
     - socialbase/tabledrag
-  # attach the timepicker library to all date fields
-  core/drupal.date:
-    - socialbase/form--datepicker
-  #extend the core datepicker with a stylesheet and attach the listener
-  core/jquery.ui.datepicker:
-    - socialbase/form--timepicker
   # Attach the bootstrap library script and css component.
   # Note that the socialbase library scripts needs to load first. That is
   # why we added weights to the library JS files in socialbase.
@@ -82,16 +76,6 @@ libraries-override:
     css:
       component:
         assets/vendor/jquery.ui/themes/base/button.css: false
-  core/jquery.ui.datepicker:
-      # CSS files are always labeled as such. This format is required.
-      css:
-        # The SMACSS category is required. See https://www.drupal.org/node/1887922
-        component:
-          # The path to the file. It is not a path relative to your theme. This
-          # should be the same as the path specified in the library file where it
-          # was defined. Setting to 'false' prevents the file from being
-          # included.
-          assets/vendor/jquery.ui/themes/base/datepicker.css: false
   core/jquery.ui.dialog:
     css:
       component:
@@ -188,7 +172,7 @@ regions:
 regions_hidden:
   - hidden
 
-# Information added by Drupal.org packaging script on 2021-12-27
-version: '1.3.5'
+# Information added by Drupal.org packaging script on 2022-01-28
+version: '2.1.2'
 project: 'socialbase'
-datestamp: 1640603341
+datestamp: 1643373681

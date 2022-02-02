@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\comment\Unit\Plugin\views\field;
 
-use Drupal;
 use Drupal\comment\Plugin\views\field\LinkApprove;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -24,25 +23,25 @@ class LinkApproveTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     parent::tearDown();
     $container = new ContainerBuilder();
-    Drupal::setContainer($container);
+    \Drupal::setContainer($container);
   }
 
   /**
-   * Tests the render method.
+   * @covers ::render
    */
   public function testRender() {
     $row = new ResultRow();
     $container = new ContainerBuilder();
     $container->set('string_translation', $this->createMock(TranslationInterface::class));
-    Drupal::setContainer($container);
+    \Drupal::setContainer($container);
     $field = new LinkApprove([], '', [], $this->createMock(AccessManagerInterface::class), $this->createMock(EntityTypeManagerInterface::class), $this->createMock(EntityRepositoryInterface::class), $this->createMock(LanguageManagerInterface::class));
     $view = $this->createMock(ViewExecutable::class);
     $display = $this->createMock(DisplayPluginBase::class);
     $field->init($view, $display);
-    $this->assertEquals('', $field->render($row));
+    $this->assertEmpty($field->render($row));
   }
 
 }

@@ -50,6 +50,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "id",
  *     "label",
  *     "description",
+ *     "new_revision",
  *     "creator_membership",
  *     "creator_wizard",
  *     "creator_roles",
@@ -78,6 +79,13 @@ class GroupType extends ConfigEntityBundleBase implements GroupTypeInterface {
    * @var string
    */
   protected $description;
+
+  /**
+   * Whether a new revision should be created by default.
+   *
+   * @var bool
+   */
+  protected $new_revision = TRUE;
 
   /**
    * The group creator automatically receives a membership.
@@ -206,6 +214,20 @@ class GroupType extends ConfigEntityBundleBase implements GroupTypeInterface {
   /**
    * {@inheritdoc}
    */
+  public function shouldCreateNewRevision() {
+    return $this->new_revision;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setNewRevision($new_revision) {
+    $this->new_revision = $new_revision;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function creatorGetsMembership() {
     return $this->creator_membership;
   }
@@ -312,34 +334,6 @@ class GroupType extends ConfigEntityBundleBase implements GroupTypeInterface {
    */
   public function getContentPlugin($plugin_id) {
     return $this->getInstalledContentPlugins()->get($plugin_id);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function installContentPlugin($plugin_id, array $configuration = []) {
-    /** @var \Drupal\group\Entity\Storage\GroupContentTypeStorageInterface $storage */
-    $storage = $this->entityTypeManager()->getStorage('group_content_type');
-    $storage->createFromPlugin($this, $plugin_id, $configuration)->save();
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function updateContentPlugin($plugin_id, array $configuration) {
-    $plugin = $this->getContentPlugin($plugin_id);
-    GroupContentType::load($plugin->getContentTypeConfigId())->updateContentPlugin($configuration);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function uninstallContentPlugin($plugin_id) {
-    $plugin = $this->getContentPlugin($plugin_id);
-    GroupContentType::load($plugin->getContentTypeConfigId())->delete();
-    return $this;
   }
 
 }

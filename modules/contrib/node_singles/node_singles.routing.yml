@@ -1,7 +1,0 @@
-node_singles.overview:
-    path: '/admin/content/singles'
-    defaults:
-        _controller: '\Drupal\node_singles\Controller\OverviewController::overview'
-        _title:  'Singles'
-    requirements:
-        _permission: 'access node singles overview'

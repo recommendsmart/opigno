@@ -48,3 +48,18 @@
     padding-left: 1em;
   }
 }
+
+/*Two rows of the header*/
+.header-top {
+  display: none;
+  padding: 2rem 1rem;
+  background: #fff;
+}
+
+.navbar-second-line .header-top {
+  display: block;
+}
+
+.navbar-second-line .navbar-default .navbar-brand {
+  display: none;
+}

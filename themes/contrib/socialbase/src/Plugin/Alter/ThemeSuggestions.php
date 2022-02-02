@@ -157,6 +157,19 @@ class ThemeSuggestions extends BaseThemeSuggestions {
 
         break;
 
+      case 'field':
+        // Add the view mode to the field theme suggestion since it matters for
+        // profiles.
+        if (isset($context1['element']['#entity_type'], $context1['element']['#bundle'], $context1['element']['#view_mode'])) {
+          $view_mode = $context1['element']['#view_mode'];
+          $suggestion = $hook . "__" . $context1['element']['#entity_type'] . "__" . $context1['element']['#bundle'];
+          $idx = array_search($suggestion, $suggestions, TRUE);
+          if (is_int($idx)) {
+            // Insert after the original suggestion.
+            array_splice($suggestions, $idx + 1, 0, $suggestion . "__" . $view_mode);
+          }
+        }
+
       case 'file_link':
         // For the new Social Comment we need a different theme hook suggestion.
         if (\Drupal::config('social_comment_upload.settings')
@@ -164,7 +177,7 @@ class ThemeSuggestions extends BaseThemeSuggestions {
           $file = $variables['file'];
 
           // For comments in activities we show the amount of attachments.
-          if ($file->_referringItem !== NULL) {
+          if (isset($file->_referringItem) && $file->_referringItem !== NULL) {
             /** @var \Drupal\file\Plugin\Field\FieldType\FileItem $item  */
             $item = $file->_referringItem;
             $name = $item->getFieldDefinition()->getName();

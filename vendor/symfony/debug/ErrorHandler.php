@@ -119,7 +119,7 @@ class ErrorHandler
     public static function register(self $handler = null, $replace = true)
     {
         if (null === self::$reservedMemory) {
-            self::$reservedMemory = str_repeat('x', 32768);
+            self::$reservedMemory = str_repeat('x', 10240);
             register_shutdown_function(__CLASS__.'::handleFatalError');
         }
 

@@ -123,6 +123,7 @@ function _socialbase_node_get_comment_count(NodeInterface $node) {
       ->condition('entity_id', $node->id())
       ->condition('entity_type', 'node')
       ->sort('cid', 'DESC')
+      ->accessCheck(TRUE)
       ->execute();
 
     $pid_query = $comment_field_data_query = \Drupal::database()->select('comment_field_data', 'cfd');

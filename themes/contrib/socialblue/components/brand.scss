@@ -71,7 +71,6 @@
 
 .site-footer,
 .badge-secondary,
-.ui-datepicker-calendar > tbody > tr > td .ui-state-active,
 .stream-icon-new {
   background-color: $brand-secondary;
 }
@@ -285,6 +284,86 @@ blockquote {
     }
   }
 
+  &.navbar-second-line {
+    background-color: $second-line-navbar-bg;
+
+    .navbar-nav {
+      > li > a,
+      > li > button {
+        color: $second-line-navbar-text;
+        fill: $second-line-navbar-text;
+
+        &:hover,
+        &:focus {
+          color: $second-line-navbar-active-text;
+          background-color: $second-line-navbar-active-bg;
+
+          .navbar-nav__icon {
+            fill: $second-line-navbar-active-text;
+          }
+        }
+      }
+
+      > .open > a,
+      > .open > button {
+        &,
+        &:hover,
+        &:focus {
+          background-color: $second-line-navbar-active-bg;
+          color: $second-line-navbar-active-text;
+        }
+      }
+
+      > li > a.is-active,
+      > li > button.is-active,
+      > .active > a,
+      > .active > button {
+        &,
+        &:hover,
+        &:focus {
+          color: $second-line-navbar-active-text;
+          fill: $second-line-navbar-active-text;
+          background-color: $second-line-navbar-active-bg;
+        }
+      }
+
+      li > ul > li.expanded {
+        > .dropdown-menu {
+          @include for-tablet-landscape-down {
+            background-color: $second-line-navbar-active-bg;
+
+            > li {
+              &:focus,
+              &:hover,
+              &.active {
+                background: $second-line-navbar-bg;
+              }
+            }
+          }
+        }
+      }
+
+      > .dropdown > .dropdown-menu {
+        background-color: $second-line-navbar-active-bg;
+
+        a {
+          color: $second-line-navbar-active-text;
+        }
+      }
+    }
+
+    .navbar-nav__icon {
+      fill: $second-line-navbar-text;
+    }
+  }
+}
+
+.header-top {
+  background-color: $navbar-default-bg;
+}
+
+.navbar-default,
+.header-top {
   .navbar-nav {
     > li > a,
     > li > button {
@@ -343,6 +422,41 @@ blockquote {
   }
 }
 
+.navbar-second-line + main {
+  .search-take-over {
+    .form-text,
+    svg {
+      color: $second-line-navbar-text;
+      fill: $second-line-navbar-text;
+    }
+
+    .form-text {
+      &::-webkit-input-placeholder {
+        color: $second-line-navbar-text !important;
+      }
+
+      &::-moz-placeholder {
+        color: $second-line-navbar-text !important;
+      }
+      &:-ms-input-placeholder {
+        color: $second-line-navbar-text !important;
+      }
+      &:-moz-placeholder {
+        color: $second-line-navbar-text !important;
+      }
+
+      &:focus {
+        border-color: $second-line-navbar-text;
+        box-shadow: 0 2px 0 0 $second-line-navbar-text;
+      }
+    }
+  }
+
+  .search--with-suggestions .spinner > div {
+    background-color: $second-line-navbar-text;
+  }
+}
+
 html:not(.js) .navbar-default {
   .dropdown {
 
@@ -380,15 +494,28 @@ html:not(.js) .navbar-default {
 
 @include for-tablet-landscape-down {
 
-  .navbar-collapse .dropdown-menu li a {
-    color: $navbar-default-link-color;
+  .navbar-collapse .dropdown-menu {
+    li a {
+      color: $navbar-default-link-color;
 
-    &:hover,
-    &:focus {
-      color: $navbar-default-link-active-color;
-      background-color: $navbar-default-link-active-bg;
+      &:hover,
+      &:focus {
+        color: $navbar-default-link-active-color;
+        background-color: $navbar-default-link-active-bg;
+      }
     }
 
+    &.navbar-second-line {
+      background-color: $second-line-navbar-bg;
+
+      li a {
+        &:hover,
+        &:focus {
+          color: $second-line-navbar-active-text;
+          background-color: $second-line-navbar-active-bg;
+        }
+      }
+    }
   }
 }
 
@@ -425,6 +552,10 @@ html:not(.js) .navbar-default {
 
 .navbar__open-search-block {
   background-color: $navbar-default-bg;
+
+  .navbar-second-line & {
+    background-color: $second-line-navbar-bg;
+  }
 }
 
 .search--with-suggestions .spinner > div {
@@ -509,6 +640,31 @@ html:not(.js) .navbar-default {
         }
         .select-icon {
           fill: $navbar-default-link-active-color;
+        }
+      }
+    }
+  }
+
+  .navbar-second-line & {
+    > a {
+      color: $second-line-navbar-text;
+      background-color: $second-line-navbar-bg;
+      &:after {
+        color: $second-line-navbar-text;
+      }
+      .select-icon {
+        fill: $second-line-navbar-text;
+      }
+      &:focus,
+      &:hover {
+        color: $second-line-navbar-active-text;
+        fill: $second-line-navbar-active-text;
+        background-color: $second-line-navbar-active-bg;
+        &:after {
+          color: $second-line-navbar-active-text;
+        }
+        .select-icon {
+          fill: $second-line-navbar-active-text;
         }
       }
     }
@@ -726,5 +882,17 @@ html:not(.js) .navbar-default {
   &:focus {
     color: $brand-secondary;
     fill: $brand-secondary;
+  }
+}
+
+.poll-current-result {
+  .choice-result {
+    .bar {
+      border-color: $brand-primary;
+
+      .foreground {
+        background: $brand-primary;
+      }
+    }
   }
 }

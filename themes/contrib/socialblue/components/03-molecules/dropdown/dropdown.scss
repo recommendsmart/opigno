@@ -26,6 +26,51 @@
     }
   }
 
+  // Invite dropdown.
+  &--invite {
+    width: 100%;
+    max-width: 100%;
+    min-width: 220px;
+    top: 100%;
+    margin-top: .625rem;
+    padding: .625rem 1rem 1rem;
+
+    .hero__banner & {
+      @include for-tablet-landscape-up {
+        left: 10px;
+      }
+    }
+
+    .input-group {
+      max-width: 100%;
+      margin: .25rem 0 1rem;
+
+      .form-control,
+      .input-group-addon {
+        border-radius: 0 !important;
+      }
+
+      .form-control {
+        padding-left: .625rem;
+        padding-right: .625rem;
+        background-color: $gray-lightest;
+        color: $gray-light;
+      }
+
+      .input-group-addon {
+        padding-top: 11px;
+        padding-bottom: 11px;
+        background-color: transparent;
+        font-size: 22px;
+        color: $gray-light-1;
+
+        &:before {
+          color: $gray-light-1;
+        }
+      }
+    }
+  }
+
 }
 .dropdown {
   @include for-phone-only {

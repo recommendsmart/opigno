@@ -14,7 +14,7 @@ abstract class GroupNodeAccessTestBase extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['group', 'node', 'gnode'];
+  public static $modules = ['group', 'options', 'entity', 'variationcache', 'node', 'gnode'];
 
   /**
    * The entity type manager service.

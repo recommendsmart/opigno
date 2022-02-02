@@ -1,10 +1,17 @@
 {
-  "name": "drupal/socialbase",
-  "description": "Base theme for Open social installations.",
-  "license": "GPL-2.0-or-later",
-  "type": "drupal-theme",
-  "minimum-stability": "dev",
-  "require": {
-      "drupal/bootstrap": "3.23"
-  }
+    "name": "drupal/socialbase",
+    "description": "Base theme for Open social installations.",
+    "license": "GPL-2.0-or-later",
+    "type": "drupal-theme",
+    "minimum-stability": "dev",
+    "require": {
+        "drupal/bootstrap": "3.23"
+    },
+    "extra": {
+        "patches": {
+            "drupal/bootstrap": {
+                "'Show row weight' text is miissing": "https://www.drupal.org/files/issues/2021-08-24/bootstrap-toggle_undefined-3209773-8.patch"
+            }
+        }
+    }
 }

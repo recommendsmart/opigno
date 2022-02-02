@@ -1,5 +1,0 @@
-# Schema for the configuration files of the laces theme.
-
-laces.settings:
-  type: theme_settings
-  label: 'Laces settings'

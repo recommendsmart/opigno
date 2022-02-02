@@ -133,6 +133,13 @@ form:not(.layout-builder-configure-block) {
     }
   }
 
+  &[class^='flagging-report'] {
+    fieldset {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
   details,
   fieldset {
     fieldset {
