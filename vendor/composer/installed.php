@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '19b62695f107239cf6cd5c89822b0e1de1e0a923',
+        'reference' => '1842abc92ff8a5570bbf5d4ff2133b1a11b51842',
         'name' => 'goalgorilla/social_template',
         'dev' => true,
     ),
@@ -302,15 +302,6 @@
             'install_path' => __DIR__ . '/../../themes/contrib/bootstrap',
             'aliases' => array(),
             'reference' => '8.x-3.23',
-            'dev_requirement' => false,
-        ),
-        'drupal/bootstrap5' => array(
-            'pretty_version' => '1.1.3',
-            'version' => '1.1.3.0',
-            'type' => 'drupal-theme',
-            'install_path' => __DIR__ . '/../../themes/contrib/bootstrap5',
-            'aliases' => array(),
-            'reference' => '1.1.3',
             'dev_requirement' => false,
         ),
         'drupal/breakpoint' => array(
@@ -1227,15 +1218,6 @@
                 0 => '9.2.11',
             ),
         ),
-        'drupal/laces' => array(
-            'pretty_version' => '1.3.2',
-            'version' => '1.3.2.0',
-            'type' => 'drupal-theme',
-            'install_path' => __DIR__ . '/../../themes/contrib/laces',
-            'aliases' => array(),
-            'reference' => '1.3.2',
-            'dev_requirement' => false,
-        ),
         'drupal/language' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -1770,15 +1752,6 @@
                 0 => '9.2.11',
             ),
         ),
-        'drupal/twig_tweak' => array(
-            'pretty_version' => '3.1.3',
-            'version' => '3.1.3.0',
-            'type' => 'drupal-module',
-            'install_path' => __DIR__ . '/../../modules/contrib/twig_tweak',
-            'aliases' => array(),
-            'reference' => '3.1.3',
-            'dev_requirement' => false,
-        ),
         'drupal/type_tray' => array(
             'pretty_version' => '1.1.1',
             'version' => '1.1.1.0',
@@ -2001,7 +1974,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '19b62695f107239cf6cd5c89822b0e1de1e0a923',
+            'reference' => '1842abc92ff8a5570bbf5d4ff2133b1a11b51842',
             'dev_requirement' => false,
         ),
         'guzzlehttp/guzzle' => array(

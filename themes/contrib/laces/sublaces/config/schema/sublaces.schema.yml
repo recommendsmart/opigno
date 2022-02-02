@@ -1,5 +1,0 @@
-# Schema for the configuration files of the Laces sub-theme.
-
-sublaces.settings:
-  type: theme_settings
-  label: 'Laces sub-theme settings'

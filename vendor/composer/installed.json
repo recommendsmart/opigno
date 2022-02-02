@@ -1801,55 +1801,6 @@
             "install-path": "../../themes/contrib/bootstrap"
         },
         {
-            "name": "drupal/bootstrap5",
-            "version": "1.1.3",
-            "version_normalized": "1.1.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/bootstrap5.git",
-                "reference": "1.1.3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/bootstrap5-1.1.3.zip",
-                "reference": "1.1.3",
-                "shasum": "eb3745cda3ff9ad7f99fbe073b752d899323b31e"
-            },
-            "require": {
-                "drupal/core": "^8.9 || ^9"
-            },
-            "type": "drupal-theme",
-            "extra": {
-                "drupal": {
-                    "version": "1.1.3",
-                    "datestamp": "1641738987",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "installation-source": "dist",
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Vladimir Roudakov (vladimiraus)",
-                    "homepage": "https://www.drupal.org/u/vladimiraus",
-                    "role": "Maintainer"
-                }
-            ],
-            "description": "Master theme using Bootstrap 5: powerful front-end framework for faster and easier web development.",
-            "homepage": "https://www.drupal.org/project/bootstrap5",
-            "support": {
-                "source": "https://git.drupalcode.org/project/bootstrap5",
-                "issues": "https://www.drupal.org/project/issues/bootstrap5"
-            },
-            "install-path": "../../themes/contrib/bootstrap5"
-        },
-        {
             "name": "drupal/charts",
             "version": "3.3.0",
             "version_normalized": "3.3.0.0",
@@ -6127,55 +6078,6 @@
             "install-path": "../../modules/contrib/jquery_ui_touch_punch"
         },
         {
-            "name": "drupal/laces",
-            "version": "1.3.2",
-            "version_normalized": "1.3.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/laces.git",
-                "reference": "1.3.2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/laces-1.3.2.zip",
-                "reference": "1.3.2",
-                "shasum": "ac4dbec89a0eaae10c132d50b65b8eafaed9f399"
-            },
-            "require": {
-                "drupal/core": "^8.9 || ^9",
-                "drupal/twig_tweak": "*"
-            },
-            "type": "drupal-theme",
-            "extra": {
-                "drupal": {
-                    "version": "1.3.2",
-                    "datestamp": "1643699128",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
-                    }
-                }
-            },
-            "installation-source": "dist",
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "bigbaldy",
-                    "homepage": "https://www.drupal.org/user/340887"
-                }
-            ],
-            "description": "Laces - A Bootstrap 5 theme designed to work with the Layout Builder ecosystem.",
-            "homepage": "https://www.drupal.org/project/laces",
-            "support": {
-                "source": "https://git.drupalcode.org/project/laces",
-                "error": "require.drupal/twig_tweak : invalid version constraint (Could not parse version constraint ^8x-2.8: Invalid version string \"^8x-2.8\")"
-            },
-            "install-path": "../../themes/contrib/laces"
-        },
-        {
             "name": "drupal/lazy",
             "version": "3.10.0",
             "version_normalized": "3.10.0.0",
@@ -8418,65 +8320,6 @@
                 "source": "https://git.drupalcode.org/project/token"
             },
             "install-path": "../../modules/contrib/token"
-        },
-        {
-            "name": "drupal/twig_tweak",
-            "version": "3.1.3",
-            "version_normalized": "3.1.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/twig_tweak.git",
-                "reference": "3.1.3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/twig_tweak-3.1.3.zip",
-                "reference": "3.1.3",
-                "shasum": "9f2f6813bf6d40faded73b0fd36e6c669565c7f7"
-            },
-            "require": {
-                "drupal/core": "^9.0",
-                "ext-json": "*",
-                "php": ">=7.3",
-                "symfony/polyfill-php80": "^1.17",
-                "twig/twig": "^2.12"
-            },
-            "suggest": {
-                "symfony/var-dumper": "Better dump() function for debugging Twig variables"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "3.1.3",
-                    "datestamp": "1635338145",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "installation-source": "dist",
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Chi",
-                    "homepage": "https://www.drupal.org/user/556138"
-                }
-            ],
-            "description": "A Twig extension with some useful functions and filters for Drupal development.",
-            "homepage": "https://www.drupal.org/project/twig_tweak",
-            "keywords": [
-                "Drupal",
-                "Twig"
-            ],
-            "support": {
-                "source": "https://git.drupalcode.org/project/twig_tweak",
-                "issues": "https://www.drupal.org/project/issues/twig_tweak"
-            },
-            "install-path": "../../modules/contrib/twig_tweak"
         },
         {
             "name": "drupal/type_tray",
