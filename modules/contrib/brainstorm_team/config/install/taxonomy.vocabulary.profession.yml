@@ -1,8 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-name: Profession
-vid: profession
-description: ''
-hierarchy: 0
-weight: 0

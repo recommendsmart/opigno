@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\Link;
 /**
  * @file
  * Enables configurable user account types (bundles).
@@ -20,12 +21,12 @@ function user_bundle_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.user_bundle':
       $output = '';
       $output .= '<dt>' . t('Adding account types') . '</dt>';
-      $output .= '<dd>' . t('Additional <em>account types</em> can be added on the <a href=":account_types">Account types page</a>.', [':account_types' => \Drupal::url('entity.user_type.collection')]) . '</dd>';
+      $output .= '<dd>' . t('Additional <em>account types</em> can be added on the <a href=":account_types">Account types page</a>.', [':account_types' => Url::fromRoute('entity.user_type.collection')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Managing user account fields') . '</dt>';
       $output .= '<dd>' . t('You can manage the fields, form, and display settings for each user account type on the <a href=":account_types">Account types page</a>. By adding fields for e.g., a picture, a biography, or address, you can a create a custom profile for each type of user on the website. For background information on entities and fields, see the <a href=":field_help">Field module help page</a>.', [
-        ':account_types' => \Drupal::url('entity.user_type.collection'),
-        ':field_help' => (\Drupal::moduleHandler()->moduleExists('field')) ? \Drupal::url('help.page', ['name' => 'field']) : '#',
-        ':accounts' => \Drupal::url('entity.user.admin_form'),
+        ':account_types' => Url::fromRoute('entity.user_type.collection')->toString(),
+        ':field_help' => (\Drupal::moduleHandler()->moduleExists('field')) ? Url::fromRoute('help.page', ['name' => 'field'])->toString() : '#',
+        ':accounts' => Url::fromRoute('entity.user.admin_form')->toString(),
       ]) . '</dd>';
       $output .= '</dl>';
       return $output;
@@ -70,7 +71,7 @@ function template_preprocess_user_bundle_user_add_list(array &$variables) {
     foreach ($variables['content'] as $type) {
       $variables['types'][$type->id()] = [
         'type' => $type->id(),
-        'add_link' => \Drupal::l($type->label(), new Url('user.admin_create_form', ['user_type' => $type->id()])),
+        'add_link' => Link::fromTextAndUrl($type->label(), new Url('user.admin_create_form', ['user_type' => $type->id()])),
         'description' => [
           '#markup' => $type->getDescription(),
         ],
@@ -146,7 +147,7 @@ function user_bundle_form_user_admin_settings_alter(&$form, FormStateInterface $
     '#title' => t('Visitor registration account type'),
     '#default_value' => \Drupal::config('user_bundle.settings')->get('registration_user_type'),
     '#options' => user_bundle_get_type_names(),
-    '#description' => t('This <a href=":types-url">account type</a> will be used to build the user registration form.  New accounts created through the user registration form will be of this account type.', [':types-url' => \Drupal::url('entity.user_type.collection')]),
+    '#description' => t('This <a href=":types-url">account type</a> will be used to build the user registration form.  New accounts created through the user registration form will be of this account type.', [':types-url' => Url::fromRoute('entity.user_type.collection')->toString()]),
   ];
 
   $form['#submit'][] = 'user_bundle_user_admin_settings_form_submit';
@@ -257,5 +258,5 @@ function user_bundle_get_user_type_description(UserTypeInterface $user_type) {
  *   The number of users whose account type field was modified.
  */
 function user_bundle_update_users_type($old_id, $new_id) {
-  return \Drupal::entityManager()->getStorage('user')->updateType($old_id, $new_id);
+  return \Drupal::service('entity_type.manager')->getStorage('user')->updateType($old_id, $new_id);
 }

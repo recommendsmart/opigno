@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'f8864d375152ab14fdd707902774c42f26d5590c',
+        'reference' => '19b62695f107239cf6cd5c89822b0e1de1e0a923',
         'name' => 'goalgorilla/social_template',
         'dev' => true,
     ),
@@ -1836,6 +1836,15 @@
                 0 => '9.2.11',
             ),
         ),
+        'drupal/user_bundle' => array(
+            'pretty_version' => '1.1.0',
+            'version' => '1.1.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/user_bundle',
+            'aliases' => array(),
+            'reference' => '8.x-1.1',
+            'dev_requirement' => false,
+        ),
         'drupal/variationcache' => array(
             'pretty_version' => '1.0.0',
             'version' => '1.0.0.0',
@@ -1992,7 +2001,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'f8864d375152ab14fdd707902774c42f26d5590c',
+            'reference' => '19b62695f107239cf6cd5c89822b0e1de1e0a923',
             'dev_requirement' => false,
         ),
         'guzzlehttp/guzzle' => array(

@@ -109,11 +109,11 @@ class UserTypeForm extends BundleEntityFormBase {
     }
     elseif ($status == SAVED_NEW) {
       $this->messenger()->addStatus($this->t('The account type %name has been added.', $t_args));
-      $context = array_merge($t_args, ['link' => $type->link($this->t('View'), 'collection')]);
+      $context = array_merge($t_args, ['link' => $type->toLink($this->t('View'), 'collection')->toString()]);
       $this->logger('user')->notice('Added account type %name.', $context);
     }
 
-    $form_state->setRedirectUrl($type->urlInfo('collection'));
+    $form_state->setRedirectUrl($type->toUrl('collection'));
   }
 
 }

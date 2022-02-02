@@ -25,11 +25,11 @@ class TypedUserController extends UserController {
     $build = [
       '#theme' => 'user_bundle_user_add_list',
       '#cache' => [
-        'tags' => $this->entityManager()->getDefinition('user_type')->getListCacheTags(),
+        'tags' => $this->entityTypeManager()->getDefinition('user_type')->getListCacheTags(),
       ],
     ];
 
-    $content = $this->entityManager()->getStorage('user_type')->loadMultiple();
+    $content = $this->entityTypeManager()->getStorage('user_type')->loadMultiple();
 
     // Bypass the types listing if only one user type is available.
     if (count($content) == 1) {
@@ -52,7 +52,7 @@ class TypedUserController extends UserController {
    *   A user creation form.
    */
   public function adminCreateForm(UserTypeInterface $user_type) {
-    $user = $this->entityManager()->getStorage('user')->create([
+    $user = $this->entityTypeManager()->getStorage('user')->create([
       'type' => $user_type->id(),
     ]);
 

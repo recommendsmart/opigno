@@ -1,8 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-name: Portfolio
-vid: portfolio
-description: ''
-hierarchy: 0
-weight: 0
