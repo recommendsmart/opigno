@@ -47,7 +47,8 @@
         "drupal/menu_items_visibility": "^1.1",
         "drupal/micronode": "1.0.x-dev",
         "drupal/keep_referenced_entities": "^2.0",
-        "drupal/pagerer": "^2.2"
+        "drupal/pagerer": "^2.2",
+        "drupal/browser_back_button": "^1.1"
     },
     "repositories": [
         {

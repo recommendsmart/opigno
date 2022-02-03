@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '0634b1dd56b66e2db40ecd943561a1157d1a3ae0',
+        'reference' => 'b43d8fa23b05c280182141172121f8282a0ff43b',
         'name' => 'goalgorilla/social_template',
         'dev' => true,
     ),
@@ -309,6 +309,15 @@
             'replaced' => array(
                 0 => '9.2.11',
             ),
+        ),
+        'drupal/browser_back_button' => array(
+            'pretty_version' => '1.1.0',
+            'version' => '1.1.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/browser_back_button',
+            'aliases' => array(),
+            'reference' => '8.x-1.1',
+            'dev_requirement' => false,
         ),
         'drupal/charts' => array(
             'pretty_version' => '3.3.0',
@@ -2048,7 +2057,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '0634b1dd56b66e2db40ecd943561a1157d1a3ae0',
+            'reference' => 'b43d8fa23b05c280182141172121f8282a0ff43b',
             'dev_requirement' => false,
         ),
         'guzzlehttp/guzzle' => array(
