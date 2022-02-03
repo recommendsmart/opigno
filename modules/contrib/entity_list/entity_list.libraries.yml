@@ -7,3 +7,12 @@ region-table:
     - core/drupal
     - core/drupalSettings
     - core/jquery.once
+
+sortable-filters:
+  version: VERSION
+  js:
+    js/sortable-filters.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once

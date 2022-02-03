@@ -12,13 +12,20 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\entity_list\Entity\EntityListInterface;
 use Drupal\entity_list\Plugin\EntityListDisplayManager;
+use Drupal\entity_list\Plugin\EntityListExtraDisplayManager;
 use Drupal\entity_list\Plugin\EntityListQueryManager;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class EntityListForm.
  */
 class EntityListForm extends EntityForm {
+
+  const HIDDEN_PLUGIN_SELECTION = [
+    'filters_entity_list_extra_display',
+    'sortable_filters_entity_list_extra_display'
+  ];
 
   protected $bundleInfo;
 
@@ -27,6 +34,8 @@ class EntityListForm extends EntityForm {
   protected $entityListDisplayManager;
 
   protected $languageManager;
+
+  protected $entityListExtraDisplayManager;
 
   /**
    * EntityListForm constructor.
@@ -39,12 +48,15 @@ class EntityListForm extends EntityForm {
    *   The entity list display manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager service.
+   * @param \Drupal\entity_list\Plugin\EntityListExtraDisplayManager $entity_list_extra_display_manager
+   *   The entity list extra display manager.
    */
-  public function __construct(EntityTypeBundleInfoInterface $bundle_info, EntityListQueryManager $entity_list_query_manager, EntityListDisplayManager $entity_list_display_manager, LanguageManagerInterface $language_manager) {
+  public function __construct(EntityTypeBundleInfoInterface $bundle_info, EntityListQueryManager $entity_list_query_manager, EntityListDisplayManager $entity_list_display_manager, LanguageManagerInterface $language_manager, EntityListExtraDisplayManager $entity_list_extra_display_manager) {
     $this->bundleInfo = $bundle_info;
     $this->entityListQueryManager = $entity_list_query_manager;
     $this->entityListDisplayManager = $entity_list_display_manager;
     $this->languageManager = $language_manager;
+    $this->entityListExtraDisplayManager = $entity_list_extra_display_manager;
   }
 
   /**
@@ -57,7 +69,8 @@ class EntityListForm extends EntityForm {
       $container->get('entity_type.bundle.info'),
       $container->get('plugin.manager.entity_list_query'),
       $container->get('plugin.manager.entity_list_display'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('plugin.manager.entity_list_extra_display')
     );
   }
 
@@ -82,7 +95,7 @@ class EntityListForm extends EntityForm {
           '#manager' => $this->entityListQueryManager,
           '#get_selected_plugin' => [
             ['query', 'plugin'],
-            $entity_list->get('query')['plugin'] ?? 'default_entity_list_query',
+            $entity_list->get('query')['plugin'] ?? 'filter_entity_list_query',
           ],
           '#get_settings' => [
             ['query'],
@@ -103,7 +116,7 @@ class EntityListForm extends EntityForm {
           '#manager' => $this->entityListDisplayManager,
           '#get_selected_plugin' => [
             ['display', 'plugin'],
-            $entity_list->get('display')['plugin'] ?? 'default_entity_list_display',
+            $entity_list->get('display')['plugin'] ?? 'filter_entity_list_display',
           ],
           '#get_settings' => [
             ['display'],
@@ -114,15 +127,48 @@ class EntityListForm extends EntityForm {
           ],
         ],
       ],
-      /*'filter_details' => [
-        '#title' => $this->t('Filter'),
-        '#description' => $this->t('Manage filter settings.'),
+      'filters_details' => [
+        '#title' => $this->t('Filters'),
+        '#description' => $this->t('Manage filters settings.'),
         'filter' => [
-          '#title' => $this->t('Filter'),
-          '#prefix' => '<div id="filter-wrapper">',
+          '#title' => $this->t('Filters'),
+          '#prefix' => '<div id="filters-wrapper">',
           '#suffix' => '</div>',
+          '#manager' => $this->entityListExtraDisplayManager,
+          '#get_selected_plugin' => [
+            ['filter', 'plugin'],
+            'filters_entity_list_extra_display',
+          ],
+          '#get_settings' => [
+            ['filter'],
+            $entity_list->get('filter') ?? [],
+          ],
+          '#ajax_update' => [
+            'filters-wrapper' => ['filters_details', 'filter'],
+          ],
         ],
-      ],*/
+      ],
+      'sortable_filters_details' => [
+        '#title' => $this->t('Sortable Filters'),
+        '#description' => $this->t('Manage sortable filters settings.'),
+        'sortable_filter' => [
+          '#title' => $this->t('Sortable Filters'),
+          '#prefix' => '<div id="sortable-filters-wrapper">',
+          '#suffix' => '</div>',
+          '#manager' => $this->entityListExtraDisplayManager,
+          '#get_selected_plugin' => [
+            ['sortableFilter', 'plugin'],
+            'sortable_filters_entity_list_extra_display',
+          ],
+          '#get_settings' => [
+            ['sortable_filter'],
+            $entity_list->get('sortableFilter') ?? [],
+          ],
+          '#ajax_update' => [
+            'sortable-filters-wrapper' => ['sortable_filters_details', 'sortable_filter'],
+          ],
+        ],
+      ],
     ];
   }
 
@@ -201,7 +247,7 @@ class EntityListForm extends EntityForm {
         ],
         '#ajax_update' => $fieldset['#ajax_update'] ?? [],
       ];
-      if (count($plugin_options) < 2) {
+      if (count($plugin_options) < 2 || in_array($selected_plugin, self::HIDDEN_PLUGIN_SELECTION)) {
         $element['plugin']['#type'] = 'hidden';
       }
 
@@ -268,7 +314,31 @@ class EntityListForm extends EntityForm {
       '#default_tab' => 'edit-query-details',
     ];
 
+    $step = $this->entity->get('step');
     $tabs = $this->getFormTabs($entity_list);
+
+    if ($step !== 'finish') {
+      $step = $step ?? 0;
+
+      $form['step'] = [
+        '#type' => 'hidden',
+        '#value' => $step,
+      ];
+
+      if ($step == 0) {
+        unset($tabs['display_details']);
+        unset($tabs['query_details']);
+        unset($tabs['filters_details']);
+        unset($tabs['sortable_filters_details']);
+      }
+
+      if ($step == 1) {
+        unset($tabs['display_details']);
+        unset($tabs['filters_details']);
+        unset($tabs['sortable_filters_details']);
+      }
+    }
+
     foreach ($tabs as $key => $tab) {
       $form[$key] = $this->buildTab($tab, $entity_list, $form_state);
     }
@@ -292,7 +362,9 @@ class EntityListForm extends EntityForm {
     $element = $form_state->getTriggeringElement();
     $ajax_update = self::getAjaxUpdate($element, $form);
     foreach ($ajax_update as $id => $path) {
-      $response->addCommand(new ReplaceCommand("#$id", self::getFormElementFromPath($path, $form)));
+      if (!empty($form[$path[0]])) {
+        $response->addCommand(new ReplaceCommand("#$id", self::getFormElementFromPath($path, $form)));
+      }
     }
     $response->addCommand(new AppendCommand('#debug', ['#type' => 'status_messages']));
     return $response;
@@ -365,6 +437,11 @@ class EntityListForm extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $entity_list = $this->entity;
+
+    if (!empty($entity_list->sortable_filter)) {
+      $entity_list->sortableFilter = $this->entity->sortable_filter;
+    }
+
     $status = $entity_list->save();
 
     switch ($status) {
@@ -379,7 +456,20 @@ class EntityListForm extends EntityForm {
           '%label' => $entity_list->label(),
         ]));
     }
-    $form_state->setRedirectUrl($entity_list->toUrl('collection'));
+
+    $step = $form_state->getValue('step');
+
+    if ($step < 2 && !is_null($step) && $step !== 'finish') {
+      $step++;
+      $entity_list->setStep($step);
+      $entity_list->save();
+      $form_state->setRedirectUrl(Url::fromRoute('entity.entity_list.edit_form', ['entity_list' => $entity_list->id()]));
+    }
+    else {
+      $entity_list->setStep('finish');
+      $entity_list->save();
+      $form_state->setRedirectUrl($entity_list->toUrl('collection'));
+    }
   }
 
 }

@@ -8,6 +8,9 @@ entity_list.entity_list.*:
     label:
       type: label
       label: 'Label'
+    step:
+      type: string
+      label: 'Step'
     uuid:
       type: string
     query:

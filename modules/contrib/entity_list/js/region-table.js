@@ -9,7 +9,6 @@
 
     attach: function (context) {
       $(context).find('[data-region-table]').once('regionTable').each(function (index, element) {
-        // var tableDrag =
         var table = this.findTable(element);
         if (table) {
           var tableDrag = Drupal.tableDrag[table.attr('id')];

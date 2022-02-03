@@ -70,4 +70,22 @@ interface EntityListInterface extends ConfigEntityInterface {
    */
   public function getHost();
 
+  /**
+   * Get the step of creation of entity list.
+   *
+   * @return mixed
+   *   Return step.
+   */
+  public function getStep();
+
+  /**
+   * set the step of creation of entity list.
+   *
+   * @param $step
+   *   This is the step.
+   *
+   * @return mixed
+   *   Return step.
+   */
+  public function setStep($step);
 }

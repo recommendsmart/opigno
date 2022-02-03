@@ -31,6 +31,8 @@ use Drupal\Core\Entity\EntityInterface;
  *     "query",
  *     "display",
  *     "filter",
+ *     "sortableFilter",
+ *     "step",
  *   },
  *   config_prefix = "entity_list",
  *   admin_permission = "administer entity list",
@@ -64,13 +66,25 @@ class EntityList extends ConfigEntityBase implements EntityListInterface {
    */
   protected $label;
 
+  /**
+   * The host.
+   *
+   * @var \Drupal\Core\Entity\EntityInterface
+   */
   protected $host;
+
+  /**
+   * The step of creation.
+   *
+   * @var string|integer
+   */
+  protected $step;
 
   /**
    * {@inheritdoc}
    */
   public function getEntityListDisplayPluginId($default = '') {
-    return $this->get('display')['plugin'];
+    return $this->get('display')['plugin'] ?? $default;
   }
 
   /**
@@ -126,6 +140,20 @@ class EntityList extends ConfigEntityBase implements EntityListInterface {
    */
   public function getHost() {
     return $this->host;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setStep($step) {
+    $this->step = $step;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getStep() {
+    return $this->step;
   }
 
 }

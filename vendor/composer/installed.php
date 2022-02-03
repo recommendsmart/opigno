@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '8f0945f14c76e54e0e130e1fcaaf004623987919',
+        'reference' => '0634b1dd56b66e2db40ecd943561a1157d1a3ae0',
         'name' => 'goalgorilla/social_template',
         'dev' => true,
     ),
@@ -838,12 +838,12 @@
             'dev_requirement' => false,
         ),
         'drupal/entity_list' => array(
-            'pretty_version' => '1.7.0',
-            'version' => '1.7.0.0',
+            'pretty_version' => '2.0.0-alpha5',
+            'version' => '2.0.0.0-alpha5',
             'type' => 'drupal-module',
             'install_path' => __DIR__ . '/../../modules/contrib/entity_list',
             'aliases' => array(),
-            'reference' => '8.x-1.7',
+            'reference' => '8.x-2.0-alpha5',
             'dev_requirement' => false,
         ),
         'drupal/entity_reference' => array(
@@ -1185,6 +1185,33 @@
             'reference' => '8.x-1.1',
             'dev_requirement' => false,
         ),
+        'drupal/jquery_ui_button' => array(
+            'pretty_version' => '1.1.0',
+            'version' => '1.1.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/jquery_ui_button',
+            'aliases' => array(),
+            'reference' => '8.x-1.1',
+            'dev_requirement' => false,
+        ),
+        'drupal/jquery_ui_checkboxradio' => array(
+            'pretty_version' => '1.2.0',
+            'version' => '1.2.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/jquery_ui_checkboxradio',
+            'aliases' => array(),
+            'reference' => '8.x-1.2',
+            'dev_requirement' => false,
+        ),
+        'drupal/jquery_ui_controlgroup' => array(
+            'pretty_version' => '1.1.0',
+            'version' => '1.1.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/jquery_ui_controlgroup',
+            'aliases' => array(),
+            'reference' => '8.x-1.1',
+            'dev_requirement' => false,
+        ),
         'drupal/jquery_ui_datepicker' => array(
             'pretty_version' => '1.2.0',
             'version' => '1.2.0.0',
@@ -1217,6 +1244,15 @@
             'replaced' => array(
                 0 => '9.2.11',
             ),
+        ),
+        'drupal/keep_referenced_entities' => array(
+            'pretty_version' => '2.0.0',
+            'version' => '2.0.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/keep_referenced_entities',
+            'aliases' => array(),
+            'reference' => '2.0.0',
+            'dev_requirement' => false,
         ),
         'drupal/kpi_analytics' => array(
             'pretty_version' => '2.0.0-beta2',
@@ -1296,6 +1332,15 @@
                 0 => '9.2.11',
             ),
         ),
+        'drupal/menu_items_visibility' => array(
+            'pretty_version' => '1.1.0',
+            'version' => '1.1.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/menu_items_visibility',
+            'aliases' => array(),
+            'reference' => '1.1.0',
+            'dev_requirement' => false,
+        ),
         'drupal/menu_link_content' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -1333,6 +1378,17 @@
             'install_path' => __DIR__ . '/../../modules/contrib/metatag',
             'aliases' => array(),
             'reference' => '8.x-1.16',
+            'dev_requirement' => false,
+        ),
+        'drupal/micronode' => array(
+            'pretty_version' => 'dev-1.0.x',
+            'version' => 'dev-1.0.x',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/micronode',
+            'aliases' => array(
+                0 => '1.0.x-dev',
+            ),
+            'reference' => '09c5891f6498f975c43ef5d8031a49549e94fe69',
             'dev_requirement' => false,
         ),
         'drupal/migrate' => array(
@@ -1406,6 +1462,15 @@
             'replaced' => array(
                 0 => '9.2.11',
             ),
+        ),
+        'drupal/pagerer' => array(
+            'pretty_version' => '2.2.0',
+            'version' => '2.2.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/pagerer',
+            'aliases' => array(),
+            'reference' => '8.x-2.2',
+            'dev_requirement' => false,
         ),
         'drupal/paragraphs' => array(
             'pretty_version' => '1.12.0',
@@ -1983,7 +2048,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '8f0945f14c76e54e0e130e1fcaaf004623987919',
+            'reference' => '0634b1dd56b66e2db40ecd943561a1157d1a3ae0',
             'dev_requirement' => false,
         ),
         'guzzlehttp/guzzle' => array(

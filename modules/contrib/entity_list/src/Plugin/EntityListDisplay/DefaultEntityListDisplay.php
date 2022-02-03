@@ -36,10 +36,25 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class DefaultEntityListDisplay extends EntityListDisplayBase implements ContainerFactoryPluginInterface {
 
+  /**
+   * Entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
   protected $entityTypeManager;
 
+  /**
+   * Entity display repository.
+   *
+   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
+   */
   protected $entityDisplayRepository;
 
+  /**
+   * Layout plugin manager.
+   *
+   * @var \Drupal\Core\Layout\LayoutPluginManagerInterface
+   */
   protected $layoutPluginManager;
 
   /**
@@ -269,6 +284,7 @@ class DefaultEntityListDisplay extends EntityListDisplayBase implements Containe
       $row['#selected_layout'] = $selected_layout;
 
       $row['settings'] = $layout_item['settings'] ?? [];
+      $row['#attributes'] = !empty($layout_item['attributes']) ? array_merge($row['#attributes'], $layout_item['attributes']) : $row['#attributes'];
 
       $row['weight']['#attributes']['class'] = [
         $group_classes['weight'],
@@ -475,7 +491,7 @@ class DefaultEntityListDisplay extends EntityListDisplayBase implements Containe
    *   A layout plugin id or empty.
    */
   public function getLayout() {
-    return $this->settings['layout'] ?? 'default_entity_list_display';
+    return $this->settings['layout'] ?? 'filter_entity_list_display';
   }
 
   /**
@@ -523,13 +539,13 @@ class DefaultEntityListDisplay extends EntityListDisplayBase implements Containe
           break;
 
         case 'total':
-          if (!empty($entities) && $query_plugin->usePager() && !empty($item['settings']['singular']) && !empty($item['settings']['plural'])) {
+          if (!empty($entities) && $query_plugin->usePager()) {
             $pager_info = entity_list_get_pager_infos();
             $rendered_item = [
               '#plain_text' => $this->formatPlural(
                 $pager_info['total'] ?? 0,
-                $item['settings']['singular'],
-                $item['settings']['plural']
+                !empty($item['settings']['singular']) ? $item['settings']['singular'] : '1 item',
+                !empty($item['settings']['plural']) ? $item['settings']['plural'] : '@count items',
               ),
               '#prefix' => '<p class="total">',
               '#suffix' => '</p>',
@@ -551,13 +567,15 @@ class DefaultEntityListDisplay extends EntityListDisplayBase implements Containe
             $values = $this->getLayoutItems();
 
             foreach ($entities as $entity_key => $entity) {
-              $rendered_item[$entity_key]['#theme'] = 'entity_list_item';
-              $rendered_item[$entity_key]['#attributes'] = $attr;
-              $rendered_item[$entity_key]['#element'] = $view_builder->view($entity, $values['items']['settings']['view_mode'] ?? '');
-              $rendered_item[$entity_key]['#list_id'] = $this->entity->id();
+              $rendered_item[$entity_key] = [
+                '#theme' => 'entity_list_item',
+                '#attributes' => $attr,
+                '#element' => $view_builder->view($entity, $values['items']['settings']['view_mode'] ?? ''),
+                '#list_id' => $this->entity->id(),
+              ];
             }
           }
-          elseif (!empty($item['settings']['empty'])) {
+          else if (!empty($item['settings']['empty'])) {
             $rendered_item = [
               '#plain_text' => $item['settings']['empty'],
             ];

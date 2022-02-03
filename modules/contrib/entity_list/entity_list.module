@@ -61,6 +61,9 @@ function entity_list_theme($existing, $type, $theme, $path) {
         'list_id' => '',
       ],
     ],
+    'entity_list_sortable_filters' => [
+      'render element' => 'form',
+    ],
   ];
 }
 
@@ -147,4 +150,14 @@ function entity_list_get_pager_infos($element = 0) {
  */
 function entity_list_theme_suggestions_entity_list_item_alter(array &$suggestions, array $variables) {
   $suggestions[] = 'entity_list_item__' . $variables['list_id'];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function entity_list_theme_suggestions_form_alter(array &$suggestions, array $variables) {
+  if (!empty($variables['element']['#form_id']) && $variables['element']['#form_id'] === 'entity_list_filter_form') {
+    $suggestions[] = 'form__entity_list_filter_form';
+    $suggestions[] = 'form__entity_list_filter_form__' . $variables['element']['#attributes']['data-entity-list-id'];
+  }
 }
