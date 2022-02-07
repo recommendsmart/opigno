@@ -29,6 +29,10 @@ Only users with the `administer node singles` permission will be able to delete 
 An overview with all singles is available at `/admin/content/singles` for 
 all users with the `access node singles overview` permission. 
 
+## Limitations
+- The single overview menu link does not appear if the user does not have the _Access the Content overview page_ 
+  permission.
+
 ## Changelog
 All notable changes to this project will be documented in the
 [CHANGELOG](CHANGELOG.md) file.

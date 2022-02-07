@@ -51,11 +51,6 @@ function node_singles_entity_operation_alter(array &$operations, EntityInterface
  */
 function node_singles_menu_links_discovered_alter(array &$links)
 {
-    // Fix menu link not being visible if the user doesn't have the 'access content overview' permission
-    if (!\Drupal::currentUser()->hasPermission('access content overview')) {
-        $links['node_singles.content']['parent'] = 'system.admin';
-    }
-
     // Remove single node add menu links added by modules like admin_toolbar_tools.
     // The node access handler should deal with this, but it doesn't for user 1.
     $singles = \Drupal::getContainer()->get('node_singles')->getAllSingles();

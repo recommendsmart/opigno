@@ -71,7 +71,7 @@ class CartManager implements CartManagerInterface {
     $cart->setItems([]);
     $cart->setAdjustments([]);
 
-    $this->eventDispatcher->dispatch(CartEvents::CART_EMPTY, new CartEmptyEvent($cart, $order_items));
+    $this->eventDispatcher->dispatch(new CartEmptyEvent($cart, $order_items), CartEvents::CART_EMPTY);
     $this->resetCheckoutStep($cart);
     if ($save_cart) {
       $cart->save();
@@ -122,10 +122,10 @@ class CartManager implements CartManagerInterface {
 
     if ($purchased_entity) {
       $event = new CartEntityAddEvent($cart, $purchased_entity, $quantity, $saved_order_item);
-      $this->eventDispatcher->dispatch(CartEvents::CART_ENTITY_ADD, $event);
+      $this->eventDispatcher->dispatch($event, CartEvents::CART_ENTITY_ADD);
     }
     $event = new CartOrderItemAddEvent($cart, $quantity, $saved_order_item);
-    $this->eventDispatcher->dispatch(CartEvents::CART_ORDER_ITEM_ADD, $event);
+    $this->eventDispatcher->dispatch($event, CartEvents::CART_ORDER_ITEM_ADD);
 
     $this->resetCheckoutStep($cart);
     if ($save_cart) {
@@ -143,7 +143,7 @@ class CartManager implements CartManagerInterface {
     $original_order_item = $this->orderItemStorage->loadUnchanged($order_item->id());
     $order_item->save();
     $event = new CartOrderItemUpdateEvent($cart, $order_item, $original_order_item);
-    $this->eventDispatcher->dispatch(CartEvents::CART_ORDER_ITEM_UPDATE, $event);
+    $this->eventDispatcher->dispatch($event, CartEvents::CART_ORDER_ITEM_UPDATE);
     $this->resetCheckoutStep($cart);
     if ($save_cart) {
       $cart->save();
@@ -156,7 +156,7 @@ class CartManager implements CartManagerInterface {
   public function removeOrderItem(OrderInterface $cart, OrderItemInterface $order_item, $save_cart = TRUE) {
     $order_item->delete();
     $cart->removeItem($order_item);
-    $this->eventDispatcher->dispatch(CartEvents::CART_ORDER_ITEM_REMOVE, new CartOrderItemRemoveEvent($cart, $order_item));
+    $this->eventDispatcher->dispatch(new CartOrderItemRemoveEvent($cart, $order_item), CartEvents::CART_ORDER_ITEM_REMOVE);
 
     // If this results in an empty cart call the emptyCart method for
     // consistency.

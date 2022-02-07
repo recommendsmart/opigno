@@ -2,7 +2,7 @@ name: Commerce Product
 type: module
 description: 'Defines the Product entity and associated features.'
 package: Commerce
-core_version_requirement: ^8.9 || ^9
+core_version_requirement: ^9.2 || ^10
 configure: commerce_product.configuration
 dependencies:
   - commerce:commerce
@@ -11,7 +11,7 @@ dependencies:
   - drupal:path
   - drupal:text
 
-# Information added by Drupal.org packaging script on 2021-11-11
-version: '8.x-2.28'
+# Information added by Drupal.org packaging script on 2022-02-03
+version: '8.x-2.29'
 project: 'commerce'
-datestamp: 1636648412
+datestamp: 1643900269

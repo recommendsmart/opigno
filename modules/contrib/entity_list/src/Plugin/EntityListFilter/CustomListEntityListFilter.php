@@ -107,7 +107,7 @@ class CustomListEntityListFilter extends TaxonomiesEntityListFilter {
         $element = explode("|", $value);
 
         if (!empty($element)) {
-          $options[$element[0]] = $element[1];
+          $options[$element[0]] = $this->t($element[1]);
         }
       }
     }

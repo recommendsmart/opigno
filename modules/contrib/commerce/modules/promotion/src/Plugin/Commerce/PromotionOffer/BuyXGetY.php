@@ -576,6 +576,9 @@ class BuyXGetY extends OrderPromotionOfferBase {
   protected function findOrCreateOrderItem(PurchasableEntityInterface $get_purchasable_entity, array $order_items) {
     foreach ($order_items as $order_item) {
       $purchased_entity = $order_item->getPurchasedEntity();
+      if (!$purchased_entity) {
+        continue;
+      }
       if ($purchased_entity->getEntityTypeId() == $get_purchasable_entity->getEntityTypeId()
           && $purchased_entity->id() == $get_purchasable_entity->id()) {
         return $order_item;
