@@ -1,0 +1,7 @@
+field_suggestion.settings:
+  path: '/admin/config/content/field-suggestion'
+  defaults:
+    _form: '\Drupal\field_suggestion\Form\FieldSuggestionSettingsForm'
+    _title: 'Field suggestion'
+  requirements:
+    _permission: 'administer field suggestion'

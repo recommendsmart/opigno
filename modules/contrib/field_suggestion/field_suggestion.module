@@ -1,0 +1,94 @@
+<?php
+
+/**
+ * @file
+ * Provides a list of often-used field values for just copy-pasting it.
+ */
+
+use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function field_suggestion_help($route_name, RouteMatchInterface $route_match) {
+  $output = '';
+
+  if ($route_name === 'help.page.field_suggestion') {
+    $output .= '<h3>' . t('About') . '</h3>';
+    $output .= '<p>' . t('Provides a list of often-used field values for just copy-pasting it.') . '</p>';
+  }
+
+  return $output;
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function field_suggestion_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
+  /** @var \Drupal\Core\Field\FieldItemListInterface $items */
+  $items = $context['items'];
+
+  $config = \Drupal::config('field_suggestion.settings');
+  $fields = (array) $config->get('fields');
+  $entity = $items->getEntity();
+
+  if (!isset($fields[$entity_type_id = $entity->getEntityTypeId()])) {
+    return;
+  }
+
+  $field_name = $items->getName();
+
+  if (!in_array($field_name, $fields[$entity_type_id])) {
+    return;
+  }
+
+  $values = \Drupal::entityQueryAggregate($entity_type_id)
+    ->addTag('field_suggestion')
+    ->addMetaData('field_name', $field_name)
+    ->addMetaData('entity', $entity)
+    ->sortAggregate($field_name, 'COUNT', 'DESC')
+    ->groupBy($field_name)
+    ->range(0, $config->get('limit'))
+    ->execute();
+
+  if (count($values) > 0) {
+    $element['suggestion'] = [
+      '#type' => 'radios',
+      '#title' => t('Suggestions'),
+      '#options' => array_map(function (array $item) use ($field_name) {
+        return $item[$field_name];
+      }, $values),
+      '#ajax' => [
+        'wrapper' => 'edit-' . $field_name . '-wrapper',
+        'callback' => '_field_suggestion_ajax_callback',
+      ],
+    ];
+
+    $input = $form_state->getUserInput();
+    $parents = [$field_name, $context['delta'], 'suggestion'];
+
+    if (NestedArray::keyExists($input, $parents)) {
+      $delta = NestedArray::getValue($input, $parents);
+      $element['value']['#value'] = $element['suggestion']['#options'][$delta];
+    }
+  }
+}
+
+/**
+ * AJAX callback.
+ *
+ * @param array $form
+ *   The form structure.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ *
+ * @return array
+ *   The field structure.
+ */
+function _field_suggestion_ajax_callback($form, $form_state) {
+  $field = $form[$form_state->getTriggeringElement()['#parents'][0]];
+  $field['#id'] = $field['#attributes']['data-drupal-selector'];
+  return $field;
+}

@@ -1,0 +1,12 @@
+name: 'Field Suggestion'
+type: module
+description: 'Provides a list of often-used field values for just copy-pasting it.'
+core_version_requirement: ^8 || ^9
+configure: field_suggestion.settings
+dependencies:
+  - drupal:field
+
+# Information added by Drupal.org packaging script on 2022-01-16
+version: '1.0.0-alpha1'
+project: 'field_suggestion'
+datestamp: 1642348508

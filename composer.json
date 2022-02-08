@@ -48,7 +48,8 @@
         "drupal/micronode": "1.0.x-dev",
         "drupal/keep_referenced_entities": "^2.0",
         "drupal/pagerer": "^2.2",
-        "drupal/browser_back_button": "^1.1"
+        "drupal/browser_back_button": "^1.1",
+        "drupal/field_suggestion": "^1.0"
     },
     "repositories": [
         {
