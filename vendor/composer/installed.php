@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'e0a7b7d2a6243eaa97932b709261a62ada7618f1',
+        'reference' => 'f6ac0c297494cb39c1a33b0a3cdbecfd1765592e',
         'name' => 'goalgorilla/social_template',
         'dev' => true,
     ),
@@ -846,6 +846,15 @@
             'reference' => '8.x-1.3',
             'dev_requirement' => false,
         ),
+        'drupal/entity_inherit' => array(
+            'pretty_version' => '2.0.0-beta1',
+            'version' => '2.0.0.0-beta1',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/entity_inherit',
+            'aliases' => array(),
+            'reference' => '2.0.0-beta1',
+            'dev_requirement' => false,
+        ),
         'drupal/entity_list' => array(
             'pretty_version' => '2.0.0-alpha6',
             'version' => '2.0.0.0-alpha6',
@@ -871,12 +880,12 @@
             'dev_requirement' => false,
         ),
         'drupal/entity_version' => array(
-            'pretty_version' => '1.0.0-beta7',
-            'version' => '1.0.0.0-beta7',
+            'pretty_version' => '1.0.0-beta8',
+            'version' => '1.0.0.0-beta8',
             'type' => 'drupal-module',
             'install_path' => __DIR__ . '/../../modules/contrib/entity_version',
             'aliases' => array(),
-            'reference' => '8.x-1.0-beta7',
+            'reference' => '8.x-1.0-beta8',
             'dev_requirement' => false,
         ),
         'drupal/exif_orientation' => array(
@@ -1685,7 +1694,7 @@
         'drupal/social' => array(
             'dev_requirement' => false,
             'replaced' => array(
-                0 => '11.0.0',
+                0 => '11.0.1',
             ),
         ),
         'drupal/social_course' => array(
@@ -2052,12 +2061,12 @@
             'dev_requirement' => false,
         ),
         'goalgorilla/open_social' => array(
-            'pretty_version' => '11.0.0',
-            'version' => '11.0.0.0',
+            'pretty_version' => '11.0.1',
+            'version' => '11.0.1.0',
             'type' => 'drupal-profile',
             'install_path' => __DIR__ . '/../../profiles/contrib/social',
             'aliases' => array(),
-            'reference' => '360fa97686050e724624f69c02a48092d4297139',
+            'reference' => 'debe46dc15a383c9c751d3e34554e7af355e6f4b',
             'dev_requirement' => false,
         ),
         'goalgorilla/social_template' => array(
@@ -2066,7 +2075,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'e0a7b7d2a6243eaa97932b709261a62ada7618f1',
+            'reference' => 'f6ac0c297494cb39c1a33b0a3cdbecfd1765592e',
             'dev_requirement' => false,
         ),
         'guzzlehttp/guzzle' => array(
