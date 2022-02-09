@@ -77,7 +77,7 @@ class ManualSelection extends ExposedFormPluginBase implements ContainerFactoryP
       '#default_value' => $this->options['filter_always_visible'],
     ];
 
-    /* @var \Drupal\views\Plugin\views\HandlerBase $filter */
+    /** @var \Drupal\views\Plugin\views\HandlerBase $filter **/
     foreach ($filters as $label => $filter) {
       if ($filter->isExposed() && $filter->realField !== 'column_selector') {
         $form['filter_always_visible']['#options'][$label] = $filter->options["expose"]["label"];
@@ -126,34 +126,80 @@ class ManualSelection extends ExposedFormPluginBase implements ContainerFactoryP
    * @return array
    *   The form array.
    */
-  public static function sortCheckboxes(array $form, array $filter_always_visible = []) {
+  public static function sortCheckboxes(array $form, array $filter_always_visible = []): array {
     $checkboxes = array_filter(array_keys($form), function ($element) {
       return strpos($element, '_check_deactivate');
     });
 
+    $highest_weight = 0;
+
     foreach ($checkboxes as $checkbox) {
       $filter_name = str_replace('_check_deactivate', '', $checkbox);
 
-      if (isset($form['#info']['filter-' . $filter_name]['operator']) &&$form['#info']['filter-' . $filter_name]['operator'] !== "" && isset($form[$form['#info']['filter-' . $filter_name]['operator']])) {
+      if (isset($form['#info']['filter-' . $filter_name]['operator']) && $form['#info']['filter-' . $filter_name]['operator'] !== "" && isset($form[$form['#info']['filter-' . $filter_name]['operator']])) {
+        $form[$form['#info']['filter-' . $filter_name]['operator']]['#weight'] = $form[$filter_name]['#weight'] - 0.0001;
         $weight = $form[$form['#info']['filter-' . $filter_name]['operator']]['#weight'];
       }
       else {
         $weight = $form[$filter_name]['#weight'];
+
+        if ($form[$filter_name]['#weight'] > $highest_weight) {
+          $highest_weight = $form[$filter_name]['#weight'];
+        }
       }
 
       $form[$checkbox]['#weight'] = floatval($weight) - 0.001;
     }
 
-    // Sort always visible filters.
-    foreach (array_keys(array_filter($filter_always_visible)) as $filter) {
-      $form[$filter]['#weight'] = $form[$filter]['#weight'] - 100;
+    if (isset($form["flexible_tables_fieldset"])) {
+      $form["flexible_tables_fieldset"]['#weight'] = $highest_weight + 1;
+    }
+    if (isset($form["selected_filters"])) {
+      $form["selected_filters"]['#weight'] = $highest_weight + 1.1;
+    }
 
-      if ($form['#info']['filter-' . $filter]['operator'] !== "" && isset($form[$form['#info']['filter-' . $filter]['operator']])) {
-        $form[$form['#info']['filter-' . $filter]['operator']]['#weight'] = $form[$form['#info']['filter-' . $filter]['operator']]['#weight'] - 100;
+    // Sort always_visible filters.
+    foreach (array_keys(array_filter($filter_always_visible)) as $filter) {
+      $form[$filter]['#weight'] = ($form[$filter]['#weight'] ?? 0) - 100;
+
+      if (($form['#info']['filter-' . $filter]['operator'] ?? FALSE) && $form['#info']['filter-' . $filter]['operator'] !== "" && isset($form[$form['#info']['filter-' . $filter]['operator']])) {
+        if ($form[$form['#info']['filter-' . $filter]['operator']]['#weight'] >= $form[$filter]['#weight']) {
+          $form[$form['#info']['filter-' . $filter]['operator']]['#weight'] = $form[$filter]['#weight'] - 0.001;
+        }
+        else {
+          $form[$form['#info']['filter-' . $filter]['operator']]['#weight'] = $form[$form['#info']['filter-' . $filter]['operator']]['#weight'] - 100;
+        }
       }
     }
 
     return $form;
+  }
+
+  /**
+   * Remove fieldsets around filters with operators.
+   *
+   * @param array $form
+   *   The exposed form.
+   * @param array $filters
+   *   The current filters.
+   */
+  public static function removeWrapperFieldSets(array &$form, array $filters) {
+    foreach ($filters as $filter) {
+      $filter = str_replace('filter-', '', $filter);
+
+      if (isset($form[$filter . '_wrapper'])) {
+        // Copy filter.
+        $form[$filter] = $form[$filter . '_wrapper'][$filter];
+
+        // Copy operator.
+        if (isset($form[$filter . '_wrapper'][$filter . '_op'])) {
+          $form[$filter . '_op'] = $form[$filter . '_wrapper'][$filter . '_op'];
+        }
+
+        // Remove fieldset.
+        unset($form[$filter . '_wrapper']);
+      }
+    }
   }
 
   /**
@@ -163,10 +209,9 @@ class ManualSelection extends ExposedFormPluginBase implements ContainerFactoryP
     $form = parent::renderExposedForm($block);
 
     // Set the correct weight for the deactivate_checkboxes.
-    $filter_always_visible = isset($this->options['filter_always_visible']) ? $this->options['filter_always_visible'] : [];
-    $form = self::sortCheckboxes($form, $filter_always_visible);
+    $filter_always_visible = $this->options['filter_always_visible'] ?? [];
 
-    return $form;
+    return self::sortCheckboxes($form, $filter_always_visible);
   }
 
   /**
@@ -179,7 +224,7 @@ class ManualSelection extends ExposedFormPluginBase implements ContainerFactoryP
     $form['#attributes']['class'][] = 'manual-selection-form';
 
     $filters = array_keys($form['#info']);
-    // TODO: Dependency injection.
+    // @todo Dependency injection.
     $query = TableSort::getQueryParameters(\Drupal::request());
     $filter_always_visible = isset($this->options['filter_always_visible']) ? array_filter($this->options['filter_always_visible']) : [];
     $manual_select_filter_options = [];
@@ -208,7 +253,7 @@ class ManualSelection extends ExposedFormPluginBase implements ContainerFactoryP
         '#type' => 'details',
         '#open' => FALSE,
         '#title' => $this->options['details_label'],
-        '#weight' => -80,
+        '#weight' => -180,
         '#attributes' => [
           'style' => 'float: none;clear: both;',
           'class' => ['flexible-views-manual-selection-details'],
@@ -216,11 +261,20 @@ class ManualSelection extends ExposedFormPluginBase implements ContainerFactoryP
       ];
     }
 
+    self::removeWrapperFieldSets($form, $filters);
+
     // Deactivate the filters on default.
     foreach ($filters as $filter) {
       $filter_name = str_replace('filter-', '', $filter);
 
       if (!in_array($filter_name, $filter_always_visible, TRUE)) {
+        // Fix for "mismatching in filter naming" - eg. the "combine field
+        // filter username or mail" is named user but the $filter_name is
+        // filter-combine.
+        if (!isset($form[$filter_name]) && isset($form[$form['#info'][$filter]['value']])) {
+          $filter_name = $form['#info'][$filter]['value'];
+        }
+
         // Wrap each pair of filters with html div.
         $form[$filter_name]['#suffix'] = '</div>';
         $form[$filter_name]['#chosen'] = FALSE;
@@ -254,10 +308,16 @@ class ManualSelection extends ExposedFormPluginBase implements ContainerFactoryP
           $form[$filter_name]['value']['#states']['enabled'][] = [
             ":input[name='{$filter_name}_check_deactivate']" => ['checked' => TRUE],
           ];
+          $form[$filter_name]['value']['#states']['invisible'][] = [
+            ":input[name='{$filter_name}_check_deactivate']" => ['checked' => FALSE],
+          ];
         }
         else {
           $form[$filter_name]['#states']['enabled'][] = [
             ":input[name='{$filter_name}_check_deactivate']" => ['checked' => TRUE],
+          ];
+          $form[$filter_name]['#states']['invisible'][] = [
+            ":input[name='{$filter_name}_check_deactivate']" => ['checked' => FALSE],
           ];
         }
 
@@ -281,7 +341,7 @@ class ManualSelection extends ExposedFormPluginBase implements ContainerFactoryP
           $form['manual_selection_filter_details'][$filter_name . '_check_deactivate'] = $form[$filter_name . '_check_deactivate'];
           unset($form[$filter_name . '_check_deactivate']);
 
-          if ($form['#info'][$filter]['operator'] !== "" && isset($form[$form['#info'][$filter]['operator']])) {
+          if (($form['#info'][$filter]['operator'] ?? FALSE) && $form['#info'][$filter]['operator'] !== "" && isset($form[$form['#info'][$filter]['operator']])) {
             $form['manual_selection_filter_details'][$form['#info'][$filter]['operator']] = $form[$form['#info'][$filter]['operator']];
             unset($form[$form['#info'][$filter]['operator']]);
           }
@@ -293,13 +353,24 @@ class ManualSelection extends ExposedFormPluginBase implements ContainerFactoryP
       else {
         // Wrap the always visible filters with a wrap.
         if ($form['#info'][$filter]['operator'] !== "" && isset($form[$form['#info'][$filter]['operator']])) {
+          // The filter has an operator.
           $form[$form['#info'][$filter]['operator']]['#title_display'] = 'invisible';
           $form[$form['#info'][$filter]['operator']]['#prefix'] = "<div class='filter-wrap always-visible'><span class='label'>{$form['#info'][$filter]['label']}</span>";
           // Disable chosen.
           $form[$form['#info'][$filter]['operator']]['#chosen'] = FALSE;
         }
-        else {
+        elseif (isset($form[$filter_name])) {
           $form[$filter_name]['#prefix'] = "<div class='filter-wrap always-visible'><span class='label'>{$form['#info'][$filter]['label']}</span>";
+        }
+        else {
+          $form[$form['#info'][$filter]['value']]['#prefix'] = "<div class='filter-wrap always-visible'><span class='label'>{$form['#info'][$filter]['label']}</span>";
+        }
+
+        // Fix for "mismatching in filter naming" - eg. the "combine field
+        // filter username or mail" is named user but the $filter_name is
+        // filter-combine.
+        if (!isset($form[$filter_name]) && isset($form[$form['#info'][$filter]['value']])) {
+          $filter_name = $form['#info'][$filter]['value'];
         }
 
         // Label handling.
@@ -322,7 +393,7 @@ class ManualSelection extends ExposedFormPluginBase implements ContainerFactoryP
       '#empty_value' => '',
       '#empty_option' => $this->t('- Select a filter -'),
       '#default_value' => '',
-      '#weight' => -99,
+      '#weight' => -10,
       '#chosen' => FALSE,
     ];
 

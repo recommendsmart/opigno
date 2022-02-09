@@ -193,6 +193,14 @@ class Comment extends ContentEntityBase implements CommentInterface {
     $comments = $comment_storage->loadMultiple($child_cids);
     $comment_storage->delete($comments);
 
+    // Always invalidate the cache tag for the commented entity.
+    /** @var \Drupal\comment\CommentInterface $entity */
+    foreach ($entities as $entity) {
+      if ($commented_entity = $entity->getCommentedEntity()) {
+        Cache::invalidateTags($commented_entity->getCacheTagsToInvalidate());
+      }
+    }
+
     foreach ($entities as $id => $entity) {
       \Drupal::service('comment.statistics')->update($entity);
     }

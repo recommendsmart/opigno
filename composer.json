@@ -50,7 +50,8 @@
         "drupal/pagerer": "^2.2",
         "drupal/browser_back_button": "^1.1",
         "drupal/field_suggestion": "^1.0",
-        "drupal/entity_inherit": "^2.0@beta"
+        "drupal/entity_inherit": "^2.0@beta",
+        "drupal/config_views": "^2.0@RC"
     },
     "repositories": [
         {
