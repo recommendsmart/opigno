@@ -8,7 +8,6 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -30,6 +29,16 @@ class FieldSuggestionSettingsForm extends ConfigFormBase {
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
   protected $entityFieldManager;
+
+  /**
+   * The field names duplication resolver.
+   *
+   * Shows which entity type fields have an extra character in the name to not
+   * duplicate the name of other fields.
+   *
+   * @var bool[]
+   */
+  protected $hasSuffix = [];
 
   /**
    * FieldSuggestionSettingsForm constructor.
@@ -96,6 +105,13 @@ class FieldSuggestionSettingsForm extends ConfigFormBase {
       '#min' => 1,
     ];
 
+    $form['own'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Filter by owner'),
+      '#description' => $this->t('Looking for suggestions only in entities of the current user.'),
+      '#default_value' => $config->get('own'),
+    ];
+
     $form['entity_types'] = [
       '#type' => 'vertical_tabs',
       '#title' => $this->t('Entity types'),
@@ -127,7 +143,9 @@ class FieldSuggestionSettingsForm extends ConfigFormBase {
         continue;
       }
 
-      $form[$entity_type_id] = [
+      $this->hasSuffix[$entity_type_id] = isset($form[$entity_type_id]);
+
+      $form[$entity_type_id . ($this->hasSuffix[$entity_type_id] ? '_' : '')] = [
         '#type' => 'details',
         '#title' => $entity_type->getLabel(),
         '#group' => 'entity_types',
@@ -150,23 +168,20 @@ class FieldSuggestionSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $all_fields = [];
 
-    foreach (Element::children($form) as $entity_type_id) {
-      if (
-        is_array($form[$entity_type_id]) &&
-        isset($form[$entity_type_id]['#group'])
-      ) {
-        $fields = array_filter(
-          array_values($form_state->getValue($entity_type_id)['fields'])
-        );
+    foreach ($this->hasSuffix as $entity_type_id => $has_suffix) {
+      $fields = array_filter(array_values($form_state->getValue([
+        $entity_type_id . ($has_suffix ? '_' : ''),
+        'fields',
+      ])));
 
-        if (count($fields) > 0) {
-          $all_fields[$entity_type_id] = $fields;
-        }
+      if (count($fields) > 0) {
+        $all_fields[$entity_type_id] = $fields;
       }
     }
 
     $this->config($this->getEditableConfigNames()[0])
       ->set('limit', $form_state->getValue('limit'))
+      ->set('own', $form_state->getValue('own'))
       ->set('fields', $all_fields)
       ->save();
 

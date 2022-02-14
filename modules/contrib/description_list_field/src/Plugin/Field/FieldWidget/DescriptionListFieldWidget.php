@@ -38,7 +38,7 @@ class DescriptionListFieldWidget extends WidgetBase {
       '#base_type' => 'textarea',
       '#title' => $this->t('Description'),
       '#default_value' => $items[$delta]->description ?? NULL,
-      '#format' => isset($items[$delta]->format) ? $items[$delta]->format : filter_fallback_format(),
+      '#format' => $items[$delta]->format ?? filter_fallback_format(),
       '#rows' => 5,
       '#required' => $element['#required'],
     ];

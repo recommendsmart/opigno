@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the field_suggestion module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function field_suggestion_uninstall($is_syncing) {
+  \Drupal::state()->delete('field_suggestion');
+}

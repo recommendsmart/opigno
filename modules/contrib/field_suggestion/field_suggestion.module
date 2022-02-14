@@ -6,8 +6,12 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+use Drupal\field_suggestion\Element\FieldSuggestionOperations;
+use Drupal\user\EntityOwnerInterface;
 
 /**
  * Implements hook_help().
@@ -44,36 +48,140 @@ function field_suggestion_field_widget_form_alter(&$element, FormStateInterface 
     return;
   }
 
-  $values = \Drupal::entityQueryAggregate($entity_type_id)
+  $query = \Drupal::entityQueryAggregate($entity_type_id)
     ->addTag('field_suggestion')
     ->addMetaData('field_name', $field_name)
-    ->addMetaData('entity', $entity)
+    ->addMetaData('entity', $entity);
+
+  if ($config->get('own')) {
+    $entity_type = $entity->getEntityType();
+
+    if (
+      is_subclass_of($entity_type->getClass(), EntityOwnerInterface::class) &&
+      $entity_type->hasKey('owner')
+    ) {
+      $query->condition($entity_type->getKey('owner'), \Drupal::currentUser()->id());
+    }
+  }
+
+  /** @var \Drupal\field_suggestion\Service\FieldSuggestionHelperInterface $helper */
+  $helper = \Drupal::service('field_suggestion.helper');
+
+  $ignored = $helper->ignored($entity_type_id, $field_name);
+
+  if (!empty($ignored)) {
+    $query->condition($field_name, $ignored, 'NOT IN');
+  }
+
+  $values = $query
     ->sortAggregate($field_name, 'COUNT', 'DESC')
     ->groupBy($field_name)
     ->range(0, $config->get('limit'))
     ->execute();
 
-  if (count($values) > 0) {
-    $element['suggestion'] = [
-      '#type' => 'radios',
-      '#title' => t('Suggestions'),
-      '#options' => array_map(function (array $item) use ($field_name) {
-        return $item[$field_name];
-      }, $values),
-      '#ajax' => [
-        'wrapper' => 'edit-' . $field_name . '-wrapper',
-        'callback' => '_field_suggestion_ajax_callback',
-      ],
-    ];
+  if (count($values) === 0) {
+    return;
+  }
 
-    $input = $form_state->getUserInput();
-    $parents = [$field_name, $context['delta'], 'suggestion'];
+  $element['suggestion'] = [
+    '#type' => 'radios',
+    '#title' => t('Suggestions'),
+    '#ajax' => [
+      'wrapper' => 'edit-' . $field_name . '-wrapper',
+      'callback' => '_field_suggestion_ajax_callback',
+    ],
+  ];
 
-    if (NestedArray::keyExists($input, $parents)) {
-      $delta = NestedArray::getValue($input, $parents);
-      $element['value']['#value'] = $element['suggestion']['#options'][$delta];
+  $values = array_column($values, $field_name);
+  $pinned = \Drupal::state()->get('field_suggestion', []);
+
+  if (!empty($pinned[$entity_type_id][$field_name])) {
+    $values = array_merge($pinned[$entity_type_id][$field_name], $values);
+  }
+
+  $storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
+  $view_builder = \Drupal::entityTypeManager()->getViewBuilder($entity_type_id);
+  $renderer = \Drupal::service('renderer');
+
+  foreach ($values as $delta => $value) {
+    $element['suggestion']['#attributes']['data-suggestion-' . $delta] = $value;
+
+    $ids = \Drupal::entityQuery($entity_type_id)
+      ->condition($field_name, $value)
+      ->range(0, 1)
+      ->execute();
+
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    $entity = $storage->load(reset($ids));
+
+    $sub_element = $view_builder->viewFieldItem($entity->$field_name->first());
+
+    $element['suggestion']['#options'][] = $renderer->render($sub_element);
+  }
+
+  $input = $form_state->getUserInput();
+  $parents = [$field_name, $context['delta'], 'suggestion'];
+
+  if (NestedArray::keyExists($input, $parents)) {
+    $delta = NestedArray::getValue($input, $parents);
+    $element['value']['#value'] = $element['suggestion']['#attributes']['data-suggestion-' . $delta];
+  }
+}
+
+/**
+ * Implements hook_entity_operation().
+ */
+function field_suggestion_entity_operation(EntityInterface $entity) {
+  $operations = [];
+  $fields = (array) \Drupal::config('field_suggestion.settings')->get('fields');
+
+  if (!empty($fields[$entity_type_id = $entity->getEntityTypeId()])) {
+    $items = \Drupal::state()->get('field_suggestion', []);
+    $options = ['query' => \Drupal::destination()->getAsArray()];
+    $actions = [TRUE => t('Unpin'), FALSE => t('Pin')];
+
+    foreach ($fields[$entity_type_id] as $field) {
+      $url = Url::fromRoute(
+        'field_suggestion.pin',
+        [
+          'entity_type_id' => str_replace('_', '-', $entity_type_id),
+          'entity_id' => $entity->id(),
+          'field_name' => $field,
+        ],
+        $options
+      );
+
+      if ($url->access()) {
+        $unpin = !empty($items[$entity_type_id][$field]) &&
+          in_array($entity->$field->value, $items[$entity_type_id][$field]);
+
+        $operations['field_suggestion_' . $field] = [
+          'title' => t('@action %field', [
+            '@action' => $actions[$unpin],
+            '%field' => $field,
+          ]),
+          'url' => $url,
+          'weight' => 100,
+        ];
+      }
+    }
+
+    if (count($operations) === 1) {
+      $operations['field_suggestion_' . $field]['title'] = $actions[$unpin];
     }
   }
+
+  return $operations;
+}
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function field_suggestion_element_info_alter(array &$info) {
+  $info['operations']['#pre_render'][] = [
+    FieldSuggestionOperations::class,
+    'preRender',
+  ];
 }
 
 /**

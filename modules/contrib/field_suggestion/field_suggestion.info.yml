@@ -5,8 +5,9 @@ core_version_requirement: ^8 || ^9
 configure: field_suggestion.settings
 dependencies:
   - drupal:field
+  - drupal:user
 
-# Information added by Drupal.org packaging script on 2022-01-16
-version: '1.0.0-alpha1'
+# Information added by Drupal.org packaging script on 2022-02-13
+version: '1.0.0-alpha2'
 project: 'field_suggestion'
-datestamp: 1642348508
+datestamp: 1644780459

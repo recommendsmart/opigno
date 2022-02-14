@@ -5,3 +5,13 @@ field_suggestion.settings:
     _title: 'Field suggestion'
   requirements:
     _permission: 'administer field suggestion'
+
+field_suggestion.pin:
+  path: '/field-suggestion/{entity_type_id}/{entity_id}/{field_name}'
+  defaults:
+    _controller: '\Drupal\field_suggestion\Controller\FieldSuggestionController::pin'
+    _title: Pin
+  requirements:
+    _permission: 'administer field suggestion+pin and unpin field suggestion'
+    _custom_access: '\Drupal\field_suggestion\Controller\FieldSuggestionController::access'
+    entity_id: \d+

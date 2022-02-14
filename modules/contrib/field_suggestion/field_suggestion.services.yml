@@ -1,0 +1,4 @@
+services:
+  field_suggestion.helper:
+    class: Drupal\field_suggestion\Service\FieldSuggestionHelper
+    arguments: ['@module_handler']

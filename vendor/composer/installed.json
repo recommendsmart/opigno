@@ -2217,6 +2217,60 @@
             "install-path": null
         },
         {
+            "name": "drupal/commerce_payment",
+            "version": "2.29.0",
+            "version_normalized": "2.29.0.0",
+            "require": {
+                "drupal/commerce": "*",
+                "drupal/commerce_order": "*",
+                "drupal/core": "^9.2 || ^10",
+                "drupal/entity_reference_revisions": "*"
+            },
+            "type": "metapackage",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-2.29",
+                    "datestamp": "1643900314",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Centarro",
+                    "homepage": "https://www.drupal.org/user/3661446"
+                },
+                {
+                    "name": "bojanz",
+                    "homepage": "https://www.drupal.org/user/86106"
+                },
+                {
+                    "name": "jsacksick",
+                    "homepage": "https://www.drupal.org/user/972218"
+                },
+                {
+                    "name": "mglaman",
+                    "homepage": "https://www.drupal.org/user/2416470"
+                },
+                {
+                    "name": "rszrama",
+                    "homepage": "https://www.drupal.org/user/49344"
+                }
+            ],
+            "description": "Provides payment functionality.",
+            "homepage": "https://www.drupal.org/project/commerce",
+            "support": {
+                "source": "https://git.drupalcode.org/project/commerce"
+            },
+            "install-path": null
+        },
+        {
             "name": "drupal/commerce_price",
             "version": "2.29.0",
             "version_normalized": "2.29.0.0",
@@ -2524,6 +2578,61 @@
             "install-path": null
         },
         {
+            "name": "drupal/commerce_transaction",
+            "version": "1.0.0-beta1",
+            "version_normalized": "1.0.0.0-beta1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/commerce_transaction.git",
+                "reference": "1.0.0-beta1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/commerce_transaction-1.0.0-beta1.zip",
+                "reference": "1.0.0-beta1",
+                "shasum": "c994de40a772b3d38047544f8335dc6eac39bc12"
+            },
+            "require": {
+                "drupal/commerce": "^2.17",
+                "drupal/commerce_payment": "*",
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0-beta1",
+                    "datestamp": "1644790968",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "krystalcode",
+                    "homepage": "https://www.drupal.org/u/krystalcode",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Provides functionality for tracking transactions related to payments on Drupal Commerce.",
+            "homepage": "https://www.drupal.org/project/commerce_transaction",
+            "keywords": [
+                "Drupal",
+                "commerce"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/commerce_transaction",
+                "issues": "https://www.drupal.org/project/issues/commerce_transaction"
+            },
+            "install-path": "../../modules/contrib/commerce_transaction"
+        },
+        {
             "name": "drupal/config_update",
             "version": "1.7.0",
             "version_normalized": "1.7.0.0",
@@ -2579,18 +2688,18 @@
         },
         {
             "name": "drupal/config_views",
-            "version": "2.0.0-rc1",
-            "version_normalized": "2.0.0.0-RC1",
+            "version": "2.0.0-rc2",
+            "version_normalized": "2.0.0.0-RC2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/config_views.git",
-                "reference": "2.0.0-rc1"
+                "reference": "2.0.0-rc2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/config_views-2.0.0-rc1.zip",
-                "reference": "2.0.0-rc1",
-                "shasum": "8b1a6e1eb51cded25bfd4da605b97538d3b0efc2"
+                "url": "https://ftp.drupal.org/files/projects/config_views-2.0.0-rc2.zip",
+                "reference": "2.0.0-rc2",
+                "shasum": "dce6c668861c5bde68ecaaf925e260f57342c94d"
             },
             "require": {
                 "drupal/core": "^8 || ^9"
@@ -2598,8 +2707,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.0.0-rc1",
-                    "datestamp": "1644016396",
+                    "version": "2.0.0-rc2",
+                    "datestamp": "1644834326",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "RC releases are not covered by Drupal security advisories."
@@ -3471,45 +3580,46 @@
         },
         {
             "name": "drupal/description_list_field",
-            "version": "1.0.0-alpha2",
-            "version_normalized": "1.0.0.0-alpha2",
+            "version": "1.0.0-alpha3",
+            "version_normalized": "1.0.0.0-alpha3",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/description_list_field.git",
-                "reference": "1.0.0-alpha2"
+                "reference": "1.0.0-alpha3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/description_list_field-1.0.0-alpha2.zip",
-                "reference": "1.0.0-alpha2",
-                "shasum": "bce1e08a43a1097eb00f9546a1ffe8d68aea83ae"
+                "url": "https://ftp.drupal.org/files/projects/description_list_field-1.0.0-alpha3.zip",
+                "reference": "1.0.0-alpha3",
+                "shasum": "c720c809f0998d40764b5ef0ce9dbecfc9e4442f"
             },
             "require": {
-                "drupal/core": "^8.9 || ^9",
-                "php": ">=7.3"
+                "drupal/core": "^9.2",
+                "php": ">=7.4"
             },
             "require-dev": {
                 "composer/installers": "~1.5",
                 "drupal/config_devel": "~1.2",
-                "drupal/core-composer-scaffold": "^9.0",
+                "drupal/core-composer-scaffold": "^9.2",
+                "drupal/core-dev": "^9.2",
                 "drupal/drupal-extension": "~4.0",
                 "drupal/tmgmt": "1.11",
                 "drush/drush": "~10.3",
+                "egulias/email-validator": "^2.1.22 || ^3.0",
                 "nikic/php-parser": "~4.10.4",
-                "openeuropa/code-review": "~1.6",
-                "openeuropa/drupal-core-require-dev": "^8.9 || ^9",
-                "openeuropa/task-runner-drupal-project-symlink": "^1.0",
-                "phpspec/prophecy-phpunit": "^1 || ^2",
-                "phpunit/phpunit": "^6.5 || ^7 || ^8 || ^9"
+                "openeuropa/code-review": "~2.0",
+                "openeuropa/task-runner-drupal-project-symlink": "^1.0.0-beta5",
+                "phpspec/prophecy-phpunit": "^2",
+                "symfony/dom-crawler": "^4.4.12"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "1.0.0-alpha2",
-                    "datestamp": "1629102609",
+                    "version": "1.0.0-alpha3",
+                    "datestamp": "1644506955",
                     "security-coverage": {
                         "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
+                        "message": "Alpha releases are not covered by Drupal security advisories."
                     }
                 },
                 "composer-exit-on-patch-failure": true,
@@ -3532,7 +3642,11 @@
                     "locations": {
                         "web-root": "./build"
                     }
-                }
+                },
+                "_readme": [
+                    "Explicit requirement for egulias/email-validator due to https://www.drupal.org/project/drupal/issues/3061074#comment-14300579. It can be removed when Drupal core 9.2 support is droppped.",
+                    "Explicit minimum version requirement for symfony/dom-crawler due to its lower versions using the deprecated function libxml_disable_entity_loader() in PHP8."
+                ]
             },
             "installation-source": "dist",
             "autoload": {
@@ -3564,6 +3678,10 @@
                 {
                     "name": "Upchuk",
                     "homepage": "https://www.drupal.org/user/1885838"
+                },
+                {
+                    "name": "hernani",
+                    "homepage": "https://www.drupal.org/user/448086"
                 },
                 {
                     "name": "ieguskiza",
@@ -4656,18 +4774,18 @@
         },
         {
             "name": "drupal/field_suggestion",
-            "version": "1.0.0-alpha1",
-            "version_normalized": "1.0.0.0-alpha1",
+            "version": "1.0.0-alpha2",
+            "version_normalized": "1.0.0.0-alpha2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/field_suggestion.git",
-                "reference": "1.0.0-alpha1"
+                "reference": "1.0.0-alpha2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/field_suggestion-1.0.0-alpha1.zip",
-                "reference": "1.0.0-alpha1",
-                "shasum": "250664201df29b544a4809095727eebe90624d07"
+                "url": "https://ftp.drupal.org/files/projects/field_suggestion-1.0.0-alpha2.zip",
+                "reference": "1.0.0-alpha2",
+                "shasum": "44f44ef7f45da854ed111964ae3671b775d5d6a3"
             },
             "require": {
                 "drupal/core": "^8 || ^9"
@@ -4675,8 +4793,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "1.0.0-alpha1",
-                    "datestamp": "1642348505",
+                    "version": "1.0.0-alpha2",
+                    "datestamp": "1644780456",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
@@ -8605,28 +8723,28 @@
         },
         {
             "name": "drupal/state_machine",
-            "version": "1.5.0",
-            "version_normalized": "1.5.0.0",
+            "version": "1.6.0",
+            "version_normalized": "1.6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/state_machine.git",
-                "reference": "8.x-1.5"
+                "reference": "8.x-1.6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/state_machine-8.x-1.5.zip",
-                "reference": "8.x-1.5",
-                "shasum": "1c6bacfb94bb04a8e8f32e6027644c6381422350"
+                "url": "https://ftp.drupal.org/files/projects/state_machine-8.x-1.6.zip",
+                "reference": "8.x-1.6",
+                "shasum": "9a29e00e4c47202fd4b27be792d18d2026f733b2"
             },
             "require": {
-                "drupal/core": "^8.7.7 || ^9",
+                "drupal/core": "^9.2 || ^10",
                 "php": ">=7.0.8"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.5",
-                    "datestamp": "1628248627",
+                    "version": "8.x-1.6",
+                    "datestamp": "1644836575",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
