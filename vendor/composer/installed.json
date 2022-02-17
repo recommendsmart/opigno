@@ -2735,17 +2735,17 @@
         },
         {
             "name": "drupal/core",
-            "version": "9.2.12",
-            "version_normalized": "9.2.12.0",
+            "version": "9.2.13",
+            "version_normalized": "9.2.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core.git",
-                "reference": "c00365209216db25626860f3229e02f0ab75ab58"
+                "reference": "609d1b2840d265a4a599cdd473b767d3a7bf786e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core/zipball/c00365209216db25626860f3229e02f0ab75ab58",
-                "reference": "c00365209216db25626860f3229e02f0ab75ab58",
+                "url": "https://api.github.com/repos/drupal/core/zipball/609d1b2840d265a4a599cdd473b767d3a7bf786e",
+                "reference": "609d1b2840d265a4a599cdd473b767d3a7bf786e",
                 "shasum": ""
             },
             "require": {
@@ -2910,7 +2910,7 @@
                 "drupal/workflows": "self.version",
                 "drupal/workspaces": "self.version"
             },
-            "time": "2022-02-04T20:23:35+00:00",
+            "time": "2022-02-15T20:26:35+00:00",
             "type": "drupal-core",
             "extra": {
                 "drupal-scaffold": {
@@ -3007,14 +3007,14 @@
             ],
             "description": "Drupal is an open source content management platform powering millions of websites and applications.",
             "support": {
-                "source": "https://github.com/drupal/core/tree/9.2.12"
+                "source": "https://github.com/drupal/core/tree/9.2.13"
             },
             "install-path": "../../core"
         },
         {
             "name": "drupal/core-composer-scaffold",
-            "version": "9.2.12",
-            "version_normalized": "9.2.12.0",
+            "version": "9.2.13",
+            "version_normalized": "9.2.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-composer-scaffold.git",
@@ -3060,23 +3060,23 @@
                 "drupal"
             ],
             "support": {
-                "source": "https://github.com/drupal/core-composer-scaffold/tree/9.2.12"
+                "source": "https://github.com/drupal/core-composer-scaffold/tree/9.2.13"
             },
             "install-path": "../drupal/core-composer-scaffold"
         },
         {
             "name": "drupal/core-recommended",
-            "version": "9.2.12",
-            "version_normalized": "9.2.12.0",
+            "version": "9.2.13",
+            "version_normalized": "9.2.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-recommended.git",
-                "reference": "33e890d950f24496f19cd1ce5df6808bda426f64"
+                "reference": "01c09046942c89a86645ab9c7fbf80c68d0f5d7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/33e890d950f24496f19cd1ce5df6808bda426f64",
-                "reference": "33e890d950f24496f19cd1ce5df6808bda426f64",
+                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/01c09046942c89a86645ab9c7fbf80c68d0f5d7c",
+                "reference": "01c09046942c89a86645ab9c7fbf80c68d0f5d7c",
                 "shasum": ""
             },
             "require": {
@@ -3085,7 +3085,7 @@
                 "doctrine/annotations": "1.13.1",
                 "doctrine/lexer": "1.2.1",
                 "doctrine/reflection": "1.2.2",
-                "drupal/core": "9.2.12",
+                "drupal/core": "9.2.13",
                 "egulias/email-validator": "2.1.25",
                 "guzzlehttp/guzzle": "6.5.5",
                 "guzzlehttp/promises": "1.4.1",
@@ -3141,7 +3141,7 @@
             "conflict": {
                 "webflo/drupal-core-strict": "*"
             },
-            "time": "2022-02-04T20:23:35+00:00",
+            "time": "2022-02-15T20:26:35+00:00",
             "type": "metapackage",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3149,7 +3149,7 @@
             ],
             "description": "Locked core dependencies; require this project INSTEAD OF drupal/core.",
             "support": {
-                "source": "https://github.com/drupal/core-recommended/tree/9.2.12"
+                "source": "https://github.com/drupal/core-recommended/tree/9.2.13"
             },
             "install-path": null
         },
@@ -4868,26 +4868,23 @@
         },
         {
             "name": "drupal/file_mdm",
-            "version": "2.2.0",
-            "version_normalized": "2.2.0.0",
+            "version": "2.3.0",
+            "version_normalized": "2.3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/file_mdm.git",
-                "reference": "8.x-2.2"
+                "reference": "8.x-2.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/file_mdm-8.x-2.2.zip",
-                "reference": "8.x-2.2",
-                "shasum": "94b6e1dd7e5c605c149cf146fe1ee539850cb19f"
+                "url": "https://ftp.drupal.org/files/projects/file_mdm-8.x-2.3.zip",
+                "reference": "8.x-2.3",
+                "shasum": "3979a591cfe41342627277d82f569b714d39e4a5"
             },
             "require": {
-                "drupal/core": "^9.2",
-                "lsolesen/pel": "^0.9.8",
-                "phenx/php-font-lib": "^0.5.3"
-            },
-            "conflict": {
-                "lsolesen/pel": "0.9.10"
+                "drupal/core": "^9.2 || ^10",
+                "lsolesen/pel": "^0.9.11",
+                "phenx/php-font-lib": "^0.5.4"
             },
             "require-dev": {
                 "drupal/image_effects": "*",
@@ -4897,8 +4894,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.2",
-                    "datestamp": "1639755159",
+                    "version": "8.x-2.3",
+                    "datestamp": "1644943374",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -4925,17 +4922,17 @@
         },
         {
             "name": "drupal/file_mdm_exif",
-            "version": "2.2.0",
-            "version_normalized": "2.2.0.0",
+            "version": "2.3.0",
+            "version_normalized": "2.3.0.0",
             "require": {
-                "drupal/core": "^9.2",
+                "drupal/core": "^9.2 || ^10",
                 "drupal/file_mdm": "*"
             },
             "type": "metapackage",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.2",
-                    "datestamp": "1639755159",
+                    "version": "8.x-2.3",
+                    "datestamp": "1644943374",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -4961,17 +4958,17 @@
         },
         {
             "name": "drupal/file_mdm_font",
-            "version": "2.2.0",
-            "version_normalized": "2.2.0.0",
+            "version": "2.3.0",
+            "version_normalized": "2.3.0.0",
             "require": {
-                "drupal/core": "^9.2",
+                "drupal/core": "^9.2 || ^10",
                 "drupal/file_mdm": "*"
             },
             "type": "metapackage",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.2",
-                    "datestamp": "1639755159",
+                    "version": "8.x-2.3",
+                    "datestamp": "1644943374",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -8996,6 +8993,68 @@
             "install-path": "../../modules/contrib/swiftmailer"
         },
         {
+            "name": "drupal/textarea_limit",
+            "version": "2.0.0",
+            "version_normalized": "2.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/textarea_limit.git",
+                "reference": "8.x-2.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/textarea_limit-8.x-2.0.zip",
+                "reference": "8.x-2.0",
+                "shasum": "ed101c9df8120dc8c6e173f3e1554fe6826baefb"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-2.0",
+                    "datestamp": "1644941880",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "George Anderson (geoanders)",
+                    "homepage": "https://www.drupal.org/u/geoanders",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "mikejw",
+                    "homepage": "https://www.drupal.org/user/868770"
+                },
+                {
+                    "name": "singularo",
+                    "homepage": "https://www.drupal.org/user/143"
+                }
+            ],
+            "description": "Limit the number of characters in a textarea field.",
+            "homepage": "https://www.drupal.org/project/textarea_limit",
+            "keywords": [
+                "Drupal",
+                "Text Limit",
+                "Textarea"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/textarea_limit",
+                "issues": "https://www.drupal.org/project/issues/textarea_limit"
+            },
+            "install-path": "../../modules/contrib/textarea_limit"
+        },
+        {
             "name": "drupal/token",
             "version": "1.9.0",
             "version_normalized": "1.9.0.0",
@@ -10269,17 +10328,17 @@
         },
         {
             "name": "goalgorilla/open_social",
-            "version": "11.0.1",
-            "version_normalized": "11.0.1.0",
+            "version": "11.0.2",
+            "version_normalized": "11.0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/goalgorilla/open_social.git",
-                "reference": "debe46dc15a383c9c751d3e34554e7af355e6f4b"
+                "reference": "887fe0e1bf5e853dbe71a6df69414e88336dcb5e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/goalgorilla/open_social/zipball/debe46dc15a383c9c751d3e34554e7af355e6f4b",
-                "reference": "debe46dc15a383c9c751d3e34554e7af355e6f4b",
+                "url": "https://api.github.com/repos/goalgorilla/open_social/zipball/887fe0e1bf5e853dbe71a6df69414e88336dcb5e",
+                "reference": "887fe0e1bf5e853dbe71a6df69414e88336dcb5e",
                 "shasum": ""
             },
             "require": {
@@ -10376,7 +10435,7 @@
                 "phpstan/extension-installer": "^1.1",
                 "phpstan/phpstan-deprecation-rules": "^1.0"
             },
-            "time": "2022-02-08T10:54:38+00:00",
+            "time": "2022-02-15T08:10:10+00:00",
             "type": "drupal-profile",
             "extra": {
                 "enable-patching": true,
@@ -10514,7 +10573,7 @@
             ],
             "description": "Open Social is a distribution for building social communities and intranets.",
             "support": {
-                "source": "https://github.com/goalgorilla/open_social/tree/11.0.1"
+                "source": "https://github.com/goalgorilla/open_social/tree/11.0.2"
             },
             "install-path": "../../profiles/contrib/social"
         },

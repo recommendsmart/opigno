@@ -1,0 +1,12 @@
+name: Textarea Limit
+type: module
+description: Limit the number of characters that can be put into selected textarea widgets.
+core: 8.x
+core_version_requirement: ^8 || ^9
+configure: textarea_limit.settings
+package: Other
+
+# Information added by Drupal.org packaging script on 2022-02-15
+version: '8.x-2.0'
+project: 'textarea_limit'
+datestamp: 1644941883
