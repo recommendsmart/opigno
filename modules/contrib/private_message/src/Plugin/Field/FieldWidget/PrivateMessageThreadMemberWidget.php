@@ -213,7 +213,7 @@ class PrivateMessageThreadMemberWidget extends EntityReferenceAutocompleteWidget
     }
     $url = Url::fromRoute('private_message.members_widget_callback');
     $token = $this->csrfTokenGenerator->get($url->getInternalPath());
-    $url->setOptions(['absolute' => TRUE, 'query' => ['token' => $token]]);
+    $url->setOptions(['query' => ['token' => $token]]);
 
     $element['#attached']['drupalSettings']['privateMessageMembersWidget']['callbackPath'] = $url->toString();
     $element['#attached']['drupalSettings']['privateMessageMembersWidget']['placeholder'] = $this->getSetting('placeholder');
@@ -222,7 +222,7 @@ class PrivateMessageThreadMemberWidget extends EntityReferenceAutocompleteWidget
 
     $validate_username_url = Url::fromRoute('private_message.ajax_callback', ['op' => 'validate_private_message_member_username']);
     $validate_username_token = $this->csrfTokenGenerator->get($validate_username_url->getInternalPath());
-    $validate_username_url->setOptions(['absolute' => TRUE, 'query' => ['token' => $validate_username_token]]);
+    $validate_username_url->setOptions(['query' => ['token' => $validate_username_token]]);
     $element['#attached']['drupalSettings']['privateMessageMembersWidget']['validateUsernameUrl'] = $validate_username_url->toString();
 
     return $element;

@@ -1,0 +1,10 @@
+flow.task.settings.action:
+  type: mapping
+  label: 'Merge plugin settings'
+  mapping:
+    access_check:
+      type: string
+      label: 'Access check setting'
+    action:
+      type: ignore
+      label: 'Action plugin settings'

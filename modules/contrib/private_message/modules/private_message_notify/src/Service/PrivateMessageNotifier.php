@@ -1,15 +1,17 @@
 <?php
 
-namespace Drupal\private_message\Service;
+namespace Drupal\private_message_notify\Service;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\message_notify\MessageNotifier;
 use Drupal\private_message\Entity\PrivateMessageInterface;
 use Drupal\private_message\Entity\PrivateMessageThreadInterface;
 use Drupal\user\UserDataInterface;
+use Drupal\private_message\Service\PrivateMessageServiceInterface;
 
 /**
  * A service class for sending notifications of private messages.
@@ -73,6 +75,8 @@ class PrivateMessageNotifier implements PrivateMessageNotifierInterface {
    *   The entity type manager service.
    * @param \Drupal\message_notify\MessageNotifier $messageNotifier
    *   The message notification service.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   *   The module handler service.
    */
   public function __construct(
     PrivateMessageServiceInterface $privateMessageService,
@@ -80,7 +84,8 @@ class PrivateMessageNotifier implements PrivateMessageNotifierInterface {
     UserDataInterface $userData,
     ConfigFactoryInterface $configFactory,
     EntityTypeManagerInterface $entityTypeManager,
-    MessageNotifier $messageNotifier
+    MessageNotifier $messageNotifier,
+    ModuleHandlerInterface $moduleHandler
   ) {
     $this->privateMessageService = $privateMessageService;
     $this->currentUser = $currentUser;
@@ -88,12 +93,15 @@ class PrivateMessageNotifier implements PrivateMessageNotifierInterface {
     $this->config = $configFactory->get('private_message.settings');
     $this->messageManager = $entityTypeManager->getStorage('message');
     $this->messageNotifier = $messageNotifier;
+    $this->moduleHandler = $moduleHandler;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function notify(PrivateMessageInterface $message, PrivateMessageThreadInterface $thread, array $members = []) {
+  public function notify(PrivateMessageInterface $message, PrivateMessageThreadInterface $thread) {
+    $members = $this->getNotificationRecipients($message, $thread);
+
     foreach ($members as $member) {
       if ($member->id() != $this->currentUser->id()) {
         // Check if the notification should be sent.
@@ -188,6 +196,38 @@ class PrivateMessageNotifier implements PrivateMessageNotifierInterface {
     }
 
     return $notify;
+  }
+
+  /**
+   * The users to receive notifications.
+   *
+   * @return \Drupal\Core\Session\AccountInterface[]
+   *   An array of Account objects of the thread members who are to receive
+   *   the notification.
+   */
+  public function getNotificationRecipients(PrivateMessageInterface $message, PrivateMessageThreadInterface $thread) {
+    $recipients = $thread->getMembers();
+    $exclude = [];
+
+    // Allow other modules to alter notification recipients.
+    $this->moduleHandler->invokeAll(
+      'private_message_notify_exclude', [
+        $message,
+        $thread,
+        &$exclude
+      ]
+    );
+
+    if (empty($exclude)) {
+      return $recipients;
+    }
+
+    return array_filter(
+      $recipients, static function (AccountInterface $account) use ($exclude) {
+      // If this user is in the excluded list, filter them from the recipients
+      // list, so they do not receive the notification.
+      return !in_array($account->id(), $exclude);
+    });
   }
 
 }

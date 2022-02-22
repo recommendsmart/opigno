@@ -1,0 +1,97 @@
+<?php
+
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\flow\Entity\EntitySaveHandler;
+use Drupal\flow\Flow;
+use Drupal\flow\FlowTaskQueue;
+
+/**
+ * @file
+ * Flow module file.
+ */
+
+/**
+ * Implements hook_entity_create().
+ */
+function flow_entity_create(EntityInterface $entity) {
+  Flow::service()->apply($entity, 'create');
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function flow_entity_presave(EntityInterface $entity) {
+  Flow::service()->apply($entity, 'save');
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function flow_entity_predelete(EntityInterface $entity) {
+  Flow::service()->apply($entity, 'delete');
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function flow_entity_insert(EntityInterface $entity) {
+  _flow_process_after_task($entity, 'create');
+  _flow_process_after_task($entity, 'save');
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function flow_entity_update(EntityInterface $entity) {
+  _flow_process_after_task($entity, 'save');
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function flow_entity_delete(EntityInterface $entity) {
+  _flow_process_after_task($entity, 'delete');
+}
+
+/**
+ * Processes Flow tasks that are to be executed after task completion.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The Flow-related entity.
+ * @param string $task_mode
+ *   The completed task mode.
+ */
+function _flow_process_after_task(EntityInterface $entity, string $task_mode): void {
+  if (!($entity instanceof ContentEntityInterface)) {
+    // Flow only takes care of content entities.
+    return;
+  }
+
+  $flow_is_active = Flow::isActive();
+  Flow::setActive(\Drupal::getContainer()->getParameter('flow.allow_nested_flow'));
+  try {
+    if (!isset(Flow::$stack[$task_mode])) {
+      Flow::$stack[$task_mode] = [];
+    }
+    $stack = &Flow::$stack[$task_mode];
+    array_push($stack, $entity);
+    FlowTaskQueue::service()->process($entity, $task_mode, TRUE);
+    $entity_needs_save = FALSE;
+    if (!empty(Flow::$save)) {
+      /** @var \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository */
+      $entity_repository = \Drupal::service('entity.repository');
+      $loaded = $entity->uuid() ? $entity_repository->loadEntityByUuid($entity->getEntityTypeId(), $entity->uuid()) : NULL;
+      $entity_needs_save = $loaded && in_array($entity, Flow::$save, TRUE) && $task_mode !== 'delete';
+      EntitySaveHandler::service()->ensureSaveAll(Flow::$save);
+    }
+    array_pop($stack);
+    if ($entity_needs_save) {
+      Flow::setActive(FALSE);
+      $entity->save();
+    }
+  }
+  finally {
+    Flow::setActive($flow_is_active);
+  }
+}

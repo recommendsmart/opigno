@@ -131,11 +131,11 @@ class PrivateMessageInboxBlock extends BlockBase implements BlockPluginInterface
         if (count($threads) && $thread_info['next_exists']) {
           $prev_url = Url::fromRoute('private_message.ajax_callback', ['op' => 'get_old_inbox_threads']);
           $prev_token = $this->csrfToken->get($prev_url->getInternalPath());
-          $prev_url->setOptions(['absolute' => TRUE, 'query' => ['token' => $prev_token]]);
+          $prev_url->setOptions(['query' => ['token' => $prev_token]]);
 
           $new_url = Url::fromRoute('private_message.ajax_callback', ['op' => 'get_new_inbox_threads']);
           $new_token = $this->csrfToken->get($new_url->getInternalPath());
-          $new_url->setOptions(['absolute' => TRUE, 'query' => ['token' => $new_token]]);
+          $new_url->setOptions(['query' => ['token' => $new_token]]);
 
           $last_thread = array_pop($threads);
           $block['#attached']['drupalSettings']['privateMessageInboxBlock'] = [
@@ -161,7 +161,7 @@ class PrivateMessageInboxBlock extends BlockBase implements BlockPluginInterface
 
       $new_url = Url::fromRoute('private_message.ajax_callback', ['op' => 'get_new_inbox_threads']);
       $new_token = $this->csrfToken->get($new_url->getInternalPath());
-      $new_url->setOptions(['absolute' => TRUE, 'query' => ['token' => $new_token]]);
+      $new_url->setOptions(['query' => ['token' => $new_token]]);
 
       $block['#attached']['drupalSettings']['privateMessageInboxBlock']['loadNewUrl'] = $new_url->toString();
 

@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\private_message\Entity\PrivateMessageInterface;
+use Drupal\private_message\Entity\PrivateMessageThreadInterface;
 
 /**
  * Alter the private message render array before it is rendered.
@@ -22,4 +24,18 @@ function hook_private_message_view_alter(array &$build, EntityInterface $private
   $class = 'private-message-author-' . $privateMessage->getOwnerId();
   // Add the class to the wrapper.
   $build['wrapper']['#attributes']['class'][] = $class;
+}
+
+/**
+ * "New message added to the thread" event.
+ *
+ * @param \Drupal\private_message\Entity\PrivateMessageInterface $privateMessage
+ *   Private message entity added to the thread.
+ * @param \Drupal\private_message\Entity\PrivateMessageThreadInterface $thread
+ *   Thread entity a new message is added to.
+ *
+ * @return void
+ */
+function hook_private_message_new_message(PrivateMessageInterface $privateMessage, PrivateMessageThreadInterface $thread) {
+  // Action on new message added to the thread (notifications, counters etc.).
 }

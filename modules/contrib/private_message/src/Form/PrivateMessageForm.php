@@ -336,7 +336,7 @@ class PrivateMessageForm extends ContentEntityForm {
     }
 
     // Save the thread.
-    $this->privateMessageThreadManager->saveThread($this->entity, $private_message_thread->getMembers(), [], $private_message_thread);
+    $this->privateMessageThreadManager->saveThread($this->entity, $private_message_thread->getMembers(), $private_message_thread);
 
     // Save the thread to the form state.
     $formState->set('private_message_thread', $private_message_thread);

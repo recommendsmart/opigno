@@ -147,11 +147,14 @@ interface PrivateMessageThreadInterface extends ContentEntityInterface {
   public function updateLastDeleteTime(AccountInterface $account);
 
   /**
-   * Perform a delete action on the private message thread.
+   * Perform a complete delete action on the private message thread including all messages.
+   */
+  public function delete();
+
+  /**
+   * Provides clear thread history feature.
    *
-   * When this method is called, the following process happens:
-   *   - If no user has been provided, the thread is deleted
-   *     outright. Otherwise the following steps are taken.
+   * The following steps will happen:
    *   - The delete timestamp for the given user is updated
    *   - The created timestamp for the newest message in the
    *     thread is retrieved
@@ -159,8 +162,12 @@ interface PrivateMessageThreadInterface extends ContentEntityInterface {
    *     are compared to the timestamp of the newest private message.
    *   - If no messages have been created after every member has deleted
    *     the thread, the entire thread is deleted from the system.
+   *
+   * @param \Drupal\Core\Session\AccountInterface|null $account
+   *    (Optional) Account for which thread history will be cleared.
+   *    If no account provided, the current user will be used.
    */
-  public function delete();
+  public function clearAccountHistory(AccountInterface $account = NULL);
 
   /**
    * Filter messages in the thread deleted by the given account.

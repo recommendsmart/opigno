@@ -22,6 +22,7 @@ use Drupal\Core\Session\AccountInterface;
  *     "access" = "Drupal\private_message\Entity\Access\PrivateMessageThreadAccessControlHandler",
  *     "form" = {
  *       "delete" = "Drupal\private_message\Form\PrivateMessageThreadDeleteForm",
+ *       "clear_personal_history" = "Drupal\private_message\Form\PrivateMessageThreadClearPersonalHistoryForm",
  *     },
  *   },
  *   base_table = "private_message_threads",
@@ -44,7 +45,10 @@ class PrivateMessageThread extends ContentEntityBase implements PrivateMessageTh
    * {@inheritdoc}
    */
   public function addMember(AccountInterface $account) {
-    $this->get('members')->appendItem($account->id());
+    if (!$this->isMember($account->id())) {
+      $this->get('members')->appendItem($account->id());
+    }
+
     return $this;
   }
 
@@ -52,7 +56,9 @@ class PrivateMessageThread extends ContentEntityBase implements PrivateMessageTh
    * {@inheritdoc}
    */
   public function addMemberById($id) {
-    $this->get('members')->appendItem($id);
+    if (!$this->isMember($id)) {
+      $this->get('members')->appendItem($id);
+    }
 
     return $this;
   }
@@ -87,7 +93,12 @@ class PrivateMessageThread extends ContentEntityBase implements PrivateMessageTh
    */
   public function addMessage(PrivateMessageInterface $privateMessage) {
     $this->get('private_messages')->appendItem($privateMessage->id());
-
+    // Allow other modules to react on a new message in thread.
+    // @todo: inject when entity dependency serialization core issues resolved.
+    \Drupal::moduleHandler()->invokeAll(
+      'private_message_new_message',
+      [$privateMessage, $this]
+    );
     return $this;
   }
 
@@ -213,25 +224,35 @@ class PrivateMessageThread extends ContentEntityBase implements PrivateMessageTh
   /**
    * {@inheritdoc}
    */
-  public function delete(AccountInterface $account = NULL) {
-    if ($account) {
-      $this->updateLastDeleteTime($account);
-      $last_creation_timestamp = $this->getNewestMessageCreationTimestamp();
+  public function delete() {
+    $this->deleteReferencedEntities();
+    parent::delete();
+    $this->clearCacheTags();
+  }
 
-      $query = \Drupal::database()->select('pm_thread_history', 'pm_thread_history')
-        ->condition('thread_id', $this->id());
-      $query->addExpression('MIN(delete_timestamp)', 'min_deleted');
-      $min_deleted = $query->execute()->fetchField();
-      if ($min_deleted >= $last_creation_timestamp) {
-        $this->deleteReferencedEntities();
-        parent::delete();
-      }
+  /**
+   * {@inheritDoc}
+   */
+  public function clearAccountHistory(AccountInterface $account = NULL) {
+    if (!$account) {
+      $account = \Drupal::currentUser();
     }
-    else {
-      $this->deleteReferencedEntities();
-      parent::delete();
-    }
+    // Update thread deleted time for account.
+    $this->updateLastDeleteTime($account);
 
+    // Get timestamp when last message was created.
+    $last_creation_timestamp = $this->getNewestMessageCreationTimestamp();
+
+    // Query thread history table to get deleted timestamp.
+    $query = \Drupal::database()->select('pm_thread_history', 'pm_thread_history')
+      ->condition('thread_id', $this->id());
+    $query->addExpression('MIN(delete_timestamp)', 'min_deleted');
+    $min_deleted = $query->execute()->fetchField();
+
+    // If no messages have been created after every member has deleted thread.
+    if ($min_deleted >= $last_creation_timestamp) {
+      $this->delete();
+    }
     $this->clearCacheTags();
   }
 
@@ -274,6 +295,9 @@ class PrivateMessageThread extends ContentEntityBase implements PrivateMessageTh
       $tags[] = 'private_message_inbox_block:uid:' . $member->id();
       $tags[] = 'private_message_notification_block:uid:' . $member->id();
     }
+
+    // Invalidate cache for list of private message threads.
+    $tags[] = 'private_message_thread_list';
 
     Cache::invalidateTags($tags);
   }

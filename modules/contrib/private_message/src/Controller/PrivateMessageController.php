@@ -6,6 +6,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\Core\Url;
 use Drupal\private_message\Service\PrivateMessageServiceInterface;
 use Drupal\user\UserDataInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -128,8 +129,10 @@ class PrivateMessageController extends ControllerBase implements PrivateMessageC
    * {@inheritdoc}
    */
   public function pmSettingsPage() {
+    $url = Url::fromRoute('private_message.admin_config.config')->toString();
+    $message = $this->t('You can find module settings here: <a href="@url">page</a>', ['@url' => $url]);
     return [
-      '#markup' => $this->t('Private Messages'),
+      '#markup' => $message,
     ];
   }
 

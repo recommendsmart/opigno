@@ -66,7 +66,7 @@ class PrivateMessageService implements PrivateMessageServiceInterface {
   /**
    * The user entity manager.
    *
-   * @var \Crupal\user\UserStorageInterface
+   * @var \Drupal\user\UserStorageInterface
    */
   protected $userManager;
 
@@ -94,6 +94,9 @@ class PrivateMessageService implements PrivateMessageServiceInterface {
    *   The entity type manager interface.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function __construct(
     PrivateMessageMapperInterface $mapper,
@@ -123,9 +126,8 @@ class PrivateMessageService implements PrivateMessageServiceInterface {
     if ($thread_id) {
       return $this->pmThreadManager->load($thread_id);
     }
-    else {
-      return $this->createPrivateMessageThread($members);
-    }
+
+    return $this->createPrivateMessageThread($members);
   }
 
   /**
@@ -218,8 +220,8 @@ class PrivateMessageService implements PrivateMessageServiceInterface {
       $total = count($messages);
       foreach ($messages as $index => $message) {
         if ($message->id() >= $messageId) {
-          $start_index = $index - $count >= 0 ? $index - $count : 0;
-          $slice_count = $index > $count ? $count : $index;
+          $start_index = max($index - $count, 0);
+          $slice_count = min($index, $count);
           break;
         }
       }
@@ -396,6 +398,8 @@ class PrivateMessageService implements PrivateMessageServiceInterface {
    *
    * @return \Drupal\private_message\Entity\PrivateMessageThread
    *   The new private message thread.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   protected function createPrivateMessageThread(array $members) {
     $thread = $this->pmThreadManager->create();

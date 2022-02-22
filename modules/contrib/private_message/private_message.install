@@ -7,17 +7,6 @@
 
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 
-define('PRIVATE_MESSAGE_UPDATE_LIMIT', 10);
-define('PRIVATE_MESSAGE_LAST_STATE', 'wso_scalable_bridge_last');
-
-define('PRIVATE_MESSAGE_THREADS_TABLE', 'private_message_threads');
-define('PRIVATE_MESSAGE_MEMBERS_TABLE', 'private_message_thread__members');
-define('PRIVATE_MESSAGE_LAST_ACCESS_TABLE', 'private_message_thread__last_access_time');
-define('PRIVATE_MESSAGE_LAST_DELETE_TABLE', 'private_message_thread__last_delete_time');
-define('PRIVATE_MESSAGE_ACCESS_TIME_TABLE', 'pm_thread_access_time');
-define('PRIVATE_MESSAGE_DELETE_TIME_TABLE', 'pm_thread_delete_time');
-define('PRIVATE_MESSAGE_HISTORY_TABLE', 'pm_thread_history');
-
 /**
  * Implements hook_uninstall().
  */
@@ -165,30 +154,30 @@ function private_message_update_8004() {
 function private_message_update_8005(&$sandbox) {
   // Store last processed thread ID, so the sites with a huge amount of threads
   // will have at least some chances to complete this update in a few runs.
-  $last_processed = \Drupal::state()->get(PRIVATE_MESSAGE_LAST_STATE, 0);
+  $last_processed = \Drupal::state()->get('scalable_bridge_last', 0);
   $database = \Drupal::database();
 
   if (empty($sandbox['max'])) {
     $sandbox['progress'] = 0;
     $sandbox['max'] = $database
-      ->select(PRIVATE_MESSAGE_THREADS_TABLE, 't')
+      ->select('private_message_threads', 't')
       ->condition('t.id', $last_processed, '>')
       ->countQuery()->execute()
       ->fetchField();
   }
 
   // Select a range of the threads:
-  $query = $database->select(PRIVATE_MESSAGE_THREADS_TABLE, 't');
+  $query = $database->select('private_message_threads', 't');
   $query->fields('t', ['id']);
   $query->condition('t.id', $last_processed, '>');
-  $query->range(0, PRIVATE_MESSAGE_UPDATE_LIMIT);
+  $query->range(0, 10);
   $query->orderBy('t.id');
   $threads = $query->execute()->fetchCol();
 
   if (empty($threads)) {
     $sandbox['#finished'] = 1;
     // Reset last processed thread.
-    \Drupal::state()->delete(PRIVATE_MESSAGE_LAST_STATE);
+    \Drupal::state()->delete('scalable_bridge_last');
     $sandbox['messages'][] = t('@total threads processed.', [
       '@total' => $sandbox['max'],
     ]);
@@ -196,11 +185,11 @@ function private_message_update_8005(&$sandbox) {
   }
 
   // Select the thread-member pairs:
-  $query = $database->select(PRIVATE_MESSAGE_THREADS_TABLE, 't');
+  $query = $database->select('private_message_threads', 't');
   $query->fields('t', ['id']);
   $query->condition('t.id', $threads, 'IN');
   $query->orderBy('t.id');
-  $query->leftJoin(PRIVATE_MESSAGE_MEMBERS_TABLE, 'm', 't.id = m.entity_id');
+  $query->leftJoin('private_message_thread__members', 'm', 't.id = m.entity_id');
   $query->fields('m', ['members_target_id']);
   $thread_member_pairs = $query->execute()->fetchAll();
 
@@ -209,16 +198,16 @@ function private_message_update_8005(&$sandbox) {
     $member_id = $thread_member_pair->members_target_id;
 
     // Get the last access timestamp of the member for thread.
-    $query = $database->select(PRIVATE_MESSAGE_LAST_ACCESS_TABLE, 'la');
-    $query->leftJoin(PRIVATE_MESSAGE_ACCESS_TIME_TABLE, 'at', 'at.id = la.last_access_time_target_id');
+    $query = $database->select('private_message_thread__last_access_time', 'la');
+    $query->leftJoin('pm_thread_access_time', 'at', 'at.id = la.last_access_time_target_id');
     $query->condition('la.entity_id', $thread_id);
     $query->condition('at.owner', $member_id);
     $query->addExpression('MAX(at.access_time)', 'access_time');
     $access_timestamp = $query->execute()->fetchField() ?: 0;
 
     // Get the last delete timestamp of the member for thread.
-    $query = $database->select(PRIVATE_MESSAGE_LAST_DELETE_TABLE, 'ld');
-    $query->leftJoin(PRIVATE_MESSAGE_DELETE_TIME_TABLE, 'dt', 'dt.id = ld.last_delete_time_target_id');
+    $query = $database->select('private_message_thread__last_delete_time', 'ld');
+    $query->leftJoin('pm_thread_delete_time', 'dt', 'dt.id = ld.last_delete_time_target_id');
     $query->condition('ld.entity_id', $thread_id);
     $query->condition('dt.owner', $member_id);
     $query->addExpression('MAX(dt.delete_time)', 'delete_time');
@@ -226,7 +215,7 @@ function private_message_update_8005(&$sandbox) {
 
     try {
       // Update the new table with the access/delete time.
-      $database->insert(PRIVATE_MESSAGE_HISTORY_TABLE)
+      $database->insert('pm_thread_history')
         ->fields([
           'uid' => $member_id,
           'thread_id' => $thread_id,
@@ -244,10 +233,10 @@ function private_message_update_8005(&$sandbox) {
 
   // At the end of run update the last processed thread ID.
   $last_processed = end($threads);
-  \Drupal::state()->set(PRIVATE_MESSAGE_LAST_STATE, $last_processed);
+  \Drupal::state()->set('scalable_bridge_last', $last_processed);
   // Or reset it when all the threads processed.
   if ($sandbox['#finished'] === 1) {
-    \Drupal::state()->delete(PRIVATE_MESSAGE_LAST_STATE);
+    \Drupal::state()->delete('scalable_bridge_last');
   }
 
   $sandbox['messages'][] = t('@current/@total threads processed.', [
@@ -268,5 +257,17 @@ function private_message_update_8006(&$sandbox) {
   foreach (['last_access_time', 'last_delete_time'] as $field_name) {
     $definition = $entity_update_manager->getFieldStorageDefinition($field_name, 'private_message_thread');
     $entity_update_manager->uninstallFieldStorageDefinition($definition);
+  }
+}
+
+/**
+ * Enable notifications submodule.
+ */
+function private_message_update_8007() {
+  $module = 'private_message_notify';
+  if (!\Drupal::moduleHandler()->moduleExists($module)) {
+    /** @var \Drupal\Core\Extension\ModuleInstallerInterface $installer */
+    $installer = \Drupal::service('module_installer');
+    $installer->install(['private_message_notify']);
   }
 }

@@ -107,7 +107,7 @@ class PrivateMessageNotificationBlock extends BlockBase implements BlockPluginIn
 
       $url = Url::fromRoute('private_message.ajax_callback', ['op' => 'get_new_unread_thread_count']);
       $token = $this->csrfToken->get($url->getInternalPath());
-      $url->setOptions(['absolute' => TRUE, 'query' => ['token' => $token]]);
+      $url->setOptions(['query' => ['token' => $token]]);
       $block['#attached']['drupalSettings']['privateMessageNotificationBlock']['newMessageCountCallback'] = $url->toString();
 
       $config = $this->getConfiguration();

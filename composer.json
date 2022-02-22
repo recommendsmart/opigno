@@ -53,7 +53,8 @@
         "drupal/entity_inherit": "^2.0@beta",
         "drupal/config_views": "^2.0@RC",
         "drupal/commerce_transaction": "^1.0@beta",
-        "drupal/textarea_limit": "^2.0"
+        "drupal/textarea_limit": "^2.0",
+        "drupal/flow": "^1.0@alpha"
     },
     "repositories": [
         {

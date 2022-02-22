@@ -175,27 +175,34 @@ class PrivateMessageMapper implements PrivateMessageMapperInterface {
    */
   public function getUserIdsFromString($string, $count) {
     if ($this->currentUser->hasPermission('access user profiles') && $this->currentUser->hasPermission('use private messaging system')) {
+      $arguments = [
+        ':string' => $string . '%',
+        ':current_user' => $this->currentUser->getAccountName(),
+        ':authenticated_config' => 'user.role.authenticated',
+      ];
       $query = 'SELECT user_data.uid FROM {users_field_data} AS user_data LEFT ' .
         'JOIN {user__roles} AS user_roles ' .
         'ON user_roles.entity_id = user_data.uid ' .
         'LEFT JOIN {config} AS role_config ' .
         "ON role_config.name = CONCAT('user.role.', user_roles.roles_target_id) " .
         'JOIN {config} AS config ON config.name = :authenticated_config ' .
-        'WHERE user_data.name LIKE :string AND user_data.name != :current_user ' .
-        'AND user_roles.roles_target_id IN (:rids[]) ' .
-        'ORDER BY user_data.name ASC';
+        'WHERE user_data.name LIKE :string AND user_data.name != :current_user ';
+
+      $rids = $this->getCanUseRids();
+      if (!in_array('authenticated', $rids)) {
+        $arguments[':rids[]'] = $rids;
+        $query .= 'AND user_roles.roles_target_id IN (:rids[]) ';
+      }
+      $query .= 'ORDER BY user_data.name ASC';
 
       return $this->database->queryRange(
         $query,
         0,
         $count,
-        [
-          ':string' => $string . '%',
-          ':current_user' => $this->currentUser->getAccountName(),
-          ':authenticated_config' => 'user.role.authenticated',
-          ':rids[]' => $this->getCanUseRids(),
-        ]
+        $arguments
       )->fetchCol();
+
+      return $results;
     }
     else {
       return [];
@@ -234,24 +241,31 @@ class PrivateMessageMapper implements PrivateMessageMapperInterface {
    * {@inheritdoc}
    */
   public function checkPrivateMessageMemberExists($username) {
-    return $this->database->queryRange(
-      'SELECT 1 FROM {users_field_data} AS user_data ' .
+    $arguments = [
+      ':username' => $username,
+      ':authenticated_user_role' => 'user.role.authenticated',
+    ];
+
+    $query = 'SELECT 1 FROM {users_field_data} AS user_data ' .
       'LEFT JOIN {user__roles} AS user_roles ' .
       'ON user_roles.entity_id = user_data.uid ' .
       'LEFT JOIN {config} AS role_config ' .
       "ON role_config.name = CONCAT('user.role.', user_roles.roles_target_id) " .
       'LEFT JOIN {config} AS authenticated_config ' .
       'ON authenticated_config.name = :authenticated_user_role ' .
-      'WHERE user_data.name = :username ' .
-      'AND user_roles.roles_target_id IN (:rids[]) '.
-      'AND user_data.status = 1',
+      'WHERE user_data.name = :username ';
+
+    $rids = $this->getCanUseRids();
+    if (!in_array('authenticated', $rids)) {
+      $arguments[':rids[]'] = $rids;
+      $query .= 'AND user_roles.roles_target_id IN (:rids[]) ';
+    }
+    $query .= 'AND user_data.status = 1';
+
+    return $this->database->queryRange($query,
       0,
       1,
-      [
-        ':username' => $username,
-        ':authenticated_user_role' => 'user.role.authenticated',
-        ':rids[]' => $this->getCanUseRids(),
-      ]
+      $arguments
     )->fetchField();
   }
 

@@ -2,7 +2,6 @@
 
 namespace Drupal\private_message\Service;
 
-use Drupal\Core\Session\AccountInterface;
 use Drupal\private_message\Entity\PrivateMessageInterface;
 use Drupal\private_message\Entity\PrivateMessageThreadInterface;
 
@@ -21,13 +20,6 @@ class PrivateMessageThreadManager implements PrivateMessageThreadManagerInterfac
   private $privateMessageService;
 
   /**
-   * The private message notifier service.
-   *
-   * @var \Drupal\private_message\Service\PrivateMessageNotifierInterface
-   */
-  private $privateMessageNotifier;
-
-  /**
    * The private message.
    *
    * @var \Drupal\private_message\Entity\PrivateMessageInterface
@@ -42,13 +34,6 @@ class PrivateMessageThreadManager implements PrivateMessageThreadManagerInterfac
   private $recipients = [];
 
   /**
-   * An array of members to exclude from notifications.
-   *
-   * @var \Drupal\Core\Session\AccountInterface[]
-   */
-  private $excludeFromNotification = [];
-
-  /**
    * The private message thread.
    *
    * @var \Drupal\private_message\Entity\PrivateMessageThreadInterface|null
@@ -60,29 +45,22 @@ class PrivateMessageThreadManager implements PrivateMessageThreadManagerInterfac
    *
    * @param \Drupal\private_message\Service\PrivateMessageServiceInterface $privateMessageService
    *   The private message service.
-   * @param \Drupal\private_message\Service\PrivateMessageNotifierInterface $privateMessageNotifier
-   *   The private message notifier service.
    */
   public function __construct(
-    PrivateMessageServiceInterface $privateMessageService,
-    PrivateMessageNotifierInterface $privateMessageNotifier
+    PrivateMessageServiceInterface $privateMessageService
   ) {
     $this->privateMessageService = $privateMessageService;
-    $this->privateMessageNotifier = $privateMessageNotifier;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function saveThread(PrivateMessageInterface $message, array $recipients = [], array $excludeFromNotification = [], PrivateMessageThreadInterface $thread = NULL) {
+  public function saveThread(PrivateMessageInterface $message, array $recipients = [], PrivateMessageThreadInterface $thread = NULL) {
     $this->message = $message;
     $this->thread = $thread;
     $this->recipients = $recipients;
-    $this->excludeFromNotification = $excludeFromNotification;
 
-    $this->getThread()
-      ->addMessage()
-      ->sendNotification();
+    $this->getThread()->addMessage();
   }
 
   /**
@@ -108,36 +86,6 @@ class PrivateMessageThreadManager implements PrivateMessageThreadManagerInterfac
     $this->thread->save();
 
     return $this;
-  }
-
-  /**
-   * Send the notification.
-   *
-   * @return $this
-   */
-  private function sendNotification() {
-    $this->privateMessageNotifier->notify($this->message, $this->thread, $this->getNotificationRecipients());
-
-    return $this;
-  }
-
-  /**
-   * The users to receive notifications.
-   *
-   * @return \Drupal\Core\Session\AccountInterface[]
-   *   An array of Account objects of the thread members who are to receive
-   *   the notification.
-   */
-  private function getNotificationRecipients() {
-    if (empty($this->excludeFromNotification)) {
-      return $this->recipients;
-    }
-
-    return array_filter($this->recipients, function (AccountInterface $account) {
-      // If this user is in the excluded list, filter them from the recipients
-      // list so they do not receive the notification.
-      return !in_array($account, $this->excludeFromNotification);
-    });
   }
 
 }

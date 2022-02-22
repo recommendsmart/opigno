@@ -31,6 +31,8 @@ Drupal.PrivateMessageNotificationBlock = {};
   }
 
   function updateCount(unreadThreadCount) {
+    notificationWrapper = $('.private-message-notification-wrapper');
+
     if (unreadThreadCount) {
       notificationWrapper.addClass('unread-threads');
     }
@@ -98,8 +100,6 @@ Drupal.PrivateMessageNotificationBlock = {};
   function init() {
     if (!initialized) {
       initialized = true;
-
-      notificationWrapper = $('.private-message-notification-wrapper');
 
       if (drupalSettings.privateMessageNotificationBlock.ajaxRefreshRate) {
         refreshRate = drupalSettings.privateMessageNotificationBlock.ajaxRefreshRate * 1000;

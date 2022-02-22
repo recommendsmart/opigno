@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "33f8ca3618d37d7d1d603ddd16036e23",
+    "content-hash": "4414f0507acb7b85df2beb71d407669f",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2568,17 +2568,17 @@
         },
         {
             "name": "drupal/config_views",
-            "version": "2.0.0-rc2",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/config_views.git",
-                "reference": "2.0.0-rc2"
+                "reference": "2.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/config_views-2.0.0-rc2.zip",
-                "reference": "2.0.0-rc2",
-                "shasum": "dce6c668861c5bde68ecaaf925e260f57342c94d"
+                "url": "https://ftp.drupal.org/files/projects/config_views-2.0.0.zip",
+                "reference": "2.0.0",
+                "shasum": "e1ca72fe7b5dd7ff7445059f3dd75c2bbc824de9"
             },
             "require": {
                 "drupal/core": "^8 || ^9"
@@ -2586,11 +2586,11 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.0.0-rc2",
-                    "datestamp": "1644834326",
+                    "version": "2.0.0",
+                    "datestamp": "1645191041",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "RC releases are not covered by Drupal security advisories."
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 }
             },
@@ -2599,6 +2599,10 @@
                 "GPL-2.0-or-later"
             ],
             "authors": [
+                {
+                    "name": "cosmicdreams",
+                    "homepage": "https://www.drupal.org/user/42579"
+                },
                 {
                     "name": "vijaycs85",
                     "homepage": "https://www.drupal.org/user/93488"
@@ -4025,17 +4029,17 @@
         },
         {
             "name": "drupal/entity_list",
-            "version": "2.0.0-alpha6",
+            "version": "2.0.0-alpha8",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/entity_list.git",
-                "reference": "8.x-2.0-alpha6"
+                "reference": "8.x-2.0-alpha8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/entity_list-8.x-2.0-alpha6.zip",
-                "reference": "8.x-2.0-alpha6",
-                "shasum": "dbbaf0aad967a633276726095638c3997b261fb3"
+                "url": "https://ftp.drupal.org/files/projects/entity_list-8.x-2.0-alpha8.zip",
+                "reference": "8.x-2.0-alpha8",
+                "shasum": "7c54673f3ec2a3f52f07cc93ec78e92a5238c4b0"
             },
             "require": {
                 "drupal/core": "^8 || ^9"
@@ -4043,8 +4047,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.0-alpha6",
-                    "datestamp": "1643886168",
+                    "version": "8.x-2.0-alpha8",
+                    "datestamp": "1645108558",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Alpha releases are not covered by Drupal security advisories."
@@ -4623,21 +4627,21 @@
         },
         {
             "name": "drupal/file_mdm",
-            "version": "2.3.0",
+            "version": "2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/file_mdm.git",
-                "reference": "8.x-2.3"
+                "reference": "8.x-2.4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/file_mdm-8.x-2.3.zip",
-                "reference": "8.x-2.3",
-                "shasum": "3979a591cfe41342627277d82f569b714d39e4a5"
+                "url": "https://ftp.drupal.org/files/projects/file_mdm-8.x-2.4.zip",
+                "reference": "8.x-2.4",
+                "shasum": "f0611a95417d35e98b7792dfffb569afe8bd6e7c"
             },
             "require": {
-                "drupal/core": "^9.2 || ^10",
-                "lsolesen/pel": "^0.9.11",
+                "drupal/core": "^9.2",
+                "lsolesen/pel": "^0.9.12",
                 "phenx/php-font-lib": "^0.5.4"
             },
             "require-dev": {
@@ -4648,8 +4652,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.3",
-                    "datestamp": "1644943374",
+                    "version": "8.x-2.4",
+                    "datestamp": "1645440700",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -4674,16 +4678,16 @@
         },
         {
             "name": "drupal/file_mdm_exif",
-            "version": "2.3.0",
+            "version": "2.4.0",
             "require": {
-                "drupal/core": "^9.2 || ^10",
+                "drupal/core": "^9.2",
                 "drupal/file_mdm": "*"
             },
             "type": "metapackage",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.3",
-                    "datestamp": "1644943374",
+                    "version": "8.x-2.4",
+                    "datestamp": "1645440700",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -4708,16 +4712,16 @@
         },
         {
             "name": "drupal/file_mdm_font",
-            "version": "2.3.0",
+            "version": "2.4.0",
             "require": {
-                "drupal/core": "^9.2 || ^10",
+                "drupal/core": "^9.2",
                 "drupal/file_mdm": "*"
             },
             "type": "metapackage",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.3",
-                    "datestamp": "1644943374",
+                    "version": "8.x-2.4",
+                    "datestamp": "1645440700",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -4814,6 +4818,55 @@
             "homepage": "https://www.drupal.org/project/flag",
             "support": {
                 "source": "https://git.drupalcode.org/project/flag"
+            }
+        },
+        {
+            "name": "drupal/flow",
+            "version": "1.0.0-alpha1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/flow.git",
+                "reference": "1.0.0-alpha1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/flow-1.0.0-alpha1.zip",
+                "reference": "1.0.0-alpha1",
+                "shasum": "1edb9e197a8a38fd9cb3a4d8a37bbd91a9fbb970"
+            },
+            "require": {
+                "drupal/core": "^9",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "drupal/context_stack": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0-alpha1",
+                    "datestamp": "1645524371",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "mxh",
+                    "homepage": "https://www.drupal.org/user/1124384"
+                }
+            ],
+            "description": "A Drupal module for automating your workflow on content.",
+            "homepage": "https://www.drupal.org/project/flow",
+            "support": {
+                "source": "https://drupal.org/project/flow",
+                "issues": "https://drupal.org/project/issues/flow"
             }
         },
         {
@@ -7199,17 +7252,17 @@
         },
         {
             "name": "drupal/private_message",
-            "version": "2.0.0-beta17",
+            "version": "3.0.0-beta2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/private_message.git",
-                "reference": "8.x-2.0-beta17"
+                "reference": "3.0.0-beta2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/private_message-8.x-2.0-beta17.zip",
-                "reference": "8.x-2.0-beta17",
-                "shasum": "b12996915535486a848b39f0e59f2c25ba1a2962"
+                "url": "https://ftp.drupal.org/files/projects/private_message-3.0.0-beta2.zip",
+                "reference": "3.0.0-beta2",
+                "shasum": "218e3d1e1eaba4103fbf16136e86b009ac512a91"
             },
             "require": {
                 "drupal/core": "^8.8.0 || ^9.0",
@@ -7217,14 +7270,17 @@
                 "drupal/message_notify": "^1.0",
                 "php": ">=7.1"
             },
+            "require-dev": {
+                "drupal/message_notify": "*"
+            },
             "suggest": {
                 "drush/drush": "^9 || ^10"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.0-beta17",
-                    "datestamp": "1631780578",
+                    "version": "3.0.0-beta2",
+                    "datestamp": "1645433297",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Beta releases are not covered by Drupal security advisories."
@@ -7769,16 +7825,8 @@
             "authors": [
                 {
                     "name": "Christian Fritsch",
-                    "homepage": "https://www.drupal.org/user/1133806",
+                    "homepage": "https://www.drupal.org/user/2103716",
                     "email": "christian.fritsch@burda.com"
-                },
-                {
-                    "name": "chr.fritsch",
-                    "homepage": "https://www.drupal.org/user/2103716"
-                },
-                {
-                    "name": "oushen",
-                    "homepage": "https://www.drupal.org/user/1200780"
                 },
                 {
                     "name": "thunderbot",
@@ -9777,16 +9825,16 @@
         },
         {
             "name": "goalgorilla/open_social",
-            "version": "11.0.2",
+            "version": "11.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/goalgorilla/open_social.git",
-                "reference": "887fe0e1bf5e853dbe71a6df69414e88336dcb5e"
+                "reference": "c4d7a3a6986c254c656a9ab218a8086ca09647b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/goalgorilla/open_social/zipball/887fe0e1bf5e853dbe71a6df69414e88336dcb5e",
-                "reference": "887fe0e1bf5e853dbe71a6df69414e88336dcb5e",
+                "url": "https://api.github.com/repos/goalgorilla/open_social/zipball/c4d7a3a6986c254c656a9ab218a8086ca09647b9",
+                "reference": "c4d7a3a6986c254c656a9ab218a8086ca09647b9",
                 "shasum": ""
             },
             "require": {
@@ -9827,7 +9875,7 @@
                 "drupal/override_node_options": "2.6.0",
                 "drupal/paragraphs": "1.12",
                 "drupal/pathauto": "1.8.0",
-                "drupal/private_message": "2.0-beta17",
+                "drupal/private_message": "3.0.0-beta2",
                 "drupal/profile": "1.3",
                 "drupal/r4032login": "2.1.0",
                 "drupal/redirect": "1.6.0",
@@ -9973,9 +10021,6 @@
                     "drupal/paragraphs": {
                         "Integrity constraint violation: 1048 Column 'langcode' cannot be null": "https://www.drupal.org/files/issues/2019-07-10/paragraphs-set_langcode_widgets-2901390-29.patch"
                     },
-                    "drupal/private_message": {
-                        "3248258 - Coding standard issue at PrivateMessageService": "https://www.drupal.org/files/issues/2021-11-08/coding-standard-3248258-2.patch"
-                    },
                     "drupal/search_api": {
                         "Ensure field definition allowed values callbacks are used for field filter callbacks": "https://www.drupal.org/files/issues/2020-06-03/2949022-12--views_filter_options_callback.patch",
                         "Selecting the same day in a date between filter returns no results": "https://www.drupal.org/files/issues/2021-05-05/date_between_2842409_2_d8.patch",
@@ -10019,9 +10064,9 @@
             ],
             "description": "Open Social is a distribution for building social communities and intranets.",
             "support": {
-                "source": "https://github.com/goalgorilla/open_social/tree/11.0.2"
+                "source": "https://github.com/goalgorilla/open_social/tree/11.0.3"
             },
-            "time": "2022-02-15T08:10:10+00:00"
+            "time": "2022-02-22T10:01:04+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -10767,16 +10812,16 @@
         },
         {
             "name": "lsolesen/pel",
-            "version": "0.9.11",
+            "version": "0.9.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pel/pel.git",
-                "reference": "3229f133f9403894fd77de7832b25aead8164221"
+                "reference": "b95fe29cdacf9d36330da277f10910a13648c84c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pel/pel/zipball/3229f133f9403894fd77de7832b25aead8164221",
-                "reference": "3229f133f9403894fd77de7832b25aead8164221",
+                "url": "https://api.github.com/repos/pel/pel/zipball/b95fe29cdacf9d36330da277f10910a13648c84c",
+                "reference": "b95fe29cdacf9d36330da277f10910a13648c84c",
                 "shasum": ""
             },
             "require": {
@@ -10821,9 +10866,9 @@
             ],
             "support": {
                 "issues": "https://github.com/pel/pel/issues",
-                "source": "https://github.com/pel/pel/tree/0.9.11"
+                "source": "https://github.com/pel/pel/tree/0.9.12"
             },
-            "time": "2022-02-04T15:03:47+00:00"
+            "time": "2022-02-18T13:20:54+00:00"
         },
         {
             "name": "masterminds/html5",
@@ -15881,7 +15926,8 @@
         "drupal/micronode": 20,
         "drupal/entity_inherit": 10,
         "drupal/config_views": 5,
-        "drupal/commerce_transaction": 10
+        "drupal/commerce_transaction": 10,
+        "drupal/flow": 15
     },
     "prefer-stable": true,
     "prefer-lowest": false,

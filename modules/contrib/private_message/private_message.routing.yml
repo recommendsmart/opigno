@@ -27,6 +27,15 @@ entity.private_message_thread.delete_form:
     _entity_access: 'private_message_thread.delete'
     _permission: 'use private messaging system,access user profiles'
 
+entity.private_message_thread.clear_personal_history_form:
+  path: '/private-messages/{private_message_thread}/clear-personal-history'
+  defaults:
+    _entity_form: private_message_thread.clear_personal_history
+    _title: 'Clear personal history in thread'
+  requirements:
+    _entity_access: 'private_message_thread.clear_personal_history'
+    _permission: 'use private messaging system,access user profiles'
+
 private_message.private_message_create:
   path: '/private-message/create'
   defaults:

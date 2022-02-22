@@ -90,7 +90,7 @@ class SearchEntityListFilter extends EntityListFilterBase implements ContainerFa
       '#type' => 'textfield',
       '#title' => $this->t($parameters['settings']['title']),
       '#attributes' => [
-        'placeholder' => $parameters['settings']['placeholder'] ?? '',
+        'placeholder' => !empty($parameters['settings']['placeholder']) ? $this->t($parameters['settings']['placeholder']) : '',
       ],
       '#default_value' => $request->get(self::FIELD_SEARCH, ''),
     ];

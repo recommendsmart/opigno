@@ -259,15 +259,15 @@ class PrivateMessageThreadMessageFormatter extends FormatterBase implements Cont
 
     $new_url = Url::fromRoute('private_message.ajax_callback', ['op' => 'get_new_messages']);
     $token = $this->csrfTokenGenerator->get($new_url->getInternalPath());
-    $new_url->setOptions(['absolute' => TRUE, 'query' => ['token' => $token]]);
+    $new_url->setOptions(['query' => ['token' => $token]]);
 
     $prev_url = Url::fromRoute('private_message.ajax_callback', ['op' => 'get_old_messages']);
     $token = $this->csrfTokenGenerator->get($prev_url->getInternalPath());
-    $prev_url->setOptions(['absolute' => TRUE, 'query' => ['token' => $token]]);
+    $prev_url->setOptions(['query' => ['token' => $token]]);
 
     $load_url = Url::fromRoute('private_message.ajax_callback', ['op' => 'load_thread']);
     $load_token = $this->csrfTokenGenerator->get($load_url->getInternalPath());
-    $load_url->setOptions(['absolute' => TRUE, 'query' => ['token' => $load_token]]);
+    $load_url->setOptions(['query' => ['token' => $load_token]]);
 
     $element['#attached']['drupalSettings']['privateMessageThread'] = [
       'threadId' => (int) $private_message_thread->id(),

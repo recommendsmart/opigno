@@ -1,0 +1,168 @@
+flow.settings:
+  type: config_object
+  label: 'Flow settings'
+  mapping:
+    cron:
+      type: mapping
+      label: 'Cron settings'
+      mapping:
+        limit:
+          type: integer
+          label: 'Maximum number of tasks to process during Cron run'
+
+flow.flow.*.*.*:
+  type: config_entity
+  label: 'Flow'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    status:
+      type: boolean
+      label: 'Enabled'
+    targetEntityType:
+      type: string
+      label: 'Target entity type'
+    targetBundle:
+      type: string
+      label: 'Target entity bundle'
+    taskMode:
+      type: string
+      label: 'Task mode'
+    tasks:
+      type: sequence
+      label: 'Tasks'
+      sequence:
+        type: flow_task
+        label: 'Task'
+
+flow_subject:
+  type: mapping
+  label: 'Flow subject'
+  mapping:
+    id:
+      type: string
+      label: 'Flow subject plugin ID'
+    type:
+      type: string
+      label: 'Flow subject base plugin ID'
+    settings:
+      type: flow.subject.settings.[%parent.type]
+      label: 'Settings'
+    third_party_settings:
+      type: sequence
+      label: 'Third party settings'
+      sequence:
+        type: flow.subject.third_party.[%key]
+
+flow_task:
+  type: mapping
+  label: 'Flow task'
+  mapping:
+    id:
+      type: string
+      label: 'Flow task plugin ID'
+    type:
+      type: string
+      label: 'Flow task base plugin ID'
+    weight:
+      type: integer
+      label: 'Weight'
+    active:
+      type: boolean
+      label: 'Active'
+    execution:
+      type: mapping
+      label: 'Execution settings'
+      mapping:
+        start:
+          type: string
+          label: 'Start method'
+    subject:
+      type: flow_subject
+    settings:
+      type: flow.task.settings.[%parent.type]
+      label: 'Settings'
+    third_party_settings:
+      type: sequence
+      label: 'Third party settings'
+      sequence:
+        type: flow.task.third_party.[%key]
+
+flow_subject_fallback:
+  type: mapping
+  label: 'Subject fallback settings'
+  mapping:
+    method:
+      type: string
+      label: 'Fallback method'
+
+flow.task.settings.merge:
+  type: mapping
+  label: 'Merge plugin settings'
+  mapping:
+    values:
+      type: ignore
+      label: 'Values to merge'
+
+flow.task.settings.relate:
+  type: mapping
+  label: 'Relate plugin settings'
+  mapping:
+    field_name:
+      type: string
+      label: 'Reference field machine name'
+    method:
+      type: string
+      label: 'Reference method'
+    reverse_field_name:
+      type: string
+      label: 'Reverse reference field machine name'
+    reverse_method:
+      type: string
+      label: 'Reverse reference method'
+    target:
+      type: flow_subject
+      label: 'Target subject'
+
+flow.subject.settings.load:
+  type: mapping
+  label: 'Load plugin settings'
+  mapping:
+    mode:
+      type: string
+      label: 'Load mode (id, uuid, view)'
+    entity_id:
+      type: string
+      label: 'Entity ID'
+    entity_uuid:
+      type: string
+      label: 'Entity UUID'
+    view:
+      type: mapping
+      label: 'Views configuration'
+      mapping:
+        id:
+          type: string
+          label: 'Views configuration ID'
+        display:
+          type: string
+          label: 'Views display ID'
+        arguments:
+          type: string
+          label: 'Arguments passed to the view'
+    fallback:
+      type: flow_subject_fallback
+
+flow.subject.settings.reference:
+  type: mapping
+  label: 'Reference plugin settings'
+  mapping:
+    field_name:
+      type: string
+      label: 'Field machine name'
+    source:
+      type: flow_subject
+      label: 'Source subject'
+    fallback:
+      type: flow_subject_fallback

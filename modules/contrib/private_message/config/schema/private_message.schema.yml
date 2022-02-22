@@ -49,6 +49,9 @@ field.formatter.settings.private_message_thread_member_formatter:
     members_prefix:
       type: string
       label: 'Members list prefix'
+    separator:
+      type: string
+      label: 'Separator'
 
 field.formatter.settings.private_message_thread_message_formatter:
   type: mapping
