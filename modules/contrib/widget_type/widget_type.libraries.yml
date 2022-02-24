@@ -1,0 +1,10 @@
+widget_type.admin:
+  js:
+    js/admin.widget-type.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
+  css:
+    component:
+      css/admin.widget-type.css: {}

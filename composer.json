@@ -54,7 +54,16 @@
         "drupal/config_views": "^2.0@RC",
         "drupal/commerce_transaction": "^1.0@beta",
         "drupal/textarea_limit": "^2.0",
-        "drupal/flow": "^1.0@alpha"
+        "drupal/flow": "^1.0@alpha",
+        "drupal/widget_type": "^1.5",
+        "drupal/freelinking": "^3.2",
+        "drupal/group_mandatory": "1.0.x-dev",
+        "drupal/entity_reference_tree": "^2.0",
+        "drupal/cshs": "^3.5",
+        "drupal/shs": "^2.0@RC",
+        "drupal/value_widget": "^1.0@alpha",
+        "drupal/job_scheduler": "^3.1",
+        "drupal/field_tools": "^1.0@alpha"
     },
     "repositories": [
         {

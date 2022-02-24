@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4414f0507acb7b85df2beb71d407669f",
+    "content-hash": "5fbb2587aa96162c24fe610873b9e92a",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3063,6 +3063,72 @@
             }
         },
         {
+            "name": "drupal/cshs",
+            "version": "3.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/cshs.git",
+                "reference": "8.x-3.5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/cshs-8.x-3.5.zip",
+                "reference": "8.x-3.5",
+                "shasum": "d85d9aa905dd5e836fc93168694d28748d6efe53"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9",
+                "php": ">=7.3.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-3.5",
+                    "datestamp": "1632333917",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Walter Jenner",
+                    "homepage": "https://drupal.org/u/valderama"
+                },
+                {
+                    "name": "Sergii Bondarenko",
+                    "homepage": "https://drupal.org/u/BR0kEN",
+                    "email": "sb@firstvector.org"
+                },
+                {
+                    "name": "Daneel Cruz",
+                    "homepage": "https://drupal.org/u/daneelcm"
+                },
+                {
+                    "name": "Purushotam Rai",
+                    "homepage": "https://drupal.org/u/purushotam.rai"
+                }
+            ],
+            "description": "A simple client-side hierarchical select widget for taxonomy terms.",
+            "homepage": "https://www.drupal.org/project/cshs",
+            "keywords": [
+                "client-side-select",
+                "hierarchical-select",
+                "module",
+                "select",
+                "taxonomy"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/cshs",
+                "issues": "https://www.drupal.org/project/issues/cshs"
+            }
+        },
+        {
             "name": "drupal/csv_serialization",
             "version": "2.0.0",
             "source": {
@@ -4159,6 +4225,50 @@
             }
         },
         {
+            "name": "drupal/entity_reference_tree",
+            "version": "2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/entity_reference_tree.git",
+                "reference": "2.0.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/entity_reference_tree-2.0.2.zip",
+                "reference": "2.0.2",
+                "shasum": "b66f2508fce2aa2098a4e94474878fabff336863"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.2",
+                    "datestamp": "1645638767",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Mingsong",
+                    "homepage": "https://www.drupal.org/user/2986445"
+                }
+            ],
+            "description": "A field widget for entity reference tree",
+            "homepage": "https://www.drupal.org/project/entity_reference_tree",
+            "support": {
+                "source": "https://git.drupalcode.org/project/entity_reference_tree"
+            }
+        },
+        {
             "name": "drupal/entity_version",
             "version": "1.0.0-beta8",
             "source": {
@@ -4582,6 +4692,54 @@
             }
         },
         {
+            "name": "drupal/field_tools",
+            "version": "1.0.0-alpha9",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/field_tools.git",
+                "reference": "8.x-1.0-alpha9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/field_tools-8.x-1.0-alpha9.zip",
+                "reference": "8.x-1.0-alpha9",
+                "shasum": "2528d48ee2fa796c50c7c0fdf91f80dba173a4b2"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.0-alpha9",
+                    "datestamp": "1645310211",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "joachim",
+                    "homepage": "https://www.drupal.org/user/107701"
+                },
+                {
+                    "name": "tedbow",
+                    "homepage": "https://www.drupal.org/user/240860"
+                }
+            ],
+            "description": "Provides tools for working with fields, such as cloning to other entities and bundles.",
+            "homepage": "https://www.drupal.org/project/field_tools",
+            "support": {
+                "source": "https://git.drupalcode.org/project/field_tools"
+            }
+        },
+        {
             "name": "drupal/file_de_duplicator",
             "version": "1.0.1",
             "source": {
@@ -4822,17 +4980,17 @@
         },
         {
             "name": "drupal/flow",
-            "version": "1.0.0-alpha1",
+            "version": "1.0.0-alpha2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/flow.git",
-                "reference": "1.0.0-alpha1"
+                "reference": "1.0.0-alpha2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/flow-1.0.0-alpha1.zip",
-                "reference": "1.0.0-alpha1",
-                "shasum": "1edb9e197a8a38fd9cb3a4d8a37bbd91a9fbb970"
+                "url": "https://ftp.drupal.org/files/projects/flow-1.0.0-alpha2.zip",
+                "reference": "1.0.0-alpha2",
+                "shasum": "a9ceafc82f26844b900d0c99f3b02dcdcc63f586"
             },
             "require": {
                 "drupal/core": "^9",
@@ -4844,8 +5002,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "1.0.0-alpha1",
-                    "datestamp": "1645524371",
+                    "version": "1.0.0-alpha2",
+                    "datestamp": "1645617778",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Alpha releases are not covered by Drupal security advisories."
@@ -4911,6 +5069,80 @@
             "homepage": "https://www.drupal.org/project/form_filter_fields",
             "support": {
                 "source": "https://git.drupalcode.org/project/form_filter_fields"
+            }
+        },
+        {
+            "name": "drupal/freelinking",
+            "version": "3.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/freelinking.git",
+                "reference": "8.x-3.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/freelinking-8.x-3.2.zip",
+                "reference": "8.x-3.2",
+                "shasum": "31e8ac4cfed25b10088094c6f198e49e74ae2dcb"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9"
+            },
+            "require-dev": {
+                "drupal/advanced_help": "^1",
+                "drupal/advanced_help_hint": "^1.0-alpha1",
+                "drupal/prepopulate": "^2"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-3.2",
+                    "datestamp": "1645646957",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPLv2"
+            ],
+            "authors": [
+                {
+                    "name": "eafarris",
+                    "homepage": "http://oif.eafarris.com",
+                    "email": "eafarris@812.no-reply.drupal.org",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Adam Ross",
+                    "homepage": "http://grayside.org",
+                    "email": "Grayside@346868.no-reply.drupal.org",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Juampy NR",
+                    "email": "juampynr@682736.no-reply.drupal.org",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Gisle Hannemyr",
+                    "email": "gisle@409554.no-reply.drupal.org",
+                    "homepage": "http://hannemyr.no",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Matthew Radcliffe",
+                    "email": "mradcliffe@2823497.no-reply.drupal.org",
+                    "homepage": "http://softpixel.com/~mradcliffe/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A filter that provides flexible, extensible, wiki-style linking of content.",
+            "homepage": "https://www.drupal.org/project/freelinking",
+            "support": {
+                "source": "https://git.drupalcode.org/project/freelinking"
             }
         },
         {
@@ -5528,6 +5760,64 @@
             }
         },
         {
+            "name": "drupal/group_mandatory",
+            "version": "dev-1.0.x",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/group_mandatory.git",
+                "reference": "afebe9f911dffdacc8941e003baa9e8ecff172cb"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9"
+            },
+            "require-dev": {
+                "drupal/group": "^1.4"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.0.x": "1.0.x-dev"
+                },
+                "drupal": {
+                    "version": "1.0.x-dev",
+                    "datestamp": "1645640771",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                },
+                "patches": {
+                    "drupal/group": {
+                        "Fix form TPS": "https://git.drupalcode.org/project/group/-/merge_requests/41.patch"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "gpl-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Merlin",
+                    "homepage": "https://www.drupal.org/user/894458",
+                    "email": "merlin@geeks4change.net"
+                },
+                {
+                    "name": "geek-merlin",
+                    "homepage": "https://www.drupal.org/user/229048"
+                },
+                {
+                    "name": "heliogabal",
+                    "homepage": "https://www.drupal.org/user/998658"
+                }
+            ],
+            "description": "Add option to disallow content type without group.",
+            "homepage": "https://www.drupal.org/project/group_mandatory",
+            "support": {
+                "source": "https://git.drupalcode.org/project/group_mandatory"
+            }
+        },
+        {
             "name": "drupal/group_permissions",
             "version": "1.0.0-alpha4",
             "source": {
@@ -5797,6 +6087,86 @@
             "homepage": "https://www.drupal.org/project/inline_entity_form",
             "support": {
                 "source": "https://git.drupalcode.org/project/inline_entity_form"
+            }
+        },
+        {
+            "name": "drupal/job_scheduler",
+            "version": "3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/job_scheduler.git",
+                "reference": "8.x-3.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/job_scheduler-8.x-3.1.zip",
+                "reference": "8.x-3.1",
+                "shasum": "6c12ebbeec24213147c98fe7aafa24f8d5bc629c"
+            },
+            "require": {
+                "drupal/core": "^8.7.7 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-3.1",
+                    "datestamp": "1589878241",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "RenatoG",
+                    "homepage": "https://www.drupal.org/user/3326031"
+                },
+                {
+                    "name": "alex_b",
+                    "homepage": "https://www.drupal.org/user/53995"
+                },
+                {
+                    "name": "febbraro",
+                    "homepage": "https://www.drupal.org/user/43670"
+                },
+                {
+                    "name": "gabesullice",
+                    "homepage": "https://www.drupal.org/user/2287430"
+                },
+                {
+                    "name": "intrafusion",
+                    "homepage": "https://www.drupal.org/user/424800"
+                },
+                {
+                    "name": "jmiccolis",
+                    "homepage": "https://www.drupal.org/user/31731"
+                },
+                {
+                    "name": "joachim",
+                    "homepage": "https://www.drupal.org/user/107701"
+                },
+                {
+                    "name": "makara",
+                    "homepage": "https://www.drupal.org/user/132402"
+                },
+                {
+                    "name": "twistor",
+                    "homepage": "https://www.drupal.org/user/473738"
+                },
+                {
+                    "name": "webflo",
+                    "homepage": "https://www.drupal.org/user/254778"
+                }
+            ],
+            "description": "Scheduler API.",
+            "homepage": "http://drupal.org/project/job_scheduler",
+            "support": {
+                "source": "https://git.drupalcode.org/project/job_scheduler"
             }
         },
         {
@@ -7901,6 +8271,57 @@
             }
         },
         {
+            "name": "drupal/shs",
+            "version": "2.0.0-rc2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/shs.git",
+                "reference": "2.0.0-rc2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/shs-2.0.0-rc2.zip",
+                "reference": "2.0.0-rc2",
+                "shasum": "49e130e5dd35cbdd38775a071d09dc24606da2b1"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9"
+            },
+            "require-dev": {
+                "drupal/chosen": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.0-rc2",
+                    "datestamp": "1645591925",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "RC releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "jhedstrom",
+                    "homepage": "https://www.drupal.org/user/208732"
+                },
+                {
+                    "name": "stBorchert",
+                    "homepage": "https://www.drupal.org/user/36942"
+                }
+            ],
+            "description": "Creates a simple hierarchical select widget for taxonomy fields.",
+            "homepage": "https://www.drupal.org/project/shs",
+            "support": {
+                "source": "https://git.drupalcode.org/project/shs"
+            }
+        },
+        {
             "name": "drupal/social_course",
             "version": "4.0.0",
             "source": {
@@ -9065,6 +9486,50 @@
             }
         },
         {
+            "name": "drupal/value_widget",
+            "version": "1.0.0-alpha2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/value_widget.git",
+                "reference": "1.0.0-alpha2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/value_widget-1.0.0-alpha2.zip",
+                "reference": "1.0.0-alpha2",
+                "shasum": "8e1373f961f8e319fd250e2301ea8c3af589a3b9"
+            },
+            "require": {
+                "drupal/core": "^9.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0-alpha2",
+                    "datestamp": "1645532833",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "kerasai",
+                    "homepage": "https://www.drupal.org/user/1175666"
+                }
+            ],
+            "description": "Provides a \"value\" widget for fields.",
+            "homepage": "https://www.drupal.org/project/value_widget",
+            "support": {
+                "source": "https://git.drupalcode.org/project/value_widget"
+            }
+        },
+        {
             "name": "drupal/variationcache",
             "version": "1.0.0",
             "source": {
@@ -9441,6 +9906,60 @@
             "homepage": "https://www.drupal.org/project/weight",
             "support": {
                 "source": "https://git.drupalcode.org/project/weight"
+            }
+        },
+        {
+            "name": "drupal/widget_type",
+            "version": "1.5.6",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/widget_type.git",
+                "reference": "1.5.6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/widget_type-1.5.6.zip",
+                "reference": "1.5.6",
+                "shasum": "0f40d83c2edab5ec0e1e96ca9a9fe8637b3908b5"
+            },
+            "require": {
+                "drupal/core": "^8.8.0 || ^9.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.5.6",
+                    "datestamp": "1645616488",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Mateu Aguiló Bosch",
+                    "homepage": "https://www.drupal.org/user/550110",
+                    "email": "mateu@mateuaguilo.com"
+                },
+                {
+                    "name": "rabbitlair",
+                    "homepage": "https://www.drupal.org/user/2386096"
+                }
+            ],
+            "description": "Widget type entities.",
+            "homepage": "https://www.drupal.org/project/widget_type",
+            "keywords": [
+                "Drupal",
+                "Widgets"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/widget_type",
+                "issues": "https://www.drupal.org/project/issues/widget_type"
             }
         },
         {
@@ -10166,12 +10685,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "GuzzleHttp\\Promise\\": "src/"
-                },
                 "files": [
                     "src/functions_include.php"
-                ]
+                ],
+                "psr-4": {
+                    "GuzzleHttp\\Promise\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -15927,7 +16446,11 @@
         "drupal/entity_inherit": 10,
         "drupal/config_views": 5,
         "drupal/commerce_transaction": 10,
-        "drupal/flow": 15
+        "drupal/flow": 15,
+        "drupal/group_mandatory": 20,
+        "drupal/shs": 5,
+        "drupal/value_widget": 15,
+        "drupal/field_tools": 15
     },
     "prefer-stable": true,
     "prefer-lowest": false,

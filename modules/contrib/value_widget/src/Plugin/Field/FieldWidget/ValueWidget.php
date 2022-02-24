@@ -73,7 +73,7 @@ class ValueWidget extends WidgetBase {
     ];
 
     $description['text'] = [
-      '#plain_text' => $this->t('Enter the values to set on the field. Use a comma-delimited string for multiple values with " as enclosure and \ as escape characters.'),
+      '#plain_text' => $this->t('Enter the values to set on the field. With this option, it\'s only possible to set a field\'s "value" column. To set multiple values, use a comma-delimited string with " as enclosure and \ as escape characters.'),
       '#prefix' => '<p>',
       '#suffix' => '</p>',
     ];
@@ -115,7 +115,7 @@ class ValueWidget extends WidgetBase {
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     switch ($this->getSetting('type')) {
       case 'callback':
-        $values = $this->getValuesFromCallback($items);
+        $values = $this->getValuesFromCallback($items, $element, $form_state, $form);
         break;
 
       case 'value':
@@ -128,10 +128,12 @@ class ValueWidget extends WidgetBase {
 
     $values = array_values($values);
     if (array_key_exists($delta, $values)) {
-      $element['value'] = [
-        '#type' => 'value',
-        '#value' => $values[$delta],
-      ];
+      foreach ($values[$delta] as $key => $value) {
+        $element[$key] = [
+          '#type' => 'value',
+          '#value' => $value,
+        ];
+      }
     }
 
     return $element;
@@ -188,7 +190,7 @@ class ValueWidget extends WidgetBase {
     if ($entity) {
       $data = [$entity->getEntityTypeId() => $entity];
       foreach ($values as $delta => $value) {
-        $values[$delta] = $this->token->replace($value, $data);
+        $values[$delta]['value'] = $this->token->replace($value, $data);
       }
     }
 
@@ -198,13 +200,22 @@ class ValueWidget extends WidgetBase {
   /**
    * Get the values to use for the field's form elements from a callback.
    *
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
+   *   The field items.
+   * @param array $element
+   *   The form element.
+   * @param \Drupal\Core\Form\FormStateInterface $formState
+   *   The form state.
+   * @param array $form
+   *   The complete form.
+   *
    * @return array
    *   The values to set in the field's form elements.
    */
-  protected function getValuesFromCallback(FieldItemListInterface $items) {
+  protected function getValuesFromCallback(FieldItemListInterface $items, array $element, FormStateInterface $formState, array $form) {
     $callback = $this->getSetting('callback');
     if (is_callable($callback)) {
-      return $callback($items->getEntity(), $items);
+      return $callback($items->getEntity(), $items, $element, $formState, $form);
     }
     return [];
   }

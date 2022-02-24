@@ -64,6 +64,17 @@ On every task mode, you can create a task that always operates on a certain
 subject. A subject is always a concrete data type, like an article, blog post
 or a "Tags" taxonomy term.
 
+## 4.1 The default form display mode
+
+Some configurations of tasks and subjects, for example for merging content
+values, make use of a form to enter values for content fields. Flow uses the
+form display mode "flow" to display the fields in the form, and when this
+form display doesn't exists, it falls back to the default form display.
+
+That means that you can adjust the way fields are being displayed within Flow
+configurations by adding a "flow" form display mode for your content at
+/admin/structure/display-modes/form and configure that form display accordingly.
+
 ## 5. Complementary projects
 
 This module contains additional sub-modules, all optional:
@@ -82,12 +93,25 @@ When working with Tokens, the contrib Token module
 That module provides a Token browser for a convenient way to browse through
 available Tokens.
 
+## 5.1 The role of Flow in the ecosystem of Rules and automation
+
 This module is a tool for workflow automation, by configuring tasks that are to
-be executed automatically on content operations. There might be use cases
-for automation, that go beyond the scope of content operations, and exceed the
-level of complexity this module is not able to cover. For such use cases, you
-might need the scale of a rules-engine. The following modules could be
-considered when you need a rules-engine:
+be executed automatically on content operations. Its intent is to provide a
+simple interface for setting up such actions, without the need of a knowledge
+of programming or Drupal's application logic.
+
+There might be use cases for automation, that go beyond the scope of content
+operations, and exceed the level of complexity this module is not able to cover.
+
+Examples that go beyond the capabilities of this workflow automation tool:
+* Process logic that should apply on a more generic level other than on concrete
+  data, i.e. when you need a higher level of abstraction.
+* A conditional chain of actions to execute.
+* Creating data whose structure is to be (dynamically) defined on runtime.
+* Reacting on events other than entity-related operations.
+
+For such use cases, you might need the scale of a rules-engine. The following
+modules could be considered when you need a rules-engine:
 * Rules (https://www.drupal.org/project/rules)
 * ECA: Event - Condition - Action (https://www.drupal.org/project/eca)
 * Business Rules (https://www.drupal.org/project/business_rules)

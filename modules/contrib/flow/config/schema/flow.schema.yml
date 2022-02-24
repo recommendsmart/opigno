@@ -166,3 +166,11 @@ flow.subject.settings.reference:
       label: 'Source subject'
     fallback:
       type: flow_subject_fallback
+
+flow.subject.settings.new:
+  type: mapping
+  label: 'New content settings'
+  mapping:
+    values:
+      type: ignore
+      label: 'Values of the new content'

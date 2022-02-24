@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '96dedfc4d358403b8dc45d1895fde52c2609270c',
+        'reference' => '9eba1871e41db3e9f26f348e7a83a12815c6de9f',
         'name' => 'goalgorilla/social_template',
         'dev' => true,
     ),
@@ -717,6 +717,15 @@
             'reference' => '8.x-2.1',
             'dev_requirement' => false,
         ),
+        'drupal/cshs' => array(
+            'pretty_version' => '3.5.0',
+            'version' => '3.5.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/cshs',
+            'aliases' => array(),
+            'reference' => '8.x-3.5',
+            'dev_requirement' => false,
+        ),
         'drupal/csv_serialization' => array(
             'pretty_version' => '2.0.0',
             'version' => '2.0.0.0',
@@ -906,6 +915,15 @@
             'reference' => '8.x-1.9',
             'dev_requirement' => false,
         ),
+        'drupal/entity_reference_tree' => array(
+            'pretty_version' => '2.0.2',
+            'version' => '2.0.2.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/entity_reference_tree',
+            'aliases' => array(),
+            'reference' => '2.0.2',
+            'dev_requirement' => false,
+        ),
         'drupal/entity_version' => array(
             'pretty_version' => '1.0.0-beta8',
             'version' => '1.0.0.0-beta8',
@@ -972,6 +990,15 @@
             'reference' => '1.0.0-alpha2',
             'dev_requirement' => false,
         ),
+        'drupal/field_tools' => array(
+            'pretty_version' => '1.0.0-alpha9',
+            'version' => '1.0.0.0-alpha9',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/field_tools',
+            'aliases' => array(),
+            'reference' => '8.x-1.0-alpha9',
+            'dev_requirement' => false,
+        ),
         'drupal/field_ui' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -1036,12 +1063,12 @@
             'dev_requirement' => false,
         ),
         'drupal/flow' => array(
-            'pretty_version' => '1.0.0-alpha1',
-            'version' => '1.0.0.0-alpha1',
+            'pretty_version' => '1.0.0-alpha2',
+            'version' => '1.0.0.0-alpha2',
             'type' => 'drupal-module',
             'install_path' => __DIR__ . '/../../modules/contrib/flow',
             'aliases' => array(),
-            'reference' => '1.0.0-alpha1',
+            'reference' => '1.0.0-alpha2',
             'dev_requirement' => false,
         ),
         'drupal/form_filter_fields' => array(
@@ -1058,6 +1085,15 @@
             'replaced' => array(
                 0 => '9.2.13',
             ),
+        ),
+        'drupal/freelinking' => array(
+            'pretty_version' => '3.2.0',
+            'version' => '3.2.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/freelinking',
+            'aliases' => array(),
+            'reference' => '8.x-3.2',
+            'dev_requirement' => false,
         ),
         'drupal/friggeri_cv' => array(
             'pretty_version' => '1.0.0-alpha1',
@@ -1158,6 +1194,17 @@
             'reference' => '1.0.0-beta5',
             'dev_requirement' => false,
         ),
+        'drupal/group_mandatory' => array(
+            'pretty_version' => 'dev-1.0.x',
+            'version' => 'dev-1.0.x',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/group_mandatory',
+            'aliases' => array(
+                0 => '1.0.x-dev',
+            ),
+            'reference' => 'afebe9f911dffdacc8941e003baa9e8ecff172cb',
+            'dev_requirement' => false,
+        ),
         'drupal/group_permissions' => array(
             'pretty_version' => '1.0.0-alpha4',
             'version' => '1.0.0.0-alpha4',
@@ -1229,6 +1276,15 @@
             'replaced' => array(
                 0 => '9.2.13',
             ),
+        ),
+        'drupal/job_scheduler' => array(
+            'pretty_version' => '3.1.0',
+            'version' => '3.1.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/job_scheduler',
+            'aliases' => array(),
+            'reference' => '8.x-3.1',
+            'dev_requirement' => false,
         ),
         'drupal/jquery_ui' => array(
             'pretty_version' => '1.4.0',
@@ -1727,6 +1783,15 @@
                 0 => '9.2.13',
             ),
         ),
+        'drupal/shs' => array(
+            'pretty_version' => '2.0.0-rc2',
+            'version' => '2.0.0.0-RC2',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/shs',
+            'aliases' => array(),
+            'reference' => '2.0.0-rc2',
+            'dev_requirement' => false,
+        ),
         'drupal/social' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -1964,6 +2029,15 @@
             'reference' => '8.x-1.1',
             'dev_requirement' => false,
         ),
+        'drupal/value_widget' => array(
+            'pretty_version' => '1.0.0-alpha2',
+            'version' => '1.0.0.0-alpha2',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/value_widget',
+            'aliases' => array(),
+            'reference' => '1.0.0-alpha2',
+            'dev_requirement' => false,
+        ),
         'drupal/variationcache' => array(
             'pretty_version' => '1.0.0',
             'version' => '1.0.0.0',
@@ -2028,6 +2102,15 @@
             'install_path' => __DIR__ . '/../../modules/contrib/weight',
             'aliases' => array(),
             'reference' => '8.x-3.3',
+            'dev_requirement' => false,
+        ),
+        'drupal/widget_type' => array(
+            'pretty_version' => '1.5.6',
+            'version' => '1.5.6.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/widget_type',
+            'aliases' => array(),
+            'reference' => '1.5.6',
             'dev_requirement' => false,
         ),
         'drupal/workflows' => array(
@@ -2120,7 +2203,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '96dedfc4d358403b8dc45d1895fde52c2609270c',
+            'reference' => '9eba1871e41db3e9f26f348e7a83a12815c6de9f',
             'dev_requirement' => false,
         ),
         'guzzlehttp/guzzle' => array(

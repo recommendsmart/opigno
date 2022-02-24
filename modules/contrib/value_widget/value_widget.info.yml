@@ -1,9 +1,9 @@
 name: Value Widget
 description: Provides a "value" widget for fields.
 type: module
-core_version_requirement: ^8.8.0 || ^9.0
+core_version_requirement: ^9.0
 
-# Information added by Drupal.org packaging script on 2021-03-15
-version: '1.0.0-alpha1'
+# Information added by Drupal.org packaging script on 2022-02-22
+version: '1.0.0-alpha2'
 project: 'value_widget'
-datestamp: 1615828223
+datestamp: 1645532836
