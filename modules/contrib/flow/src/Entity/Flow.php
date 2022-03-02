@@ -212,4 +212,18 @@ class Flow extends ConfigEntityBase implements FlowInterface {
     return $config;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $etm = \Drupal::entityTypeManager();
+    $entity_type = $etm->getDefinition($this->getTargetEntityTypeId());
+    if ($bundle_entity_type_id = $entity_type->getBundleEntityType()) {
+      if ($bundle_config = $etm->getStorage($bundle_entity_type_id)->load($this->getTargetBundle())) {
+        $this->dependencies[$bundle_config->getConfigDependencyKey()][] = $bundle_config->getConfigDependencyName();
+      }
+    }
+    return parent::calculateDependencies();
+  }
+
 }

@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '9eba1871e41db3e9f26f348e7a83a12815c6de9f',
+        'reference' => '1e7f8afd3cde7bb4a17ee302af435222c502bdde',
         'name' => 'goalgorilla/social_template',
         'dev' => true,
     ),
@@ -952,12 +952,12 @@
             'dev_requirement' => false,
         ),
         'drupal/feeds' => array(
-            'pretty_version' => '3.0.0-alpha11',
-            'version' => '3.0.0.0-alpha11',
+            'pretty_version' => '3.0.0-beta1',
+            'version' => '3.0.0.0-beta1',
             'type' => 'drupal-module',
             'install_path' => __DIR__ . '/../../modules/contrib/feeds',
             'aliases' => array(),
-            'reference' => '8.x-3.0-alpha11',
+            'reference' => '8.x-3.0-beta1',
             'dev_requirement' => false,
         ),
         'drupal/field' => array(
@@ -982,12 +982,12 @@
             ),
         ),
         'drupal/field_suggestion' => array(
-            'pretty_version' => '1.0.0-alpha2',
-            'version' => '1.0.0.0-alpha2',
+            'pretty_version' => '1.0.0-alpha3',
+            'version' => '1.0.0.0-alpha3',
             'type' => 'drupal-module',
             'install_path' => __DIR__ . '/../../modules/contrib/field_suggestion',
             'aliases' => array(),
-            'reference' => '1.0.0-alpha2',
+            'reference' => '1.0.0-alpha3',
             'dev_requirement' => false,
         ),
         'drupal/field_tools' => array(
@@ -1063,12 +1063,12 @@
             'dev_requirement' => false,
         ),
         'drupal/flow' => array(
-            'pretty_version' => '1.0.0-alpha2',
-            'version' => '1.0.0.0-alpha2',
+            'pretty_version' => '1.0.0-alpha6',
+            'version' => '1.0.0.0-alpha6',
             'type' => 'drupal-module',
             'install_path' => __DIR__ . '/../../modules/contrib/flow',
             'aliases' => array(),
-            'reference' => '1.0.0-alpha2',
+            'reference' => '1.0.0-alpha6',
             'dev_requirement' => false,
         ),
         'drupal/form_filter_fields' => array(
@@ -1795,7 +1795,7 @@
         'drupal/social' => array(
             'dev_requirement' => false,
             'replaced' => array(
-                0 => '11.0.3',
+                0 => '11.0.4',
             ),
         ),
         'drupal/social_course' => array(
@@ -1895,6 +1895,17 @@
             'install_path' => __DIR__ . '/../../modules/contrib/swiftmailer',
             'aliases' => array(),
             'reference' => '8.x-2.0',
+            'dev_requirement' => false,
+        ),
+        'drupal/switch_theme' => array(
+            'pretty_version' => 'dev-1.0.x',
+            'version' => 'dev-1.0.x',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/switch_theme',
+            'aliases' => array(
+                0 => '1.0.x-dev',
+            ),
+            'reference' => 'ea02701b0fe4b679d95021426c5eb9f967a58145',
             'dev_requirement' => false,
         ),
         'drupal/syslog' => array(
@@ -2189,12 +2200,12 @@
             'dev_requirement' => false,
         ),
         'goalgorilla/open_social' => array(
-            'pretty_version' => '11.0.3',
-            'version' => '11.0.3.0',
+            'pretty_version' => '11.0.4',
+            'version' => '11.0.4.0',
             'type' => 'drupal-profile',
             'install_path' => __DIR__ . '/../../profiles/contrib/social',
             'aliases' => array(),
-            'reference' => 'c4d7a3a6986c254c656a9ab218a8086ca09647b9',
+            'reference' => '3102a2ce013b1bf975bb79fdd156daa6598510bb',
             'dev_requirement' => false,
         ),
         'goalgorilla/social_template' => array(
@@ -2203,7 +2214,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '9eba1871e41db3e9f26f348e7a83a12815c6de9f',
+            'reference' => '1e7f8afd3cde7bb4a17ee302af435222c502bdde',
             'dev_requirement' => false,
         ),
         'guzzlehttp/guzzle' => array(

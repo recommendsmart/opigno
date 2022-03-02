@@ -6,7 +6,11 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -69,6 +73,56 @@ function field_suggestion_field_widget_form_alter(&$element, FormStateInterface 
 
   $ignored = $helper->ignored($entity_type_id, $field_name);
 
+  $pinned = [];
+
+  $ids = \Drupal::entityQuery('field_suggestion')
+    ->condition('entity_type', $entity_type_id)
+    ->condition('field_name', $field_name)
+    ->execute();
+
+  if (!empty($ids)) {
+    /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $manager */
+    $manager = \Drupal::service('entity_field.manager');
+
+    $field_type = $manager->getBaseFieldDefinitions($entity_type_id)[$field_name]
+      ->getType();
+
+    $storage = \Drupal::entityTypeManager()->getStorage('field_suggestion');
+
+    foreach ($ids as $id) {
+      /** @var \Drupal\field_suggestion\FieldSuggestionInterface $suggestion_entity */
+      $suggestion_entity = $storage->load($id);
+
+      $allow = TRUE;
+
+      if (!$suggestion_entity->exclude->isEmpty()) {
+        $hook = 'field_suggestion_exclude';
+        $exclude = $suggestion_entity->exclude->getValue();
+
+        foreach (\Drupal::moduleHandler()->getImplementations($hook) as $module) {
+          $function = $module . '_' . $hook;
+
+          if ($function($exclude, $entity)) {
+            $allow = FALSE;
+
+            break;
+          }
+        }
+      }
+
+      $value = $suggestion_entity->get('field_suggestion_' . $field_type)->value;
+
+      if ($allow) {
+        $pinned[] = $value;
+      }
+      else {
+        $ignored[] = $value;
+      }
+    }
+  }
+
+  $ignored = array_unique(array_merge($ignored, $pinned));
+
   if (!empty($ignored)) {
     $query->condition($field_name, $ignored, 'NOT IN');
   }
@@ -78,6 +132,12 @@ function field_suggestion_field_widget_form_alter(&$element, FormStateInterface 
     ->groupBy($field_name)
     ->range(0, $config->get('limit'))
     ->execute();
+
+  $values = array_column($values, $field_name);
+
+  if (!empty($pinned)) {
+    $values = array_merge($pinned, $values);
+  }
 
   if (count($values) === 0) {
     return;
@@ -91,13 +151,6 @@ function field_suggestion_field_widget_form_alter(&$element, FormStateInterface 
       'callback' => '_field_suggestion_ajax_callback',
     ],
   ];
-
-  $values = array_column($values, $field_name);
-  $pinned = \Drupal::state()->get('field_suggestion', []);
-
-  if (!empty($pinned[$entity_type_id][$field_name])) {
-    $values = array_merge($pinned[$entity_type_id][$field_name], $values);
-  }
 
   $storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
   $view_builder = \Drupal::entityTypeManager()->getViewBuilder($entity_type_id);
@@ -119,13 +172,79 @@ function field_suggestion_field_widget_form_alter(&$element, FormStateInterface 
     $element['suggestion']['#options'][] = $renderer->render($sub_element);
   }
 
-  $input = $form_state->getUserInput();
-  $parents = [$field_name, $context['delta'], 'suggestion'];
+  if (($triggering_element = $form_state->getTriggeringElement()) !== NULL) {
+    $parents = [$field_name, $context['delta'], 'suggestion'];
 
-  if (NestedArray::keyExists($input, $parents)) {
-    $delta = NestedArray::getValue($input, $parents);
-    $element['value']['#value'] = $element['suggestion']['#attributes']['data-suggestion-' . $delta];
+    if ($triggering_element['#parents'] === $parents) {
+      $input = $form_state->getUserInput();
+
+      if (NestedArray::keyExists($input, $parents)) {
+        $delta = NestedArray::getValue($input, $parents);
+        $element['value']['#value'] = $element['suggestion']['#attributes']['data-suggestion-' . $delta];
+      }
+    }
   }
+}
+
+/**
+ * Implements hook_field_suggestion_exclude().
+ */
+function field_suggestion_field_suggestion_exclude(
+  array $excluded_entities,
+  ContentEntityInterface $entity
+) {
+  if (!$entity->isNew()) {
+    foreach ($excluded_entities as $excluded_entity) {
+      if (
+        $excluded_entity['target_type'] === $entity->getEntityTypeId() &&
+        $excluded_entity['target_id'] === $entity->id()
+      ) {
+        return TRUE;
+      }
+    }
+  }
+
+  return FALSE;
+}
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function field_suggestion_entity_base_field_info(EntityTypeInterface $entity_type) {
+  $fields = [];
+
+  if ($entity_type->id() !== 'field_suggestion') {
+    return $fields;
+  }
+
+  $items = (array) \Drupal::config('field_suggestion.settings')->get('fields');
+
+  if (empty($items)) {
+    return $fields;
+  }
+
+  $settings = ['exclude_entity_types' => FALSE];
+
+  foreach (array_keys($items) as $entity_type_id) {
+    $settings['entity_type_ids'][$entity_type_id] = $entity_type_id;
+
+    $settings[$entity_type_id] = [
+      'handler' => 'default:' . $entity_type_id,
+      'handler_settings' => [
+        'target_bundles' => NULL,
+      ],
+    ];
+  }
+
+  $fields['exclude'] = BaseFieldDefinition::create('dynamic_entity_reference')
+    ->setLabel(t('Exclude'))
+    ->setDescription(t('Entities list where this suggestion should be hidden
+in the suggestions list.'))
+    ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+    ->setSettings($settings)
+    ->setDisplayOptions('form', ['weight' => 1]);
+
+  return $fields;
 }
 
 /**
@@ -136,11 +255,22 @@ function field_suggestion_entity_operation(EntityInterface $entity) {
   $fields = (array) \Drupal::config('field_suggestion.settings')->get('fields');
 
   if (!empty($fields[$entity_type_id = $entity->getEntityTypeId()])) {
-    $items = \Drupal::state()->get('field_suggestion', []);
+    /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $manager */
+    $manager = \Drupal::service('entity_field.manager');
+
+    $definitions = $manager->getBaseFieldDefinitions($entity_type_id);
+    $fields = array_flip($fields[$entity_type_id]);
+
+    foreach ($definitions as $field => $definition) {
+      if (isset($fields[$field])) {
+        $fields[$field] = $definition->getType();
+      }
+    }
+
     $options = ['query' => \Drupal::destination()->getAsArray()];
     $actions = [TRUE => t('Unpin'), FALSE => t('Pin')];
 
-    foreach ($fields[$entity_type_id] as $field) {
+    foreach ($fields as $field => $type) {
       $url = Url::fromRoute(
         'field_suggestion.pin',
         [
@@ -152,12 +282,17 @@ function field_suggestion_entity_operation(EntityInterface $entity) {
       );
 
       if ($url->access()) {
-        $unpin = !empty($items[$entity_type_id][$field]) &&
-          in_array($entity->$field->value, $items[$entity_type_id][$field]);
+        $count = \Drupal::entityQuery('field_suggestion')
+          ->condition('entity_type', $entity_type_id)
+          ->condition('field_name', $field)
+          ->condition('field_suggestion_' . $type, $entity->$field->value)
+          ->range(0, 1)
+          ->count()
+          ->execute();
 
         $operations['field_suggestion_' . $field] = [
           'title' => t('@action %field', [
-            '@action' => $actions[$unpin],
+            '@action' => $actions[$unpin = $count > 0],
             '%field' => $field,
           ]),
           'url' => $url,

@@ -114,13 +114,21 @@ class FlowTaskQueue {
     $this->imminent = [];
     while ($item = array_shift($tasks)) {
       $item_entity = $item->getEntity();
-      /** @var \Drupal\flow\Plugin\FlowTaskBase $task */
-      $task = $item->getTask();
       if ((($item_entity !== $entity) && ($item_entity->uuid() !== $entity->uuid())) || ($item->getTaskMode() !== $task_mode)) {
         array_push($this->imminent, $item);
         continue;
       }
+      // When the UUID matches, but not the entity object instance, the entity
+      // most probably got cloned during the process (for example after
+      // submitting an entity form). Re-instantiate the item with the currently
+      // given entity, as this one should be the current state of its values.
+      if (($item_entity !== $entity) && ($entity->uuid() && ($item_entity->uuid() === $entity->uuid()))) {
+        $item = new FlowTaskQueueItem($entity, $item->getTaskMode(), $item->getTask(), $item->getSubject());
+        $item_entity = $item->getEntity();
+      }
 
+      /** @var \Drupal\flow\Plugin\FlowTaskBase $task */
+      $task = $item->getTask();
       $start = $task->configuration()['execution']['start'] ?? 'now';
       if (!($start == 'now') && !$task_completed) {
         // Defer the task to be executed after the task was completed. This

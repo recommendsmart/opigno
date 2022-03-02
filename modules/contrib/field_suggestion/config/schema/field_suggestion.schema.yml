@@ -19,3 +19,11 @@ field_suggestion.settings:
         sequence:
           type: string
           label: 'Fields per entity type'
+
+field_suggestion.type.*:
+  type: config_entity
+  label: 'Field suggestion type'
+  mapping:
+    id:
+      type: string
+      label: 'Field type name'

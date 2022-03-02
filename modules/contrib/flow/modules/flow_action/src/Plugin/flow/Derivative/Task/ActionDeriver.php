@@ -18,6 +18,16 @@ class ActionDeriver extends ContentDeriverBase {
   use StringTranslationTrait;
 
   /**
+   * An array of action plugins to exclude.
+   *
+   * @var array
+   */
+  public static array $excludes = [
+    'action_goto_action',
+    'entity_delete_action',
+  ];
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, $base_plugin_id) {
@@ -37,6 +47,47 @@ class ActionDeriver extends ContentDeriverBase {
     $action_derivatives = [];
     foreach ($content_derivatives as $content_id => &$content_derivative) {
       foreach ($action_definitions as $action_plugin_id => $action_plugin_definition) {
+        if (isset($action_plugin_definition['provider'])) {
+          $provider = $action_plugin_definition['provider'];
+          if (substr($provider, 0, 5) === 'views') {
+            // Exclude any Views Bulk Operations (VBO) as they only make sense
+            // to be executed via Views.
+            continue;
+          }
+          // Exclude all actions for the ECA module, as they will be used within
+          // ECA configurations and mostly don't make sense to  be used within
+          // Flow. One exception is the
+          // "eca_trigger_content_entity_custom_event" action - this one allows
+          // to start any ECA-configured process from Flow.
+          if ((substr($provider, 0, 3) === 'eca' || substr($action_plugin_id, 0, 3) === 'eca') && $action_plugin_id !== "eca_trigger_content_entity_custom_event") {
+            continue;
+          }
+        }
+        if (substr($action_plugin_id, 0, 7) === 'entity:') {
+          [, $entity_action, $action_entity_type] = explode(':', $action_plugin_id);
+          // Map entity actions to their according entity type.
+          if ($action_entity_type !== $content_derivative['entity_type']) {
+            continue;
+          }
+          // Saving an entity explicitly is not supported.
+          if (substr($entity_action, 0, 4) === 'save') {
+            continue;
+          }
+        }
+        if ((substr($action_plugin_id, 0, 4) === 'user') && $content_derivative['entity_type'] !== 'user') {
+          continue;
+        }
+        if ((substr($action_plugin_id, 0, 4) === 'node') && $content_derivative['entity_type'] !== 'node') {
+          continue;
+        }
+        if ((substr($action_plugin_id, 0, 7) === 'comment') && $content_derivative['entity_type'] !== 'comment') {
+          continue;
+        }
+        foreach (self::$excludes as $exclude) {
+          if ($action_plugin_id === $exclude || $action_plugin_definition['id'] === $exclude) {
+            continue 2;
+          }
+        }
         $derivative_id = $content_id . '::' . $action_plugin_id;
         $action_derivatives[$derivative_id] = [
           'label' => $this->t('Execute @action on @content', [

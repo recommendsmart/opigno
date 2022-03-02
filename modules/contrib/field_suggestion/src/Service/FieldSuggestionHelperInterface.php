@@ -2,6 +2,8 @@
 
 namespace Drupal\field_suggestion\Service;
 
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
@@ -21,8 +23,16 @@ interface FieldSuggestionHelperInterface {
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
+   *   The entity display repository.
    */
-  public function __construct(ModuleHandlerInterface $module_handler);
+  public function __construct(
+    ModuleHandlerInterface $module_handler,
+    EntityTypeManagerInterface $entity_type_manager,
+    EntityDisplayRepositoryInterface $entity_display_repository
+  );
 
   /**
    * Gets field values that should be excluded from the suggestions list.
@@ -36,5 +46,13 @@ interface FieldSuggestionHelperInterface {
    *   The values list.
    */
   public function ignored($entity_type_id, $field_name);
+
+  /**
+   * Create a bundle.
+   *
+   * @param string $field_type
+   *   The field type.
+   */
+  public function bundle($field_type);
 
 }

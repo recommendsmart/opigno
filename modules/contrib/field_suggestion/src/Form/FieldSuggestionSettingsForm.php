@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\field_suggestion\Service\FieldSuggestionHelperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -31,6 +32,13 @@ class FieldSuggestionSettingsForm extends ConfigFormBase {
   protected $entityFieldManager;
 
   /**
+   * The helper.
+   *
+   * @var \Drupal\field_suggestion\Service\FieldSuggestionHelperInterface
+   */
+  protected $helper;
+
+  /**
    * The field names duplication resolver.
    *
    * Shows which entity type fields have an extra character in the name to not
@@ -51,18 +59,22 @@ class FieldSuggestionSettingsForm extends ConfigFormBase {
    *   The entity type manager.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
+   * @param \Drupal\field_suggestion\Service\FieldSuggestionHelperInterface $helper
+   *   The helper.
    */
   public function __construct(
     ConfigFactoryInterface $config_factory,
     TranslationInterface $translation,
     EntityTypeManagerInterface $entity_type_manager,
-    EntityFieldManagerInterface $entity_field_manager
+    EntityFieldManagerInterface $entity_field_manager,
+    FieldSuggestionHelperInterface $helper
   ) {
     parent::__construct($config_factory);
 
     $this->setStringTranslation($translation);
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
+    $this->helper = $helper;
   }
 
   /**
@@ -73,7 +85,8 @@ class FieldSuggestionSettingsForm extends ConfigFormBase {
       $container->get('config.factory'),
       $container->get('string_translation'),
       $container->get('entity_type.manager'),
-      $container->get('entity_field.manager')
+      $container->get('entity_field.manager'),
+      $container->get('field_suggestion.helper')
     );
   }
 
@@ -123,19 +136,27 @@ class FieldSuggestionSettingsForm extends ConfigFormBase {
       $form['entity_types']['#default_tab'] = 'edit-' . str_replace('_', '-', array_keys($selected_fields)[0]);
     }
 
+    $storage = $this->entityTypeManager->getStorage('field_suggestion_type');
+    $field_types = $storage->getQuery()->execute();
+
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
       if (!$entity_type instanceof ContentEntityTypeInterface) {
         continue;
       }
 
-      $allowed_fields = [];
+      $allowed_fields = $allowed_types = [];
 
       foreach ($this->entityFieldManager->getBaseFieldDefinitions($entity_type_id) as $field_name => $field) {
         if (
           !$field->isReadOnly() &&
           $field->getDisplayOptions('form') !== NULL
         ) {
-          $allowed_fields[$field_name] = $field->getLabel();
+          $key = $field_name . '|' . ($field_type = $field->getType());
+          $allowed_fields[$key] = $field->getLabel();
+
+          if (in_array($field_type, $field_types)) {
+            $allowed_types[] = $key;
+          }
         }
       }
 
@@ -154,7 +175,7 @@ class FieldSuggestionSettingsForm extends ConfigFormBase {
           '#type' => 'checkboxes',
           '#title' => $this->t('Fields'),
           '#options' => $allowed_fields,
-          '#default_value' => $selected_fields[$entity_type_id] ?? [],
+          '#default_value' => $allowed_types,
         ],
       ];
     }
@@ -168,14 +189,24 @@ class FieldSuggestionSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $all_fields = [];
 
+    $storage = $this->entityTypeManager->getStorage('field_suggestion_type');
+    $field_types = $storage->getQuery()->execute();
+
     foreach ($this->hasSuffix as $entity_type_id => $has_suffix) {
       $fields = array_filter(array_values($form_state->getValue([
         $entity_type_id . ($has_suffix ? '_' : ''),
         'fields',
       ])));
 
-      if (count($fields) > 0) {
-        $all_fields[$entity_type_id] = $fields;
+      foreach ($fields as $field) {
+        [$field_name, $field_type] = explode('|', $field);
+
+        $all_fields[$entity_type_id][] = $field_name;
+
+        if (!in_array($field_type, $field_types)) {
+          $this->helper->bundle($field_type);
+          $field_types[] = $field_type;
+        }
       }
     }
 

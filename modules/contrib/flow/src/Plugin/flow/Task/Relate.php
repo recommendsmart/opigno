@@ -18,6 +18,7 @@ use Drupal\flow\FlowCompatibility;
 use Drupal\flow\Helpers\EntityFieldManagerTrait;
 use Drupal\flow\Helpers\EntityTypeBundleInfoTrait;
 use Drupal\flow\Helpers\EntityTypeManagerTrait;
+use Drupal\flow\Helpers\ModuleHandlerTrait;
 use Drupal\flow\Helpers\SingleTaskOperationTrait;
 use Drupal\flow\Plugin\FlowSubjectInterface;
 use Drupal\flow\Plugin\FlowSubjectManager;
@@ -38,6 +39,7 @@ class Relate extends FlowTaskBase implements PluginFormInterface {
   use EntityFieldManagerTrait;
   use EntityTypeBundleInfoTrait;
   use EntityTypeManagerTrait;
+  use ModuleHandlerTrait;
   use SingleTaskOperationTrait;
   use StringTranslationTrait;
 
@@ -73,6 +75,7 @@ class Relate extends FlowTaskBase implements PluginFormInterface {
 
     /** @var \Drupal\flow\Plugin\flow\Task\Relate $instance */
     $instance = parent::create($container, ['target_entity_type_id' => $target_entity_type_id, 'target_bundle' => $target_bundle] + $configuration, $plugin_id, $plugin_definition);
+    $instance->setModuleHandler($container->get(self::$moduleHandlerServiceName));
     $instance->setStringTranslation($container->get('string_translation'));
     $instance->setEntityFieldManager($container->get(self::$entityFieldManagerServiceName));
     $instance->setEntityTypeBundleInfo($container->get(self::$entityTypeBundleInfoServiceName));
@@ -104,6 +107,8 @@ class Relate extends FlowTaskBase implements PluginFormInterface {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $form['#task'] = $this;
+
     $source_definition = $this->getPluginDefinition();
     $source_entity_type_id = $source_definition['entity_type'];
     $source_bundle = $source_definition['bundle'];
@@ -125,6 +130,7 @@ class Relate extends FlowTaskBase implements PluginFormInterface {
       '@type' => $target_entity_type->getLabel(),
     ]) : $this->t('@type item', ['@type' => $bundle_label]);
 
+    $select_widget = $this->moduleHandler->moduleExists('select2') ? 'select2' : 'select';
     $weight = 0;
 
     $weight += 10;
@@ -150,7 +156,7 @@ class Relate extends FlowTaskBase implements PluginFormInterface {
       ]);
     }
     $form['field_name'] = [
-      '#type' => 'select',
+      '#type' => $select_widget,
       '#title' => $this->t('Reference field'),
       '#description' => $this->t('Select the field of the subject that will hold the reference to the @target.', [
         '@target' => $target_label,
@@ -209,50 +215,43 @@ class Relate extends FlowTaskBase implements PluginFormInterface {
       $weight += 10;
       $field_name_options = ['_none' => $this->t('- None -')] + $field_name_options;
       $reverse_wrapper_id = Html::getUniqueId('flow-reverse-reference');
-      $form['reverse_prefix'] = [
-        '#type' => 'markup',
-        '#markup' => '<div id="' . $reverse_wrapper_id . '">',
+      $form['reverse'] = [
+        '#type' => 'container',
+        '#attributes' => ['id' => $reverse_wrapper_id],
         '#weight' => $weight++,
       ];
-      $weight += 10;
-      $form['reverse_field_name'] = [
-        '#type' => 'select',
+      $form['reverse']['field_name'] = [
+        '#type' => $select_widget,
         '#title' => $this->t('Reverse reference field'),
         '#description' => $this->t('Optionally you may define the reverse relationship, by selecting the field of the target that will hold the reference back to the @source.', [
           '@source' => $source_label,
         ]),
         '#options' => $field_name_options,
-        '#default_value' => $this->settings['reverse_field_name'] ?? '_none',
+        '#default_value' => $this->settings['reverse']['field_name'] ?? '_none',
         '#required' => FALSE,
         '#empty_value' => '_none',
-        '#weight' => $weight++,
+        '#weight' => 10,
         '#ajax' => [
-          'callback' => [$this, 'setReverseAjax'],
+          'callback' => [$this, 'selectAjax'],
           'wrapper' => $reverse_wrapper_id,
         ],
-        '#submit' => [[$this, 'submitReverseAjax']],
+        '#submit' => [[$this, 'selectSubmitAjax']],
         '#executes_submit_callback' => TRUE,
         '#limit_validation_errors' => [],
       ];
       $weight += 10;
-      if (!empty($this->settings['reverse_field_name'])) {
-        $form['reverse_method'] = [
+      if (!empty($this->settings['reverse']['field_name'])) {
+        $form['reverse']['method'] = [
           '#type' => 'select',
           '#title' => $this->t('Reverse reference method'),
           '#description' => $this->t('Select how the reverse relationship will be defined, using the above selected reverse reference field.'),
           '#options' => $reference_method_options,
-          '#default_value' => $this->settings['reverse_method'] ?? '_none',
+          '#default_value' => $this->settings['reverse']['method'] ?? '_none',
           '#required' => TRUE,
           '#empty_value' => '_none',
-          '#weight' => $weight++,
+          '#weight' => 20,
         ];
       }
-      $weight += 10;
-      $form['reverse_suffix'] = [
-        '#type' => 'markup',
-        '#markup' => '</div>',
-        '#weight' => $weight++,
-      ];
     }
 
     $weight += 10;
@@ -284,7 +283,7 @@ class Relate extends FlowTaskBase implements PluginFormInterface {
       $target_plugin_options[$target_plugin_id] = $target_plugin_definition['label'];
     }
     $form['target']['id'] = [
-      '#type' => 'select',
+      '#type' => $select_widget,
       '#title' => $this->t('Reference target'),
       '#description' => $this->t('Select how the @target will be identified.', [
         '@target' => $target_label,
@@ -295,10 +294,10 @@ class Relate extends FlowTaskBase implements PluginFormInterface {
       '#empty_value' => '_none',
       '#weight' => 10,
       '#ajax' => [
-        'callback' => [$this, 'setTargetAjax'],
+        'callback' => [$this, 'selectAjax'],
         'wrapper' => $target_wrapper_id,
       ],
-      '#submit' => [[$this, 'submitTargetAjax']],
+      '#submit' => [[$this, 'selectSubmitAjax']],
       '#executes_submit_callback' => TRUE,
       '#limit_validation_errors' => [],
     ];
@@ -330,66 +329,33 @@ class Relate extends FlowTaskBase implements PluginFormInterface {
   }
 
   /**
-   * Ajax submit callback for setting up the reverse reference.
+   * Ajax submit callback for select widgets.
    *
    * @param array &$form
    *   The current form build array.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The according form state.
    */
-  public function submitReverseAjax(array &$form, FormStateInterface $form_state): void {
-    $button = &$form_state->getTriggeringElement();
-    $element = &NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
-    foreach (Element::children($element) as $child) {
-      if (isset($element[$child]['#value'])) {
-        $form_state->setValueForElement($element[$child], $element[$child]['#value']);
+  public function selectSubmitAjax(array &$form, FormStateInterface $form_state): void {
+    $button = $form_state->getTriggeringElement();
+    $button_parents = $button['#array_parents'];
+    while ($element = &NestedArray::getValue($form, $button_parents)) {
+      foreach (Element::children($element) as $child) {
+        if (isset($element[$child]['#value'])) {
+          $value = $element[$child]['#value'] === '_none' ? NULL : $element[$child]['#value'];
+          $form_state->setValueForElement($element[$child], $value);
+        }
       }
+      if (isset($element['#task']) && $element['#task'] === $this) {
+        break;
+      }
+      array_pop($button_parents);
     }
     $subform_state = SubformState::createForSubform($element, $form, $form_state);
-    $this->submitConfigurationForm($element, $subform_state);
-    $form_state->setRebuild();
-  }
-
-  /**
-   * Ajax callback for setting up the reverse reference.
-   *
-   * @param array &$form
-   *   The current form build array.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The according form state.
-   *
-   * @return array
-   *   The part of the form that got refreshed via Ajax.
-   */
-  public function setReverseAjax(array &$form, FormStateInterface $form_state): array {
-    $button = &$form_state->getTriggeringElement();
-    $element = &NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
-    return array_intersect_key($element, [
-      'reverse_prefix' => TRUE,
-      'reverse_field_name' => TRUE,
-      'reverse_method' => TRUE,
-      'reverse_suffix' => TRUE,
-    ]);
-  }
-
-  /**
-   * Ajax submit callback for setting up the identifier of the target.
-   *
-   * @param array &$form
-   *   The current form build array.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The according form state.
-   */
-  public function submitTargetAjax(array &$form, FormStateInterface $form_state): void {
-    $button = &$form_state->getTriggeringElement();
-    $element = &NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
-    foreach (Element::children($element) as $child) {
-      if (isset($element[$child]['#value'])) {
-        $form_state->setValueForElement($element[$child], $element[$child]['#value']);
-      }
-    }
-    $subform_state = SubformState::createForSubform($element, $form, $form_state);
-    $this->submitConfigurationForm($element, $subform_state);
+    $this->settings['field_name'] = $subform_state->getValue(['field_name']);
+    $this->settings['method'] = $subform_state->getValue(['method']);
+    $this->settings['reverse'] = $subform_state->getValue(['reverse']);
+    $this->settings['target']['id'] = $subform_state->getValue(['target', 'id']);
     $form_state->setRebuild();
   }
 
@@ -404,7 +370,7 @@ class Relate extends FlowTaskBase implements PluginFormInterface {
    * @return array
    *   The part of the form that got refreshed via Ajax.
    */
-  public function setTargetAjax(array &$form, FormStateInterface $form_state): array {
+  public function selectAjax(array &$form, FormStateInterface $form_state): array {
     $button = &$form_state->getTriggeringElement();
     $element = &NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
     return $element;
@@ -415,7 +381,7 @@ class Relate extends FlowTaskBase implements PluginFormInterface {
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     $target = $this->getTargetSubject();
-    if ($target instanceof PluginFormInterface) {
+    if (isset($form['target']['settings']) && $target instanceof PluginFormInterface) {
       $target_form_state = SubformState::createForSubform($form['target']['settings'], $form, $form_state);
       $target->validateConfigurationForm($form['target']['settings'], $target_form_state);
     }
@@ -427,14 +393,13 @@ class Relate extends FlowTaskBase implements PluginFormInterface {
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->settings['field_name'] = $form_state->getValue(['field_name']);
     $this->settings['method'] = $form_state->getValue(['method']);
-    $this->settings['reverse_field_name'] = $form_state->getValue(['reverse_field_name']);
-    $this->settings['reverse_method'] = $form_state->getValue(['reverse_method']);
+    $this->settings['reverse'] = $form_state->getValue(['reverse']);
     $this->settings['target']['id'] = $form_state->getValue(['target', 'id']);
 
     $this->target = NULL;
     $this->initTargetSubject();
     if ($target = $this->getTargetSubject()) {
-      if (isset($form['target']['settings']) && $target instanceof PluginFormInterface) {
+      if (isset($form['target']['settings']) && $form_state->hasValue(['target', 'settings']) && $target instanceof PluginFormInterface) {
         $target_form_state = SubformState::createForSubform($form['target']['settings'], $form, $form_state);
         $target->submitConfigurationForm($form['target']['settings'], $target_form_state);
       }
@@ -463,8 +428,8 @@ class Relate extends FlowTaskBase implements PluginFormInterface {
       return;
     }
     $method_settings = explode(':', $this->settings['method']);
-    $reverse_field_name = $this->settings['reverse_field_name'] ?? NULL;
-    $reverse_method_settings = !empty($this->settings['reverse_method']) ? explode(':', $this->settings['reverse_method']) : NULL;
+    $reverse_field_name = $this->settings['reverse']['field_name'] ?? NULL;
+    $reverse_method_settings = !empty($this->settings['reverse']['method']) ? explode(':', $this->settings['reverse']['method']) : NULL;
 
     if (empty($this->flags)) {
       $this->flags = [
@@ -663,8 +628,8 @@ class Relate extends FlowTaskBase implements PluginFormInterface {
     if (isset($settings['field_name'])) {
       $target_configuration['settings']['target_for']['field'] = $settings['field_name'];
     }
-    if (isset($settings['reverse_field_name'])) {
-      $target_configuration['settings']['target_for']['reverse_field'] = $settings['reverse_field_name'];
+    if (isset($settings['reverse']['field_name'])) {
+      $target_configuration['settings']['target_for']['reverse_field'] = $settings['reverse']['field_name'];
     }
     $this->setTargetSubject($this->subjectManager->createInstance($settings['target']['id'], $target_configuration));
   }
@@ -711,6 +676,47 @@ class Relate extends FlowTaskBase implements PluginFormInterface {
       }
     }
     return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $dependencies = parent::calculateDependencies();
+
+    $etm = \Drupal::entityTypeManager();
+    $source_definition = $this->getPluginDefinition();
+    if (isset($this->settings['field_name'])) {
+      if ($field_storage_config = $etm->getStorage('field_storage_config')->load($source_definition['entity_type'] . '.' . $this->settings['field_name'])) {
+        $dependencies[$field_storage_config->getConfigDependencyKey()][] = $field_storage_config->getConfigDependencyName();
+      }
+      if ($field_config = $etm->getStorage('field_config')->load($source_definition['entity_type'] . '.' . $source_definition['bundle'] . '.' . $this->settings['field_name'])) {
+        $dependencies[$field_config->getConfigDependencyKey()][] = $field_config->getConfigDependencyName();
+      }
+    }
+    $target_entity_type_id = $this->configuration['target_entity_type_id'] ?? NULL;
+    $target_bundle = $this->configuration['target_bundle'] ?? NULL;
+    if ($target_entity_type_id && $target_bundle && !empty($this->settings['reverse']['field_name'])) {
+      if ($field_storage_config = $etm->getStorage('field_storage_config')->load($target_entity_type_id . '.' . $this->settings['reverse']['field_name'])) {
+        $dependencies[$field_storage_config->getConfigDependencyKey()][] = $field_storage_config->getConfigDependencyName();
+      }
+      if ($field_config = $etm->getStorage('field_config')->load($target_entity_type_id . '.' . $target_bundle . '.' . $this->settings['reverse']['field_name'])) {
+        $dependencies[$field_config->getConfigDependencyKey()][] = $field_config->getConfigDependencyName();
+      }
+    }
+    /** @var \Drupal\flow\FlowSubjectBase $target */
+    if ($target = $this->getTargetSubject()) {
+      foreach ($target->calculateDependencies() as $key => $source_dependencies) {
+        if (!isset($dependencies[$key])) {
+          $dependencies[$key] = $source_dependencies;
+        }
+        else {
+          $dependencies[$key] = array_unique(array_merge($dependencies[$key], $source_dependencies));
+        }
+      }
+    }
+
+    return $dependencies;
   }
 
 }

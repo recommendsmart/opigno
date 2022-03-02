@@ -115,12 +115,16 @@ flow.task.settings.relate:
     method:
       type: string
       label: 'Reference method'
-    reverse_field_name:
-      type: string
-      label: 'Reverse reference field machine name'
-    reverse_method:
-      type: string
-      label: 'Reverse reference method'
+    reverse:
+      type: mapping
+      label: 'Reverse reference settings'
+      mapping:
+        field_name:
+          type: string
+          label: 'Reverse reference field machine name'
+        method:
+          type: string
+          label: 'Reverse reference method'
     target:
       type: flow_subject
       label: 'Target subject'

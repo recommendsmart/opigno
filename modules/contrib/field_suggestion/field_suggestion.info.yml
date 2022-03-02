@@ -6,8 +6,9 @@ configure: field_suggestion.settings
 dependencies:
   - drupal:field
   - drupal:user
+  - dynamic_entity_reference:dynamic_entity_reference
 
-# Information added by Drupal.org packaging script on 2022-02-13
-version: '1.0.0-alpha2'
+# Information added by Drupal.org packaging script on 2022-02-27
+version: '1.0.0-alpha3'
 project: 'field_suggestion'
-datestamp: 1644780459
+datestamp: 1645977793

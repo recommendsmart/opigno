@@ -266,26 +266,32 @@ class TaskForm implements FormInterface, ContainerInjectionInterface {
   /**
    * After build callback.
    */
-  public function afterBuild(array $element, FormStateInterface $form_state) {
-    if ($form_state->hasValue(['task', 'settings'])) {
+  public function afterBuild(array $form, FormStateInterface $form_state) {
+    $subject = $this->subject;
+    $task = $this->task;
+    if ($form_state->hasValue(['task', 'settings']) && $task instanceof PluginFormInterface) {
       $values = $form_state->getValue(['task', 'settings']);
       array_walk_recursive($values, function (&$value) {
         if ($value === '_none') {
           $value = NULL;
         }
       });
-      $this->task->setSettings($values);
+      $form_state->setValue(['task', 'settings'], $values);
+      $task_form_state = SubformState::createForSubform($form['task']['settings'], $form, $form_state);
+      $task->submitConfigurationForm($form['task']['settings'], $task_form_state);
     }
-    if ($form_state->hasValue(['subject', 'settings'])) {
+    if ($form_state->hasValue(['subject', 'settings']) && $subject instanceof PluginFormInterface) {
       $values = $form_state->getValue(['subject', 'settings']);
       array_walk_recursive($values, function (&$value) {
         if ($value === '_none') {
           $value = NULL;
         }
       });
-      $this->subject->setSettings($values);
+      $form_state->setValue(['subject', 'settings'], $values);
+      $subject_form_state = SubformState::createForSubform($form['subject']['settings'], $form, $form_state);
+      $subject->submitConfigurationForm($form['subject']['settings'], $subject_form_state);
     }
-    return $element;
+    return $form;
   }
 
   /**

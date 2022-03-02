@@ -21,7 +21,9 @@ copy-pasting it.
 REQUIREMENTS
 ------------
 
-This module requires no modules outside of Drupal core.
+This module requires the following modules:
+
+ * [Dynamic Entity Reference](https://www.drupal.org/project/dynamic_entity_reference)
 
 
 INSTALLATION

@@ -12,6 +12,7 @@ use Drupal\flow\Flow;
  */
 trait FallbackSubjectTrait {
 
+  use EntityTypeManagerTrait;
   use ModuleHandlerTrait;
 
   /**
@@ -105,7 +106,7 @@ trait FallbackSubjectTrait {
     $definition = $this->getPluginDefinition();
     $entity_type_id = $definition['entity_type'];
     $values = [];
-    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
+    $entity_type = $this->getEntityTypeManager()->getDefinition($entity_type_id);
     if ($entity_type->hasKey('bundle')) {
       $values[$entity_type->getKey('bundle')] = $definition['bundle'];
     }
@@ -116,8 +117,8 @@ trait FallbackSubjectTrait {
       if (!isset(EntityFallbackRepository::$items[$uuid])) {
         $uuid_key = $entity_type->hasKey('uuid') ? $entity_type->getKey('uuid') : 'uuid';
         $values[$uuid_key] = $uuid;
-        $item = $this->entityTypeManager->getStorage($entity_type_id)->create($values);
-        Flow::needsSave($item, $this);
+        $item = $this->getEntityTypeManager()->getStorage($entity_type_id)->create($values);
+        Flow::needsSave($item);
         EntityFallbackRepository::$items[$uuid] = $item;
       }
       return [EntityFallbackRepository::$items[$uuid]];
@@ -127,8 +128,8 @@ trait FallbackSubjectTrait {
     // same entity within the same process.
     $settings_hash = hash('md4', $entity_type_id . ':' . $definition['bundle'] . ':' . serialize($this->settings));
     if (!isset(EntityFallbackRepository::$items[$settings_hash])) {
-      $item = $this->entityTypeManager->getStorage($entity_type_id)->create($values);
-      Flow::needsSave($item, $this);
+      $item = $this->getEntityTypeManager()->getStorage($entity_type_id)->create($values);
+      Flow::needsSave($item);
       EntityFallbackRepository::$items[$settings_hash] = $item;
     }
     return [EntityFallbackRepository::$items[$settings_hash]];

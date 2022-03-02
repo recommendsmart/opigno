@@ -24,6 +24,17 @@ This module works on top of your data in the system: Every task and
 subject always relates to a concrete data type, that is being defined by the
 entity type and a bundle (for example node type "article").
 
+Out of the box you can:
+
+* Merge field values (with Token support)
+* Create further content (such as taxonomy terms, nodes, comments etc.)
+* Relate content with each other (including back-references)
+
+You can extend this by either writing your own task plugins, or installing
+further modules. You can decide whether your task is to be executed immediately
+or to be run in the background queue. Flow automatically enqueues your task for
+continuation when it's operating on a large number of subjects.
+
 ## 2. Requirements
 
 This module does not require anything outside of Drupal core.
@@ -64,6 +75,9 @@ On every task mode, you can create a task that always operates on a certain
 subject. A subject is always a concrete data type, like an article, blog post
 or a "Tags" taxonomy term.
 
+When adding a new task, it is not enabled immediately. To enable the task,
+select the newly created task in the Flow configuration and choose "Enable".
+
 ## 4.1 The default form display mode
 
 Some configurations of tasks and subjects, for example for merging content
@@ -74,6 +88,18 @@ form display doesn't exists, it falls back to the default form display.
 That means that you can adjust the way fields are being displayed within Flow
 configurations by adding a "flow" form display mode for your content at
 /admin/structure/display-modes/form and configure that form display accordingly.
+
+## 4.2 The Flow task queue
+
+When you have tasks that operate on a large amount of subjects (for example when
+using a View for loading subject items), Flow automatically enqueues the
+task for continuation into the `flow_task` queue. When you run Drupal cron,
+the queue is being processed automatically. For heavy usage of the queue
+mechanic, it is recommended to setup a cron job that works o that queue, for
+example using Drush:
+```bash
+drush queue:run flow_task
+```
 
 ## 5. Complementary projects
 
@@ -101,20 +127,24 @@ simple interface for setting up such actions, without the need of a knowledge
 of programming or Drupal's application logic.
 
 There might be use cases for automation, that go beyond the scope of content
-operations, and exceed the level of complexity this module is not able to cover.
+operations, and exceed the level of complexity this module would be able to
+cover. Examples that go beyond the capabilities of this workflow automation
+tool:
 
-Examples that go beyond the capabilities of this workflow automation tool:
-* Process logic that should apply on a more generic level other than on concrete
+* Process logic that should apply on a more generic level other than on concret
   data, i.e. when you need a higher level of abstraction.
 * A conditional chain of actions to execute.
 * Creating data whose structure is to be (dynamically) defined on runtime.
 * Reacting on events other than entity-related operations.
+* Granular control level structures similar to a programming language.
 
-For such use cases, you might need the scale of a rules-engine. The following
-modules could be considered when you need a rules-engine:
+For such use cases, you might need the scale of a rule-based engine.
+Example modules:
+
 * Rules (https://www.drupal.org/project/rules)
 * ECA: Event - Condition - Action (https://www.drupal.org/project/eca)
 * Business Rules (https://www.drupal.org/project/business_rules)
+
 This list is not kept up-to date. Inform yourself about current solutions
 for having a rules-engine in Drupal.
 

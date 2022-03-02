@@ -2,6 +2,7 @@
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\flow\Entity\EntitySaveHandler;
 use Drupal\flow\Flow;
 use Drupal\flow\FlowTaskQueue;
@@ -26,7 +27,7 @@ function flow_entity_presave(EntityInterface $entity) {
 }
 
 /**
- * Implements hook_entity_presave().
+ * Implements hook_entity_predelete().
  */
 function flow_entity_predelete(EntityInterface $entity) {
   Flow::service()->apply($entity, 'delete');
@@ -36,6 +37,8 @@ function flow_entity_predelete(EntityInterface $entity) {
  * Implements hook_entity_insert().
  */
 function flow_entity_insert(EntityInterface $entity) {
+  _flow_update_task_stack($entity);
+  _flow_cleanup_save_stack($entity);
   _flow_process_after_task($entity, 'create');
   _flow_process_after_task($entity, 'save');
 }
@@ -44,6 +47,8 @@ function flow_entity_insert(EntityInterface $entity) {
  * Implements hook_entity_update().
  */
 function flow_entity_update(EntityInterface $entity) {
+  _flow_update_task_stack($entity);
+  _flow_cleanup_save_stack($entity);
   _flow_process_after_task($entity, 'save');
 }
 
@@ -82,16 +87,54 @@ function _flow_process_after_task(EntityInterface $entity, string $task_mode): v
       /** @var \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository */
       $entity_repository = \Drupal::service('entity.repository');
       $loaded = $entity->uuid() ? $entity_repository->loadEntityByUuid($entity->getEntityTypeId(), $entity->uuid()) : NULL;
-      $entity_needs_save = $loaded && in_array($entity, Flow::$save, TRUE) && $task_mode !== 'delete';
-      EntitySaveHandler::service()->ensureSaveAll(Flow::$save);
+      $entity_needs_save = $loaded && $task_mode !== 'delete' && (in_array($entity, Flow::$save, TRUE) || array_filter(Flow::$save, function ($stacked) use ($entity) {return $entity->uuid() && ($stacked->uuid() === $entity->uuid());}));
+      EntitySaveHandler::service()->ensureSave(Flow::$save);
     }
     array_pop($stack);
     if ($entity_needs_save) {
       Flow::setActive(FALSE);
+      if ($entity instanceof RevisionableInterface) {
+        $entity->updateLoadedRevisionId();
+        $entity->setNewRevision(FALSE);
+      }
       $entity->save();
     }
   }
   finally {
     Flow::setActive($flow_is_active);
+  }
+}
+
+/**
+ * Updates the Flow task stack using the given entity.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The Flow-related entity.
+ */
+function _flow_update_task_stack(EntityInterface $entity) {
+  if ($uuid = $entity->uuid()) {
+    foreach (Flow::$stack as &$stack) {
+      foreach ($stack as $i => $stacked) {
+        if (($stacked !== $entity) && ($uuid === $stacked->uuid())) {
+          $stack[$i] = $entity;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Removes the given entity from the save stack.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The Flow-related entity.
+ */
+function _flow_cleanup_save_stack(EntityInterface $entity) {
+  if (!empty(Flow::$save)) {
+    foreach (Flow::$save as $i => $stacked) {
+      if (($stacked === $entity) || ($entity->uuid() && ($entity->uuid() === $stacked->uuid()))) {
+        unset(Flow::$save[$i]);
+      }
+    }
   }
 }

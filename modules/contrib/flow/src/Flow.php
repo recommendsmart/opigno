@@ -169,7 +169,7 @@ class Flow {
         $queue->process($entity, $task_mode);
         // Finally make sure, that changed entities are being saved.
         if (!empty(self::$save)) {
-          EntitySaveHandler::service()->ensureSaveAll(self::$save);
+          EntitySaveHandler::service()->ensureSave(self::$save);
         }
       }
       finally {

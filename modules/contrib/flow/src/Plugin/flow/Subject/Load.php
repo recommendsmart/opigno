@@ -202,7 +202,7 @@ class Load extends FlowSubjectBase implements PluginFormInterface {
       '#required' => TRUE,
       '#empty_value' => '_none',
       '#ajax' => [
-        'callback' => [$this, 'setModeAjax'],
+        'callback' => [$this, 'selectAjax'],
         'wrapper' => $wrapper_id,
       ],
       '#executes_submit_callback' => TRUE,
@@ -274,15 +274,16 @@ class Load extends FlowSubjectBase implements PluginFormInterface {
           $entity_type = Views::getView($view_id)->getBaseEntityType();
           return $entity_type && $entity_type->id() == $entity_type_id;
         }, ARRAY_FILTER_USE_KEY);
+        $select_widget = $this->moduleHandler->moduleExists('select2') ? 'select2' : 'select';
         $form['view']['id'] = [
-          '#type' => 'select',
+          '#type' => $select_widget,
           '#title' => $this->t('View'),
           '#options' => $view_id_options,
           '#default_value' => $selected_view_id,
           '#required' => TRUE,
           '#empty_value' => '_none',
           '#ajax' => [
-            'callback' => [$this, 'setViewAjax'],
+            'callback' => [$this, 'selectAjax'],
             'wrapper' => $view_wrapper_id,
           ],
           '#executes_submit_callback' => TRUE,
@@ -312,7 +313,7 @@ class Load extends FlowSubjectBase implements PluginFormInterface {
             '#required' => TRUE,
             '#empty_value' => '_none',
             '#ajax' => [
-              'callback' => [$this, 'setViewAjax'],
+              'callback' => [$this, 'selectAjax'],
               'wrapper' => $view_wrapper_id,
             ],
             '#executes_submit_callback' => TRUE,
@@ -372,7 +373,7 @@ class Load extends FlowSubjectBase implements PluginFormInterface {
   }
 
   /**
-   * Ajax submit callback for setting up the loading mode.
+   * Ajax submit callback.
    *
    * @param array &$form
    *   The current form build array.
@@ -385,7 +386,8 @@ class Load extends FlowSubjectBase implements PluginFormInterface {
     while ($element = &NestedArray::getValue($form, $button_parents)) {
       foreach (Element::children($element) as $child) {
         if (isset($element[$child]['#value'])) {
-          $form_state->setValueForElement($element[$child], $element[$child]['#value']);
+          $value = $element[$child]['#value'] === '_none' ? NULL : $element[$child]['#value'];
+          $form_state->setValueForElement($element[$child], $value);
         }
       }
       if (isset($element['#subject']) && $element['#subject'] === $this) {
@@ -399,7 +401,7 @@ class Load extends FlowSubjectBase implements PluginFormInterface {
   }
 
   /**
-   * Ajax callback for setting up the loading mode.
+   * Ajax callback when changing a form input using a select widget.
    *
    * @param array &$form
    *   The current form build array.
@@ -409,24 +411,7 @@ class Load extends FlowSubjectBase implements PluginFormInterface {
    * @return array
    *   The part of the form that got refreshed via Ajax.
    */
-  public function setModeAjax(array &$form, FormStateInterface $form_state): array {
-    $button = $form_state->getTriggeringElement();
-    $element = &NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
-    return $element;
-  }
-
-  /**
-   * Ajax callback for setting up the Views configuration.
-   *
-   * @param array $form
-   *   The current form build array.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The according form state.
-   *
-   * @return array
-   *   The part of the form that got refreshed via Ajax.
-   */
-  public function setViewAjax(array $form, FormStateInterface $form_state): array {
+  public function selectAjax(array &$form, FormStateInterface $form_state): array {
     $button = $form_state->getTriggeringElement();
     $element = &NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
     return $element;
@@ -515,6 +500,21 @@ class Load extends FlowSubjectBase implements PluginFormInterface {
 
       yield $entity;
     }
+  }
+
+    /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $dependencies = parent::calculateDependencies();
+    if (!empty($this->settings['view']['id']) && \Drupal::moduleHandler()->moduleExists('views')) {
+      $etm = \Drupal::entityTypeManager();
+      if ($view_config = $etm->getStorage('view')->load($this->settings['view']['id'])) {
+        $dependencies[$view_config->getConfigDependencyKey()][] = $view_config->getConfigDependencyName();
+        $dependencies['module'][] = 'views';
+      }
+    }
+    return $dependencies;
   }
 
 }

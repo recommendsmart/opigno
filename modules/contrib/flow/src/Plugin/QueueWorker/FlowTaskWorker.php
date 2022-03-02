@@ -22,7 +22,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @QueueWorker(
  *   id = "flow_task",
- *   title = @Translation("Flow tasks")
+ *   title = @Translation("Flow tasks"),
+ *   cron = {"time" = 60}
  * )
  */
 class FlowTaskWorker extends QueueWorkerBase implements ContainerFactoryPluginInterface {
@@ -121,8 +122,8 @@ class FlowTaskWorker extends QueueWorkerBase implements ContainerFactoryPluginIn
       try {
         $queue->process($entity, $task_mode);
         if (!empty(Flow::$save)) {
-          $entity_needs_save = $loaded && in_array($entity, Flow::$save, TRUE) && $task_mode !== 'delete';
-          EntitySaveHandler::service()->ensureSaveAll(Flow::$save);
+          $entity_needs_save = $loaded && $task_mode !== 'delete' && (in_array($entity, Flow::$save, TRUE) || array_filter(Flow::$save, function ($stacked) use ($entity) {return $entity->uuid() && ($stacked->uuid() === $entity->uuid());}));
+          EntitySaveHandler::service()->ensureSave(Flow::$save);
         }
       }
       finally {

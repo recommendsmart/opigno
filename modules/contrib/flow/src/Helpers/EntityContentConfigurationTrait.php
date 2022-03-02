@@ -117,7 +117,9 @@ trait EntityContentConfigurationTrait {
     ];
     // We need to use a process callback for embedding the entity fields,
     // because the fields to embed need to know their "#parents".
-    $form['#process'][] = [$this, 'processForm'];
+    $form['values'] = [
+      '#process' => [[$this, 'processForm']],
+    ];
     return $form;
   }
 
@@ -146,19 +148,23 @@ trait EntityContentConfigurationTrait {
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+    if (!$form_state->hasValue(['values'])) {
+      return;
+    }
+
     $entity_form_object = $this->getEntityFormObject();
     $entity_form_state = (new FormState())
       ->disableCache()
       ->setFormObject($entity_form_object)
       ->setFormState($form_state->getCacheableArray())
-      ->setValues($form_state->getValues());
+      ->setValues($form_state->getValue(['values']));
     $entity_form = [];
     $entity_form_object->buildForm($entity_form, $entity_form_state);
     $this->getFormBuilder()->prepareForm($entity_form_object->getFormId(), $entity_form, $entity_form_state);
     $entity_form_object->validateForm($entity_form, $entity_form_state);
     $form_state
       ->setFormState($entity_form_state->getCacheableArray())
-      ->setValues($entity_form_state->getValues());
+      ->setValue('values', $entity_form_state->getValues());
     $form_state->setLimitValidationErrors($entity_form_state->getLimitValidationErrors());
     foreach ($entity_form_state->getErrors() as $name => $error) {
       $form_state->setErrorByName($name, $error);
@@ -169,12 +175,16 @@ trait EntityContentConfigurationTrait {
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    if (!$form_state->hasValue(['values'])) {
+      return;
+    }
+
     $entity_form_object = $this->getEntityFormObject();
     $entity_form_state = (new FormState())
       ->disableCache()
       ->setFormObject($entity_form_object)
       ->setFormState($form_state->getCacheableArray())
-      ->setValues($form_state->getValues());
+      ->setValues($form_state->getValue(['values']));
     $entity_form = [];
     $entity_form_object->buildForm($entity_form, $entity_form_state);
     $this->getFormBuilder()->prepareForm($entity_form_object->getFormId(), $entity_form, $entity_form_state);
@@ -182,8 +192,15 @@ trait EntityContentConfigurationTrait {
 
     $this->configuredContentEntity = $entity_form_object->getEntity();
     $values = $this->getSerializer()->normalize($this->configuredContentEntity, get_class($this->configuredContentEntity));
-    $entity_type = $this->configuredContentEntity->getEntityType();
 
+    // @todo Remove this workaround once #2972988 is fixed.
+    foreach ($values as &$field_values) {
+      foreach ($field_values as &$field_value) {
+        unset($field_value['processed']);
+      }
+    }
+
+    $entity_type = $this->configuredContentEntity->getEntityType();
     // Remove the UUID as it won't be used at all for configuration, and do a
     // little cleanup by filtering out empty values. Also only include field
     // values that are available on the used form display mode.

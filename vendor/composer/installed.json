@@ -4712,18 +4712,18 @@
         },
         {
             "name": "drupal/feeds",
-            "version": "3.0.0-alpha11",
-            "version_normalized": "3.0.0.0-alpha11",
+            "version": "3.0.0-beta1",
+            "version_normalized": "3.0.0.0-beta1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/feeds.git",
-                "reference": "8.x-3.0-alpha11"
+                "reference": "8.x-3.0-beta1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/feeds-8.x-3.0-alpha11.zip",
-                "reference": "8.x-3.0-alpha11",
-                "shasum": "5f46520bda42a5986225d5c4892fca123da5861e"
+                "url": "https://ftp.drupal.org/files/projects/feeds-8.x-3.0-beta1.zip",
+                "reference": "8.x-3.0-beta1",
+                "shasum": "badc1d2ca2f386c05c4c7d793a0ee23ce035b94c"
             },
             "require": {
                 "drupal/core": "^8.9 || ^9"
@@ -4735,8 +4735,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-3.0-alpha11",
-                    "datestamp": "1637865868",
+                    "version": "8.x-3.0-beta1",
+                    "datestamp": "1645727744",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
@@ -4894,27 +4894,28 @@
         },
         {
             "name": "drupal/field_suggestion",
-            "version": "1.0.0-alpha2",
-            "version_normalized": "1.0.0.0-alpha2",
+            "version": "1.0.0-alpha3",
+            "version_normalized": "1.0.0.0-alpha3",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/field_suggestion.git",
-                "reference": "1.0.0-alpha2"
+                "reference": "1.0.0-alpha3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/field_suggestion-1.0.0-alpha2.zip",
-                "reference": "1.0.0-alpha2",
-                "shasum": "44f44ef7f45da854ed111964ae3671b775d5d6a3"
+                "url": "https://ftp.drupal.org/files/projects/field_suggestion-1.0.0-alpha3.zip",
+                "reference": "1.0.0-alpha3",
+                "shasum": "1176c7e4c87301bd4c53035e60658740469ca825"
             },
             "require": {
-                "drupal/core": "^8 || ^9"
+                "drupal/core": "^8 || ^9",
+                "drupal/dynamic_entity_reference": "*"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "1.0.0-alpha2",
-                    "datestamp": "1644780456",
+                    "version": "1.0.0-alpha3",
+                    "datestamp": "1645977791",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
@@ -5248,18 +5249,18 @@
         },
         {
             "name": "drupal/flow",
-            "version": "1.0.0-alpha2",
-            "version_normalized": "1.0.0.0-alpha2",
+            "version": "1.0.0-alpha6",
+            "version_normalized": "1.0.0.0-alpha6",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/flow.git",
-                "reference": "1.0.0-alpha2"
+                "reference": "1.0.0-alpha6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/flow-1.0.0-alpha2.zip",
-                "reference": "1.0.0-alpha2",
-                "shasum": "a9ceafc82f26844b900d0c99f3b02dcdcc63f586"
+                "url": "https://ftp.drupal.org/files/projects/flow-1.0.0-alpha6.zip",
+                "reference": "1.0.0-alpha6",
+                "shasum": "fe86ee58eec5c950a591719fb5339bacc0b2237d"
             },
             "require": {
                 "drupal/core": "^9",
@@ -5271,8 +5272,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "1.0.0-alpha2",
-                    "datestamp": "1645617778",
+                    "version": "1.0.0-alpha6",
+                    "datestamp": "1646083421",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Alpha releases are not covered by Drupal security advisories."
@@ -9492,6 +9493,50 @@
             "install-path": "../../modules/contrib/swiftmailer"
         },
         {
+            "name": "drupal/switch_theme",
+            "version": "dev-1.0.x",
+            "version_normalized": "dev-1.0.x",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/switch_theme.git",
+                "reference": "ea02701b0fe4b679d95021426c5eb9f967a58145"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.0.x": "1.0.x-dev"
+                },
+                "drupal": {
+                    "version": "1.0.x-dev",
+                    "datestamp": "1646055552",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "installation-source": "source",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "racol",
+                    "homepage": "https://www.drupal.org/user/3709377"
+                }
+            ],
+            "description": "Provide Theme negociator for depending roles and regex pattern URL",
+            "homepage": "https://www.drupal.org/project/switch_theme",
+            "support": {
+                "source": "https://git.drupalcode.org/project/switch_theme"
+            },
+            "install-path": "../../modules/contrib/switch_theme"
+        },
+        {
             "name": "drupal/textarea_limit",
             "version": "2.0.0",
             "version_normalized": "2.0.0.0",
@@ -10931,17 +10976,17 @@
         },
         {
             "name": "goalgorilla/open_social",
-            "version": "11.0.3",
-            "version_normalized": "11.0.3.0",
+            "version": "11.0.4",
+            "version_normalized": "11.0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/goalgorilla/open_social.git",
-                "reference": "c4d7a3a6986c254c656a9ab218a8086ca09647b9"
+                "reference": "3102a2ce013b1bf975bb79fdd156daa6598510bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/goalgorilla/open_social/zipball/c4d7a3a6986c254c656a9ab218a8086ca09647b9",
-                "reference": "c4d7a3a6986c254c656a9ab218a8086ca09647b9",
+                "url": "https://api.github.com/repos/goalgorilla/open_social/zipball/3102a2ce013b1bf975bb79fdd156daa6598510bb",
+                "reference": "3102a2ce013b1bf975bb79fdd156daa6598510bb",
                 "shasum": ""
             },
             "require": {
@@ -11038,7 +11083,7 @@
                 "phpstan/extension-installer": "^1.1",
                 "phpstan/phpstan-deprecation-rules": "^1.0"
             },
-            "time": "2022-02-22T10:01:04+00:00",
+            "time": "2022-03-01T09:47:17+00:00",
             "type": "drupal-profile",
             "extra": {
                 "enable-patching": true,
@@ -11173,7 +11218,7 @@
             ],
             "description": "Open Social is a distribution for building social communities and intranets.",
             "support": {
-                "source": "https://github.com/goalgorilla/open_social/tree/11.0.3"
+                "source": "https://github.com/goalgorilla/open_social/tree/11.0.4"
             },
             "install-path": "../../profiles/contrib/social"
         },

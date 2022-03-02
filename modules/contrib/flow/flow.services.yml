@@ -25,5 +25,3 @@ services:
   flow.entity_save_handler:
     class: Drupal\flow\Entity\EntitySaveHandler
     arguments: ['%flow.save_list_threshold%']
-    calls:
-      - [setEntityTypeManager, ['@entity_type.manager']]

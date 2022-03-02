@@ -2,6 +2,7 @@
 
 namespace Drupal\flow\Plugin\flow\Subject;
 
+use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\flow\Flow;
@@ -63,9 +64,9 @@ class NewContent extends FlowSubjectBase implements PluginFormInterface {
    * {@inheritdoc}
    */
   public function getSubjectItems(): iterable {
-    $new_entity = $this->initConfiguredContentEntity($this->getEntityFromStack());
-    Flow::needsSave($new_entity);
-    return [$new_entity];
+    $entity = $this->initConfiguredContentEntity($this->getEntityFromStack());
+    Flow::needsSave($entity);
+    return [$entity];
   }
 
 }

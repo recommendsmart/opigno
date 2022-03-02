@@ -10,6 +10,9 @@
  * @{
  */
 
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\field_suggestion\FieldSuggestionInterface;
+
 /**
  * Provides field values that should be excluded from the suggestions list.
  *
@@ -54,6 +57,31 @@ function hook_field_suggestion_ignore_alter(array &$items, $entity_type_id, $fie
   ) {
     unset($items[$delta]);
   }
+}
+
+/**
+ * Exclude a pinned suggestion for the selected entity.
+ *
+ * @param array $excluded_entities
+ *   The excluded entities list.
+ * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+ *   The entity object.
+ *
+ * @return bool
+ *   TRUE if suggestion should be excluded.
+ */
+function hook_field_suggestion_exclude(
+  array $excluded_entities,
+  ContentEntityInterface $entity
+) {
+  return count(
+    array_filter(
+      array_unique(array_column($excluded_entities, 'target_type')),
+      function ($entity_type_id) use ($entity) {
+        return $entity_type_id === $entity->getEntityTypeId();
+      }
+    )
+  ) > 0;
 }
 
 /**

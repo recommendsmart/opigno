@@ -214,8 +214,9 @@ class Reference extends FlowSubjectBase implements PluginFormInterface {
     }
 
     $weight = 10;
+    $select_widget = $this->moduleHandler->moduleExists('select2') ? 'select2' : 'select';
     $form['field_name'] = [
-      '#type' => 'select',
+      '#type' => $select_widget,
       '#title' => $this->t('Source field'),
       '#description' => $this->t('Select the field that identifies the @reference.', [
         '@reference' => $target_definition['label'],
@@ -292,6 +293,36 @@ class Reference extends FlowSubjectBase implements PluginFormInterface {
     }
 
     $this->submitFallbackForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $dependencies = parent::calculateDependencies();
+    /** @var \Drupal\flow\Plugin\FlowSubjectBase $source */
+    $source = $this->getSourceSubject();
+    $etm = \Drupal::entityTypeManager();
+    if ($source && isset($this->settings['field_name'])) {
+      $source_definition = $source->getPluginDefinition();
+      if ($field_storage_config = $etm->getStorage('field_storage_config')->load($source_definition['entity_type'] . '.' . $this->settings['field_name'])) {
+        $dependencies[$field_storage_config->getConfigDependencyKey()][] = $field_storage_config->getConfigDependencyName();
+      }
+      if ($field_config = $etm->getStorage('field_config')->load($source_definition['entity_type'] . '.' . $source_definition['bundle'] . '.' . $this->settings['field_name'])) {
+        $dependencies[$field_config->getConfigDependencyKey()][] = $field_config->getConfigDependencyName();
+      }
+    }
+    if ($source) {
+      foreach ($source->calculateDependencies() as $key => $source_dependencies) {
+        if (!isset($dependencies[$key])) {
+          $dependencies[$key] = $source_dependencies;
+        }
+        else {
+          $dependencies[$key] = array_unique(array_merge($dependencies[$key], $source_dependencies));
+        }
+      }
+    }
+    return $dependencies;
   }
 
 }

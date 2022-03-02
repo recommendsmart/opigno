@@ -26,6 +26,13 @@ class FieldSuggestionController extends ControllerBase {
   protected $helper;
 
   /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -33,6 +40,7 @@ class FieldSuggestionController extends ControllerBase {
 
     $instance->invalidator = $container->get('cache_tags.invalidator');
     $instance->helper = $container->get('field_suggestion.helper');
+    $instance->entityFieldManager = $container->get('entity_field.manager');
 
     return $instance;
   }
@@ -58,26 +66,25 @@ class FieldSuggestionController extends ControllerBase {
       ->$field_name
       ->value;
 
-    $all_items = $this->state()->get('field_suggestion', []);
+    $field_type = $this->entityFieldManager
+      ->getBaseFieldDefinitions($entity_type_id)[$field_name]
+      ->getType();
 
-    if (!isset($all_items[$entity_type_id][$field_name])) {
-      $all_items[$entity_type_id][$field_name] = [];
-    }
+    $storage = $this->entityTypeManager()->getStorage('field_suggestion');
 
-    $field_items = &$all_items[$entity_type_id][$field_name];
+    $entities = $storage->loadByProperties($values = [
+      'type' => $field_type,
+      'entity_type' => $entity_type_id,
+      'field_name' => $field_name,
+      'field_suggestion_' . $field_type => $value,
+    ]);
 
-    if (
-      !empty($field_items) &&
-      ($delta = array_search($value, $field_items)) !== FALSE
-    ) {
-      unset($field_items[$delta]);
-      $field_items = array_values($field_items);
+    if (!empty($entities)) {
+      $storage->delete($entities);
     }
     else {
-      $field_items[] = $value;
+      $storage->create($values)->save();
     }
-
-    $this->state()->set('field_suggestion', $all_items);
 
     $this->invalidator->invalidateTags(['field_suggestion_operations']);
 
@@ -110,20 +117,23 @@ class FieldSuggestionController extends ControllerBase {
         ->load($entity_id);
 
       if ($entity !== NULL && !($field = $entity->$field_name)->isEmpty()) {
-        $success = TRUE;
-        $items = $this->state()->get('field_suggestion', []);
+        $field_type = $this->entityFieldManager
+          ->getBaseFieldDefinitions($entity_type_id)[$field_name]
+          ->getType();
 
-        if (
-          (
-            empty($items[$entity_type_id][$field_name]) ||
-            !in_array($field->value, $items[$entity_type_id][$field_name])
-          ) &&
-          in_array($field->value, $this->helper->ignored($entity_type_id, $field_name))
-        ) {
-          $success = FALSE;
-        }
+        $count = $this->entityTypeManager()->getStorage('field_suggestion')
+          ->getQuery()
+          ->condition('entity_type', $entity_type_id)
+          ->condition('field_name', $field_name)
+          ->condition('field_suggestion_' . $field_type, $field->value)
+          ->range(0, 1)
+          ->count()
+          ->execute();
 
-        return AccessResult::allowedIf($success);
+        return AccessResult::allowedIf(
+          $count > 0 ||
+          !in_array($field->value, $this->helper->ignored($entity_type_id, $field_name))
+        );
       }
     }
 
