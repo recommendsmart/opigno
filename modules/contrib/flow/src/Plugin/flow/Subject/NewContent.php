@@ -2,7 +2,7 @@
 
 namespace Drupal\flow\Plugin\flow\Subject;
 
-use Drupal\Core\Entity\RevisionableInterface;
+use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\flow\Flow;
@@ -65,7 +65,14 @@ class NewContent extends FlowSubjectBase implements PluginFormInterface {
    */
   public function getSubjectItems(): iterable {
     $entity = $this->initConfiguredContentEntity($this->getEntityFromStack());
-    Flow::needsSave($entity);
+    $current_time = \Drupal::time()->getCurrentTime();
+    if (method_exists($entity, 'setCreatedTime')) {
+      $entity->setCreatedTime($current_time);
+    }
+    if ($entity instanceof EntityChangedInterface) {
+      $entity->setChangedTime($current_time);
+    }
+    Flow::needsSave($entity, $this);
     return [$entity];
   }
 

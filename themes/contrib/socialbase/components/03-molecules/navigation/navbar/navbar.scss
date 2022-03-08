@@ -107,8 +107,15 @@ body {
 
 // align this item last
 .navbar-user {
-  margin-left: auto;
   order: 1;
+
+  [dir='ltr'] & {
+    margin-left: auto;
+  }
+
+  [dir='rtl'] & {
+    margin-right: auto;
+  }
 
   @include for-tablet-landscape-up {
     order: 10;
@@ -222,10 +229,13 @@ body {
       position: relative;
 
       @media(min-width: 1025px) {
-        > a:hover:not(.is-active)  {
+        > a {
+          padding-right: 25px;
 
-          + .dropdown-menu {
-            display: block;
+          &:hover:not(.is-active)  {
+            + .dropdown-menu {
+              display: block;
+            }
           }
         }
       }
@@ -236,7 +246,7 @@ body {
         @media(min-width: 1025px) {
           position: absolute;
           top: 44%;
-          right: 10px;
+          right: 5px;
           transform: rotate(-90deg) translateY(-50%);
 
           [dir='rtl'] & {
@@ -381,7 +391,13 @@ body {
 
   .gin--vertical-toolbar.user-logged-in & {
     @media (min-width: 976px) {
-      left: 72px;
+      [dir='ltr'] & {
+        left: 68px;
+      }
+
+      [dir='rtl'] & {
+        right: 68px;
+      }
     }
   }
 
@@ -535,7 +551,15 @@ body {
 
       li a,
       li button {
-        padding: 5px 15px 5px 30px;
+        padding: 5px 15px;
+
+        [dir='ltr'] & {
+          padding-left: 30px;
+        }
+
+        [dir='rtl'] & {
+          padding-right: 30px;
+        }
       }
 
     }

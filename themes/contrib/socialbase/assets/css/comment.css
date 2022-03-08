@@ -243,6 +243,13 @@ details[open] .details__close-icon {
           animation: glyphicon-spin 1s infinite linear;
 }
 
+.comments-sticky {
+  border: 1px solid #e6e6e6;
+  padding: 10px;
+  border-radius: 2px;
+  margin-bottom: 2em;
+}
+
 @media (min-width: 600px) {
   .comment__avatar {
     margin-right: 12px;

@@ -64,7 +64,8 @@
         "drupal/value_widget": "^1.0@alpha",
         "drupal/job_scheduler": "^3.1",
         "drupal/field_tools": "^1.0@alpha",
-        "drupal/switch_theme": "1.0.x-dev"
+        "drupal/switch_theme": "1.0.x-dev",
+        "drupal/radiostoslider": "^1.1"
     },
     "repositories": [
         {

@@ -46,6 +46,10 @@ class EntityListFilterFormBase extends FormBase {
       }
     }
 
+    if (!empty($params['page'])) {
+      unset($params['page']);
+    }
+
     $url = Url::fromRoute('<current>', $params);
     $form_state->setRedirectUrl($url);
   }

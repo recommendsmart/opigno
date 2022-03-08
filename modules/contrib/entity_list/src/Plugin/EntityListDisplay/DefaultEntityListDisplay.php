@@ -577,7 +577,7 @@ class DefaultEntityListDisplay extends EntityListDisplayBase implements Containe
           }
           else if (!empty($item['settings']['empty'])) {
             $rendered_item = [
-              '#plain_text' => $item['settings']['empty'],
+              '#plain_text' => $this->t($item['settings']['empty']),
             ];
           }
           if (!empty($item['settings']['custom_class'])) {

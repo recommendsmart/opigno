@@ -127,14 +127,20 @@
 
 // Body of the teaser, contains the content and the actionbar. Shown on the right side next to the image
 .teaser__body {
+  display: flex;
   flex: 0 0 100%;
   max-width: 100%;
-  display: flex;
   flex-direction: column;
 
   @include for-tablet-portrait-up {
-    flex: 0 0 calc(100% - 220px);
-    max-width: calc(100% - 220px);
+    flex: 1;
+  }
+
+  .teaser:not(.teaser--tile) & {
+    @include for-tablet-portrait-up {
+      flex: 0 0 calc(100% - 220px);
+      max-width: calc(100% - 220px);
+    }
   }
 }
 

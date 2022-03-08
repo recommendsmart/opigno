@@ -316,6 +316,12 @@ form:not(.layout-builder-configure-block) .select-all.checkbox {
   > .btn {
     white-space: nowrap;
   }
+
+  .dropdown-menu {
+    top: 100%;
+    left: 0;
+    right: auto;
+  }
 }
 
 .vbo-table .form-no-label.checkbox label {
@@ -456,6 +462,10 @@ form:not(.layout-builder-configure-block) .select-all.checkbox {
       td {
         border-width: 1px 0 0;
 
+        &.views-field-vote-source {
+          word-break: break-all;
+        }
+
         @include for-tablet-landscape-up {
           padding-top: 1.875rem;
           padding-bottom: 1.875rem;
@@ -493,128 +503,6 @@ form:not(.layout-builder-configure-block) .select-all.checkbox {
               padding-right: 1.875rem;
               padding-left: 2.5rem;
             }
-          }
-        }
-      }
-    }
-  }
-}
-
-// Cart table.
-.card__block--table {
-  table {
-    margin-bottom: 0;
-
-    th,
-    td {
-      border-color: $gray-lighter;
-    }
-
-    thead {
-      th {
-        border: none;
-      }
-    }
-
-    tbody {
-      tr {
-        &:nth-of-type(odd),
-        &:hover {
-          background-color: $gray-lightest;
-        }
-      }
-
-      td {
-        border-width: 1px 0 0;
-
-        @include for-tablet-landscape-up {
-          padding-top: 1.875rem;
-          padding-bottom: 1.875rem;
-        }
-
-        a {
-          font-weight: bold;
-        }
-      }
-
-      td,
-      td a {
-        font-size: 1rem;
-        line-height: 1.5rem;
-      }
-    }
-
-    tr {
-      @include for-tablet-landscape-up {
-        th,
-        td {
-          &:first-child {
-            padding-left: 2.5rem;
-          }
-
-          &:last-child {
-            padding-right: 2.5rem;
-          }
-        }
-      }
-    }
-  }
-}
-
-// Cart table.
-.card__block--table {
-  table {
-    margin-bottom: 0;
-
-    th,
-    td {
-      border-color: $gray-lighter;
-    }
-
-    thead {
-      th {
-        border: none;
-      }
-    }
-
-    tbody {
-      tr {
-        &:nth-of-type(odd),
-        &:hover {
-          background-color: $gray-lightest;
-        }
-      }
-
-      td {
-        border-width: 1px 0 0;
-
-        @include for-tablet-landscape-up {
-          padding-top: 1.875rem;
-          padding-bottom: 1.875rem;
-        }
-
-        a {
-          font-weight: bold;
-        }
-      }
-
-      td,
-      td a {
-        font-size: 1rem;
-        line-height: 1.5rem;
-      }
-    }
-
-    tr {
-      @include for-tablet-landscape-up {
-        th,
-        td {
-          &:first-child {
-            padding-left: 2.5rem;
-          }
-
-          &:last-child {
-            padding-right: 2.5rem;
           }
         }
       }

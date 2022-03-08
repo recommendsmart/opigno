@@ -187,7 +187,7 @@ class FilterEntityListDisplay extends DefaultEntityListDisplay {
           }
           else if (!empty($item['settings']['empty'])) {
             $rendered_item = [
-              '#plain_text' => $item['settings']['empty'],
+              '#plain_text' => $this->t($item['settings']['empty']),
             ];
           }
           if (!empty($item['settings']['custom_class'])) {
@@ -325,6 +325,15 @@ class FilterEntityListDisplay extends DefaultEntityListDisplay {
     }
 
     return $as_sortable_filter;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function render(array $items, $view_mode = 'full', $langcode = NULL) {
+    $render = parent::render($items, $view_mode, $langcode);
+    $render['#cache']['contexts'][] = 'url';
+    return $render;
   }
 
 }

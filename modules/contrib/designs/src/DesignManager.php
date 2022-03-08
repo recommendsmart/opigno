@@ -381,7 +381,7 @@ class DesignManager extends PluginManagerBase implements PluginManagerInterface,
     if ($this->themeList->exists($activeTheme)) {
       $discovery = $this->getDiscoveryByDirectories([
         $activeTheme => $this->appRoot . '/' . $this->themeList->get($activeTheme)
-            ->getPath()
+            ->getPath(),
       ]);
       $definitions += $discovery->getDefinitions();
 
@@ -389,10 +389,10 @@ class DesignManager extends PluginManagerBase implements PluginManagerInterface,
       $themes = $this->themeList->getBaseThemes($this->themeList->getList(), $activeTheme);
 
       // Process themes for definitions.
-      foreach ($themes as $theme) {
+      foreach (array_keys($themes) as $theme) {
         $discovery = $this->getDiscoveryByDirectories([
           $theme => $this->appRoot . '/' . $this->themeList->get($theme)
-              ->getPath()
+              ->getPath(),
         ]);
         $definitions += $discovery->getDefinitions();
       }
@@ -406,7 +406,10 @@ class DesignManager extends PluginManagerBase implements PluginManagerInterface,
     // plugin definition.
     foreach ($definitions as $plugin_id => $plugin_definition) {
       $provider = $this->extractProviderFromDefinition($plugin_definition);
-      if ($provider && !in_array($provider, ['core', 'component']) && !$this->providerExists($provider)) {
+      if ($provider && !in_array($provider, [
+          'core',
+          'component',
+        ]) && !$this->providerExists($provider)) {
         unset($definitions[$plugin_id]);
       }
     }
@@ -635,8 +638,7 @@ class DesignManager extends PluginManagerBase implements PluginManagerInterface,
       $design = $this->createInstance($design_id, $design_configuration);
       $source = $this->sourceManager->createInstance($source_id, $source_configuration);
       $design->setSourcePlugin($source);
-    }
-    catch (PluginNotFoundException $e) {
+    } catch (PluginNotFoundException $e) {
       return NULL;
     }
     return $design;

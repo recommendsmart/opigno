@@ -104,6 +104,25 @@ flow.task.settings.merge:
     values:
       type: ignore
       label: 'Values to merge'
+    fields:
+      type: sequence
+      label: 'Fields to merge'
+      sequence:
+        type: string
+        label: 'Field name'
+    check_langcode:
+      type: boolean
+      label: 'Check language'
+    method:
+      type: mapping
+      label: 'Merge method'
+      mapping:
+        single:
+          type: string
+          label: 'Single-value fields'
+        multi:
+          type: string
+          label: 'Multi-value fields'
 
 flow.task.settings.relate:
   type: mapping
@@ -178,3 +197,15 @@ flow.subject.settings.new:
     values:
       type: ignore
       label: 'Values of the new content'
+
+flow.subject.settings.save:
+  type: mapping
+  label: 'Content being saved settings'
+
+flow.subject.settings.create:
+  type: mapping
+  label: 'Content being created settings'
+
+flow.subject.settings.delete:
+  type: mapping
+  label: 'Content being deleted settings'

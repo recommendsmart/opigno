@@ -32,6 +32,9 @@
  * @see template_preprocess_links()
  */
 #}
+
+{{ attach_library('socialbase/comment')}}
+
 {% if links -%}
   <div class="comment__actions pull-right">
     <button type="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true" class="btn btn-icon-toggle dropdown-toggle" aria-label="{% trans %}More options{% endtrans %}">

@@ -794,6 +794,12 @@ form:not(.layout-builder-configure-block) .select-all.checkbox {
   white-space: nowrap;
 }
 
+.vbo-table .btn-group--operations .dropdown-menu {
+  top: 100%;
+  left: 0;
+  right: auto;
+}
+
 .vbo-table .form-no-label.checkbox label {
   display: none;
 }
@@ -896,66 +902,8 @@ form:not(.layout-builder-configure-block) .select-all.checkbox {
   border-width: 1px 0 0;
 }
 
-.card__block--table table tbody td a {
-  font-weight: bold;
-}
-
-.card__block--table table tbody td,
-.card__block--table table tbody td a {
-  font-size: 1rem;
-  line-height: 1.5rem;
-}
-
-.card__block--table table {
-  margin-bottom: 0;
-}
-
-.card__block--table table th,
-.card__block--table table td {
-  border-color: #e6e6e6;
-}
-
-.card__block--table table thead th {
-  border: none;
-}
-
-.card__block--table table tbody tr:nth-of-type(odd), .card__block--table table tbody tr:hover {
-  background-color: #f3f3f3;
-}
-
-.card__block--table table tbody td {
-  border-width: 1px 0 0;
-}
-
-.card__block--table table tbody td a {
-  font-weight: bold;
-}
-
-.card__block--table table tbody td,
-.card__block--table table tbody td a {
-  font-size: 1rem;
-  line-height: 1.5rem;
-}
-
-.card__block--table table {
-  margin-bottom: 0;
-}
-
-.card__block--table table th,
-.card__block--table table td {
-  border-color: #e6e6e6;
-}
-
-.card__block--table table thead th {
-  border: none;
-}
-
-.card__block--table table tbody tr:nth-of-type(odd), .card__block--table table tbody tr:hover {
-  background-color: #f3f3f3;
-}
-
-.card__block--table table tbody td {
-  border-width: 1px 0 0;
+.card__block--table table tbody td.views-field-vote-source {
+  word-break: break-all;
 }
 
 .card__block--table table tbody td a {
@@ -1650,30 +1598,6 @@ button.close {
   .card__block--table table tr td:last-child {
     padding-right: 1.875rem;
     padding-left: 2.5rem;
-  }
-  .card__block--table table tbody td {
-    padding-top: 1.875rem;
-    padding-bottom: 1.875rem;
-  }
-  .card__block--table table tr th:first-child,
-  .card__block--table table tr td:first-child {
-    padding-left: 2.5rem;
-  }
-  .card__block--table table tr th:last-child,
-  .card__block--table table tr td:last-child {
-    padding-right: 2.5rem;
-  }
-  .card__block--table table tbody td {
-    padding-top: 1.875rem;
-    padding-bottom: 1.875rem;
-  }
-  .card__block--table table tr th:first-child,
-  .card__block--table table tr td:first-child {
-    padding-left: 2.5rem;
-  }
-  .card__block--table table tr th:last-child,
-  .card__block--table table tr td:last-child {
-    padding-right: 2.5rem;
   }
 }
 

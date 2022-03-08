@@ -118,7 +118,7 @@ trait FallbackSubjectTrait {
         $uuid_key = $entity_type->hasKey('uuid') ? $entity_type->getKey('uuid') : 'uuid';
         $values[$uuid_key] = $uuid;
         $item = $this->getEntityTypeManager()->getStorage($entity_type_id)->create($values);
-        Flow::needsSave($item);
+        Flow::needsSave($item, $this);
         EntityFallbackRepository::$items[$uuid] = $item;
       }
       return [EntityFallbackRepository::$items[$uuid]];
@@ -129,7 +129,7 @@ trait FallbackSubjectTrait {
     $settings_hash = hash('md4', $entity_type_id . ':' . $definition['bundle'] . ':' . serialize($this->settings));
     if (!isset(EntityFallbackRepository::$items[$settings_hash])) {
       $item = $this->getEntityTypeManager()->getStorage($entity_type_id)->create($values);
-      Flow::needsSave($item);
+      Flow::needsSave($item, $this);
       EntityFallbackRepository::$items[$settings_hash] = $item;
     }
     return [EntityFallbackRepository::$items[$settings_hash]];

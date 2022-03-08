@@ -7,7 +7,7 @@ package: 'Content'
 dependencies:
   - drupal:layout_discovery
 
-# Information added by Drupal.org packaging script on 2022-02-17
-version: '8.x-2.0-alpha8'
+# Information added by Drupal.org packaging script on 2022-03-07
+version: '8.x-2.0-beta3'
 project: 'entity_list'
-datestamp: 1645108559
+datestamp: 1646665398

@@ -100,7 +100,11 @@
     outline: none;
     appearance: none;
     opacity: 1;
-    margin-top: 3px;
+    margin: 0;
+    width: 1.75rem;
+    height: 1.75rem;
+    top: 50%;
+    transform: translateY(-50%);
 
     > span {
       display: none;
@@ -109,8 +113,8 @@
     &:before {
       content: '';
       display: block;
-      width: 1.75rem;
-      height: 1.75rem;
+      width: 100%;
+      height: 100%;
       margin: auto;
 
       position: absolute;

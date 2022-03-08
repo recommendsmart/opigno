@@ -51,6 +51,11 @@
   margin-right: 10px;
   border-radius: 50%;
   margin-top: 2px; // vertical alignment
+
+  [dir='rtl'] & {
+    margin-right: 0;
+    margin-left: 10px;
+  }
 }
 
 .list-item__avatar--medium {

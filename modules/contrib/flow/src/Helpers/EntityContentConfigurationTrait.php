@@ -6,6 +6,7 @@ use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
@@ -193,10 +194,41 @@ trait EntityContentConfigurationTrait {
     $this->configuredContentEntity = $entity_form_object->getEntity();
     $values = $this->getSerializer()->normalize($this->configuredContentEntity, get_class($this->configuredContentEntity));
 
-    // @todo Remove this workaround once #2972988 is fixed.
-    foreach ($values as &$field_values) {
+    foreach ($values as $field_name => &$field_values) {
+      $is_reference_field = FALSE;
+      $target_is_content = FALSE;
+      $item_list = $this->configuredContentEntity->get($field_name);
+      if ($item_list instanceof EntityReferenceFieldItemListInterface) {
+        $is_reference_field = TRUE;
+        $item_definition = $item_list->getFieldDefinition()->getFieldStorageDefinition();
+        $target_entity_type = $this->getEntityTypeManager()->getDefinition($item_definition->getSetting('target_type'));
+        $target_is_content = $target_entity_type->entityClassImplements(ContentEntityInterface::class);
+      }
+
       foreach ($field_values as &$field_value) {
+        if ($is_reference_field) {
+          // No usage for the url info.
+          unset($field_value['url']);
+        }
+        // For content entity references, rely on the UUID. For any other
+        // entity (that is always a config entity at this time) rely on the ID.
+        // One exception is made for users that have ID 0 (anonymous) and
+        // ID 1 (admin).
+        if ($target_is_content) {
+          if ($target_entity_type->id() === 'user' && isset($field_value['target_id']) && in_array($field_value['target_id'], [0, 1])) {
+            unset($field_value['target_uuid']);
+          }
+          elseif (!empty($field_value['target_uuid'])) {
+            unset($field_value['target_id']);
+          }
+        }
+        else {
+          unset($field_value['target_uuid']);
+        }
+
+        // @todo Remove this workaround once #2972988 is fixed.
         unset($field_value['processed']);
+
       }
     }
 
@@ -206,6 +238,9 @@ trait EntityContentConfigurationTrait {
     // values that are available on the used form display mode.
     $uuid_key = $entity_type->hasKey('uuid') ? $entity_type->getKey('uuid') : 'uuid';
     unset($values[$uuid_key]);
+    // Remove the created and changed timestamp, as it does not make sense to
+    // store as configuration.
+    unset($values['created'], $values['changed']);
     $entity_keys = $entity_type->getKeys();
     $form_display = EntityFormDisplay::collectRenderDisplay($this->configuredContentEntity, $this->entityFormDisplay, TRUE);
     $components = $form_display->getComponents();

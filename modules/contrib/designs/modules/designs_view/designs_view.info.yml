@@ -7,7 +7,7 @@ dependencies:
   - designs:designs
   - drupal:views
 
-# Information added by Drupal.org packaging script on 2022-01-22
-version: '1.0.5'
+# Information added by Drupal.org packaging script on 2022-03-07
+version: '1.0.6'
 project: 'designs'
-datestamp: 1642865070
+datestamp: 1646690539

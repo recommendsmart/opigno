@@ -179,11 +179,21 @@
 
     .region--content {
       padding-left: 0;
+
+      [dir='rtl'] & {
+        padding-left: 1rem;
+        padding-right: 0;
+      }
     }
 
     .region--sidebar-first,
     .region--sidebar-second {
       padding-right: 0;
+
+      [dir='rtl'] & {
+        padding-right: 1rem;
+        padding-left: 0;
+      }
     }
 
   }
@@ -210,10 +220,20 @@
 
     .region--content {
       padding-left: 0;
+
+      [dir='rtl'] & {
+        padding-left: 1rem;
+        padding-right: 0;
+      }
     }
 
     .region--sidebar-second {
       padding-right: 0;
+
+      [dir='rtl'] & {
+        padding-right: 1rem;
+        padding-left: 0;
+      }
     }
 
   }

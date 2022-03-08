@@ -156,14 +156,31 @@
   .layout--with-two-columns .region--content {
     padding-left: 0;
   }
+  [dir='rtl'] .layout--with-two-columns .region--content {
+    padding-left: 1rem;
+    padding-right: 0;
+  }
   .layout--with-two-columns .region--sidebar-first,
   .layout--with-two-columns .region--sidebar-second {
     padding-right: 0;
   }
+  [dir='rtl'] .layout--with-two-columns .region--sidebar-first, [dir='rtl']
+  .layout--with-two-columns .region--sidebar-second {
+    padding-right: 1rem;
+    padding-left: 0;
+  }
   .layout--with-three-columns .region--content {
     padding-left: 0;
   }
+  [dir='rtl'] .layout--with-three-columns .region--content {
+    padding-left: 1rem;
+    padding-right: 0;
+  }
   .layout--with-three-columns .region--sidebar-second {
     padding-right: 0;
+  }
+  [dir='rtl'] .layout--with-three-columns .region--sidebar-second {
+    padding-right: 1rem;
+    padding-left: 0;
   }
 }
