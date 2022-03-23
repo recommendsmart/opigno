@@ -1,0 +1,11 @@
+services:
+  eca.commands:
+    class: Drupal\eca\Commands\EcaCommands
+    arguments: ['@eca.service.modeller']
+    tags:
+      - { name: drush.command }
+  eca.docs.commands:
+    class: Drupal\eca\Commands\DocsCommands
+    arguments: ['@eca.service.action', '@eca.service.condition', '@eca.service.modeller', '@file_system', '@module_handler']
+    tags:
+      - { name: drush.command }

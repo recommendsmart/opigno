@@ -2,8 +2,8 @@
 
 {% set attributes = attributes.addClass('btn--comment-submit') %}
 
-{% spaceless %}
-  {% block input %}
+{% block input %}
+  {% apply spaceless %}
     <button{{ attributes.addClass(classes) }}>
       <span class="label">{{ label }}</span>
       <svg class="btn-icon" aria-hidden="true">
@@ -12,6 +12,5 @@
       </svg>
 
     </button>{{ children }}
-
-  {% endblock %}
-{% endspaceless %}
+  {% endapply %}
+{% endblock %}

@@ -81,3 +81,17 @@ function storage_update_8102() {
   }
   return t('Update completed, no changes were made.');
 }
+
+/**
+ * Added a new setting for Storage types to optionally have canonical URLs.
+ *
+ * This update enables canonical URLs for every existing Storage type, as this
+ * was the default behavior. Export your configuration after this update.
+ */
+function storage_update_8103() {
+  /** @var \Drupal\storage\Entity\StorageTypeInterface $storage_type */
+  foreach (\Drupal::entityTypeManager()->getStorage('storage_type')->loadMultiple() as $storage_type) {
+    $storage_type->set('has_canonical', TRUE);
+    $storage_type->save();
+  }
+}

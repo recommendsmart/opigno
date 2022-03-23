@@ -6,7 +6,7 @@ package: User interface
 dependencies:
  - pagerer:pagerer
 
-# Information added by Drupal.org packaging script on 2021-12-22
-version: '8.x-2.2'
+# Information added by Drupal.org packaging script on 2022-03-13
+version: '8.x-2.3'
 project: 'pagerer'
-datestamp: 1640209289
+datestamp: 1647175552

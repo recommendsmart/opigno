@@ -47,8 +47,8 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "collection" = "/admin/structure/storage_types"
  *   },
  *   config_export = {
- *     "label",
  *     "id",
+ *     "label",
  *     "description",
  *     "help",
  *     "new_revision",
@@ -56,6 +56,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "revision_log",
  *     "name_pattern",
  *     "status",
+ *     "has_canonical"
  *   }
  * )
  */
@@ -94,7 +95,7 @@ class StorageType extends ConfigEntityBundleBase implements StorageTypeInterface
    *
    * @var string
    */
-  protected $help;
+  protected $help = '';
 
   /**
    * Default value of the 'Create new revision' checkbox of this storage type.
@@ -123,6 +124,13 @@ class StorageType extends ConfigEntityBundleBase implements StorageTypeInterface
    * @var string
    */
   protected $name_pattern = '';
+
+  /**
+   * Whether items of this Storage types have a canonical URL. Default is FALSE.
+   *
+   * @var bool
+   */
+  protected $has_canonical = FALSE;
 
   /**
    * {@inheritdoc}
@@ -237,6 +245,13 @@ class StorageType extends ConfigEntityBundleBase implements StorageTypeInterface
    */
   public function setNamePattern($pattern) {
     $this->name_pattern = $pattern;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasCanonical() {
+    return $this->has_canonical;
   }
 
 }

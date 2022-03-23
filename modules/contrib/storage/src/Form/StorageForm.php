@@ -40,6 +40,16 @@ class StorageForm extends ContentEntityForm {
 
     /** @var \Drupal\storage\Entity\StorageInterface $entity */
     $entity = $this->entity;
+    // Load the bundle.
+    $bundle = StorageType::load($entity->bundle());
+
+    // If explanation or submission guidelines are set, display them.
+    if ($help = $bundle->getHelp()) {
+      $form['help'] = [
+        '#markup' => $help,
+        '#weight' => -1000,
+      ];
+    }
 
     if ($this->operation == 'edit') {
       $form['#title'] = $this->t('<em>Edit @type</em> @name', [
@@ -49,9 +59,6 @@ class StorageForm extends ContentEntityForm {
     }
     $fields = \Drupal::service('entity_field.manager')->getFieldDefinitions('storage', $entity->bundle());
     $form['name']['#title'] = $fields['name']->getLabel();
-
-    // Load the bundle.
-    $bundle = StorageType::load($entity->bundle());
 
     $revision_default = $bundle->get('new_revision');
 
@@ -155,6 +162,12 @@ class StorageForm extends ContentEntityForm {
    *   The current state of the form.
    */
   public static function applyNamePattern($entity_type_id, StorageInterface $entity, array $form, FormStateInterface $form_state) {
+    if (!isset($entity->original) && !$entity->isNew()) {
+      // Load the unchanged values from the database in order to access
+      // previous values.
+      $entity->original = \Drupal::entityTypeManager()
+        ->getStorage($entity->getEntityTypeId())->loadUnchanged($entity->id());
+    }
     $entity->applyNamePattern();
     // Disable the name pattern afterwards, in order to avoid redundant
     // rebuilds during the save operation chain.

@@ -13,6 +13,7 @@ base.css:
       css/pagerer.base.css: {}
 
 base.js:
+  deprecated: The %library_id% library is deprecated in pagerer:8.x-2.3 and will be removed in pagerer:3.0.0. See https://www.drupal.org/project/pagerer/issues/3256042
   version: VERSION
   js:
     js/base.js: {}
@@ -23,6 +24,7 @@ base.js:
     - core/jquery.once
 
 mini:
+  deprecated: The %library_id% library is deprecated in pagerer:8.x-2.3 and will be removed in pagerer:3.0.0. See https://www.drupal.org/project/pagerer/issues/3256042
   version: VERSION
   js:
     js/mini.js: {}
@@ -40,6 +42,7 @@ multipane:
       css/pagerer.multipane.css: {}
 
 scrollpane:
+  deprecated: The %library_id% library is deprecated in pagerer:8.x-2.3 and will be removed in pagerer:3.0.0. See https://www.drupal.org/project/pagerer/issues/3256042
   version: VERSION
   js:
     js/scrollpane.js: {}
@@ -51,6 +54,7 @@ scrollpane:
     - jquery_ui_button/button
 
 slider:
+  deprecated: The %library_id% library is deprecated in pagerer:8.x-2.3 and will be removed in pagerer:3.0.0. See https://www.drupal.org/project/pagerer/issues/3256042
   version: VERSION
   js:
     js/slider.js: {}

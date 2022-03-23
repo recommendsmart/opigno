@@ -1,0 +1,65 @@
+services:
+
+  eca.memory_cache:
+    class: Drupal\Core\Cache\MemoryCache\MemoryCache
+  eca.state:
+    class: Drupal\eca\EcaState
+    parent: state
+    arguments: ['@datetime.time']
+  eca.processor:
+    class: Drupal\eca\Processor
+    arguments: ['@entity_type.manager', '@logger.channel.eca', '@event_dispatcher', '%eca.max_recursion_level%']
+  logger.channel.eca:
+    parent: logger.channel_base
+    arguments: ['eca']
+  eca.configurable_logger_channel:
+    class: Drupal\eca\ConfigurableLoggerChannel
+    decorates: logger.channel.eca
+    arguments: ['eca', '@eca.configurable_logger_channel.inner', '@config.factory']
+
+  plugin.manager.eca.modeller:
+    class: Drupal\eca\PluginManager\Modeller
+    parent: default_plugin_manager
+  plugin.manager.eca.event:
+    class: Drupal\eca\PluginManager\Event
+    parent: default_plugin_manager
+  plugin.manager.eca.condition:
+    class: Drupal\eca\PluginManager\Condition
+    parent: default_plugin_manager
+
+  eca.service.modeller:
+    class: Drupal\eca\Service\Modellers
+    arguments: ['@entity_type.manager', '@plugin.manager.eca.modeller', '@plugin.manager.eca.event',  '@eca.service.action',  '@eca.service.condition', '@logger.channel.eca']
+  eca.service.action:
+    class: Drupal\eca\Service\Actions
+    arguments: ['@plugin.manager.action', '@logger.channel.eca', '@entity_type.manager']
+  eca.service.condition:
+    class: Drupal\eca\Service\Conditions
+    arguments: ['@plugin.manager.eca.condition', '@logger.channel.eca', '@entity_type.manager', '@current_user', '@language_manager', '@eca.service.token']
+
+  eca.trigger_event:
+    class: Drupal\eca\Event\TriggerEvent
+    arguments: ['@plugin.manager.eca.event', '@event_dispatcher']
+
+  eca.token_services:
+    class: Drupal\eca\Token\TokenServices
+    arguments: ['@eca.service.token', '@token']
+  eca.service.token:
+    decorates: token
+    parent: token
+    class: Drupal\eca\Token\CoreToken
+    calls:
+      - [setDecoratedToken, ['@eca.service.token.inner']]
+    tags:
+      - { name: service_collector, tag: eca.token_data_provider, call: addTokenDataProvider }
+  eca.service.token_browser:
+    class: Drupal\eca\Service\TokenBrowserService
+    arguments: ['@module_handler','@entity_type.manager']
+  eca.execution.token_subscriber:
+    class: Drupal\eca\EventSubscriber\EcaExecutionTokenSubscriber
+    arguments: ['@eca.token_services']
+    tags:
+      - { name: event_subscriber }
+
+parameters:
+  eca.max_recursion_level: 1

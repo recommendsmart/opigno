@@ -1,5 +1,5 @@
 {{ attach_library('socialbase/file') }}
-{% spaceless %}
+{% apply spaceless %}
   <li class="card-file">
     <a class="card-file__link" href="{{ link_url }}" title="{{ 'Open or download file'|t }}" target="_blank">
       <span class="card-file__title">{{ link_text|replace({'_': ' '}) }}</span>
@@ -10,4 +10,4 @@
       </span>
     </a>
   </li>
-{% endspaceless %}
+{% endapply %}

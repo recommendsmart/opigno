@@ -5,89 +5,89 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [3.0.3] - 2022-02-07
-## Fixed
+### Fixed
 - Revert "_Fix menu link not being visible if the user doesn't have the 'access content overview' permission_". This 
   cannot be fixed since the menu link tree is stored in the database and there's no easy way to alter it at runtime.
 
 ## [3.0.2] - 2022-01-31
-## Fixed
+### Fixed
 - Fix menu link not being visible if the user doesn't have the 'access content overview' permission
 - Remove single node add menu links added by modules like admin_toolbar_tools
 - Hide some single node permissions since they aren't relevant
 
 ## [3.0.1] - 2022-01-20
-## Changed
+### Changed
 - Replace underscores with dashes in automatically generated url alias
 
 ## [3.0.0] - 2022-01-20
 Check [`UPGRADING.md`](UPGRADING.md) for instructions.
 
-## Changed
+### Changed
 - Rename module from `wmsingles` to `node_singles`
 - Move module development to Drupal.org, changing the namespace from `wieni` to `drupal`
 
 ## [2.5.7] - 2022-01-20
-## Added
+### Added
 - Document 3.0.0 upgrade
 
 ## [2.5.6] - 2022-01-20
-## Added
+### Added
 - Add PHP 8 support
 
-## Fixed
+### Fixed
 - Increase Drupal core version due to path_alias dependency
 
 ## [2.5.5] - 2021-04-11
-## Changed
+### Changed
 - Disallow cloning singles using the [Entity Clone module](https://www.drupal.org/project/entity_clone)
 
 ## [2.5.4] - 2021-03-07
-## Fixed
+### Fixed
 - Fix error in access control handler
 
 ## [2.5.3] - 2021-03-07
-## Fixed
+### Fixed
 - Fix error in access control handler
 
 ## [2.5.2] - 2021-02-09
-## Fixed
+### Fixed
 - Fix singles appearing on /node/add
 
 ## [2.5.1] - 2021-02-02
-## Fixed
+### Fixed
 - Fix node & node type form alters not being executed
 
 ## [2.5.0] - 2020-12-22
-## Added
+### Added
 - Add Twig extension
 
 ## [2.4.3] - 2020-11-27
-## Removed
+### Removed
 - Fix node add access check not always working
 
 ## [2.4.2] - 2020-11-10
-## Removed
+### Removed
 - Fix warning on singles overview when the user does not have edit access
 
 ## [2.4.1] - 2020-07-23
-## Removed
+### Removed
 - Remove call to path.alias_manager
 
 ## [2.4.0] - 2020-07-23
-## Removed
+### Removed
 - Remove hook_event_dispatcher dependency
 
 ## [2.3.2] - 2020-07-09
-## Fixed
+### Fixed
 - Stop creating singles during cache rebuild. This feature made it in
  some cases impossible to remove single node types.
 
 ## [2.3.1] - 2020-06-23
-## Changed
+### Changed
 - Change overview labels to fallback to the node type label 
 
 ## [2.3.0] - 2020-04-22
-## Changed
+### Changed
 - Remove _Type_ column from overview
 
 ## [2.2.0] - 2020-03-12

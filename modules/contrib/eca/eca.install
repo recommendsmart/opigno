@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * ECA install file.
+ */
+
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+/**
+ * Moved logic related to Context Stack into its own sub-module, which will be
+ * installed by this update.
+ *
+ * Export your configuration after this update.
+ */
+function eca_update_8101(&$sandbox): TranslatableMarkup {
+  try {
+    /** @var \Drupal\Core\Extension\ModuleInstaller $installer */
+    $installer = \Drupal::service('module_installer');
+    $installer->install(['eca_context']);
+    drupal_flush_all_caches();
+    return t('Module installation completed. Export your configuration to synchronize the applied changes.');
+  }
+  catch (\Exception $e) {
+    return t('An error occured. The error was: @error', ['@error' => $e->getMessage()]);
+  }
+}

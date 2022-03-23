@@ -21,7 +21,7 @@ class OverviewController implements ContainerInjectionInterface
 
     public static function create(ContainerInterface $container)
     {
-        $instance = new static;
+        $instance = new static();
         $instance->entityTypeManager = $container->get('entity_type.manager');
         $instance->singles = $container->get('node_singles');
 

@@ -1,0 +1,92 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - eca_base
+    - eca_content
+    - eca_user
+    - eca_views
+id: process_zcwfb3z
+modeller: bpmn_io
+label: Views
+version: 1.0.0
+weight: null
+events:
+  Event_1up81dz:
+    plugin: 'eca_base:eca_cron'
+    label: Cron
+    fields:
+      -
+        key: frequency
+        value: '* * * * *'
+    successors:
+      -
+        id: Activity_0ha3xin
+        condition: ''
+  Event_1asjw3k:
+    plugin: 'content_entity:custom'
+    label: X1
+    fields:
+      -
+        key: event_id
+        value: x1
+    successors:
+      -
+        id: Activity_0xpew34
+        condition: ''
+conditions: {  }
+gateways:
+  '':
+    type: 4
+    successors: {  }
+actions:
+  Activity_08o1wo5:
+    plugin: eca_views_query
+    label: 'List users'
+    fields:
+      -
+        key: token_name
+        value: userlist
+      -
+        key: view_id
+        value: user_admin_people
+      -
+        key: display_id
+        value: default
+      -
+        key: arguments
+        value: ''
+    successors:
+      -
+        id: Activity_105ssdc
+        condition: ''
+  Activity_0ha3xin:
+    plugin: eca_switch_account
+    label: 'Switch user'
+    fields:
+      -
+        key: user_id
+        value: '1'
+    successors:
+      -
+        id: Activity_08o1wo5
+        condition: ''
+  Activity_105ssdc:
+    plugin: eca_trigger_content_entity_custom_event
+    label: 'Trigger X1'
+    fields:
+      -
+        key: event_id
+        value: x1
+      -
+        key: object
+        value: userlist
+    successors: {  }
+  Activity_0xpew34:
+    plugin: action_message_action
+    label: Msg
+    fields:
+      -
+        key: message
+        value: 'User [entity:name]'
+    successors: {  }

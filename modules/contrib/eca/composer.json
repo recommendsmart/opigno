@@ -1,0 +1,24 @@
+{
+  "name": "drupal/eca",
+  "license": "GPL-2.0+",
+  "type": "drupal-module",
+  "description": "TBD",
+  "support": {
+    "issues": "https://drupal.org/project/issues/eca",
+    "source": "https://drupal.org/project/eca"
+  },
+  "require": {
+    "php": ">=7.4",
+    "ext-dom": "*",
+    "ext-json": "*",
+    "dragonmantank/cron-expression": "^3.1",
+    "mtownsend/xml-to-array": "^2.0"
+  },
+  "extra": {
+    "drush": {
+      "services": {
+        "drush.services.yml": "^9 || ^10 || ^11"
+      }
+    }
+  }
+}

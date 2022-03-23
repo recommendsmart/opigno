@@ -7,7 +7,8 @@
 
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\group\Entity\GroupContent;
-
+use Drupal\group\Entity\GroupInterface;
+use Drupal\node\Entity\Node;
 
 /**
  * Implements hook_token_info_alter().
@@ -36,9 +37,7 @@ function gnode_token_info() {
     ];
   }
 
-  return array(
-    'tokens' => array('node' => $tokens),
-  );
+  return ['tokens' => ['node' => $tokens]];
 }
 
 /**
@@ -52,22 +51,37 @@ function gnode_tokens($type, $tokens, array $data, array $options, BubbleableMet
   $token_service = \Drupal::token();
   $replacements = [];
 
-   if (!$data['node']->id()) {
-     return [];
-   }
+  if (is_numeric($data['node'])) {
+    $data['node'] = Node::load($data['node']);
+  }
 
-  $group_content_array = GroupContent::loadByEntity($data['node']);
-  if (empty($group_content_array)) {
+  if (!$data['node']->id()) {
     return [];
   }
 
   $groups = [];
+  $group_content_array = GroupContent::loadByEntity($data['node']);
+  if (empty($group_content_array)) {
+    // Attempt to find group from group route context.
+    if ($context = \Drupal::service('group.group_route_context')->getRuntimeContexts(['group'])['group']) {
+      $group = $context->getContextValue();
+      if (!($group instanceof GroupInterface)) {
+        return [];
+      }
+      $groups[$group->id()] = $group->label();
+      $bubbleable_metadata->addCacheableDependency($group);
+    }
+    else {
+      return [];
+    }
+  }
+
   /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
   foreach ($group_content_array as $group_content) {
     $group = $group_content->getGroup();
     $groups[$group->id()] = $group->label();
     $bubbleable_metadata->addCacheableDependency($group);
-  };
+  }
 
   if (isset($tokens['groups'])) {
     $replacements[$tokens['groups']] = token_render_array($groups, $options);
@@ -75,12 +89,14 @@ function gnode_tokens($type, $tokens, array $data, array $options, BubbleableMet
 
   // [node:groups:*] chained tokens.
   if ($parents_tokens = \Drupal::token()->findWithPrefix($tokens, 'groups')) {
-    $replacements += \Drupal::token()->generate('array', $parents_tokens, array('array' => $groups), $options, $bubbleable_metadata);
+    $replacements += \Drupal::token()->generate('array', $parents_tokens, ['array' => $groups], $options, $bubbleable_metadata);
   }
 
-  /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
-  $group_content = array_pop($group_content_array);
-  $group = $group_content->getGroup();
+  if (!empty($group_content_array)) {
+    /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+    $group_content = array_pop($group_content_array);
+    $group = $group_content->getGroup();
+  }
   if (isset($tokens['group'])) {
     $replacements[$tokens['group']] = $group->label();
   }
@@ -91,7 +107,7 @@ function gnode_tokens($type, $tokens, array $data, array $options, BubbleableMet
   }
 
   if ($group_tokens = $token_service->findWithPrefix($tokens, 'group')) {
-    $replacements += $token_service->generate('group', $group_tokens, array('group' => $group), $options, $bubbleable_metadata);
+    $replacements += $token_service->generate('group', $group_tokens, ['group' => $group], $options, $bubbleable_metadata);
   }
 
   return $replacements;

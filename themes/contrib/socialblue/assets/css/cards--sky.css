@@ -168,6 +168,12 @@
   margin-left: 10px;
 }
 
+[dir='rtl'] .socialblue--sky .block-profile-statistic-block .btn-group__chellange .btn + .btn, [dir='rtl']
+.socialblue--sky .block-group-statistic-block .btn-group__chellange .btn + .btn {
+  margin-right: 10px;
+  margin-left: 0;
+}
+
 .socialblue--sky .block-profile-statistic-block .btn-group__chellange > .dropdown-toggle:not(:first-child),
 .socialblue--sky .block-group-statistic-block .btn-group__chellange > .dropdown-toggle:not(:first-child) {
   border-radius: 10px;

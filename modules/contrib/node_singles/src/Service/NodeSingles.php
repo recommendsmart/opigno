@@ -100,8 +100,8 @@ class NodeSingles implements NodeSinglesInterface
         $types = $this->getAllSingles();
 
         return isset($types[$bundle])
-            ? $this->getSingle($types[$bundle], $langcode) :
-            null;
+            ? $this->getSingle($types[$bundle], $langcode)
+            : null;
     }
 
     public function isSingle(NodeTypeInterface $type): bool

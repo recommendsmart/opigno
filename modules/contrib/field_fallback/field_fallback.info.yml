@@ -1,0 +1,21 @@
+name: Field fallback
+description: Allows configuring fallback fields.
+type: module
+core_version_requirement: ^8.8 || ^9
+dependencies:
+  - drupal:field
+
+test_dependencies:
+  - entity_reference_revisions:entity_reference_revisions
+  - paragraphs:paragraphs
+  - paragraphs_summary_token:paragraphs_summary_token (>=2.0.2)
+
+# Information added by Drupal.org packaging script on 2021-11-02
+# version: '1.0.0-beta1'
+# project: 'field_fallback'
+# datestamp: 1635845925
+
+# Information added by Drupal.org packaging script on 2022-03-22
+version: '1.0.0-beta2'
+project: 'field_fallback'
+datestamp: 1647981522

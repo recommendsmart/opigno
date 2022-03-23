@@ -64,7 +64,7 @@
             width: 100%; }
         table td {
             font-family: sans-serif;
-            font-size: 14px;
+            font-size: 16px;
             vertical-align: top; }
 
         /* -------------------------------------
@@ -82,7 +82,7 @@
             /* makes it centered */
             max-width: 580px;
             padding: 10px;
-            width: 580px; }
+            width: 580px;}
 
         /* This should also be a block element, so that it will fill 100% of the .container */
         .content {
@@ -92,48 +92,64 @@
             max-width: 580px;
             padding: 10px; }
 
+        .content-wrapper {
+            width: 100%;
+            background: #fff;
+            box-shadow: 0 -1px 0 #e0e0e0, 0 0 2px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.24); }
+
         /* -------------------------------------
             HEADER, FOOTER, MAIN
         ------------------------------------- */
         .header {
-            padding-top: 30px;
-            padding-bottom: 30px;
+            padding-top: 40px;
+            padding-bottom: 20px;
             text-align: center;
         }
 
         .postheader {
-            padding-bottom: 30px;
-            text-align: center;
-            font-size: 18px;
+            padding: 0 44px 25px;
+            font-size: 16px;
         }
 
         .main {
-            background: #fff;
-            width: 100%;
-            box-shadow: 0 -1px 0 #e0e0e0, 0 0 2px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.24); }
+            width: 100%;}
 
         .wrapper {
             box-sizing: border-box;
-            padding: 50px 35px 15px; }
+            padding: 0 44px 40px; }
 
         .footer {
             clear: both;
-            padding-top: 10px;
+            padding-top: 30px;
             text-align: center;
             width: 100%; }
         .footer td,
         .footer p,
         .footer span,
         .footer a {
-            color: #999999;
+            color: #adadad;
             font-size: 12px;
+            line-height: 21px;
             text-align: center; }
+
+        .footer .brand {
+            margin-bottom: 0;
+        }
+
+        .footer .brand,
+        .footer .brand a {
+            font-size: 14px;
+        }
 
         .content-block {
             padding-top: 10px;
         }
         .content-block img {
             margin: 10px 0;
+        }
+
+        .footer .powered-by {
+            padding-top: 20px;
         }
         /* -------------------------------------
             TYPOGRAPHY
@@ -163,6 +179,10 @@
             font-weight: normal;
             margin: 0;
             margin-bottom: 15px; }
+
+        p:last-child {
+            margin-bottom: 0; }
+
         p li,
         ul li,
         ol li {
@@ -173,10 +193,16 @@
             padding-left: 1em;
         }
 
+        small  {
+            font-size: 12px; }
+
         a {
             color: {{ primary }};
-            text-decoration: none;
-            font-weight: 700; }
+            font-weight: 700;
+            text-decoration: underline; }
+
+        a:hover {
+            text-decoration: underline; }
 
         .first-paragraph {
             font-size: 16px;
@@ -227,10 +253,7 @@
             color: #ffffff; }
 
         .btn-wrapp {
-            margin-bottom: 30px; }
-
-        .btn-wrapp td {
-            padding: 0 10px; }
+            margin-bottom: 25px; }
 
         .btn-wrapp td:nth-child(odd) {
             padding-left: 0; }
@@ -246,11 +269,11 @@
             border: 1px solid {{ primary }};
             color: {{ primary }};
             padding: 9px 25px 7px;
-            text-align: center; }
+            text-align: center;
+            text-decoration: none; }
 
-        .btn-link-one {
-            display: inline-block;
-            min-width: 230px; }
+        .btn-link:hover {
+            text-decoration: none; }
 
         .btn-link img {
             position: absolute;
@@ -265,10 +288,10 @@
             COMMENTS, POST, MESSAGE STYLES
         ------------------------------------- */
         .comments {
-            padding: 5px 0 0;
             border-radius: 5px;
-            border: 2px solid #e0e0e0;
-            margin-bottom: 20px; }
+            border: 1px solid #e0e0e0;
+            margin-bottom: 20px;
+            margin-top: 20px; }
 
         .comment {
             padding: 15px 20px 0;
@@ -280,7 +303,8 @@
             background: #f3f3f3; }
 
         .post {
-            padding: 15px 20px 20px; }
+            padding: 15px 20px 20px;
+            font-size: 16px; }
 
         .message {
             padding: 5px 20px; }
@@ -291,6 +315,26 @@
         .post p,
         .comment p {
             margin: 10px 0; }
+
+        .post-type {
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: {{ primary }};
+        }
+
+        .post-title {
+            margin-bottom: 10px;
+        }
+
+        .post-info {
+            font-size: 14px;
+        }
+
+        .post-info span,
+        .post-info strong {
+            display: inline-block;
+            vertical-align: sub;
+        }
 
         .post-answer {
             background-color: #f3f3f3; }
@@ -426,61 +470,64 @@
                 <!-- START CENTERED WHITE CONTAINER -->
                 <span class="preheader"></span>
 
-                <div class="header">
-                    <img src="{{ logo }}" alt="Logo" class="logo" />
-                </div>
+                <div class="content-wrapper">
+                    <div class="header">
+                        <img src="{{ logo }}" alt="Logo" class="logo" />
+                    </div>
 
-                <div class="postheader">
-                    {{ heading }}
-                </div>
+                    <div class="postheader">
+                        {{ heading }},
+                    </div>
 
-                <table class="main">
+                    <table class="main">
 
-                    <!-- START MAIN CONTENT AREA -->
-                    <tr>
-                        <td class="wrapper">
-                            <table border="0" cellpadding="0" cellspacing="0">
-                                {% if header %}
-                                <tr>
-                                    <td>
-                                       {{ header }}
-                                    </td>
-                                </tr>
-                                {% endif %}
-                                <tr>
-                                    <td>
-                                        {{ body }}
-                                    </td>
-                                </tr>
-                                {% if footer %}
+                        <!-- START MAIN CONTENT AREA -->
+                        <tr>
+                            <td class="wrapper">
+                                <table border="0" cellpadding="0" cellspacing="0">
+                                    {% if header %}
                                     <tr>
                                         <td>
-                                            {{ footer }}
+                                           {{ header }}
                                         </td>
                                     </tr>
-                                {% endif %}
+                                    {% endif %}
+                                    <tr>
+                                        <td>
+                                            {{ body }}
+                                        </td>
+                                    </tr>
+                                    {% if footer %}
+                                        <tr>
+                                            <td>
+                                                {{ footer }}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
 
-                            </table>
-                        </td>
-                    </tr>
+                                </table>
+                            </td>
+                        </tr>
 
-                    <!-- END MAIN CONTENT AREA -->
-                </table>
+                        <!-- END MAIN CONTENT AREA -->
+                    </table>
+                </div>
 
                 <!-- START FOOTER -->
                 <div class="footer">
                     <table border="0" cellpadding="0" cellspacing="0">
                         <tr>
                             <td class="content-block">
-                                <strong class="brand">
-                                    {% if site_link %}
-                                        <a href="{{ base_url }}">{{ site_name }}</a>
-                                    {% else %}
-                                        {{ site_name }}
-                                    {% endif %}
-                                </strong>
+                                <p class="brand">
+                                    <strong>
+                                        {% if site_link %}
+                                            <a href="{{ base_url }}">{{ site_name }}</a>
+                                        {% else %}
+                                            {{ site_name }}
+                                        {% endif %}
+                                    </strong>
+                                </p>
                                 {% if site_slogan %}
-                                    <br />
                                     <span class="tagline">{{ site_slogan }}</span>
                                 {% endif %}
                                 {% if site_sub_slogan %}

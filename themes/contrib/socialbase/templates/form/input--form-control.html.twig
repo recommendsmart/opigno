@@ -28,7 +28,7 @@
 
 {{ attach_library('socialbase/form--input-groups') }}
 
-{% spaceless %}
+{% apply spaceless %}
   {% if input_group %}
 
     <div class="input-group">
@@ -50,4 +50,4 @@
     </div>
   {% endif %}
 
-{% endspaceless %}
+{% endapply %}

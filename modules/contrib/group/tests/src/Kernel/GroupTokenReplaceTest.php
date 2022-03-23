@@ -50,7 +50,6 @@ class GroupTokenReplaceTest extends GroupTokenReplaceKernelTestBase {
     $metadata_tests['[group:type-name]'] = $base_bubbleable_metadata;
     $metadata_tests['[group:title]'] = $base_bubbleable_metadata;
     $metadata_tests['[group:langcode]'] = $base_bubbleable_metadata;
-    $metadata_tests['[group:url]'] = $base_bubbleable_metadata;
     $metadata_tests['[group:edit-url]'] = $base_bubbleable_metadata;
     $bubbleable_metadata = clone $base_bubbleable_metadata;
     $metadata_tests['[group:author]'] = $bubbleable_metadata->addCacheTags($account->getCacheTags());
@@ -59,6 +58,7 @@ class GroupTokenReplaceTest extends GroupTokenReplaceKernelTestBase {
     $bubbleable_metadata = clone $base_bubbleable_metadata;
     $metadata_tests['[group:created:since]'] = $bubbleable_metadata->setCacheMaxAge(0);
     $metadata_tests['[group:changed:since]'] = $bubbleable_metadata;
+    $metadata_tests['[group:url]'] = $bubbleable_metadata;
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');

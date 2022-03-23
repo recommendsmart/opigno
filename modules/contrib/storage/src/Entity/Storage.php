@@ -203,6 +203,20 @@ class Storage extends EditorialContentEntityBase implements StorageInterface {
   /**
    * {@inheritdoc}
    */
+  public function hasLinkTemplate($rel) {
+    if ($rel === 'canonical') {
+      /** @var \Drupal\storage\Entity\StorageTypeInterface $type */
+      $type = \Drupal::entityTypeManager()->getStorage('storage_type')->load($this->bundle());
+      if (!$type->hasCanonical()) {
+        return FALSE;
+      }
+    }
+    return parent::hasLinkTemplate($rel);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function applyNamePattern() {
     if (isset($this->name_pattern)) {
       $name_pattern = $this->hasField('name_pattern') ? $this->get('name_pattern')->getString() : $this->name_pattern;

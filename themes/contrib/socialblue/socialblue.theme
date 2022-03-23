@@ -81,3 +81,22 @@ function socialblue_preprocess_file_upload_help(array &$variables) {
     $variables['description'] = '';
   }
 }
+
+/**
+ * Implements hook_preprocess_html().
+ */
+function socialblue_preprocess_html(array &$variables): void {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+
+  $routes = [
+    'entity.group_content.edit_form',
+    'entity.group_content.delete_form',
+    'entity.group_content.canonical',
+    'entity.group.content_translation_overview',
+  ];
+
+  if (in_array($route_name, $routes)) {
+    $variables['attributes']['class'][] = 'path-group--membership-actions';
+    $variables['#attached']['library'][] = 'socialblue/page-node';
+  }
+}

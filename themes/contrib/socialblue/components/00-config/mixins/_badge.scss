@@ -5,10 +5,29 @@
   color: $color;
   transition: 0.3s;
 
-  &[href] {
+  &[href],
+  [href] & {
     &:hover,
     &:focus {
       background-color: darken($bgcolor, 10%);
+    }
+  }
+
+  [href] {
+    &:hover,
+    &:focus {
+      color: darken($color, 10%);
+    }
+  }
+
+  .ui-widget-content & {
+    [href] {
+      color: $color;
+
+      &:hover,
+      &:focus {
+        color: darken($color, 10%);
+      }
     }
   }
 }

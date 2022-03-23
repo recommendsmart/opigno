@@ -198,6 +198,11 @@ layout:
       assets/css/layout.css: {}
       assets/css/layout--sky.css: {}
 
+page-node:
+  css:
+    layout:
+      assets/css/page-node--sky.css: {}
+
 color.preview:
   css:
     theme:

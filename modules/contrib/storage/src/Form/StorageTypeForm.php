@@ -86,6 +86,13 @@ class StorageTypeForm extends BundleEntityFormBase {
       '#description' => $this->t('This description text will be displayed on the <em><a href="/storage/add" target="_blank">Add storage</a></em> page.'),
     ];
 
+    $form['help'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Explanation or submission guidelines'),
+      '#default_value' => $storage_type->getHelp(),
+      '#description' => $this->t('This text will be displayed at the top of the form when creating or editing data of this storage type.'),
+    ];
+
     $form['name_label'] = [
       '#title' => $this->t('Form label for name field'),
       '#type' => 'textfield',
@@ -155,6 +162,15 @@ class StorageTypeForm extends BundleEntityFormBase {
       ],
     ];
 
+    $form['has_canonical'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Has canonical URL'),
+      '#default_value' => $storage_type->hasCanonical(),
+      '#description' => t('Whether items of this Storage type have a canonical URL for being viewed (accessible via /storage/{id}). When enabled, <a href=":permissions_url" target="_blank">permissions</a> need to be properly defined.', [
+        ':permissions_url' => '/admin/people/permissions',
+      ]),
+    ];
+
     return $form;
   }
 
@@ -165,6 +181,7 @@ class StorageTypeForm extends BundleEntityFormBase {
     /** @var \Drupal\storage\Entity\StorageTypeInterface $storage_type */
     $storage_type = $this->entity;
     $storage_type->setStatus((bool) $form_state->getValue('status'));
+    $storage_type->set('has_canonical', (bool) $form_state->getValue('has_canonical'));
     $status = $storage_type->save();
 
     switch ($status) {

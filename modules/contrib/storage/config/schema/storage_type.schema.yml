@@ -5,9 +5,17 @@ storage.storage_type.*:
     id:
       type: string
       label: 'ID'
+    uuid:
+      type: string
     label:
       type: label
       label: 'Label'
+    description:
+      type: string
+      label: 'Description'
+    help:
+      type: string
+      label: 'Explanation or submission guidelines'
     status:
       type: boolean
       label: 'Whether Storage items should be published by default'
@@ -20,8 +28,9 @@ storage.storage_type.*:
     revision_log:
       type: boolean
       label: 'Whether to show the revision log text field'
-    uuid:
-      type: string
     name_pattern:
       type: string
       label: 'A pattern to use for creating the name of the Storage entity'
+    has_canonical:
+      type: boolean
+      label: 'Whether items of this Storage type have a canonical URL'

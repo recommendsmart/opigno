@@ -78,6 +78,8 @@ libraries-extend:
     - socialblue/stream
   socialbase/layout:
     - socialblue/layout
+  socialbase/page-node:
+    - socialblue/page-node
 
 ckeditor_stylesheets:
   - assets/css/ckeditor.css
@@ -118,7 +120,7 @@ regions:
   sidebar_second: Sidebar Second
   footer: Footer
 
-# Information added by Drupal.org packaging script on 2022-01-05
-version: '2.1.1'
+# Information added by Drupal.org packaging script on 2022-03-09
+version: '2.1.3'
 project: 'socialblue'
-datestamp: 1641386634
+datestamp: 1646829228

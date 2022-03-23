@@ -3,12 +3,17 @@
 namespace Drupal\storage\Controller;
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\Controller\EntityViewController;
 use Drupal\Core\Link;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\storage\Entity\StorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class StorageController.
@@ -16,6 +21,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *  Returns responses for Storage routes.
  */
 class StorageController extends ControllerBase implements ContainerInjectionInterface {
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * The date formatter.
@@ -36,9 +48,87 @@ class StorageController extends ControllerBase implements ContainerInjectionInte
    */
   public static function create(ContainerInterface $container) {
     $instance = parent::create($container);
+    $instance->entityTypeManager = $container->get('entity_type.manager');
     $instance->dateFormatter = $container->get('date.formatter');
     $instance->renderer = $container->get('renderer');
     return $instance;
+  }
+
+  /**
+   * Provides a canonical page to render a single Storage entity.
+   *
+   * This wraps the default entity view controller in the way that a check is
+   * performed, whether the according type is configured to have a canonical
+   * URL. It passes the rendering to the default view controller if enabled
+   * to do so, and otherwise throws an exception to show a 404 page instead,
+   * or redirects a privileged user to the edit form.
+   *
+   * @param \Drupal\storage\Entity\StorageInterface $storage
+   *   The Storage entity to render.
+   * @param string $view_mode
+   *   (optional) The view mode that should be used to display the entity.
+   *   Defaults to 'full'.
+   *
+   * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+   *   A render array as expected by
+   *   \Drupal\Core\Render\RendererInterface::render() or a redirect response.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+   *   When the Storage type is not configured to have canonical URLs and the
+   *   current user has no access to edit the entity.
+   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+   *   When the user has no access to view the Storage entity.
+   */
+  public function viewCanonical(StorageInterface $storage, $view_mode = 'full') {
+    /** @var \Drupal\storage\Entity\StorageTypeInterface $storage_type */
+    $storage_type = $this->entityTypeManager->getStorage('storage_type')->load($storage->bundle());
+    if (!$storage_type->hasCanonical()) {
+      if ($storage->access('update')) {
+        return $this->redirect('entity.storage.edit_form', ['storage' => $storage->id()], [], 302);
+      }
+      throw new NotFoundHttpException();
+    }
+    if (!$storage->access('view')) {
+      throw new AccessDeniedHttpException();
+    }
+    return (new EntityViewController($this->entityTypeManager, $this->renderer))->view($storage, $view_mode);
+  }
+
+  /**
+   * Custom access callback for ::viewCanonical().
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The current user account.
+   * @param \Drupal\storage\Entity\StorageInterface $storage
+   *   The requested Storage entity.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
+   */
+  public function viewCanonicalAccess(AccountInterface $account, StorageInterface $storage) {
+    // Local menu links are being built up using a "fake" route match. Therefore
+    // we catch the current route match from the global container instead.
+    $current_route_match = \Drupal::routeMatch();
+    $route = $current_route_match->getRouteObject();
+
+    if ($route && ($route->getDefault('_controller') === 'Drupal\storage\Controller\StorageController::viewCanonical')) {
+      // Let ::viewCanonical finally decide whether access is allowed.
+      return AccessResult::allowed()
+        ->addCacheContexts(['url.path', 'url.query_args'])
+        ->addCacheableDependency($storage);
+    }
+
+    /** @var \Drupal\storage\Entity\StorageTypeInterface $storage_type */
+    $storage_type = $this->entityTypeManager->getStorage('storage_type')->load($storage->bundle());
+    if (!$storage_type->hasCanonical()) {
+      return AccessResult::forbidden()
+        ->addCacheContexts(['route.name'])
+        ->addCacheTags(['config:storage.storage_type.' . $storage_type->id()])
+        ->addCacheableDependency($storage);
+    }
+    return $storage->access('view', $account, TRUE)
+    ->addCacheTags(['config:storage.storage_type.' . $storage_type->id()])
+      ->addCacheableDependency($storage);
   }
 
   /**

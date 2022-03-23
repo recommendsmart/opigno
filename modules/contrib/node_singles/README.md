@@ -32,6 +32,9 @@ all users with the `access node singles overview` permission.
 ## Limitations
 - The single overview menu link does not appear if the user does not have the _Access the Content overview page_ 
   permission.
+- Just like with other entities, deleting entity bundles though a config import without deleting the entities first 
+  results in an error. You can work around this by first calling `drush entity:delete node --bundle=<bundle>` or by using 
+  a module like [_Config Import - Delete Entities_](https://www.drupal.org/project/config_import_de). 
 
 ## Changelog
 All notable changes to this project will be documented in the

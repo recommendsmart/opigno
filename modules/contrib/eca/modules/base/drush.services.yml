@@ -1,0 +1,6 @@
+services:
+  eca_base.commands:
+    class: Drupal\eca_base\Commands\EcaBaseCommands
+    arguments: []
+    tags:
+      - { name: drush.command }

@@ -109,6 +109,9 @@ function _socialbase_get_join_method_icon($title) {
 
 /**
  * Get comment count for a node.
+ *
+ * @deprecated
+ * Use $entity->get(<comment_field_name>)->comment_count instead this function.
  */
 function _socialbase_node_get_comment_count(NodeInterface $node) {
   $comment_count = &drupal_static(__FUNCTION__ . $node->id());

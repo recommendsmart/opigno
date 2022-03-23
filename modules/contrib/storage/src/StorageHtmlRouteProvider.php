@@ -50,6 +50,18 @@ class StorageHtmlRouteProvider extends AdminHtmlRouteProvider {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function getCanonicalRoute(EntityTypeInterface $entity_type) {
+    $route = parent::getCanonicalRoute($entity_type);
+    // We need our own controller method for canonical URLs, as some Storage
+    // entities might not be allowed to have a canonical URL.
+    $route->setDefault('_controller', 'Drupal\storage\Controller\StorageController::viewCanonical');
+    $route->setRequirements(['_custom_access' => 'Drupal\storage\Controller\StorageController::viewCanonicalAccess']);
+    return $route;
+  }
+
+  /**
    * Gets the version history route.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type

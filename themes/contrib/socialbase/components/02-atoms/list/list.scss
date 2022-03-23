@@ -102,10 +102,16 @@
   padding-right: 1rem;
   margin-bottom: -1px;
   justify-content: flex-start;
+  cursor: pointer;
 
-  .form-group label {
-    font-weight: 500;
-    cursor: pointer;
+  .form-group {
+    label {
+      font-weight: 500;
+    }
+
+    .form-radio {
+      z-index: -1;
+    }
   }
 
   &:hover, &:focus-within {

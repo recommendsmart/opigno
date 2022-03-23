@@ -7,7 +7,7 @@ dependencies:
 core_version_requirement: ^8.8 || ^9
 package: User interface
 
-# Information added by Drupal.org packaging script on 2022-02-23
-version: '2.0.0-rc2'
+# Information added by Drupal.org packaging script on 2022-03-09
+version: '2.0.0-rc3'
 project: 'shs'
-datestamp: 1645591928
+datestamp: 1646804410

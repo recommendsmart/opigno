@@ -57,7 +57,7 @@ class StorageRevisionDeleteForm extends ConfirmFormBase {
    */
   public function getQuestion() {
     return $this->t('Are you sure you want to delete the revision from %revision-date?', [
-      '%revision-date' => format_date($this->revision->getRevisionCreationTime()),
+      '%revision-date' => \Drupal::service('date.formatter')->format($this->revision->getRevisionCreationTime()),
     ]);
   }
 
@@ -79,7 +79,7 @@ class StorageRevisionDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $storage_revision = NULL) {
-    $this->revision = $this->StorageStorage->loadRevision($storage_revision);
+    $this->revision = $this->storageStorage->loadRevision($storage_revision);
     $form = parent::buildForm($form, $form_state);
 
     return $form;
@@ -89,10 +89,10 @@ class StorageRevisionDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->StorageStorage->deleteRevision($this->revision->getRevisionId());
+    $this->storageStorage->deleteRevision($this->revision->getRevisionId());
 
     $this->logger('content')->notice('Storage: deleted %name revision %revision.', ['%name' => $this->revision->label(), '%revision' => $this->revision->getRevisionId()]);
-    $this->messenger()->addMessage(t('Revision from %revision-date of Storage %name has been deleted.', ['%revision-date' => format_date($this->revision->getRevisionCreationTime()), '%name' => $this->revision->label()]));
+    $this->messenger()->addMessage(t('Revision from %revision-date of Storage %name has been deleted.', ['%revision-date' => \Drupal::service('date.formatter')->format($this->revision->getRevisionCreationTime()), '%name' => $this->revision->label()]));
     $form_state->setRedirect(
       'entity.storage.canonical',
        ['storage' => $this->revision->id()]

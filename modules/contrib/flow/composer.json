@@ -9,7 +9,6 @@
     "source": "https://drupal.org/project/flow"
   },
   "require": {
-    "php": ">=7.4",
-    "drupal/core": "^9"
+    "php": ">=7.4"
   }
 }

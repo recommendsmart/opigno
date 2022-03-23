@@ -60,8 +60,11 @@
 }
 
 @media (min-width: 900px) {
-  .socialblue--sky .navbar-fixed-top .navbar-nav {
+  [dir='ltr'] .socialblue--sky .navbar-fixed-top .navbar-nav {
     padding-right: 1.625rem;
+  }
+  [dir='rtl'] .socialblue--sky .navbar-fixed-top .navbar-nav {
+    padding-left: 1.625rem;
   }
   .socialblue--sky.mode-search .navbar__open-search-block {
     -webkit-transform: scale(100);

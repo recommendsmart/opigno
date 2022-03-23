@@ -43,4 +43,5 @@ return array(
     '952683d815ff0a7bf322b93c0be7e4e4' => $vendorDir . '/chi-teck/drupal-code-generator/src/bootstrap.php',
     '04c6c5c2f7095ccf6c481d3e53e1776f' => $vendorDir . '/mustangostang/spyc/Spyc.php',
     '9eb40347f70870d4d4c016d3dd2f5056' => $vendorDir . '/jawira/plantuml-encoding/src/plantuml_functions.php',
+    '029bffbd721800038bcfaf4916fa491c' => $vendorDir . '/mtownsend/xml-to-array/src/helpers.php',
 );

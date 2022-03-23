@@ -4,6 +4,8 @@ namespace Drupal\pagerer\Plugin\pagerer;
 
 use Drupal\Core\Form\FormStateInterface;
 
+@trigger_error('\Drupal\pagerer\Plugin\pagerer\Slider is deprecated in pagerer:8.x-2.3 and is removed in pagerer:3.0.0. Moved to the pagerer_jqueryui module. See https://www.drupal.org/project/pagerer/issues/3256042', E_USER_DEPRECATED);
+
 /**
  * Pager style using a jQuery slider.
  *
@@ -16,6 +18,11 @@ use Drupal\Core\Form\FormStateInterface;
  *   help = @Translation("Pager style using a jQuery slider to select the page."),
  *   style_type = "base"
  * )
+ *
+ * @deprecated in pagerer:8.x-2.3 and is removed in pagerer:3.0.0. Moved to the
+ *   pagerer_jqueryui module.
+ *
+ * @see https://www.drupal.org/project/pagerer/issues/3256042
  */
 class Slider extends PagererStyleBase {
 

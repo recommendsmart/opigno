@@ -435,7 +435,10 @@ function socialbase_form_alter(&$form, FormStateInterface $form_state, $form_id)
 
   // Ensure the sign-up or login link is displayed as a nested card section.
   // Bootstrap already converted the fieldset itself to a card.
-  if ($form_id === 'social_user_login_form') {
+  if (
+    $form_id === 'social_user_login_form' &&
+    isset($form['username_login']['sign-up-link'])
+  ) {
     $form['username_login']['sign-up-link']['#prefix'] = '<div class="card__nested-section">';
     $form['username_login']['sign-up-link']['#suffix'] = '</div>';
   }
@@ -443,7 +446,10 @@ function socialbase_form_alter(&$form, FormStateInterface $form_state, $form_id)
     $form['account']['login-link']['#prefix'] = '<div class="card__nested-section">';
     $form['account']['login-link']['#suffix'] = '</div>';
   }
-  elseif ($form_id === 'social_user_password_form') {
+  elseif (
+    $form_id === 'social_user_password_form' &&
+    isset($form['forgot']['sign-up-link'])
+  ) {
     $form['forgot']['sign-up-link']['#prefix'] = '<div class="card__nested-section">';
     $form['forgot']['sign-up-link']['#suffix'] = '</div>';
   }

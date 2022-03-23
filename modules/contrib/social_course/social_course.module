@@ -771,25 +771,33 @@ function _social_course_redirect_users_on_join(array $form, FormStateInterface $
 function social_course_change_form_field_texts(array &$form): void {
   foreach ($form as &$field) {
     if (is_array($field) && isset($field['widget'])) {
+      // Translation strings for replacing.
+      [$Group_string, $group_string, $Course_string, $course_string] = [
+        t('Group')->render(),
+        t('group')->render(),
+        t('Course')->render(),
+        t('course')->render(),
+      ];
+
       // Modify all fields titles.
       if (isset($field['widget']['#title'])) {
-        $title = &$field['widget']['#title'];
-        $title = t(str_replace(['Group', 'group'], ['Course', 'course'], $title));
+        $title =& $field['widget']['#title'];
+        $title = t(str_replace([$Group_string, $group_string], [$Course_string, $course_string], $title));
       }
       // Modify all fields descriptions.
       if (isset($field['widget']['#description'])) {
         $description =& $field['widget']['#description'];
-        $description = t(str_replace(['Group', 'group'], ['Course', 'course'], $description));
+        $description = t(str_replace([$Group_string, $group_string], [$Course_string, $course_string], $description));
       }
       // Modify checkbox titles.
       if (isset($field['widget']['value']['#title'])) {
-        $title = &$field['widget']['value']['#title'];
-        $title = t(str_replace(['Group', 'group'], ['Course', 'course'], $title));
+        $title =& $field['widget']['value']['#title'];
+        $title = t(str_replace([$Group_string, $group_string], [$Course_string, $course_string], $title));
       }
       // Modify checkbox descriptions.
       if (isset($field['widget']['value']['#description'])) {
         $description =& $field['widget']['value']['#description'];
-        $description = t(str_replace(['Group', 'group'], ['Course', 'course'], $description));
+        $description = t(str_replace([$Group_string, $group_string], [$Course_string, $course_string], $description));
       }
     }
   }
@@ -882,10 +890,9 @@ function social_course_preprocess_fieldset(array &$variables): void {
       social_group_flexible_group_preprocess_fieldset($variables);
       $toggle_title = $variables['popover']['toggle']['#attributes']['data-title'];
       $variables['popover']['toggle']['#attributes']['data-title'] =
-        str_replace('Group', 'Course', $toggle_title);
+        str_replace(t('Group')->render(), t('Course')->render(), $toggle_title);
       $description_markup =& $variables['popover']['requirements']['descriptions']['#markup'];
-      $description_markup = str_replace('Group', 'Course', $description_markup);
-      $description_markup = str_replace('group', 'course', $description_markup);
+      $description_markup = str_replace([t('Group')->render(), t('group')->render()], [t('Course')->render(), t('course')->render()], $description_markup);
     }
   }
 }
@@ -965,8 +972,8 @@ function social_course_preprocess_group(array &$variables): void {
     }
 
     if (isset($variables['group_settings_help'])) {
-      $help_text_markup = &$variables['group_settings_help'];
-      $help_text_markup = t(str_replace(['Group', 'group'], ['Course', 'course'], $help_text_markup));
+      $help_text_markup =& $variables['group_settings_help'];
+      $help_text_markup = t(str_replace([t('Group')->render(), t('group')->render()], [t('Course')->render(), t('course')->render()], $help_text_markup));
     }
   }
 }
@@ -982,7 +989,7 @@ function social_course_preprocess_views_view__social_group_invitations(array &$v
     $bundles = $course_wrapper->getAvailableBundles();
     if (in_array($group->bundle(), $bundles)) {
       if (isset($variables['more']['#title'])) {
-        $variables['more']['#title'] = str_replace('group', 'course', $variables['more']['#title']);
+        $variables['more']['#title'] = str_replace(t('group')->render(), t('course')->render(), $variables['more']['#title']);
       }
     }
   }
@@ -1577,10 +1584,10 @@ function social_course_node_access(NodeInterface $node, string $op, AccountInter
     $section = $course_wrapper->getSectionFromMaterial($node);
 
     if ($node->bundle() == 'course_section' && $course_wrapper->setCourseFromSection($node)->getCourse()) {
-      return AccessResult::forbiddenIf(!$course_wrapper->sectionAccess($node, $account, 'view')->isAllowed());
+      return AccessResult::allowedIf($course_wrapper->sectionAccess($node, $account, 'view')->isAllowed());
     }
     elseif ($section && $course_wrapper->setCourseFromSection($section)->getCourse()) {
-      return AccessResult::forbiddenIf(!$course_wrapper->materialAccess($node, $account, 'view')->isAllowed());
+      return AccessResult::allowedIf($course_wrapper->materialAccess($node, $account, 'view')->isAllowed());
     }
   }
 

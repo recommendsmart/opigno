@@ -1,0 +1,13 @@
+name: 'ECA model test: Loop over entities'
+type: module
+description: 'Support module for the ECA model tests.'
+package: Testing
+
+config_devel:
+  - eca.eca.process_zcwfb3z
+  - eca.model.process_zcwfb3z
+
+# Information added by Drupal.org packaging script on 2022-03-23
+version: '1.0.0-beta6'
+project: 'eca'
+datestamp: 1648025783

@@ -80,6 +80,9 @@
     padding-left: 1.5rem;
     padding-right: 0;
   }
+  [dir='rtl'] .socialblue--sky.path-user .layout--with-complementary .region--secondary-navigation, [dir='rtl'] .socialblue--sky.path-group .layout--with-complementary .region--secondary-navigation {
+    padding-left: 0;
+  }
 }
 
 @media (max-width: 899px) {

@@ -81,11 +81,15 @@
   -webkit-box-pack: start;
       -ms-flex-pack: start;
           justify-content: flex-start;
+  cursor: pointer;
 }
 
 .list-item--visibility .form-group label {
   font-weight: 500;
-  cursor: pointer;
+}
+
+.list-item--visibility .form-group .form-radio {
+  z-index: -1;
 }
 
 .list-item--visibility:hover, .list-item--visibility:focus-within {

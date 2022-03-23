@@ -1,0 +1,13 @@
+services:
+
+  eca_log.subscriber:
+    class: Drupal\eca_log\EventSubscriber\EcaLog
+    arguments: ['@eca.processor', '@eca.service.token']
+    tags:
+      - { name: event_subscriber }
+
+  logger.eca_log:
+    class: Drupal\eca_log\Logger\EcaLog
+    arguments: ['@event_dispatcher']
+    tags:
+      - { name: logger }

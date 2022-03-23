@@ -3,6 +3,12 @@
   color: #fff;
 }
 
+.badge a:focus {
+  outline: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
 .badge__icon {
   fill: #4d4d4d;
 }
@@ -18,8 +24,22 @@
   transition: 0.3s;
 }
 
-.badge-default[href]:hover, .badge-default[href]:focus {
+.badge-default[href]:hover, .badge-default[href]:focus,
+[href] .badge-default:hover,
+[href] .badge-default:focus {
   background-color: #cdcdcd;
+}
+
+.badge-default [href]:hover, .badge-default [href]:focus {
+  color: #343434;
+}
+
+.ui-widget-content .badge-default [href] {
+  color: #4d4d4d;
+}
+
+.ui-widget-content .badge-default [href]:hover, .ui-widget-content .badge-default [href]:focus {
+  color: #343434;
 }
 
 .badge-primary {
@@ -29,8 +49,22 @@
   transition: 0.3s;
 }
 
-.badge-primary[href]:hover, .badge-primary[href]:focus {
+.badge-primary[href]:hover, .badge-primary[href]:focus,
+[href] .badge-primary:hover,
+[href] .badge-primary:focus {
   background-color: #1a8dbe;
+}
+
+.badge-primary [href]:hover, .badge-primary [href]:focus {
+  color: #e6e6e6;
+}
+
+.ui-widget-content .badge-primary [href] {
+  color: #fff;
+}
+
+.ui-widget-content .badge-primary [href]:hover, .ui-widget-content .badge-primary [href]:focus {
+  color: #e6e6e6;
 }
 
 .badge-secondary {
@@ -40,8 +74,22 @@
   transition: 0.3s;
 }
 
-.badge-secondary[href]:hover, .badge-secondary[href]:focus {
+.badge-secondary[href]:hover, .badge-secondary[href]:focus,
+[href] .badge-secondary:hover,
+[href] .badge-secondary:focus {
   background-color: #17607f;
+}
+
+.badge-secondary [href]:hover, .badge-secondary [href]:focus {
+  color: #e6e6e6;
+}
+
+.ui-widget-content .badge-secondary [href] {
+  color: #fff;
+}
+
+.ui-widget-content .badge-secondary [href]:hover, .ui-widget-content .badge-secondary [href]:focus {
+  color: #e6e6e6;
 }
 
 .badge-accent {
@@ -51,8 +99,22 @@
   transition: 0.3s;
 }
 
-.badge-accent[href]:hover, .badge-accent[href]:focus {
+.badge-accent[href]:hover, .badge-accent[href]:focus,
+[href] .badge-accent:hover,
+[href] .badge-accent:focus {
   background-color: #ffb00f;
+}
+
+.badge-accent [href]:hover, .badge-accent [href]:focus {
+  color: #343434;
+}
+
+.ui-widget-content .badge-accent [href] {
+  color: #4d4d4d;
+}
+
+.ui-widget-content .badge-accent [href]:hover, .ui-widget-content .badge-accent [href]:focus {
+  color: #343434;
 }
 
 .badge-success {
@@ -62,8 +124,22 @@
   transition: 0.3s;
 }
 
-.badge-success[href]:hover, .badge-success[href]:focus {
+.badge-success[href]:hover, .badge-success[href]:focus,
+[href] .badge-success:hover,
+[href] .badge-success:focus {
   background-color: #449d44;
+}
+
+.badge-success [href]:hover, .badge-success [href]:focus {
+  color: #e6e6e6;
+}
+
+.ui-widget-content .badge-success [href] {
+  color: #fff;
+}
+
+.ui-widget-content .badge-success [href]:hover, .ui-widget-content .badge-success [href]:focus {
+  color: #e6e6e6;
 }
 
 .badge-info {
@@ -73,8 +149,22 @@
   transition: 0.3s;
 }
 
-.badge-info[href]:hover, .badge-info[href]:focus {
+.badge-info[href]:hover, .badge-info[href]:focus,
+[href] .badge-info:hover,
+[href] .badge-info:focus {
   background-color: #1a9bcb;
+}
+
+.badge-info [href]:hover, .badge-info [href]:focus {
+  color: #e6e6e6;
+}
+
+.ui-widget-content .badge-info [href] {
+  color: #fff;
+}
+
+.ui-widget-content .badge-info [href]:hover, .ui-widget-content .badge-info [href]:focus {
+  color: #e6e6e6;
 }
 
 .badge-warning {
@@ -84,8 +174,22 @@
   transition: 0.3s;
 }
 
-.badge-warning[href]:hover, .badge-warning[href]:focus {
+.badge-warning[href]:hover, .badge-warning[href]:focus,
+[href] .badge-warning:hover,
+[href] .badge-warning:focus {
   background-color: #cc6d00;
+}
+
+.badge-warning [href]:hover, .badge-warning [href]:focus {
+  color: #e6e6e6;
+}
+
+.ui-widget-content .badge-warning [href] {
+  color: #fff;
+}
+
+.ui-widget-content .badge-warning [href]:hover, .ui-widget-content .badge-warning [href]:focus {
+  color: #e6e6e6;
 }
 
 .badge-danger {
@@ -95,8 +199,22 @@
   transition: 0.3s;
 }
 
-.badge-danger[href]:hover, .badge-danger[href]:focus {
+.badge-danger[href]:hover, .badge-danger[href]:focus,
+[href] .badge-danger:hover,
+[href] .badge-danger:focus {
   background-color: #c9302c;
+}
+
+.badge-danger [href]:hover, .badge-danger [href]:focus {
+  color: #e6e6e6;
+}
+
+.ui-widget-content .badge-danger [href] {
+  color: #fff;
+}
+
+.ui-widget-content .badge-danger [href]:hover, .ui-widget-content .badge-danger [href]:focus {
+  color: #e6e6e6;
 }
 
 a .badge-default {

@@ -237,6 +237,11 @@
 
       .btn + .btn {
         margin-left: 10px;
+
+        [dir='rtl'] & {
+          margin-right: 10px;
+          margin-left: 0;
+        }
       }
 
       > .dropdown-toggle:not(:first-child) {

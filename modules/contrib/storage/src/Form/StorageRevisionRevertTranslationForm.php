@@ -75,8 +75,8 @@ class StorageRevisionRevertTranslationForm extends StorageRevisionRevertForm {
   protected function prepareRevertedRevision(StorageInterface $revision, FormStateInterface $form_state) {
     $revert_untranslated_fields = $form_state->getValue('revert_untranslated_fields');
 
-    /** @var \Drupal\storage\Entity\StorageInterface $default_revision */
-    $latest_revision = $this->StorageStorage->load($revision->id());
+    /** @var \Drupal\storage\Entity\StorageInterface $latest_revision */
+    $latest_revision = $this->storageStorage->load($revision->id());
     $latest_revision_translation = $latest_revision->getTranslation($this->langcode);
 
     $revision_translation = $revision->getTranslation($this->langcode);
@@ -89,7 +89,7 @@ class StorageRevisionRevertTranslationForm extends StorageRevisionRevertForm {
 
     $latest_revision_translation->setNewRevision();
     $latest_revision_translation->isDefaultRevision(TRUE);
-    $revision->setRevisionCreationTime(REQUEST_TIME);
+    $revision->setRevisionCreationTime(\Drupal::time()->getRequestTime());
 
     return $latest_revision_translation;
   }

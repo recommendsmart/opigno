@@ -4,6 +4,8 @@ namespace Drupal\pagerer\Plugin\pagerer;
 
 use Drupal\Core\Form\FormStateInterface;
 
+@trigger_error('\Drupal\pagerer\Plugin\pagerer\Mini is deprecated in pagerer:8.x-2.3 and is removed in pagerer:3.0.0. Moved to the pagerer_jqueryui module. See https://www.drupal.org/project/pagerer/issues/3256042', E_USER_DEPRECATED);
+
 /**
  * Pager style to display current page/item in a direct entry textbox.
  *
@@ -26,6 +28,11 @@ use Drupal\Core\Form\FormStateInterface;
  *   help = @Translation("Pager style to display current page/item in a direct entry textbox."),
  *   style_type = "base"
  * )
+ *
+ * @deprecated in pagerer:8.x-2.3 and is removed in pagerer:3.0.0. Moved to the
+ *   pagerer_jqueryui module.
+ *
+ * @see https://www.drupal.org/project/pagerer/issues/3256042
  */
 class Mini extends PagererStyleBase {
 

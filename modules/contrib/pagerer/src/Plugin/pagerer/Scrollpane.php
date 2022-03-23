@@ -4,6 +4,8 @@ namespace Drupal\pagerer\Plugin\pagerer;
 
 use Drupal\Component\Utility\NestedArray;
 
+@trigger_error('\Drupal\pagerer\Plugin\pagerer\Scrollpane is deprecated in pagerer:8.x-2.3 and is removed in pagerer:3.0.0. Moved to the pagerer_jqueryui module. See https://www.drupal.org/project/pagerer/issues/3256042', E_USER_DEPRECATED);
+
 /**
  * Pager style to display a scrollpane embedding a full pager.
  *
@@ -16,6 +18,11 @@ use Drupal\Component\Utility\NestedArray;
  *   help = @Translation("Pager style to display a scrollpane embedding a full pager."),
  *   style_type = "base"
  * )
+ *
+ * @deprecated in pagerer:8.x-2.3 and is removed in pagerer:3.0.0. Moved to the
+ *   pagerer_jqueryui module.
+ *
+ * @see https://www.drupal.org/project/pagerer/issues/3256042
  */
 class Scrollpane extends PagererStyleBase {
 

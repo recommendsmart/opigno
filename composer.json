@@ -65,7 +65,10 @@
         "drupal/job_scheduler": "^3.1",
         "drupal/field_tools": "^1.0@alpha",
         "drupal/switch_theme": "1.0.x-dev",
-        "drupal/radiostoslider": "^1.1"
+        "drupal/radiostoslider": "^1.1",
+        "drupal/group_action": "^1.0@beta",
+        "drupal/eca": "^1.0@beta",
+        "drupal/field_fallback": "^1.0@beta"
     },
     "repositories": [
         {

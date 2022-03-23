@@ -1,0 +1,18 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\eca_form\HookHandler;
+
+/**
+ * @return \Drupal\eca_form\HookHandler
+ */
+function _eca_form_hook_handler(): HookHandler {
+  return \Drupal::service('eca_form.hook_handler');
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function eca_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  _eca_form_hook_handler()->alter($form, $form_state, $form_id);
+}

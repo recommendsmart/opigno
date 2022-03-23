@@ -14,7 +14,7 @@
 */
 #}
 {{ attach_library('socialbase/file') }}
-{% spaceless %}
+{% apply spaceless %}
 
   <div class="file-tile">
       <span class="file-link">{{ link }}</span>
@@ -26,4 +26,4 @@
       </span>
   </div>
 
-{% endspaceless %}
+{% endapply %}

@@ -71,10 +71,9 @@ class SocialGeolocationLandingPageConfigOverride implements ConfigFactoryOverrid
         // Grab current configuration and push the new values.
         $config = $this->configFactory->getEditable($config_name);
         // We have to add config dependencies to field storage.
-        $settings = $config->getOriginal('settings', FALSE)['plugin_ids'];
-        $settings['views_block:social_geolocation_leaflet_commonmap_with_marker_icons-block_upcomming_events_map'] = 'views_block:social_geolocation_leaflet_commonmap_with_marker_icons-block_upcomming_events_map';
-
-        $overrides[$config_name]['settings']['plugin_ids'] = $settings;
+        $plugin_ids = $config->getOriginal('settings.selection_settings.plugin_ids', FALSE);
+        $plugin_ids['views_block:social_geolocation_leaflet_commonmap_with_marker_icons-block_upcomming_events_map'] = 'views_block:social_geolocation_leaflet_commonmap_with_marker_icons-block_upcomming_events_map';
+        $overrides[$config_name]['settings']['selection_settings']['plugin_ids'] = $plugin_ids;
       }
     }
 

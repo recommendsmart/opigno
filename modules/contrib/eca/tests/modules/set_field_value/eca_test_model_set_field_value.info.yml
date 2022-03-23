@@ -1,0 +1,23 @@
+name: 'ECA model test: Set field value'
+type: module
+description: 'Support module for the ECA model tests.'
+package: Testing
+
+config_devel:
+  - eca.eca.process_zylxxse
+  - eca.model.process_zylxxse
+  - field.field.node.type_set_field_value.field_term
+  - field.field.node.type_set_field_value.field_terms
+  - field.field.node.type_set_field_value.field_text_line
+  - field.field.node.type_set_field_value.field_text_lines
+  - field.storage.node.field_term
+  - field.storage.node.field_terms
+  - field.storage.node.field_text_line
+  - field.storage.node.field_text_lines
+  - node.type.type_set_field_value
+  - taxonomy.vocabulary.tags
+
+# Information added by Drupal.org packaging script on 2022-03-23
+version: '1.0.0-beta6'
+project: 'eca'
+datestamp: 1648025783

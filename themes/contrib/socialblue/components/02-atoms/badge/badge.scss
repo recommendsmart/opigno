@@ -22,6 +22,11 @@
 .badge {
   border-radius: $badge-border-radius;
   color: $badge-color;
+
+  a:focus {
+    outline: none;
+    box-shadow: none;
+  }
 }
 
 .badge__icon {

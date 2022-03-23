@@ -5,11 +5,12 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\node\Entity\NodeType;
 use Drupal\node_singles\Access\SingleNodeAccessControlHandler;
+use Drupal\node_singles\Form\SingleNodeTypeDeleteConfirm;
 
 /**
  * Implements @see hook_entity_operation_alter().
  */
-function node_singles_entity_operation_alter(array &$operations, EntityInterface $entity)
+function node_singles_entity_operation_alter(array &$operations, EntityInterface $entity): void
 {
     /** @var EntityInterface|null $single */
     $single = \Drupal::service('node_singles')->getSingleByBundle($entity->bundle());
@@ -49,7 +50,7 @@ function node_singles_entity_operation_alter(array &$operations, EntityInterface
 /**
  * Implements @see hook_menu_links_discovered_alter().
  */
-function node_singles_menu_links_discovered_alter(array &$links)
+function node_singles_menu_links_discovered_alter(array &$links): void
 {
     // Remove single node add menu links added by modules like admin_toolbar_tools.
     // The node access handler should deal with this, but it doesn't for user 1.
@@ -68,7 +69,7 @@ function node_singles_menu_links_discovered_alter(array &$links)
 /**
  * Implements @see hook_entity_insert().
  */
-function node_singles_entity_insert(EntityInterface $entity)
+function node_singles_entity_insert(EntityInterface $entity): void
 {
     \Drupal::getContainer()
         ->get('node_singles.node_type_update.subscriber')
@@ -78,7 +79,7 @@ function node_singles_entity_insert(EntityInterface $entity)
 /**
  * Implements @see hook_entity_update().
  */
-function node_singles_entity_update(EntityInterface $entity)
+function node_singles_entity_update(EntityInterface $entity): void
 {
     \Drupal::getContainer()
         ->get('node_singles.node_type_update.subscriber')
@@ -88,7 +89,7 @@ function node_singles_entity_update(EntityInterface $entity)
 /**
  * Implements @see hook_form_BASE_FORM_ID_alter().
  */
-function node_singles_form_node_type_form_alter(array &$form, FormStateInterface $formState)
+function node_singles_form_node_type_form_alter(array &$form, FormStateInterface $formState): void
 {
     \Drupal::getContainer()
         ->get('node_singles.node_type_form.subscriber')
@@ -98,7 +99,7 @@ function node_singles_form_node_type_form_alter(array &$form, FormStateInterface
 /**
  * Implements @see hook_form_BASE_FORM_ID_alter().
  */
-function node_singles_form_node_form_alter(array &$form)
+function node_singles_form_node_form_alter(array &$form): void
 {
     \Drupal::getContainer()
         ->get('node_singles.node_form.subscriber')
@@ -111,13 +112,14 @@ function node_singles_form_node_form_alter(array &$form)
 function node_singles_entity_type_alter(array &$entityTypes): void
 {
     $entityTypes['node']->setHandlerClass('access', SingleNodeAccessControlHandler::class);
+    $entityTypes['node_type']->setFormClass('delete', SingleNodeTypeDeleteConfirm::class);
 }
 
 /**
  * Implements @see hook_form_FORM_ID_alter().
  * Hide some single node permissions since they aren't relevant.
  */
-function node_singles_form_user_admin_permissions_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
+function node_singles_form_user_admin_permissions_alter(&$form, FormStateInterface $form_state, $form_id): void
 {
     $singles = \Drupal::getContainer()->get('node_singles')->getAllSingles();
 
@@ -136,4 +138,30 @@ function node_singles_form_user_admin_permissions_alter(&$form, \Drupal\Core\For
             }
         }
     }
+}
+
+/**
+ * Implements @see hook_views_data_alter().
+ */
+function node_singles_views_data_alter(array &$data): void
+{
+    $data['node']['node_singles'] = [
+        'title' => t('Single nodes'),
+        'filter' => [
+            'title' => t('Single nodes'),
+            'help' => t('Filter single nodes.'),
+            'field' => 'type',
+            'id' => 'node_singles',
+        ],
+    ];
+
+    $data['node']['node_non_singles'] = [
+        'title' => t('Non-single nodes'),
+        'filter' => [
+            'title' => t('Non-single nodes'),
+            'help' => t('Filter non-single nodes.'),
+            'field' => 'type',
+            'id' => 'node_non_singles',
+        ],
+    ];
 }

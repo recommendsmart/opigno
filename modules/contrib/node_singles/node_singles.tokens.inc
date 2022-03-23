@@ -2,8 +2,8 @@
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\node\NodeInterface;
-use Drupal\path_alias\AliasManagerInterface;
 use Drupal\node_singles\Service\NodeSinglesInterface;
+use Drupal\path_alias\AliasManagerInterface;
 
 /**
  * Implements @see hook_token_info().

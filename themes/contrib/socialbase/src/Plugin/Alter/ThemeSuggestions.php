@@ -171,6 +171,8 @@ class ThemeSuggestions extends BaseThemeSuggestions {
           }
         }
 
+        break;
+
       case 'file_link':
         // For the new Social Comment we need a different theme hook suggestion.
         if (\Drupal::config('social_comment_upload.settings')
@@ -192,13 +194,16 @@ class ThemeSuggestions extends BaseThemeSuggestions {
         // Get the route name for file links.
         $route_name = \Drupal::routeMatch()->getRouteName();
 
-        /** @var \Drupal\file\Entity\File $c_file */
-        $c_file = $context1['file'];
-
         // Ensure that it is file.
-        if (!($c_file instanceof File)) {
+        if (
+          !isset($context1['file']) ||
+          !($context1['file'] instanceof File)
+        ) {
           return;
         }
+
+        /** @var \Drupal\file\Entity\File $c_file */
+        $c_file = $context1['file'];
 
         // If the file link is part of a node field, suggest another template.
         if ($route_name == 'entity.node.canonical') {

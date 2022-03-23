@@ -214,22 +214,35 @@
   border-color: $brand-secondary;
 }
 
-.field--name-field-introduction-text a:not(.btn),
-.field--name-field-featured-items-description a:not(.btn),
-.field--name-field-featured-description a:not(.btn),
-.field--name-field-accord-description a:not(.btn),
-.field--name-field-accord-item-description a:not(.btn),
-.paragraph--type--image-text .field--name-field-text a,
-.paragraph--type--text-image .field--name-field-text a,
-.paragraph--type--text .field--name-field-text a,
-.course-full .card__body p a,
-.teaser--course p a,
-.comment__text p a:not(.btn),
-.body-text a:not(.btn),
-.block--intro-text .block--intro-text__content a,
-.basic-block .field--name-field-text-block a,
-.hero--dashboard .field--name-field-text-block a {
-  color: $brand-link;
+.field--name-field-introduction-text,
+.field--name-field-featured-items-description,
+.field--name-field-featured-description,
+.field--name-field-accord-description,
+.field--name-field-accord-item-description,
+.field--name-field-phase-description,
+.quiz-form__text,
+.scorm-form--body,
+.body-text,
+.paragraph--type--image-text .field--name-field-text,
+.paragraph--type--text-image .field--name-field-text,
+.paragraph--type--text .field--name-field-text,
+.course-full .card__body,
+.teaser--course,
+.block--intro-text .block--intro-text__content,
+.block-inline-blockkpi-analytics  .field--name-body,
+.basic-block .field--name-field-text-block,
+.hero--dashboard .field--name-field-text-block,
+.certificate-footer .bottom,
+.certificate-header .description {
+  *:not(.badge):not(.section__title) > a:not(.btn) {
+    color: $brand-link;
+  }
+}
+
+.comment__text p {
+  a:not(.btn) {
+    color: $brand-link;
+  }
 }
 
 blockquote {

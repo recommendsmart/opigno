@@ -11,7 +11,14 @@
   .navbar-fixed-top {
     .navbar-nav {
       @include for-tablet-landscape-up {
-        padding-right: 1.625rem;
+
+        [dir='ltr'] & {
+          padding-right: 1.625rem;
+        }
+
+        [dir='rtl'] & {
+          padding-left: 1.625rem;
+        }
       }
     }
   }

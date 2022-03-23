@@ -14,7 +14,7 @@
 */
 #}
 {{ attach_library('socialbase/file') }}
-{% spaceless %}
+{% apply spaceless %}
 
   <li class="card-file">
     <a class="card-file__link" href="{{ link.url.uri }}" title="{{ link.text|replace({'_': ' '}) }}" target="_blank">
@@ -26,4 +26,4 @@
     </a>
   </li>
 
-{% endspaceless %}
+{% endapply %}

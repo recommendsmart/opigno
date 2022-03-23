@@ -100,13 +100,13 @@ function shs_term_load_all_parents($tid, $target_type = 'taxonomy_term') {
 /**
  * Determine whether a term has children.
  *
- * @param int $tid
+ * @param mixed $tid
  *   Term ID to check existence of children for.
  *
  * @return bool
  *   TRUE if the term has any children, FALSE otherwise.
  */
-function shs_term_has_children(int $tid): bool {
+function shs_term_has_children($tid): bool {
   if (empty($tid)) {
     return FALSE;
   }

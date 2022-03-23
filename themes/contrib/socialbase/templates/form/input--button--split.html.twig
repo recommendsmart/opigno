@@ -22,8 +22,8 @@
  * @ingroup templates
  */
 #}
-{% spaceless %}
-  {% block input %}
+{% block input %}
+  {% apply spaceless %}
     {% if default_button %}
       {% if icon_only %}
         <button{{ attributes.addClass(classes, 'icon-only') }}>
@@ -58,5 +58,5 @@
       <span class="sr-only">{{ 'Toggle Dropdown'|t }}</span>
     </button>
     {{ children }}
-  {% endblock %}
-{% endspaceless %}
+  {% endapply %}
+{% endblock %}

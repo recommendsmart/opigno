@@ -10,7 +10,7 @@ Source: https://www.drupal.org/files/issues/2021-07-30/group-2718195-58-groups-c
 
 
 Ability to use group tokens in node context
-Source: https://www.drupal.org/files/issues/2018-12-19/group-2774827-41-gnode-tokens.patch
+Source: https://www.drupal.org/files/issues/2021-03-11/group-gnode_tokens-2774827-75.patch
 
 
 Group: Don't try to re-save deleted entities

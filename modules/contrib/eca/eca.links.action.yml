@@ -1,0 +1,5 @@
+eca.import:
+  route_name: eca.import
+  title: 'Import'
+  appears_on:
+    - entity.eca.collection

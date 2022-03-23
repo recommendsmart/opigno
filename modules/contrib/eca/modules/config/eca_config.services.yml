@@ -1,0 +1,7 @@
+services:
+
+  eca_config.subscriber:
+    class: Drupal\eca_config\EventSubscriber\EcaConfig
+    arguments: ['@eca.processor', '@eca.service.token']
+    tags:
+      - { name: event_subscriber }

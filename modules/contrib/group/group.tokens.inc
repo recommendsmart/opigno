@@ -215,7 +215,7 @@ function group_tokens($type, $tokens, array $data, array $options, BubbleableMet
     }
 
     if ($url_tokens = $token_service->findWithPrefix($tokens, 'url')) {
-      $replacements += $token_service->generate('url', $url_tokens, ['url' => $group->urlInfo()], $options, $bubbleable_metadata);
+      $replacements += $token_service->generate('url', $url_tokens, ['url' => $group->toUrl()], $options, $bubbleable_metadata);
     }
   }
   elseif ($type == 'group_content' && !empty($data[$type])) {

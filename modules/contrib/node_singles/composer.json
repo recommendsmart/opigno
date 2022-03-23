@@ -1,8 +1,8 @@
 {
     "name": "wieni/node_singles",
-    "type": "drupal-module",
     "description": "Singles are node types used for one-off pages that have unique content requirements",
     "license": "GPL-2.0-or-later",
+    "type": "drupal-module",
     "require": {
         "php": "^7.1 || ^8.0",
         "drupal/core": "^8.8 || ^9.0"
@@ -19,6 +19,11 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true
+        }
+    },
     "scripts": {
         "coding-standards": [
             "@composer normalize",

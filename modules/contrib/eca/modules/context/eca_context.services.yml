@@ -1,0 +1,17 @@
+services:
+  context_stack.eca:
+    class: Drupal\context_stack\ContextStack
+    factory: ['@context_stack.factory', createStack]
+    arguments: [eca]
+    tags:
+      - { name: context_stack }
+  eca.token_data.context_stack:
+    class: Drupal\eca_context\Token\ContextStackDataProvider
+    arguments: ['@module_handler']
+    tags:
+      - { name: eca.token_data_provider }
+  eca.execution.context_subscriber:
+    class: Drupal\eca_context\EventSubscriber\EcaExecutionContextSubscriber
+    arguments: ['@eca.processor', '@eca.service.token']
+    tags:
+      - { name: event_subscriber }

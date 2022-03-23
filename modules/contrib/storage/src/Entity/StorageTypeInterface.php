@@ -41,4 +41,20 @@ interface StorageTypeInterface extends ConfigEntityInterface {
    */
   public function setNamePattern($pattern);
 
+  /**
+   * Gets the help information.
+   *
+   * @return string
+   *   The help information of this storage entity type.
+   */
+  public function getHelp();
+
+  /**
+   * Whether items of this Storage type have a canonical URL.
+   *
+   * @return bool
+   *   Returns TRUE when they are accessible via URL, FALSE otherwise.
+   */
+  public function hasCanonical();
+
 }
