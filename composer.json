@@ -68,7 +68,8 @@
         "drupal/radiostoslider": "^1.1",
         "drupal/group_action": "^1.0@beta",
         "drupal/eca": "^1.0@beta",
-        "drupal/field_fallback": "^1.0@beta"
+        "drupal/field_fallback": "^1.0@beta",
+        "drupal/field_bundle": "^1.0@RC"
     },
     "repositories": [
         {
