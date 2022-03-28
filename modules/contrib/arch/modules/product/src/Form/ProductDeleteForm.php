@@ -17,8 +17,7 @@ class ProductDeleteForm extends ContentEntityDeleteForm {
   protected function getDeletionMessage() {
     /** @var \Drupal\arch_product\Entity\ProductInterface $entity */
     $entity = $this->getEntity();
-
-    $product_type_storage = $this->entityManager->getStorage('product_type');
+    $product_type_storage = $this->entityTypeManager->getStorage('product_type');
     $product_type = $product_type_storage->load($entity->bundle())->label();
 
     if (!$entity->isDefaultTranslation()) {

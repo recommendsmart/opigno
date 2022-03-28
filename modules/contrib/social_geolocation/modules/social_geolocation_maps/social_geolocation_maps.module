@@ -161,12 +161,22 @@ function social_geolocation_maps_form_user_form_alter(&$form, FormStateInterface
  * Form submission handler for account_settings().
  */
 function social_geolocation_maps_account_settings_form_submit(array $form, FormStateInterface $form_state): void {
+  // If the Social Profile Privacy module is not installed we have nothing to
+  // do.
+  if (!\Drupal::moduleHandler()->moduleExists('social_profile_privacy')) {
+    return;
+  }
+
   $account = $form_state->getFormObject()->getEntity();
   $account_data = \Drupal::service('user.data')
     ->get('social_profile_privacy', $account->id(), 'private_info');
   $profile_privacy = $form_state->getValue('profile_privacy');
 
-  if ($account_data['group_profile_contact_info'] != $profile_privacy['group_profile_contact_info_visible']) {
+  if (
+    !empty($account_data['group_profile_contact_info']) &&
+    !empty($profile_privacy['group_profile_contact_info_visible']) &&
+    $account_data['group_profile_contact_info'] !== $profile_privacy['group_profile_contact_info_visible']
+  ) {
     \Drupal::service('cache_tags.invalidator')->invalidateTags(['social_geolocation_members_map']);
   }
 }

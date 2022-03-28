@@ -924,9 +924,11 @@ class Order extends RevisionableContentEntityBase implements OrderInterface {
    */
   public function setBillingAddress($address = NULL) {
     if ($address instanceof OrderAddressDataInterface) {
+      $this->set('billing_address', $address->toArray());
       $this->billingAddress = $address;
     }
     elseif (!isset($address)) {
+      $this->set('billing_address', NULL);
       $this->billingAddress = NULL;
     }
     else {
@@ -948,9 +950,11 @@ class Order extends RevisionableContentEntityBase implements OrderInterface {
    */
   public function setShippingAddress($address = NULL) {
     if ($address instanceof OrderAddressDataInterface) {
+      $this->set('shipping_address', $address->toArray());
       $this->shippingAddress = $address;
     }
     elseif (!isset($address)) {
+      $this->set('shipping_address', NULL);
       $this->shippingAddress = NULL;
     }
     else {

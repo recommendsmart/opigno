@@ -33,7 +33,7 @@ function hook_arch_order_mail_params_alter(array &$token_params, array &$context
  * @param \Drupal\arch_cart\Cart\CartInterface $cart
  *   Cart instance.
  */
-function hook_arch_order_create_from_cart_data_alter(array $data, CartInterface $cart) {
+function hook_arch_order_create_from_cart_data_alter(array &$data, CartInterface $cart) {
   foreach ($data['line_items'] as $index => $line_item) {
     if ($line_item['type'] != OrderLineItemInterface::ORDER_LINE_ITEM_TYPE_PRODUCT) {
       continue;

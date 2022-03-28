@@ -4,11 +4,48 @@ namespace Drupal\arch_product\Controller;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Controller\EntityViewController;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Render\RendererInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a controller to render a single product in preview.
  */
 class ProductPreviewController extends EntityViewController {
+
+  /**
+   * Entity repository.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.manager'),
+      $container->get('renderer'),
+      $container->get('entity.repository')
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    RendererInterface $renderer,
+    EntityRepositoryInterface $entity_repository
+  ) {
+    parent::__construct(
+      $entity_type_manager,
+      $renderer
+    );
+    $this->entityRepository = $entity_repository;
+  }
 
   /**
    * {@inheritdoc}
@@ -35,7 +72,7 @@ class ProductPreviewController extends EntityViewController {
    *   The page title.
    */
   public function title(EntityInterface $product_preview) {
-    return $this->entityManager->getTranslationFromContext($product_preview)->label();
+    return $this->entityRepository->getTranslationFromContext($product_preview)->label();
   }
 
 }

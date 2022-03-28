@@ -19,3 +19,8 @@ services:
   plugin.manager.design_source:
     class: Drupal\designs\DesignSourceManager
     parent: default_plugin_manager
+  design.properties:
+    class: Drupal\designs\DesignProperties
+    arguments:
+      - '@entity_type.manager'
+      - '@renderer'

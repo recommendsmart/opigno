@@ -25,9 +25,9 @@ class ProductSelection extends DefaultSelection {
   protected function buildEntityQuery($match = NULL, $match_operator = 'CONTAINS') {
     $configuration = $this->getConfiguration();
     $target_type = $configuration['target_type'];
-    $entity_type = $this->entityManager->getDefinition($target_type);
+    $entity_type = $this->entityTypeManager->getDefinition($target_type);
 
-    $query = $this->entityManager->getStorage($target_type)->getQuery();
+    $query = $this->entityTypeManager->getStorage($target_type)->getQuery();
 
     // If 'target_bundles' is NULL, all bundles are referenceable, no further
     // conditions are needed.
@@ -128,10 +128,10 @@ class ProductSelection extends DefaultSelection {
 
     $options = [];
     /** @var \Drupal\arch_product\Entity\ProductInterface[] $entities */
-    $entities = $this->entityManager->getStorage($target_type)->loadMultiple($result);
+    $entities = $this->entityTypeManager->getStorage($target_type)->loadMultiple($result);
     foreach ($entities as $entity_id => $entity) {
       $bundle = $entity->bundle();
-      $translation = $this->entityManager->getTranslationFromContext($entity);
+      $translation = $this->entityRepository->getTranslationFromContext($entity);
       $label = $translation->get('sku')->value . ' - ' . $translation->label();
       $options[$bundle][$entity_id] = Html::escape($label);
     }

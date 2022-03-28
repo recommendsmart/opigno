@@ -52,11 +52,11 @@ class BooleanSetting extends DesignSettingBase {
    */
   public function defaultConfiguration() {
     return parent::defaultConfiguration() + [
-      'value' => $this->getDefinitionValue('default_value', ''),
-      'string' => $this->getDefinitionValue('string', FALSE),
-      'on' => $this->getDefinitionValue('on', '1'),
-      'off' => $this->getDefinitionValue('off', '0'),
-    ];
+        'value' => $this->getDefinitionValue('default_value', ''),
+        'string' => $this->getDefinitionValue('string', FALSE),
+        'on' => $this->getDefinitionValue('on', '1'),
+        'off' => $this->getDefinitionValue('off', '0'),
+      ];
   }
 
   /**
@@ -91,10 +91,14 @@ class BooleanSetting extends DesignSettingBase {
     $output = $this->renderer->render($build);
 
     // Process the rendered content using PHP coersion.
+    $output = trim(strip_tags($output));
     $result = filter_var($output, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
 
     // Respond using the values provided by the configuration.
-    return ['#markup' => $result ? $this->configuration['on'] : $this->configuration['off']];
+    if ($this->configuration['string']) {
+      return ['#markup' => $result ? $this->configuration['on'] : $this->configuration['off']];
+    }
+    return ['#markup' => $result];
   }
 
 }

@@ -306,7 +306,7 @@ class ProductForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    /** @var \Drupal\arch_product\Entity\Product $product */
+    /** @var \Drupal\arch_product\Entity\ProductInterface $product */
     $product = $this->entity;
     $insert = $product->isNew();
     $product->save();

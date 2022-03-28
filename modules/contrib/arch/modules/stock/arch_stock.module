@@ -712,7 +712,7 @@ function arch_stock_api_cart_data_alter(array &$data, CartInterface $cart) {
 /**
  * Implements hook_arch_order_create_from_cart_data_alter().
  */
-function arch_stock_arch_order_create_from_cart_data_alter(array $data, CartInterface $cart) {
+function arch_stock_arch_order_create_from_cart_data_alter(array &$data, CartInterface $cart) {
   /** @var \Drupal\arch_stock\StockKeeperInterface $stock_keeper */
   $stock_keeper = \Drupal::service('arch_stock.stock_keeper');
 
@@ -725,14 +725,25 @@ function arch_stock_arch_order_create_from_cart_data_alter(array $data, CartInte
     if ($line_item['type'] != OrderLineItemInterface::ORDER_LINE_ITEM_TYPE_PRODUCT) {
       continue;
     }
+
+    $remove = FALSE;
+
     /** @var \Drupal\arch_product\Entity\ProductInterface $product */
     $product = $product_storage->load($line_item['product_id']);
-    $stock = $stock_keeper->getTotalProductStock($product, $account);
     if (
       !$product
       || empty($line_item['quantity'])
-      || empty($stock)
     ) {
+      $remove = TRUE;
+    }
+    else {
+      $stock = $stock_keeper->getTotalProductStock($product, $account);
+      if (empty($stock)) {
+        $remove = TRUE;
+      }
+    }
+
+    if ($remove) {
       unset($data['line_items'][$index]);
     }
   }

@@ -1,0 +1,13 @@
+type: module
+name: Access Records
+description: "Manage access with customizable content entities."
+core_version_requirement: '^9'
+package: Other
+dependencies:
+  - drupal:user
+  - entity:entity
+
+# Information added by Drupal.org packaging script on 2022-03-18
+version: '1.0.0-beta1'
+project: 'access_records'
+datestamp: 1647599962

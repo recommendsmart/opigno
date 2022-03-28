@@ -48,7 +48,7 @@ function arch_checkout_preprocess_arch_checkout_op_summary(array &$variables) {
   $media_view_builder = \Drupal::entityTypeManager()->getViewBuilder('media');
 
   foreach ($cart->getProducts() as $key => $product_data) {
-    /** @var \Drupal\arch_product\Entity\Product $product */
+    /** @var \Drupal\arch_product\Entity\ProductInterface $product */
     $product = Product::load($product_data['id']);
     if (empty($product)) {
       continue;

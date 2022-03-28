@@ -1,12 +1,12 @@
 type: module
 name: 'Field Bundle: Canonical URLs'
 description: "Enables canonical URLs for field bundle items."
-core_version_requirement: ^8.9 || ^9
+core_version_requirement: ^9.2 || ^10
 package: Other
 dependencies:
   - field_bundle:field_bundle
 
-# Information added by Drupal.org packaging script on 2022-03-18
-version: '1.0.0-rc1'
+# Information added by Drupal.org packaging script on 2022-03-27
+version: '1.0.0'
 project: 'field_bundle'
-datestamp: 1647599861
+datestamp: 1648400931

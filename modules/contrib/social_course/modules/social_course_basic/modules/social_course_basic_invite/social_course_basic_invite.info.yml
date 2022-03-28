@@ -7,7 +7,7 @@ dependencies:
   - social:social_group_invite
 package: Social
 
-# Information added by Drupal.org packaging script on 2022-03-22
-version: '4.0.1'
+# Information added by Drupal.org packaging script on 2022-03-23
+version: '4.0.2'
 project: 'social_course'
-datestamp: 1647963689
+datestamp: 1648043729

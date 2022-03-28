@@ -69,7 +69,9 @@
         "drupal/group_action": "^1.0@beta",
         "drupal/eca": "^1.0@beta",
         "drupal/field_fallback": "^1.0@beta",
-        "drupal/field_bundle": "^1.0@RC"
+        "drupal/field_bundle": "^1.0@RC",
+        "drupal/access_records": "^1.0@beta",
+        "drupal/arch": "^1.0@alpha"
     },
     "repositories": [
         {

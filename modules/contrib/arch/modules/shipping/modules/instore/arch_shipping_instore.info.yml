@@ -7,7 +7,7 @@ dependencies:
   - arch:arch
   - arch:arch_shipping
 
-# Information added by Drupal.org packaging script on 2021-09-14
-version: '8.x-1.0-alpha10'
+# Information added by Drupal.org packaging script on 2021-10-15
+version: '8.x-1.0-alpha13'
 project: 'arch'
-datestamp: 1631635065
+datestamp: 1634312824

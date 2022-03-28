@@ -29,7 +29,7 @@ use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\search_api\Query\QueryInterface;
 use Drupal\social_course\Entity\CourseEnrollmentInterface;
-use Drupal\views\Plugin\views\query\Sql;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -2074,7 +2074,7 @@ function social_course_get_destination() {
 /**
  * Implements hook_views_query_alter().
  */
-function social_course_views_query_alter(ViewExecutable $view, Sql $query): void {
+function social_course_views_query_alter(ViewExecutable $view, QueryPluginBase $query): void {
   if ($view->id() === 'newest_groups') {
     $query->addWhere(1, 'groups_field_data.type', 'course_%', 'NOT LIKE');
   }

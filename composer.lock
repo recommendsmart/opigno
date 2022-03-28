@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "097a89855387f94cefd88967d5876b40",
+    "content-hash": "a92bdbd573c9c70b57bd8ea97cdb1f2a",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1116,6 +1116,53 @@
             "time": "2022-01-18T15:43:28+00:00"
         },
         {
+            "name": "drupal/access_records",
+            "version": "1.0.0-beta1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/access_records.git",
+                "reference": "1.0.0-beta1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/access_records-1.0.0-beta1.zip",
+                "reference": "1.0.0-beta1",
+                "shasum": "e902157e50034655ef3cd6299d7c73b86139489e"
+            },
+            "require": {
+                "drupal/core": "^9",
+                "drupal/entity": "^1.2",
+                "php": ">=7.4"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0-beta1",
+                    "datestamp": "1647599960",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Beta releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "mxh",
+                    "homepage": "https://www.drupal.org/user/1124384"
+                }
+            ],
+            "description": "A Drupal module for managing access with customizable content entities.",
+            "homepage": "https://www.drupal.org/project/access_records",
+            "support": {
+                "source": "https://drupal.org/project/access_records",
+                "issues": "https://drupal.org/project/issues/access_records"
+            }
+        },
+        {
             "name": "drupal/activity_send_push",
             "version": "1.4.0",
             "require": {
@@ -1546,6 +1593,191 @@
             "homepage": "https://www.drupal.org/project/ajax_comments",
             "support": {
                 "source": "https://git.drupalcode.org/project/ajax_comments"
+            }
+        },
+        {
+            "name": "drupal/arch",
+            "version": "1.0.0-alpha13",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/arch.git",
+                "reference": "8.x-1.0-alpha13"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/arch-8.x-1.0-alpha13.zip",
+                "reference": "8.x-1.0-alpha13",
+                "shasum": "33bd33b580fea7d360864effdff24035c511fb80"
+            },
+            "require": {
+                "drupal/address": "^1.4",
+                "drupal/arch_order": "*",
+                "drupal/arch_product": "*",
+                "drupal/core": "^8.8 || ^9",
+                "drupal/currency": "~3.1",
+                "ext-bcmath": "*",
+                "ext-intl": "*",
+                "ext-json": "*",
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "drupal/arch_cart": "*",
+                "drupal/arch_checkout": "*",
+                "drupal/arch_order": "*",
+                "drupal/arch_payment": "*",
+                "drupal/arch_price": "*",
+                "drupal/arch_product": "*",
+                "drupal/arch_shipping": "*",
+                "drupal/arch_stock": "*",
+                "drupal/currency": "*",
+                "drupal/search_api": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.0-alpha13",
+                    "datestamp": "1634312821",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Varga Tamás",
+                    "homepage": "https://www.drupal.org/user/837344"
+                },
+                {
+                    "name": "tikaszvince",
+                    "homepage": "https://www.drupal.org/user/337178"
+                }
+            ],
+            "description": "Arch is an e-commerce Drupal module",
+            "homepage": "https://www.drupal.org/project/arch",
+            "support": {
+                "source": "https://git.drupalcode.org/project/arch"
+            }
+        },
+        {
+            "name": "drupal/arch_order",
+            "version": "1.0.0-alpha13",
+            "require": {
+                "drupal/arch": "*",
+                "drupal/arch_product": "*",
+                "drupal/core": "^8.8 || ^9"
+            },
+            "type": "metapackage",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.0-alpha13",
+                    "datestamp": "1634312821",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Varga Tamás",
+                    "homepage": "https://www.drupal.org/user/837344"
+                },
+                {
+                    "name": "tikaszvince",
+                    "homepage": "https://www.drupal.org/user/337178"
+                }
+            ],
+            "description": "Allow to handle orders, collect and store data about customers and purchased items.",
+            "homepage": "https://www.drupal.org/project/arch",
+            "support": {
+                "source": "https://git.drupalcode.org/project/arch"
+            }
+        },
+        {
+            "name": "drupal/arch_price",
+            "version": "1.0.0-alpha13",
+            "require": {
+                "drupal/arch": "*",
+                "drupal/core": "^8.8 || ^9",
+                "drupal/currency": "*"
+            },
+            "type": "metapackage",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.0-alpha13",
+                    "datestamp": "1634312821",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Varga Tamás",
+                    "homepage": "https://www.drupal.org/user/837344"
+                },
+                {
+                    "name": "tikaszvince",
+                    "homepage": "https://www.drupal.org/user/337178"
+                }
+            ],
+            "description": "Allow to define price types, VAT categories and multiple prices for products.",
+            "homepage": "https://www.drupal.org/project/arch",
+            "support": {
+                "source": "https://git.drupalcode.org/project/arch"
+            }
+        },
+        {
+            "name": "drupal/arch_product",
+            "version": "1.0.0-alpha13",
+            "require": {
+                "drupal/arch": "*",
+                "drupal/arch_price": "*",
+                "drupal/core": "^8.8 || ^9"
+            },
+            "type": "metapackage",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.0-alpha13",
+                    "datestamp": "1634312821",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Varga Tamás",
+                    "homepage": "https://www.drupal.org/user/837344"
+                },
+                {
+                    "name": "tikaszvince",
+                    "homepage": "https://www.drupal.org/user/337178"
+                }
+            ],
+            "description": "Allow products to be submitted to the store and displayed on pages.",
+            "homepage": "https://www.drupal.org/project/arch",
+            "support": {
+                "source": "https://git.drupalcode.org/project/arch"
             }
         },
         {
@@ -3653,17 +3885,17 @@
         },
         {
             "name": "drupal/designs",
-            "version": "1.0.6",
+            "version": "1.0.7",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/designs.git",
-                "reference": "1.0.6"
+                "reference": "1.0.7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/designs-1.0.6.zip",
-                "reference": "1.0.6",
-                "shasum": "63c0500793cd973c2fa24b4975349a5afe33c724"
+                "url": "https://ftp.drupal.org/files/projects/designs-1.0.7.zip",
+                "reference": "1.0.7",
+                "shasum": "9fc0c0670fc526744a7b68c40c315ca3a2103c41"
             },
             "require": {
                 "drupal/core": "^9"
@@ -3671,8 +3903,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "1.0.6",
-                    "datestamp": "1646690537",
+                    "version": "1.0.7",
+                    "datestamp": "1648316586",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -4716,20 +4948,20 @@
         },
         {
             "name": "drupal/field_bundle",
-            "version": "1.0.0-rc1",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/field_bundle.git",
-                "reference": "1.0.0-rc1"
+                "reference": "1.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/field_bundle-1.0.0-rc1.zip",
-                "reference": "1.0.0-rc1",
-                "shasum": "df4ad3875f2b03fa101946f2758ff8bfa6c65b4d"
+                "url": "https://ftp.drupal.org/files/projects/field_bundle-1.0.0.zip",
+                "reference": "1.0.0",
+                "shasum": "56c6cf72aca6522d24333a1315295fcae087cdcb"
             },
             "require": {
-                "drupal/core": "^8.9 || ^9.2"
+                "drupal/core": "^9.2 || ^10"
             },
             "require-dev": {
                 "drupal/group": "*"
@@ -4737,11 +4969,11 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "1.0.0-rc1",
-                    "datestamp": "1647599859",
+                    "version": "1.0.0",
+                    "datestamp": "1648400930",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "RC releases are not covered by Drupal security advisories."
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 }
             },
@@ -5511,7 +5743,7 @@
                     "datestamp": "1615385511",
                     "security-coverage": {
                         "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
+                        "message": "Beta releases are not covered by Drupal security advisories."
                     }
                 }
             },
@@ -5541,8 +5773,8 @@
                     "homepage": "https://www.drupal.org/user/2936003"
                 },
                 {
-                    "name": "mglaman",
-                    "homepage": "https://www.drupal.org/user/2416470"
+                    "name": "rszrama",
+                    "homepage": "https://www.drupal.org/user/49344"
                 },
                 {
                     "name": "skyredwang",
@@ -8657,17 +8889,17 @@
         },
         {
             "name": "drupal/social_course",
-            "version": "4.0.1",
+            "version": "4.0.2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/social_course.git",
-                "reference": "4.0.1"
+                "reference": "4.0.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/social_course-4.0.1.zip",
-                "reference": "4.0.1",
-                "shasum": "3c6d4112fb94d933ff38f5d728eff5e122409bd9"
+                "url": "https://ftp.drupal.org/files/projects/social_course-4.0.2.zip",
+                "reference": "4.0.2",
+                "shasum": "e0356f2a054258467b28b531cb202f33776b5fd8"
             },
             "require": {
                 "drupal/core": "^9",
@@ -8690,8 +8922,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "4.0.1",
-                    "datestamp": "1647963687",
+                    "version": "4.0.2",
+                    "datestamp": "1648043727",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
@@ -8750,17 +8982,17 @@
         },
         {
             "name": "drupal/social_geolocation",
-            "version": "2.0.1",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/social_geolocation.git",
-                "reference": "2.0.1"
+                "reference": "2.0.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/social_geolocation-2.0.1.zip",
-                "reference": "2.0.1",
-                "shasum": "0fd82ed0524aeefe6ba7044efe1436002e2789a9"
+                "url": "https://ftp.drupal.org/files/projects/social_geolocation-2.0.2.zip",
+                "reference": "2.0.2",
+                "shasum": "0c118b064a2abe4d8bb755d7095880dfefe784ae"
             },
             "require": {
                 "commerceguys/addressing": "^1.0.7",
@@ -8781,8 +9013,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.0.1",
-                    "datestamp": "1646810955",
+                    "version": "2.0.2",
+                    "datestamp": "1648465170",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -16973,7 +17205,9 @@
         "drupal/group_action": 10,
         "drupal/eca": 10,
         "drupal/field_fallback": 10,
-        "drupal/field_bundle": 5
+        "drupal/field_bundle": 5,
+        "drupal/access_records": 10,
+        "drupal/arch": 15
     },
     "prefer-stable": true,
     "prefer-lowest": false,

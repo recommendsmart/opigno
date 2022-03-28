@@ -2,12 +2,12 @@
 
 namespace Drupal\designs_field_formatter\Plugin\designs\source;
 
-use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
+use Drupal\designs\DesignPropertiesInterface;
 use Drupal\designs\DesignSourceBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -43,12 +43,20 @@ class FieldFormatterSource extends DesignSourceBase implements ContainerFactoryP
   protected $fieldTypeManager;
 
   /**
+   * The design properties.
+   *
+   * @var \Drupal\designs\DesignPropertiesInterface
+   */
+  protected $designProperties;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityFieldManagerInterface $entityFieldManager, FieldTypePluginManagerInterface $fieldTypeManager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityFieldManagerInterface $entityFieldManager, FieldTypePluginManagerInterface $fieldTypeManager, DesignPropertiesInterface $designProperties) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityFieldManager = $entityFieldManager;
     $this->fieldTypeManager = $fieldTypeManager;
+    $this->designProperties = $designProperties;
   }
 
   /**
@@ -60,7 +68,8 @@ class FieldFormatterSource extends DesignSourceBase implements ContainerFactoryP
       $plugin_id,
       $plugin_definition,
       $container->get('entity_field.manager'),
-      $container->get('plugin.manager.field.field_type')
+      $container->get('plugin.manager.field.field_type'),
+      $container->get('design.properties')
     );
   }
 
@@ -114,41 +123,11 @@ class FieldFormatterSource extends DesignSourceBase implements ContainerFactoryP
     // Cycle through all the properties for the field type.
     $definition = $this->getType()->getDataDefinition();
     foreach ($definition->getPropertyDefinitions() as $prop_id => $property) {
-      $output[$prop_id] = $this->getMarkup($item->get($prop_id)->getValue());
+      $output[$prop_id] = $this->designProperties->getMarkup($item->get($prop_id)
+        ->getValue());
     }
 
     return $output;
-  }
-
-  /**
-   * Get the markup from the value.
-   *
-   * @param mixed $value
-   *   A property value.
-   *
-   * @return array
-   *   The render array.
-   */
-  protected function getMarkup($value) {
-    if (is_null($value)) {
-      return ['#markup' => ''];
-    }
-    elseif (is_scalar($value)) {
-      return [
-        '#markup' => $value,
-      ];
-    }
-    elseif (method_exists($value, 'toString')) {
-      return [
-        '#markup' => $value->toString(),
-      ];
-    }
-    elseif (method_exists($value, '__toString')) {
-      return [
-        '#markup' => (string) $value,
-      ];
-    }
-    return [];
   }
 
   /**
