@@ -1,6 +1,0 @@
-arch_cart.settings:
-  title: 'Cart settings'
-  title_context: arch_cart__menu
-  parent: arch.settings
-  description: 'Enable or disable cart settings such as combine items.'
-  route_name: arch_cart.settings

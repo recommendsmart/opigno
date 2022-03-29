@@ -16,7 +16,7 @@ class RoleAssignTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['user', 'role_delegation', 'node'];
+  protected static $modules = ['user', 'role_delegation', 'node'];
 
   /**
    * {@inheritdoc}
@@ -106,14 +106,14 @@ class RoleAssignTest extends BrowserTestBase {
     $this->assertSession()->checkboxNotChecked($field_id);
 
     // Assign the role and ensure its now checked and assigned.
-    $this->drupalPostForm(NULL, [$field_name => $rid1], 'Save');
+    $this->submitForm([$field_name => $rid1], 'Save');
     $user_storage->resetCache();
     $account = $user_storage->load($account->id());
     self::assertTrue($account->hasRole($rid1), 'The target user has been granted the role.');
     $this->assertSession()->checkboxChecked($field_id);
 
     // Revoke the role.
-    $this->drupalPostForm(NULL, [$field_name => FALSE], 'Save');
+    $this->submitForm([$field_name => FALSE], 'Save');
     $user_storage->resetCache();
     $account = $user_storage->load($account->id());
     self::assertFalse($account->hasRole($rid1), 'The target user has gotten the role revoked.');
@@ -145,14 +145,14 @@ class RoleAssignTest extends BrowserTestBase {
     $this->assertSession()->checkboxNotChecked($field_id);
 
     // Assign the role and ensure its now checked and assigned.
-    $this->drupalPostForm(NULL, [$field_name => $rid1], 'Save');
+    $this->submitForm([$field_name => $rid1], 'Save');
     $user_storage->resetCache();
     $account = $user_storage->load($account->id());
     self::assertTrue($account->hasRole($rid1), 'The target user has been granted the role.');
     $this->assertSession()->checkboxChecked($field_id);
 
     // Revoke the role.
-    $this->drupalPostForm(NULL, [$field_name => FALSE], 'Save');
+    $this->submitForm([$field_name => FALSE], 'Save');
     $user_storage->resetCache();
     $account = $user_storage->load($account->id());
     self::assertFalse($account->hasRole($rid1), 'The target user has gotten the role revoked.');
@@ -195,37 +195,6 @@ class RoleAssignTest extends BrowserTestBase {
    * Test access to the "Roles" entity operation.
    */
   public function testRoleDelegationEntityOperationAccess() {
-    // Users that can assign all roles have access to the entity operation.
-    $account = $this->createUser(['administer users', 'assign all roles']);
-    $this->drupalLogin($account);
-    $this->drupalGet('/admin/people');
-    $this->assertSession()->linkByHrefExists(sprintf('/user/%s/roles', $account->id()));
-
-    // Users with only 'administer users' have access to the entity operation.
-    $account = $this->drupalCreateUser(['administer users']);
-    $this->drupalLogin($account);
-    $this->drupalGet('/admin/people');
-    $this->assertSession()->linkByHrefNotExists(sprintf('/user/%s/roles', $account->id()));
-
-    // Users with assign all roles permission have access to the entity
-    // operation.
-    $account = $this->createUser(['administer users', 'assign all roles']);
-    $this->drupalLogin($account);
-    $this->drupalGet('/admin/people');
-    $this->assertSession()->linkByHrefExists(sprintf('/user/%s/roles', $account->id()));
-
-    // Users with assign all roles permission have access to the entity
-    // operation.
-    $role = $this->createRole([]);
-    $account = $this->createUser([
-      'administer users',
-      'access content overview',
-      sprintf('assign %s role', $role),
-    ]);
-    $this->drupalLogin($account);
-    $this->drupalGet('/admin/people');
-    $this->assertSession()->linkByHrefExists(sprintf('/user/%s/roles', $account->id()));
-
     // Make sure the entity operation is only added to users.
     $node = $this->drupalCreateNode();
     $this->drupalGet('/admin/content');

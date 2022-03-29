@@ -1,4 +1,0 @@
-arch_checkout_type:
-  label: Checkout type
-  plugin_manager_service_id: plugin.manager.checkout_type
-  plugin_definition_decorator_class: \Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator

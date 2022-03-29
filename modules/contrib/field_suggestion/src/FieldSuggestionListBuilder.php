@@ -51,6 +51,7 @@ class FieldSuggestionListBuilder extends EntityListBuilder {
       'entity_type' => $this->t('Entity type'),
       'field_name' => $this->t('Field name'),
       'field_value' => $this->t('Field value'),
+      'usage' => $this->t('Usage'),
       'exclude' => $this->t('Exclude'),
     ] + parent::buildHeader();
   }
@@ -85,10 +86,10 @@ class FieldSuggestionListBuilder extends EntityListBuilder {
         ),
     ];
 
-    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field */
-    $field = $entity->exclude;
+    /** @var \Drupal\field_suggestion\FieldSuggestionInterface $entity */
+    $row['usage'] = $entity->isOnce() ? 1 : '∞';
 
-    $row['exclude'] = $field->count();
+    $row['exclude'] = $entity->countExcluded();
 
     return $row + parent::buildRow($entity);
   }

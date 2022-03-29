@@ -1,6 +1,0 @@
-onepage-checkout:
-  version: 1.x
-  js:
-    assets/js/onepage-checkout.js: {}
-  dependencies:
-    - core/jquery

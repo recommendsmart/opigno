@@ -1,9 +1,0 @@
-
-arch_payment_transfer.success:
-  path: '/payment/transfer/success'
-  defaults:
-    _controller: '\Drupal\arch_payment_transfer\Controller\TransferPaymentController::paymentSuccess'
-    _title: 'Successful Payment'
-    _title_context: 'arch_payment_transfer'
-  requirements:
-    _permission: 'access content'

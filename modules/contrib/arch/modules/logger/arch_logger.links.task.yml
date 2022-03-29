@@ -1,5 +1,0 @@
-entity.order.history:
-  route_name: entity.order.history
-  base_route: entity.order.canonical
-  title: 'History'
-  weight: 30

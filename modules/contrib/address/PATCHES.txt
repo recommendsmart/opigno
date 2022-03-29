@@ -5,8 +5,3 @@ Default country value produces missing schema problem
 Source: https://www.drupal.org/files/issues/2019-05-30/default_country_schema_problem-3058288-2.patch
 
 
-3226772: D9.1 / Symfony 4.x changes $event_dispatcher->dispatch() parameters order
-
-Source: https://git.drupalcode.org/project/address/-/merge_requests/8.diff
-
-

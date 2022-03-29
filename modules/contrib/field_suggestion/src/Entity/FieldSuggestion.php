@@ -3,6 +3,7 @@
 namespace Drupal\field_suggestion\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityPublishedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\field_suggestion\FieldSuggestionInterface;
@@ -39,6 +40,8 @@ use Drupal\field_suggestion\FieldSuggestionInterface;
  *     "id" = "fsid",
  *     "bundle" = "type",
  *     "uuid" = "uuid",
+ *     "status" = "once",
+ *     "published" = "once",
  *   },
  *   bundle_entity_type = "field_suggestion_type",
  *   field_ui_base_route = "entity.field_suggestion_type.edit_form",
@@ -53,11 +56,38 @@ use Drupal\field_suggestion\FieldSuggestionInterface;
  */
 class FieldSuggestion extends ContentEntityBase implements FieldSuggestionInterface {
 
+  use EntityPublishedTrait {
+    isPublished as isOnce;
+    setPublished as setOnce;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasExcluded() {
+    return !$this->get('exclude')->isEmpty();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getExcluded() {
+    return $this->get('exclude')->getValue();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function countExcluded() {
+    return $this->get('exclude')->count();
+  }
+
   /**
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
+    $fields += static::publishedBaseFieldDefinitions($entity_type);
 
     $fields['entity_type'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Entity type'))
@@ -66,6 +96,23 @@ class FieldSuggestion extends ContentEntityBase implements FieldSuggestionInterf
     $fields['field_name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Field name'))
       ->setRequired(TRUE);
+
+    $fields['once']
+      ->setLabel(t('Allowed number of usages'))
+      ->setDescription(t('How many times this suggestion can be re-used.'))
+      ->setRequired(TRUE)
+      ->setRevisionable(FALSE)
+      ->setTranslatable(FALSE)
+      ->setDefaultValue(FALSE)
+      ->setInitialValue(FALSE)
+      ->setSettings([
+        'on_label' => 'Once',
+        'off_label' => 'Unlimited',
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'options_buttons',
+        'weight' => 1,
+      ]);
 
     return $fields;
   }

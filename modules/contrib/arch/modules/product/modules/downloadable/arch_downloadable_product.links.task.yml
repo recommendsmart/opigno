@@ -1,5 +1,0 @@
-arch_downloadable_product.user.purchased_files:
-  route_name: arch_downloadable_product.user.purchased_files
-  base_route: entity.user.canonical
-  title: 'My files'
-  weight: 11

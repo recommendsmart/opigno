@@ -1,6 +1,0 @@
-entity.warehouse.add_form:
-  route_name: entity.warehouse.add_form
-  title: 'Add warehouse'
-  title_context: arch_stock
-  appears_on:
-    - entity.warehouse.collection

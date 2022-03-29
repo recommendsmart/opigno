@@ -146,7 +146,9 @@ class ValueWidget extends WidgetBase {
     $summary = [];
 
     if ($this->getSetting('type') == 'value') {
-      $values = $this->getValues();
+      $values = array_map(function ($val) {
+        return $val['value'];
+      }, $this->getValues());
       if (count($values) == 0) {
         $summary[] = $this->t('Value:') . ' ' . $this->t('Not set');
       }
@@ -186,15 +188,17 @@ class ValueWidget extends WidgetBase {
   protected function getValues(EntityInterface $entity = NULL) {
     $values = str_getcsv($this->getSetting('values'));
 
-    // Tokenize.
-    if ($entity) {
-      $data = [$entity->getEntityTypeId() => $entity];
-      foreach ($values as $delta => $value) {
-        $values[$delta]['value'] = $this->token->replace($value, $data);
+    $output = [];
+    foreach ($values as $delta => $value) {
+      // Tokenize.
+      if ($entity) {
+        $data = [$entity->getEntityTypeId() => $entity];
+        $value = $this->token->replace($value, $data);
       }
+      $output[$delta]['value'] = $value;
     }
 
-    return array_filter($values);
+    return $output;
   }
 
   /**

@@ -4,5 +4,6 @@ editor_advanced_link:
     js/editor_advanced_link.js: {}
   dependencies:
     - core/drupal
+    - core/drupal.announce
     - core/jquery
-    - core/jquery.once
+    - core/once

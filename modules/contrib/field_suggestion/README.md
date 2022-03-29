@@ -11,8 +11,9 @@ CONTENTS OF THIS FILE
 INTRODUCTION
 ------------
 
-The Field Suggestion module provides a list of often-used field values for just
-copy-pasting it.
+The Field Suggestion module provides a list of often-used values of a field for
+selecting one from them to automatically fill the field instead of filling the
+field each time manually.
 
  * For a full description of the module, visit the project page:
    https://www.drupal.org/project/field_suggestion

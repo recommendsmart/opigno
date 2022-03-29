@@ -1,4 +1,0 @@
-services:
-  plugin.manager.shipping_method:
-    class: Drupal\arch_shipping\ShippingMethodManager
-    parent: default_plugin_manager

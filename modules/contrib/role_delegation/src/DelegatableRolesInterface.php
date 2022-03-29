@@ -5,9 +5,7 @@ namespace Drupal\role_delegation;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Interface DelegatableRolesInterface.
- *
- * @package Drupal\role_delegation
+ * Interface for the delegatable roles service.
  */
 interface DelegatableRolesInterface {
 
@@ -20,7 +18,7 @@ interface DelegatableRolesInterface {
    * @return array
    *   An array of roles with machine names as keys and labels as values.
    */
-  public function getAssignableRoles(AccountInterface $account);
+  public function getAssignableRoles(AccountInterface $account): array;
 
   /**
    * Gets all roles apart from anonymous and authenticated.
@@ -28,6 +26,6 @@ interface DelegatableRolesInterface {
    * @return \Drupal\user\RoleInterface[]
    *   An array of role objects.
    */
-  public function getAllRoles();
+  public function getAllRoles(): array;
 
 }

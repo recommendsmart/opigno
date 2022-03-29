@@ -1,14 +1,14 @@
 name: 'Field Suggestion'
 type: module
-description: 'Provides a list of often-used field values for just copy-pasting it.'
-core_version_requirement: ^8 || ^9
+description: 'Provides a list of often-used values of a field for selecting one from them to automatically fill the field instead of filling the field each time manually.'
+core_version_requirement: ^9.2
 configure: field_suggestion.settings
 dependencies:
   - drupal:field
   - drupal:user
   - dynamic_entity_reference:dynamic_entity_reference
 
-# Information added by Drupal.org packaging script on 2022-02-27
-version: '1.0.0-alpha3'
+# Information added by Drupal.org packaging script on 2022-03-28
+version: '1.0.0-alpha4'
 project: 'field_suggestion'
-datestamp: 1645977793
+datestamp: 1648503441

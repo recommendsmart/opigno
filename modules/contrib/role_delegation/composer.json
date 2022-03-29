@@ -3,6 +3,9 @@
   "description": "Allows site administrators to grant some roles the authority to assign selected roles to users.",
   "type": "drupal-module",
   "homepage": "http://drupal.org/project/role_delegation",
+  "require": {
+    "drupal/core": "^9.2 || ^10"
+    },
   "authors": [
     {
       "name": "Jeroen Tubex",

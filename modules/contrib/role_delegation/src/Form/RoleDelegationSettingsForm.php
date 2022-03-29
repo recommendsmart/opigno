@@ -53,14 +53,14 @@ class RoleDelegationSettingsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'role_delegation_role_assign_form';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, AccountInterface $user = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, AccountInterface $user = NULL): array {
     if (!$user instanceof AccountInterface) {
       return $form;
     }
@@ -88,7 +88,7 @@ class RoleDelegationSettingsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     /** @var \Drupal\user\UserInterface $account */
     $account = $form_state->getBuildInfo()['args'][0];
 

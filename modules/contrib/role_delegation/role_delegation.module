@@ -30,7 +30,7 @@ use Drupal\user\UserInterface;
 /**
  * Implements hook_help().
  */
-function role_delegation_help($route_name, RouteMatchInterface $route_match) {
+function role_delegation_help(string $route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.role_delegation':
       $output = '<p>' . t('This module allows site administrators to grant some roles the authority to assign selected roles to users, without them needing the <em>administer permissions</em> permission.') . '</p>';
@@ -49,6 +49,7 @@ function role_delegation_user_role_delete(RoleInterface $entity) {
   $roles = \Drupal::entityQuery('user_role')
     ->condition('permissions.*', $permission)
     ->condition('id', $entity->id(), '<>')
+    ->accessCheck(FALSE)
     ->execute();
 
   /** @var \Drupal\user\RoleInterface $role */
@@ -95,7 +96,7 @@ function role_delegation_user_presave(UserInterface $entity) {
 /**
  * Implements hook_ENTITY_TYPE_load().
  */
-function role_delegation_user_load($entities) {
+function role_delegation_user_load(array $entities) {
   // This is a workaround for known limitations of computed fields: since they
   // are not stored, they are also not loaded with the user, so values must be
   // manually supplied. This allows us to later determine that an empty field
@@ -110,24 +111,24 @@ function role_delegation_user_load($entities) {
 }
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_form_BASE_FORM_ID_alter().
  */
-function role_delegation_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function role_delegation_form_user_form_alter(array &$form, FormStateInterface $form_state, string $form_id) {
   // Add an entity builder for the user entity to ensure that it recieves the
   // "empty" value when the field is not accessible.
-  if (isset($form['role_change']) && in_array($form_id, ['user_register_form', 'user_form'])) {
+  if (isset($form['role_change'])) {
     $form['role_change']['#group'] = 'account';
     $form['#entity_builders'][] = 'role_delegation_user_form_builder';
   }
 }
 
 /**
- * Implements hook_field_widget_form_alter().
+ * Implements hook_field_widget_single_element_form_alter().
  */
-function role_delegation_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
+function role_delegation_field_widget_single_element_form_alter(array &$element, FormStateInterface $form_state, array $context) {
   /** @var \Drupal\Core\Field\FieldItemListInterface $items */
-  /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
   $items = $context['items'];
+  /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
   $field_definition = $items->getFieldDefinition();
 
   // Since the field is computed, the default value of the form element will be
@@ -161,7 +162,7 @@ function role_delegation_options_list_alter(array &$options, array $context) {
  *
  * @see role_delegation_form_alter()
  */
-function role_delegation_user_form_builder($entity_type, UserInterface $user, &$form, FormStateInterface $form_state) {
+function role_delegation_user_form_builder(string $entity_type, UserInterface $user, array &$form, FormStateInterface $form_state) {
   // If the user has no access to the "role_change" field, then the form will
   // submit an empty array for the field, which will make later processing think
   // it was intentional. Set it to the empty field value to correct this.
@@ -196,7 +197,7 @@ function role_delegation_entity_base_field_info(EntityTypeInterface $entity_type
 /**
  * Implements hook_entity_field_access().
  */
-function role_delegation_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+function role_delegation_entity_field_access(string $operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
   if ($operation === 'edit' && $field_definition->getName() === 'role_change' && $field_definition->getTargetEntityTypeId() === 'user') {
     // Deny access if the user has access to the normal roles field.
     if ($account->hasPermission('administer permissions')) {
@@ -226,6 +227,12 @@ function role_delegation_entity_operation(EntityInterface $entity) {
 
   if (!$entity instanceof UserInterface) {
     return $operations;
+  }
+
+  // Hide the entity operation when the current user has the 'administer users'
+  // permission. Roles can be edited on the user edit page.
+  if (!\Drupal::currentUser()->hasPermission('administer users')) {
+    return;
   }
 
   $url = Url::fromRoute('role_delegation.edit_form', [

@@ -1,9 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-id: completed
-label: Completed
-weight: -8
-description: 'Got this status when the payment successfully finished.'
-default: false
-locked: true

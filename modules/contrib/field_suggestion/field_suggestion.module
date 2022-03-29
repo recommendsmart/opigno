@@ -2,10 +2,11 @@
 
 /**
  * @file
- * Provides a list of often-used field values for just copy-pasting it.
+ * Provides a list of often-used values of a field.
  */
 
-use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -25,16 +26,22 @@ function field_suggestion_help($route_name, RouteMatchInterface $route_match) {
 
   if ($route_name === 'help.page.field_suggestion') {
     $output .= '<h3>' . t('About') . '</h3>';
-    $output .= '<p>' . t('Provides a list of often-used field values for just copy-pasting it.') . '</p>';
+    $output .= '<p>' . t('Provides a list of often-used values of a field for
+selecting one from them to automatically fill the field instead of filling the
+field each time manually.') . '</p>';
   }
 
   return $output;
 }
 
 /**
- * Implements hook_field_widget_form_alter().
+ * Implements hook_field_widget_single_element_form_alter().
  */
-function field_suggestion_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
+function field_suggestion_field_widget_single_element_form_alter(
+  array &$element,
+  FormStateInterface $form_state,
+  array $context
+) {
   /** @var \Drupal\Core\Field\FieldItemListInterface $items */
   $items = $context['items'];
 
@@ -95,9 +102,9 @@ function field_suggestion_field_widget_form_alter(&$element, FormStateInterface 
 
       $allow = TRUE;
 
-      if (!$suggestion_entity->exclude->isEmpty()) {
+      if ($suggestion_entity->hasExcluded()) {
         $hook = 'field_suggestion_exclude';
-        $exclude = $suggestion_entity->exclude->getValue();
+        $exclude = $suggestion_entity->getExcluded();
 
         foreach (\Drupal::moduleHandler()->getImplementations($hook) as $module) {
           $function = $module . '_' . $hook;
@@ -111,6 +118,22 @@ function field_suggestion_field_widget_form_alter(&$element, FormStateInterface 
       }
 
       $value = $suggestion_entity->get('field_suggestion_' . $field_type)->value;
+
+      if ($allow && $suggestion_entity->isOnce()) {
+        $count = (int) \Drupal::entityQuery($entity_type_id)
+          ->addTag('field_suggestion')
+          ->addTag('field_suggestion_usage')
+          ->addMetaData('field_name', $field_name)
+          ->addMetaData('entity', $entity)
+          ->condition($field_name, $value)
+          ->range(0, 1)
+          ->count()
+          ->execute();
+
+        if ($count === 1) {
+          $allow = FALSE;
+        }
+      }
 
       if ($allow) {
         $pinned[] = $value;
@@ -171,19 +194,6 @@ function field_suggestion_field_widget_form_alter(&$element, FormStateInterface 
 
     $element['suggestion']['#options'][] = $renderer->render($sub_element);
   }
-
-  if (($triggering_element = $form_state->getTriggeringElement()) !== NULL) {
-    $parents = [$field_name, $context['delta'], 'suggestion'];
-
-    if ($triggering_element['#parents'] === $parents) {
-      $input = $form_state->getUserInput();
-
-      if (NestedArray::keyExists($input, $parents)) {
-        $delta = NestedArray::getValue($input, $parents);
-        $element['value']['#value'] = $element['suggestion']['#attributes']['data-suggestion-' . $delta];
-      }
-    }
-  }
 }
 
 /**
@@ -242,7 +252,7 @@ function field_suggestion_entity_base_field_info(EntityTypeInterface $entity_typ
 in the suggestions list.'))
     ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
     ->setSettings($settings)
-    ->setDisplayOptions('form', ['weight' => 1]);
+    ->setDisplayOptions('form', ['weight' => 2]);
 
   return $fields;
 }
@@ -320,6 +330,26 @@ function field_suggestion_element_info_alter(array &$info) {
 }
 
 /**
+ * Implements hook_preprocess_HOOK().
+ */
+function field_suggestion_preprocess_links__help(&$variables) {
+  $titles = [
+    'entity.field_suggestion.collection' => t('Pinned items'),
+    'entity.field_suggestion_type.collection' => t('Supported field types'),
+    'field_suggestion.settings' => t('Settings'),
+  ];
+
+  foreach ($variables['links'] as &$item) {
+    /** @var \Drupal\Core\Url $url */
+    $url = $item['link']['#url'];
+
+    if (isset($titles[$route_name = $url->getRouteName()])) {
+      $item['link']['#title'] = $titles[$route_name];
+    }
+  }
+}
+
+/**
  * AJAX callback.
  *
  * @param array $form
@@ -327,11 +357,17 @@ function field_suggestion_element_info_alter(array &$info) {
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
  *
- * @return array
- *   The field structure.
+ * @return \Drupal\Core\Ajax\AjaxResponse
+ *   The AJAX response.
  */
-function _field_suggestion_ajax_callback($form, $form_state) {
-  $field = $form[$form_state->getTriggeringElement()['#parents'][0]];
-  $field['#id'] = $field['#attributes']['data-drupal-selector'];
-  return $field;
+function _field_suggestion_ajax_callback(array $form, FormStateInterface $form_state) {
+  $name = $form_state->getTriggeringElement()['#parents'][0];
+  $attributes = $form[$name]['widget'][0]['suggestion']['#attributes'];
+  $delta = $form_state->getValue([$name, 0, 'suggestion']);
+
+  return (new AjaxResponse())->addCommand(new InvokeCommand(
+    '#edit-' . $name . '-0-value',
+    'val',
+    [$attributes['data-suggestion-' . $delta]]
+  ));
 }

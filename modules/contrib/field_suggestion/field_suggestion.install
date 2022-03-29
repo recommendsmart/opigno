@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the field_suggestion module.
  */
 
+use Drupal\Core\Field\BaseFieldDefinition;
+
 /**
  * Create entity type.
  */
@@ -63,4 +65,43 @@ function field_suggestion_update_8002(&$sandbox) {
   }
 
   $sandbox['#finished'] = $sandbox['processed'] / $sandbox['total'];
+}
+
+/**
+ * Add a field to set the allowed number of usages.
+ */
+function field_suggestion_update_9201(&$sandbox) {
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $manager->getEntityType('field_suggestion');
+
+  $entity_type->set(
+    'entity_keys',
+    $entity_type->getKeys() + array_fill_keys(['status', 'published'], 'once')
+  );
+
+  $manager->updateEntityType($entity_type);
+
+  $field_storage_definition = BaseFieldDefinition::create('boolean')
+    ->setLabel(t('Allowed number of usages'))
+    ->setDescription(t('How many times this suggestion can be re-used.'))
+    ->setRequired(TRUE)
+    ->setRevisionable(FALSE)
+    ->setTranslatable(FALSE)
+    ->setDefaultValue(FALSE)
+    ->setInitialValue(FALSE)
+    ->setSettings([
+      'on_label' => 'Once',
+      'off_label' => 'Unlimited',
+    ])
+    ->setDisplayOptions('form', [
+      'type' => 'options_buttons',
+      'weight' => 1,
+    ]);
+
+  $manager->installFieldStorageDefinition(
+    'once',
+    'field_suggestion',
+    'field_suggestion',
+    $field_storage_definition
+  );
 }

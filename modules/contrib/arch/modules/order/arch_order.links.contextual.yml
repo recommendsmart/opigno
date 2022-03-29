@@ -1,4 +1,0 @@
-entity.order.edit_form:
-  route_name: entity.order.edit_form
-  group: order
-  title: Edit

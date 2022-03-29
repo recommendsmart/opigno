@@ -1,8 +1,0 @@
-arch_payment.admin_settings:
-  title: 'Payment methods'
-  title_context: arch_payment_menu
-  description: 'Manage settings for each payment method.'
-  description_context: arch_payment_menu
-  route_name: arch_payment.payment_method.overview
-  parent: arch.settings
-  weight: 200

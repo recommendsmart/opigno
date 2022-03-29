@@ -1,9 +1,0 @@
-langcode: en
-status: true
-dependencies:
-  module:
-    - arch_addressbook
-id: addressbookitem.teaser
-label: Teaser
-targetEntityType: addressbookitem
-cache: true

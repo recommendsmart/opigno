@@ -99,6 +99,7 @@ function social_core_install() {
       'delete all revisions',
       'create url aliases',
       'use text format full_html',
+      'access social_core dashboard',
     ]
   );
   user_role_grant_permissions(
@@ -128,6 +129,7 @@ function social_core_install() {
       'administer themes',
       'administer blocks',
       'access contextual links',
+      'access social_core dashboard',
     ]
   );
   // Create AN Homepage block.
@@ -498,7 +500,7 @@ function social_core_update_8005(&$sandbox) {
         // Only crop if this uri is not yet cropped for this crop style already.
         if (!$crops) {
 
-          list($ratio_width, $ratio_height) = explode(':', $crop_type->aspect_ratio);
+          [$ratio_width, $ratio_height] = explode(':', $crop_type->aspect_ratio);
           $ratio = $ratio_width / $ratio_height;
 
           if ($ratio > 1) {
@@ -1522,4 +1524,26 @@ function social_core_update_11004(): void {
   if (\Drupal::config('social_core.settings')->get('use_entity_access_api') !== NULL) {
     \Drupal::configFactory()->getEditable('social_core.settings')->delete();
   }
+}
+
+/**
+ * Update image style of social medium.
+ */
+function social_core_update_11005(): string {
+  /** @var \Drupal\update_helper\Updater $updateHelper */
+  $updateHelper = \Drupal::service('update_helper.updater');
+
+  // Execute configuration update definitions with logging of success.
+  $updateHelper->executeUpdate('social_core', 'social_core_update_11005');
+
+  // Output logged messages to related channel of update execution.
+  return $updateHelper->logger()->output();
+}
+
+/**
+ * Add dashboard permission to SM/CM.
+ */
+function social_core_update_11006(): void {
+  user_role_grant_permissions('contentmanager', ['access social_core dashboard']);
+  user_role_grant_permissions('sitemanager', ['access social_core dashboard']);
 }

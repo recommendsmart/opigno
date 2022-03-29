@@ -1,7 +1,0 @@
-arch_checkout.admin_settings:
-  title: 'Checkout settings'
-  title_context: arch_checkout_menu
-  description: 'Configure checkout type settings.'
-  route_name: arch_checkout.admin_settings
-  parent: arch.settings
-  weight: 100
