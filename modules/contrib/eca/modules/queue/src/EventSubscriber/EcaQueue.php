@@ -16,7 +16,7 @@ class EcaQueue extends EcaBase {
   public static function getSubscribedEvents(): array {
     $events = [];
     foreach (QueueEventDeriver::definitions() as $definition) {
-      $events[$definition['drupal_id']][] = ['onEvent'];
+      $events[$definition['event_name']][] = ['onEvent'];
     }
     return $events;
   }

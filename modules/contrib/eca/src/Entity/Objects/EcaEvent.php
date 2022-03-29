@@ -36,17 +36,16 @@ class EcaEvent extends EcaObject implements ObjectWithPluginInterface {
 
   /**
    * @param \Drupal\Component\EventDispatcher\Event $event
+   * @param string $event_name
    *
    * @return bool
    */
-  public function applies(Event $event): bool {
-    if (get_class($event) === $this->plugin->drupalEventClass() && (!($event instanceof ConditionalApplianceInterface) || $event->applies($this->getId(), $this->configuration))) {
+  public function applies(Event $event, string $event_name): bool {
+    if ($event_name === $this->plugin->eventName() && (!($event instanceof ConditionalApplianceInterface) || $event->applies($this->getId(), $this->configuration))) {
       if ($event instanceof ContentEntityBaseEntity) {
         return !empty($event->getEntity());
       }
-      else {
-        return TRUE;
-      }
+      return TRUE;
     }
     return FALSE;
   }

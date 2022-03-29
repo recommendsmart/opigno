@@ -19,8 +19,8 @@ class QueueEventDeriver extends EventDeriverBase {
     $definitions = [];
     $definitions['processing_task'] = [
       'label' => 'ECA processing queued task',
-      'drupal_id' => QueueEvents::PROCESSING_TASK,
-      'drupal_event_class' => ProcessingTaskEvent::class,
+      'event_name' => QueueEvents::PROCESSING_TASK,
+      'event_class' => ProcessingTaskEvent::class,
       'tags' => Tag::RUNTIME,
     ];
     return $definitions;

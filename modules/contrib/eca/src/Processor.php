@@ -110,7 +110,7 @@ class Processor {
         $context['%eventlabel'] = $ecaEvent->getLabel();
         $context['%eventid'] = $ecaEvent->getId();
         $this->logger->debug('Check %eventlabel (%eventid) from ECA %ecalabel (%ecaid) for event %event.', $context);
-        if ($ecaEvent->applies($event)) {
+        if ($ecaEvent->applies($event, $event_name)) {
           // We need to check whether this is the root of all execution calls,
           // for being able to purge the execution history once it is not
           // needed anymore.

@@ -23,7 +23,7 @@ class TokenSetValue extends ConfigurableActionBase {
     $name = $this->configuration['token_name'];
     $value = $this->configuration['token_value'];
     // Allow direct assignment of available data from the Token environment.
-    $value = (mb_strlen($value) <= 255) && $token->hasTokenData($value) ? $token->getTokenData($value) : $token->replaceClear($value);
+    $value = (mb_substr($value, 0, 1) === '[') && (mb_substr($value, -1, 1) === ']') && (mb_strlen($value) <= 255) && $token->hasTokenData($value) ? $token->getTokenData($value) : $token->replaceClear($value);
     $token->addTokenData($name, $value);
   }
 

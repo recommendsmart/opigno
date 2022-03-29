@@ -16,7 +16,7 @@ class EcaLog extends EcaBase {
   public static function getSubscribedEvents(): array {
     $events = [];
     foreach (LogEvent::actions() as $action) {
-      $events[$action['drupal_id']][] = ['onEvent'];
+      $events[$action['event_name']][] = ['onEvent'];
     }
     return $events;
   }

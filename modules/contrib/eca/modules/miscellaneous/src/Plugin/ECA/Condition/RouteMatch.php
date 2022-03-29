@@ -4,6 +4,8 @@ namespace Drupal\eca_misc\Plugin\ECA\Condition;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eca\Plugin\ECA\Condition\StringComparisonBase;
+use Drupal\eca_misc\Plugin\RouteInterface;
+use Drupal\eca_misc\Plugin\RouteTrait;
 
 /**
  * Plugin implementation of the ECA condition for entity type and bundle.
@@ -15,21 +17,20 @@ use Drupal\eca\Plugin\ECA\Condition\StringComparisonBase;
  */
 class RouteMatch extends StringComparisonBase {
 
+  use RouteTrait;
+
   /**
    * {@inheritdoc}
    */
-  protected function getFirstValue(): string {
-    if ($request = $this->requestStack->getCurrentRequest()) {
-      return $request->getBasePath();
-    }
-    return '';
+  protected function getLeftValue(): string {
+    return $this->getRouteMatch()->getRouteName() ?? '';
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getSecondValue(): string {
-    return $this->configuration['path'];
+  protected function getRightValue(): string {
+    return $this->configuration['route'];
   }
 
   /**
@@ -37,8 +38,9 @@ class RouteMatch extends StringComparisonBase {
    */
   public function defaultConfiguration(): array {
     return [
-        'path' => '',
-      ] + parent::defaultConfiguration();
+      'request' => RouteInterface::ROUTE_CURRENT,
+      'route' => '',
+    ] + parent::defaultConfiguration();
   }
 
   /**
@@ -46,10 +48,11 @@ class RouteMatch extends StringComparisonBase {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
     $form = parent::buildConfigurationForm($form, $form_state);
-    $form['path'] = [
+    $this->requestFormField($form);
+    $form['route'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Path'),
-      '#default_value' => $this->configuration['path'],
+      '#title' => $this->t('Route name'),
+      '#default_value' => $this->configuration['route'],
       '#weight' => -8,
     ];
     return $form;
@@ -59,7 +62,8 @@ class RouteMatch extends StringComparisonBase {
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
-    $this->configuration['path'] = $form_state->getValue('path');
+    $this->configuration['request'] = $form_state->getValue('request');
+    $this->configuration['route'] = $form_state->getValue('route');
     parent::submitConfigurationForm($form, $form_state);
   }
 

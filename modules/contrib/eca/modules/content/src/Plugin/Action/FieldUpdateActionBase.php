@@ -4,10 +4,11 @@ namespace Drupal\eca_content\Plugin\Action;
 
 use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\DependentPluginInterface;
+use Drupal\Core\Access\AccessibleInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
-use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
@@ -160,11 +161,17 @@ abstract class FieldUpdateActionBase extends ActionBase  implements Configurable
         throw new \RuntimeException(sprintf("The provided field %s does not resolve for entities to be saved from the %s entity having ID %s.", $field, $entity->getEntityTypeId(), $entity->id()));
       }
       $property_name = $update_target->getName();
+      $delta = 0;
       while ($update_target = $update_target->getParent()) {
+        if (is_int($update_target->getName())) {
+          $delta = $update_target->getName();
+        }
         if ($update_target instanceof FieldItemListInterface) {
           break;
         }
       }
+      $is_property_name_explicit = in_array($property_name, $metadata['parts']);
+      $is_delta_explicit = in_array((string) $delta, $metadata['parts']);
       if (!($update_target instanceof FieldItemListInterface)) {
         throw new \InvalidArgumentException(sprintf("The provided field %s does not resolve to a field on the %s entity having ID %s.", $field, $entity->getEntityTypeId(), $entity->id()));
       }
@@ -172,15 +179,20 @@ abstract class FieldUpdateActionBase extends ActionBase  implements Configurable
         $values = $values->getValue();
       }
       elseif (!is_array($values)) {
-        $values = [$values];
+        $values = [$delta => $values];
+      }
+      if (!isset($values[$delta])) {
+        $values[$delta] = end($values);
+        unset($values[key($values)]);
       }
 
       // Apply configured filters and normalize the array of values.
       foreach ($values as $i => $value) {
         if ($value instanceof TypedDataInterface) {
           $value = $value->getValue();
+          $values[$i] = $value;
         }
-        if (is_array($value)) {
+        if (is_array($value) && ($is_property_name_explicit || (count($value) === 1))) {
           $value = array_key_exists($property_name, $value) ? $value[$property_name] : reset($value);
         }
         if (is_scalar($value) || is_null($value)) {
@@ -197,19 +209,38 @@ abstract class FieldUpdateActionBase extends ActionBase  implements Configurable
             $values[$i] = [$property_name => $value];
           }
         }
-        else {
-          $values[$i] = $value;
-        }
       }
 
-      // Create a map of indices that refer to the already existing counterpart.
-      $existing = [];
+      // Custom filtering of field values is applied here, because some fields
+      // do actually want to have an incomplete instermediary state of a field
+      // value, that would be then completed by a subsequent action. Therefore
+      // a manual filter is performed here.
       /** @var \Drupal\Core\Field\FieldItemListInterface $update_target */
-      $current_values = ($update_target instanceof EntityReferenceFieldItemListInterface) && (reset($values) instanceof EntityInterface) ? $update_target->referencedEntities() : $update_target->filterEmptyItems()->getValue();
+      $current_values = array_filter($update_target->getValue(), function ($value) {
+        if (is_array($value)) {
+          foreach ($value as $v) {
+            if (!is_null($v)) {
+              return TRUE;
+            }
+          }
+          return FALSE;
+        }
+        return !is_null($value) && ($value !== '');
+      });
+
+      if ($is_delta_explicit) {
+        $values += $current_values;
+        ksort($values);
+      }
 
       if (empty($values) && !empty($current_values) && (($this->configuration['method'] ?? 'set:clear') === 'set:clear')) {
         // Shorthand for setting a field to be empty.
-        $update_target->setValue([]);
+        if ($is_property_name_explicit) {
+          $update_target->get($delta)->$property_name = NULL;
+        }
+        else {
+          $update_target->setValue([]);
+        }
         foreach ($metadata['entities'] as $entity_to_save) {
           if (!in_array($entity_to_save, $all_entities_to_save, TRUE)) {
             $all_entities_to_save[] = $entity_to_save;
@@ -218,7 +249,14 @@ abstract class FieldUpdateActionBase extends ActionBase  implements Configurable
         continue;
       }
 
+      // Create a map of indices that refer to the already existing counterpart.
+      $existing = [];
       foreach ($current_values as $k => $current_item) {
+        if (($i = array_search($current_item, $values)) !== FALSE) {
+          $existing[$i] = $k;
+          continue;
+        }
+
         $current_value = !is_array($current_item) ? $current_item : (array_key_exists($property_name, $current_item) ? $current_item[$property_name] : reset($current_item));
         if (is_string($current_value)) {
           // Extra processing is needed for strings, in order to prevent false
@@ -226,20 +264,17 @@ abstract class FieldUpdateActionBase extends ActionBase  implements Configurable
           // encoded differently.
           $current_value = nl2br(trim($current_value));
         }
-        elseif ($current_value instanceof EntityInterface) {
-          $current_value = $current_value->uuid() ?: $current_value;
-        }
 
         foreach ($values as $i => $value) {
           $new_value = !is_array($value) ? $value : (array_key_exists($property_name, $value) ? $value[$property_name] : reset($value));
           if (is_string($new_value)) {
             $new_value = nl2br(trim($new_value));
           }
-          elseif ($new_value instanceof EntityInterface) {
-            $new_value = $new_value->uuid() ?: $new_value;
-          }
-          if ((is_object($new_value) && $current_value === $new_value) || $current_value == $new_value) {
+          if (((is_object($new_value) && $current_value === $new_value) || ($current_value == $new_value)) && !isset($existing[$i]) && !in_array($k, $existing, TRUE)) {
             $existing[$i] = $k;
+          }
+          if (($i === $k) && is_array($value) && is_array($current_item) && (reset($method_settings) === 'set')) {
+            $values[$i] += $current_item;
           }
         }
       }
@@ -256,7 +291,7 @@ abstract class FieldUpdateActionBase extends ActionBase  implements Configurable
           case 'clear':
             $keep = [];
             foreach ($existing as $k) {
-              $keep[] = $current_values[$k];
+              $keep[$k] = $current_values[$k];
             }
             if (count($current_values) !== count($keep)) {
               $values_changed = TRUE;
@@ -265,20 +300,26 @@ abstract class FieldUpdateActionBase extends ActionBase  implements Configurable
             break;
 
           case 'empty':
-            if (!empty($current_values)) {
-              continue 2;
+            if (empty($current_values)) {
+              break;
             }
-            break;
+            if ($is_delta_explicit && empty($current_values[$delta])) {
+              break;
+            }
+            if ($is_property_name_explicit && empty($current_values[$delta][$property_name])) {
+              break;
+            }
+            continue 3;
 
           case 'not_full':
             if (!$is_unlimited && !(count($current_values) < $cardinality)) {
-              continue 2;
+              continue 3;
             }
             break;
 
           case 'drop_first':
             if (!$is_unlimited) {
-              $num_required = count($values) - ($cardinality - count($current_values));
+              $num_required = count($values) - count($existing) - ($cardinality - count($current_values));
               $keep = array_flip($existing);
               reset($current_values);
               while ($num_required > 0 && ($k = key($current_values)) !== NULL) {
@@ -294,7 +335,7 @@ abstract class FieldUpdateActionBase extends ActionBase  implements Configurable
 
           case 'drop_last':
             if (!$is_unlimited) {
-              $num_required = count($values) - ($cardinality - count($current_values));
+              $num_required = count($values) - count($existing) - ($cardinality - count($current_values));
               $keep = array_flip($existing);
               end($current_values);
               while ($num_required > 0 && ($k = key($current_values)) !== NULL) {
@@ -314,20 +355,39 @@ abstract class FieldUpdateActionBase extends ActionBase  implements Configurable
       foreach ($method_settings as $method_setting) {
         switch ($method_setting) {
 
-          case 'append':
           case 'set':
             $current_num = count($current_values);
             foreach ($values as $i => $value) {
+              if (($is_delta_explicit || ($is_property_name_explicit && ($delta === 0) && ($i === 0))) && !isset($existing[$i])) {
+                $current_values[$i] = $value;
+                $values_changed = TRUE;
+                continue;
+              }
               if (!$is_unlimited && $cardinality <= $current_num) {
                 break;
               }
               if (!isset($existing[$i])) {
-                $current_values[] = $value;
                 $current_num++;
+                $current_values[] = $value;
                 $values_changed = TRUE;
               }
             }
+            ksort($current_values);
             break;
+
+            case 'append':
+              $current_num = count($current_values);
+              foreach ($values as $i => $value) {
+                if (!$is_unlimited && $cardinality <= $current_num) {
+                  break;
+                }
+                if (!isset($existing[$i])) {
+                  array_push($current_values, $value);
+                  $current_num++;
+                  $values_changed = TRUE;
+                }
+              }
+              break;
 
           case 'prepend':
             $current_num = count($current_values);
@@ -357,7 +417,6 @@ abstract class FieldUpdateActionBase extends ActionBase  implements Configurable
         // Try to set the values. If that attempt fails, then it would throw an
         // exception, and the exception would be logged as an error.
         $update_target->setValue(array_values($current_values));
-        $update_target->filterEmptyItems();
         foreach ($metadata['entities'] as $entity_to_save) {
           if (!in_array($entity_to_save, $all_entities_to_save, TRUE)) {
             $all_entities_to_save[] = $entity_to_save;
@@ -374,6 +433,11 @@ abstract class FieldUpdateActionBase extends ActionBase  implements Configurable
    * {@inheritdoc}
    */
   public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+    $result = AccessResult::forbidden();
+    if (!($object instanceof AccessibleInterface)) {
+      return $return_as_object ? $result : $result->isAllowed();
+    }
+
     /** @var \Drupal\Core\Entity\EntityInterface $entity */
     $entity = $object;
     $entity_op = 'update';
@@ -384,12 +448,11 @@ abstract class FieldUpdateActionBase extends ActionBase  implements Configurable
     $options = ['auto_append' => TRUE, 'access' => 'update'];
     foreach (array_keys($this->getFieldsToUpdate()) as $field) {
       $metadata = [];
-      if ($this->getTypedProperty(EntityAdapter::createFromEntity($entity), $field, $options, $metadata)) {
-        $result->andIf($metadata['access']);
-      }
-      else {
+      $update_target = $this->getTypedProperty(EntityAdapter::createFromEntity($entity), $field, $options, $metadata);
+      if (!isset($metadata['access']) || (!$update_target && $metadata['access']->isAllowed())) {
         throw new \InvalidArgumentException(sprintf("The provided field %s does not exist as a property path on the %s entity having ID %s.", $field, $entity->getEntityTypeId(), $entity->id()));
       }
+      $result = $result->andIf($metadata['access']);
     }
 
     return $return_as_object ? $result : $result->isAllowed();

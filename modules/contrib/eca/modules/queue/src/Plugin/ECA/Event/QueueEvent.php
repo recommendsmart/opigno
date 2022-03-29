@@ -20,7 +20,7 @@ class QueueEvent extends EventBase {
    * {@inheritdoc}
    */
   public function fields(): array {
-    if ($this->drupalEventClass() === ProcessingTaskEvent::class) {
+    if ($this->eventClass() === ProcessingTaskEvent::class) {
       return [
         [
           'name' => 'task_name',

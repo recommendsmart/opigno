@@ -48,7 +48,7 @@ class LoggingTest extends Base {
 
     $this->assertNoMessages();
     $this->assertNoError([
-      new LogRecord(RfcLogLevel::INFO, 'eca', 'Node "@label" is about to be saved', ['@label' => $title]),
+      new LogRecord(RfcLogLevel::INFO, 'eca', 'Node @label is about to be saved', ['@label' => $title]),
     ]);
   }
 

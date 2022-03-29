@@ -18,15 +18,15 @@ class ScalarComparison extends StringComparisonBase {
   /**
    * {@inheritdoc}
    */
-  protected function getFirstValue(): string {
-    return $this->configuration['right'] ?? '';
+  protected function getLeftValue(): string {
+    return $this->configuration['left'] ?? '';
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getSecondValue(): string {
-    return $this->configuration['left'] ?? '';
+  protected function getRightValue(): string {
+    return $this->configuration['right'] ?? '';
   }
 
   /**
@@ -43,16 +43,16 @@ class ScalarComparison extends StringComparisonBase {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
-    $form['right'] = [
-      '#type' => 'textarea',
-      '#title' => $this->t('First value'),
-      '#default_value' => $this->getSecondValue(),
-      '#weight' => -10,
-    ];
     $form['left'] = [
       '#type' => 'textarea',
+      '#title' => $this->t('First value'),
+      '#default_value' => $this->getLeftValue(),
+      '#weight' => -10,
+    ];
+    $form['right'] = [
+      '#type' => 'textarea',
       '#title' => $this->t('Second value'),
-      '#default_value' => $this->getFirstValue(),
+      '#default_value' => $this->getRightValue(),
       '#weight' => -8,
     ];
     return parent::buildConfigurationForm($form, $form_state);

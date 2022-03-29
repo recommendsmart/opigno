@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'efd725a34092ffd4fdcee09b267d500853c26050',
+        'reference' => '8510756cf820fb8f438f57abe59230fcee99a587',
         'name' => 'goalgorilla/social_template',
         'dev' => true,
     ),
@@ -859,12 +859,12 @@
             ),
         ),
         'drupal/eca' => array(
-            'pretty_version' => '1.0.0-beta6',
-            'version' => '1.0.0.0-beta6',
+            'pretty_version' => '1.0.0-beta7',
+            'version' => '1.0.0.0-beta7',
             'type' => 'drupal-module',
             'install_path' => __DIR__ . '/../../modules/contrib/eca',
             'aliases' => array(),
-            'reference' => '1.0.0-beta6',
+            'reference' => '1.0.0-beta7',
             'dev_requirement' => false,
         ),
         'drupal/editor' => array(
@@ -2277,7 +2277,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'efd725a34092ffd4fdcee09b267d500853c26050',
+            'reference' => '8510756cf820fb8f438f57abe59230fcee99a587',
             'dev_requirement' => false,
         ),
         'guzzlehttp/guzzle' => array(

@@ -1,6 +1,6 @@
 langcode: en
 status: true
-dependencies: { }
+dependencies: {  }
 name: 'Type 2'
 type: type_2
 description: ''

@@ -19,7 +19,7 @@ class FormFieldValue extends StringComparisonBase {
   /**
    * {@inheritdoc}
    */
-  protected function getFirstValue(): string {
+  protected function getLeftValue(): string {
     if ($this->event instanceof FormBase) {
       $formState = $this->event->getFormState();
       if ($formState->hasValue($this->configuration['field_name'])) {
@@ -32,7 +32,7 @@ class FormFieldValue extends StringComparisonBase {
   /**
    * {@inheritdoc}
    */
-  protected function getSecondValue(): string {
+  protected function getRightValue(): string {
     return $this->configuration['field_value'];
   }
 

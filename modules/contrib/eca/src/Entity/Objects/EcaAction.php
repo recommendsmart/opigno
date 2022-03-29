@@ -50,6 +50,7 @@ class EcaAction extends EcaObject implements ObjectWithPluginInterface {
       return FALSE;
     }
 
+    $access_granted = FALSE;
     $exception_thrown = FALSE;
     if ($this->plugin instanceof ActionInterface) {
       $this->plugin->setEvent($event);
@@ -67,12 +68,12 @@ class EcaAction extends EcaObject implements ObjectWithPluginInterface {
       $this->eventDispatcher()->dispatch($before_event, EcaEvents::BEFORE_ACTION_EXECUTION);
 
       try {
-        $access_granted = FALSE;
-        if (!($access_granted = $this->plugin->access($object))) {
-          $this->logger()->warning('Access denied to %actionlabel (%actionid) from ECA %ecalabel (%ecaid) for event %event.', $context);
+        $access_granted = $this->plugin->access($object);
+        if ($access_granted) {
+          $this->plugin->execute($object);
         }
         else {
-          $this->plugin->execute($object);
+          $this->logger()->warning('Access denied to %actionlabel (%actionid) from ECA %ecalabel (%ecaid) for event %event.', $context);
         }
       }
       catch (\Exception $ex) {
@@ -86,7 +87,7 @@ class EcaAction extends EcaObject implements ObjectWithPluginInterface {
       }
     }
 
-    return !$exception_thrown;
+    return $access_granted && !$exception_thrown;
   }
 
   /**

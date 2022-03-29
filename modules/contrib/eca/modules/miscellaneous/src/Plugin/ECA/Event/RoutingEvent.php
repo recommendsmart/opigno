@@ -24,18 +24,18 @@ class RoutingEvent extends EventBase {
     return [
       'alter' => [
         'label' => 'Alter route',
-        'drupal_id' => RoutingEvents::ALTER,
-        'drupal_event_class' => RouteBuildEvent::class,
+        'event_name' => RoutingEvents::ALTER,
+        'event_class' => RouteBuildEvent::class,
       ],
       'dynamic' => [
         'label' => 'Allow new routes',
-        'drupal_id' => RoutingEvents::DYNAMIC,
-        'drupal_event_class' => RouteBuildEvent::class,
+        'event_name' => RoutingEvents::DYNAMIC,
+        'event_class' => RouteBuildEvent::class,
       ],
       'finished' => [
         'label' => 'Route building finished',
-        'drupal_id' => RoutingEvents::FINISHED,
-        'drupal_event_class' => Event::class,
+        'event_name' => RoutingEvents::FINISHED,
+        'event_class' => Event::class,
       ],
     ];
   }

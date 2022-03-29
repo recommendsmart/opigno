@@ -21,8 +21,8 @@ abstract class EventDeriverBase extends DeriverBase {
     $this->derivatives = [];
     foreach ($this->actions() as $action_id => $action) {
       $this->derivatives[$action_id] = [
-          'drupal_id' => $action['drupal_id'],
-          'drupal_event_class' => $action['drupal_event_class'],
+          'event_name' => $action['event_name'],
+          'event_class' => $action['event_class'],
           'action' => $action_id,
           'label' => $action['label'],
           'tags' => $action['tags'] ?? 0,

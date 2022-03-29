@@ -10,11 +10,6 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
 interface EcaInterface extends PluginInspectionInterface {
 
   /**
-   * @return string
-   */
-  public function drupalId(): string;
-
-  /**
    * @return array
    */
   public function fields(): array;

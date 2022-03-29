@@ -112,6 +112,14 @@ eca.model.*:
     label:
       type: label
       label: 'Label'
+    tags:
+      type: sequence
+      label: 'tags'
+      sequence:
+        type: string
+    documentation:
+      type: string
+      label: 'Documentation'
     filename:
       type: string
       label: 'Filename'

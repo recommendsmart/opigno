@@ -40,12 +40,23 @@ interface TokenInterface {
    * will ask data providers for existent data, using the order they were added.
    *
    * @param \Drupal\eca\Token\DataProviderInterface $provider
-   *   The data provider.
+   *   The data provider to add.
    *
    * @return $this
    *   The token service itself.
    */
   public function addTokenDataProvider(DataProviderInterface $provider): TokenInterface;
+
+  /**
+   * Remove a previously added Token data provider.
+   *
+   * @param \Drupal\eca\Token\DataProviderInterface $provider
+   *   The data provider to remove.
+   *
+   * @return $this
+   *   The token service itself.
+   */
+  public function removeTokenDataProvider(DataProviderInterface $provider): TokenInterface;
 
   /**
    * Determines whether token data exists.

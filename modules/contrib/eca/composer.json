@@ -14,6 +14,10 @@
     "dragonmantank/cron-expression": "^3.1",
     "mtownsend/xml-to-array": "^2.0"
   },
+  "require-dev": {
+    "drupal/tamper": "^1.0",
+    "drupal/token": "^1.10"
+  },
   "extra": {
     "drush": {
       "services": {

@@ -3,20 +3,17 @@ type: module
 description: 'This module contains a model test for saving a new entity.'
 package: Testing
 dependencies:
-  - drupal:text
   - drupal:node
   - drupal:taxonomy
+  - drupal:text
+  - eca:eca_base
   - eca:eca_content
 
 config_devel:
   - eca.eca.process_sjiib6d
   - eca.model.process_sjiib6d
-  - field.field.node.article.body
-  - field.storage.node.field_tags
-  - node.type.article
-  - taxonomy.vocabulary.tags
 
-# Information added by Drupal.org packaging script on 2022-03-23
-version: '1.0.0-beta6'
+# Information added by Drupal.org packaging script on 2022-03-29
+version: '1.0.0-beta7'
 project: 'eca'
-datestamp: 1648025783
+datestamp: 1648558990

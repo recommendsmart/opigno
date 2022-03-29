@@ -34,18 +34,18 @@ abstract class StringComparisonBase extends ConditionBase implements OptionsInte
   protected static bool $replaceTokens = TRUE;
 
   /**
-   * Get the first string value for comparison.
+   * Get the left/first string value for comparison.
    *
    * @return string
    */
-  abstract protected function getFirstValue(): string;
+  abstract protected function getLeftValue(): string;
 
   /**
-   * Get the second string value for comparison.
+   * Get the right/second string value for comparison.
    *
    * @return string
    */
-  abstract protected function getSecondValue(): string;
+  abstract protected function getRightValue(): string;
 
   /**
    * Get the selected comparison operator.
@@ -82,22 +82,22 @@ abstract class StringComparisonBase extends ConditionBase implements OptionsInte
    */
   final public function evaluate(): bool {
     if (static::$replaceTokens) {
-      $value1 = $this->tokenServices->replaceClear($this->getFirstValue());
-      $value2 = $this->tokenServices->replaceClear($this->getSecondValue());
+      $leftValue = $this->tokenServices->replaceClear($this->getLeftValue());
+      $rightValue = $this->tokenServices->replaceClear($this->getRightValue());
     }
     else {
-      $value1 = $this->getFirstValue();
-      $value2 = $this->getSecondValue();
+      $leftValue = $this->getLeftValue();
+      $rightValue = $this->getRightValue();
     }
 
     if (!$this->caseSensitive()) {
-      $value1 = mb_strtolower($value1);
-      $value2 = mb_strtolower($value2);
+      $leftValue = mb_strtolower($leftValue);
+      $rightValue = mb_strtolower($rightValue);
     }
 
     switch ($this->getType()) {
       case static::COMPARE_TYPE_NUMERIC:
-        if (!is_numeric($value1) || !is_numeric($value2)) {
+        if (!is_numeric($leftValue) || !is_numeric($rightValue)) {
           return FALSE;
         }
         break;
@@ -105,18 +105,18 @@ abstract class StringComparisonBase extends ConditionBase implements OptionsInte
       case static::COMPARE_TYPE_LEXICAL:
         // Prepend the value with a constant character to force string
         // comparison, even if values were numeric.
-        $value1 = 'a' . $value1;
-        $value2 = 'a' . $value2;
+        $leftValue = 'a' . $leftValue;
+        $rightValue = 'a' . $rightValue;
         break;
 
       case static::COMPARE_TYPE_NATURAL:
-        $value1 = strnatcmp($value1, $value2);
-        $value2 = 0;
+        $leftValue = 0;
+        $rightValue = strnatcmp($rightValue, $leftValue);
         break;
 
       case static::COMPARE_TYPE_COUNT:
-        $value1 = mb_strlen($value1);
-        $value2 = mb_strlen($value2);
+        $leftValue = mb_strlen($leftValue);
+        $rightValue = mb_strlen($rightValue);
         break;
     }
 
@@ -124,35 +124,35 @@ abstract class StringComparisonBase extends ConditionBase implements OptionsInte
 
     switch ($this->getOperator()) {
       case static::COMPARE_EQUALS:
-        $result = $value1 === $value2;
+        $result = $leftValue === $rightValue;
         break;
 
       case static::COMPARE_BEGINS_WITH:
-        $result = mb_strpos($value2, $value1) === 0;
+        $result = mb_strpos($leftValue, $rightValue) === 0;
         break;
 
       case static::COMPARE_ENDS_WITH:
-        $result = mb_strpos($value2, $value1) === (mb_strlen($value2) - mb_strlen($value1));
+        $result = mb_strpos($leftValue, $rightValue) === (mb_strlen($leftValue) - mb_strlen($rightValue));
         break;
 
       case static::COMPARE_CONTAINS:
-        $result = mb_strpos($value2, $value1) !== FALSE;
+        $result = mb_strpos($leftValue, $rightValue) !== FALSE;
         break;
 
       case static::COMPARE_GREATERTHAN:
-        $result = $value2 > $value1;
+        $result = $leftValue > $rightValue;
         break;
 
       case static::COMPARE_LESSTHAN:
-        $result = $value2 < $value1;
+        $result = $leftValue < $rightValue;
         break;
 
       case static::COMPARE_ATMOST:
-        $result = $value2 <= $value1;
+        $result = $leftValue <= $rightValue;
         break;
 
       case static::COMPARE_ATLEAST:
-        $result = $value2 >= $value1;
+        $result = $leftValue >= $rightValue;
         break;
     }
 

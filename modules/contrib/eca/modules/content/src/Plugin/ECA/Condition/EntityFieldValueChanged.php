@@ -23,7 +23,7 @@ class EntityFieldValueChanged extends ConditionBase {
    * {@inheritdoc}
    */
   public function evaluate(): bool {
-    $entity = $this->getContextValue('entity');
+    $entity = $this->getValueFromContext('entity');
     $field_name = $this->tokenServices->replaceClear($this->configuration['field_name']);
     if ($entity instanceof FieldableEntityInterface && isset($entity->original) && $entity->hasField($field_name)) {
       return $this->negationCheck($entity->get($field_name)->getValue() !== $entity->original->get($field_name)->getValue());

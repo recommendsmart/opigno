@@ -5,11 +5,24 @@ dependencies:
     - eca.eca.process_wymfeow
 id: process_wymfeow
 label: 'Basic entity tests'
+tags:
+  - simple
+  - node
+  - messages
+  - 'change field values'
+  - conditions
+documentation: 'This model contains somebasic conditions and actions on nodes.'
 filename: ''
 modeldata: |
   <?xml version="1.0" encoding="UTF-8"?>
   <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:qa="http://some-company/schema/bpmn/qa" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
     <bpmn2:process id="Process_wyMfeOw" name="Basic entity tests" isExecutable="true" camunda:versionTag="1.0.0">
+      <bpmn2:documentation>This model contains somebasic conditions and actions on nodes.</bpmn2:documentation>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="Tags" value="simple,node,messages,change field values,conditions" />
+        </camunda:properties>
+      </bpmn2:extensionElements>
       <bpmn2:startEvent id="Event_0033g46" name="Update node" camunda:modelerTemplate="org.drupal.content_entity:update">
         <bpmn2:extensionElements>
           <camunda:properties>

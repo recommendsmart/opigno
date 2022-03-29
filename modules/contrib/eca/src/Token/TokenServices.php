@@ -64,6 +64,14 @@ class TokenServices implements TokenInterface {
   /**
    * {@inheritdoc}
    */
+  public function removeTokenDataProvider(DataProviderInterface $provider): TokenInterface {
+    $this->decorator->removeTokenDataProvider($provider);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function hasTokenData(?string $key = NULL): bool {
     return $this->decorator->hasTokenData($key);
   }

@@ -86,19 +86,19 @@ class Conditions {
    *   The sorted list of consitions.
    */
   public function conditions(): array {
-    static $actions;
-    if ($actions === NULL) {
-      $actions = [];
+    static $conditions;
+    if ($conditions === NULL) {
+      $conditions = [];
       foreach ($this->conditionManager->getDefinitions() as $plugin_id => $definition) {
         try {
-          $actions[] = $this->conditionManager->createInstance($plugin_id);
+          $conditions[] = $this->conditionManager->createInstance($plugin_id);
         } catch (PluginException $e) {
           // Can be ignored.
         }
       }
     }
-    $this->sortPlugins($actions);
-    return $actions;
+    $this->sortPlugins($conditions);
+    return $conditions;
   }
 
   /**

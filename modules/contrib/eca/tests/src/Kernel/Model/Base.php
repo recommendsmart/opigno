@@ -5,6 +5,7 @@ namespace Drupal\Tests\eca\Kernel\Model;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\eca\Entity\Eca;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 use Symfony\Component\ErrorHandler\BufferingLogger;
@@ -38,9 +39,15 @@ abstract class Base extends KernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    Eca::setTesting();
     parent::setUp();
+
+    // Install config for modules of this base class.
+    $this->installConfig(['user', 'system', 'field', 'text', 'eca']);
     $this->installEntitySchema('user');
     $this->installSchema('system', ['sequences']);
+
+    // Install config for modules of the implementing test class.
     $this->installConfig(static::$modules);
 
     // Create user 1.

@@ -4,24 +4,34 @@ dependencies:
   config:
     - eca.eca.process_sjiib6d
 id: process_sjiib6d
-label: noname
+label: 'Save new entity'
+tags:
+  - simple
+  - 'create entity'
+documentation: 'Create new tag with the same label as the triggering node.'
 filename: ''
 modeldata: |
   <?xml version="1.0" encoding="UTF-8"?>
   <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:qa="http://some-company/schema/bpmn/qa" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
-    <bpmn2:process id="Process_sjIIb6d" isExecutable="true" camunda:versionTag="1.0">
-      <bpmn2:startEvent id="insert_article" name="Article inserted" camunda:modelerTemplate="org.drupal.content_entity:insert">
+    <bpmn2:process id="Process_sjIIb6d" name="Save new entity" isExecutable="true" camunda:versionTag="1.0.0">
+      <bpmn2:documentation>Create new tag with the same label as the triggering node.</bpmn2:documentation>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="Tags" value="simple,create entity" />
+        </camunda:properties>
+      </bpmn2:extensionElements>
+      <bpmn2:startEvent id="insert_article" name="Node inserted" camunda:modelerTemplate="org.drupal.content_entity:insert">
         <bpmn2:extensionElements>
           <camunda:properties>
             <camunda:property name="pluginid" value="content_entity:insert" />
           </camunda:properties>
           <camunda:field name="type">
-            <camunda:string>node article</camunda:string>
+            <camunda:string>node _all</camunda:string>
           </camunda:field>
         </bpmn2:extensionElements>
         <bpmn2:outgoing>Flow_1opgjzh</bpmn2:outgoing>
       </bpmn2:startEvent>
-      <bpmn2:task id="Activity_0rt55gb" name="Load article" camunda:modelerTemplate="org.drupal.eca_token_load_entity">
+      <bpmn2:task id="Activity_0rt55gb" name="Load node" camunda:modelerTemplate="org.drupal.eca_token_load_entity">
         <bpmn2:extensionElements>
           <camunda:properties>
             <camunda:property name="pluginid" value="eca_token_load_entity" />
@@ -119,7 +129,7 @@ modeldata: |
         <bpmndi:BPMNShape id="Event_0zvt8vz_di" bpmnElement="insert_article">
           <dc:Bounds x="192" y="172" width="36" height="36" />
           <bpmndi:BPMNLabel>
-            <dc:Bounds x="174" y="215" width="73" height="14" />
+            <dc:Bounds x="176" y="215" width="69" height="14" />
           </bpmndi:BPMNLabel>
         </bpmndi:BPMNShape>
         <bpmndi:BPMNShape id="Activity_0rt55gb_di" bpmnElement="Activity_0rt55gb">

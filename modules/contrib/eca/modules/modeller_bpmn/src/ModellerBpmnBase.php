@@ -13,6 +13,7 @@ use Drupal\eca\Plugin\ECA\Condition\ConditionInterface;
 use Drupal\eca\Plugin\ECA\Event\EventInterface;
 use Drupal\eca\Plugin\ECA\Modeller\ModellerBase;
 use Drupal\eca\Plugin\ECA\Modeller\ModellerInterface;
+use Drupal\eca\Plugin\EcaBase;
 use Mtownsend\XmlToArray\XmlToArray;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -278,6 +279,28 @@ abstract class ModellerBpmnBase extends ModellerBase {
   /**
    * {@inheritdoc}
    */
+  public function getTags(): array {
+    $process = $this->xmlNsPrefix() . 'process';
+    $extensions = $this->xmlNsPrefix() . 'extensionElements';
+    $tags = isset($this->xmlModel[$process][$extensions]) ?
+      explode(',', $this->findProperty($this->xmlModel[$process][$extensions], 'Tags')) :
+      [];
+    array_walk($tags, static function(&$item) {
+      $item = trim($item);
+    });
+    return $tags;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDocumentation(): string {
+    return $this->xmlModel[$this->xmlNsPrefix() . 'process'][$this->xmlNsPrefix() . 'documentation'] ?? '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getStatus(): bool {
     return mb_strtolower($this->xmlModel[$this->xmlNsPrefix() . 'process']['@attributes']['isExecutable'] ?? 'true') === 'true';
   }
@@ -489,6 +512,10 @@ abstract class ModellerBpmnBase extends ModellerBase {
     $template = [
       'name' => (string) $pluginDefinition['label'],
       'id' => 'org.drupal.' . $plugin->getPluginId(),
+      'category' => [
+        'id' => $pluginDefinition['provider'],
+        'name' => EcaBase::$modules[$pluginDefinition['provider']],
+      ],
       'appliesTo' => [$applies_to],
       'properties' => $properties,
     ];

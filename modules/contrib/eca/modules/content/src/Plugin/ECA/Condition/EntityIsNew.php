@@ -22,7 +22,7 @@ class EntityIsNew extends ConditionBase {
    * {@inheritdoc}
    */
   public function evaluate(): bool {
-    $entity = $this->getContextValue('entity');
+    $entity = $this->getValueFromContext('entity');
     if ($entity instanceof EntityInterface) {
       $result = $entity->isNew();
       return $this->negationCheck($result);

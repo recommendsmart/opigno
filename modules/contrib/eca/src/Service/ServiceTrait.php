@@ -6,6 +6,7 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eca\Plugin\EcaBase;
 use Drupal\eca\Plugin\OptionsInterface;
 
 /**
@@ -22,7 +23,21 @@ trait ServiceTrait {
    *   The list of plugin to be sorted.
    */
   public function sortPlugins(array &$plugins): void {
+    foreach ($plugins as $plugin) {
+      $provider = $plugin->getPluginDefinition()['provider'] ?? 'eca';
+      if (!isset(EcaBase::$modules[$provider])) {
+        EcaBase::$modules[$provider] = \Drupal::moduleHandler()->getName($provider);
+      }
+    }
     usort($plugins, static function($p1, $p2) {
+      $m1 = EcaBase::$modules[$p1->getPluginDefinition()['provider'] ?? 'eca'];
+      $m2 = EcaBase::$modules[$p2->getPluginDefinition()['provider'] ?? 'eca'];
+      if ($m1 < $m2) {
+        return -1;
+      }
+      if ($m1 > $m2) {
+        return 1;
+      }
       $l1 = (string) $p1->getPluginDefinition()['label'];
       $l2 = (string) $p2->getPluginDefinition()['label'];
       if ($l1 < $l2) {

@@ -44,9 +44,11 @@ trait PropertyPathTrait {
    *   - "entities" holds a list of entities that are involved along the path.
    *   - "cache" holds collected cacheability metadata.
    *   - "access" holds the calculated access result.
+   *   - "parts" holds the extracted parts of the property path as array.
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface|null
-   *   The property target, or NULL if not found.
+   *   The property target, or NULL if not found. the latter case can happen
+   *   when either the property path does not exist, or the user has no access.
    */
   protected function getTypedProperty(TypedDataInterface $object, string $property_path, array $options = [], array &$metadata = []): ?TypedDataInterface {
     $property_path = $this->normalizePropertyPath($property_path);
@@ -69,6 +71,7 @@ trait PropertyPathTrait {
     ];
 
     $parts = explode('.', $property_path);
+    $metadata['parts'] = $parts;
     $last_i = count($parts) - 1;
     $data = $object;
     foreach ($parts as $i => $property) {
@@ -149,7 +152,7 @@ trait PropertyPathTrait {
           if ($access_result instanceof CacheableDependencyInterface) {
             $metadata['cache']->addCacheableDependency($access_result);
           }
-          $metadata['access']->andIf($access_result);
+          $metadata['access'] = $metadata['access']->andIf($access_result);
           if (!$access_result->isAllowed()) {
             return NULL;
           }
@@ -182,9 +185,7 @@ trait PropertyPathTrait {
 
     if (!empty($key)) {
       if ($key[0] === '[' && $key[mb_strlen($key) - 1] === ']') {
-        // Using Token brackets is not officially supported, yet we still try to
-        // handle the case a user accidentally submitted a key with brackets.
-        // Using the Token syntax is not always intuitive, so this may happen.
+        // Remove the brackets coming from Token syntax.
         $key = mb_substr($key, 1, -1);
       }
       if (mb_strpos($key, ':') !== FALSE) {

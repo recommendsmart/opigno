@@ -4,13 +4,12 @@ namespace Drupal\eca_queue\Event;
 
 use Drupal\Component\EventDispatcher\Event;
 use Drupal\eca\Event\ConditionalApplianceInterface;
-use Drupal\eca_context\Event\ContextProviderInterface;
 use Drupal\eca_queue\Task;
 
 /**
  * Dispatches when a queued ECA task is being processed.
  */
-class ProcessingTaskEvent extends Event implements ConditionalApplianceInterface, ContextProviderInterface {
+class ProcessingTaskEvent extends Event implements ConditionalApplianceInterface {
 
   /**
    * The task that is being processed.
@@ -63,13 +62,6 @@ class ProcessingTaskEvent extends Event implements ConditionalApplianceInterface
       return FALSE;
     }
     return TRUE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getContexts(): array {
-    return $this->task->getContexts();
   }
 
 }

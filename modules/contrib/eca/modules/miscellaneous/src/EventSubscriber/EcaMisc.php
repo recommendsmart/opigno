@@ -18,13 +18,13 @@ class EcaMisc extends EcaBase {
   public static function getSubscribedEvents(): array {
     $events = [];
     foreach (DrupalCoreEvent::actions() as $action) {
-      $events[$action['drupal_id']][] = ['onEvent'];
+      $events[$action['event_name']][] = ['onEvent'];
     }
     foreach (KernelEvent::actions() as $action) {
-      $events[$action['drupal_id']][] = ['onEvent'];
+      $events[$action['event_name']][] = ['onEvent'];
     }
     foreach (RoutingEvent::actions() as $action) {
-      $events[$action['drupal_id']][] = ['onEvent'];
+      $events[$action['event_name']][] = ['onEvent'];
     }
     return $events;
   }

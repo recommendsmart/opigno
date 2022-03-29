@@ -110,9 +110,33 @@ class Eca extends ConfigEntityBase implements EntityWithPluginCollectionInterfac
   protected Model $model;
 
   /**
+   * Whether this instance s in testing mode.
+   *
+   * @var bool
+   */
+  protected static bool $isTesting = FALSE;
+
+  /**
+   * Set the instance into testing mode. This will prevent dependency
+   * calculation which would fail during test setup if not all dependant
+   * config entities were available from the test module itself.
+   *
+   * Problem is, that we can't add all the config dependencies to the test
+   * modules, because that would fail if we enable the test modules in a real
+   * Drupal instance, as some of those config entities already exist from
+   * core modules.
+   */
+  public static function setTesting(): void {
+    static::$isTesting = TRUE;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function calculateDependencies() {
+    if (static::$isTesting) {
+      return $this;
+    }
     parent::calculateDependencies();
     if (!empty($this->events)) {
       $entity_field_info = [];
@@ -171,7 +195,7 @@ class Eca extends ConfigEntityBase implements EntityWithPluginCollectionInterfac
       }
 
       if (mb_strpos('type', $name) !== FALSE) {
-        list($field, $bundle) = array_merge(explode(' ', $field, 2), ['_all']);
+        [$field, $bundle] = array_merge(explode(' ', $field, 2), ['_all']);
       }
       else {
         preg_match_all('/
@@ -432,6 +456,38 @@ class Eca extends ConfigEntityBase implements EntityWithPluginCollectionInterfac
       'successors' => $successors,
     ];
     return $this;
+  }
+
+  /**
+   * Returns a list of info strings about included events in this ECA model.
+   *
+   * @return array
+   *   A list of info strings about included events in this ECA model.
+   */
+  public function getEventInfos(): array {
+    $events = [];
+    foreach ($this->getUsedEvents() as $used_event) {
+      $plugin = $used_event->getPlugin();
+      $event_info = $plugin->getPluginDefinition()['label'];
+      // If available, additionally display the first config value of the event.
+      if ($event_config = $used_event->getConfiguration()) {
+        $first_key = key($event_config);
+        $first_value = current($event_config);
+        foreach ($plugin->fields() as $plugin_field) {
+          if (isset($plugin_field['name'], $plugin_field['extras']['choices']) && ($plugin_field['name'] === $first_key)) {
+            foreach ($plugin_field['extras']['choices'] as $choice) {
+              if (isset($choice['name'], $choice['value']) && $choice['value'] === $first_value) {
+                $first_value = $choice['name'];
+                break 2;
+              }
+            }
+          }
+        }
+        $event_info .= ' (' . $first_value . ')';
+      }
+      $events[] = $event_info;
+    }
+    return $events;
   }
 
   /**

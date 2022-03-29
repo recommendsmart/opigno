@@ -2,11 +2,14 @@
 
 namespace Drupal\eca\Commands;
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Action\ActionInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\eca\Entity\Eca;
 use Drupal\eca\Plugin\ECA\Condition\ConditionInterface;
 use Drupal\eca\Plugin\ECA\Event\EventInterface;
 use Drupal\eca\Service\Actions;
@@ -26,7 +29,7 @@ class DocsCommands extends DrushCommands {
 
   public const DOMAIN = 'eca.docs.lakedrops.com';
 
-  protected array $toc = ['ECA' => []];
+  protected array $toc = [];
   protected array $modules = [];
 
   /**
@@ -99,8 +102,29 @@ class DocsCommands extends DrushCommands {
     }
     foreach ($this->modules as $id => $values) {
       $values['toc'][$values['provider_name']]['Home'] = $values['provider_path'] . '/index.md';
-      file_put_contents('sites/default/files/eca_docs/' . $values['provider_path'] . '/index.md', $this->render(__DIR__ . '/provider.md.twig', $values));
+      file_put_contents('../mkdocs/docs/' . $values['provider_path'] . '/index.md', $this->render(__DIR__ . '/provider.md.twig', $values));
     }
+    $this->updateToc();
+  }
+
+  /**
+   * Export documentation for all models.
+   *
+   * @usage eca:doc:models
+   *   Export documentation for all models.
+   *
+   * @command eca:doc:models
+   */
+  public function models(): void {
+    foreach (\Drupal::entityTypeManager()
+               ->getStorage('eca')
+               ->loadMultiple() as $eca) {
+      $this->modelDoc($eca);
+    }
+    $this->updateToc();
+  }
+
+  private function updateToc(): void {
     $toc = explode(PHP_EOL, Yaml::encode($this->toc));
     foreach ($toc as $id => $line) {
       $line = '    - ' . $line;
@@ -109,7 +133,7 @@ class DocsCommands extends DrushCommands {
       }
       $toc[$id] = $line;
     }
-    file_put_contents('sites/default/files/eca_docs/toc.yml', implode(PHP_EOL, $toc));
+    file_put_contents('../mkdocs/docs/toc.yml', implode(PHP_EOL, $toc));
   }
 
   private function pluginDoc(PluginInspectionInterface $plugin): void {
@@ -118,8 +142,8 @@ class DocsCommands extends DrushCommands {
     $id = str_replace([':'], '_', $plugin->getPluginId());
     $path = $values['path'];
     $filename = $path . '/' . $id . '.md';
-    @$this->fileSystem->mkdir('sites/default/files/eca_docs/' . $path, NULL, TRUE);
-    file_put_contents('sites/default/files/eca_docs/' . $filename, $this->render(__DIR__ . '/plugin.md.twig', $values));
+    @$this->fileSystem->mkdir('../mkdocs/docs/' . $path, NULL, TRUE);
+    file_put_contents('../mkdocs/docs/' . $filename, $this->render(__DIR__ . '/plugin.md.twig', $values));
     $values['toc'][$values['provider_name']][ucfirst($values['type']) . 's'][(string) $values['label']] = $filename;
   }
 
@@ -165,6 +189,35 @@ class DocsCommands extends DrushCommands {
     $values['type'] = $type;
     $values['fields'] = $fields;
     return $values;
+  }
+
+  private function modelDoc(Eca $eca): void {
+    try {
+      $model = $eca->getModel();
+    }
+    catch (InvalidPluginDefinitionException|PluginNotFoundException $e) {
+      return;
+    }
+    $tags = $model->getTags();
+    $values = [
+      'id' => str_replace([':', ' '], '_', mb_strtolower($eca->label())),
+      'label' => $eca->label(),
+      'version' => $eca->get('version'),
+      'main_tag' => $tags[0],
+      'tags' => $tags,
+      'documentation' => $model->getDocumentation(),
+      'dependencies' => $eca->getDependencies(),
+      'events' => $eca->getEventInfos(),
+      'model_filename' => $eca->getModeller()->getPluginId() . '-' . $eca->id(),
+      'library_path' => 'library/' . $tags[0],
+    ];
+
+    @$this->fileSystem->mkdir('../mkdocs/docs/' . $values['library_path'] . '/' . $values['id'], NULL, TRUE);
+
+    file_put_contents('../mkdocs/docs/' . $values['library_path'] . '/' . $values['id'] . '.md', $this->render(__DIR__ . '/library.md.twig', $values));
+    file_put_contents('../mkdocs/docs/' . $values['library_path'] . '/' . $values['id'] . '/' . $values['model_filename'] . '.xml', $model->getModeldata());
+
+    $this->toc[$values['main_tag']][$values['label']] = $values['library_path'] . '/' . $values['id'] . '.md';
   }
 
   private function render(string $filename, array $values): string {

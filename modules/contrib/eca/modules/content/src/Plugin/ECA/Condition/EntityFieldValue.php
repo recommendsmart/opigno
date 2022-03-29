@@ -69,22 +69,22 @@ class EntityFieldValue extends StringComparisonBase {
   /**
    * {@inheritdoc}
    */
-  protected function getFirstValue(): string {
-    return $this->getExpectedValue();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getSecondValue(): string {
+  protected function getLeftValue(): string {
     $target_value = $this->targetValue ?? $this->getTargetValue();
-    if (NULL === $target_value && $this->getFirstValue() === '') {
+    if (NULL === $target_value && $this->getRightValue() === '') {
       // Since the StringComparisonBase always compares string values, we want
       // to make sure, that the evaluation will return FALSE for the very rare
       // situation, that an empty string is expected to be contained.
       return '_ENTITY_FIELD_VALUE_IS_NULL_';
     }
     return $target_value ?? '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getRightValue(): string {
+    return $this->getExpectedValue();
   }
 
   /**
@@ -229,7 +229,7 @@ class EntityFieldValue extends StringComparisonBase {
    *   The entity, or NULL if not found.
    */
   public function getEntity(): ?EntityInterface {
-    return $this->getContextValue('entity');
+    return $this->getValueFromContext('entity');
   }
 
 }

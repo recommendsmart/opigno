@@ -28,12 +28,6 @@ class EntityLoopTest extends Base {
    * Tests entity loop with the user list view.
    */
   public function testUserList(): void {
-    // Create a role, otherwise the SQL query for the view will fail.
-    Role::create([
-      'id' => Role::AUTHENTICATED_ID,
-      'label' => 'authenticated',
-    ])->save();
-
     // Create another user.
     $name = $this->randomMachineName();
     User::create([

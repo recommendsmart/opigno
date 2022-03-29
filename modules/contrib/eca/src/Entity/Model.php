@@ -27,6 +27,8 @@ use Drupal\eca\Plugin\ECA\Modeller\ModellerInterface;
  *   config_export = {
  *     "id",
  *     "label",
+ *     "tags",
+ *     "documentation",
  *     "filename",
  *     "modeldata"
  *   }
@@ -60,6 +62,8 @@ class Model extends ConfigEntityBase {
   public function setData(ModellerInterface $modeller): Model {
     $this
       ->setLabel($modeller->getLabel())
+      ->setTags($modeller->getTags())
+      ->setDocumentation($modeller->getDocumentation())
       ->setFilename($modeller->getFilename())
       ->setModeldata($modeller->getModeldata());
     return $this;
@@ -73,6 +77,46 @@ class Model extends ConfigEntityBase {
   public function setLabel($label): Model {
     $this->set('label', $label);
     return $this;
+  }
+
+  /**
+   * Set the tags of this model.
+   *
+   * @return $this
+   */
+  public function setTags($tags): Model {
+    $this->set('tags', empty($tags) ? ['untagged'] : $tags);
+    return $this;
+  }
+
+  /**
+   * Get the tags of this model.
+   *
+   * @return array
+   *   The tags of this model.
+   */
+  public function getTags(): array {
+    return $this->get('tags');
+  }
+
+  /**
+   * Set the documentation of this model.
+   *
+   * @return $this
+   */
+  public function setDocumentation($documentation): Model {
+    $this->set('documentation', $documentation);
+    return $this;
+  }
+
+  /**
+   * Get the documentation of this model.
+   *
+   * @return string
+   *   The documentation.
+   */
+  public function getDocumentation(): string {
+    return $this->get('documentation') ?? '';
   }
 
   /**

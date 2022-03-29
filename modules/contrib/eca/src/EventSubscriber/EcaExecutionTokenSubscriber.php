@@ -5,6 +5,7 @@ namespace Drupal\eca\EventSubscriber;
 use Drupal\eca\EcaEvents;
 use Drupal\eca\Event\AfterInitialExecutionEvent;
 use Drupal\eca\Event\BeforeInitialExecutionEvent;
+use Drupal\eca\Event\TokenReceiverInterface;
 use Drupal\eca\Token\TokenInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -44,7 +45,19 @@ class EcaExecutionTokenSubscriber implements EventSubscriberInterface {
     // to make sure, that variables are only valid within this scope.
     // After execution of successors, the data will be cleared once again,
     // so that any change will not affect logic outside of this scope.
+    $keepTokens = [];
+    $triggeredEvent = $event->getEvent();
+    if ($triggeredEvent instanceof TokenReceiverInterface) {
+      foreach ($triggeredEvent->getTokenNamesToReceive() as $key) {
+        if ($this->tokenServices->hasTokenData($key)) {
+          $keepTokens[$key] = $this->tokenServices->getTokenData($key);
+        }
+      }
+    }
     $this->tokenServices->clearTokenData();
+    foreach ($keepTokens as $key => $value) {
+      $this->tokenServices->addTokenData($key, $value);
+    }
   }
 
   /**

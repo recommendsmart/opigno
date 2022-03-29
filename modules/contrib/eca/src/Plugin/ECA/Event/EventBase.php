@@ -13,8 +13,15 @@ abstract class EventBase extends EcaBase implements EventInterface {
   /**
    * {@inheritdoc}
    */
-  final public function drupalEventClass(): string {
-    return $this->pluginDefinition['drupal_event_class'];
+  final public function eventClass(): string {
+    return $this->pluginDefinition['event_class'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  final public function eventName(): string {
+    return $this->pluginDefinition['event_name'];
   }
 
   /**

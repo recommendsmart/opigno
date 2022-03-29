@@ -32,20 +32,20 @@ class FormEvent extends EventBase {
     $actions = [];
     $actions['form_build'] = [
       'label' => 'Build form',
-      'drupal_id' => self::FORMBUILD,
-      'drupal_event_class' => FormBuild::class,
+      'event_name' => self::FORMBUILD,
+      'event_class' => FormBuild::class,
       'tags' => Tag::VIEW | Tag::RUNTIME | Tag::BEFORE,
     ];
     $actions['form_validate'] = [
       'label' => 'Validate form',
-      'drupal_id' => self::FORMVALIDATE,
-      'drupal_event_class' => FormValidate::class,
+      'event_name' => self::FORMVALIDATE,
+      'event_class' => FormValidate::class,
       'tags' => Tag::READ | Tag::RUNTIME | Tag::AFTER,
     ];
     $actions['form_submit'] = [
       'label' => 'Submit form',
-      'drupal_id' => self::FORMSUBMIT,
-      'drupal_event_class' => FormSubmit::class,
+      'event_name' => self::FORMSUBMIT,
+      'event_class' => FormSubmit::class,
       'tags' => Tag::WRITE | Tag::RUNTIME | Tag::AFTER,
     ];
     return $actions;

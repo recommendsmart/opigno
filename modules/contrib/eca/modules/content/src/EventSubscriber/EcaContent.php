@@ -32,7 +32,7 @@ class EcaContent extends EcaBase {
   public static function getSubscribedEvents(): array {
     $events = [];
     foreach (ContentEntityEvent::actions() as $action) {
-      $events[$action['drupal_id']][] = ['onEvent'];
+      $events[$action['event_name']][] = ['onEvent'];
     }
     $events[EcaEvents::BEFORE_INITIAL_EXECUTION][] = ['onBeforeInitialExecution'];
     return $events;

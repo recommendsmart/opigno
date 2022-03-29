@@ -27,7 +27,7 @@ class EntityTypeAndBundle extends ConditionBase implements OptionsInterface {
    * {@inheritdoc}
    */
   public function evaluate(): bool {
-    $entity = $this->getContextValue('entity');
+    $entity = $this->getValueFromContext('entity');
     if ($entity instanceof EntityInterface) {
       $result = $this->bundleFieldApplies($entity, $this->configuration['type']);
       return $this->negationCheck($result);

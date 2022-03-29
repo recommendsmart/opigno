@@ -4,10 +4,9 @@ description: 'Events, conditions and actions for queued operations'
 core_version_requirement: ^9 || ^10
 package: ECA
 dependencies:
-  - eca:eca_context
-  - context_stack:context_stack_account
+  - eca:eca
 
-# Information added by Drupal.org packaging script on 2022-03-23
-version: '1.0.0-beta6'
+# Information added by Drupal.org packaging script on 2022-03-29
+version: '1.0.0-beta7'
 project: 'eca'
-datestamp: 1648025783
+datestamp: 1648558990

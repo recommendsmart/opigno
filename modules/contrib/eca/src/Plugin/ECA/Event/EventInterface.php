@@ -16,7 +16,15 @@ interface EventInterface extends EcaInterface {
    * @return string
    *   The fully-qualified class name.
    */
-  public function drupalEventClass(): string;
+  public function eventClass(): string;
+
+  /**
+   * Returns the unique ID of the event.
+   *
+   * @return string
+   *   The unique name of the event.
+   */
+  public function eventName(): string;
 
   /**
    * Returns a wildcard for lazy loading.

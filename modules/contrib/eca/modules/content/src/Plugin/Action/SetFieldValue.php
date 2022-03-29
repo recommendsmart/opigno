@@ -21,14 +21,13 @@ class SetFieldValue extends FieldUpdateActionBase implements EcaFieldUpdateActio
    * {@inheritdoc}
    */
   protected function getFieldsToUpdate() {
-    $name = $this->tokenServices->replaceClear($this->configuration['field_name']);
+    $name = $this->tokenServices->replace($this->configuration['field_name']);
 
     // Process the field values.
     $values = $this->configuration['field_value'];
     $use_token_replace = TRUE;
-    // When the given input is not too large, check whether it wants to directly
-    // use defined data.
-    if ((mb_strlen($values) <= 255) && ($data = $this->tokenServices->getTokenData($values))) {
+    // Check whether the input wants to directly use defined data.
+    if ((mb_substr($values, 0, 1) === '[') && (mb_substr($values, -1, 1) === ']') && (mb_strlen($values) <= 255) && ($data = $this->tokenServices->getTokenData($values))) {
       if (!($data instanceof TypedDataInterface) || !empty($data->getValue())) {
         $use_token_replace = FALSE;
         $values = $data;

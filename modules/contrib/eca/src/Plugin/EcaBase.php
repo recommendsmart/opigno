@@ -17,6 +17,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 abstract class EcaBase extends DrupalPluginBase implements EcaInterface, ContainerFactoryPluginInterface {
 
+  public static array $modules = [
+    'core' => 'Drupal Core',
+    'eca' => 'ECA',
+  ];
+
   /**
    * The ECA-related token services.
    *
@@ -85,13 +90,6 @@ abstract class EcaBase extends DrupalPluginBase implements EcaInterface, Contain
       $container->get('request_stack'),
       $container->get('eca.state')
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  final public function drupalId(): string {
-    return $this->pluginDefinition['drupal_id'];
   }
 
   /**

@@ -2,6 +2,7 @@
 
 namespace Drupal\eca_queue\Plugin\Action;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\eca\Plugin\OptionsInterface;
 
 /**
@@ -54,6 +55,36 @@ class EnqueueTaskDelayed extends EnqueueTask implements OptionsInterface {
       ];
     }
     return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
+    $form = parent::buildConfigurationForm($form, $form_state);
+    $form['delay_value'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Delay value'),
+      '#default_value' => $this->configuration['delay_value'],
+      '#weight' => 40,
+    ];
+    $form['delay_unit'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Delay unit'),
+      '#default_value' => $this->configuration['delay_unit'],
+      '#options' => $this->getOptions('delay_unit'),
+      '#weight' => 50,
+    ];
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
+    $this->configuration['delay_value'] = $form_state->getValue('task_name');
+    $this->configuration['delay_unit'] = $form_state->getValue('delay_unit');
+    parent::submitConfigurationForm($form, $form_state);
   }
 
 }

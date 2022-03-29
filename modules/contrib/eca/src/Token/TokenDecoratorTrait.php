@@ -62,7 +62,14 @@ trait TokenDecoratorTrait {
     $parts = explode(':', $key);
     $key = array_shift($parts);
 
-    if (empty($parts) && $this->getTokenType($data)) {
+    if (is_string($data) && (trim($data) === '')) {
+      // Treat an empty string like a NULL value. This mostly happens when
+      // an empty value is used to set a Token, in order to remove a previously
+      // set value.
+      $data = NULL;
+    }
+
+    if (empty($parts) && (is_null($data) || $this->getTokenType($data))) {
       $this->data[$key] = $data;
       return $this;
     }
@@ -94,7 +101,12 @@ trait TokenDecoratorTrait {
       /** @var \Drupal\eca\Plugin\DataType\DataTransferObject $dto */
       $dto = $dto->get($key);
     }
-    $dto->setValue($data);
+    if (is_scalar($data)) {
+      $dto->setStringRepresentation($data);
+    }
+    else {
+      $dto->setValue($data);
+    }
     return $this;
   }
 
@@ -103,8 +115,19 @@ trait TokenDecoratorTrait {
    */
   public function addTokenDataProvider(DataProviderInterface $provider): TokenInterface {
     if (!in_array($provider, $this->dataProviders, TRUE)) {
-      $this->dataProviders[] = $provider;
+      // The most recently added provider should be looked up first.
+      array_unshift($this->dataProviders, $provider);
     }
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeTokenDataProvider(DataProviderInterface $provider): TokenInterface {
+    $this->dataProviders = array_filter($this->dataProviders, function ($added) use ($provider) {
+      return $added !== $provider;
+    });
     return $this;
   }
 
@@ -215,19 +238,13 @@ trait TokenDecoratorTrait {
       $data = $this->data[$key];
     }
     elseif (!empty($this->dataProviders)) {
-      $lookup_keys = [$key, 'entity'];
       foreach ($this->dataProviders as $provider) {
-        foreach ($lookup_keys as $lookup_key) {
-          if ($provider->hasData($lookup_key)) {
-            $provided_data = $provider->getData($lookup_key);
-            if ($provided_data instanceof EntityAdapter) {
-              $provided_data = $provided_data->getEntity();
-            }
-            if ($lookup_key === $key || $this->getTokenType($provided_data) === $key) {
-              $data = $provided_data;
-              break;
-            }
+        if ($provider->hasData($key)) {
+          $data = $provider->getData($key);
+          if ($data instanceof EntityAdapter) {
+            $data = $data->getEntity();
           }
+          break;
         }
       }
     }
@@ -293,11 +310,22 @@ trait TokenDecoratorTrait {
    * {@inheritdoc}
    */
   public function replace($text, array $data = [], array $options = [], BubbleableMetadata $bubbleable_metadata = NULL) {
-    // @todo Prepare arguments, see
-    // https://www.drupal.org/project/eca/issues/3232083.
     // Replacement of aliased tokens can only work within the scope of this
     // decorator. Thus we call it on its own.
     $text = parent::replace($text, $data, $options, $bubbleable_metadata);
+
+    // Allow for root-level replacements (Tokens without further keys).
+    if ((mb_strpos($text, '[') !== FALSE) && (mb_strpos($text, ']') !== FALSE)) {
+      foreach ($data + $this->data as $key => $value) {
+        $root_token = '[' . $key . ']';
+        if (mb_strpos($text, $root_token) !== FALSE) {
+          $replacement = is_scalar($value) || is_null($value) || (is_object($value) && method_exists($value, '__toString')) ? (string) $value : ($value instanceof EntityInterface ? $value->id() : '');
+          if (($replacement !== '') || !empty($options['clear'])) {
+            $text = str_replace($root_token, $replacement, $text);
+          }
+        }
+      }
+    }
 
     // Either the class of this decorator inherits from the Core token service
     // or from the Contrib token service (if available). Just in case we
@@ -366,9 +394,7 @@ trait TokenDecoratorTrait {
 
     if (!empty($key)) {
       if ($key[0] === '[' && $key[mb_strlen($key) - 1] === ']') {
-        // Using Token brackets is not officially supported, yet we still try to
-        // handle the case a user accidentally submitted a key with brackets.
-        // Using the Token syntax is not always intuitive, so this may happen.
+        // Remove the brackets coming from Token syntax.
         $key = mb_substr($key, 1, -1);
       }
       if (mb_strpos($key, '.')) {

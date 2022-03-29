@@ -2,6 +2,9 @@
 
 namespace Drupal\eca_content\Plugin\Action;
 
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -18,19 +21,25 @@ class TokenLoadEntityRef extends TokenLoadEntity {
   /**
    * {@inheritdoc}
    */
-  public function execute($entity = NULL): void {
-    if ($entity === NULL) {
-      throw new \Exception('No entity provided.');
+  protected function loadEntity($entity = NULL): ?EntityInterface {
+    $entity = parent::loadEntity($entity);
+    if (is_null($entity)) {
+      return NULL;
     }
-    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-    if (!$entity->hasField($this->configuration['field_name_entity_ref'])) {
-      throw new \Exception(sprintf('Field %s does not exist for entity type %s/%s.', $this->configuration['field_name_entity_ref'], $entity->getEntityTypeId(), $entity->bundle()));
+    if (!($entity instanceof ContentEntityInterface)) {
+      throw new \InvalidArgumentException('No content entity provided.');
     }
-    if (($first = $entity->get($this->configuration['field_name_entity_ref'])->first()) && $referencedEntity = $first->get('entity')->getTarget()->getValue()) {
-      parent::execute($referencedEntity);
-      return;
+    $reference_field_name = $this->configuration['field_name_entity_ref'];
+    if (!$entity->hasField($reference_field_name)) {
+      throw new \InvalidArgumentException(sprintf('Field %s does not exist for entity type %s/%s.', $reference_field_name, $entity->getEntityTypeId(), $entity->bundle()));
     }
-    throw new \Exception('No entity being referenced.');
+    $item_list = $entity->get($reference_field_name);
+    if (!($item_list instanceof EntityReferenceFieldItemListInterface)) {
+      throw new \InvalidArgumentException(sprintf('Field %s is not an entity reference field for entity type %s/%s.', $reference_field_name, $entity->getEntityTypeId(), $entity->bundle()));
+    }
+    $referenced = $item_list->referencedEntities();
+    $this->entity = $referenced ? reset($referenced) : NULL;
+    return $this->entity ?? NULL;
   }
 
   /**

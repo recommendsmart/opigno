@@ -2,10 +2,12 @@
 
 namespace Drupal\eca\Plugin\DataType;
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\Plugin\DataType\Map;
+use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\eca\TypedData\DataTransferObjectDefinition;
 
@@ -26,10 +28,19 @@ use Drupal\eca\TypedData\DataTransferObjectDefinition;
 class DataTransferObject extends Map {
 
   /**
+   * A manually set string representation of this object.
+   *
+   * @var string|null
+   */
+  protected ?string $stringRepresentation;
+
+  /**
    * Creates a new instance of a DTO.
    *
    * @param mixed $value
-   *   (optional) The value to set, in conformance to ::setValue().
+   *   (optional) The value to set, in conformance to ::setValue(). May also
+   *   be a content entity, whose fields will be used. When the given value is a
+   *   scalar, it will be set in conformance to ::setStringRepresentation().
    * @param \Drupal\Core\TypedData\TypedDataInterface|null $parent
    *   (optional) If known, the parent object.
    * @param string|null $name
@@ -53,8 +64,18 @@ class DataTransferObject extends Map {
     else {
       $dto = $manager->create(DataTransferObjectDefinition::create('dto'));
     }
+    /** @var \Drupal\eca\Plugin\DataType\DataTransferObject $dto */
     if (isset($value)) {
-      $dto->setValue($value, $notify);
+      if ($value instanceof ContentEntityInterface) {
+        $dto->setStringRepresentation($value->id());
+        $dto->setValue($value->getFields());
+      }
+      elseif (is_scalar($value)) {
+        $dto->setStringRepresentation($value);
+      }
+      else {
+        $dto->setValue($value, $notify);
+      }
     }
     return $dto;
   }
@@ -101,7 +122,7 @@ class DataTransferObject extends Map {
    *   Alternatively, if typed data objects are not available at this point, the
    *   values may be an associative array keyed by 'types' and 'values'. Both
    *   array values are a sequence that match with their array keys,
-   *   which are in turn property names.
+   *   which are in turn property names. Set to NULL to make this object empty.
    * @param bool $notify
    *   (optional) Whether to notify the parent object of the change. Defaults to
    *   TRUE. If a property is updated from a parent object, set it to FALSE to
@@ -111,58 +132,92 @@ class DataTransferObject extends Map {
     if ($values instanceof TypedDataInterface) {
       $values = $values->getValue();
     }
-    if (isset($values) && !is_array($values)) {
+    if (is_null($values)) {
+      // Shortcut to make this DTO empty.
+      $this->stringRepresentation = NULL;
+      $this->properties = [];
+      $this->values = [];
+    }
+    elseif (is_scalar($values)) {
+      // Internally forward this argument to set it as string representation.
+      // This is not officially allowed by this method, but included here
+      // to reduce possible hurdles when working with a DTO.
+      $this->setStringRepresentation($values);
+    }
+    elseif (!is_array($values)) {
       throw new \InvalidArgumentException("Invalid values given. Values must be represented as an associative array.");
     }
-    if (empty($values['types']) || empty($values['values'])) {
-      foreach ($values as $name => $value) {
-        if (!($value instanceof TypedDataInterface)) {
-          if ($value instanceof EntityInterface) {
-            $values[$name] = $this->wrapEntityValue($name, $value);
-          }
-          elseif (is_scalar($value)) {
-            $values[$name] = $this->wrapScalarValue($name, $value);
-          }
-          else {
-            throw new \InvalidArgumentException("Invalid values given. Values must be of scalar types, entities or typed data objects.");
+    else {
+      if (empty($values['types']) || empty($values['values'])) {
+        foreach ($values as $name => $value) {
+          if (!($value instanceof TypedDataInterface)) {
+            if ($value instanceof EntityInterface) {
+              $values[$name] = $this->wrapEntityValue($name, $value);
+            }
+            elseif (is_scalar($value)) {
+              $values[$name] = $this->wrapScalarValue($name, $value);
+            }
+            else {
+              throw new \InvalidArgumentException("Invalid values given. Values must be of scalar types, entities or typed data objects.");
+            }
           }
         }
       }
-    }
-    else {
-      $manager = $this->getTypedDataManager();
-      $instances = [];
-      foreach ($values['types'] as $name => $type) {
-        $instance = $manager->createInstance($type, [
-          'data_definition' => $manager->createDataDefinition($type),
-          'name' => $name,
-          'parent' => $this,
-        ]);
-        $instance->setValue($values[$name], FALSE);
-        $instances[$name] = $instance;
-      }
-      $values = $instances;
-    }
-    // Update any existing property objects.
-    foreach ($this->properties as $name => $property) {
-      if (isset($values[$name])) {
-        $property->setValue($values[$name]->getValue(), FALSE);
-      }
       else {
-        // Property does not exist anymore, thus remove it.
-        unset($this->properties[$name]);
+        $manager = $this->getTypedDataManager();
+        $instances = [];
+        foreach ($values['types'] as $name => $type) {
+          $instance = $manager->createInstance($type, [
+            'data_definition' => $manager->createDataDefinition($type),
+            'name' => $name,
+            'parent' => $this,
+          ]);
+          $instance->setValue($values[$name], FALSE);
+          $instances[$name] = $instance;
+        }
+        $values = $instances;
       }
-      // Remove the value from $this->values to ensure it does not contain any
-      // value for computed properties.
-      unset($this->values[$name]);
+      // Update any existing property objects.
+      foreach ($this->properties as $name => $property) {
+        if (isset($values[$name])) {
+          $property->setValue($values[$name]->getValue(), FALSE);
+        }
+        else {
+          // Property does not exist anymore, thus remove it.
+          unset($this->properties[$name]);
+        }
+        // Remove the value from $this->values to ensure it does not contain any
+        // value for computed properties.
+        unset($this->values[$name]);
+      }
+      // Add new properties.
+      $this->properties += $values;
     }
-    // Add new properties.
-    $this->properties += $values;
 
     // Notify the parent of any changes.
     if ($notify && isset($this->parent)) {
       $this->parent->onChange($this->name);
     }
+  }
+
+  /**
+   * Set a string representation of this object.
+   *
+   * @param mixed $value
+   *   A scalar value.
+   */
+  public function setStringRepresentation($value): void {
+    $this->stringRepresentation = is_null($value) ? NULL : (string) $value;
+  }
+
+  /**
+   * Implements magic __toString() method.
+   */
+  public function __toString(): string {
+    if (isset($this->stringRepresentation)) {
+      return $this->stringRepresentation;
+    }
+    return '';
   }
 
   /**
@@ -247,7 +302,7 @@ class DataTransferObject extends Map {
     // There is either a property object or a plain value - possibly for a
     // not-defined property. If we have a plain value, directly return it.
     if (isset($this->properties[$name])) {
-      return $this->properties[$name]->getValue();
+      return $this->properties[$name] instanceof PrimitiveInterface ? $this->properties[$name]->getValue() : $this->properties[$name];
     }
   }
 

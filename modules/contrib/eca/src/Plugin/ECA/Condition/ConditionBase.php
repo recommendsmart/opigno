@@ -4,6 +4,7 @@ namespace Drupal\eca\Plugin\ECA\Condition;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\EventDispatcher\Event;
+use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -103,6 +104,24 @@ abstract class ConditionBase extends PluginBase implements ConditionInterface, C
       $container->get('datetime.time'),
       $container->get('eca.state')
     );
+  }
+
+  /**
+   * Returns the named value from context, if available.
+   *
+   * @param $name
+   *   The name of the value that should be returned.
+   *
+   * @return mixed|null
+   *   The named value, if available. NULL otherwise.
+   */
+  public function getValueFromContext($name) {
+    try {
+      return $this->getContextValue($name);
+    }
+    catch (ContextException $e) {
+      return NULL;
+    }
   }
 
   /**

@@ -5,11 +5,22 @@ dependencies:
     - eca.eca.process_qtro5br
 id: process_qtro5br
 label: 'Redirects for deleted entities'
+tags:
+  - 'use case'
+  - redirect
+  - 'create entity'
+documentation: 'When a node gets deleted, this model creates an automatic redirect config entity to redirect visitors who want to go to the deleted node to the contact form instead.'
 filename: ''
 modeldata: |
   <?xml version="1.0" encoding="UTF-8"?>
   <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:qa="http://some-company/schema/bpmn/qa" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
     <bpmn2:process id="Process_qTRO5Br" name="Redirects for deleted entities" isExecutable="true" camunda:versionTag="1.0.0">
+      <bpmn2:documentation>When a node gets deleted, this model creates an automatic redirect config entity to redirect visitors who want to go to the deleted node to the contact form instead.</bpmn2:documentation>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="Tags" value="use case,redirect,create entity" />
+        </camunda:properties>
+      </bpmn2:extensionElements>
       <bpmn2:startEvent id="Event_13udgh1" name="Delete node" camunda:modelerTemplate="org.drupal.content_entity:delete">
         <bpmn2:extensionElements>
           <camunda:properties>

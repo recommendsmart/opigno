@@ -23,8 +23,8 @@ class LogEvent extends EventBase {
     $actions = [];
     $actions['log_message'] = [
       'label' => 'Log message created',
-      'drupal_id' => LogEvents::MESSAGE,
-      'drupal_event_class' => LogMessageEvent::class,
+      'event_name' => LogEvents::MESSAGE,
+      'event_class' => LogMessageEvent::class,
     ];
     return $actions;
   }
@@ -33,7 +33,7 @@ class LogEvent extends EventBase {
    * {@inheritdoc}
    */
   public function fields(): array {
-    if ($this->drupalEventClass() === LogMessageEvent::class) {
+    if ($this->eventClass() === LogMessageEvent::class) {
       return LogMessageEvent::fields();
     }
     return parent::fields();

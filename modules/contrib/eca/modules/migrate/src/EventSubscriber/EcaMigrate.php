@@ -16,7 +16,7 @@ class EcaMigrate extends EcaBase {
   public static function getSubscribedEvents(): array {
     $events = [];
     foreach (MigrateEvent::actions() as $action) {
-      $events[$action['drupal_id']][] = ['onEvent'];
+      $events[$action['event_name']][] = ['onEvent'];
     }
     return $events;
   }

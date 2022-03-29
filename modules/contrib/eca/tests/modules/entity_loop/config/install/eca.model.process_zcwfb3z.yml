@@ -5,11 +5,25 @@ dependencies:
     - eca.eca.process_zcwfb3z
 id: process_zcwfb3z
 label: Views
+tags:
+  - simple
+  - views
+  - loop
+  - 'custom event'
+  - cron
+  - 'switch user'
+documentation: 'During cron, this model switches the user context, queries a view to receive all user accounts and loops over all those users triggering a custom event for each of them to print their names in messages.'
 filename: ''
 modeldata: |
   <?xml version="1.0" encoding="UTF-8"?>
   <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:qa="http://some-company/schema/bpmn/qa" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
     <bpmn2:process id="Process_zCWFB3z" name="Views" isExecutable="true" camunda:versionTag="1.0.0">
+      <bpmn2:documentation>During cron, this model switches the user context, queries a view to receive all user accounts and loops over all those users triggering a custom event for each of them to print their names in messages.</bpmn2:documentation>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="Tags" value="simple,views,loop,custom event,cron,switch user" />
+        </camunda:properties>
+      </bpmn2:extensionElements>
       <bpmn2:startEvent id="Event_1up81dz" name="Cron" camunda:modelerTemplate="org.drupal.eca_base:eca_cron">
         <bpmn2:extensionElements>
           <camunda:properties>

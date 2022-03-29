@@ -13,9 +13,9 @@ class EcaEvent extends Plugin {
 
   public string $label;
 
-  public string $drupal_id;
+  public string $event_name;
 
-  public string $drupal_event_class;
+  public string $event_class;
 
   public int $tags;
 

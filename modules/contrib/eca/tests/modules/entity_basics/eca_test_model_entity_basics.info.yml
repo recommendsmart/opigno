@@ -2,12 +2,16 @@ name: 'ECA model test: Entity basics'
 type: module
 description: 'Support module for the ECA model tests.'
 package: Testing
+dependencies:
+  - drupal:node
+  - eca:eca_content
+  - eca:eca_user
 
 config_devel:
   - eca.eca.process_wymfeow
   - eca.model.process_wymfeow
 
-# Information added by Drupal.org packaging script on 2022-03-23
-version: '1.0.0-beta6'
+# Information added by Drupal.org packaging script on 2022-03-29
+version: '1.0.0-beta7'
 project: 'eca'
-datestamp: 1648025783
+datestamp: 1648558990

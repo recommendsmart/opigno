@@ -3,6 +3,7 @@
 namespace Drupal\eca_user\Plugin\Action;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\eca\Plugin\Action\ActionBase;
 use Drupal\eca\Plugin\Action\ConfigurableActionBase;
 use Drupal\eca\Plugin\CleanupInterface;
@@ -19,6 +20,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class SwitchAccount extends ConfigurableActionBase implements CleanupInterface {
 
   /**
+   * The account switcher service.
+   *
+   * @var \Drupal\Core\Session\AccountSwitcherInterface
+   */
+  protected AccountSwitcherInterface $accountSwitcher;
+
+  /**
    * A flag indicating whether an account switch was done.
    *
    * @var bool
@@ -26,18 +34,12 @@ class SwitchAccount extends ConfigurableActionBase implements CleanupInterface {
   protected bool $switched = FALSE;
 
   /**
-   * Whether the "account" context stack is available and ready to use.
-   *
-   * @var bool
-   */
-  protected bool $useContextStack = FALSE;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): ActionBase {
+    /** @var \Drupal\eca_user\Plugin\Action\SwitchAccount $instance */
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
-    $instance->useContextStack = $container->get('module_handler')->moduleExists('context_stack_account');
+    $instance->accountSwitcher = $container->get('account_switcher');
     return $instance;
   }
 
@@ -88,16 +90,7 @@ class SwitchAccount extends ConfigurableActionBase implements CleanupInterface {
       $user = $this->entityTypeManager->getStorage('user')->load($uid);
     }
     if ($user && !$this->switched) {
-      if ($this->useContextStack) {
-        /** @var \Drupal\context_stack\ContextStackInterface $context_stack */
-        $context_stack = \Drupal::service('context_stack.account');
-        $context_stack->addContext(\Drupal\context_stack\Plugin\Context\SwitchAccountContext::fromEntity(...[$user]));
-      }
-      else {
-        /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
-        $account_switcher = \Drupal::service('account_switcher');
-        $account_switcher->switchTo($user);
-      }
+      $this->accountSwitcher->switchTo($user);
       $this->switched = TRUE;
     }
   }
@@ -107,16 +100,7 @@ class SwitchAccount extends ConfigurableActionBase implements CleanupInterface {
    */
   public function cleanupAfterSuccessors(): void {
     if ($this->switched) {
-      if ($this->useContextStack) {
-        /** @var \Drupal\context_stack\ContextStackInterface $context_stack */
-        $context_stack = \Drupal::service('context_stack.account');
-        $context_stack->pop();
-      }
-      else {
-        /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
-        $account_switcher = \Drupal::service('account_switcher');
-        $account_switcher->switchBack();
-      }
+      $this->accountSwitcher->switchBack();
       $this->switched = FALSE;
     }
   }

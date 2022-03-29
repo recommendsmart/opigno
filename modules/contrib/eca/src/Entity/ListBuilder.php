@@ -91,34 +91,11 @@ class ListBuilder extends DraggableListBuilder {
     /** @var \Drupal\eca\Entity\Eca $eca */
     $eca = $entity;
 
-    $events = [];
-    foreach ($eca->getUsedEvents() as $used_event) {
-      $plugin = $used_event->getPlugin();
-      $event_info = $plugin->getPluginDefinition()['label'];
-      // If available, additionally display the first config value of the event.
-      if ($event_config = $used_event->getConfiguration()) {
-        $first_key = key($event_config);
-        $first_value = current($event_config);
-        foreach ($plugin->fields() as $plugin_field) {
-          if (isset($plugin_field['name']) && ($plugin_field['name'] === $first_key) && isset($plugin_field['extras']['choices'])) {
-            foreach ($plugin_field['extras']['choices'] as $choice) {
-              if (isset($choice['name'], $choice['value']) && $choice['value'] === $first_value) {
-                $first_value = $choice['name'];
-                break 2;
-              }
-            }
-          }
-        }
-        $event_info .= ' (' . $first_value . ')';
-      }
-      $events[] = $event_info;
-    }
-
     $row['model'] = ['#markup' => $eca->label() ?: $eca->id()];
     if ($this->showModeller()) {
       $row['modeller'] = ['#markup' => (string) $eca->get('modeller')];
     }
-    $row['events'] = ['#theme' => 'item_list', '#items' => $events];
+    $row['events'] = ['#theme' => 'item_list', '#items' => $eca->getEventInfos()];
     $row['version'] = ['#markup' => $eca->get('version') ?: $this->t('undefined')];
     $row['status'] = [
       '#markup' => $eca->status() ? $this->t('yes') : $this->t('no'),

@@ -65,9 +65,9 @@ class TriggerEvent {
       // @todo: Log this exception.
       return;
     }
-    $event_class = $event_plugin->drupalEventClass();
+    $event_class = $event_plugin->eventClass();
     $event = new $event_class(...$args);
-    $this->eventDispatcher->dispatch($event, $event_plugin->drupalId());
+    $this->eventDispatcher->dispatch($event, $event_plugin->eventName());
   }
 
 }

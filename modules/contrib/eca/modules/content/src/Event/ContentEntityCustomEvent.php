@@ -3,13 +3,17 @@
 namespace Drupal\eca_content\Event;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\eca\Event\TokenReceiverInterface;
+use Drupal\eca\Event\TokenReceiverTrait;
 
 /**
  * Provides a custom event that is entity aware.
  *
  * @package Drupal\eca_content\Event
  */
-class ContentEntityCustomEvent extends ContentEntityBaseEntity {
+class ContentEntityCustomEvent extends ContentEntityBaseEntity implements TokenReceiverInterface {
+
+  use TokenReceiverTrait;
 
   /**
    * The (optional) id for this event.

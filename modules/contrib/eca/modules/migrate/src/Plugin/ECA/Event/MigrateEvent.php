@@ -30,58 +30,58 @@ class MigrateEvent extends EventBase {
     $actions = [];
     $actions['idmap_message'] = [
       'label' => 'Save message to ID map',
-      'drupal_id' => MigrateEvents::IDMAP_MESSAGE,
-      'drupal_event_class' => MigrateIdMapMessageEvent::class,
+      'event_name' => MigrateEvents::IDMAP_MESSAGE,
+      'event_class' => MigrateIdMapMessageEvent::class,
     ];
     $actions['map_delete'] = [
       'label' => 'Remove entry from migration map',
-      'drupal_id' => MigrateEvents::MAP_DELETE,
-      'drupal_event_class' => MigrateMapDeleteEvent::class,
+      'event_name' => MigrateEvents::MAP_DELETE,
+      'event_class' => MigrateMapDeleteEvent::class,
     ];
     $actions['map_save'] = [
       'label' => 'Save to migration map',
-      'drupal_id' => MigrateEvents::MAP_SAVE,
-      'drupal_event_class' => MigrateMapSaveEvent::class,
+      'event_name' => MigrateEvents::MAP_SAVE,
+      'event_class' => MigrateMapSaveEvent::class,
     ];
     $actions['post_import'] = [
       'label' => 'Migration import finished',
-      'drupal_id' => MigrateEvents::POST_IMPORT,
-      'drupal_event_class' => MigrateImportEvent::class,
+      'event_name' => MigrateEvents::POST_IMPORT,
+      'event_class' => MigrateImportEvent::class,
     ];
     $actions['post_rollback'] = [
       'label' => 'Migration rollback finished',
-      'drupal_id' => MigrateEvents::POST_ROLLBACK,
-      'drupal_event_class' => MigrateRollbackEvent::class,
+      'event_name' => MigrateEvents::POST_ROLLBACK,
+      'event_class' => MigrateRollbackEvent::class,
     ];
     $actions['post_row_delete'] = [
       'label' => 'Migration row deleted',
-      'drupal_id' => MigrateEvents::POST_ROW_DELETE,
-      'drupal_event_class' => MigrateRowDeleteEvent::class,
+      'event_name' => MigrateEvents::POST_ROW_DELETE,
+      'event_class' => MigrateRowDeleteEvent::class,
     ];
     $actions['post_row_save'] = [
       'label' => 'Migration row saved',
-      'drupal_id' => MigrateEvents::POST_ROW_SAVE,
-      'drupal_event_class' => MigratePostRowSaveEvent::class,
+      'event_name' => MigrateEvents::POST_ROW_SAVE,
+      'event_class' => MigratePostRowSaveEvent::class,
     ];
     $actions['pre_import'] = [
       'label' => 'Migration import started',
-      'drupal_id' => MigrateEvents::PRE_IMPORT,
-      'drupal_event_class' => MigrateImportEvent::class,
+      'event_name' => MigrateEvents::PRE_IMPORT,
+      'event_class' => MigrateImportEvent::class,
     ];
     $actions['pre_rollback'] = [
       'label' => 'Migration rollback started',
-      'drupal_id' => MigrateEvents::PRE_ROLLBACK,
-      'drupal_event_class' => MigrateRollbackEvent::class,
+      'event_name' => MigrateEvents::PRE_ROLLBACK,
+      'event_class' => MigrateRollbackEvent::class,
     ];
     $actions['pre_row_delete'] = [
       'label' => 'Deleting migration row',
-      'drupal_id' => MigrateEvents::PRE_ROW_DELETE,
-      'drupal_event_class' => MigrateRowDeleteEvent::class,
+      'event_name' => MigrateEvents::PRE_ROW_DELETE,
+      'event_class' => MigrateRowDeleteEvent::class,
     ];
     $actions['pre_row_save'] = [
       'label' => 'Saving migration row',
-      'drupal_id' => MigrateEvents::PRE_ROW_SAVE,
-      'drupal_event_class' => MigratePreRowSaveEvent::class,
+      'event_name' => MigrateEvents::PRE_ROW_SAVE,
+      'event_class' => MigratePreRowSaveEvent::class,
     ];
     return $actions;
   }

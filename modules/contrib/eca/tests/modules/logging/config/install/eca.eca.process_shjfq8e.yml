@@ -39,5 +39,5 @@ actions:
         value: '6'
       -
         key: message
-        value: 'Node "[entity:title]" is about to be saved'
+        value: 'Node [entity:title] is about to be saved'
     successors: {  }

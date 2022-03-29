@@ -119,13 +119,19 @@ class TokenTest extends KernelTestBase {
   public function testDto() {
     /** @var \Drupal\eca\Plugin\DataType\DataTransferObject $dto */
     $dto = DataTransferObject::create();
-    $dto->set('mystring', 'Hello!');
 
     $token = \Drupal::token();
     $token_data = ['dto' => $dto];
 
-    $this->assertEquals('[dto]', $token->replace('[dto]', $token_data), "This must not replace anything, because a Token must consist of at least two parts.");
+    // Testing a string property.
+    $dto->set('mystring', 'Hello!');
     $this->assertEquals('Hello!', $token->replace('[dto:mystring]', $token_data));
+
+    // Testing the DTO itself as string representation.
+    $this->assertEquals('[dto]', $token->replace('[dto]', $token_data), "This must not replace anything, because the DTO itself has no string representation.");
+    $dto->setStringRepresentation('This is a string');
+    $this->assertEquals('This is a string', (string) $dto, 'String representation must return the defined string.');
+    $this->assertEquals('This is a string!', $token->replace('[dto]!', $token_data), "The DTO has now a string representation defined, thus Token replacement must include it.");
 
     // Create the Article content type with a standard body field.
     /** @var \Drupal\node\NodeTypeInterface $node_type */
@@ -157,6 +163,25 @@ class TokenTest extends KernelTestBase {
     $this->assertEquals($token->replace('[node:body]', ['node' => $node]), $token->replace('[dto:article:body]', $token_data), "The result must be the same like what the Token replacement generates for the node directly.");
     $this->assertEquals($token->replace('[node:summary]', ['node' => $node]), $token->replace('[dto:article:summary]', $token_data), "The result must be the same like what the Token replacement generates for the node directly.");
     $this->assertEquals($token->replace('[node:nonexistentfield]', ['node' => $node], ['clear' => TRUE]), $token->replace('[dto:article:nonexistentfield]', $token_data, ['clear' => TRUE]), "The result must be the same like what the Token replacement generates for the node directly.");
+
+    // Create another DTO, directly with a string.
+    $dto = DataTransferObject::create('Another one!');
+    $token_data = ['dto' => $dto];
+    $this->assertTrue($dto instanceof DataTransferObject, 'DTO must be a DTO.');
+    $this->assertEquals('Another one!', (string) $dto, 'String representation of the DTO must match with the defined string.');
+    $this->assertEquals((string) $dto, $token->replace('[dto]', $token_data), 'String representation of the DTO must be also usable as root token.');
+
+    // Create another DTO, directly using the node.
+    $dto = DataTransferObject::create($node);
+    $token_data = ['dto' => $dto];
+
+    $this->assertTrue($dto instanceof DataTransferObject, 'DTO must be a DTO.');
+    $this->assertTrue(isset($dto->body->value), 'DTO must contain the node body field.');
+    $this->assertEquals($body, $dto->body->value, 'DTO must hold the same body value as the node.');
+    $this->assertEquals($node->body->value, $dto->body->value, 'DTO must hold the same body value as the node.');
+    $this->assertEquals('I am the node title.', $token->replace('[dto:title]', $token_data), 'The DTO must generate the same token value as the node title.');
+    $this->assertNotEquals('[dto:body]', $token->replace('[dto:body]', $token_data), 'The DTO body value must be replacable as token.');
+    $this->assertEquals($token->replace('[node:body]', ['node' => $node]), $token->replace('[dto:body]', $token_data), 'The DTO must generate the same token value as the node body.');
   }
 
   /**
@@ -253,6 +278,13 @@ class TokenTest extends KernelTestBase {
     $this->assertSame($node2, $token_services->getTokenData('node2'));
     $this->assertSame($node3, $token_services->getTokenData('node3'));
 
+    // Basic test for token replacement.
+    $this->assertEquals('NID: ' . $node1->id(), $token_services->replace('NID: [node1:nid]'));
+    $this->assertEquals('TITLE: ' . $node1->label(), $token_services->replace('TITLE: [node1:title]'));
+    // ECA supports root-level tokens (tokens without further keys). When not
+    // specified otherwise, the entity ID will be used for replacement.
+    $this->assertEquals('NID: ' . $node1->id(), $token_services->replace('NID: [node1]'));
+
     // Expect a DTO when adding nested data.
     $token_services->addTokenData('myobject:node1', $node1);
     $this->assertTrue($token_services->hasTokenData('myobject'));
@@ -283,6 +315,29 @@ class TokenTest extends KernelTestBase {
     $this->assertEquals($body1, $nodes_found[0]->body->value);
     $this->assertEquals($body2, $nodes_found[1]->body->value);
     $this->assertEquals($body3, $nodes_found[2]->body->value);
+
+    // Test adding a plain string token and use it as a root token.
+    $this->assertFalse($token_services->hasTokenData('myroot_token'), 'The token must not yet exist.');
+    $token_services->addTokenData('myroot_token', 'A string value');
+    $this->assertTrue($token_services->hasTokenData('myroot_token'), 'The token must now exist.');
+    $this->assertEquals('A string value', $token_services->replace('[myroot_token]'), 'Token replacement must use root token.');
+    $this->assertEquals('Hello: A string value', $token_services->replaceClear('Hello: [myroot_token]'), 'Token replacement must use root token.');
+    $this->assertEquals('', $token_services->replaceClear('[myroot_token:nonexistent]'), 'Root token must only return its value when accessed as root token.');
+
+    $this->assertFalse($token_services->hasTokenData('myroot_token:existent'), 'Property token must not yet exist.');
+    $token_services->addTokenData('myroot_token:existent', 'I exist.');
+    $this->assertTrue($token_services->hasTokenData('myroot_token:existent'), 'Property token must not yet exist.');
+    $this->assertEquals('A string value', $token_services->replace('[myroot_token]'), 'Token replacement must use root token.');
+    $this->assertEquals('I exist.', $token_services->replace('[myroot_token:existent]'), 'Token replacement must use assigned property when defined.');
+    // Remove the assigned property.
+    $token_services->addTokenData('myroot_token:existent', '');
+    $this->assertFalse($token_services->hasTokenData('myroot_token:existent'), 'Property token must not exist anymore.');
+    $this->assertEquals('A string value', $token_services->replace('[myroot_token]'), 'Token replacement must still use root token.');
+    // Remove the root token itself.
+    $token_services->addTokenData('myroot_token', '');
+    $this->assertFalse($token_services->hasTokenData('myroot_token'), 'Root token must not exist anymore.');
+    $this->assertEquals('[myroot_token]', $token_services->replace('[myroot_token]'), 'Token replacement not replace root token anymore.');
+    $this->assertEquals('', $token_services->replaceClear('[myroot_token]'), 'Token replacement not replace root token anymore.');
   }
 
 }

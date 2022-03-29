@@ -2,10 +2,12 @@
 
 namespace Drupal\eca_queue;
 
+use Drupal\eca\Token\DataProviderInterface;
+
 /**
  * Task that will be proccessed in a queue.
  */
-class Task {
+class Task implements DataProviderInterface {
 
   /**
    * The name of the task.
@@ -22,11 +24,11 @@ class Task {
   protected ?string $taskValue;
 
   /**
-   * The according contexts, keyed by purpose and unqualified context ID.
+   * According Token data.
    *
-   * @var \Drupal\Core\Plugin\Context\ContextInterface[][]
+   * @var array
    */
-  protected array $contexts;
+  protected array $data;
 
   /**
    * The timestamp when this task should be processed the earliest.
@@ -42,16 +44,15 @@ class Task {
    *   The name of the task.
    * @param string|null $task_value
    *   (optional) An according value of the task.
-   * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
-   *   (optional) The according contexts, keyed by purpose and unqualified
-   *   context ID.
+   * @param array $data
+   *   (optional) According Token data.
    * @param int $notBefore
    *   (optional) The timestamp when this task should be processed the earliest.
    */
-  public function __construct(string $task_name, ?string $task_value = NULL, array $contexts = [], int $notBefore = 0) {
+  public function __construct(string $task_name, ?string $task_value = NULL, array $data = [], int $notBefore = 0) {
     $this->taskName = $task_name;
     $this->taskValue = $task_value;
-    $this->contexts = $contexts;
+    $this->data = $data;
     $this->notBefore = $notBefore;
   }
 
@@ -76,22 +77,26 @@ class Task {
   }
 
   /**
-   * Get the according contexts.
-   *
-   * @return \Drupal\Core\Plugin\Context\ContextInterface[][]
-   *   The array of contexts, keyed by purpose and unqualified context ID.
-   */
-  public function getContexts(): array {
-    return $this->contexts;
-  }
-
-  /**
    * Determine if the task is due for processing.
    *
    * @return bool
    */
   public function isDueForProcessing(): bool {
     return \Drupal::time()->getCurrentTime() >= $this->notBefore;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getData(string $key) {
+    return $this->data[$key] ?? NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasData(string $key): bool {
+    return isset($this->data[$key]);
   }
 
 }

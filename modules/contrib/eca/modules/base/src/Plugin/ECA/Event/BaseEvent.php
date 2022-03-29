@@ -26,14 +26,14 @@ class BaseEvent extends EventBase {
     $actions = [];
     $actions['eca_cron'] = [
       'label' => 'ECA cron event',
-      'drupal_id' => BaseEvents::CRON,
-      'drupal_event_class' => CronEvent::class,
+      'event_name' => BaseEvents::CRON,
+      'event_class' => CronEvent::class,
       'tags' => Tag::RUNTIME | Tag::PERSISTENT | Tag::EPHEMERAL,
     ];
     $actions['eca_custom'] = [
       'label' => 'ECA custom event',
-      'drupal_id' => BaseEvents::CUSTOM,
-      'drupal_event_class' => CustomEvent::class,
+      'event_name' => BaseEvents::CUSTOM,
+      'event_class' => CustomEvent::class,
       'tags' => Tag::RUNTIME,
     ];
     return $actions;
@@ -43,10 +43,10 @@ class BaseEvent extends EventBase {
    * {@inheritdoc}
    */
   public function fields(): array {
-    if ($this->drupalEventClass() === CronEvent::class) {
+    if ($this->eventClass() === CronEvent::class) {
       return CronEvent::fields();
     }
-    if ($this->drupalEventClass() === CustomEvent::class) {
+    if ($this->eventClass() === CustomEvent::class) {
       return CustomEvent::fields();
     }
     return parent::fields();

@@ -21,9 +21,9 @@ class TriggerCustomEvent extends ConfigurableActionBase {
    * {@inheritdoc}
    */
   public function execute(): void {
-    // @todo: Add more arguments when #3232083 got implemented.
     $event_id = $this->tokenServices->replaceClear($this->configuration['event_id']);
     $event = new CustomEvent($event_id, ['event' => $this->event]);
+    $event->addTokenNamesFromString($this->configuration['tokens']);
     \Drupal::service('event_dispatcher')->dispatch($event, BaseEvents::CUSTOM);
   }
 
@@ -33,6 +33,7 @@ class TriggerCustomEvent extends ConfigurableActionBase {
   public function defaultConfiguration(): array {
     return [
       'event_id' => '',
+      'tokens' => '',
     ] + parent::defaultConfiguration();
   }
 
@@ -47,6 +48,13 @@ class TriggerCustomEvent extends ConfigurableActionBase {
       '#default_value' => $this->configuration['event_id'],
       '#weight' => -10,
     ];
+    $form['tokens'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Tokens to forward'),
+      '#default_value' => $this->configuration['tokens'],
+      '#description' => $this->t('Comma separated list of token names from the current context, that will be forwarded to the triggered event and its process.'),
+      '#weight' => -9,
+    ];
     return $form;
   }
 
@@ -55,6 +63,7 @@ class TriggerCustomEvent extends ConfigurableActionBase {
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     $this->configuration['event_id'] = $form_state->getValue('event_id');
+    $this->configuration['tokens'] = $form_state->getValue('tokens');
     parent::submitConfigurationForm($form, $form_state);
   }
 

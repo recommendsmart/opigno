@@ -130,6 +130,16 @@ interface ModellerInterface extends PluginInspectionInterface {
   public function getLabel(): string;
 
   /**
+   * @return array
+   */
+  public function getTags(): array;
+
+  /**
+   * @return string
+   */
+  public function getDocumentation(): string;
+
+  /**
    * @return bool
    */
   public function getStatus(): bool;

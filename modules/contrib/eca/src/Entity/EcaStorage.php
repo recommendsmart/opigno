@@ -132,16 +132,16 @@ class EcaStorage extends ConfigEntityStorage {
           foreach ($eca->getUsedEvents() as $ecaEvent) {
             $eca_id = $eca->id();
             $plugin = $ecaEvent->getPlugin();
-            $drupal_id = $plugin->drupalId();
+            $plugin_event_name = $plugin->eventName();
             $wildcard = $plugin->lazyLoadingWildcard($eca_id, $ecaEvent);
-            if (!isset($this->configByEvents[$drupal_id])) {
-              $this->configByEvents[$drupal_id] = [$eca_id => [$wildcard]];
+            if (!isset($this->configByEvents[$plugin_event_name])) {
+              $this->configByEvents[$plugin_event_name] = [$eca_id => [$wildcard]];
             }
-            elseif (!isset($this->configByEvents[$drupal_id][$eca_id])) {
-              $this->configByEvents[$drupal_id][$eca_id] = [$wildcard];
+            elseif (!isset($this->configByEvents[$plugin_event_name][$eca_id])) {
+              $this->configByEvents[$plugin_event_name][$eca_id] = [$wildcard];
             }
-            elseif (!in_array($wildcard, $this->configByEvents[$drupal_id][$eca_id], TRUE)) {
-              $this->configByEvents[$drupal_id][$eca_id][] = $wildcard;
+            elseif (!in_array($wildcard, $this->configByEvents[$plugin_event_name][$eca_id], TRUE)) {
+              $this->configByEvents[$plugin_event_name][$eca_id][] = $wildcard;
             }
           }
         }

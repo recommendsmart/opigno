@@ -17,6 +17,7 @@ class CrossRefTest extends Base {
    */
   protected static $modules = [
     'node',
+    'token',
     'eca_base',
     'eca_content',
     'eca_test_model_cross_ref',
@@ -88,6 +89,22 @@ class CrossRefTest extends Base {
       "Node $title1 got updated",
       "Node $title2 got updated",
     ]);
+
+    // Remove the reference from node 1 to node 2 and verfiy, that the reverse
+    // reference also gets removed.
+    $node1
+      ->set('field_other_node', [])
+      ->save();
+    $this->assertStatusMessages([
+      "Node $title1 got updated",
+      "Node $title2 got updated",
+      "The title of the referenced node is $title1.",
+      "The title of the referenced node is $title2.",
+    ]);
+    $this->assertNoMessages();
+    $this->assertNoError();
+    $this->assertEmpty($node1->get('field_other_node')->getValue(), 'Field "Other Node" on node 1 should be empty.');
+    $this->assertEmpty($node2->get('field_other_node')->getValue(), 'Field "Other Node" on node 2 should be empty.');
   }
 
   /**

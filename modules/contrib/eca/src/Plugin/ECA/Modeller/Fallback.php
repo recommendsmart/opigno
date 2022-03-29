@@ -108,6 +108,20 @@ class Fallback extends ModellerBase {
   /**
    * {@inheritdoc}
    */
+  public function getTags(): array {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDocumentation(): string {
+    return '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getStatus(): bool {
     return FALSE;
   }

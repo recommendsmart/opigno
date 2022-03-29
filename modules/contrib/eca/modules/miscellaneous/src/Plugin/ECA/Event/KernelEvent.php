@@ -32,48 +32,48 @@ class KernelEvent extends EventBase {
     return [
       'view' => [
         'label' => 'Controller does not return a Response instance',
-        'drupal_id' => KernelEvents::VIEW,
-        'drupal_event_class' => ViewEvent::class,
+        'event_name' => KernelEvents::VIEW,
+        'event_class' => ViewEvent::class,
       ],
       'controller' => [
         'label' => 'Controller found to handle request',
-        'drupal_id' => KernelEvents::CONTROLLER,
-        'drupal_event_class' => ControllerEvent::class,
+        'event_name' => KernelEvents::CONTROLLER,
+        'event_class' => ControllerEvent::class,
       ],
       'controller_arguments' => [
         'label' => 'Controller arguments have been resolved',
-        'drupal_id' => KernelEvents::CONTROLLER_ARGUMENTS,
-        'drupal_event_class' => ControllerArgumentsEvent::class,
+        'event_name' => KernelEvents::CONTROLLER_ARGUMENTS,
+        'event_class' => ControllerArgumentsEvent::class,
       ],
       'exception' => [
         'label' => 'Uncaught exception',
-        'drupal_id' => KernelEvents::EXCEPTION,
-        'drupal_event_class' => ExceptionEvent::class,
+        'event_name' => KernelEvents::EXCEPTION,
+        'event_class' => ExceptionEvent::class,
       ],
       'finish_request' => [
         'label' => 'Response for request created',
-        'drupal_id' => KernelEvents::FINISH_REQUEST,
-        'drupal_event_class' => FinishRequestEvent::class,
+        'event_name' => KernelEvents::FINISH_REQUEST,
+        'event_class' => FinishRequestEvent::class,
       ],
       'request' => [
         'label' => 'Start dispatching request',
-        'drupal_id' => KernelEvents::REQUEST,
-        'drupal_event_class' => RequestEvent::class,
+        'event_name' => KernelEvents::REQUEST,
+        'event_class' => RequestEvent::class,
       ],
       'response' => [
         'label' => 'Response created',
-        'drupal_id' => KernelEvents::RESPONSE,
-        'drupal_event_class' => ResponseEvent::class,
+        'event_name' => KernelEvents::RESPONSE,
+        'event_class' => ResponseEvent::class,
       ],
       'terminate' => [
         'label' => 'Response was sent',
-        'drupal_id' => KernelEvents::TERMINATE,
-        'drupal_event_class' => TerminateEvent::class,
+        'event_name' => KernelEvents::TERMINATE,
+        'event_class' => TerminateEvent::class,
       ],
       'container_initialize_subrequest_finished' => [
         'label' => 'Service container finished initializing',
-        'drupal_id' => DrupalKernelInterface::CONTAINER_INITIALIZE_SUBREQUEST_FINISHED,
-        'drupal_event_class' => Event::class,
+        'event_name' => DrupalKernelInterface::CONTAINER_INITIALIZE_SUBREQUEST_FINISHED,
+        'event_class' => Event::class,
       ],
     ];
   }

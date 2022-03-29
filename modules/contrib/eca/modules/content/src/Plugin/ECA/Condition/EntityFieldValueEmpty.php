@@ -23,7 +23,7 @@ class EntityFieldValueEmpty extends ConditionBase {
    * {@inheritdoc}
    */
   public function evaluate(): bool {
-    $entity = $this->getContextValue('entity');
+    $entity = $this->getValueFromContext('entity');
     $field_name = $this->tokenServices->replaceClear($this->configuration['field_name']);
     if ($entity instanceof FieldableEntityInterface && $entity->hasField($field_name)) {
       return $this->negationCheck($entity->get($field_name)->isEmpty());

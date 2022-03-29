@@ -33,78 +33,78 @@ class ConfigEvent extends EventBase {
     $actions = [
       'delete' => [
         'label' => 'Delete config',
-        'drupal_id' => ConfigEvents::DELETE,
-        'drupal_event_class' => ConfigCrudEvent::class,
+        'event_name' => ConfigEvents::DELETE,
+        'event_class' => ConfigCrudEvent::class,
         'tags' => Tag::CONFIG | Tag::WRITE | Tag::PERSISTENT | Tag::AFTER,
       ],
       'collection_info' => [
         'label' => 'Collect information on all config collections',
-        'drupal_id' => ConfigEvents::COLLECTION_INFO,
-        'drupal_event_class' => ConfigCollectionInfo::class,
+        'event_name' => ConfigEvents::COLLECTION_INFO,
+        'event_class' => ConfigCollectionInfo::class,
         'tags' => Tag::READ | Tag::PERSISTENT | Tag::AFTER,
       ],
       'import' => [
         'label' => 'Import config',
-        'drupal_id' => ConfigEvents::IMPORT,
-        'drupal_event_class' => ConfigImporterEvent::class,
+        'event_name' => ConfigEvents::IMPORT,
+        'event_class' => ConfigImporterEvent::class,
         'tags' => Tag::CONFIG | Tag::WRITE | Tag::PERSISTENT | Tag::AFTER,
       ],
       'import_missing_content' => [
         'label' => 'Import config but content missing',
-        'drupal_id' => ConfigEvents::IMPORT_MISSING_CONTENT,
-        'drupal_event_class' => MissingContentEvent::class,
+        'event_name' => ConfigEvents::IMPORT_MISSING_CONTENT,
+        'event_class' => MissingContentEvent::class,
         'tags' => Tag::CONFIG | Tag::WRITE | Tag::PERSISTENT | Tag::BEFORE,
       ],
       'import_validate' => [
         'label' => 'Import config validation',
-        'drupal_id' => ConfigEvents::IMPORT_VALIDATE,
-        'drupal_event_class' => ConfigImporterEvent::class,
+        'event_name' => ConfigEvents::IMPORT_VALIDATE,
+        'event_class' => ConfigImporterEvent::class,
         'tags' => Tag::CONFIG | Tag::WRITE | Tag::PERSISTENT | Tag::BEFORE,
       ],
       'rename' => [
         'label' => 'Rename config',
-        'drupal_id' => ConfigEvents::RENAME,
-        'drupal_event_class' => ConfigRenameEvent::class,
+        'event_name' => ConfigEvents::RENAME,
+        'event_class' => ConfigRenameEvent::class,
         'tags' => Tag::CONFIG | Tag::WRITE | Tag::PERSISTENT | Tag::BEFORE,
       ],
       'save' => [
         'label' => 'Save config',
-        'drupal_id' => ConfigEvents::SAVE,
-        'drupal_event_class' => ConfigCrudEvent::class,
+        'event_name' => ConfigEvents::SAVE,
+        'event_class' => ConfigCrudEvent::class,
         'tags' => Tag::CONFIG | Tag::WRITE | Tag::PERSISTENT | Tag::AFTER,
       ],
       'storage_transform_export' => [
         'label' => 'Start config export',
-        'drupal_id' => ConfigEvents::STORAGE_TRANSFORM_EXPORT,
-        'drupal_event_class' => StorageTransformEvent::class,
+        'event_name' => ConfigEvents::STORAGE_TRANSFORM_EXPORT,
+        'event_class' => StorageTransformEvent::class,
         'tags' => Tag::CONFIG | Tag::WRITE | Tag::PERSISTENT | Tag::BEFORE,
       ],
       'storage_transform_import' => [
         'label' => 'Start config import',
-        'drupal_id' => ConfigEvents::STORAGE_TRANSFORM_IMPORT,
-        'drupal_event_class' => StorageTransformEvent::class,
+        'event_name' => ConfigEvents::STORAGE_TRANSFORM_IMPORT,
+        'event_class' => StorageTransformEvent::class,
         'tags' => Tag::CONFIG | Tag::WRITE | Tag::PERSISTENT | Tag::BEFORE,
       ],
     ];
     if (class_exists(ConfigTranslationEvents::class)) {
       $actions['populate_mapper'] = [
         'label' => 'Config manager populated',
-        'drupal_id' => ConfigTranslationEvents::POPULATE_MAPPER,
-        'drupal_event_class' => ConfigMapperPopulateEvent::class,
+        'event_name' => ConfigTranslationEvents::POPULATE_MAPPER,
+        'event_class' => ConfigMapperPopulateEvent::class,
         'tags' => Tag::CONFIG | Tag::WRITE | Tag::RUNTIME | Tag::AFTER,
       ];
     }
     if (class_exists(LanguageConfigOverrideEvents::class)) {
       $actions['delete_override'] = [
         'label' => 'Delete config override',
-        'drupal_id' => LanguageConfigOverrideEvents::DELETE_OVERRIDE,
-        'drupal_event_class' => LanguageConfigOverrideCrudEvent::class,
+        'event_name' => LanguageConfigOverrideEvents::DELETE_OVERRIDE,
+        'event_class' => LanguageConfigOverrideCrudEvent::class,
         'tags' => Tag::CONFIG | Tag::WRITE | Tag::PERSISTENT | Tag::AFTER,
       ];
       $actions['save_override'] = [
         'label' => 'Save config override',
-        'drupal_id' => LanguageConfigOverrideEvents::SAVE_OVERRIDE,
-        'drupal_event_class' => LanguageConfigOverrideCrudEvent::class,
+        'event_name' => LanguageConfigOverrideEvents::SAVE_OVERRIDE,
+        'event_class' => LanguageConfigOverrideCrudEvent::class,
         'tags' => Tag::CONFIG | Tag::WRITE | Tag::PERSISTENT | Tag::AFTER,
       ];
     }

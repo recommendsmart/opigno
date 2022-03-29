@@ -18,14 +18,14 @@ class EcaState extends StringComparisonBase {
   /**
    * {@inheritdoc}
    */
-  protected function getFirstValue(): string {
+  protected function getLeftValue(): string {
     return $this->state->get($this->configuration['key'], '');
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getSecondValue(): string {
+  protected function getRightValue(): string {
     return $this->configuration['value'];
   }
 

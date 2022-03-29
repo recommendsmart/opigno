@@ -188,26 +188,10 @@ trait EcaObjectTrait {
       }
 
       if (method_exists($plugin, 'getEvent')) {
-        // Ask the triggering event for an entity and return it.
+        // As a last resort, ask the triggering event for an entity.
         $event = $plugin->getEvent();
         if ($event instanceof ContentEntityEventInterface && ($entity = $event->getEntity())) {
           return [$entity];
-        }
-      }
-
-      // If available, lookup the ECA context stack for an available entity.
-      if (\Drupal::hasService('context_stack.eca')) {
-        /** @var \Drupal\context_stack\ContextStackInterface $context_stack */
-        $context_stack = \Drupal::service('context_stack.eca');
-        if ($context_stack->hasContext('entity')) {
-          if ($context = $context_stack->getContext('entity')) {
-            if ($context->hasContextValue()) {
-              $value = $context->getContextValue();
-              if ($value instanceof EntityInterface) {
-                return [$value];
-              }
-            }
-          }
         }
       }
     }

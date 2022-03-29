@@ -3920,17 +3920,17 @@
         },
         {
             "name": "drupal/eca",
-            "version": "1.0.0-beta6",
+            "version": "1.0.0-beta7",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/eca.git",
-                "reference": "1.0.0-beta6"
+                "reference": "1.0.0-beta7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/eca-1.0.0-beta6.zip",
-                "reference": "1.0.0-beta6",
-                "shasum": "093c0f8377366da6599c3a6506643206c097d034"
+                "url": "https://ftp.drupal.org/files/projects/eca-1.0.0-beta7.zip",
+                "reference": "1.0.0-beta7",
+                "shasum": "45808f2469ff2b64cf32b1041c78b7f6d788d98e"
             },
             "require": {
                 "dragonmantank/cron-expression": "^3.1",
@@ -3941,16 +3941,14 @@
                 "php": ">=7.4"
             },
             "require-dev": {
-                "drupal/context_stack": "*",
-                "drupal/context_stack_account": "*",
-                "drupal/eca_context": "*",
-                "drupal/tamper": "*"
+                "drupal/tamper": "^1.0",
+                "drupal/token": "^1.10"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "1.0.0-beta6",
-                    "datestamp": "1648025781",
+                    "version": "1.0.0-beta7",
+                    "datestamp": "1648558988",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Beta releases are not covered by Drupal security advisories."

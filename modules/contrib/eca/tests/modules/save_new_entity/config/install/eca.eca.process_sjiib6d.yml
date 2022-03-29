@@ -1,25 +1,22 @@
 langcode: en
 status: true
 dependencies:
-  config:
-    - node.type.article
-    - taxonomy.vocabulary.tags
   module:
     - eca_content
     - taxonomy
 id: process_sjiib6d
 modeller: bpmn_io
-label: noname
-version: '1.0'
+label: 'Save new entity'
+version: 1.0.0
 weight: null
 events:
   insert_article:
     plugin: 'content_entity:insert'
-    label: 'Article inserted'
+    label: 'Node inserted'
     fields:
       -
         key: type
-        value: 'node article'
+        value: 'node _all'
     successors:
       -
         id: Activity_0rt55gb
@@ -29,7 +26,7 @@ gateways: {  }
 actions:
   Activity_0rt55gb:
     plugin: eca_token_load_entity
-    label: 'Load article'
+    label: 'Load node'
     fields:
       -
         key: token_name
