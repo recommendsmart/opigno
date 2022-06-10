@@ -13,6 +13,7 @@ interface ContentEntityEventInterface {
    * Get the entity which was involved in the entity event.
    *
    * @return \Drupal\Core\Entity\EntityInterface
+   *   The content entity.
    */
   public function getEntity(): EntityInterface;
 

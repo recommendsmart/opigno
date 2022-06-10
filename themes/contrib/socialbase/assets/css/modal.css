@@ -104,6 +104,10 @@
   right: -2px;
 }
 
+.ui-dialog .comment-post-comment-delete-form.is_modal .form-actions .btn {
+  border: 0 !important;
+}
+
 .ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close {
   font-size: 0;
   cursor: pointer;
@@ -172,6 +176,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 1rem;
+  line-height: 1.625rem;
 }
 
 .ui-button-icon-only {

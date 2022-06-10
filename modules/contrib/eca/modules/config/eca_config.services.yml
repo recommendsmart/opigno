@@ -2,6 +2,6 @@ services:
 
   eca_config.subscriber:
     class: Drupal\eca_config\EventSubscriber\EcaConfig
-    arguments: ['@eca.processor', '@eca.service.token']
+    parent: eca.default_event_subscriber
     tags:
       - { name: event_subscriber }

@@ -2,13 +2,17 @@
 
 namespace Drupal\eca\Service;
 
-use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Component\Plugin\Exception\PluginNotFoundException;
-use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Archiver\ArchiveTar;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
+use Drupal\eca\Entity\Eca;
 use Drupal\eca\Plugin\ECA\Modeller\ModellerInterface;
 use Drupal\eca\PluginManager\Event;
 use Drupal\eca\PluginManager\Modeller;
@@ -21,54 +25,101 @@ class Modellers {
   use ServiceTrait;
 
   /**
+   * ECA config entity storage manager.
+   *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected EntityStorageInterface $configStorage;
 
   /**
+   * ECA model storage manager.
+   *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected EntityStorageInterface $modelStorage;
 
   /**
+   * ECA modeller plugin manager.
+   *
    * @var \Drupal\eca\PluginManager\Modeller
    */
   protected Modeller $pluginManagerModeller;
 
   /**
+   * ECA event plugin manager.
+   *
    * @var \Drupal\eca\PluginManager\Event
    */
   protected Event $pluginManagerEvent;
 
   /**
+   * ECA action services.
+   *
    * @var \Drupal\eca\Service\Actions
    */
   protected Actions $actionServices;
 
   /**
+   * ECA condition services.
+   *
    * @var \Drupal\eca\Service\Conditions
    */
   protected Conditions $conditionServices;
 
   /**
+   * Logger channel service.
+   *
    * @var \Drupal\Core\Logger\LoggerChannelInterface
    */
   protected LoggerChannelInterface $logger;
 
   /**
+   * File system service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected FileSystemInterface $fileSystem;
+
+  /**
+   * Export storage service.
+   *
+   * @var \Drupal\Core\Config\StorageInterface
+   */
+  protected StorageInterface $exportStorage;
+
+  /**
+   * Config factory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected ConfigFactoryInterface $configFactory;
+
+  /**
    * Modellers constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    * @param \Drupal\eca\PluginManager\Modeller $plugin_manager_modeller
+   *   The ECA modeller plugin manager.
    * @param \Drupal\eca\PluginManager\Event $plugin_manager_event
+   *   The ECA event plugin manager.
    * @param \Drupal\eca\Service\Actions $action_services
+   *   The ECA action service.
    * @param \Drupal\eca\Service\Conditions $condition_services
+   *   The ECA condition service.
    * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
+   *   The logger channel service.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   The file system service.
+   * @param \Drupal\Core\Config\StorageInterface $export_storage
+   *   The export storage service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory service.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, Modeller $plugin_manager_modeller, Event $plugin_manager_event, Actions $action_services, Conditions $condition_services, LoggerChannelInterface $logger) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, Modeller $plugin_manager_modeller, Event $plugin_manager_event, Actions $action_services, Conditions $condition_services, LoggerChannelInterface $logger, FileSystemInterface $file_system, StorageInterface $export_storage, ConfigFactoryInterface $config_factory) {
     $this->configStorage = $entity_type_manager->getStorage('eca');
     $this->modelStorage = $entity_type_manager->getStorage('eca_model');
     $this->pluginManagerModeller = $plugin_manager_modeller;
@@ -76,17 +127,39 @@ class Modellers {
     $this->actionServices = $action_services;
     $this->conditionServices = $condition_services;
     $this->logger = $logger;
+    $this->fileSystem = $file_system;
+    $this->exportStorage = $export_storage;
+    $this->configFactory = $config_factory;
+  }
+
+  /**
+   * Loads the given Eca config entity by its ID.
+   *
+   * @param string $id
+   *   The ID of an ECA model.
+   *
+   * @return \Drupal\eca\Entity\Eca|null
+   *   The Eca config entity if available, NULL otherwise.
+   */
+  public function loadModel(string $id): ?Eca {
+    /** @var \Drupal\eca\Entity\Eca $eca */
+    $eca = $this->configStorage->load(mb_strtolower($id));
+    return $eca;
   }
 
   /**
    * Save a model as config.
    *
    * @param \Drupal\eca\Plugin\ECA\Modeller\ModellerInterface $modeller
+   *   The modeller controlling the ECA config entity.
    *
    * @return bool
    *   Returns TRUE, if a reload of the saved model is required. That's the case
    *   when this is either a new model or if the label had changed. It returns
    *   FALSE otherwise, if none of those conditions applies.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \LogicException
    */
   public function saveModel(ModellerInterface $modeller): bool {
     $id = mb_strtolower($modeller->getId());
@@ -110,59 +183,36 @@ class Modellers {
       ->set('conditions', [])
       ->set('actions', []);
     $modeller->readComponents($config);
-    try {
+    if (!$modeller->hasError()) {
+      // Only save model if reading its components succeeded without errors.
       $config->save();
       $config->getModel()
         ->setData($modeller)
         ->save();
     }
-    catch (EntityStorageException | InvalidPluginDefinitionException | PluginNotFoundException $e) {
-      // @todo: Log these exceptions.
-    }
     return $requiresReload;
   }
 
   /**
-   * Update all previously imported models.
+   * Gets a list of all available modeller plugin definitions.
+   *
+   * @return array
+   *   The list of modeller plugin definitions indexed by their ID.
    */
-  public function reimportAll(): void {
-    /** @var \Drupal\eca\Entity\Eca $eca */
-    foreach ($this->configStorage->loadMultiple() as $eca) {
-      $modeller = $this->getModeller($eca->get('modeller'));
-      if ($modeller === NULL) {
-        $this->logger->error('This modeller plugin ' . $eca->get('modeller') . ' does not exist.');
-        continue;
-      }
-      if ($modeller->isEditable()) {
-        // Editable models have no external files.
-        continue;
-      }
-      try {
-        $model = $eca->getModel();
-      }
-      catch (InvalidPluginDefinitionException | PluginNotFoundException $e) {
-        // @todo: Log this exception.
-        continue;
-      }
-      $filename = $model->getFilename();
-      if (!file_exists($filename)) {
-        $this->logger->error('This file '. $filename . ' does not exist.');
-        continue;
-      }
-      $modeller->save(file_get_contents($filename), $filename);
-    }
+  public function getModellerDefinitions(): array {
+    return $this->pluginManagerModeller->getDefinitions();
   }
 
   /**
    * Returns an instance of the modeller for the given id.
    *
-   * @param $plugin_id
+   * @param string $plugin_id
    *   The id of the modeller plugin.
    *
    * @return \Drupal\eca\Plugin\ECA\Modeller\ModellerInterface|null
    *   The modeller instance, or NULL if the plugin doesn't exist.
    */
-  public function getModeller($plugin_id): ?ModellerInterface {
+  public function getModeller(string $plugin_id): ?ModellerInterface {
     /** @var \Drupal\eca\Plugin\ECA\Modeller\ModellerInterface $modeller */
     try {
       $modeller = $this->pluginManagerModeller->createInstance($plugin_id);
@@ -188,7 +238,7 @@ class Modellers {
           $events[] = $this->pluginManagerEvent->createInstance($plugin_id);
         }
         catch (PluginException $e) {
-          // Can be ignored
+          // Can be ignored.
         }
       }
     }
@@ -207,38 +257,82 @@ class Modellers {
         $modeller->exportTemplates();
       }
       catch (PluginException $e) {
-        // Can be ignored
+        // Can be ignored.
       }
     }
   }
 
   /**
-   * Updates all existing ECA entities by calling ::updateModel in their modeller.
+   * Exports the ECA config with all dependencies into an archive.
    *
-   * It is the modeller's responsibility to load all existing plugins and find
-   * out if the model data, which is proprietary to them, needs to be updated.
+   * @param \Drupal\eca\Entity\Eca $eca
+   *   The ECA config entity.
+   * @param string $archiveFileName
+   *   The fully qualified filename for the archive.
+   *
+   * @return array
+   *   An array with "config" and "module" keys, each containing the list of
+   *   dependencies.
    */
-  public function updateAllModels(): void {
-    /** @var \Drupal\eca\Entity\Eca $eca */
-    foreach ($this->configStorage->loadMultiple() as $eca) {
-      $modeller = $this->getModeller($eca->get('modeller'));
-      if ($modeller === NULL) {
-        $this->logger->error('This modeller plugin ' . $eca->get('modeller') . ' does not exist.');
-        continue;
-      }
+  public function exportArchive(Eca $eca, string $archiveFileName): array {
+    $dependencies = [
+      'config' => [
+        'eca.eca.' . $eca->id(),
+        'eca.model.' . $eca->id(),
+      ],
+      'module' => [],
+    ];
+    $this->getNestedDependencies($dependencies, $eca->getDependencies());
+    if (file_exists($archiveFileName)) {
       try {
-        $model = $eca->getModel();
+        @$this->fileSystem->delete($archiveFileName);
       }
-      catch (InvalidPluginDefinitionException | PluginNotFoundException $e) {
-        // @todo: Log this exception.
-        continue;
+      catch (FileException $e) {
+        // Ignore failed deletes.
       }
-      if ($modeller->updateModel($model)) {
-        $filename = $model->getFilename();
-        if ($filename && file_exists($filename)) {
-          file_put_contents($filename, $model->getModeldata());
-        }
-        $modeller->save($model->getModeldata(), $filename);
+    }
+    $archiver = new ArchiveTar($archiveFileName, 'gz');
+    foreach ($dependencies['config'] as $name) {
+      $archiver->addString("$name.yml", Yaml::encode($this->exportStorage->read($name)));
+    }
+    $archiver->addString('dependencies.yml', Yaml::encode($dependencies));
+
+    // Remove the first 2 items from the config dependencies.
+    array_shift($dependencies['config']);
+    array_shift($dependencies['config']);
+    foreach ($dependencies as $type => $values) {
+      if (empty($values)) {
+        unset($dependencies[$type]);
+      }
+      else {
+        sort($dependencies[$type]);
+      }
+    }
+    return $dependencies;
+  }
+
+  /**
+   * Recursively determines config dependencies.
+   *
+   * @param array $allDependencies
+   *   The list of all dependencies.
+   * @param array $dependencies
+   *   The list of dependencies to be added.
+   */
+  private function getNestedDependencies(array &$allDependencies, array $dependencies): void {
+    foreach ($dependencies['module'] ?? [] as $module) {
+      if (!in_array($module, $allDependencies['module'], TRUE)) {
+        $allDependencies['module'][] = $module;
+      }
+    }
+    if (empty($dependencies['config'])) {
+      return;
+    }
+    foreach ($dependencies['config'] as $dependency) {
+      if (!in_array($dependency, $allDependencies['config'], TRUE)) {
+        $allDependencies['config'][] = $dependency;
+        $depConfig = $this->configFactory->get($dependency)->getStorage()->read($dependency)['dependencies'];
+        $this->getNestedDependencies($allDependencies, $depConfig);
       }
     }
   }

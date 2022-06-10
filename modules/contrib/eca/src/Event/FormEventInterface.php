@@ -10,29 +10,20 @@ use Drupal\Core\Form\FormStateInterface;
 interface FormEventInterface {
 
   /**
-   * Gets the form array which was involved in the form event.
+   * Get the form array.
    *
-   * @return array
+   * This may be the complete form, or a sub-form, or a specific form element.
+   *
+   * @return array|null
+   *   The form array as reference or NULL if there is no form array.
    */
-  public function getForm(): array;
-
-  /**
-   * Sets the form array for this event.
-   *
-   * This is needed, if the receiver of the form array had to modify the array
-   * and needs to hand over the changes to the subsequent process.
-   *
-   * @todo: Analyse if we could change getForm() into a method that returns
-   * the form array by reference.
-   *
-   * @param array $form
-   */
-  public function setForm(array $form): void;
+  public function &getForm(): ?array;
 
   /**
    * Gets the form state object which was involved in the form event.
    *
    * @return \Drupal\Core\Form\FormStateInterface
+   *   The form state.
    */
   public function getFormState(): FormStateInterface;
 

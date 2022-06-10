@@ -8,8 +8,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eca\Plugin\Action\ConfigurableActionBase;
 use Drupal\eca\Plugin\OptionsInterface;
-use Drupal\eca\Service\Conditions;
-use Drupal\eca_content\EntityTypeTrait;
+use Drupal\eca_content\Service\EntityTypes;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Create a new content entity without saving it.
@@ -22,7 +22,12 @@ use Drupal\eca_content\EntityTypeTrait;
  */
 class NewEntity extends ConfigurableActionBase implements OptionsInterface {
 
-  use EntityTypeTrait;
+  /**
+   * The entity type service.
+   *
+   * @var \Drupal\eca_content\Service\EntityTypes
+   */
+  protected EntityTypes $entityTypes;
 
   /**
    * The instantiated entity.
@@ -30,6 +35,15 @@ class NewEntity extends ConfigurableActionBase implements OptionsInterface {
    * @var \Drupal\Core\Entity\EntityInterface|null
    */
   protected ?EntityInterface $entity;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): NewEntity {
+    $plugin = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $plugin->entityTypes = $container->get('eca_content.service.entity_types');
+    return $plugin;
+  }
 
   /**
    * {@inheritdoc}
@@ -52,7 +66,7 @@ class NewEntity extends ConfigurableActionBase implements OptionsInterface {
     $form = parent::buildConfigurationForm($form, $form_state);
     $form['token_name'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Token name'),
+      '#title' => $this->t('Name of token'),
       '#default_value' => $this->configuration['token_name'],
       '#weight' => -10,
     ];
@@ -109,8 +123,8 @@ class NewEntity extends ConfigurableActionBase implements OptionsInterface {
   public function getOptions(string $id): ?array {
     if ($id === 'type') {
       $types = [];
-      $this->bundleField(FALSE, FALSE);
-      foreach (static::$typesAndBundles as $info) {
+      $this->entityTypes->bundleField(FALSE, FALSE);
+      foreach ($this->entityTypes->getTypesAndBundles() as $info) {
         $types[$info['value']] = $info['name'];
       }
       return $types;
@@ -126,7 +140,7 @@ class NewEntity extends ConfigurableActionBase implements OptionsInterface {
     $access_result = parent::access($object, $account, TRUE);
     if ($access_result->isAllowed() && !empty($this->configuration['type'])) {
       $account = $account ?? $this->currentUser;
-      list($entity_type_id, $bundle) = array_pad(explode(' ', $this->configuration['type'], 2), 2, NULL);
+      [$entity_type_id, $bundle] = array_pad(explode(' ', $this->configuration['type'], 2), 2, NULL);
       if ($bundle === NULL || $bundle === '' || $bundle === '_all') {
         $access_result = AccessResult::forbidden(sprintf('Cannot determine access without a specified bundle.', $entity_type_id));
       }
@@ -151,7 +165,7 @@ class NewEntity extends ConfigurableActionBase implements OptionsInterface {
    */
   public function execute(): void {
     $config = &$this->configuration;
-    list($entity_type_id, $bundle) = explode(' ', $config['type']);
+    [$entity_type_id, $bundle] = explode(' ', $config['type']);
     $values = [];
     $definition = $this->entityTypeManager->getDefinition($entity_type_id);
     $entity_keys = $definition->get('entity_keys');
@@ -189,7 +203,7 @@ class NewEntity extends ConfigurableActionBase implements OptionsInterface {
    *   Returns TRUE in case to set as published, FALSE otherwise.
    */
   protected function shouldPublish(): bool {
-    return $this->configuration['published'] === Conditions::OPTION_YES;
+    return $this->configuration['published'];
   }
 
 }

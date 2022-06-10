@@ -7,6 +7,10 @@ strong {
   font-weight: $font-weight-strong;
 }
 
+:lang(ar) {
+  font-family: "Almarai", "montserrat", sans-serif;
+}
+
 @include text-emphasis-variant('.text-primary', $brand-primary);
 @include text-emphasis-variant('.text-success', $state-success-text);
 @include text-emphasis-variant('.text-info', $state-info-text);

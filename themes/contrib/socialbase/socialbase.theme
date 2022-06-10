@@ -5,7 +5,6 @@
  * The primary PHP file for the Social base theme.
  */
 
-use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\node\NodeInterface;
 use Drupal\Component\Utility\Html;
@@ -186,17 +185,6 @@ function _socialbase_node_get_like_count($type, $id) {
 
   return $count;
 
-}
-
-/**
- * Implements theme_preprocess_username().
- */
-function socialbase_preprocess_username(&$variables) {
-  $account = $variables['account'] ?: new AnonymousUserSession();
-
-  // Override the default drupal truncate function for all user names,
-  // so the whole name will be displayed.
-  $variables['name'] = $account->getDisplayName();
 }
 
 /**

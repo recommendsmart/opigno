@@ -93,7 +93,7 @@
 .popover.bottom .popover-content [id*='enroll-method'] p {
   margin-bottom: 1rem;
   font-size: 14px;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 21px;
 }
 
@@ -110,8 +110,8 @@
 .path-group .popover .popover-title {
   padding: .75rem 1.25rem .75rem 52px;
   font-weight: bold;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 1rem;
+  line-height: 1.625rem;
   border: none;
   background: #f3f3f3 url("../../components/03-molecules/popover/icon-cog.svg") no-repeat 20px center/24px 24px;
 }
@@ -130,7 +130,7 @@
   font-size: 14px;
   line-height: 21px;
   font-weight: 400;
-  color: #4d4d4d;
+  color: #343434;
 }
 
 .path-group .popover .popover-content .group-visibility-details {

@@ -60,6 +60,16 @@
           <span class="inline-center">{{ event_date }}</span>
         </div>
 
+        {% if content.field_event_addtocal|render is not empty and logged_in %}
+          <div class="article__special-field">
+            <div class="hero_btn-group">
+              <div class="meta-addtocal">
+                {{ content.field_event_addtocal }}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
         {% if content.field_event_address|render or content.field_event_location|render %}
           <div class="article__special-field">
             <svg class="article__special-fields-icon">

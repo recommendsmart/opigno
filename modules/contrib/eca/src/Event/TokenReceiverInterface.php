@@ -14,6 +14,7 @@ interface TokenReceiverInterface {
    *   The list of token names to be kept.
    *
    * @return \Drupal\eca\Event\TokenReceiverInterface
+   *   This.
    *
    * @see \Drupal\eca\EventSubscriber\EcaExecutionTokenSubscriber::onBeforeInitialExecution
    * @see \Drupal\eca\Token\TokenInterface::clearTokenData
@@ -30,6 +31,7 @@ interface TokenReceiverInterface {
    *   Comma separated list of token names to be kept.
    *
    * @return \Drupal\eca\Event\TokenReceiverInterface
+   *   This.
    */
   public function addTokenNamesFromString(string $token_names): TokenReceiverInterface;
 

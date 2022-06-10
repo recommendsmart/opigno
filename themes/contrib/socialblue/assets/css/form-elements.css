@@ -324,7 +324,7 @@ fieldset strong {
   margin: 0;
   padding-top: 1.25rem;
   padding-bottom: .5rem;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 #edit-author-info label,
@@ -336,7 +336,7 @@ fieldset strong {
 .field--type-address label,
 .enrollment-methods label,
 .field--name-field-discussion-date label {
-  font-weight: 300;
+  font-weight: 400;
   margin-bottom: .5rem;
 }
 
@@ -493,7 +493,7 @@ fieldset strong {
 }
 
 .enrollment-methods .panel-body .panel-heading header {
-  font-weight: 300;
+  font-weight: 400;
 }
 
 @media (max-width: 599px) {
@@ -579,7 +579,6 @@ fieldset strong {
         -ms-flex: 0 0 100%;
             flex: 0 0 100%;
     max-width: 100%;
-    margin-bottom: 0;
   }
   .field--name-field-discussion-date .card__block > * .form-inline {
     margin-bottom: 0;

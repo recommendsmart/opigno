@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\eca\Kernel\Model;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Messenger\MessengerInterface;
@@ -37,6 +38,9 @@ abstract class Base extends KernelTestBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Exception
    */
   protected function setUp(): void {
     Eca::setTesting();
@@ -96,12 +100,32 @@ abstract class Base extends KernelTestBase {
   }
 
   /**
+   * Disable a given ECA model.
+   *
+   * @param string $id
+   *   The ID of the model to be disabled.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function disableEcaModel(string $id): void {
+    /** @var \Drupal\eca\Entity\Eca $eca */
+    if ($eca = \Drupal::entityTypeManager()->getStorage('eca')->load($id)) {
+      $eca->disable()->save();
+    }
+  }
+
+  /**
    * Verify that no error or worse has been logged.
    *
    * Optionally this can also assert a number of expected log records, that
    * need to be present and won't be treated as available errors.
    *
    * @param \Drupal\Tests\eca\Kernel\Model\LogRecord[] $logRecords
+   *   List of expected log records.
+   *
+   * @throws \Exception
    */
   protected function assertNoError(array $logRecords = []): void {
     foreach ($this->container->get(self::$testLogServiceName)->cleanLogs() as $log_message) {
@@ -112,7 +136,7 @@ abstract class Base extends KernelTestBase {
           continue 2;
         }
       }
-      $this->assertGreaterThan(RfcLogLevel::ERROR, $log_message[0], strip_tags(t($log_message[1], $log_message[2])));
+      $this->assertGreaterThan(RfcLogLevel::ERROR, $log_message[0], strip_tags(new FormattableMarkup($log_message[1], $log_message[2])));
     }
     self::assertEmpty($logRecords, 'Expected log records missing: ' . PHP_EOL . implode(PHP_EOL, $logRecords));
   }
@@ -175,21 +199,50 @@ abstract class Base extends KernelTestBase {
 
 }
 
+/**
+ * Helper class to compare log records.
+ */
 class LogRecord {
 
+  /**
+   * Log severity.
+   *
+   * @var int
+   */
   private int $severity;
 
+  /**
+   * Log channel.
+   *
+   * @var string
+   */
   private string $channel;
 
+  /**
+   * Log message.
+   *
+   * @var string
+   */
   private string $message;
 
+  /**
+   * Log arguments/context.
+   *
+   * @var array
+   */
   private array $arguments;
 
   /**
+   * Constructs a log record.
+   *
    * @param int $severity
+   *   The log severity.
    * @param string $channel
+   *   The log channel.
    * @param string $message
+   *   The log message.
    * @param array $arguments
+   *   The list of log message arguments.
    */
   public function __construct(int $severity, string $channel, string $message, array $arguments = []) {
     $this->severity = $severity;
@@ -199,22 +252,35 @@ class LogRecord {
   }
 
   /**
+   * Formats and cleans the log record.
+   *
    * @param string $message
+   *   The log message.
    * @param array $arguments
+   *   The log message arguments.
    *
    * @return string
+   *   The formatted message string.
    */
   public static function format(string $message, array $arguments = []): string {
-    return strip_tags(t($message, $arguments));
+    return strip_tags(strtr($message, $arguments));
   }
 
   /**
+   * Compares the current log record to the given values.
+   *
    * @param int $severity
+   *   The log severity.
    * @param string $channel
+   *   The log channel.
    * @param string $message
+   *   The log message.
    * @param array $arguments
+   *   The list of log message arguments.
    *
    * @return bool
+   *   Returns TRUE, if all components equal the current log record, FALSE
+   *   otherwise.
    */
   public function compare(int $severity, string $channel, string $message, array $arguments = []): bool {
     return $this->severity === $severity &&
@@ -223,7 +289,10 @@ class LogRecord {
   }
 
   /**
+   * Return the formatted version of the current log record.
+   *
    * @return string
+   *   The formatted message string.
    */
   public function __toString(): string {
     return self::format($this->message, $this->arguments);

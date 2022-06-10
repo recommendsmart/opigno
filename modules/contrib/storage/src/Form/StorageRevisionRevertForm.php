@@ -37,12 +37,20 @@ class StorageRevisionRevertForm extends ConfirmFormBase {
   protected $dateFormatter;
 
   /**
+   * The time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected $time;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     $instance = parent::create($container);
     $instance->storageStorage = $container->get('entity_type.manager')->getStorage('storage');
     $instance->dateFormatter = $container->get('date.formatter');
+    $instance->time = $container->get('datetime.time');
     return $instance;
   }
 
@@ -129,7 +137,7 @@ class StorageRevisionRevertForm extends ConfirmFormBase {
   protected function prepareRevertedRevision(StorageInterface $revision, FormStateInterface $form_state) {
     $revision->setNewRevision();
     $revision->isDefaultRevision(TRUE);
-    $revision->setRevisionCreationTime(REQUEST_TIME);
+    $revision->setRevisionCreationTime($this->time->getRequestTime());
 
     return $revision;
   }

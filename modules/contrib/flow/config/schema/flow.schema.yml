@@ -35,6 +35,9 @@ flow.flow.*.*.*:
       sequence:
         type: flow_task
         label: 'Task'
+    custom:
+      type: flow_custom
+      label: 'Custom flow settings'
 
 flow_subject:
   type: mapping
@@ -96,6 +99,49 @@ flow_subject_fallback:
     method:
       type: string
       label: 'Fallback method'
+
+flow_custom:
+  type: mapping
+  label: 'Custom flow settings'
+  mapping:
+    label:
+      type: string
+      label: 'Human-readable label'
+    baseMode:
+      type: string
+      label: 'Base task mode'
+    qualifiers:
+      type: sequence
+      label: 'Qualifiers'
+      sequence:
+        type: flow_qualifier
+
+flow_qualifier:
+  type: mapping
+  label: 'Flow qualifier'
+  mapping:
+    id:
+      type: string
+      label: 'Flow qualifier plugin ID'
+    type:
+      type: string
+      label: 'Flow qualifier base plugin ID'
+    weight:
+      type: integer
+      label: 'Weight'
+    active:
+      type: boolean
+      label: 'Active'
+    subject:
+      type: flow_subject
+    settings:
+      type: flow.qualifier.settings.[%parent.type]
+      label: 'Settings'
+    third_party_settings:
+      type: sequence
+      label: 'Third party settings'
+      sequence:
+        type: flow.qualifier.third_party.[%key]
 
 flow.task.settings.merge:
   type: mapping
@@ -209,3 +255,27 @@ flow.subject.settings.create:
 flow.subject.settings.delete:
   type: mapping
   label: 'Content being deleted settings'
+
+flow.qualifier.settings.congruent:
+  type: mapping
+  label: 'Congruent content settings'
+  mapping:
+    values:
+      type: ignore
+      label: 'Congruent values'
+    fields:
+      type: sequence
+      label: 'Fields to check'
+      sequence:
+        type: string
+        label: 'Field name'
+    method:
+      type: mapping
+      label: 'Congruency method'
+      mapping:
+        admission:
+          type: string
+          label: 'Congruency admission'
+        multi:
+          type: string
+          label: 'Congruency on multi-value fields'

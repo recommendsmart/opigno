@@ -5,11 +5,8 @@ namespace Drupal\eca\Entity;
 use Drupal\Component\EventDispatcher\Event;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
-use Drupal\Core\Logger\RfcLogLevel;
-use Drupal\eca\ConfigurableLoggerChannel;
 use Drupal\eca\Event\ConditionalApplianceInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -48,58 +45,6 @@ class EcaStorage extends ConfigEntityStorage {
     $instance->setCacheBackend($container->get('cache.default'));
     $instance->setLogger($container->get('logger.channel.eca'));
     return $instance;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function mapToStorageRecord(EntityInterface $entity) {
-    $data = parent::mapToStorageRecord($entity);
-    foreach (['events', 'conditions', 'actions', 'gateways'] as $type) {
-      if (!isset($data[$type])) {
-        $data[$type] = [];
-      }
-      foreach ($data[$type] as &$item) {
-        if (isset($item['fields'])) {
-          $fields = [];
-          foreach ($item['fields'] as $key => $value) {
-            $fields[] = [
-              'key' => $key,
-              'value' => $value,
-            ];
-          }
-          $item['fields'] = $fields;
-        }
-      }
-    }
-    return $data;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function mapFromStorageRecords(array $records) {
-    foreach ($records as &$record) {
-      foreach (['events', 'conditions', 'actions', 'gateways'] as $type) {
-        if (!isset($record[$type])) {
-          $record[$type] = [];
-        }
-        foreach ($record[$type] as &$item) {
-          if (isset($item['fields'])) {
-            $fields = [];
-            foreach ($item['fields'] as $field) {
-              if (!isset($field['key']) && !isset($field['value'])) {
-                // This is the old schema, nothing to convert.
-                break 3;
-              }
-              $fields[$field['key']] = $field['value'];
-            }
-            $item['fields'] = $fields;
-          }
-        }
-      }
-    }
-    return parent::mapFromStorageRecords($records);
   }
 
   /**

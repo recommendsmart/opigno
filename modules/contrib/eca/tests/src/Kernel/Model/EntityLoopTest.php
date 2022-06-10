@@ -2,12 +2,12 @@
 
 namespace Drupal\Tests\eca\Kernel\Model;
 
-use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 
 /**
  * Model test for entity loops.
  *
+ * @group eca
  * @group eca_model
  */
 class EntityLoopTest extends Base {

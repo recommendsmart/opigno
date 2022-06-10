@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\eca\Kernel;
 
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\TypedData\ListDataDefinition;
 use Drupal\Core\TypedData\Plugin\DataType\ItemList;
@@ -15,9 +16,13 @@ use Drupal\user\RoleInterface;
  * Tests for ECA-extended Token replacement behavior.
  *
  * @group eca
+ * @group eca_core
  */
 class TokenTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'system',
     'user',
@@ -40,8 +45,10 @@ class TokenTest extends KernelTestBase {
 
   /**
    * Tests token aliases.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function testTokenAlias() {
+  public function testTokenAlias(): void {
     // Create the Article content type with a standard body field.
     /** @var \Drupal\node\NodeTypeInterface $node_type */
     $node_type = NodeType::create(['type' => 'article', 'name' => 'Article']);
@@ -57,7 +64,13 @@ class TokenTest extends KernelTestBase {
       'tnid' => 0,
       'uid' => 0,
       'title' => 'Token aliases are awesome!',
-      'body' => [['value' => $body, 'summary' => $summary, 'format' => 'plain_text']],
+      'body' => [
+        [
+          'value' => $body,
+          'summary' => $summary,
+          'format' => 'plain_text',
+        ],
+      ],
     ]);
     /** @var \Drupal\node\NodeInterface $node */
     $node = Node::create([
@@ -65,7 +78,13 @@ class TokenTest extends KernelTestBase {
       'tnid' => 0,
       'uid' => 0,
       'title' => 'But please do not replace me by an alias...',
-      'body' => [['value' => $body, 'summary' => $summary, 'format' => 'plain_text']],
+      'body' => [
+        [
+          'value' => $body,
+          'summary' => $summary,
+          'format' => 'plain_text',
+        ],
+      ],
     ]);
     $node->save();
 
@@ -115,23 +134,33 @@ class TokenTest extends KernelTestBase {
 
   /**
    * Tests Token replacement of Data Transfer Objects (DTOs).
+   *
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function testDto() {
-    /** @var \Drupal\eca\Plugin\DataType\DataTransferObject $dto */
+  public function testDto(): void {
     $dto = DataTransferObject::create();
 
     $token = \Drupal::token();
     $token_data = ['dto' => $dto];
 
-    // Testing a string property.
+    $this->assertEquals('[dto]', $token->replace('[dto]', $token_data), "An empty DTO must behave like it does not exist.");
+
+    // Testing string properties.
     $dto->set('mystring', 'Hello!');
+    $dto->set('another', 'Greetings');
     $this->assertEquals('Hello!', $token->replace('[dto:mystring]', $token_data));
+    $this->assertEquals('Greetings', $token->replace('[dto:another]', $token_data));
 
     // Testing the DTO itself as string representation.
-    $this->assertEquals('[dto]', $token->replace('[dto]', $token_data), "This must not replace anything, because the DTO itself has no string representation.");
+    $this->assertEquals(Yaml::encode([
+      'mystring' => 'Hello!',
+      'another' => 'Greetings',
+    ]),
+    $token->replace('[dto]', $token_data), "The DTO items must be concatenated when accessed through their parent.");
     $dto->setStringRepresentation('This is a string');
-    $this->assertEquals('This is a string', (string) $dto, 'String representation must return the defined string.');
-    $this->assertEquals('This is a string!', $token->replace('[dto]!', $token_data), "The DTO has now a string representation defined, thus Token replacement must include it.");
+    $this->assertEquals('This is a string', (string) $dto, 'String representation must return the manually defined string.');
+    $this->assertEquals('This is a string!', $token->replace('[dto]!', $token_data), "The DTO has now a string representation manually defined, thus Token replacement must include it.");
 
     // Create the Article content type with a standard body field.
     /** @var \Drupal\node\NodeTypeInterface $node_type */
@@ -149,7 +178,13 @@ class TokenTest extends KernelTestBase {
       'uid' => 0,
       'status' => 1,
       'title' => 'I am the node title.',
-      'body' => [['value' => $body, 'summary' => $summary, 'format' => 'plain_text']],
+      'body' => [
+        [
+          'value' => $body,
+          'summary' => $summary,
+          'format' => 'plain_text',
+        ],
+      ],
     ]);
     $node->save();
 
@@ -167,7 +202,7 @@ class TokenTest extends KernelTestBase {
     // Create another DTO, directly with a string.
     $dto = DataTransferObject::create('Another one!');
     $token_data = ['dto' => $dto];
-    $this->assertTrue($dto instanceof DataTransferObject, 'DTO must be a DTO.');
+    $this->assertInstanceOf(DataTransferObject::class, $dto, 'DTO must be a DTO.');
     $this->assertEquals('Another one!', (string) $dto, 'String representation of the DTO must match with the defined string.');
     $this->assertEquals((string) $dto, $token->replace('[dto]', $token_data), 'String representation of the DTO must be also usable as root token.');
 
@@ -175,7 +210,7 @@ class TokenTest extends KernelTestBase {
     $dto = DataTransferObject::create($node);
     $token_data = ['dto' => $dto];
 
-    $this->assertTrue($dto instanceof DataTransferObject, 'DTO must be a DTO.');
+    $this->assertInstanceOf(DataTransferObject::class, $dto, 'DTO must be a DTO.');
     $this->assertTrue(isset($dto->body->value), 'DTO must contain the node body field.');
     $this->assertEquals($body, $dto->body->value, 'DTO must hold the same body value as the node.');
     $this->assertEquals($node->body->value, $dto->body->value, 'DTO must hold the same body value as the node.');
@@ -186,8 +221,10 @@ class TokenTest extends KernelTestBase {
 
   /**
    * Tests list operations on a DTO using the Token service.
+   *
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    */
-  public function testDtoList() {
+  public function testDtoList(): void {
     $dto = DataTransferObject::create();
     $dto->set('+', 'Hello');
     $dto->set('+', 'nice to meet you');
@@ -206,15 +243,21 @@ class TokenTest extends KernelTestBase {
     $this->assertNotSame($dto, $token_services->getTokenData('mydto'));
     $this->assertTrue($token_services->hasTokenData('mydto:list'));
     $this->assertSame($dto, $token_services->getTokenData('mydto:list'));
-    $this->assertEquals("Hello, nice to meet you, hope you enjoy using ECA.", $token_services->replace('[mydto:list]'));
+    $this->assertEquals(Yaml::encode([
+      "Hello",
+      "nice to meet you",
+      "hope you enjoy using ECA.",
+    ]), $token_services->replace('[mydto:list]'));
     $this->assertEquals("Hello", $token_services->replace('[mydto:list:0]'));
     $this->assertEquals("hope you enjoy using ECA.", $token_services->replace('[mydto:list:2]'));
   }
 
   /**
    * Tests usages of data attached to the Token service.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function testTokenData() {
+  public function testTokenData(): void {
     /** @var \Drupal\eca\Token\TokenInterface $token_services */
     $token_services = \Drupal::service('eca.token_services');
 
@@ -235,7 +278,13 @@ class TokenTest extends KernelTestBase {
       'uid' => 0,
       'status' => 1,
       'title' => $title1,
-      'body' => [['value' => $body1, 'summary' => $summary1, 'format' => 'plain_text']],
+      'body' => [
+        [
+          'value' => $body1,
+          'summary' => $summary1,
+          'format' => 'plain_text',
+        ],
+      ],
     ]);
     $node1->save();
 
@@ -250,7 +299,13 @@ class TokenTest extends KernelTestBase {
       'uid' => 0,
       'status' => 1,
       'title' => $title2,
-      'body' => [['value' => $body2, 'summary' => $summary2, 'format' => 'plain_text']],
+      'body' => [
+        [
+          'value' => $body2,
+          'summary' => $summary2,
+          'format' => 'plain_text',
+        ],
+      ],
     ]);
     $node2->save();
 
@@ -265,7 +320,13 @@ class TokenTest extends KernelTestBase {
       'uid' => 0,
       'status' => 1,
       'title' => $title3,
-      'body' => [['value' => $body3, 'summary' => $summary3, 'format' => 'plain_text']],
+      'body' => [
+        [
+          'value' => $body3,
+          'summary' => $summary3,
+          'format' => 'plain_text',
+        ],
+      ],
     ]);
     $node3->save();
 
@@ -289,7 +350,7 @@ class TokenTest extends KernelTestBase {
     $token_services->addTokenData('myobject:node1', $node1);
     $this->assertTrue($token_services->hasTokenData('myobject'));
     $this->assertEquals(DataTransferObject::class, get_class($token_services->getTokenData('myobject')));
-    $this->assertTrue($token_services->getTokenData('myobject:node1') instanceof EntityInterface);
+    $this->assertInstanceOf(EntityInterface::class, $token_services->getTokenData('myobject:node1'));
     $this->assertNotSame($token_services->getTokenData('myobject'), $token_services->getTokenData('myobject:node1'));
 
     $nodes_array = [$node1, $node2, $node3];
@@ -338,6 +399,44 @@ class TokenTest extends KernelTestBase {
     $this->assertFalse($token_services->hasTokenData('myroot_token'), 'Root token must not exist anymore.');
     $this->assertEquals('[myroot_token]', $token_services->replace('[myroot_token]'), 'Token replacement not replace root token anymore.');
     $this->assertEquals('', $token_services->replaceClear('[myroot_token]'), 'Token replacement not replace root token anymore.');
+  }
+
+  /**
+   * Tests DTO built from user input.
+   */
+  public function testDtoUserInput(): void {
+    /** @var \Drupal\eca\Token\TokenInterface $token_services */
+    $token_services = \Drupal::service('eca.token_services');
+
+    $yaml = <<<YAML
+key1: val1
+key2: val2
+YAML;
+    $dto = DataTransferObject::fromUserInput($yaml);
+    $token_services->addTokenData('mydto', $dto);
+
+    $this->assertEquals(Yaml::encode(['key1' => 'val1', 'key2' => 'val2']), $token_services->replace('[mydto]'));
+
+    $string = $this->randomMachineName();
+    $dto = DataTransferObject::fromUserInput($string);
+    $token_services->addTokenData('mydto', $dto);
+
+    $this->assertEquals($string, $token_services->replaceClear('[mydto]'));
+
+    $string = 'key1,key2-key3';
+    $dto = DataTransferObject::fromUserInput($string);
+    $token_services->addTokenData('mydto', $dto);
+    $this->assertEquals(Yaml::encode(['key1', 'key2-key3']), $token_services->replace('[mydto]'));
+
+    $string = 'key1, key2-key3';
+    $dto = DataTransferObject::fromUserInput($string);
+    $token_services->addTokenData('mydto', $dto);
+    $this->assertEquals(Yaml::encode(['key1', 'key2-key3']), $token_services->replace('[mydto]'));
+
+    $string = 'key1:val1, key2: val2';
+    $dto = DataTransferObject::fromUserInput($string);
+    $token_services->addTokenData('mydto', $dto);
+    $this->assertEquals(Yaml::encode(['key1' => 'val1', 'key2' => 'val2']), $token_services->replace('[mydto]'));
   }
 
 }

@@ -9,9 +9,11 @@ use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\TypedData\ListInterface;
 use Drupal\Core\TypedData\TraversableTypedDataInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\eca\Token\TokenServices;
 
 /**
  * Implements hook_token_info().
@@ -25,6 +27,12 @@ function eca_token_info(): array {
     'nested' => TRUE,
     'dynamic' => TRUE,
   ];
+  $info['types']['_eca_root_token'] = [
+    'name' => t('ECA root-level token'),
+    'description' => t('Support for tokens to access data on their root level, for example [list].'),
+    'nested' => TRUE,
+    'dynamic' => TRUE,
+  ];
   return $info;
 }
 
@@ -33,6 +41,7 @@ function eca_token_info(): array {
  */
 function eca_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata): array {
   $replacements = [];
+
   if ($type === 'dto' && !empty($data['dto'])) {
     /** @var \Drupal\eca\Token\TokenInterface $token_services */
     $token_services = \Drupal::service('eca.token_services');
@@ -128,7 +137,25 @@ function eca_tokens($type, $tokens, array $data, array $options, BubbleableMetad
       }
 
       if (empty($parts)) {
-        $replacements[$original] = $typed_object->getString();
+        // Within the scope of DTOs, we assume conscious handling of string
+        // values by their users. Therefore we allow passing through the
+        // replacement values as safe markup.
+        // @todo Reconsider this once https://www.drupal.org/node/2580723
+        // got fixed.
+        $replacements[$original] = Markup::create($typed_object->getString());
+      }
+    }
+  }
+
+  if ($type === '_eca_root_token') {
+    $available = $data + TokenServices::get()->getTokenData();
+    foreach ($tokens as $name => $original) {
+      if (isset($available[$name])) {
+        $value = $available[$name];
+        $replacement = is_scalar($value) || is_null($value) || (is_object($value) && method_exists($value, '__toString')) ? (string) $value : ($value instanceof EntityInterface ? $value->id() : '');
+        if ($replacement !== '') {
+          $replacements[$original] = Markup::create($replacement);
+        }
       }
     }
   }

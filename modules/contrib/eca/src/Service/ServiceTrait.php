@@ -29,7 +29,7 @@ trait ServiceTrait {
         EcaBase::$modules[$provider] = \Drupal::moduleHandler()->getName($provider);
       }
     }
-    usort($plugins, static function($p1, $p2) {
+    usort($plugins, static function ($p1, $p2) {
       $m1 = EcaBase::$modules[$p1->getPluginDefinition()['provider'] ?? 'eca'];
       $m2 = EcaBase::$modules[$p2->getPluginDefinition()['provider'] ?? 'eca'];
       if ($m1 < $m2) {
@@ -57,7 +57,7 @@ trait ServiceTrait {
    *   The list of fields to be sorted.
    */
   public function sortFields(array &$fields): void {
-    usort($fields, static function($f1, $f2) {
+    usort($fields, static function ($f1, $f2) {
       $l1 = (int) $f1['weight'];
       $l2 = (int) $f2['weight'];
       if ($l1 < $l2) {
@@ -87,6 +87,11 @@ trait ServiceTrait {
       $form = $plugin->buildConfigurationForm($form, $form_state);
     }
     foreach ($config as $key => $value) {
+      if (!empty($form) && !isset($form[$key])) {
+        // Some action plugins have default config values that are excluded
+        // from the config form. We're ignoring them here too.
+        continue;
+      }
       $label = NULL;
       $description = NULL;
       $type = 'String';
@@ -107,6 +112,12 @@ trait ServiceTrait {
               $type = 'Text';
               break;
 
+            case 'checkbox':
+              $fields[] = $this->checkbox($key, $label, $weight, $description, $value);
+              continue 2;
+
+            case 'checkboxes':
+            case 'radios':
             case 'select':
               $fields[] = $this->optionsField($key, $this->fieldLabel($label, $key), $weight, $description, $form[$key]['#options'], (string) $value);
               continue 2;
@@ -116,7 +127,7 @@ trait ServiceTrait {
       }
       $label = $this->fieldLabel($label, $key);
       if (is_bool($value)) {
-        $fields[] = $this->checkbox($key, $label, $weight, $value);
+        $fields[] = $this->checkbox($key, $label, $weight, $description, $value);
         continue;
       }
       if (is_array($value)) {
@@ -142,7 +153,7 @@ trait ServiceTrait {
   }
 
   /**
-   * Builds a field label from the key, if no label is given yet,
+   * Builds a field label from the key, if no label is given yet.
    *
    * @param string|null $label
    *   The given label or NULL, is none is available.
@@ -213,32 +224,38 @@ trait ServiceTrait {
    *   The field label.
    * @param int $weight
    *   The field weight for sorting.
-   * @param string $value
+   * @param string|null $description
+   *   The optional field description.
+   * @param bool $value
    *   The default value for the field.
    *
    * @return array
    *   Prepared checkbox field.
    */
-  protected function checkbox(string $name, string $label, int $weight, string $value): array {
-    return [
+  protected function checkbox(string $name, string $label, int $weight, ?string $description, bool $value): array {
+    $field = [
       'name' => $name,
       'label' => $label,
       'weight' => $weight,
       'type' => 'Dropdown',
-      'value' => $value ? Conditions::OPTION_YES : Conditions::OPTION_NO,
+      'value' => $value,
       'extras' => [
         'choices' => [
           [
             'name' => 'no',
-            'value' => Conditions::OPTION_NO,
+            'value' => 'no',
           ],
           [
             'name' => 'yes',
-            'value' => Conditions::OPTION_YES,
+            'value' => 'yes',
           ],
         ],
       ],
     ];
+    if ($description !== NULL) {
+      $field['description'] = $description;
+    }
+    return $field;
   }
 
 }

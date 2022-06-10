@@ -328,6 +328,7 @@
   -ms-flex-wrap: nowrap;
       flex-wrap: nowrap;
   font-size: 16px;
+  line-height: 1.625rem;
 }
 
 .navbar-secondary .navbar-nav a, .navbar-secondary .navbar-nav button {
@@ -606,7 +607,7 @@
   }
   .navbar-nav > li > ul > li.expanded > .dropdown-menu > li > a:hover, .navbar-nav > li > ul > li.expanded > .dropdown-menu > li > a.is-active, .navbar-nav > li > ul > li.expanded > .dropdown-menu > li > button:hover, .navbar-nav > li > ul > li.expanded > .dropdown-menu > li > button.is-active {
     background: #e6e6e6;
-    color: #4d4d4d;
+    color: #343434;
   }
   .navbar-nav .open .dropdown-menu {
     background-color: #fff;

@@ -4,16 +4,11 @@ namespace Drupal\eca_content\Event;
 
 use Drupal\Component\EventDispatcher\Event;
 use Drupal\eca\Event\ConditionalApplianceInterface;
-use Drupal\eca_content\EntityTypeTrait;
 
 /**
- * Class ContentEntityBase
- *
- * @package Drupal\eca_content\Event
+ * Base class for entity related events.
  */
 abstract class ContentEntityBase extends Event implements ConditionalApplianceInterface {
-
-  use EntityTypeTrait;
 
   /**
    * {@inheritdoc}

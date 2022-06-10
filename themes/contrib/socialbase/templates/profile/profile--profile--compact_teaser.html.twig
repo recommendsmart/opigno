@@ -15,20 +15,26 @@
  * - attributes: HTML attributes for the wrapper.
  * - profile: The profile object.
  * - url: The profile URL.
+ * - avatar_attributes: HTML attributes for the link with an avatar.
+ * - link_attributes: HTML attributes for the link with a username.
  *
  * @ingroup themeable
  */
 #}
 {{ attach_library('socialbase/teaser') }}
+
 <div class="card__block card__block--list">
   <div class="card__text list-item">
+    {% if avatar_attributes is not defined %}
+      {% set avatar_attributes = create_attribute() %}
+    {% endif %}
 
-    <a href="{{ profile_home }}" class="list-item__avatar list-item__avatar--medium">
+    <a href="{{ profile_home }}"{{ avatar_attributes.addClass(['list-item__avatar', 'list-item__avatar--medium']) }}>
       {{ content.field_profile_image }}
     </a>
 
     <div class="list-item__text">
-      <a href="{{ profile_home }}" title="{{ 'View Profile'|t }}">{{ profile_name }}</a>
+      <a href="{{ profile_home }}" title="{{ 'View Profile'|t }}"{{ link_attributes }}>{{ profile_name }}</a>
 
       {% if content.field_profile_function|render and content.field_profile_organization|render %} <br /> {% endif %}
       {{content.field_profile_function}}

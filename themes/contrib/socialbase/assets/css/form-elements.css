@@ -24,7 +24,7 @@ label {
   width: 30px;
   height: 30px;
   padding: 3px;
-  fill: #4d4d4d;
+  fill: #343434;
 }
 
 .control-label--above {
@@ -229,7 +229,7 @@ span.form-required {
 }
 
 .field--label-inline .field--label + .field--item a {
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .node-event-form #edit-timezone-indication .btn,
@@ -269,6 +269,10 @@ details summary svg.icon-summary-arrow {
 [dir='rtl'] details summary svg.icon-summary-arrow {
   right: auto;
   left: 1.25rem;
+}
+
+details summary:focus, details summary.btn:focus {
+  outline: #0f64ce solid 2px;
 }
 
 details[open] summary {

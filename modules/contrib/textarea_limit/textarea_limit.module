@@ -17,7 +17,7 @@ const TL_USE_GLOBAL_LIMIT_ID = 'textarea_limit_use_global_limit';
  */
 function textarea_limit_field_widget_third_party_settings_form($plugin, $field_definition, $form_mode, $form, $form_state) {
   $element = [];
-  if ($plugin->getPluginId() == 'string_textarea') {
+  if ($plugin->getPluginId() == 'string_textarea' || $plugin->getPluginId() == 'text_textarea') {
     $element[TL_USE_GLOBAL_LIMIT_ID] = [
       '#type' => 'checkbox',
       '#title' => t('Use global limit'),
@@ -39,7 +39,7 @@ function textarea_limit_field_widget_third_party_settings_form($plugin, $field_d
  * Implements hook_field_widget_settings_summary_alter().
  */
 function textarea_limit_field_widget_settings_summary_alter(&$summary, $context) {
-  if ($context['widget']->getPluginId() == 'string_textarea') {
+  if ($context['widget']->getPluginId() == 'string_textarea' || $context['widget']->getPluginId() == 'text_textarea') {
     $use_global = $context['widget']->getThirdPartySetting('textarea_limit', TL_USE_GLOBAL_LIMIT_ID);
     if ($use_global) {
       $summary[] = t('Limited to global character limit');
@@ -62,13 +62,10 @@ function textarea_limit_fetch_field_definitions($entity_type, $bundle, $field_de
     $entityFieldManager = \Drupal::service('entity_field.manager');
     $field_definitions = $entityFieldManager->getFieldDefinitions($entity_type, $bundle);
   }
-
   $field_definitions = array_filter($field_definitions, function ($field_definition) {
     return $field_definition instanceof FieldConfigInterface;
   });
-
   uasort($field_definitions, ['\Drupal\Core\Config\Entity\ConfigEntityBase', 'sort']);
-
   return $field_definitions;
 }
 
@@ -98,12 +95,10 @@ function textarea_limit_form_field_apply_limit(&$field, &$form, $limit = NULL) {
     ];
 
     $limit_rendered = \Drupal::service('renderer')->renderPlain($limit_render_array);
-
     $field['widget'][$key]['#suffix'] = $limit_rendered;
   }
 
   $field['#attributes']['class'][] = 'character-limited';
-
   textarea_limit_form_add_library($form);
 }
 
@@ -129,9 +124,6 @@ function textarea_limit_form_alter(&$form, FormStateInterface $form_state, $form
     }
 
     $form_display = $storage['form_display'];
-    if ($form_display === NULL) {
-      return;
-    }
     $field_definitions = textarea_limit_fetch_field_definitions($form_display->getTargetEntityTypeId(), $form_display->getTargetBundle());
 
     foreach ($field_definitions as $field_name => $field_definition) {
@@ -149,7 +141,6 @@ function textarea_limit_form_alter(&$form, FormStateInterface $form_state, $form
             }
           }
         }
-
         continue;
       }
 
@@ -167,16 +158,18 @@ function textarea_limit_form_alter(&$form, FormStateInterface $form_state, $form
  * Return whether a widget has text limiting.
  */
 function textarea_limit_widget_applies($widget) {
-  if (method_exists($widget, 'getPluginId') && $widget->getPluginId() == 'string_textarea') {
-    $use_global = $widget->getThirdPartySetting('textarea_limit', TL_USE_GLOBAL_LIMIT_ID);
-    if (!empty($use_global)) {
-      $config = \Drupal::configFactory()->get('textarea_limit.settings');
-      return $config->get('global_limit');
+  // Make sure widget is valid.
+  if (is_string($widget) || is_object($widget)) {
+    // Check widget plugin and method exists.
+    if (method_exists($widget, 'getPluginId') && ($widget->getPluginId() == 'string_textarea' || $widget->getPluginId() == 'text_textarea')) {
+      $use_global = $widget->getThirdPartySetting('textarea_limit', TL_USE_GLOBAL_LIMIT_ID);
+      if (!empty($use_global)) {
+        $config = \Drupal::configFactory()->get('textarea_limit.settings');
+        return $config->get('global_limit');
+      }
+      $char_limit = $widget->getThirdPartySetting('textarea_limit', TL_CHAR_LIMIT_ID);
+      return empty($char_limit) ? FALSE : $char_limit;
     }
-
-    $char_limit = $widget->getThirdPartySetting('textarea_limit', TL_CHAR_LIMIT_ID);
-
-    return empty($char_limit) ? FALSE : $char_limit;
   }
   return FALSE;
 }

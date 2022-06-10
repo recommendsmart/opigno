@@ -1,8 +1,8 @@
 {
   "name": "drupal/eca",
-  "license": "GPL-2.0+",
+  "license": "GPL-2.0-or-later",
   "type": "drupal-module",
-  "description": "TBD",
+  "description": "Event, Conditions, Actions - powerful, versatile, and user-friendly rules engine for Drupal",
   "support": {
     "issues": "https://drupal.org/project/issues/eca",
     "source": "https://drupal.org/project/eca"
@@ -15,8 +15,15 @@
     "mtownsend/xml-to-array": "^2.0"
   },
   "require-dev": {
-    "drupal/tamper": "^1.0",
     "drupal/token": "^1.10"
+  },
+  "suggest": {
+    "drupal/eca_state_machine": "Integrates ECA with State Machine functionality",
+    "drupal/eca_tamper": "Integrates ECA with the Tamper API",
+    "drupal/context_stack": "Integrates ECA with Context Stacks for more fine-grained control",
+    "drupal/entity_share": "Integrates ECA with Entity Share functionality",
+    "drupal/group_action": "Integrates ECA with Group Actions if you're using groups",
+    "drupal/token": "Provides the token browser in the UI and offers more token values"
   },
   "extra": {
     "drush": {

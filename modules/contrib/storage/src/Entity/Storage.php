@@ -2,6 +2,7 @@
 
 namespace Drupal\storage\Entity;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EditorialContentEntityBase;
@@ -228,7 +229,14 @@ class Storage extends EditorialContentEntityBase implements StorageInterface {
       }
     }
     if (!empty($name_pattern)) {
-      $this->name->value = \Drupal::token()->replace($name_pattern, ['storage' => $this], ['langcode' => $this->language()->getId()]);
+      $string = (string) \Drupal::token()->replace($name_pattern, ['storage' => $this], [
+        'langcode' => $this->language()->getId(),
+        'clear' => TRUE,
+      ]);
+      if (mb_strlen($string) > 255) {
+        $string = Unicode::truncate($string, 255, TRUE, TRUE, 20);
+      }
+      $this->name->value = $string;
     }
   }
 
@@ -248,8 +256,8 @@ class Storage extends EditorialContentEntityBase implements StorageInterface {
       $string = $this->generateFallbackStringRepresentation();
     }
 
-    if (strlen($string) > 255) {
-      $string = substr($string, 0, 252) . '...';
+    if (mb_strlen($string) > 255) {
+      $string = Unicode::truncate($string, 255, TRUE, TRUE, 20);
     }
 
     return $string;

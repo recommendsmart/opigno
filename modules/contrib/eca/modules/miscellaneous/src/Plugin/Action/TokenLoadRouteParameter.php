@@ -2,6 +2,7 @@
 
 namespace Drupal\eca_misc\Plugin\Action;
 
+use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -25,7 +26,14 @@ class TokenLoadRouteParameter extends ConfigurableActionBase {
    * {@inheritdoc}
    */
   public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
-    $result = AccessResult::allowedIf($this->getRouteMatch()->getParameter($this->configuration['parameter_name']));
+    $allowed = FALSE;
+    if ($parameter = $this->getRouteMatch()->getParameter($this->configuration['parameter_name'])) {
+      $allowed = TRUE;
+      if ($parameter instanceof AccessibleInterface) {
+        $allowed = $parameter->access('view', $account);
+      }
+    }
+    $result = AccessResult::allowedIf($allowed);
     return $return_as_object ? $result : $result->isAllowed();
   }
 

@@ -57,6 +57,17 @@ class EntitySaveHandler {
   public function saveIfRequired(array &$entities): void {
     if (count($entities) > static::$threshold) {
       $this->ensureSave($entities);
+      return;
+    }
+    if (count($entities) > 1) {
+      foreach ($entities as $entity) {
+        foreach ($entity->referencedEntities() as $referenced) {
+          if ($referenced->isNew() && in_array($referenced, $entities, TRUE) && ($referenced !== $entity)) {
+            $this->ensureSave($entities);
+            return;
+          }
+        }
+      }
     }
   }
 

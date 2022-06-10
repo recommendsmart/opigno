@@ -12,6 +12,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FieldSuggestionController extends ControllerBase {
 
   /**
+   * Permission per action type.
+   */
+  const PERMISSIONS = [
+    'pin' => 'pin and unpin field suggestion',
+    'ignore' => 'ignore field suggestion',
+  ];
+
+  /**
    * The cache tags invalidator.
    *
    * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
@@ -46,7 +54,7 @@ class FieldSuggestionController extends ControllerBase {
   }
 
   /**
-   * Pin values of selected fields at top of the suggestions list.
+   * Pin or ignore values of selected fields.
    *
    * @param string $entity_type_id
    *   The entity type ID.
@@ -54,36 +62,53 @@ class FieldSuggestionController extends ControllerBase {
    *   The entity ID.
    * @param string $field_name
    *   The field name.
+   * @param string $type
+   *   The action type.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect response object that may be returned by the controller.
    */
-  public function pin($entity_type_id, $entity_id, $field_name) {
+  public function action($entity_type_id, $entity_id, $field_name, $type) {
     $entity_type_id = str_replace('-', '_', $entity_type_id);
+
+    /** @var \Drupal\Core\Field\BaseFieldDefinition $definition */
+    $definition = $this->entityFieldManager
+      ->getBaseFieldDefinitions($entity_type_id)[$field_name];
+
+    $property = $definition->getMainPropertyName() ?? 'value';
 
     $value = $this->entityTypeManager()->getStorage($entity_type_id)
       ->load($entity_id)
       ->$field_name
-      ->value;
-
-    $field_type = $this->entityFieldManager
-      ->getBaseFieldDefinitions($entity_type_id)[$field_name]
-      ->getType();
+      ->$property;
 
     $storage = $this->entityTypeManager()->getStorage('field_suggestion');
 
     $entities = $storage->loadByProperties($values = [
-      'type' => $field_type,
+      'type' => $field_type = $definition->getType(),
+      'ignore' => $type === 'ignore',
       'entity_type' => $entity_type_id,
       'field_name' => $field_name,
-      'field_suggestion_' . $field_type => $value,
+      $this->helper->field($field_type) => $value,
     ]);
 
     if (!empty($entities)) {
       $storage->delete($entities);
     }
     else {
-      $storage->create($values)->save();
+      $values['ignore'] = !$values['ignore'];
+      $entities = $storage->loadByProperties($values);
+      $values['ignore'] = !$values['ignore'];
+
+      if (!empty($entities)) {
+        /** @var \Drupal\field_suggestion\FieldSuggestionInterface $entity */
+        foreach ($entities as $entity) {
+          $entity->setIgnored($values['ignore'])->save();
+        }
+      }
+      else {
+        $storage->create($values)->save();
+      }
     }
 
     $this->invalidator->invalidateTags(['field_suggestion_operations']);
@@ -100,11 +125,23 @@ class FieldSuggestionController extends ControllerBase {
    *   The entity ID.
    * @param string $field_name
    *   The field name.
+   * @param string $type
+   *   The action type.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access($entity_type_id, $entity_id, $field_name) {
+  public function access($entity_type_id, $entity_id, $field_name, $type) {
+    if (!(
+      isset(self::PERMISSIONS[$type]) &&
+      (
+        $this->currentUser()->hasPermission('administer field suggestion') ||
+        $this->currentUser()->hasPermission(self::PERMISSIONS[$type])
+      )
+    )) {
+      return AccessResult::neutral();
+    }
+
     $config = $this->config('field_suggestion.settings');
     $field_names = (array) $config->get('fields');
     $entity_type_id = str_replace('-', '_', $entity_type_id);
@@ -117,22 +154,28 @@ class FieldSuggestionController extends ControllerBase {
         ->load($entity_id);
 
       if ($entity !== NULL && !($field = $entity->$field_name)->isEmpty()) {
-        $field_type = $this->entityFieldManager
-          ->getBaseFieldDefinitions($entity_type_id)[$field_name]
-          ->getType();
+        /** @var \Drupal\Core\Field\BaseFieldDefinition $definition */
+        $definition = $this->entityFieldManager
+          ->getBaseFieldDefinitions($entity_type_id)[$field_name];
+
+        $field_type = $definition->getType();
+        $property = $definition->getMainPropertyName() ?? 'value';
 
         $count = $this->entityTypeManager()->getStorage('field_suggestion')
           ->getQuery()
           ->condition('entity_type', $entity_type_id)
           ->condition('field_name', $field_name)
-          ->condition('field_suggestion_' . $field_type, $field->value)
+          ->condition($this->helper->field($field_type), $field->$property)
           ->range(0, 1)
           ->count()
           ->execute();
 
         return AccessResult::allowedIf(
           $count > 0 ||
-          !in_array($field->value, $this->helper->ignored($entity_type_id, $field_name))
+          !in_array(
+            $field->$property,
+            $this->helper->ignored($entity_type_id, $field_name)
+          )
         );
       }
     }

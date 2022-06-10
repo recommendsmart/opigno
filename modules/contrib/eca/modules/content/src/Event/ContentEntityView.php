@@ -3,7 +3,7 @@
 namespace Drupal\eca_content\Event;
 
 /**
- * Class ContentEntityView
+ * Provides an event when a content entity is being viewed.
  *
  * @package Drupal\eca_content\Event
  */

@@ -14,6 +14,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * Tests the processor class.
  *
  * @group eca
+ * @group eca_core
  */
 class ProcessorTest extends EcaUnitTestBase {
 
@@ -56,7 +57,7 @@ class ProcessorTest extends EcaUnitTestBase {
   public function testRecursionThresholdWithoutHistory(): void {
     $processor = new Processor($this->entityTypeManager, $this->logger, $this->eventDispatcher, 3);
     $method = $this->getPrivateMethod(Processor::class, 'recursionThresholdSurpassed');
-    $result = $method->invokeArgs($processor, [ $this->getEcaEvent('1')]);
+    $result = $method->invokeArgs($processor, [$this->getEcaEvent('1')]);
     $this->assertFalse($result);
   }
 
@@ -84,11 +85,14 @@ class ProcessorTest extends EcaUnitTestBase {
    * Check whether the threshold is complied.
    *
    * @param \Drupal\eca\Processor $processor
+   *   The ECA processor service.
    *
-   * @return mixed
+   * @return bool
+   *   Retruns TRUE, if the recursion threshold got exceeded, FALSE otherwise.
+   *
    * @throws \ReflectionException
    */
-  private function isThresholdComplied(Processor $processor) {
+  private function isThresholdComplied(Processor $processor): bool {
     $method = $this->getPrivateMethod(Processor::class, 'recursionThresholdSurpassed');
     $executionHistory = $this->getPrivateProperty(Processor::class, 'executionHistory');
     $ecaEvent = $this->getEcaEvent('1');
@@ -107,8 +111,10 @@ class ProcessorTest extends EcaUnitTestBase {
    * Gets a EcaEvent initialized with mocks.
    *
    * @param string $id
+   *   The ID of the event.
    *
    * @return \Drupal\eca\Entity\Objects\EcaEvent
+   *   The mocked event.
    */
   private function getEcaEvent(string $id): EcaEvent {
     $eca = $this->createMock(Eca::class);

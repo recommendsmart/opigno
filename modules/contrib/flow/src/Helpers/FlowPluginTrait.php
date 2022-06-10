@@ -40,10 +40,15 @@ trait FlowPluginTrait {
   }
 
   /**
-   * Get the entity type of the subject.
-   *
-   * @return \Drupal\Core\Entity\EntityTypeInterface
-   *   The entity type.
+   * {@inheritdoc}
+   */
+  public function getEntityTypeId(): string {
+    $definition = $this->getPluginDefinition();
+    return $definition['entity_type'];
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function getEntityType(): EntityTypeInterface {
     $definition = $this->getPluginDefinition();
@@ -52,10 +57,15 @@ trait FlowPluginTrait {
   }
 
   /**
-   * Get the entity bundle config of the subject, if any.
-   *
-   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface|null
-   *   The entity bundle config, or NULL if the subject has no bundle config.
+   * {@inheritdoc}
+   */
+  public function getEntityBundle(): string {
+    $definition = $this->getPluginDefinition();
+    return $definition['bundle'];
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function getEntityBundleConfig(): ?ConfigEntityInterface {
     $definition = $this->getPluginDefinition();

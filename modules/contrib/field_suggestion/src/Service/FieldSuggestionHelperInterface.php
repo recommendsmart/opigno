@@ -55,4 +55,12 @@ interface FieldSuggestionHelperInterface {
    */
   public function bundle($field_type);
 
+  /**
+   * Create the name of the field for storing suggestion value.
+   *
+   * @return string
+   *   The field name.
+   */
+  public function field($type);
+
 }

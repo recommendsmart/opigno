@@ -11,6 +11,11 @@ use Drupal\Component\Annotation\Plugin;
  */
 class EcaModeller extends Plugin {
 
+  /**
+   * Label of the modeller.
+   *
+   * @var string
+   */
   public string $label;
 
 }

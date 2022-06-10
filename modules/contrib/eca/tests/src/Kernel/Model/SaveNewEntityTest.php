@@ -5,6 +5,7 @@ namespace Drupal\Tests\eca\Kernel\Model;
 /**
  * Model test for saving a new entity.
  *
+ * @group eca
  * @group eca_model
  */
 class SaveNewEntityTest extends Base {

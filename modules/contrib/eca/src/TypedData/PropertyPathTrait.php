@@ -10,8 +10,10 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\DataReferenceInterface;
+use Drupal\Core\TypedData\Exception\MissingDataException;
 use Drupal\Core\TypedData\ListInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\eca\Plugin\DataType\DataTransferObject;
 
 /**
  * A trait for traversing through the property path of typed data objects.
@@ -76,7 +78,7 @@ trait PropertyPathTrait {
     $data = $object;
     foreach ($parts as $i => $property) {
       if ($data instanceof ComplexDataInterface) {
-        $data = $data->getProperties(TRUE);
+        $data = $this->getDataProperties($data, $property);
       }
       if (($data instanceof \ArrayAccess || is_array($data)) && isset($data[$property])) {
         $data = $data[$property];
@@ -100,7 +102,7 @@ trait PropertyPathTrait {
           }
           $data = $data->first();
           if ($data instanceof ComplexDataInterface) {
-            $data = $data->getProperties(TRUE);
+            $data = $this->getDataProperties($data, $property);
             if (isset($data[$property])) {
               $data = $data[$property];
             }
@@ -126,8 +128,11 @@ trait PropertyPathTrait {
           }
           $data = $data->first();
         }
-        if ($data instanceof ComplexDataInterface && ($main_property = $data->getDataDefinition()->getMainPropertyName())) {
-          $data = $data->get($main_property);
+        if ($data instanceof ComplexDataInterface) {
+          $main_property = $data->getDataDefinition()->getMainPropertyName();
+          if ($main_property !== NULL) {
+            $data = $data->get($main_property);
+          }
         }
       }
 
@@ -195,6 +200,51 @@ trait PropertyPathTrait {
     }
 
     return $key;
+  }
+
+  /**
+   * Helper method to get the properties of the given typed data object.
+   *
+   * @param \Drupal\Core\TypedData\ComplexDataInterface $data
+   *   The typed data object.
+   * @param string|int $property_name
+   *   The targeted property name.
+   *
+   * @return array
+   *   The properties, keyed by property name. May be empty.
+   */
+  protected function getDataProperties(ComplexDataInterface $data, $property_name): array {
+    $properties = $data->getProperties(TRUE);
+    if (!$properties || !isset($properties[$property_name])) {
+      // When the targeted property name is missing, we lookup whether it is
+      // allowed to add it on our own. Therefore we need the typed data manager
+      // and knowledge about existing property definitions.
+      $tdm = \Drupal::typedDataManager();
+      $definitions = $data->getDataDefinition()->getPropertyDefinitions();
+    }
+    if (!$properties) {
+      $values = $data->getValue();
+      if (is_iterable($values)) {
+        foreach ($values as $k => $v) {
+          try {
+            $properties[$k] = isset($definitions[$property_name]) ? $tdm->create($definitions[$property_name], $v, $k, $data) : DataTransferObject::create($v, $data, $k, FALSE);
+          }
+          catch (\InvalidArgumentException | MissingDataException $e) {
+            // Do nothing, we are only interested in values that could
+            // be successfully resolved.
+          }
+        }
+      }
+    }
+    if (!isset($properties[$property_name])) {
+      if (isset($definitions[$property_name])) {
+        $properties[$property_name] = $tdm->create($definitions[$property_name], NULL, $property_name, $data);
+      }
+      elseif (empty($definitions)) {
+        $properties[$property_name] = DataTransferObject::create(NULL, $data, $property_name, FALSE);
+      }
+    }
+    return $properties;
   }
 
 }

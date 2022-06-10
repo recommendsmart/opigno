@@ -4,47 +4,89 @@ namespace Drupal\eca\Entity;
 
 use Drupal\Core\Action\ActionManager;
 use Drupal\Core\Cache\MemoryCache\MemoryCache;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Logger\LoggerChannel;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\eca\Service\Conditions;
 use Drupal\eca\PluginManager\Condition;
 use Drupal\eca\PluginManager\Event;
 use Drupal\eca\PluginManager\Modeller;
+use Drupal\eca\Token\TokenInterface;
 
 /**
- *
+ * Trait to provide all required services for ECA config entities.
  */
 trait EcaTrait {
 
   /**
+   * ECA modeller plugin manager.
+   *
    * @var \Drupal\eca\PluginManager\Modeller
    */
   protected Modeller $modellerPluginManager;
 
   /**
+   * ECA event plugin manager.
+   *
    * @var \Drupal\eca\PluginManager\Event
    */
   protected Event $eventPluginManager;
 
   /**
-   * The condition plugin manager.
+   * ECA condition plugin manager.
    *
    * @var \Drupal\eca\PluginManager\Condition
    */
   protected Condition $conditionPluginManager;
 
   /**
+   * Action plugin manager.
+   *
    * @var \Drupal\Core\Action\ActionManager
    */
   protected ActionManager $actionPluginManager;
 
   /**
+   * ECA condition service.
+   *
    * @var \Drupal\eca\Service\Conditions
    */
   protected Conditions $conditionServices;
 
   /**
+   * Memory cache service.
+   *
    * @var \Drupal\Core\Cache\MemoryCache\MemoryCache
    */
   protected MemoryCache $memoryCache;
+
+  /**
+   * Logger channel service.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannel
+   */
+  protected LoggerChannel $logger;
+
+  /**
+   * ECA token service.
+   *
+   * @var \Drupal\eca\Token\TokenInterface
+   */
+  protected TokenInterface $token;
+
+  /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected EntityFieldManagerInterface $entityFieldManager;
+
+  /**
+   * Messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected MessengerInterface $messenger;
 
   /**
    * Initializes the modeller plugin manager.
@@ -122,6 +164,58 @@ trait EcaTrait {
       $this->memoryCache = \Drupal::service('eca.memory_cache');
     }
     return $this->memoryCache;
+  }
+
+  /**
+   * Returns the ECA logger channel as a service.
+   *
+   * @return \Drupal\Core\Logger\LoggerChannel
+   *   The logger channel service.
+   */
+  protected function logger(): LoggerChannel {
+    if (!isset($this->logger)) {
+      $this->logger = \Drupal::service('logger.channel.eca');
+    }
+    return $this->logger;
+  }
+
+  /**
+   * Returns the ECA token service.
+   *
+   * @return \Drupal\eca\Token\TokenInterface
+   *   The ECA token service.
+   */
+  protected function token(): TokenInterface {
+    if (!isset($this->token)) {
+      $this->token = \Drupal::service('eca.token_services');
+    }
+    return $this->token;
+  }
+
+  /**
+   * Returns the entity field manager.
+   *
+   * @return \Drupal\Core\Entity\EntityFieldManagerInterface
+   *   The entity field manager.
+   */
+  protected function entityFieldManager(): EntityFieldManagerInterface {
+    if (!isset($this->entityFieldManager)) {
+      $this->entityFieldManager = \Drupal::service('entity_field.manager');
+    }
+    return $this->entityFieldManager;
+  }
+
+  /**
+   * Initializes the messenger service.
+   *
+   * @return \Drupal\Core\Messenger\MessengerInterface
+   *   The messenger service.
+   */
+  protected function messenger(): MessengerInterface {
+    if (!isset($this->messenger)) {
+      $this->messenger = \Drupal::messenger();
+    }
+    return $this->messenger;
   }
 
 }

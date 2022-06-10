@@ -18,6 +18,9 @@ use Drupal\user\Entity\User;
  */
 class EnqueueTaskTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'system',
     'user',
@@ -31,6 +34,8 @@ class EnqueueTaskTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function setUp(): void {
     parent::setUp();
@@ -43,8 +48,14 @@ class EnqueueTaskTest extends KernelTestBase {
 
   /**
    * Tests EnqueueTask.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   * @throws \Exception
    */
-  public function testEnqueueTask() {
+  public function testEnqueueTask(): void {
     // Create the Article content type with revisioning and translation enabled.
     /** @var \Drupal\node\NodeTypeInterface $node_type */
     $node_type = NodeType::create([
@@ -71,8 +82,8 @@ class EnqueueTaskTest extends KernelTestBase {
     ]);
     $node->save();
     $first_vid = $node->getRevisionId();
-    $node->title = '456';
-    $node->setNewRevision(TRUE);
+    $node->setTitle('456');
+    $node->setNewRevision();
     $node->save();
     $second_vid = $node->getRevisionId();
     $first_revision = \Drupal::entityTypeManager()->getStorage('node')->loadRevision($first_vid);
@@ -136,7 +147,7 @@ class EnqueueTaskTest extends KernelTestBase {
         'event_queue' => [
           'plugin' => 'eca_queue:processing_task',
           'label' => 'ECA processing task',
-          'fields' => [
+          'configuration' => [
             'task_name' => 'my_task',
             'task_value' => '',
           ],
@@ -145,11 +156,13 @@ class EnqueueTaskTest extends KernelTestBase {
           ],
         ],
       ],
+      'conditions' => [],
+      'gateways' => [],
       'actions' => [
         'action_enqueue' => [
           'plugin' => 'eca_enqueue_task',
           'label' => 'Enqueue another item',
-          'fields' => [
+          'configuration' => [
             'task_name' => 'another_task',
             'task_value' => 'my_task_value',
             'tokens' => '',
@@ -172,7 +185,7 @@ class EnqueueTaskTest extends KernelTestBase {
     $item = $queue->claimItem();
     /** @var \Drupal\eca_queue\Task $task */
     $task = $item->data;
-    $this->assertTrue($task instanceof Task, 'Newly created queue item must be a Task object.');
+    $this->assertInstanceOf(Task::class, $task, 'Newly created queue item must be a Task object.');
     $this->assertEquals('another_task', $task->getTaskName(), 'Task name must match with the one added via ECA configuration.');
     $this->assertEquals('my_task_value', $task->getTaskValue(), 'Task value must match with the one added via ECA configuration.');
     $this->assertFalse($task->hasData('entity'), 'No entity data must have been passed to the task.');
@@ -187,18 +200,19 @@ class EnqueueTaskTest extends KernelTestBase {
     // Now create another ECA config, that one will react upon the name of
     // the newly created task item and therefore create another item.
     $eca_config_values['id'] .= '_2';
-    $eca_config_values['events']['event_queue']['fields']['task_name'] = 'another_task';
+    $eca_config_values['events']['event_queue']['configuration']['task_name'] = 'another_task';
     Eca::create($eca_config_values)->trustData()->save();
     $this->assertSame(1, $queue->numberOfItems(), 'Queue must be unchanged.');
     $queue_worker->processItem($task);
     $this->assertSame(2, $queue->numberOfItems(), 'Queue must now have one more item.');
     // Create another ECA config, that one will react upon the name of
-    // the newly created task item too and therefore create another item. It will
-    // additionally use the task value for further restriction. As we now have
-    // two configs that react upon the same event, two items will be created.
+    // the newly created task item too and therefore create another item.
+    // It will additionally use the task value for further restriction. As we
+    // now have two configs that react upon the same event, two items will be
+    // created.
     $eca_config_values['id'] .= '_3';
-    $eca_config_values['events']['event_queue']['fields']['task_name'] = 'another_task';
-    $eca_config_values['events']['event_queue']['fields']['task_value'] = 'my_task_value';
+    $eca_config_values['events']['event_queue']['configuration']['task_name'] = 'another_task';
+    $eca_config_values['events']['event_queue']['configuration']['task_value'] = 'my_task_value';
     Eca::create($eca_config_values)->trustData()->save();
     $queue_worker->processItem($task);
     $this->assertSame(4, $queue->numberOfItems(), 'Queue must now have two more items, because two configurations create one item each.');
@@ -207,8 +221,8 @@ class EnqueueTaskTest extends KernelTestBase {
     // which differs from the queue item's task value. Therefore it should do
     // nothing, but the other two will create two further items.
     $eca_config_values['id'] .= '_4';
-    $eca_config_values['events']['event_queue']['fields']['task_name'] = 'another_task';
-    $eca_config_values['events']['event_queue']['fields']['task_value'] = 'my_task_value__nonexistent';
+    $eca_config_values['events']['event_queue']['configuration']['task_name'] = 'another_task';
+    $eca_config_values['events']['event_queue']['configuration']['task_value'] = 'my_task_value__nonexistent';
     Eca::create($eca_config_values)->trustData()->save();
     $queue_worker->processItem($task);
     $this->assertSame(6, $queue->numberOfItems(), 'Queue must now have two more items, because two configurations react upon that.');
@@ -225,15 +239,15 @@ class EnqueueTaskTest extends KernelTestBase {
       'task_value' => '[node:nid]',
       'tokens' => "entity",
     ] + $defaults);
-    $action->execute($node);
+    $action->execute();
     $item = $queue->claimItem();
     /** @var \Drupal\eca_queue\Task $task */
     $task = $item->data;
-    $this->assertTrue($task instanceof Task, 'Newly created queue item must be a Task object.');
+    $this->assertInstanceOf(Task::class, $task, 'Newly created queue item must be a Task object.');
     $this->assertEquals('node_task', $task->getTaskName(), 'Task name must match with the one defined via plugin configuration.');
     $this->assertEquals((string) $node->id(), $task->getTaskValue(), 'Task value must match with the one defined via plugin configuration.');
     $this->assertTrue($task->hasData('entity'), 'Entity data must have been passed to the task.');
-    $this->assertTrue($task->getData('entity') instanceof NodeInterface, 'The passed entity Token must be a node.');
+    $this->assertInstanceOf(NodeInterface::class, $task->getData('entity'), 'The passed entity Token must be a node.');
     $this->assertSame($first_vid, $task->getData('entity')->getRevisionId(), 'The loaded entity must be the first revision of the node, as it was defined in the Token environment.');
     $this->assertFalse($task->hasData('node'), 'No node data must have been passed to the task.');
     $queue->deleteItem($item);
@@ -244,15 +258,15 @@ class EnqueueTaskTest extends KernelTestBase {
       'task_value' => '[node:nid]',
       'tokens' => "entity,\nnode",
     ] + $defaults);
-    $action->execute(NULL);
+    $action->execute();
     $item = $queue->claimItem();
     /** @var \Drupal\eca_queue\Task $task */
     $task = $item->data;
-    $this->assertTrue($task instanceof Task, 'Newly created queue item must be a Task object.');
+    $this->assertInstanceOf(Task::class, $task, 'Newly created queue item must be a Task object.');
     $this->assertEquals('node_task', $task->getTaskName(), 'Task name must match with the one defined via plugin configuration.');
     $this->assertEquals((string) $node->id(), $task->getTaskValue(), 'Task value must match with the one defined via plugin configuration.');
     $this->assertTrue($task->hasData('entity'), 'Entity data must have been passed to the task.');
-    $this->assertTrue($task->getData('entity') instanceof NodeInterface, 'The passed entity Token must be a node.');
+    $this->assertInstanceOf(NodeInterface::class, $task->getData('entity'), 'The passed entity Token must be a node.');
     $this->assertSame($first_vid, $task->getData('entity')->getRevisionId(), 'The loaded entity must be the first revision of the node, as it was defined in the Token environment.');
     $this->assertTrue($task->hasData('node'), 'Node data must have been passed to the task.');
     $this->assertSame($second_vid, $task->getData('node')->getRevisionId(), 'The loaded node must be the second revision, as it was defined in the Token environment.');
@@ -262,10 +276,10 @@ class EnqueueTaskTest extends KernelTestBase {
     // must catch a value from the task.
     $token_services->clearTokenData();
     $eca_config_values['id'] .= '_5';
-    $eca_config_values['events']['event_queue']['fields']['task_name'] = 'node_task';
-    $eca_config_values['events']['event_queue']['fields']['task_value'] = (string) $node->id();
-    $eca_config_values['actions']['action_enqueue']['fields']['task_name'] = 'node_task_follow';
-    $eca_config_values['actions']['action_enqueue']['fields']['task_value'] = '[node:nid]';
+    $eca_config_values['events']['event_queue']['configuration']['task_name'] = 'node_task';
+    $eca_config_values['events']['event_queue']['configuration']['task_value'] = (string) $node->id();
+    $eca_config_values['actions']['action_enqueue']['configuration']['task_name'] = 'node_task_follow';
+    $eca_config_values['actions']['action_enqueue']['configuration']['task_value'] = '[node:nid]';
     Eca::create($eca_config_values)->trustData()->save();
     $queue_worker->processItem($task);
     $queue->deleteItem($item);
@@ -273,7 +287,7 @@ class EnqueueTaskTest extends KernelTestBase {
     $item = $queue->claimItem();
     /** @var \Drupal\eca_queue\Task $task */
     $task = $item->data;
-    $this->assertTrue($task instanceof Task, 'Newly created queue item must be a Task object.');
+    $this->assertInstanceOf(Task::class, $task, 'Newly created queue item must be a Task object.');
     $this->assertEquals('node_task_follow', $task->getTaskName(), 'Task name must match with the one defined via plugin configuration.');
     $this->assertEquals((string) $node->id(), $task->getTaskValue(), 'Task value must match with the one defined via plugin configuration.');
     $this->assertFalse($task->hasData('entity'), 'No entity data must have been passed to the task.');

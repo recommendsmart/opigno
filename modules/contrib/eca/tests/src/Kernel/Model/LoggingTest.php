@@ -8,6 +8,7 @@ use Drupal\node\Entity\Node;
 /**
  * Model test for logging.
  *
+ * @group eca
  * @group eca_model
  */
 class LoggingTest extends Base {

@@ -52,7 +52,7 @@ class TriggerCustomEvent extends ConfigurableActionBase {
       '#type' => 'textarea',
       '#title' => $this->t('Tokens to forward'),
       '#default_value' => $this->configuration['tokens'],
-      '#description' => $this->t('Comma separated list of token names from the current context, that will be forwarded to the triggered event and its process.'),
+      '#description' => $this->t('Comma separated list of token names from the current context, that will be forwarded to the triggered event. These tokens are then also available for subsequent conditions and actions within the current process.'),
       '#weight' => -9,
     ];
     return $form;

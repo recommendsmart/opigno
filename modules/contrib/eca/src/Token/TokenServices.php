@@ -46,6 +46,16 @@ class TokenServices implements TokenInterface {
   }
 
   /**
+   * Get the service instance of this class.
+   *
+   * @return \Drupal\eca\Token\TokenInterface
+   *   The Token services.
+   */
+  public static function get(): TokenInterface {
+    return \Drupal::service('eca.token_services');
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function addTokenData(string $key, $data): TokenInterface {
@@ -114,21 +124,21 @@ class TokenServices implements TokenInterface {
   /**
    * {@inheritdoc}
    */
-  public function generate($type, array $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata): array {
+  public function generate($type, array $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
     return $this->token->generate($type, $tokens, $data, $options, $bubbleable_metadata);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function replace($text, array $data = [], array $options = [], BubbleableMetadata $bubbleable_metadata = NULL): string {
+  public function replace($text, array $data = [], array $options = [], BubbleableMetadata $bubbleable_metadata = NULL) {
     return $this->token->replace($text, $data, $options, $bubbleable_metadata);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function replaceClear($text, array $data = [], array $options = [], BubbleableMetadata $bubbleable_metadata = NULL): string {
+  public function replaceClear($text, array $data = [], array $options = [], BubbleableMetadata $bubbleable_metadata = NULL) {
     $options['clear'] = TRUE;
     return $this->replace($text, $data, $options, $bubbleable_metadata);
   }
@@ -136,14 +146,28 @@ class TokenServices implements TokenInterface {
   /**
    * {@inheritdoc}
    */
-  public function scan($text): array {
+  public function getOrReplace($text, array $data = [], ?array $options = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
+    return $this->decorator->getOrReplace($text, $data, $options, $bubbleable_metadata);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function scan($text) {
     return $this->token->scan($text);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function findWithPrefix(array $tokens, $prefix, $delimiter = ':'): array {
+  public function scanRootLevelTokens($text): array {
+    return $this->decorator->scanRootLevelTokens($text);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function findWithPrefix(array $tokens, $prefix, $delimiter = ':') {
     return $this->token->findWithPrefix($tokens, $prefix, $delimiter);
   }
 

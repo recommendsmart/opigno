@@ -9,25 +9,29 @@ use Drupal\eca\Entity\Eca;
 use Drupal\eca\Plugin\ObjectWithPluginInterface;
 use Drupal\eca_content\Event\ContentEntityBaseEntity;
 
+/**
+ * Provides an ECA item of type event for internal processing.
+ */
 class EcaEvent extends EcaObject implements ObjectWithPluginInterface {
 
   /**
+   * ECA event plugin.
+   *
    * @var \Drupal\eca\Plugin\ECA\Event\EventInterface
    */
   protected EventInterface $plugin;
 
   /**
-   * @var array
-   */
-  protected array $variables = [];
-
-  /**
    * Event constructor.
    *
    * @param \Drupal\eca\Entity\Eca $eca
+   *   The ECA config entity.
    * @param string $id
+   *   The event ID provided by the modeller.
    * @param string $label
+   *   The event label.
    * @param \Drupal\eca\Plugin\ECA\Event\EventInterface $plugin
+   *   The event plugin.
    */
   public function __construct(Eca $eca, string $id, string $label, EventInterface $plugin) {
     parent::__construct($eca, $id, $label, $this);
@@ -35,10 +39,16 @@ class EcaEvent extends EcaObject implements ObjectWithPluginInterface {
   }
 
   /**
+   * Determines if the event should be executed.
+   *
    * @param \Drupal\Component\EventDispatcher\Event $event
+   *   The event dispatcher.
    * @param string $event_name
+   *   The event name beim triggered.
    *
    * @return bool
+   *   TRUE, if this event should be executed in the current context, FALSE
+   *   otherwise.
    */
   public function applies(Event $event, string $event_name): bool {
     if ($event_name === $this->plugin->eventName() && (!($event instanceof ConditionalApplianceInterface) || $event->applies($this->getId(), $this->configuration))) {

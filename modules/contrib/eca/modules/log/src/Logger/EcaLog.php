@@ -13,6 +13,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class EcaLog extends LoggerChannel {
 
   /**
+   * Event dispatcher.
+   *
    * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
   protected EventDispatcherInterface $eventDispatcher;
@@ -21,6 +23,7 @@ class EcaLog extends LoggerChannel {
    * Construct the EcaLog class.
    *
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   Event dispatcher.
    */
   public function __construct(EventDispatcherInterface $event_dispatcher) {
     parent::__construct('');
@@ -30,7 +33,7 @@ class EcaLog extends LoggerChannel {
   /**
    * {@inheritdoc}
    */
-  public function log($level, $message, array $context = []) {
+  public function log($level, $message, array $context = []): void {
     if (is_string($level)) {
       $level = $this->levelTranslation[$level];
     }

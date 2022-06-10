@@ -12,7 +12,6 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\eca\Plugin\ECA\Condition\ConditionInterface;
 use Drupal\eca\PluginManager\Condition;
 use Drupal\eca\Token\TokenInterface;
-use Drupal\user\Entity\User;
 
 /**
  * Service class for Drupal core conditions in ECA.
@@ -21,9 +20,6 @@ class Conditions {
 
   use ServiceTrait;
 
-  public const OPTION_NO = 'no';
-  public const OPTION_YES = 'yes';
-
   public const GATEWAY_TYPE_EXCLUSIVE = 0;
   public const GATEWAY_TYPE_PARALLEL = 1;
   public const GATEWAY_TYPE_INCLUSIVE = 2;
@@ -31,31 +27,43 @@ class Conditions {
   public const GATEWAY_TYPE_EVENTBASED = 4;
 
   /**
+   * ECA condition plugin manager.
+   *
    * @var \Drupal\eca\PluginManager\Condition
    */
   protected Condition $conditionManager;
 
   /**
+   * Logger channel service.
+   *
    * @var \Drupal\Core\Logger\LoggerChannelInterface
    */
   protected LoggerChannelInterface $logger;
 
   /**
+   * Entity type manager service.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
+   * Current user account.
+   *
    * @var \Drupal\user\Entity\User
    */
   protected $currentUser;
 
   /**
+   * Language manager service.
+   *
    * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected LanguageManagerInterface $languageManager;
 
   /**
+   * ECA token service.
+   *
    * @var \Drupal\eca\Token\TokenInterface
    */
   protected TokenInterface $token;
@@ -64,17 +72,26 @@ class Conditions {
    * Conditions constructor.
    *
    * @param \Drupal\eca\PluginManager\Condition $condition_manager
+   *   The ECA condition plugin manager.
    * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
+   *   The logger channel service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    * @param \Drupal\Core\Session\AccountProxyInterface $account_proxy
+   *   The current user account.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager service.
    * @param \Drupal\eca\Token\TokenInterface $token
+   *   The ECA token service.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
   public function __construct(Condition $condition_manager, LoggerChannelInterface $logger, EntityTypeManagerInterface $entity_type_manager, AccountProxyInterface $account_proxy, LanguageManagerInterface $language_manager, TokenInterface $token) {
     $this->conditionManager = $condition_manager;
     $this->logger = $logger;
     $this->entityTypeManager = $entity_type_manager;
-    $this->currentUser = User::load($account_proxy->id());
+    $this->currentUser = $entity_type_manager->getStorage('user')->load($account_proxy->id());
     $this->languageManager = $language_manager;
     $this->token = $token;
   }
@@ -92,7 +109,8 @@ class Conditions {
       foreach ($this->conditionManager->getDefinitions() as $plugin_id => $definition) {
         try {
           $conditions[] = $this->conditionManager->createInstance($plugin_id);
-        } catch (PluginException $e) {
+        }
+        catch (PluginException $e) {
           // Can be ignored.
         }
       }
@@ -130,12 +148,22 @@ class Conditions {
   }
 
   /**
+   * Aeerts the condition identified by $condition_id in context of an event.
+   *
    * @param \Drupal\Component\EventDispatcher\Event $event
+   *   The event in which context the conditions needs to be aeerted.
    * @param string|bool $condition_id
+   *   The ID of the condition to be asserted or FALSE, if the sequence flow
+   *   does not have any condition.
    * @param array|null $condition
+   *   An array containing the plugin ID of the condition to be asserted and
+   *   the field values of the plugin configuration.
    * @param array $context
+   *   An array with context settings of events and successirs for building
+   *   meaningful log messages.
    *
    * @return bool
+   *   TRUE, if the condition can be asserted, FALSE otherwise.
    */
   public function assertCondition(Event $event, $condition_id, ?array $condition, array $context): bool {
     if (empty($condition_id)) {
@@ -148,11 +176,11 @@ class Conditions {
     }
     try {
       /** @var \Drupal\eca\Plugin\ECA\Condition\ConditionInterface $plugin */
-      $plugin = $this->conditionManager->createInstance($condition['plugin'], $condition['fields']);
+      $plugin = $this->conditionManager->createInstance($condition['plugin'], $condition['configuration'] ?? []);
     }
     catch (PluginException $e) {
       // Deliberately ignored, handled below already.
-   }
+    }
     if (isset($plugin)) {
       // If a config value is an array, we may receive a string from the
       // modeller and have to convert this into an array.

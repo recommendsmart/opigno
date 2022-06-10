@@ -1,0 +1,6 @@
+services:
+  eca_development.docs.commands:
+    class: Drupal\eca_development\Commands\DocsCommands
+    arguments: ['@entity_type.manager', '@eca.service.action', '@eca.service.condition', '@eca.service.modeller', '@file_system', '@module_handler']
+    tags:
+      - { name: drush.command }

@@ -2,6 +2,7 @@
 
 namespace Drupal\field_bundle\Entity;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EditorialContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -169,8 +170,8 @@ class FieldBundle extends EditorialContentEntityBase implements FieldBundleInter
       $string = $this->generateFallbackStringRepresentation();
     }
 
-    if (strlen($string) > 255) {
-      $string = substr($string, 0, 252) . '...';
+    if (mb_strlen($string) > 255) {
+      $string = Unicode::truncate($string, 255, TRUE, TRUE, 20);
     }
 
     return $string;
@@ -200,7 +201,14 @@ class FieldBundle extends EditorialContentEntityBase implements FieldBundleInter
       }
     }
     if (!empty($label_pattern)) {
-      $this->label->value = \Drupal::token()->replace($label_pattern, ['bundle' => $this], ['langcode' => $this->language()->getId()]);
+      $string = (string) \Drupal::token()->replace($label_pattern, ['bundle' => $this], [
+        'langcode' => $this->language()->getId(),
+        'clear' => TRUE,
+      ]);
+      if (mb_strlen($string) > 255) {
+        $string = Unicode::truncate($string, 255, TRUE, TRUE, 20);
+      }
+      $this->label->value = $string;
     }
   }
 

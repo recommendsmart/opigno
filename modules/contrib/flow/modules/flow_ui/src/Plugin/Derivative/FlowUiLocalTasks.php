@@ -68,6 +68,15 @@ class FlowUiLocalTasks extends DeriverBase implements ContainerDeriverInterface 
     $default_task_mode = FlowTaskMode::service()->getDefaultTaskMode();
     $flow_list_cache_tags = $this->entityTypeManager->getDefinition('flow')->getListCacheTags();
 
+    $custom_flows = [];
+    /** @var \Drupal\flow\Entity\FlowInterface $flow */
+    foreach ($this->entityTypeManager->getStorage('flow')->loadMultiple() as $flow) {
+      if ($flow->isCustom()) {
+        $custom = $flow->get('custom');
+        $custom_flows[$flow->getTargetEntityTypeId()][$flow->getTaskMode()] = $custom['label'];
+      }
+    }
+
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
       if (!($base_route = $entity_type->get('field_ui_base_route'))) {
         continue;
@@ -81,8 +90,8 @@ class FlowUiLocalTasks extends DeriverBase implements ContainerDeriverInterface 
         'base_route' => $base_route,
       ];
 
+      $weight = 0;
       foreach ($task_modes as $task_mode => $task_mode_label) {
-        $weight = 0;
         $this->derivatives[$entity_type_id . '.' . $task_mode] = [
           'title' => $task_mode_label,
           'route_name' => $task_mode === $default_task_mode ? "entity.flow.{$entity_type_id}.default" : "entity.flow.{$entity_type_id}.task_mode",
@@ -95,6 +104,34 @@ class FlowUiLocalTasks extends DeriverBase implements ContainerDeriverInterface 
           'weight' => $weight++,
         ];
       }
+
+      $weight += 100;
+
+      if (isset($custom_flows[$entity_type_id])) {
+        foreach ($custom_flows[$entity_type_id] as $custom_task_mode => $custom_label) {
+          $this->derivatives[$entity_type_id . '.' . $custom_task_mode . '.custom'] = [
+            'title' => $custom_label,
+            'route_name' => "entity.flow.{$entity_type_id}.task_mode",
+            'route_parameters' => [
+              'flow_task_mode' => $custom_task_mode,
+            ],
+            'parent_id' => "flow_ui.flow:{$entity_type_id}",
+            'base_route' => $base_route,
+            'cache_tags' => $flow_list_cache_tags,
+            'weight' => $weight++,
+          ];
+        }
+      }
+
+      $weight += 100;
+
+      $this->derivatives[$entity_type_id . '.custom.add'] = [
+        'title' => $this->t('+ add'),
+        'route_name' => "entity.flow.{$entity_type_id}.custom.add",
+        'parent_id' => "flow_ui.flow:{$entity_type_id}",
+        'base_route' => $base_route,
+        'weight' => $weight++,
+      ];
     }
 
     foreach ($this->derivatives as &$entry) {

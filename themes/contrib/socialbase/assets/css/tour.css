@@ -1,5 +1,5 @@
 .joyride-close-tip {
-  color: #4d4d4d;
+  color: #343434;
   font-weight: bold;
   font-size: 2em;
   line-height: 1;
@@ -8,6 +8,7 @@
   padding: 7px 13px;
   height: 45px;
   width: 45px;
+  -webkit-transition: .3s background-color ease;
   transition: .3s background-color ease;
 }
 
@@ -85,8 +86,9 @@
 
 .joyride-content-wrapper {
   background: white;
-  color: #4d4d4d;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  color: #343434;
+  -webkit-box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
   padding: 20px 50px 35px 20px;
 }
 

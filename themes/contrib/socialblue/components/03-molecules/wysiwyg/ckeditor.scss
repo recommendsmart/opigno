@@ -5,7 +5,7 @@
 
 body {
   font-family: $font-family-webfont;
-  font-weight: 300;
+  font-weight: 400;
   color: $default-color;
 }
 
@@ -16,4 +16,8 @@ a:not(.btn) {
   &:hover {
     color: $link-hover-color;
   }
+}
+
+:lang(ar) {
+  font-family: "Almarai", "montserrat", sans-serif;
 }

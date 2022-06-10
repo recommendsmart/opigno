@@ -50,7 +50,10 @@ function field_suggestion_post_update_pinned_to_entities(&$sandbox) {
     $sandbox['types'][$entity_type_id][$field_name] = $values['type'];
   }
 
-  $values['field_suggestion_' . $values['type']] = $values['field_value'];
+  /** @var \Drupal\field_suggestion\Service\FieldSuggestionHelperInterface $helper */
+  $helper = \Drupal::service('field_suggestion.helper');
+
+  $values[$helper->field($values['type'])] = $values['field_value'];
 
   unset($values['field_value']);
 

@@ -24,9 +24,9 @@ use Drupal\user\Event\UserFloodEvent;
 class UserEvent extends EventBase {
 
   /**
-   * @return array[]
+   * {@inheritdoc}
    */
-  public static function actions(): array {
+  public static function definitions(): array {
     return [
       'login' => [
         'label' => 'Login of a user',

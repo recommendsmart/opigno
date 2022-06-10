@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\eca_content\Kernel;
 
-use Drupal\eca\Service\Conditions;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
@@ -18,6 +17,12 @@ use Drupal\user\Entity\User;
  */
 class SetFieldValueTest extends KernelTestBase {
 
+  /**
+   * The modules.
+   *
+   * @var string[]
+   *   The modules.
+   */
   protected static $modules = [
     'system',
     'user',
@@ -65,7 +70,13 @@ class SetFieldValueTest extends KernelTestBase {
       'type' => 'article',
       'uid' => 0,
       'title' => '123',
-      'body' => [['value' => $body, 'summary' => $summary, 'format' => 'plain_text']],
+      'body' => [
+        [
+          'value' => $body,
+          'summary' => $summary,
+          'format' => 'plain_text',
+        ],
+      ],
     ]);
     $node->save();
 
@@ -213,7 +224,13 @@ class SetFieldValueTest extends KernelTestBase {
       'type' => 'article',
       'uid' => 0,
       'title' => '456',
-      'body' => [['value' => $body, 'summary' => $summary, 'format' => 'plain_text']],
+      'body' => [
+        [
+          'value' => $body,
+          'summary' => $summary,
+          'format' => 'plain_text',
+        ],
+      ],
     ]);
     $another_node->save();
     $token_services->addTokenData('another', $another_node);
@@ -330,9 +347,21 @@ class SetFieldValueTest extends KernelTestBase {
       'title' => '123',
       'field_string_multi' => [$string, $string . '2', $string . '3'],
       'field_text_multi' => [
-        ['value' => $text, 'summary' => $summary, 'format' => 'plain_text'],
-        ['value' => $text . '2', 'summary' => $summary . '2', 'format' => 'plain_text'],
-        ['value' => $text . '3', 'summary' => $summary . '3', 'format' => 'plain_text'],
+        [
+          'value' => $text,
+          'summary' => $summary,
+          'format' => 'plain_text',
+        ],
+        [
+          'value' => $text . '2',
+          'summary' => $summary . '2',
+          'format' => 'plain_text',
+        ],
+        [
+          'value' => $text . '3',
+          'summary' => $summary . '3',
+          'format' => 'plain_text',
+        ],
       ],
     ]);
     $node->save();
@@ -802,9 +831,21 @@ class SetFieldValueTest extends KernelTestBase {
       'title' => '123',
       'field_string_multi' => [$string, $string . '2', $string . '3'],
       'field_text_multi' => [
-        ['value' => $text, 'summary' => $summary, 'format' => 'plain_text'],
-        ['value' => $text . '2', 'summary' => $summary . '2', 'format' => 'plain_text'],
-        ['value' => $text . '3', 'summary' => $summary . '3', 'format' => 'plain_text'],
+        [
+          'value' => $text,
+          'summary' => $summary,
+          'format' => 'plain_text',
+        ],
+        [
+          'value' => $text . '2',
+          'summary' => $summary . '2',
+          'format' => 'plain_text',
+        ],
+        [
+          'value' => $text . '3',
+          'summary' => $summary . '3',
+          'format' => 'plain_text',
+        ],
       ],
     ]);
     $another_node->save();
@@ -990,7 +1031,7 @@ class SetFieldValueTest extends KernelTestBase {
     $defaults = [
       'strip_tags' => FALSE,
       'trim' => FALSE,
-      'save_entity' => Conditions::OPTION_YES,
+      'save_entity' => TRUE,
     ];
     $action = $action_manager->createInstance('eca_set_field_value', [
       'method' => 'set:clear',
@@ -1113,7 +1154,7 @@ class SetFieldValueTest extends KernelTestBase {
     $defaults = [
       'strip_tags' => FALSE,
       'trim' => FALSE,
-      'save_entity' => Conditions::OPTION_YES,
+      'save_entity' => TRUE,
     ];
     $action = $action_manager->createInstance('eca_set_field_value', [
       'method' => 'set:clear',

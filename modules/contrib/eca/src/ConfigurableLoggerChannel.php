@@ -49,8 +49,6 @@ class ConfigurableLoggerChannel extends LoggerChannel {
    *
    * @param int $level
    *   The RfcLogLevel:: level which should be configured for ECA.
-   *
-   * @return void
    */
   public function updateLogLevel(int $level): void {
     $this->maximumLogLevel = $level;

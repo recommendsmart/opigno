@@ -128,6 +128,9 @@ class FieldSuggestionSettingsForm extends ConfigFormBase {
     $form['entity_types'] = [
       '#type' => 'vertical_tabs',
       '#title' => $this->t('Entity types'),
+      '#attached' => [
+        'library' => ['field_suggestion/base'],
+      ],
     ];
 
     $selected_fields = (array) $config->get('fields');
@@ -138,8 +141,11 @@ class FieldSuggestionSettingsForm extends ConfigFormBase {
 
     $storage = $this->entityTypeManager->getStorage('field_suggestion_type');
     $field_types = $storage->getQuery()->execute();
+    $definitions = $this->entityTypeManager->getDefinitions();
 
-    foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
+    unset($definitions['field_suggestion']);
+
+    foreach ($definitions as $entity_type_id => $entity_type) {
       if (!$entity_type instanceof ContentEntityTypeInterface) {
         continue;
       }
@@ -154,7 +160,11 @@ class FieldSuggestionSettingsForm extends ConfigFormBase {
           $key = $field_name . '|' . ($field_type = $field->getType());
           $allowed_fields[$key] = $field->getLabel();
 
-          if (in_array($field_type, $field_types)) {
+          if (
+            isset($selected_fields[$entity_type_id]) &&
+            in_array($field_name, $selected_fields[$entity_type_id]) &&
+            in_array($field_type, $field_types)
+          ) {
             $allowed_types[] = $key;
           }
         }

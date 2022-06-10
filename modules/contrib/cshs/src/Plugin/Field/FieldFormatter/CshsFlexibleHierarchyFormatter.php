@@ -98,7 +98,7 @@ class CshsFlexibleHierarchyFormatter extends CshsFormatterBase {
     $clear = $this->getSetting('clear');
 
     foreach ($this->getEntitiesToView($items, $langcode) as $delta => $term) {
-      $text = $this->token->replace($format, ['term' => $term], ['clear' => $clear]);
+      $text = $this->token->replace($format, ['term' => $term], ['langcode' => $langcode, 'clear' => $clear]);
       $elements[$delta]['#markup'] = $linked ? $term->toLink($text)->toString() : $text;
     }
 

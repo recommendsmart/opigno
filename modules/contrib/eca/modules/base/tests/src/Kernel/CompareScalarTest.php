@@ -4,7 +4,6 @@ namespace Drupal\Tests\eca_base\Kernel;
 
 use Drupal\eca\Plugin\ECA\Condition\StringComparisonBase;
 use Drupal\eca\PluginManager\Condition;
-use Drupal\eca\Service\Conditions;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -15,12 +14,17 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class CompareScalarTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'eca',
     'eca_base',
   ];
 
   /**
+   * ECA condition plugin manager.
+   *
    * @var \Drupal\eca\PluginManager\Condition|null
    */
   protected ?Condition $conditionManager;
@@ -38,9 +42,11 @@ class CompareScalarTest extends KernelTestBase {
    * Tests scalar value comparison.
    *
    * @dataProvider stringDataProvider
-   * @dataProvider integerDataProvider
+   * @dataProvider numericDataProvider
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
-  public function testScalarValues($left, $right, $operator, $type, $case, $negate, $message): void {
+  public function testScalarValues($left, $right, $operator, $type, $case, $negate, $message, $assertTrue = TRUE): void {
     // Configure default settings for condition.
     $config = [
       'left' => $left,
@@ -52,7 +58,12 @@ class CompareScalarTest extends KernelTestBase {
     ];
     /** @var \Drupal\eca_base\Plugin\ECA\Condition\ScalarComparison $condition */
     $condition = $this->conditionManager->createInstance('eca_scalar', $config);
-    $this->assertTrue($condition->evaluate(), $message);
+    if ($assertTrue) {
+      $this->assertTrue($condition->evaluate(), $message);
+    }
+    else {
+      $this->assertFalse($condition->evaluate(), $message);
+    }
   }
 
   /**
@@ -68,8 +79,8 @@ class CompareScalarTest extends KernelTestBase {
         'my test string',
         StringComparisonBase::COMPARE_EQUALS,
         StringComparisonBase::COMPARE_TYPE_VALUE,
-        Conditions::OPTION_NO,
-        Conditions::OPTION_NO,
+        FALSE,
+        FALSE,
         'Left equals right value.',
       ],
       [
@@ -77,8 +88,8 @@ class CompareScalarTest extends KernelTestBase {
         'my test string',
         StringComparisonBase::COMPARE_EQUALS,
         StringComparisonBase::COMPARE_TYPE_VALUE,
-        Conditions::OPTION_YES,
-        Conditions::OPTION_NO,
+        TRUE,
+        FALSE,
         'Left equals (case sensitiv) right value.',
       ],
       [
@@ -86,8 +97,8 @@ class CompareScalarTest extends KernelTestBase {
         'My Test String',
         StringComparisonBase::COMPARE_EQUALS,
         StringComparisonBase::COMPARE_TYPE_VALUE,
-        Conditions::OPTION_YES,
-        Conditions::OPTION_YES,
+        TRUE,
+        TRUE,
         'Left does not equal (case sensitiv) right value.',
       ],
       [
@@ -95,8 +106,8 @@ class CompareScalarTest extends KernelTestBase {
         'my test',
         StringComparisonBase::COMPARE_BEGINS_WITH,
         StringComparisonBase::COMPARE_TYPE_VALUE,
-        Conditions::OPTION_NO,
-        Conditions::OPTION_NO,
+        FALSE,
+        FALSE,
         'Left begins with right value.',
       ],
       [
@@ -104,8 +115,8 @@ class CompareScalarTest extends KernelTestBase {
         'test string',
         StringComparisonBase::COMPARE_ENDS_WITH,
         StringComparisonBase::COMPARE_TYPE_VALUE,
-        Conditions::OPTION_NO,
-        Conditions::OPTION_NO,
+        FALSE,
+        FALSE,
         'Left ends with right value.',
       ],
       [
@@ -113,8 +124,8 @@ class CompareScalarTest extends KernelTestBase {
         'test',
         StringComparisonBase::COMPARE_CONTAINS,
         StringComparisonBase::COMPARE_TYPE_VALUE,
-        Conditions::OPTION_NO,
-        Conditions::OPTION_NO,
+        FALSE,
+        FALSE,
         'Left contains right value.',
       ],
       [
@@ -122,8 +133,8 @@ class CompareScalarTest extends KernelTestBase {
         'a test string',
         StringComparisonBase::COMPARE_GREATERTHAN,
         StringComparisonBase::COMPARE_TYPE_VALUE,
-        Conditions::OPTION_NO,
-        Conditions::OPTION_NO,
+        FALSE,
+        FALSE,
         'Left is greater than right value.',
       ],
       [
@@ -131,8 +142,8 @@ class CompareScalarTest extends KernelTestBase {
         'your test string',
         StringComparisonBase::COMPARE_LESSTHAN,
         StringComparisonBase::COMPARE_TYPE_VALUE,
-        Conditions::OPTION_NO,
-        Conditions::OPTION_NO,
+        FALSE,
+        FALSE,
         'Left is less than right value.',
       ],
       [
@@ -140,8 +151,8 @@ class CompareScalarTest extends KernelTestBase {
         'my test string',
         StringComparisonBase::COMPARE_ATMOST,
         StringComparisonBase::COMPARE_TYPE_VALUE,
-        Conditions::OPTION_NO,
-        Conditions::OPTION_NO,
+        FALSE,
+        FALSE,
         'Left is at most the equal right value.',
       ],
       [
@@ -149,8 +160,8 @@ class CompareScalarTest extends KernelTestBase {
         'your test string',
         StringComparisonBase::COMPARE_ATMOST,
         StringComparisonBase::COMPARE_TYPE_VALUE,
-        Conditions::OPTION_NO,
-        Conditions::OPTION_NO,
+        FALSE,
+        FALSE,
         'Left is at most right value.',
       ],
       [
@@ -158,8 +169,8 @@ class CompareScalarTest extends KernelTestBase {
         'my test string',
         StringComparisonBase::COMPARE_ATLEAST,
         StringComparisonBase::COMPARE_TYPE_VALUE,
-        Conditions::OPTION_NO,
-        Conditions::OPTION_NO,
+        FALSE,
+        FALSE,
         'Left is at least the equal right value.',
       ],
       [
@@ -167,8 +178,8 @@ class CompareScalarTest extends KernelTestBase {
         'a test string',
         StringComparisonBase::COMPARE_ATLEAST,
         StringComparisonBase::COMPARE_TYPE_VALUE,
-        Conditions::OPTION_NO,
-        Conditions::OPTION_NO,
+        FALSE,
+        FALSE,
         'Left is at least right value.',
       ],
     ];
@@ -178,27 +189,101 @@ class CompareScalarTest extends KernelTestBase {
    * Provides multiple integer test cases for the testScalarValues method.
    *
    * @return array
-   *   The integer test cases.
+   *   The numeric test cases.
    */
-  public function integerDataProvider(): array {
+  public function numericDataProvider(): array {
     return [
       [
-        5,
-        5,
+        '5',
+        '5',
         StringComparisonBase::COMPARE_EQUALS,
         StringComparisonBase::COMPARE_TYPE_NUMERIC,
-        Conditions::OPTION_NO,
-        Conditions::OPTION_NO,
-        'Left and right are equal.',
+        FALSE,
+        FALSE,
+        '5 and 5 are equal.',
       ],
       [
-        5,
-        4,
+        '5',
+        '4',
         StringComparisonBase::COMPARE_GREATERTHAN,
         StringComparisonBase::COMPARE_TYPE_NUMERIC,
-        Conditions::OPTION_NO,
-        Conditions::OPTION_NO,
-        'Left is great than right value.',
+        FALSE,
+        FALSE,
+        '5 is great than 4.',
+      ],
+      [
+        '5.5',
+        '5.4',
+        StringComparisonBase::COMPARE_GREATERTHAN,
+        StringComparisonBase::COMPARE_TYPE_NUMERIC,
+        FALSE,
+        FALSE,
+        '5.5 is great than 5.4.',
+      ],
+      [
+        'a',
+        '5',
+        StringComparisonBase::COMPARE_EQUALS,
+        StringComparisonBase::COMPARE_TYPE_NUMERIC,
+        FALSE,
+        FALSE,
+        'First value should be numeric.',
+        FALSE,
+      ],
+      [
+        '5',
+        'a',
+        StringComparisonBase::COMPARE_EQUALS,
+        StringComparisonBase::COMPARE_TYPE_NUMERIC,
+        FALSE,
+        FALSE,
+        'First value should be numeric.',
+        FALSE,
+      ],
+      [
+        '15',
+        '5',
+        StringComparisonBase::COMPARE_GREATERTHAN,
+        StringComparisonBase::COMPARE_TYPE_NUMERIC,
+        FALSE,
+        FALSE,
+        '15 is greater than 5 for numeric comparison.',
+      ],
+      [
+        '15',
+        '5',
+        StringComparisonBase::COMPARE_GREATERTHAN,
+        StringComparisonBase::COMPARE_TYPE_VALUE,
+        FALSE,
+        FALSE,
+        '15 is greater than 5 for value comparison.',
+      ],
+      [
+        '15',
+        '5',
+        StringComparisonBase::COMPARE_LESSTHAN,
+        StringComparisonBase::COMPARE_TYPE_LEXICAL,
+        FALSE,
+        FALSE,
+        '15 is smaller than 5 for lexical comparison.',
+      ],
+      [
+        'img15',
+        'img5',
+        StringComparisonBase::COMPARE_LESSTHAN,
+        StringComparisonBase::COMPARE_TYPE_VALUE,
+        FALSE,
+        FALSE,
+        'img15 is smaller than img5 for value comparison.',
+      ],
+      [
+        'img15',
+        'img5',
+        StringComparisonBase::COMPARE_GREATERTHAN,
+        StringComparisonBase::COMPARE_TYPE_NATURAL,
+        FALSE,
+        FALSE,
+        'img15 is greater than img5 for natural comparison.',
       ],
     ];
   }

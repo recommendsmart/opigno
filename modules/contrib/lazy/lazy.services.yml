@@ -6,3 +6,4 @@ services:
       - '@request_stack'
       - '@plugin.manager.condition'
       - '@router.admin_context'
+      - '@module_handler'

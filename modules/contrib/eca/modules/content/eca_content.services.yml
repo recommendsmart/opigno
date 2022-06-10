@@ -2,14 +2,18 @@ services:
 
   eca_content.subscriber:
     class: Drupal\eca_content\EventSubscriber\EcaContent
-    arguments: ['@eca.processor', '@eca.service.token']
+    parent: eca.default_event_subscriber
     tags:
       - { name: event_subscriber }
 
   eca_content.hook_handler:
     class: Drupal\eca_content\HookHandler
-    arguments: ['@eca.trigger_event']
+    arguments: ['@eca.trigger_event', '@eca_content.service.entity_types']
 
   eca_content.service.entity_loader:
     class: Drupal\eca_content\Service\EntityLoader
-    arguments: ['@entity_type.manager', '@eca.token_services', '@string_translation']
+    arguments: ['@entity_type.manager', '@eca.token_services', '@string_translation', '@eca.service.yaml_parser']
+
+  eca_content.service.entity_types:
+    class: Drupal\eca_content\Service\EntityTypes
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info']

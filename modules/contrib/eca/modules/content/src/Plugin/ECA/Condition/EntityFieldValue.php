@@ -174,7 +174,9 @@ class EntityFieldValue extends StringComparisonBase {
       foreach ($list as $property) {
         if ($property instanceof ComplexDataInterface) {
           $main_property = $property->getDataDefinition()->getMainPropertyName();
-          $property = $property->get($main_property);
+          if ($main_property !== NULL) {
+            $property = $property->get($main_property);
+          }
         }
         if ($property instanceof PrimitiveInterface) {
           $values[] = (string) $property->getValue();

@@ -11,6 +11,14 @@ use Drupal\eca\Plugin\EcaInterface;
 interface EventInterface extends EcaInterface {
 
   /**
+   * Provides a list of events.
+   *
+   * @return array[]
+   *   The list of events.
+   */
+  public static function definitions(): array;
+
+  /**
    * Returns the fully-qualified class name of the according system event.
    *
    * @return string

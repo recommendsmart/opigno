@@ -4,6 +4,7 @@ namespace Drupal\lazy;
 
 use Drupal\Core\Condition\ConditionManager;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Routing\AdminContext;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -43,6 +44,13 @@ class Lazy implements LazyInterface {
   protected $adminContext;
 
   /**
+   * The module manager.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandler
+   */
+  protected $moduleHandler;
+
+  /**
    * Lazy constructor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -53,23 +61,28 @@ class Lazy implements LazyInterface {
    *   The condition plugins manager.
    * @param \Drupal\Core\Routing\AdminContext $admin_context
    *   The route admin context service.
+   * @param \Drupal\Core\Extension\ModuleHandler $module_handler
+   *   The module manager.
    */
   public function __construct(
     ConfigFactoryInterface $config_factory,
     RequestStack $request_stack,
     ConditionManager $condition_manager,
-    AdminContext $admin_context
+    AdminContext $admin_context,
+    ModuleHandler $module_handler
   ) {
     $this->lazySettings = $config_factory->get('lazy.settings')->get();
     $this->requestStack = $request_stack->getCurrentRequest();
     $this->conditionManager = $condition_manager;
     $this->adminContext = $admin_context;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getSettings(): array {
+    $this->moduleHandler->alter('lazy_settings', $this->lazySettings);
     return $this->lazySettings ?? [];
   }
 

@@ -92,7 +92,7 @@ class EntityExists extends ConditionBase {
   /**
    * Set the entity loader.
    *
-   * @param \Drupal\eca_content\Service\EntityLoader
+   * @param \Drupal\eca_content\Service\EntityLoader $entity_loader
    *   The entity loader.
    */
   public function setEntityLoader(EntityLoader $entity_loader) {

@@ -5,7 +5,10 @@ namespace Drupal\eca_content\Plugin\ECA\Condition;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Plugin implementation of the ECA condition for an entity original field value.
+ * Class for the original field value.
+ *
+ * <p>Plugin implementation of the ECA condition for an entity original
+ * field value.</p>
  *
  * @EcaCondition(
  *   id = "eca_entity_original_field_value",

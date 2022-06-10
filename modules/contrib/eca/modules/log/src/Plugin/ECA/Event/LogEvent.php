@@ -17,9 +17,9 @@ use Drupal\eca_log\LogEvents;
 class LogEvent extends EventBase {
 
   /**
-   * @return array[]
+   * {@inheritdoc}
    */
-  public static function actions(): array {
+  public static function definitions(): array {
     $actions = [];
     $actions['log_message'] = [
       'label' => 'Log message created',

@@ -30,6 +30,39 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Almarai';
+  src: url("../font/Almarai/Almarai-Light.ttf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  unicode-range: U+0600-06FF;
+  /* We do this to only download the font when arabic characters are available on the page.*/
+}
+
+@font-face {
+  font-family: 'Almarai';
+  src: url("../font/Almarai/Almarai-Regular.ttf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  unicode-range: U+0600-06FF;
+}
+
+@font-face {
+  font-family: 'Almarai';
+  src: url("../font/Almarai/Almarai-Bold.ttf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  unicode-range: U+0600-06FF;
+}
+
+@font-face {
+  font-family: 'Almarai';
+  src: url("../font/Almarai/Almarai-ExtraBold.ttf") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+  unicode-range: U+0600-06FF;
+}
+
 code,
 kbd,
 pre,
@@ -137,6 +170,10 @@ blockquote {
 
 strong {
   font-weight: 500;
+}
+
+:lang(ar) {
+  font-family: "Almarai", "montserrat", sans-serif;
 }
 
 .text-primary {
@@ -335,14 +372,14 @@ a.brand-secondary:focus {
 .brand-accent {
   background-color: #ffc142;
   border-color: #ffc142;
-  color: #4d4d4d;
+  color: #343434;
 }
 
 a.brand-accent:hover,
 a.brand-accent:focus {
   background-color: #ffb00f;
   border-color: #ffb00f;
-  color: #4d4d4d;
+  color: #343434;
 }
 
 .brand-user {
@@ -361,22 +398,22 @@ a.brand-user:focus {
 .default-light {
   background-color: #e6e6e6;
   border-color: #e6e6e6;
-  color: #4d4d4d;
+  color: #343434;
 }
 
 a.default-light:hover,
 a.default-light:focus {
   background-color: #cdcdcd;
   border-color: #cdcdcd;
-  color: #4d4d4d;
+  color: #343434;
 }
 
 body {
   font-family: "montserrat", sans-serif;
-  font-weight: 300;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #4d4d4d;
+  color: #343434;
   background-color: #f3f3f3;
 }
 

@@ -133,6 +133,40 @@
   margin-top: 1rem;
 }
 
+.socialblue--sky .block-profile-statistic-block .follow-user-wrapper,
+.socialblue--sky .block-group-statistic-block .follow-user-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  margin-bottom: 1.75rem;
+}
+
+.socialblue--sky .block-profile-statistic-block .follow-user-wrapper .flag-follow-user,
+.socialblue--sky .block-profile-statistic-block .follow-user-wrapper .hero-footer__cta,
+.socialblue--sky .block-group-statistic-block .follow-user-wrapper .flag-follow-user,
+.socialblue--sky .block-group-statistic-block .follow-user-wrapper .hero-footer__cta {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 100%;
+          flex: 0 0 100%;
+  max-width: 100%;
+}
+
+.socialblue--sky .block-profile-statistic-block .follow-user-wrapper .flag-follow-user,
+.socialblue--sky .block-group-statistic-block .follow-user-wrapper .flag-follow-user {
+  padding: 6px 12px;
+  font-weight: 400;
+}
+
+.socialblue--sky .block-profile-statistic-block .follow-user-wrapper .hero-footer__cta,
+.socialblue--sky .block-group-statistic-block .follow-user-wrapper .hero-footer__cta {
+  padding-bottom: 0;
+}
+
 .socialblue--sky .block-profile-statistic-block .card__actionbar,
 .socialblue--sky .block-group-statistic-block .card__actionbar {
   padding: 1.5rem 0;
@@ -226,7 +260,7 @@
 
 .socialblue--sky .card__info-user--about {
   font-size: 1rem;
-  line-height: 24px;
+  line-height: 1.625rem;
 }
 
 .socialblue--sky .card__info-user--about-job, .socialblue--sky .card__info-user--about-organization {
@@ -394,6 +428,24 @@
         -ms-flex-pack: center;
             justify-content: center;
   }
+  .socialblue--sky .block-profile-statistic-block .follow-user-wrapper .flag-follow-user,
+  .socialblue--sky .block-profile-statistic-block .follow-user-wrapper .hero-footer__cta,
+  .socialblue--sky .block-group-statistic-block .follow-user-wrapper .flag-follow-user,
+  .socialblue--sky .block-group-statistic-block .follow-user-wrapper .hero-footer__cta {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 0 calc(50% - 5px);
+            flex: 0 0 calc(50% - 5px);
+    max-width: calc(50% - 5px);
+  }
+  .socialblue--sky .block-profile-statistic-block .follow-user-wrapper .flag-follow-user,
+  .socialblue--sky .block-group-statistic-block .follow-user-wrapper .flag-follow-user {
+    margin-right: 5px;
+  }
+  .socialblue--sky .block-profile-statistic-block .follow-user-wrapper .hero-footer__cta,
+  .socialblue--sky .block-group-statistic-block .follow-user-wrapper .hero-footer__cta {
+    margin-left: 5px;
+    padding-bottom: 0;
+  }
   .socialblue--sky .card__info-user--name {
     font-size: 2.25rem;
     font-weight: 700;
@@ -526,6 +578,14 @@
 }
 
 @media (max-width: 599px) {
+  .socialblue--sky .block-profile-statistic-block .follow-user-wrapper,
+  .socialblue--sky .block-group-statistic-block .follow-user-wrapper {
+    margin-bottom: 1rem;
+  }
+  .socialblue--sky .block-profile-statistic-block .follow-user-wrapper .flag-follow-user,
+  .socialblue--sky .block-group-statistic-block .follow-user-wrapper .flag-follow-user {
+    margin-bottom: .5rem;
+  }
   .socialblue--sky .card__info-user {
     margin: 0  auto .75rem;
     padding-bottom: .75rem;

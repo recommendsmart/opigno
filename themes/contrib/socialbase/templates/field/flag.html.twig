@@ -23,8 +23,7 @@
 {# Set the remaining Flag CSS classes. #}
 {% set classes = [
 'btn',
-'btn-default',
-'btn-sm',
+follow_user ? '' : 'btn-sm',
 'btn-follow',
 'flag',
 'flag-' ~ flag.id()|clean_class,

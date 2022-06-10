@@ -3,7 +3,7 @@
 namespace Drupal\eca_content\Event;
 
 /**
- * Class ContentEntityStorageLoad
+ * Provides an event when a content entity is being loaded from storage.
  *
  * @package Drupal\eca_content\Event
  */

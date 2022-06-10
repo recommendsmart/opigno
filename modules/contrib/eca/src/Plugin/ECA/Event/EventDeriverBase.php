@@ -5,28 +5,31 @@ namespace Drupal\eca\Plugin\ECA\Event;
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 
 /**
- *
+ * Base class for deriver classes that build ECA event plugins.
  */
 abstract class EventDeriverBase extends DeriverBase {
 
   /**
+   * Provides a list of plugin definitions.
+   *
    * @return array
+   *   List of definitions.
    */
-  abstract protected function actions(): array;
+  abstract protected function definitions(): array;
 
   /**
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition): array {
     $this->derivatives = [];
-    foreach ($this->actions() as $action_id => $action) {
-      $this->derivatives[$action_id] = [
-          'event_name' => $action['event_name'],
-          'event_class' => $action['event_class'],
-          'action' => $action_id,
-          'label' => $action['label'],
-          'tags' => $action['tags'] ?? 0,
-        ] + $base_plugin_definition;
+    foreach ($this->definitions() as $definition_id => $definition) {
+      $this->derivatives[$definition_id] = [
+        'event_name' => $definition['event_name'],
+        'event_class' => $definition['event_class'],
+        'action' => $definition_id,
+        'label' => $definition['label'],
+        'tags' => $definition['tags'] ?? 0,
+      ] + $base_plugin_definition;
     }
     return $this->derivatives;
   }

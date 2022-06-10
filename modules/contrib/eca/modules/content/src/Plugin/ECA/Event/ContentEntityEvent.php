@@ -2,10 +2,13 @@
 
 namespace Drupal\eca_content\Plugin\ECA\Event;
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\eca\Entity\Objects\EcaEvent;
 use Drupal\eca\Event\Tag;
+use Drupal\eca\Plugin\CleanupInterface;
 use Drupal\eca\Plugin\ECA\Event\EventBase;
-use Drupal\eca_content\EntityTypeTrait;
 use Drupal\eca_content\Event\ContentEntityBundleCreate;
 use Drupal\eca_content\Event\ContentEntityBundleDelete;
 use Drupal\eca_content\Event\ContentEntityCreate;
@@ -28,6 +31,11 @@ use Drupal\eca_content\Event\ContentEntityTranslationDelete;
 use Drupal\eca_content\Event\ContentEntityTranslationInsert;
 use Drupal\eca_content\Event\ContentEntityUpdate;
 use Drupal\eca_content\Event\ContentEntityView;
+use Drupal\eca_content\Event\FieldSelectionBase;
+use Drupal\eca_content\Event\OptionsSelection;
+use Drupal\eca_content\Event\ReferenceSelection;
+use Drupal\eca_content\Service\EntityTypes;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the ECA Events for content entities.
@@ -37,14 +45,28 @@ use Drupal\eca_content\Event\ContentEntityView;
  *   deriver = "Drupal\eca_content\Plugin\ECA\Event\ContentEntityEventDeriver"
  * )
  */
-class ContentEntityEvent extends EventBase {
-
-  use EntityTypeTrait;
+class ContentEntityEvent extends EventBase implements CleanupInterface {
 
   /**
-   * @return array[]
+   * The entity type service.
+   *
+   * @var \Drupal\eca_content\Service\EntityTypes
    */
-  public static function actions(): array {
+  protected EntityTypes $entityTypes;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): ContentEntityEvent {
+    $plugin = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $plugin->entityTypes = $container->get('eca_content.service.entity_types');
+    return $plugin;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function definitions(): array {
     return [
       'bundlecreate' => [
         'label' => 'Create content entity bundle',
@@ -167,10 +189,22 @@ class ContentEntityEvent extends EventBase {
         'tags' => Tag::CONTENT | Tag::WRITE | Tag::RUNTIME | Tag::AFTER,
       ],
       'custom' => [
-        'label' => 'ECA content entity custom event',
+        'label' => 'ECA custom event (entity-aware)',
         'event_name' => ContentEntityEvents::CUSTOM,
         'event_class' => ContentEntityCustomEvent::class,
         'tags' => Tag::CONTENT | Tag::WRITE | Tag::RUNTIME | Tag::AFTER,
+      ],
+      'reference_selection' => [
+        'label' => 'Entity reference field selection',
+        'event_name' => ContentEntityEvents::REFERENCE_SELECTION,
+        'event_class' => ReferenceSelection::class,
+        'tags' => Tag::RUNTIME | Tag::CONTENT,
+      ],
+      'options_selection' => [
+        'label' => 'Options field selection',
+        'event_name' => ContentEntityEvents::OPTIONS_SELECTION,
+        'event_class' => OptionsSelection::class,
+        'tags' => Tag::RUNTIME | Tag::CONTENT,
       ],
     ];
   }
@@ -183,7 +217,20 @@ class ContentEntityEvent extends EventBase {
       return ContentEntityCustomEvent::fields();
     }
     $fields = parent::fields();
-    $fields[] = $this->bundleField(TRUE);
+    $fields[] = $this->entityTypes->bundleField(TRUE);
+    if (is_subclass_of($this->eventClass(), FieldSelectionBase::class)) {
+      $fields[] = [
+        'name' => 'field_name',
+        'label' => 'Restrict by field (machine name)',
+        'type' => 'String',
+      ];
+      $fields[] = [
+        'name' => 'token_name',
+        'label' => 'Token name holding the selection',
+        'type' => 'String',
+        'value' => 'selection',
+      ];
+    }
     return $fields;
   }
 
@@ -207,6 +254,30 @@ class ContentEntityEvent extends EventBase {
         [$entityType] = explode(' ', $type);
         return $entityType;
 
+      case 'reference_selection':
+      case 'options_selection':
+        $config = $ecaEvent->getConfiguration();
+        $type = $config['type'] ?? '_all';
+        if ($type === '_all') {
+          $wildcard = '*';
+        }
+        else {
+          [$entityType, $bundle] = array_merge(explode(' ', $type), ['_all']);
+          if ($bundle === '_all') {
+            $wildcard = $entityType . '::*';
+          }
+          else {
+            $wildcard = $entityType . '::' . $bundle;
+          }
+        }
+        if (empty($config['field_name'])) {
+          $wildcard .= '::*';
+        }
+        else {
+          $wildcard .= '::' . $config['field_name'];
+        }
+        return $wildcard;
+
       default:
         $type = $ecaEvent->getConfiguration()['type'] ?? '_all';
         if ($type === '_all') {
@@ -217,6 +288,84 @@ class ContentEntityEvent extends EventBase {
           return $entityType;
         }
         return $entityType . '::' . $bundle;
+
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function cleanupAfterSuccessors(): void {
+    switch ($this->getDerivativeId()) {
+
+      case 'reference_selection':
+        if (!($event = array_pop(ReferenceSelection::$instances))) {
+          return;
+        }
+        if (!($token_name = $this->configuration['token_name'] ?? NULL)) {
+          return;
+        }
+
+        $entities = $this->tokenServices->hasTokenData($token_name) ?
+          $this->tokenServices->getTokenData($token_name) : [];
+        if ($entities instanceof EntityInterface) {
+          $entities = [$entities];
+        }
+        elseif (!is_iterable($entities)) {
+          $entities = [];
+        }
+
+        $event->selection->referencableEntities = [];
+        $config = $event->selection->getConfiguration();
+        $target_type = $config['target_type'];
+        foreach ($entities as $entity) {
+          while ($entity instanceof TypedDataInterface) {
+            $entity = $entity->getValue();
+          }
+          if (is_scalar($entity)) {
+            $entity = $this->entityTypeManager->getStorage($target_type)
+              ->load($entity);
+          }
+          if (!($entity instanceof EntityInterface) || ($target_type !== $entity->getEntityTypeId()) || in_array($entity, $event->selection->referencableEntities, TRUE)) {
+            continue;
+          }
+          $event->selection->referencableEntities[] = $entity;
+        }
+        return;
+
+      case 'options_selection':
+        if (!($event = array_pop(OptionsSelection::$instances))) {
+          return;
+        }
+        if (!($token_name = $this->configuration['token_name'] ?? NULL)) {
+          return;
+        }
+
+        $values = $this->tokenServices->hasTokenData($token_name) ?
+          $this->tokenServices->getTokenData($token_name) : [];
+        if (!is_iterable($values)) {
+          $values = [];
+        }
+
+        $event->allowedValues = [];
+        foreach ($values as $k => $v) {
+          if ($v instanceof TypedDataInterface) {
+            $v = $v->getString();
+          }
+          if (is_object($v) && !($v instanceof TranslatableMarkup) && method_exists($v, '__toString')) {
+            $v = (string) $v;
+          }
+          if (is_scalar($v)) {
+            $event->allowedValues[$k] = (string) $v;
+          }
+          elseif ($v instanceof TranslatableMarkup) {
+            $event->allowedValues[$k] = $v;
+          }
+          elseif (is_null($v)) {
+            $event->allowedValues[$k] = $k;
+          }
+        }
+        return;
 
     }
   }

@@ -19,6 +19,7 @@ interface ConditionInterface extends PluginFormInterface, ConfigurableInterface,
    * Resets stateful variables to their initial values.
    *
    * @return \Drupal\eca\Plugin\ECA\Condition\ConditionInterface
+   *   This.
    */
   public function reset(): ConditionInterface;
 

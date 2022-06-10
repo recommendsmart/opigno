@@ -8,6 +8,7 @@ use Drupal\Core\Queue\QueueWorkerBase;
 use Drupal\flow\Entity\EntitySaveHandler;
 use Drupal\flow\Event\FlowBeginEvent;
 use Drupal\flow\Event\FlowEndEvent;
+use Drupal\flow\Event\FlowTaskWorkerRuntimeContext;
 use Drupal\flow\Flow;
 use Drupal\flow\FlowEvents;
 use Drupal\flow\FlowTaskQueue;
@@ -111,7 +112,8 @@ class FlowTaskWorker extends QueueWorkerBase implements ContainerFactoryPluginIn
     }
     $stack = &Flow::$stack[$task_mode];
     array_push($stack, $entity);
-    $this->getEventDispatcher()->dispatch(new FlowBeginEvent($entity, $task_mode), FlowEvents::BEGIN);
+    $runtime_context = new FlowTaskWorkerRuntimeContext($item);
+    $this->getEventDispatcher()->dispatch(new FlowBeginEvent($entity, $task_mode, $runtime_context), FlowEvents::BEGIN);
     $entity_needs_save = FALSE;
 
     if (Flow::isActive()) {
@@ -131,7 +133,7 @@ class FlowTaskWorker extends QueueWorkerBase implements ContainerFactoryPluginIn
       }
     }
 
-    $this->getEventDispatcher()->dispatch(new FlowEndEvent($entity, $task_mode), FlowEvents::END);
+    $this->getEventDispatcher()->dispatch(new FlowEndEvent($entity, $task_mode, $runtime_context), FlowEvents::END);
     array_pop($stack);
     if ($entity_needs_save) {
       $flow_is_active = Flow::isActive();

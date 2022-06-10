@@ -5,15 +5,15 @@ namespace Drupal\eca_base\Plugin\ECA\Event;
 use Drupal\eca\Plugin\ECA\Event\EventDeriverBase;
 
 /**
- *
+ * Deriver for ECA Base event plugins.
  */
 class BaseEventDeriver extends EventDeriverBase {
 
   /**
    * {@inheritdoc}
    */
-  protected function actions(): array {
-    return BaseEvent::actions();
+  protected function definitions(): array {
+    return BaseEvent::definitions();
   }
 
 }

@@ -113,7 +113,9 @@ trait FallbackSubjectTrait {
     if (!empty($this->settings['entity_uuid']) && Uuid::isValid($this->settings['entity_uuid'])) {
       // When a UUID is specified, use it as identifier.
       $uuid = $this->settings['entity_uuid'];
-      EntityFallbackRepository::$items[$uuid] = $this->getEntityRepository()->loadEntityByUuid($entity_type_id, $uuid);
+      if (!isset(EntityFallbackRepository::$items[$uuid])) {
+        EntityFallbackRepository::$items[$uuid] = $this->getEntityRepository()->loadEntityByUuid($entity_type_id, $uuid);
+      }
       if (!isset(EntityFallbackRepository::$items[$uuid])) {
         $uuid_key = $entity_type->hasKey('uuid') ? $entity_type->getKey('uuid') : 'uuid';
         $values[$uuid_key] = $uuid;

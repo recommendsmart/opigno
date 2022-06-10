@@ -164,9 +164,9 @@ class StorageTypeForm extends BundleEntityFormBase {
 
     $form['has_canonical'] = [
       '#type' => 'checkbox',
-      '#title' => t('Has canonical URL'),
+      '#title' => t('Allow direct viewing of entities'),
       '#default_value' => $storage_type->hasCanonical(),
-      '#description' => t('Whether items of this Storage type have a canonical URL for being viewed (accessible via /storage/{id}). When enabled, <a href=":permissions_url" target="_blank">permissions</a> need to be properly defined.', [
+      '#description' => t('Whether items of this Storage type have a canonical URL for being viewed (accessible via /storage/{id}). When enabled, <a href=":permissions_url" target="_blank">permissions</a> need to be properly defined. If disabled, attempts to view an entity at /storage/{id} will redirect to /storage/{id}/edit potentially returning a 404 if the user lacks the required permissions.', [
         ':permissions_url' => '/admin/people/permissions',
       ]),
     ];

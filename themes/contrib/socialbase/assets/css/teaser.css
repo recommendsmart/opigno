@@ -86,6 +86,21 @@
   position: relative;
 }
 
+.teaser__content .field--name-field-profile-self-introduction,
+.teaser__content .field--name-field-profile-summary {
+  margin-bottom: 0.75rem;
+}
+
+.teaser__content .field--name-field-profile-self-introduction > *:first-child,
+.teaser__content .field--name-field-profile-summary > *:first-child {
+  margin-top: 0;
+}
+
+.teaser__content .field--name-field-profile-self-introduction > *:last-child,
+.teaser__content .field--name-field-profile-summary > *:last-child {
+  margin-bottom: 0;
+}
+
 .teaser__content-line {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -198,11 +213,6 @@
   display: block;
 }
 
-.teaser--tile.teaser-profile .teaser__image a {
-  display: block;
-  height: 100%;
-}
-
 .teaser--tile.teaser-profile .teaser__image img {
   display: block;
   margin: 0 auto;
@@ -235,7 +245,7 @@
 .teaser--small .teaser--small__media .teaser--small__type-icon {
   width: 44px;
   height: 44px;
-  fill: #4d4d4d;
+  fill: #343434;
   background-color: #e6e6e6;
   border-radius: 5px;
   padding: .75rem;

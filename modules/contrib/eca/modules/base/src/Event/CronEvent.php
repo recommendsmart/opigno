@@ -6,30 +6,33 @@ use Cron\CronExpression;
 use Drupal\Component\EventDispatcher\Event;
 use Drupal\eca\EcaState;
 use Drupal\eca\Event\ConditionalApplianceInterface;
+use Drupal\eca\Event\ConfigurableEventInterface;
 
 /**
- * Class CronEvent
+ * Provides a cron event.
  *
  * @package Drupal\eca_base\Event
  */
-class CronEvent extends Event implements ConditionalApplianceInterface {
+class CronEvent extends Event implements ConditionalApplianceInterface, ConfigurableEventInterface {
 
   /**
+   * ECA state service.
+   *
    * @var \Drupal\eca\EcaState
    */
   protected EcaState $store;
 
   /**
-   * Provides field specifications for the modeller.
-   *
-   * @return string[]
+   * {@inheritdoc}
    */
   public static function fields(): array {
-    return [[
-      'name' => 'frequency',
-      'label' => 'Frequency (UTC)',
-      'type' => 'String',
-    ]];
+    return [
+      [
+        'name' => 'frequency',
+        'label' => 'Frequency (UTC)',
+        'type' => 'String',
+      ],
+    ];
   }
 
   /**
@@ -99,7 +102,7 @@ class CronEvent extends Event implements ConditionalApplianceInterface {
       return $this->keyValueStore()->getCurrentTimestamp() > $cron->getNextRunDate($dt)->getTimestamp();
     }
     catch (\Exception $e) {
-      // @todo: Log this exception.
+      // @todo Log this exception.
     }
     return FALSE;
   }

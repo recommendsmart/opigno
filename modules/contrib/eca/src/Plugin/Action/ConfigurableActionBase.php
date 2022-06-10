@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 
 /**
- *
+ * Base class for configurable ECA action plugins.
  */
 abstract class ConfigurableActionBase extends ActionBase implements ConfigurableInterface, DependentPluginInterface, PluginFormInterface {
 

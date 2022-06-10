@@ -19,16 +19,22 @@ class Actions {
   use ServiceTrait;
 
   /**
+   * Action plugin manager.
+   *
    * @var \Drupal\Core\Action\ActionManager
    */
   protected ActionManager $actionManager;
 
   /**
+   * Logger channel service.
+   *
    * @var \Drupal\Core\Logger\LoggerChannelInterface
    */
   protected LoggerChannelInterface $logger;
 
   /**
+   * Entity type manager service.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected EntityTypeManagerInterface $entityTypeManager;
@@ -37,8 +43,11 @@ class Actions {
    * Actions constructor.
    *
    * @param \Drupal\Core\Action\ActionManager $action_manager
+   *   The action plugin manager.
    * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
+   *   The logger channel service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type managewr service.
    */
   public function __construct(ActionManager $action_manager, LoggerChannelInterface $logger, EntityTypeManagerInterface $entity_type_manager) {
     $this->actionManager = $action_manager;
@@ -53,18 +62,28 @@ class Actions {
    *   The sorted list of actions.
    */
   public function actions(): array {
-    static $actions;
+    $actions = &drupal_static('eca_actions');
     if ($actions === NULL) {
       $actions = [];
       foreach ($this->actionManager->getDefinitions() as $plugin_id => $definition) {
+        if (!empty($definition['confirm_form_route_name'])) {
+          // We cannot support actions that redirect to a confirmation form.
+          // @see https://www.drupal.org/project/eca/issues/3279483
+          continue;
+        }
+        if ($definition['id'] === 'entity:save_action') {
+          // We replace all save actions by one generic "Entity: save" action.
+          continue;
+        }
         try {
           $actions[] = $this->actionManager->createInstance($plugin_id);
-        } catch (PluginException $e) {
+        }
+        catch (PluginException $e) {
           // Can be ignored.
         }
       }
+      $this->sortPlugins($actions);
     }
-    $this->sortPlugins($actions);
     return $actions;
   }
 

@@ -8,7 +8,7 @@ core_version_requirement: ^8 || ^9
 dependencies:
   - drupal:file
 
-# Information added by Drupal.org packaging script on 2022-01-25
-version: '1.0.1'
+# Information added by Drupal.org packaging script on 2022-05-11
+version: '1.1.0'
 project: 'file_de_duplicator'
-datestamp: 1643113564
+datestamp: 1652274895

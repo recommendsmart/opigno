@@ -6,7 +6,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- *
+ * Trait providing methods for ECA provided action plugins.
  */
 trait ConfigurableActionTrait {
 

@@ -21,6 +21,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class ActionBase extends CoreActionBase implements ContainerFactoryPluginInterface, ActionInterface {
 
   /**
+   * Triggered event leading to this action.
+   *
    * @var \Drupal\Component\EventDispatcher\Event
    */
   protected Event $event;
@@ -40,18 +42,22 @@ abstract class ActionBase extends CoreActionBase implements ContainerFactoryPlug
   protected TokenInterface $tokenServices;
 
   /**
+   * Current user account.
+   *
    * @var \Drupal\Core\Session\AccountProxyInterface
    */
   protected AccountProxyInterface $currentUser;
 
   /**
-   * The time service.
+   * Time service.
    *
    * @var \Drupal\Component\Datetime\TimeInterface
    */
   protected TimeInterface $time;
 
   /**
+   * ECA state service.
+   *
    * @var \Drupal\eca\EcaState
    */
   protected EcaState $state;

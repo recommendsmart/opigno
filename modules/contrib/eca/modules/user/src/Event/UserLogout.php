@@ -3,7 +3,7 @@
 namespace Drupal\eca_user\Event;
 
 /**
- * Class UserLogout
+ * Provides an event for when the user logs out of the current session.
  *
  * @package Drupal\eca_user\Event
  */

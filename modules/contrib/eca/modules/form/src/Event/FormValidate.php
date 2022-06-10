@@ -3,7 +3,7 @@
 namespace Drupal\eca_form\Event;
 
 /**
- * Class FormValidate
+ * Dispatched when a form is being validated.
  *
  * @package Drupal\eca_form\Event
  */

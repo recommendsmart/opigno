@@ -3,8 +3,7 @@
 namespace Drupal\eca\Plugin;
 
 /**
- * Interface for actions and conditions with an option list for at least one of
- * their configuration values.
+ * Interface for actions and conditions with select-type config field(s).
  */
 interface OptionsInterface {
 

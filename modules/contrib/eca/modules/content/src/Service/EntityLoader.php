@@ -11,8 +11,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
-use Drupal\eca\Service\Conditions;
+use Drupal\eca\Service\YamlParser;
 use Drupal\eca\Token\TokenInterface;
+use Symfony\Component\Yaml\Exception\ParseException;
 
 /**
  * Service for loading entities from ECA plugins.
@@ -36,6 +37,13 @@ class EntityLoader {
   protected TokenInterface $tokenServices;
 
   /**
+   * The YAML parser.
+   *
+   * @var \Drupal\eca\Service\YamlParser
+   */
+  protected YamlParser $yamlParser;
+
+  /**
    * Constructs a new EntityLoader object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -44,11 +52,14 @@ class EntityLoader {
    *   The Token services.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
+   * @param \Drupal\eca\Service\YamlParser $yaml_parser
+   *   The YAML parser.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, TokenInterface $token_services, TranslationInterface $string_translation) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, TokenInterface $token_services, TranslationInterface $string_translation, YamlParser $yaml_parser) {
     $this->entityTypeManager = $entity_type_manager;
     $this->tokenServices = $token_services;
     $this->stringTranslation = $string_translation;
+    $this->yamlParser = $yaml_parser;
   }
 
   /**
@@ -114,7 +125,7 @@ class EntityLoader {
       '#type' => 'textarea',
       '#title' => $this->t('Property values'),
       '#default_value' => $plugin_configuration['properties'],
-      '#description' => $this->t('A key-value list of raw field values of the entity to load. This will only be used when loading by properties is selected above. Supports tokens. Set one value per line. Example:<em><br/>field_mynumber: 1</em>'),
+      '#description' => $this->t('A key-value list of raw field values of the entity to load. This will only be used when loading by properties is selected above. Supports tokens and YAML format. Example:<em><br/>field_mynumber: 1</em>. When using tokens and YAML altogether, make sure that tokens are wrapped as a string. Example: <em>title: "[node:title]"</em>'),
     ];
     $form['langcode'] = [
       '#type' => 'select',
@@ -239,10 +250,10 @@ class EntityLoader {
           && $config['entity_type'] !== '_none'
           && $config['entity_id'] !== ''
           && $this->entityTypeManager->hasDefinition($config['entity_type'])) {
-            $entity_id = trim($token->replaceClear($config['entity_id']));
-            if ($entity_id !== '') {
-              $entity = $this->entityTypeManager->getStorage($config['entity_type'])->load($entity_id);
-            }
+          $entity_id = trim($token->replaceClear($config['entity_id']));
+          if ($entity_id !== '') {
+            $entity = $this->entityTypeManager->getStorage($config['entity_type'])->load($entity_id);
+          }
         }
         break;
 
@@ -252,18 +263,13 @@ class EntityLoader {
           && $config['entity_type'] !== '_none'
           && $config['properties'] !== ''
           && $this->entityTypeManager->hasDefinition($config['entity_type'])) {
-
-          $properties_string = trim($token->replaceClear($config['properties']));
-          $properties = [];
-          $tok = strtok($properties_string, "\n");
-          while ($tok !== false) {
-            [$k, $v] = array_merge(explode(':', $tok, 2), ['']);
-            if (trim($k) !== '') {
-              $properties[trim($k)][] = trim($v);
-            }
-            $tok = strtok("\n");
+          try {
+            $properties = $this->yamlParser->parse($config['properties']);
           }
-          if (!empty($properties)) {
+          catch (ParseException $e) {
+            \Drupal::logger('eca')->error('Tried parsing properties as YAML format for loading an entity, but parsing failed.');
+          }
+          if (is_array($properties) && !empty($properties)) {
             $entities = $this->entityTypeManager->getStorage($config['entity_type'])->loadByProperties($properties);
             $entity = $entities ? reset($entities) : NULL;
           }
@@ -272,7 +278,7 @@ class EntityLoader {
 
     }
 
-    if ($config['unchanged'] === Conditions::OPTION_YES) {
+    if ($config['unchanged']) {
       if (!isset($entity->original) && !$entity->isNew()) {
         /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
         $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
@@ -296,7 +302,7 @@ class EntityLoader {
     if ($entity instanceof RevisionableInterface) {
       /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
       $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
-      if (($config['latest_revision'] === Conditions::OPTION_YES) && !$entity->isLatestRevision()) {
+      if ($config['latest_revision'] && !$entity->isLatestRevision()) {
         $entity = $storage->loadRevision($storage->getLatestRevisionId($entity->id()));
       }
       elseif ($config['revision_id'] !== '') {

@@ -44,7 +44,11 @@ class ProcessingTaskEvent extends Event implements ConditionalApplianceInterface
   public function appliesForLazyLoadingWildcard(string $wildcard): bool {
     $task_name = mb_strtolower(trim($this->task->getTaskName()));
     $task_value = mb_strtolower(trim($this->task->getTaskValue()));
-    return in_array($wildcard, ['*', $task_name, $task_name . '::' . $task_value]);
+    return in_array($wildcard, [
+      '*',
+      $task_name,
+      $task_name . '::' . $task_value,
+    ], TRUE);
   }
 
   /**

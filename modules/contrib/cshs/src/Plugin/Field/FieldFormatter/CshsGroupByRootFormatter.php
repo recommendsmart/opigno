@@ -106,6 +106,7 @@ class CshsGroupByRootFormatter extends CshsFormatterBase {
     $settings = parent::defaultSettings();
     $settings['sort'] = static::SORT_NONE;
     $settings['depth'] = 0;
+    $settings['last_child'] = FALSE;
 
     return $settings;
   }
@@ -128,6 +129,18 @@ class CshsGroupByRootFormatter extends CshsFormatterBase {
       '#title' => $this->t('Depth'),
       '#description' => $this->t('The maximum hierarchy depth. Use 0 to not limit or 1 to display just the root term (or the last if reverse order selected).'),
       '#default_value' => $this->getSetting('depth'),
+      '#states' => [
+        'disabled' => [
+          ':input[name*="last_child"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+
+    $element['last_child'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Last child'),
+      '#description' => $this->t('Show only the root term and its deepest child.'),
+      '#default_value' => $this->getSetting('last_child'),
     ];
 
     return $element;
@@ -142,8 +155,11 @@ class CshsGroupByRootFormatter extends CshsFormatterBase {
       '@value' => static::SORT_OPTIONS[$this->getSetting('sort')],
     ]);
 
+    /* @noinspection NestedTernaryOperatorInspection */
     $summary[] = $this->t('Depth: @value', [
-      '@value' => $this->getSetting('depth') ?: $this->t('Unlimited'),
+      '@value' => $this->getSetting('last_child')
+        ? $this->t('Last child only')
+        : ($this->getSetting('depth') ?: $this->t('Unlimited')),
     ]);
 
     return $summary;
@@ -153,9 +169,9 @@ class CshsGroupByRootFormatter extends CshsFormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode): array {
-    $depth = $this->getSetting('depth');
-    $linked = $this->getSetting('linked');
-    $reverse = $this->getSetting('reverse');
+    $depth = (int) $this->getSetting('depth');
+    $linked = (bool) $this->getSetting('linked');
+    $reverse = (bool) $this->getSetting('reverse');
     $elements = [];
 
     foreach ($this->getEntitiesToView($items, $langcode) as $term) {
@@ -197,6 +213,17 @@ class CshsGroupByRootFormatter extends CshsFormatterBase {
     if ($sort_function = static::SORT_FUNCTIONS[$this->getSetting('sort')] ?? NULL) {
       foreach ($elements as $root_id => $element) {
         $sort_function($elements[$root_id]['#terms']);
+      }
+    }
+
+    if ($this->getSetting('last_child')) {
+      foreach ($elements as $root_id => $element) {
+        $value = \end($element['#terms']);
+        $key = \key($element['#terms']);
+
+        $elements[$root_id]['#terms'] = [
+          $key => $value,
+        ];
       }
     }
 

@@ -319,7 +319,7 @@ span.form-required {
     & + .field--item {
       display: inline-block;
       a {
-        font-weight: 300;
+        font-weight: 400;
       }
     }
   }
@@ -371,6 +371,13 @@ details {
       [dir='rtl'] & {
         right: auto;
         left: 1.25rem;
+      }
+    }
+
+    &,
+    &.btn {
+      &:focus {
+        outline: $default-outline solid 2px;
       }
     }
   }

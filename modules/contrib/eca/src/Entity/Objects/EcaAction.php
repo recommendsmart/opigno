@@ -3,6 +3,7 @@
 namespace Drupal\eca\Entity\Objects;
 
 use Drupal\Component\EventDispatcher\Event;
+use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\eca\Plugin\Action\ActionInterface;
 use Drupal\eca\Entity\Eca;
 use Drupal\Core\Action\ActionInterface as CoreActionInterface;
@@ -14,9 +15,14 @@ use Drupal\eca\Event\BeforeActionExecutionEvent;
 use Drupal\eca\Plugin\ObjectWithPluginInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * Provides an ECA item of type action for internal processing.
+ */
 class EcaAction extends EcaObject implements ObjectWithPluginInterface {
 
   /**
+   * Action plugin.
+   *
    * @var \Drupal\Core\Action\ActionInterface
    */
   protected CoreActionInterface $plugin;
@@ -32,10 +38,15 @@ class EcaAction extends EcaObject implements ObjectWithPluginInterface {
    * Event constructor.
    *
    * @param \Drupal\eca\Entity\Eca $eca
+   *   The ECA config entity.
    * @param string $id
+   *   The action ID provided by the modeller.
    * @param string $label
+   *   The action label.
    * @param \Drupal\eca\Entity\Objects\EcaEvent $event
+   *   The ECA event object which started the process towards this action.
    * @param \Drupal\Core\Action\ActionInterface $plugin
+   *   The action plugin.
    */
   public function __construct(Eca $eca, string $id, string $label, EcaEvent $event, CoreActionInterface $plugin) {
     parent::__construct($eca, $id, $label, $event);
@@ -54,6 +65,19 @@ class EcaAction extends EcaObject implements ObjectWithPluginInterface {
     $exception_thrown = FALSE;
     if ($this->plugin instanceof ActionInterface) {
       $this->plugin->setEvent($event);
+    }
+    elseif ($this->plugin instanceof ConfigurableActionBase) {
+      // When this action plugin is not related with ECA directly, that external
+      // action plugin might provide configuration input where it makes sense
+      // to apply Token replacement.
+      $token = $this->token();
+      $fields = $this->plugin->getConfiguration();
+      array_walk_recursive($fields, static function (&$value) use ($token) {
+        if (is_string($value) && !empty($value)) {
+          $value = $token->replaceClear($value);
+        }
+      });
+      $this->plugin->setConfiguration($fields);
     }
     $objects = $this->getObjects($this->plugin);
     foreach ($objects as $object) {

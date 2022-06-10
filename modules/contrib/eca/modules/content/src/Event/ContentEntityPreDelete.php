@@ -3,7 +3,7 @@
 namespace Drupal\eca_content\Event;
 
 /**
- * Class ContentEntityPreDelete
+ * Provides an event before a content entity is being deleted.
  *
  * @package Drupal\eca_content\Event
  */

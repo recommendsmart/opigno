@@ -22,8 +22,6 @@ class EcaCondition extends Plugin {
   /**
    * The human-readable name of the condition.
    *
-   * @ingroup plugin_translatable
-   *
    * @var \Drupal\Core\Annotation\Translation
    */
   public Translation $label;

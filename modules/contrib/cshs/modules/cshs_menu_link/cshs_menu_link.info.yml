@@ -11,7 +11,7 @@ dependencies:
   - cshs:cshs
   - drupal:menu_ui
 
-# Information added by Drupal.org packaging script on 2021-09-09
-version: '8.x-3.5'
+# Information added by Drupal.org packaging script on 2022-04-26
+version: '8.x-3.6'
 project: 'cshs'
-datestamp: 1631181477
+datestamp: 1650996359

@@ -2,12 +2,6 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
   width: 100%;
   padding-top: 0.625rem;
   padding-bottom: 0.625rem;
@@ -15,6 +9,7 @@
 }
 
 .list-item__avatar {
+  display: block;
   width: 24px;
   height: 24px;
   -webkit-box-flex: 0;
@@ -70,7 +65,7 @@
 
 .list-item__text .list-item__text--small {
   color: #555;
-  font-weight: 300;
+  font-weight: 400;
   margin-top: 5px;
 }
 
@@ -109,7 +104,7 @@
 }
 
 .list-item--visibility .icon-small {
-  fill: #4d4d4d;
+  fill: #343434;
   margin-right: .25em;
 }
 

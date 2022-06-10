@@ -34,6 +34,17 @@ class ViewsQuery extends ConfigurableActionBase implements OptionsInterface {
   /**
    * {@inheritdoc}
    */
+  public function calculateDependencies(): array {
+    return [
+      'config' => [
+        'views.view.' . $this->getViewId(),
+      ],
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function execute($object = NULL): void {
     if (!($display = $this->getDisplay())) {
       return;
@@ -83,7 +94,7 @@ class ViewsQuery extends ConfigurableActionBase implements OptionsInterface {
     $form = parent::buildConfigurationForm($form, $form_state);
     $form['token_name'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Token name'),
+      '#title' => $this->t('Name of token'),
       '#default_value' => $this->configuration['token_name'],
       '#weight' => -10,
     ];
@@ -212,7 +223,7 @@ class ViewsQuery extends ConfigurableActionBase implements OptionsInterface {
 
     $view = $this->view;
     foreach ($view->result as $row) {
-      $entity = isset($row->_entity) ? $row->_entity : NULL;
+      $entity = $row->_entity ?? NULL;
       if (!$entity) {
         continue;
       }

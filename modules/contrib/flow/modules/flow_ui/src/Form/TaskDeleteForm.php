@@ -66,8 +66,13 @@ class TaskDeleteForm extends TaskForm {
     $flow = $this->flow;
     $tasks_array = $flow->get('tasks');
     unset($tasks_array[$this->taskIndex]);
-    $flow->setTasks($tasks_array);
-    $flow->save();
+    if (!empty($tasks_array)) {
+      $flow->setTasks($tasks_array);
+      $flow->save();
+    }
+    elseif (!$flow->isCustom()) {
+      $flow->delete();
+    }
     $this->messenger->addStatus($this->t('The task has been successfully removed.'));
   }
 
@@ -83,11 +88,10 @@ class TaskDeleteForm extends TaskForm {
     $flow = $this->flow;
     $target_type = $this->targetEntityType;
     $bundle_type_id = $target_type->getBundleEntityType() ?: 'bundle';
-    $form_state->setRedirect("flow.task.{$target_type->id()}.edit", [
+    $form_state->setRedirect("entity.flow.{$target_type->id()}.task_mode", [
       'entity_type_id' => $target_type->id(),
       $bundle_type_id => $flow->getTargetBundle(),
       'flow_task_mode' => $flow->getTaskMode(),
-      'flow_task_index' => $this->taskIndex,
     ]);
   }
 

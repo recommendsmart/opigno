@@ -3,7 +3,7 @@
 namespace Drupal\eca_form\Event;
 
 /**
- * Class FormSubmit
+ * Dispatched when a form is being submitted.
  *
  * @package Drupal\eca_form\Event
  */

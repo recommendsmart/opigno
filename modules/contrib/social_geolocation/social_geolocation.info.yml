@@ -12,7 +12,7 @@ dependencies:
   - social_profile
 package: Social
 
-# Information added by Drupal.org packaging script on 2022-03-28
-version: '2.0.2'
+# Information added by Drupal.org packaging script on 2022-05-20
+version: '2.1.1'
 project: 'social_geolocation'
-datestamp: 1648465172
+datestamp: 1653055953

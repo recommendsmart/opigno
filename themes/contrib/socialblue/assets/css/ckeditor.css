@@ -7,17 +7,17 @@
 }
 
 .btn-default {
-  color: #4d4d4d;
+  color: #343434;
   background-color: #ffffff;
   border-color: #adadad;
-  fill: #4d4d4d;
+  fill: #343434;
 }
 
 .btn-default:focus, .btn-default.focus, .btn-default:hover, .btn-default:active, .btn-default.active,
 .open > .btn-default.dropdown-toggle {
   background-color: #e6e6e6;
   border-color: #8e8e8e;
-  color: #4d4d4d;
+  color: #343434;
 }
 
 .btn-default.disabled:hover, .btn-default.disabled:focus, .btn-default.disabled.focus, .btn-default[disabled]:hover, .btn-default[disabled]:focus, .btn-default[disabled].focus,
@@ -169,7 +169,7 @@ fieldset[disabled]
 
 .btn-flat:hover .icon-inline, .btn-flat:focus .icon-inline,
 .open .dropdown-toggle .btn-flat .icon-inline {
-  fill: #4d4d4d;
+  fill: #343434;
 }
 
 .btn-flat:active, .btn-flat.active {
@@ -314,10 +314,19 @@ fieldset[disabled] .btn--twitter.focus {
   border-radius: 10px;
 }
 
+.meta-addtocal .btn {
+  margin-right: 5px;
+  margin-bottom: 3px;
+  padding: 5px 10px;
+  border-radius: 5px !important;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
 body {
   font-family: "montserrat", sans-serif;
-  font-weight: 300;
-  color: #4d4d4d;
+  font-weight: 400;
+  color: #343434;
 }
 
 a:not(.btn) {
@@ -327,4 +336,8 @@ a:not(.btn) {
 
 a:not(.btn):hover {
   color: #178ab4;
+}
+
+:lang(ar) {
+  font-family: "Almarai", "montserrat", sans-serif;
 }

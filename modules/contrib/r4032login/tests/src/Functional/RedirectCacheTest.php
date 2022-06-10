@@ -22,30 +22,27 @@ class RedirectCacheTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'file',
     'node',
-    'page_cache',
     'r4032login',
   ];
 
   /**
-   * The node used for tests.
+   * An unpublished node used for tests.
    *
    * @var \Drupal\node\NodeInterface
    */
-  protected $node;
+  protected $unpublishedNode;
 
   /**
-   * The file used for tests.
+   * An published node used for tests.
    *
-   * @var \Drupal\file\FileInterface
+   * @var \Drupal\node\NodeInterface
    */
-  protected $file;
+  protected $publishedNode;
 
   /**
    * {@inheritdoc}
@@ -64,15 +61,26 @@ class RedirectCacheTest extends BrowserTestBase {
     $this->createFileField('field_text_file', 'node', 'page', ['uri_scheme' => 'private']);
 
     // Create an unpublished node with a private file to test.
-    $this->node = $this->drupalCreateNode();
+    $this->unpublishedNode = $this->drupalCreateNode();
     file_put_contents('private://test.txt', 'test');
-    $this->file = File::create([
+    $file = File::create([
       'uri' => 'private://test.txt',
       'filename' => 'test.txt',
     ]);
-    $this->file->save();
-    $this->node->set('field_text_file', $this->file->id());
-    $this->node->setUnpublished()->save();
+    $file->save();
+    $this->unpublishedNode->set('field_text_file', $file->id());
+    $this->unpublishedNode->setUnpublished()->save();
+
+    // Create a published node with a private file to test.
+    $this->publishedNode = $this->drupalCreateNode();
+    file_put_contents('private://test2.txt', 'test2');
+    $file = File::create([
+      'uri' => 'private://test2.txt',
+      'filename' => 'test2.txt',
+    ]);
+    $file->save();
+    $this->publishedNode->set('field_text_file', $file->id());
+    $this->publishedNode->setPublished()->save();
   }
 
   /**
@@ -82,15 +90,16 @@ class RedirectCacheTest extends BrowserTestBase {
    */
   public function testNodeRedirectCache() {
     // Assert there is the redirection since the node is not published.
-    $this->drupalGet('node/' . $this->node->id());
+    $this->drupalGet('node/' . $this->unpublishedNode->id());
     $this->assertSession()->addressEquals('user/login');
 
     // Publish the node.
-    $this->node->setPublished()->save();
+    $this->unpublishedNode->setPublished()->save();
+    $newlyPublishedNode = $this->unpublishedNode;
 
     // Assert there is not the redirection since the node is published.
-    $this->drupalGet('node/' . $this->node->id());
-    $this->assertSession()->addressEquals('node/' . $this->node->id());
+    $this->drupalGet('node/' . $newlyPublishedNode->id());
+    $this->assertSession()->addressEquals('node/' . $newlyPublishedNode->id());
   }
 
   /**
@@ -100,16 +109,20 @@ class RedirectCacheTest extends BrowserTestBase {
    */
   public function testPrivateFileRedirectCache() {
     // Assert there is the redirection since the node is not published.
-    $this->drupalGet(file_create_url($this->file->getFileUri()));
+    $this->drupalGet(file_create_url($this->unpublishedNode->field_text_file->entity->getFileUri()));
     $this->assertSession()->addressEquals('user/login');
 
-    // Publish the node.
-    $this->node->setPublished()->save();
+    // Assert there is not the redirection for an already published node file.
+    $this->drupalGet(file_create_url($this->publishedNode->field_text_file->entity->getFileUri()));
+    $this->assertSession()->addressEquals(file_create_url($this->publishedNode->field_text_file->entity->getFileUri()));
 
-    // Assert there is not the redirection since the node is published.
-    $this->drupalGet(file_create_url($this->file->getFileUri()));
-    $this->assertSession()
-      ->addressEquals(file_create_url($this->file->getFileUri()));
+    // Publish the node.
+    $this->unpublishedNode->setPublished()->save();
+    $newlyPublishedNode = $this->unpublishedNode;
+
+    // Assert there is not the redirection since the node is now published.
+    $this->drupalGet(file_create_url($newlyPublishedNode->field_text_file->entity->getFileUri()));
+    $this->assertSession()->addressEquals(file_create_url($newlyPublishedNode->field_text_file->entity->getFileUri()));
   }
 
 }

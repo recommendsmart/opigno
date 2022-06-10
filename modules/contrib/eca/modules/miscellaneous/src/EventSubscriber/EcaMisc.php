@@ -17,14 +17,14 @@ class EcaMisc extends EcaBase {
    */
   public static function getSubscribedEvents(): array {
     $events = [];
-    foreach (DrupalCoreEvent::actions() as $action) {
-      $events[$action['event_name']][] = ['onEvent'];
+    foreach (DrupalCoreEvent::definitions() as $definition) {
+      $events[$definition['event_name']][] = ['onEvent'];
     }
-    foreach (KernelEvent::actions() as $action) {
-      $events[$action['event_name']][] = ['onEvent'];
+    foreach (KernelEvent::definitions() as $definition) {
+      $events[$definition['event_name']][] = ['onEvent'];
     }
-    foreach (RoutingEvent::actions() as $action) {
-      $events[$action['event_name']][] = ['onEvent'];
+    foreach (RoutingEvent::definitions() as $definition) {
+      $events[$definition['event_name']][] = ['onEvent'];
     }
     return $events;
   }

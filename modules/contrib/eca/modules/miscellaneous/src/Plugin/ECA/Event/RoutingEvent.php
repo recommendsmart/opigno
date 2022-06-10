@@ -18,9 +18,9 @@ use Drupal\eca\Plugin\ECA\Event\EventBase;
 class RoutingEvent extends EventBase {
 
   /**
-   * @return array[]
+   * {@inheritdoc}
    */
-  public static function actions(): array {
+  public static function definitions(): array {
     return [
       'alter' => [
         'label' => 'Alter route',

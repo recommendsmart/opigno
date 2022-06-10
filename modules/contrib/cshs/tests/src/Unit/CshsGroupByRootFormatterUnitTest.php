@@ -32,6 +32,7 @@ class CshsGroupByRootFormatterUnitTest extends UnitTestCase {
    *   The expected tree after applying a formatter.
    *
    * @dataProvider providerViewElements
+   * @dataProvider providerViewElementsLastChild
    */
   public function testViewElements(array $settings, array $tree, array $expectations): void {
     $mock = $this
@@ -149,7 +150,7 @@ class CshsGroupByRootFormatterUnitTest extends UnitTestCase {
       LanguageInterface::LANGCODE_DEFAULT,
     );
 
-    static::assertCount(\count($elements), $elements);
+    static::assertCount(\count($expectations), $elements);
 
     foreach ($expectations as $children) {
       $group_title = (string) \array_shift($children);
@@ -172,10 +173,10 @@ class CshsGroupByRootFormatterUnitTest extends UnitTestCase {
   /**
    * Returns the test suites.
    *
-   * @return array
+   * @return \Generator
    *   The test suites.
    */
-  public function providerViewElements(): array {
+  public function providerViewElements(): \Generator {
     $tree = [
       ['a', 'b', 'c'],
       ['a', 'b1'],
@@ -184,125 +185,164 @@ class CshsGroupByRootFormatterUnitTest extends UnitTestCase {
       ['a1', 'b1', 'c1', 'd1'],
     ];
 
-    return [
+    yield [
       [
-        [
-          'depth' => 0,
-          'linked' => TRUE,
-          'reverse' => FALSE,
-          'sort' => CshsGroupByRootFormatter::SORT_NONE,
-        ],
-        $tree,
-        [
-          [
-            static::getGeneratedLink('a'),
-            static::getGeneratedLink('b'),
-            static::getGeneratedLink('c'),
-            static::getGeneratedLink('b1'),
-            static::getGeneratedLink('d'),
-          ],
-          [
-            static::getGeneratedLink('a1'),
-            static::getGeneratedLink('b1'),
-            static::getGeneratedLink('c1'),
-            static::getGeneratedLink('d1'),
-          ],
-        ],
+        'depth' => 0,
+        'linked' => TRUE,
+        'reverse' => FALSE,
+        'sort' => CshsGroupByRootFormatter::SORT_NONE,
+        'last_child' => FALSE,
       ],
+      $tree,
       [
         [
-          'depth' => 0,
-          'linked' => FALSE,
-          'reverse' => FALSE,
-          'sort' => CshsGroupByRootFormatter::SORT_ASC,
+          static::getGeneratedLink('a'),
+          static::getGeneratedLink('b'),
+          static::getGeneratedLink('c'),
+          static::getGeneratedLink('b1'),
+          static::getGeneratedLink('d'),
         ],
-        $tree,
         [
-          ['a', 'b', 'b1', 'c', 'd'],
-          ['a1', 'b1', 'c1', 'd1'],
-        ],
-      ],
-      [
-        [
-          'depth' => 0,
-          'linked' => FALSE,
-          'reverse' => FALSE,
-          'sort' => CshsGroupByRootFormatter::SORT_DESC,
-        ],
-        $tree,
-        [
-          ['a', 'd', 'c', 'b1', 'b'],
-          ['a1', 'd1', 'c1', 'b1'],
-        ],
-      ],
-      [
-        [
-          'depth' => 0,
-          'linked' => TRUE,
-          'reverse' => FALSE,
-          'sort' => CshsGroupByRootFormatter::SORT_DESC,
-        ],
-        $tree,
-        [
-          [
-            static::getGeneratedLink('a'),
-            static::getGeneratedLink('d'),
-            static::getGeneratedLink('c'),
-            static::getGeneratedLink('b1'),
-            static::getGeneratedLink('b'),
-          ],
-          [
-            static::getGeneratedLink('a1'),
-            static::getGeneratedLink('d1'),
-            static::getGeneratedLink('c1'),
-            static::getGeneratedLink('b1'),
-          ],
-        ],
-      ],
-      [
-        [
-          'depth' => 0,
-          'linked' => FALSE,
-          'reverse' => TRUE,
-          'sort' => CshsGroupByRootFormatter::SORT_NONE,
-        ],
-        $tree,
-        [
-          ['c', 'b', 'a'],
-          ['b1', 'a'],
-          ['d', 'c', 'b', 'a'],
-          ['c1', 'b1', 'a1'],
-          ['d1', 'c1', 'b1', 'a1'],
-        ],
-      ],
-      [
-        [
-          'depth' => 2,
-          'linked' => FALSE,
-          'reverse' => FALSE,
-          'sort' => CshsGroupByRootFormatter::SORT_NONE,
-        ],
-        $tree,
-        [
-          // Here we have 2 items because the hierarchy at each delta differs.
-          ['a', 'b', 'b1'],
-          ['a1', 'b1'],
-        ],
-      ],
-      [
-        [
-          'depth' => 1,
-          'linked' => FALSE,
-          'reverse' => FALSE,
-          'sort' => CshsGroupByRootFormatter::SORT_ASC,
-        ],
-        $tree,
-        [
-          ['a'],
-          ['a1'],
+          static::getGeneratedLink('a1'),
+          static::getGeneratedLink('b1'),
+          static::getGeneratedLink('c1'),
+          static::getGeneratedLink('d1'),
         ],
       ],
     ];
+
+    yield [
+      [
+        'depth' => 0,
+        'linked' => FALSE,
+        'reverse' => FALSE,
+        'sort' => CshsGroupByRootFormatter::SORT_ASC,
+        'last_child' => FALSE,
+      ],
+      $tree,
+      [
+        ['a', 'b', 'b1', 'c', 'd'],
+        ['a1', 'b1', 'c1', 'd1'],
+      ],
+    ];
+
+    yield [
+      [
+        'depth' => 0,
+        'linked' => FALSE,
+        'reverse' => FALSE,
+        'sort' => CshsGroupByRootFormatter::SORT_DESC,
+        'last_child' => FALSE,
+      ],
+      $tree,
+      [
+        ['a', 'd', 'c', 'b1', 'b'],
+        ['a1', 'd1', 'c1', 'b1'],
+      ],
+    ];
+
+    yield [
+      [
+        'depth' => 0,
+        'linked' => TRUE,
+        'reverse' => FALSE,
+        'sort' => CshsGroupByRootFormatter::SORT_DESC,
+        'last_child' => FALSE,
+      ],
+      $tree,
+      [
+        [
+          static::getGeneratedLink('a'),
+          static::getGeneratedLink('d'),
+          static::getGeneratedLink('c'),
+          static::getGeneratedLink('b1'),
+          static::getGeneratedLink('b'),
+        ],
+        [
+          static::getGeneratedLink('a1'),
+          static::getGeneratedLink('d1'),
+          static::getGeneratedLink('c1'),
+          static::getGeneratedLink('b1'),
+        ],
+      ],
+    ];
+
+    yield [
+      [
+        'depth' => 0,
+        'linked' => FALSE,
+        'reverse' => TRUE,
+        'sort' => CshsGroupByRootFormatter::SORT_NONE,
+        'last_child' => FALSE,
+      ],
+      $tree,
+      [
+        ['c', 'b', 'a'],
+        ['b1', 'a'],
+        ['d', 'c', 'b', 'a'],
+        ['c1', 'b1', 'a1'],
+        ['d1', 'c1', 'b1', 'a1'],
+      ],
+    ];
+
+    yield [
+      [
+        'depth' => 2,
+        'linked' => FALSE,
+        'reverse' => FALSE,
+        'sort' => CshsGroupByRootFormatter::SORT_NONE,
+        'last_child' => FALSE,
+      ],
+      $tree,
+      [
+        // Here we have 2 items because the hierarchy at each delta differs.
+        ['a', 'b', 'b1'],
+        ['a1', 'b1'],
+      ],
+    ];
+
+    yield [
+      [
+        'depth' => 1,
+        'linked' => FALSE,
+        'reverse' => FALSE,
+        'sort' => CshsGroupByRootFormatter::SORT_ASC,
+        'last_child' => FALSE,
+      ],
+      $tree,
+      [
+        ['a'],
+        ['a1'],
+      ],
+    ];
+  }
+
+  /**
+   * Returns the test suites.
+   *
+   * @return \Generator
+   *   The test suites.
+   */
+  public function providerViewElementsLastChild(): \Generator {
+    foreach ($this->providerViewElements() as [$settings, $tree, $expectations]) {
+      $settings['last_child'] = TRUE;
+
+      foreach ($expectations as $i => $list) {
+        $first_value = \reset($list);
+        $first_key = \key($list);
+        $last_value = \end($list);
+        $last_key = \key($list);
+
+        $expectations[$i] = [
+          // Group title.
+          $first_key => $first_value,
+          // Deepest child.
+          $last_key => $last_value,
+        ];
+      }
+
+      yield [$settings, $tree, $expectations];
+    }
   }
 
   /**

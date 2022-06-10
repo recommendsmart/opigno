@@ -13,6 +13,9 @@ services:
   plugin.manager.flow.task:
     class: Drupal\flow\Plugin\FlowTaskManager
     parent: default_plugin_manager
+  plugin.manager.flow.qualifier:
+    class: Drupal\flow\Plugin\FlowQualifierManager
+    parent: default_plugin_manager
   flow.task.mode:
     class: Drupal\flow\FlowTaskMode
     arguments: ['@module_handler', '@string_translation']
@@ -25,3 +28,18 @@ services:
   flow.entity_save_handler:
     class: Drupal\flow\Entity\EntitySaveHandler
     arguments: ['%flow.save_list_threshold%']
+  flow.entity_qualifier:
+    class: Drupal\flow\Entity\EntityQualifier
+  serializer.normalizer.flow__content_entity:
+    decorates: serializer.normalizer.content_entity
+    parent: serializer.normalizer.content_entity
+    class: Drupal\flow\Normalizer\FlowContentEntityNormalizer
+    calls:
+      - [setDecoratedNormalizer, ['@serializer.normalizer.flow__content_entity.inner']]
+  serializer.normalizer.flow__entity_reference_field_item:
+    decorates: serializer.normalizer.entity_reference_field_item
+    parent: serializer.normalizer.entity_reference_field_item
+    class: Drupal\flow\Normalizer\FlowEntityReferenceFieldItemNormalizer
+    calls:
+      - [setDecoratedNormalizer, ['@serializer.normalizer.flow__entity_reference_field_item.inner']]
+      - [setEntityTypeManager, ['@entity_type.manager']]

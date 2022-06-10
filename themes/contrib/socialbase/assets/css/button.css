@@ -22,6 +22,10 @@
           user-select: none;
   -webkit-transition: .3s ease-out;
   transition: .3s ease-out;
+}
+
+.btn:not(.btn-link), .btn:not(.btn-link):focus, .btn:not(.btn-link):hover, .btn:not(.btn-link).focus {
+  text-decoration: none;
   outline: 0;
 }
 
@@ -35,11 +39,6 @@
 
 .btn .caret {
   margin-left: 3px;
-}
-
-.btn:hover, .btn:focus, .btn.focus {
-  text-decoration: none;
-  outline: 0;
 }
 
 .btn:active, .btn.active {

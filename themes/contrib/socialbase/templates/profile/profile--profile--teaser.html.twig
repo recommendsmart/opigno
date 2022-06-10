@@ -71,6 +71,12 @@
         </div>
         {% endif %}
 
+        {% if content.field_profile_summary|render %}
+          {{ content.field_profile_summary }}
+        {% else %}
+          {{ content.field_profile_self_introduction }}
+        {% endif %}
+
         {% if content.field_profile_profile_tag['#items'] or badges %}
           <div style="margin-left: 30px; margin-top: 5px;">
             {% for badge in badges %}
@@ -88,16 +94,27 @@
 
     <div class="card__actionbar">
       {% block card_actionbar %}
-        <a href="{{ profile_contact_url }}" class="card__link">
+        {% if content.flag_follow_user %}
+          {{ content.flag_follow_user }}
+        {% endif %}
+
+        {% set follow_user_classes = [ content.flag_follow_user ? 'btn btn-default' : 'card__link' ] %}
+        <a href="{{ profile_contact_url }}" {{ attributes.addClass(follow_user_classes) }}>
           {% if profile_contact_label == 'private_message' %}
-            {% trans %}Private message{% endtrans %}
+            {% if content.flag_follow_user %}
+              {% trans %}Message{% endtrans %}
+            {% else %}
+              {% trans %}Private message{% endtrans %}
+            {% endif %}
           {% else %}
             {% trans %}View profile{% endtrans %}
           {% endif %}
         </a>
-        <a href="{{ profile_stream_url }}" class="card__link hidden-for-phone-only">
-          {% trans %}View activities{% endtrans %}
-        </a>
+        {% if not content.flag_follow_user %}
+          <a href="{{ profile_stream_url }}" class="card__link hidden-for-phone-only">
+            {% trans %}View activities{% endtrans %}
+          </a>
+        {% endif %}
       {% endblock %}
     </div>
   </div>

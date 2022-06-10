@@ -78,5 +78,26 @@ CSS;
 }
 
 /**
+ * Alter Lazy module settings.
+ *
+ * The module settings can be overridden completely, or partially for any given
+ * condition.
+ *
+ * @param array $settings
+ *   The Lazy module settings.
+ */
+function hook_lazy_settings_alter(array &$settings) {
+  switch ($_SERVER['HTTP_HOST']) {
+    case 'example.com':
+      $settings['libraryPath'] = 'https://cdn.example.com/libraries/lazysizes';
+      break;
+
+    case 'demo1.example.com':
+      $settings['libraryPath'] = '/demo-assets/lazysizes';
+      break;
+  }
+}
+
+/**
  * @} End of "addtogroup hooks".
  */

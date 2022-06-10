@@ -28,9 +28,9 @@ class EcaStateRead extends ConfigurableActionBase {
    */
   public function defaultConfiguration(): array {
     return [
-        'key' => '',
-        'token_name' => '',
-      ] + parent::defaultConfiguration();
+      'key' => '',
+      'token_name' => '',
+    ] + parent::defaultConfiguration();
   }
 
   /**

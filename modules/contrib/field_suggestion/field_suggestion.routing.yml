@@ -6,15 +6,17 @@ field_suggestion.settings:
   requirements:
     _permission: 'administer field suggestion'
 
-field_suggestion.pin:
-  path: '/field-suggestion/{entity_type_id}/{entity_id}/{field_name}'
+field_suggestion.action:
+  path: '/field-suggestion/{entity_type_id}/{entity_id}/{field_name}/{type}'
   defaults:
-    _controller: '\Drupal\field_suggestion\Controller\FieldSuggestionController::pin'
-    _title: Pin
+    _controller: '\Drupal\field_suggestion\Controller\FieldSuggestionController::action'
+    _title: 'Pin or Ignore'
   requirements:
-    _permission: 'administer field suggestion+pin and unpin field suggestion'
     _custom_access: '\Drupal\field_suggestion\Controller\FieldSuggestionController::access'
+    entity_type_id: '[a-z-]+'
     entity_id: \d+
+    field_name: '[a-z]+'
+    type: '[a-z]+'
 
 entity.field_suggestion_type.collection:
   path: '/admin/structure/field-suggestion'

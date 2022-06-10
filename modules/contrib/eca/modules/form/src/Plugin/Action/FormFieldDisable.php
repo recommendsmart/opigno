@@ -2,28 +2,22 @@
 
 namespace Drupal\eca_form\Plugin\Action;
 
-use Drupal\eca_form\Event\FormBase;
-
 /**
- * Disable a form field.
+ * Set a form field as disabled.
  *
  * @Action(
  *   id = "eca_form_field_disable",
- *   label = @Translation("Form field: disable"),
+ *   label = @Translation("Form field: set as disabled"),
  *   type = "form"
  * )
  */
-class FormFieldDisable extends FormFieldActionBase {
+class FormFieldDisable extends FormFlagFieldActionBase {
 
   /**
    * {@inheritdoc}
    */
-  public function execute(): void {
-    if ($this->event instanceof FormBase) {
-      $form = $this->event->getForm();
-      $form[$this->configuration['field_name']]['#disabled'] = TRUE;
-      $this->event->setForm($form);
-    }
+  protected function getFlagName(bool $human_readable = FALSE) {
+    return $human_readable ? $this->t('disabled') : 'disabled';
   }
 
 }

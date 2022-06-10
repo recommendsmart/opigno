@@ -5,6 +5,9 @@ eca.settings:
     log_level:
       type: integer
       label: 'Log level'
+    documentation_domain:
+      type: string
+      label: 'Documentation domain'
 
 eca.eca.*:
   type: config_entity
@@ -38,11 +41,9 @@ eca.eca.*:
           label:
             type: string
             label: 'Label'
-          fields:
-            type: sequence
-            label: 'Fields'
-            sequence:
-              type: eca.wrapper.field
+          configuration:
+            type: ignore
+            label: 'Configuration'
           successors:
             type: sequence
             label: 'Successors'
@@ -58,11 +59,9 @@ eca.eca.*:
           plugin:
             type: string
             label: 'Plugin ID'
-          fields:
-            type: sequence
-            label: 'Fields'
-            sequence:
-              type: eca.wrapper.field
+          configuration:
+            type: ignore
+            label: 'Configuration'
     gateways:
       type: sequence
       label: 'Gateways'
@@ -91,11 +90,9 @@ eca.eca.*:
           label:
             type: string
             label: 'Label'
-          fields:
-            type: sequence
-            label: 'Fields'
-            sequence:
-              type: eca.wrapper.field
+          configuration:
+            type: ignore
+            label: 'Configuration'
           successors:
             type: sequence
             label: 'Successors'
@@ -126,17 +123,6 @@ eca.model.*:
     modeldata:
       type: string
       label: 'Raw model data'
-
-eca.wrapper.field:
-  type: mapping
-  label: 'Field'
-  mapping:
-    key:
-      type: string
-      label: 'Field name'
-    value:
-      type: string
-      label: 'Field value'
 
 eca.wrapper.successor:
   type: mapping

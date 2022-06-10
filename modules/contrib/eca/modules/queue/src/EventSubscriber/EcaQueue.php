@@ -3,7 +3,7 @@
 namespace Drupal\eca_queue\EventSubscriber;
 
 use Drupal\eca\EventSubscriber\EcaBase;
-use Drupal\eca_queue\Plugin\ECA\Event\QueueEventDeriver;
+use Drupal\eca_queue\Plugin\ECA\Event\QueueEvent;
 
 /**
  * ECA base event subscriber.
@@ -15,7 +15,7 @@ class EcaQueue extends EcaBase {
    */
   public static function getSubscribedEvents(): array {
     $events = [];
-    foreach (QueueEventDeriver::definitions() as $definition) {
+    foreach (QueueEvent::definitions() as $definition) {
       $events[$definition['event_name']][] = ['onEvent'];
     }
     return $events;

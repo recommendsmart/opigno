@@ -10,7 +10,7 @@ use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 /**
  * The interface implemented by all flow subject plugins.
  */
-interface FlowSubjectInterface extends PluginInspectionInterface, DerivativeInspectionInterface, ConfigurableInterface, PluginWithSettingsInterface, ThirdPartySettingsInterface {
+interface FlowSubjectInterface extends PluginInspectionInterface, DerivativeInspectionInterface, ConfigurableInterface, PluginWithSettingsInterface, ThirdPartySettingsInterface, FlowPluginInterface {
 
   /**
    * Get the subject items that are being identified by this plugin.

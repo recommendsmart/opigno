@@ -6,7 +6,7 @@ package: Other
 dependencies:
   - flow:flow
 
-# Information added by Drupal.org packaging script on 2022-03-20
-version: '1.0.0-beta3'
+# Information added by Drupal.org packaging script on 2022-06-09
+version: '1.0.0-beta8'
 project: 'flow'
-datestamp: 1647805446
+datestamp: 1654760691

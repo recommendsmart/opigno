@@ -63,3 +63,35 @@
   font-weight: 700;
   font-style: normal;
 }
+
+@font-face {
+  font-family: 'Almarai';
+  src: url("../font/Almarai/Almarai-Light.ttf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  unicode-range: U+0600-06FF; /* We do this to only download the font when arabic characters are available on the page.*/
+}
+
+@font-face {
+  font-family: 'Almarai';
+  src: url("../font/Almarai/Almarai-Regular.ttf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  unicode-range: U+0600-06FF;
+}
+
+@font-face {
+  font-family: 'Almarai';
+  src: url("../font/Almarai/Almarai-Bold.ttf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  unicode-range: U+0600-06FF;
+}
+
+@font-face {
+  font-family: 'Almarai';
+  src: url("../font/Almarai/Almarai-ExtraBold.ttf") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+  unicode-range: U+0600-06FF;
+}

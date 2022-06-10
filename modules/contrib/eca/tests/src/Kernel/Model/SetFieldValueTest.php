@@ -7,6 +7,7 @@ use Drupal\node\Entity\Node;
 /**
  * Model test for the action set_field_value.
  *
+ * @group eca
  * @group eca_model
  */
 class SetFieldValueTest extends Base {

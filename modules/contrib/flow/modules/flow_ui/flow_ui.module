@@ -5,8 +5,10 @@
  * Flow UI module file.
  */
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
+use Drupal\flow\Entity\FlowInterface;
 
 /**
  * Implements hook_entity_type_build().
@@ -15,7 +17,7 @@ function flow_ui_entity_type_build(array &$entity_types) {
   /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   $flow_type = $entity_types['flow'];
   $flow_type->setFormClass('default', 'Drupal\flow_ui\Form\FlowForm');
-  $flow_type->setFormClass('delete', 'Drupal\Core\Entity\EntityDeleteForm');
+  $flow_type->setFormClass('delete', 'Drupal\flow_ui\Form\FlowDeleteForm');
   $flow_type->setListBuilderClass('Drupal\flow_ui\FlowUiListBuilder');
   $flow_type->setLinkTemplate('collection', '/admin/structure/flow');
   $flow_type->set('admin_permission', 'administer flow');
@@ -94,4 +96,32 @@ function flow_ui_entity_operation(EntityInterface $entity) {
   }
 
   return $operations;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for 'flow'.
+ */
+function flow_ui_flow_insert(FlowInterface $flow) {
+  _flow_ui_post_save_custom($flow);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update() for 'flow'.
+ */
+function flow_ui_flow_update(FlowInterface $flow) {
+  _flow_ui_post_save_custom($flow);
+}
+
+/**
+ * Post saving tasks for custom flow.
+ *
+ * @param \Drupal\flow\Entity\FlowInterface $flow
+ *   The Flow configuration.
+ */
+function _flow_ui_post_save_custom(FlowInterface $flow): void {
+  if (!$flow->isCustom()) {
+    return;
+  }
+  // Reset local tasks cache.
+  Cache::invalidateTags(['local_task']);
 }

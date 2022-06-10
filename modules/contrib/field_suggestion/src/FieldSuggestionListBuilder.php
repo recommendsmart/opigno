@@ -29,6 +29,13 @@ class FieldSuggestionListBuilder extends EntityListBuilder {
   protected $entityFieldManager;
 
   /**
+   * The helper.
+   *
+   * @var \Drupal\field_suggestion\Service\FieldSuggestionHelperInterface
+   */
+  protected $helper;
+
+  /**
    * {@inheritdoc}
    */
   public static function createInstance(
@@ -39,6 +46,7 @@ class FieldSuggestionListBuilder extends EntityListBuilder {
 
     $instance->entityTypeManager = $container->get('entity_type.manager');
     $instance->entityFieldManager = $container->get('entity_field.manager');
+    $instance->helper = $container->get('field_suggestion.helper');
 
     return $instance;
   }
@@ -48,6 +56,7 @@ class FieldSuggestionListBuilder extends EntityListBuilder {
    */
   public function buildHeader() {
     return [
+      'type' => $this->t('Type'),
       'entity_type' => $this->t('Entity type'),
       'field_name' => $this->t('Field name'),
       'field_value' => $this->t('Field value'),
@@ -61,6 +70,9 @@ class FieldSuggestionListBuilder extends EntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $row = [];
+
+    $row['type'] = ($ignore = $entity->ignore->value)
+      ? $this->t('Ignored') : $this->t('Pinned');
 
     $entity_type_id = $entity->entity_type->value;
 
@@ -82,14 +94,14 @@ class FieldSuggestionListBuilder extends EntityListBuilder {
     $row['field_value'] = [
       'data' => $this->entityTypeManager->getViewBuilder($entity_type_id)
         ->viewFieldItem(
-          $entity->get('field_suggestion_' . $entity->bundle())->first()
+          $entity->get($this->helper->field($entity->bundle()))->first()
         ),
     ];
 
     /** @var \Drupal\field_suggestion\FieldSuggestionInterface $entity */
-    $row['usage'] = $entity->isOnce() ? 1 : '∞';
+    $row['usage'] = $ignore ? '-' : ($entity->isOnce() ? 1 : '∞');
 
-    $row['exclude'] = $entity->countExcluded();
+    $row['exclude'] = $ignore ? '-' : $entity->countExcluded();
 
     return $row + parent::buildRow($entity);
   }

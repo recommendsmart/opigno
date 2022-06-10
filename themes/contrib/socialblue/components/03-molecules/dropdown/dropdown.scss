@@ -11,7 +11,7 @@
 
   // Links within the dropdown menu
   > li > a {
-    font-weight: 300;
+    font-weight: 400;
   }
 
   // Disabled state
@@ -85,11 +85,5 @@
   &.has-alert.has-alert--desktop > a:before {
     color: $brand-accent-text;
     background-color: $brand-accent;
-  }
-}
-
-.meta-addtocal {
-  .dropdown-menu {
-    min-width: 100%;
   }
 }

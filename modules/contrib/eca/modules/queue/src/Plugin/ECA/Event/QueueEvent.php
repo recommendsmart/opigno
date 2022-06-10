@@ -3,8 +3,10 @@
 namespace Drupal\eca_queue\Plugin\ECA\Event;
 
 use Drupal\eca\Entity\Objects\EcaEvent;
+use Drupal\eca\Event\Tag;
 use Drupal\eca\Plugin\ECA\Event\EventBase;
 use Drupal\eca_queue\Event\ProcessingTaskEvent;
+use Drupal\eca_queue\QueueEvents;
 
 /**
  * Plugin implementation for ECA Queue events.
@@ -15,6 +17,20 @@ use Drupal\eca_queue\Event\ProcessingTaskEvent;
  * )
  */
 class QueueEvent extends EventBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function definitions(): array {
+    return [
+      'processing_task' => [
+        'label' => 'ECA processing queued task',
+        'event_name' => QueueEvents::PROCESSING_TASK,
+        'event_class' => ProcessingTaskEvent::class,
+        'tags' => Tag::RUNTIME,
+      ],
+    ];
+  }
 
   /**
    * {@inheritdoc}

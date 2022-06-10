@@ -293,7 +293,7 @@ body {
             &:hover,
             &.is-active {
               background: #e6e6e6;
-              color: #4d4d4d;
+              color: #343434;
             }
           }
         }
@@ -810,6 +810,7 @@ body {
     justify-content: center;
     flex-wrap: nowrap;
     font-size: $font-size-base;
+    line-height: 1.625rem;
 
     a, button {
       transition: all 0.3s;

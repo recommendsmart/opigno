@@ -2,6 +2,8 @@
 
 namespace Drupal\eca\Event;
 
+use Drupal\eca\Plugin\DataType\DataTransferObject;
+
 /**
  * Trait to implement all required methods for the TokenReceiverInterface.
  */
@@ -26,13 +28,7 @@ trait TokenReceiverTrait {
    * {@inheritdoc}
    */
   public function addTokenNamesFromString(string $token_names): TokenReceiverInterface {
-    $token_names_array = [];
-    foreach (explode(',', $token_names) as $item) {
-      $item = trim($item);
-      if (!empty($item)) {
-        $token_names_array[] = $item;
-      }
-    }
+    $token_names_array = DataTransferObject::buildArrayFromUserInput($token_names);
     return empty($token_names_array) ? $this : $this->addTokenNamesToReceive($token_names_array);
   }
 

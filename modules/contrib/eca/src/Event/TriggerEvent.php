@@ -62,7 +62,7 @@ class TriggerEvent {
       $event_plugin = $this->eventPluginManager->createInstance($plugin_id);
     }
     catch (PluginException $e) {
-      // @todo: Log this exception.
+      // @todo Log this exception.
       return;
     }
     $event_class = $event_plugin->eventClass();

@@ -6,7 +6,6 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\eca\Service\Conditions;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 
 /**
@@ -33,7 +32,7 @@ class ViewsExport extends ViewsQuery {
     if (!($display = $this->getDisplay())) {
       return;
     }
-    if ($this->configuration['load_results_into_token'] === Conditions::OPTION_YES) {
+    if ($this->configuration['load_results_into_token']) {
       parent::execute();
     }
     else {
@@ -78,10 +77,10 @@ class ViewsExport extends ViewsQuery {
    */
   public function defaultConfiguration(): array {
     return [
-        'filename' => '',
-        'token_for_filename' => '',
-        'load_results_into_token' => FALSE,
-      ] + parent::defaultConfiguration();
+      'filename' => '',
+      'token_for_filename' => '',
+      'load_results_into_token' => FALSE,
+    ] + parent::defaultConfiguration();
   }
 
   /**

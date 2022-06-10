@@ -5,7 +5,6 @@ namespace Drupal\Tests\eca\Unit\Service;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\eca\Plugin\Action\ConfigurableActionBase;
 use Drupal\eca\Plugin\ECA\Condition\StringComparisonBase;
-use Drupal\eca\Service\Conditions;
 use Drupal\eca\Service\ServiceTrait;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -14,6 +13,7 @@ use PHPUnit\Framework\MockObject\MockObject;
  * Tests the service trait.
  *
  * @group eca
+ * @group eca_core
  */
 class ServiceTraitTest extends UnitTestCase {
 
@@ -23,9 +23,12 @@ class ServiceTraitTest extends UnitTestCase {
    * Gets the expected option fields.
    *
    * @param string $name
+   *   The name of the field.
    * @param string $label
+   *   The label of the field.
    *
    * @return array
+   *   The expected option field definition.
    */
   private static function getExpectedOptionFields(string $name, string $label): array {
     return [
@@ -57,10 +60,14 @@ class ServiceTraitTest extends UnitTestCase {
    * Gets the expected checkbox.
    *
    * @param string $name
+   *   The name of the checkbox.
    * @param string $label
+   *   The label of the checkbox.
    * @param string $condition
+   *   The condition of the checkbox.
    *
    * @return array
+   *   The expected checkbox field definition.
    */
   private static function getExpectedCheckbox(string $name, string $label, string $condition): array {
     return [
@@ -73,11 +80,11 @@ class ServiceTraitTest extends UnitTestCase {
         'choices' => [
           [
             'name' => 'no',
-            'value' => Conditions::OPTION_NO,
+            'value' => 'no',
           ],
           [
             'name' => 'yes',
-            'value' => Conditions::OPTION_YES,
+            'value' => 'yes',
           ],
         ],
       ],
@@ -86,26 +93,24 @@ class ServiceTraitTest extends UnitTestCase {
 
   /**
    * Tests the sort of plugins.
-   *
-   * @return void
    */
   public function testSortPlugins(): void {
     $plugins = [];
     foreach ([
-               'testPluginB',
-               'testPluginC',
-               'testPluginA',
-               'testPluginC',
-             ] as $label) {
+      'testPluginB',
+      'testPluginC',
+      'testPluginA',
+      'testPluginC',
+    ] as $label) {
       $plugins[] = $this->getPluginMock($label);
     }
     $this->sortPlugins($plugins);
     foreach ([
-               'testPluginA',
-               'testPluginB',
-               'testPluginC',
-               'testPluginC',
-             ] as $key => $label) {
+      'testPluginA',
+      'testPluginB',
+      'testPluginC',
+      'testPluginC',
+    ] as $key => $label) {
       $this->assertEquals($label, $plugins[$key]->getPluginDefinition()['label']);
     }
   }
@@ -114,8 +119,10 @@ class ServiceTraitTest extends UnitTestCase {
    * Gets plugin mocks by the given label.
    *
    * @param string $label
+   *   The plugin label.
    *
-   * @return MockObject
+   * @return \PHPUnit\Framework\MockObject\MockObject
+   *   The mocked plugin.
    */
   private function getPluginMock(string $label): MockObject {
     $mockObject = $this->createMock(PluginInspectionInterface::class);
@@ -127,8 +134,6 @@ class ServiceTraitTest extends UnitTestCase {
 
   /**
    * Tests the method prepare config fields with boolean.
-   *
-   * @return void
    */
   public function testPrepareConfigFieldsWithBoolean(): void {
     $fields = [];
@@ -137,14 +142,12 @@ class ServiceTraitTest extends UnitTestCase {
       'testKey' => TRUE,
     ];
     $this->prepareConfigFields($fields, $config, $pluginInspection);
-    $this->assertEquals(self::getExpectedCheckbox('testKey', 'TestKey', Conditions::OPTION_YES),
+    $this->assertEquals(self::getExpectedCheckbox('testKey', 'TestKey', TRUE),
       $fields[0]);
   }
 
   /**
    * Tests the method prepare config fields with array.
-   *
-   * @return void
    */
   public function testPrepareConfigFieldsWithArray(): void {
     $fields = [];
@@ -169,8 +172,6 @@ class ServiceTraitTest extends UnitTestCase {
 
   /**
    * Tests the method prepare config fields with options.
-   *
-   * @return void
    */
   public function testPrepareConfigFieldsWithOptions(): void {
     $fields = [];
@@ -191,8 +192,6 @@ class ServiceTraitTest extends UnitTestCase {
 
   /**
    * Tests the method prepare config fields with form textarea.
-   *
-   * @return void
    */
   public function testPrepareConfigFieldsWithFormTextarea(): void {
     $fields = [];
@@ -214,8 +213,6 @@ class ServiceTraitTest extends UnitTestCase {
 
   /**
    * Tests the method prepare config fields with form select.
-   *
-   * @return void
    */
   public function testPrepareConfigFieldsWithFormSelect(): void {
     $fields = [];
@@ -251,8 +248,10 @@ class ServiceTraitTest extends UnitTestCase {
    * Gets the mock by the given type.
    *
    * @param string $type
+   *   The action type.
    *
-   * @return PluginInspectionInterface
+   * @return \Drupal\Component\Plugin\PluginInspectionInterface
+   *   The mocked action.
    */
   private function getActionBaseMockByType(string $type): PluginInspectionInterface {
     $pluginInspection = $this->createMock(ConfigurableActionBase::class);
@@ -274,8 +273,6 @@ class ServiceTraitTest extends UnitTestCase {
 
   /**
    * Tests the method fieldLabel with NULL value.
-   *
-   * @return void
    */
   public function testFieldLabelWithNull(): void {
     $this->assertEquals('A test key',
@@ -284,8 +281,6 @@ class ServiceTraitTest extends UnitTestCase {
 
   /**
    * Tests the method fieldLabel.
-   *
-   * @return void
    */
   public function testFieldLabelWithLabel(): void {
     $this->assertEquals('Test Label',
@@ -294,13 +289,11 @@ class ServiceTraitTest extends UnitTestCase {
 
   /**
    * Tests the optionsField method.
-   *
-   * @return void
    */
   public function testOptionsField(): void {
     $expected = self::getExpectedOptionFields('test', 'This is a test');
 
-    $this->assertEquals($expected, $this->optionsField('test', 'This is a test', 0,NULL, [
+    $this->assertEquals($expected, $this->optionsField('test', 'This is a test', 0, NULL, [
       'value1' => 'name1',
       'value2' => 'name2',
       'value3' => 'name3',
@@ -309,33 +302,35 @@ class ServiceTraitTest extends UnitTestCase {
 
   /**
    * Tests the optionsField with description.
-   *
-   * @return void
    */
   public function testOptionsFieldWithDescription(): void {
     $expected = self::getExpectedOptionFields('test', 'This is a test');
     $expected['description'] = 'Test description';
 
-    $this->assertEquals($expected, $this->optionsField('test', 'This is a test', 0,'Test description',
+    $this->assertEquals($expected, $this->optionsField('test', 'This is a test', 0, 'Test description',
       [
-      'value1' => 'name1',
-      'value2' => 'name2',
-      'value3' => 'name3',
-    ], 'testValue'));
+        'value1' => 'name1',
+        'value2' => 'name2',
+        'value3' => 'name3',
+      ], 'testValue'));
   }
 
   /**
    * Tests the checkbox method.
-   *
-   * @return void
    */
   public function testCheckBox(): void {
-    $expected = self::getExpectedCheckbox('test', 'testLabel', Conditions::OPTION_YES);
+    $expected = self::getExpectedCheckbox('test', 'testLabel', TRUE);
     $this->assertEquals($expected,
-      $this->checkbox('test', 'testLabel', 0, 'testValue'));
-    $expected['value'] = 'no';
+      $this->checkbox('test', 'testLabel', 0, NULL, 'testValue'));
+    $this->assertNotEquals($expected,
+      $this->checkbox('test', 'testLabel', 0, NULL, ''));
     $this->assertEquals($expected,
-      $this->checkbox('test', 'testLabel', 0, ''));
+      $this->checkbox('test', 'testLabel', 0, NULL, TRUE));
+    $expected['value'] = FALSE;
+    $this->assertEquals($expected,
+      $this->checkbox('test', 'testLabel', 0, NULL, ''));
+    $this->assertEquals($expected,
+      $this->checkbox('test', 'testLabel', 0, NULL, FALSE));
   }
 
 }

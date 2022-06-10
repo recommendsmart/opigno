@@ -12,6 +12,7 @@ use Drupal\Core\Form\SubformState;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Drupal\flow\Entity\Flow;
 use Drupal\flow\Entity\FlowInterface;
 use Drupal\flow\FlowCompatibility;
@@ -76,6 +77,13 @@ class TaskForm implements FormInterface, ContainerInjectionInterface {
    * @var \Drupal\Core\Entity\EntityTypeInterface
    */
   protected EntityTypeInterface $targetEntityType;
+
+  /**
+   * This flag indicates whether a new task has been saved.
+   *
+   * @var bool
+   */
+  protected bool $savedNewTask = FALSE;
 
   /**
    * The TaskForm constructor.
@@ -182,9 +190,10 @@ class TaskForm implements FormInterface, ContainerInjectionInterface {
       '#title' => $this->t('Task execution'),
       '#weight' => $weight++,
     ];
+    $mode = $this->flow->isCustom() ? $flow->get('custom')['baseMode'] : $flow->getTaskMode();
     $execution_options = [
-      'now' => $this->t('Immediately on @mode', ['@mode' => $this->flow->getTaskMode()]),
-      'after' => $this->t('Immediately after @mode', ['@mode' => $this->flow->getTaskMode()]),
+      'now' => $this->t('Immediately on @mode', ['@mode' => $mode]),
+      'after' => $this->t('Immediately after @mode', ['@mode' => $mode]),
       'queue' => $this->t('Enqueue for running in the background'),
     ];
     $form['execution']['start'] = [
@@ -193,7 +202,7 @@ class TaskForm implements FormInterface, ContainerInjectionInterface {
       '#title_display' => 'invisible',
       '#description' => $this->t('Different values of information may be available during and after the @mode operation. For example, when a new @type item is being created, the @type ID is only available after it got saved.', [
         '@type' => $this->entityTypeManager->getDefinition($this->flow->getTargetEntityTypeId())->getLabel(),
-        '@mode' => $this->flow->getTaskMode(),
+        '@mode' => $mode,
       ]),
       '#options' => $execution_options,
       '#default_value' => $task_config['execution']['start'] ?? 'now',
@@ -269,6 +278,19 @@ class TaskForm implements FormInterface, ContainerInjectionInterface {
   public function afterBuild(array $form, FormStateInterface $form_state) {
     $subject = $this->subject;
     $task = $this->task;
+
+    // Prevent Inline Entity Form from saving nested data.
+    // @todo Find a better way to prevent submit handlers from saving data.
+    if ($triggering_element = &$form_state->getTriggeringElement()) {
+      if (isset($triggering_element['#ief_submit_trigger']) && !empty($triggering_element['#submit']) && is_array($triggering_element['#submit'])) {
+        foreach ($triggering_element['#submit'] as $i => $submit_handler) {
+          if (is_array($submit_handler) && (reset($submit_handler) === 'Drupal\\inline_entity_form\\ElementSubmit') && end($submit_handler) === 'trigger') {
+            unset($triggering_element['#submit'][$i]);
+          }
+        }
+      }
+    }
+
     if ($form_state->hasValue(['task', 'settings']) && $task instanceof PluginFormInterface) {
       $values = $form_state->getValue(['task', 'settings']);
       array_walk_recursive($values, function (&$value) {
@@ -362,14 +384,27 @@ class TaskForm implements FormInterface, ContainerInjectionInterface {
     $task_modes = FlowTaskMode::service()->getAvailableTaskModes();
 
     $t_args = [
-      '%task_mode' => $task_modes[$config->getTaskMode()],
-      '%type' => $this->entityTypeManager->getDefinition($config->getTargetEntityTypeId())->getLabel(),
+      '%label' => $config->isCustom() ? $config->get('custom')['label'] : $task_modes[$config->getTaskMode()],
+      '%type' =>$this->entityTypeManager->getDefinition($config->getTargetEntityTypeId())->getLabel(),
     ];
-    $message = $this->t('The %task_mode flow configuration for %type has been saved.', $t_args);
+    $message = $config->isCustom() ? $this->t('The custom %label flow configuration for %type has been saved.', $t_args)
+      : $this->t('The %label flow configuration for %type has been saved.', $t_args);
 
     $this->messenger->addStatus($message);
 
     $bundle_type_id = $this->targetEntityType->getBundleEntityType() ?: 'bundle';
+
+    if ($this->savedNewTask) {
+      $this->messenger->addWarning($this->t("The newly added task is not yet enabled. <a href=\":url\">Enable it now</a>, or enable it later by choosing \"Enable\" in the operations column below on this page.", [
+        ':url' => Url::fromRoute("flow.task.{$this->targetEntityType->id()}.enable", [
+          'entity_type_id' => $this->targetEntityType->id(),
+          $bundle_type_id => $this->flow->getTargetBundle(),
+          'flow_task_mode' => $this->flow->getTaskMode(),
+          'flow_task_index' => $this->taskIndex,
+        ])->toString(),
+      ]));
+    }
+
     $form_state->setRedirect("entity.flow.{$this->targetEntityType->id()}.task_mode", [
       'entity_type_id' => $this->targetEntityType->id(),
       $bundle_type_id => $this->flow->getTargetBundle(),
@@ -415,8 +450,10 @@ class TaskForm implements FormInterface, ContainerInjectionInterface {
     foreach ($subject->getThirdPartyProviders() as $provider) {
       $tasks_array[$this->taskIndex]['subject']['third_party_settings'][$provider] = $subject->getThirdPartySettings($provider);
     }
+    $this->filterRuntimeSettings($tasks_array);
     $flow->setTasks($tasks_array);
     $flow->save();
+    $this->savedNewTask = $task_is_new;
   }
 
   /**
@@ -503,6 +540,23 @@ class TaskForm implements FormInterface, ContainerInjectionInterface {
     $form_state->set('task', $this->task);
     $form_state->set('subject', $this->subject);
     $form_state->set('task_index', $this->taskIndex);
+  }
+
+  /**
+   * Filters runtime settings from the given array.
+   *
+   * @param array &$array
+   *   The array.
+   */
+  protected function filterRuntimeSettings(&$array) {
+    foreach ($array as $k => $v) {
+      if ($k === 'target_for' || $k === 'subject_for') {
+        unset($array[$k]);
+      }
+      elseif (is_array($v)) {
+        $this->filterRuntimeSettings($array[$k]);
+      }
+    }
   }
 
 }

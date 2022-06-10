@@ -3,6 +3,8 @@
 namespace Drupal\flow\Helpers;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\flow\Normalizer\FlowContentEntityNormalizer;
+use Drupal\flow\Normalizer\FlowEntityReferenceFieldItemNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
 /**
@@ -73,6 +75,50 @@ trait EntitySerializationTrait {
    */
   public function setSerializer(Serializer $serializer): void {
     $this->serializer = $serializer;
+  }
+
+  /**
+   * Returns a normalized array of the given entity, suitable for configuration.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity to normalize.
+   *
+   * @return array
+   *   The normalized array.
+   */
+  public function toConfigArray(ContentEntityInterface $entity): array {
+    FlowContentEntityNormalizer::$cleanupFieldValues = TRUE;
+    FlowEntityReferenceFieldItemNormalizer::$normalizeNewEntities = TRUE;
+    try {
+      return $this->getSerializer()->normalize($entity, get_class($entity));
+    }
+    finally {
+      FlowContentEntityNormalizer::$cleanupFieldValues = FALSE;
+      FlowEntityReferenceFieldItemNormalizer::$normalizeNewEntities = FALSE;
+    }
+  }
+
+  /**
+   * Converts the given normalized config array to an entity object.
+   *
+   * @param array $array
+   *   The normalized array.
+   * @param string $entity_class
+   *   The entity class to expect.
+   *
+   * @return \Drupal\Core\Entity\ContentEntityInterface
+   *   The entity.
+   */
+  public function fromConfigArray(array $array, string $entity_class): ContentEntityInterface {
+    FlowContentEntityNormalizer::$cleanupFieldValues = TRUE;
+    FlowEntityReferenceFieldItemNormalizer::$normalizeNewEntities = TRUE;
+    try {
+      return $this->getSerializer()->denormalize($array, $entity_class);
+    }
+    finally {
+      FlowContentEntityNormalizer::$cleanupFieldValues = FALSE;
+      FlowEntityReferenceFieldItemNormalizer::$normalizeNewEntities = FALSE;
+    }
   }
 
 }

@@ -2,11 +2,10 @@
 
 namespace Drupal\eca_modeller_bpmn;
 
-use DOMDocument;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Component\Utility\Random;
 use Drupal\Core\Action\ActionInterface;
-use Drupal\Core\Render\HtmlResponse;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\eca\Entity\Eca;
 use Drupal\eca\Entity\Model;
 use Drupal\eca\Plugin\ECA\Condition\ConditionInterface;
@@ -15,11 +14,13 @@ use Drupal\eca\Plugin\ECA\Modeller\ModellerBase;
 use Drupal\eca\Plugin\ECA\Modeller\ModellerInterface;
 use Drupal\eca\Plugin\EcaBase;
 use Mtownsend\XmlToArray\XmlToArray;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Abstract class for BPMN modellers, providing generic functionality which
- * is similar to all such modellers.
+ * Abstract class for BPMN modellers.
+ *
+ * Providing generic functionality which is similar to all such modellers.
  */
 abstract class ModellerBpmnBase extends ModellerBase {
 
@@ -49,7 +50,7 @@ abstract class ModellerBpmnBase extends ModellerBase {
    *
    * @var \DOMDocument
    */
-  protected DOMDocument $doc;
+  protected \DOMDocument $doc;
 
   /**
    * The DOM Xpath object for DOM queries.
@@ -59,12 +60,15 @@ abstract class ModellerBpmnBase extends ModellerBase {
   protected \DOMXPath $xpath;
 
   /**
-   * @param \Drupal\eca\Entity\Model $model
+   * Prepares the data for further updates processes.
+   *
+   * @param string $data
+   *   The serialized data of this model.
    */
-  protected function prepareForUpdate(Model $model): void {
-    $this->modeldata = $model->getModeldata();
+  protected function prepareForUpdate(string $data): void {
+    $this->modeldata = $data;
     $this->xmlModel = XmlToArray::convert($this->modeldata);
-    $this->doc = new DOMDocument();
+    $this->doc = new \DOMDocument();
     $this->doc->loadXML($this->modeldata);
     $this->xpath = new \DOMXPath($this->doc);
   }
@@ -73,6 +77,7 @@ abstract class ModellerBpmnBase extends ModellerBase {
    * Return the XML namespace prefix used by the BPMN modeller.
    *
    * @return string
+   *   The namespace prefix used by the current modeller.
    */
   protected function xmlNsPrefix(): string {
     return '';
@@ -102,18 +107,22 @@ abstract class ModellerBpmnBase extends ModellerBase {
   /**
    * {@inheritdoc}
    */
-  public function save(string $model_data, string $filename = NULL): bool {
-    $this->modeldata = $model_data;
-    $this->xmlModel = XmlToArray::convert($model_data);
+  public function save(string $data, string $filename = NULL, bool $status = NULL): bool {
+    $this->prepareForUpdate($data);
     $this->filename = $filename ?? '';
+    if ($status !== NULL) {
+      $this->xmlModel[$this->xmlNsPrefix() . 'process']['@attributes']['isExecutable'] = $status ? 'true' : 'false';
+    }
     return $this->modellerServices->saveModel($this);
   }
 
   /**
    * {@inheritdoc}
+   *
+   * @throws \DOMException
    */
   public function updateModel(Model $model): bool {
-    $this->prepareForUpdate($this->eca->getModel());
+    $this->prepareForUpdate($this->eca->getModel()->getModeldata());
     $changed = FALSE;
     $idxExtension = $this->xmlNsPrefix() . 'extensionElements';
     foreach ($this->getTemplates() as $template) {
@@ -142,7 +151,8 @@ abstract class ModellerBpmnBase extends ModellerBase {
             /** @var \DOMElement $element */
             if ($element = $this->xpath->query("//*[@id='$id']")->item(0)) {
               /** @var \DOMElement $extensions */
-              $extensions = $this->xpath->query("//*[@id='$id']/$idxExtension")->item(0);
+              $extensions = $this->xpath->query("//*[@id='$id']/$idxExtension")
+                ->item(0);
               if (!$extensions) {
                 $node = $this->doc->createElement($idxExtension);
                 $extensions = $element->appendChild($node);
@@ -176,7 +186,8 @@ abstract class ModellerBpmnBase extends ModellerBase {
               // Remove remaining fields from the model.
               foreach ($fields as $name => $value) {
                 /** @var \DOMElement $fieldElement */
-                if ($fieldElement = $this->xpath->query("//*[@id='$id']/$idxExtension/camunda:field[@name='$name']")->item(0)) {
+                if ($fieldElement = $this->xpath->query("//*[@id='$id']/$idxExtension/camunda:field[@name='$name']")
+                  ->item(0)) {
                   $extensions->removeChild($fieldElement);
                   $changed = TRUE;
                 }
@@ -187,7 +198,7 @@ abstract class ModellerBpmnBase extends ModellerBase {
       }
     }
     if ($changed) {
-      $this->modeldata = $this->doc->saveXML();
+      $this->prepareForUpdate($this->doc->saveXML());
       $model->setModeldata($this->modeldata);
     }
     return $changed;
@@ -197,11 +208,18 @@ abstract class ModellerBpmnBase extends ModellerBase {
    * {@inheritdoc}
    */
   public function enable(): ModellerInterface {
-    $this->prepareForUpdate($this->eca->getModel());
-    if ($element = $this->xpath->query("//*[@id='{$this->getId()}']")->item(0)) {
+    $this->prepareForUpdate($this->eca->getModel()->getModeldata());
+    /** @var \DOMElement $element */
+    if ($element = $this->xpath->query("//*[@id='{$this->getId()}']")
+      ->item(0)) {
       $element->setAttribute('isExecutable', 'true');
     }
-    $this->save($this->doc->saveXML());
+    try {
+      $this->save($this->doc->saveXML());
+    }
+    catch (\LogicException | EntityStorageException $e) {
+      $this->messenger->addError($e->getMessage());
+    }
     return $this;
   }
 
@@ -209,25 +227,40 @@ abstract class ModellerBpmnBase extends ModellerBase {
    * {@inheritdoc}
    */
   public function disable(): ModellerInterface {
-    $this->prepareForUpdate($this->eca->getModel());
-    if ($element = $this->xpath->query("//*[@id='{$this->getId()}']")->item(0)) {
+    $this->prepareForUpdate($this->eca->getModel()->getModeldata());
+    /** @var \DOMElement $element */
+    if ($element = $this->xpath->query("//*[@id='{$this->getId()}']")
+      ->item(0)) {
       $element->setAttribute('isExecutable', 'false');
     }
-    $this->save($this->doc->saveXML());
+    try {
+      $this->save($this->doc->saveXML());
+    }
+    catch (\LogicException | EntityStorageException $e) {
+      $this->messenger->addError($e->getMessage());
+    }
     return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function clone(): Eca {
-    $this->prepareForUpdate($this->eca->getModel());
+  public function clone(): ?Eca {
+    $this->prepareForUpdate($this->eca->getModel()->getModeldata());
     $id = $this->generateId();
-    if ($element = $this->xpath->query("//*[@id='{$this->getId()}']")->item(0)) {
+    /** @var \DOMElement $element */
+    if ($element = $this->xpath->query("//*[@id='{$this->getId()}']")
+      ->item(0)) {
       $element->setAttribute('id', $id);
       $element->setAttribute('name', $this->getLabel() . ' (' . $this->t('clone') . ')');
     }
-    return $this->createNewModel($id, $this->doc->saveXML(), NULL, TRUE);
+    try {
+      return $this->createNewModel($id, $this->doc->saveXML(), NULL, TRUE);
+    }
+    catch (\LogicException | EntityStorageException $e) {
+      $this->messenger->addError($e->getMessage());
+    }
+    return NULL;
   }
 
   /**
@@ -241,10 +274,13 @@ abstract class ModellerBpmnBase extends ModellerBase {
    * {@inheritdoc}
    */
   public function export(): ?Response {
-    $this->prepareForUpdate($this->eca->getModel());
-    return new HtmlResponse($this->modeldata, 200, [
-      'Content-Type' => 'application/xml',
-      'Content-Disposition' => 'attachment; filename="' . $this->getPluginId() . '-' . $this->getId() . '.xml"'
+    $this->prepareForUpdate($this->eca->getModel()->getModeldata());
+    $filename = mb_strtolower($this->getPluginId()) . '-' . mb_strtolower($this->getId()) . '.tar.gz';
+    $tempFileName = 'temporary://' . $filename;
+    $this->modellerServices->exportArchive($this->eca, $tempFileName);
+    return new BinaryFileResponse($tempFileName, 200, [
+      'Content-Type' => 'application/octet-stream',
+      'Content-Disposition' => 'attachment; filename="' . $filename . '"',
     ]);
   }
 
@@ -253,6 +289,14 @@ abstract class ModellerBpmnBase extends ModellerBase {
    */
   public function getFilename(): string {
     return $this->filename;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setModeldata(string $data): ModellerInterface {
+    $this->prepareForUpdate($data);
+    return $this;
   }
 
   /**
@@ -285,7 +329,7 @@ abstract class ModellerBpmnBase extends ModellerBase {
     $tags = isset($this->xmlModel[$process][$extensions]) ?
       explode(',', $this->findProperty($this->xmlModel[$process][$extensions], 'Tags')) :
       [];
-    array_walk($tags, static function(&$item) {
+    array_walk($tags, static function (&$item) {
       $item = trim($item);
     });
     return $tags;
@@ -316,6 +360,7 @@ abstract class ModellerBpmnBase extends ModellerBase {
    * Returns all the startEvent (events) objects from the XML model.
    *
    * @return array
+   *   The list of all start events in the model data.
    */
   private function getStartEvents(): array {
     $events = $this->xmlModel[$this->xmlNsPrefix() . 'process'][$this->xmlNsPrefix() . 'startEvent'] ?? [];
@@ -329,6 +374,7 @@ abstract class ModellerBpmnBase extends ModellerBase {
    * Returns all the task objects (actions) from the XML model.
    *
    * @return array
+   *   The list of all tasks in the model data.
    */
   private function getTasks(): array {
     $actions = $this->xmlModel[$this->xmlNsPrefix() . 'process'][$this->xmlNsPrefix() . 'task'] ?? [];
@@ -342,6 +388,7 @@ abstract class ModellerBpmnBase extends ModellerBase {
    * Returns all the sequenceFlow objects (condition) from the XML model.
    *
    * @return array
+   *   The list of all sequence flows in the model data.
    */
   private function getSequenceFlows(): array {
     $conditions = $this->xmlModel[$this->xmlNsPrefix() . 'process'][$this->xmlNsPrefix() . 'sequenceFlow'] ?? [];
@@ -355,6 +402,7 @@ abstract class ModellerBpmnBase extends ModellerBase {
    * Returns all the gateway objects from the XML model.
    *
    * @return array
+   *   The list of all gateways in the model data.
    */
   private function getGateways(): array {
     $types = [
@@ -384,15 +432,22 @@ abstract class ModellerBpmnBase extends ModellerBase {
   public function readComponents(Eca $eca): ModellerInterface {
     $idxExtension = $this->xmlNsPrefix() . 'extensionElements';
 
+    $this->hasError = FALSE;
     $flow = [];
     foreach ($this->getSequenceFlows() as $sequenceFlow) {
       if (isset($sequenceFlow[$idxExtension])) {
+        $pluginId = $this->findProperty($sequenceFlow[$idxExtension], 'pluginid');
         $condition = $this->findAttribute($sequenceFlow, 'id');
-        $eca->addCondition(
-          $condition,
-          $this->findProperty($sequenceFlow[$idxExtension], 'pluginid'),
-          $this->findFields($sequenceFlow[$idxExtension])
-        );
+        if (!empty($pluginId) && !empty($condition)) {
+          $eca->addCondition(
+            $condition,
+            $pluginId,
+            $this->findFields($sequenceFlow[$idxExtension])
+          );
+        }
+        else {
+          $condition = '';
+        }
       }
       else {
         $condition = '';
@@ -421,23 +476,31 @@ abstract class ModellerBpmnBase extends ModellerBase {
 
     foreach ($this->getTasks() as $task) {
       $extension = $task[$idxExtension] ?? [];
-      $eca->addAction(
+      $pluginId = $this->findProperty($extension, 'pluginid');
+      if (empty($pluginId)) {
+        continue;
+      }
+      if (!$eca->addAction(
         $this->findAttribute($task, 'id'),
-        $this->findProperty($extension, 'pluginid'),
+        $pluginId,
         $this->findAttribute($task, 'name'),
         $this->findFields($extension),
         $flow[$this->findAttribute($task, 'id')] ?? []
-      );
+      )) {
+        $this->hasError = TRUE;
+      }
     }
 
     return $this;
   }
 
   /**
-   * Returns all the templates for events, conditions and actions for the
-   * modeller UI.
+   * Returns all the templates for the modeller UI.
+   *
+   * This includes templates for events, conditions and actions.
    *
    * @return array
+   *   The list of all templates.
    */
   protected function getTemplates(): array {
     $templates = [];
@@ -479,20 +542,38 @@ abstract class ModellerBpmnBase extends ModellerBase {
    *   fields.
    */
   protected function properties(PluginInspectionInterface $plugin, string $applies_to, array $fields): array {
-    $properties = [[
-      'label' => 'Plugin ID',
-      'type' => 'Hidden',
-      'value' => $plugin->getPluginId(),
-      'binding' => [
-        'type' => 'camunda:property',
-        'name' => 'pluginid',
+    $properties = [
+      [
+        'label' => 'Plugin ID',
+        'type' => 'Hidden',
+        'value' => $plugin->getPluginId(),
+        'binding' => [
+          'type' => 'camunda:property',
+          'name' => 'pluginid',
+        ],
       ],
-    ]];
+    ];
     foreach ($fields as $field) {
+      if (!isset($field['value'])) {
+        $value = '';
+      }
+      elseif (is_scalar($field['value'])) {
+        $value = (string) $field['value'];
+      }
+      elseif (is_object($field['value']) && method_exists($field['value'], '__toString')) {
+        $value = $field['value']->__toString();
+      }
+      else {
+        $this->logger->error('Found config field %field in %plugin with non-supported value.', [
+          '%field' => $field['label'],
+          '%plugin' => $plugin->getPluginId(),
+        ]);
+        $value = '';
+      }
       $property = [
         'label' => $field['label'],
         'type' => $field['type'],
-        'value' => $field['value'] ?? '',
+        'value' => $value,
         'editable' => $field['editable'] ?? TRUE,
         'binding' => [
           'type' => 'camunda:field',
@@ -503,7 +584,7 @@ abstract class ModellerBpmnBase extends ModellerBase {
         $property['description'] = (string) $field['description'];
       }
       if (isset($field['extras'])) {
-        /** @noinspection SlowArrayOperationsInLoopInspection */
+        /* @noinspection SlowArrayOperationsInLoopInspection */
         $property = array_merge_recursive($property, $field['extras']);
       }
       $properties[] = $property;
@@ -511,7 +592,7 @@ abstract class ModellerBpmnBase extends ModellerBase {
     $pluginDefinition = $plugin->getPluginDefinition();
     $template = [
       'name' => (string) $pluginDefinition['label'],
-      'id' => 'org.drupal.' . $plugin->getPluginId(),
+      'id' => 'org.drupal.' . $this->pluginType($applies_to) . '.' . $plugin->getPluginId(),
       'category' => [
         'id' => $pluginDefinition['provider'],
         'name' => EcaBase::$modules[$pluginDefinition['provider']],
@@ -522,7 +603,52 @@ abstract class ModellerBpmnBase extends ModellerBase {
     if (isset($pluginDefinition['description'])) {
       $template['description'] = (string) $pluginDefinition['description'];
     }
+    if ($doc_url = $this->pluginDocUrl($plugin, $applies_to)) {
+      $template['documentationRef'] = $doc_url;
+    }
     return $template;
+  }
+
+  /**
+   * Provides the plugin type derived from the string to what it applies.
+   *
+   * @param string $applies_to
+   *   BPMN identifier to what the plugin applies.
+   *
+   * @return string
+   *   The type of plugin.
+   */
+  protected function pluginType(string $applies_to): string {
+    if ($applies_to === 'bpmn:Event') {
+      return 'event';
+    }
+    if ($applies_to === 'bpmn:SequenceFlow') {
+      return 'condition';
+    }
+    return 'action';
+  }
+
+  /**
+   * Builds the URL to the offsite documentation for the given plugin.
+   *
+   * @param \Drupal\Component\Plugin\PluginInspectionInterface $plugin
+   *   The plugin for which the documentation URL should be build.
+   * @param string $applies_to
+   *   The identifier of the plugin types in BPMN terminology.
+   *
+   * @return string|null
+   *   The URL to the offsite documentation, or NULL if no URL was generated.
+   */
+  protected function pluginDocUrl(PluginInspectionInterface $plugin, string $applies_to): ?string {
+    if (!($domain = $this->documentationDomain)) {
+      return NULL;
+    }
+    $type = $this->pluginType($applies_to);
+    $provider = $plugin->getPluginDefinition()['provider'];
+    $basePath = (mb_strpos($provider, 'eca_') === 0) ?
+      str_replace('_', '/', $provider) :
+      $provider;
+    return sprintf('%s/plugins/%s/%ss/%s/', $domain, $basePath, $type, str_replace([':'], '_', $plugin->getPluginId()));
   }
 
   /**
@@ -539,7 +665,7 @@ abstract class ModellerBpmnBase extends ModellerBase {
   }
 
   /**
-   * Prepares and returns the template of the given condition for BPMN modellers.
+   * Returns the template of the given condition for BPMN modellers.
    *
    * @param \Drupal\eca\Plugin\ECA\Condition\ConditionInterface $condition
    *   The condition plugin for which the template should be build.

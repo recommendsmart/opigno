@@ -5,6 +5,7 @@ namespace Drupal\eca\Plugin;
 use Drupal\Component\Plugin\PluginBase as DrupalPluginBase;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\eca\EcaState;
@@ -17,55 +18,91 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 abstract class EcaBase extends DrupalPluginBase implements EcaInterface, ContainerFactoryPluginInterface {
 
+  /**
+   * List of modules that provide ECA plugins.
+   *
+   * @var array|string[]
+   */
   public static array $modules = [
     'core' => 'Drupal Core',
     'eca' => 'ECA',
   ];
 
   /**
-   * The ECA-related token services.
+   * Messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected MessengerInterface $messenger;
+
+  /**
+   * ECA token service.
    *
    * @var \Drupal\eca\Token\TokenInterface
    */
   protected TokenInterface $tokenServices;
 
   /**
+   * Current user account.
+   *
    * @var \Drupal\Core\Session\AccountProxyInterface
    */
   protected AccountProxyInterface $currentUser;
 
   /**
+   * Entity type manager service.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
+   * Entity type bundle info service.
+   *
    * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
    */
   protected EntityTypeBundleInfoInterface $entityTypeBundleInfo;
 
   /**
+   * Symfony request stack.
+   *
    * @var \Symfony\Component\HttpFoundation\RequestStack
    */
   protected RequestStack $requestStack;
 
   /**
+   * ECA state service.
+   *
    * @var \Drupal\eca\EcaState
    */
   protected EcaState $state;
 
   /**
+   * Constructor for ECA plugins.
+   *
    * @param array $configuration
-   * @param $plugin_id
-   * @param $plugin_definition
+   *   The plugin configuration.
+   * @param string $plugin_id
+   *   The plugin ID.
+   * @param array $plugin_definition
+   *   The plugin definition.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger service.
    * @param \Drupal\eca\Token\TokenInterface $token_services
+   *   The ECA token service.
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user account.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity bundle info service.
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+   *   The Symfony request stack.
    * @param \Drupal\eca\EcaState $state
+   *   The ECA state service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, TokenInterface $token_services, AccountProxyInterface $current_user, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, RequestStack $requestStack, EcaState $state) {
+  public function __construct(array $configuration, string $plugin_id, array $plugin_definition, MessengerInterface $messenger, TokenInterface $token_services, AccountProxyInterface $current_user, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, RequestStack $requestStack, EcaState $state) {
+    $this->messenger = $messenger;
     $this->tokenServices = $token_services;
     $this->currentUser = $current_user;
     $this->entityTypeManager = $entity_type_manager;
@@ -83,6 +120,7 @@ abstract class EcaBase extends DrupalPluginBase implements EcaInterface, Contain
       $configuration,
       $plugin_id,
       $plugin_definition,
+      $container->get('messenger'),
       $container->get('eca.token_services'),
       $container->get('current_user'),
       $container->get('entity_type.manager'),

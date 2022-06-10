@@ -2,6 +2,7 @@
 
 namespace Drupal\eca\Token;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Utility\Token;
@@ -115,8 +116,7 @@ trait TokenDecoratorTrait {
    */
   public function addTokenDataProvider(DataProviderInterface $provider): TokenInterface {
     if (!in_array($provider, $this->dataProviders, TRUE)) {
-      // The most recently added provider should be looked up first.
-      array_unshift($this->dataProviders, $provider);
+      $this->dataProviders[] = $provider;
     }
     return $this;
   }
@@ -125,7 +125,7 @@ trait TokenDecoratorTrait {
    * {@inheritdoc}
    */
   public function removeTokenDataProvider(DataProviderInterface $provider): TokenInterface {
-    $this->dataProviders = array_filter($this->dataProviders, function ($added) use ($provider) {
+    $this->dataProviders = array_filter($this->dataProviders, static function ($added) use ($provider) {
       return $added !== $provider;
     });
     return $this;
@@ -248,15 +248,15 @@ trait TokenDecoratorTrait {
         }
       }
     }
-    foreach ($parts as $key) {
-      if (!is_object($data) || !isset($data->$key)) {
+    foreach ($parts as $partKey) {
+      if (!is_object($data) || !isset($data->$partKey)) {
         return NULL;
       }
       if ($data instanceof EntityInterface || $data instanceof ComplexDataInterface) {
-        $data = $data->get($key);
+        $data = $data->get($partKey);
       }
       else {
-        $data = $data->$key;
+        $data = $data->$partKey;
       }
     }
     if ($data instanceof TypedDataInterface && $data->getValue() instanceof EntityInterface) {
@@ -314,19 +314,6 @@ trait TokenDecoratorTrait {
     // decorator. Thus we call it on its own.
     $text = parent::replace($text, $data, $options, $bubbleable_metadata);
 
-    // Allow for root-level replacements (Tokens without further keys).
-    if ((mb_strpos($text, '[') !== FALSE) && (mb_strpos($text, ']') !== FALSE)) {
-      foreach ($data + $this->data as $key => $value) {
-        $root_token = '[' . $key . ']';
-        if (mb_strpos($text, $root_token) !== FALSE) {
-          $replacement = is_scalar($value) || is_null($value) || (is_object($value) && method_exists($value, '__toString')) ? (string) $value : ($value instanceof EntityInterface ? $value->id() : '');
-          if (($replacement !== '') || !empty($options['clear'])) {
-            $text = str_replace($root_token, $replacement, $text);
-          }
-        }
-      }
-    }
-
     // Either the class of this decorator inherits from the Core token service
     // or from the Contrib token service (if available). Just in case we
     // actually received a decorated service that differs from these two
@@ -348,8 +335,46 @@ trait TokenDecoratorTrait {
   /**
    * {@inheritdoc}
    */
+  public function getOrReplace($text, array $data = [], ?array $options = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
+    $string = (string) $text;
+    if ((mb_substr($string, 0, 1) === '[') && (mb_substr($string, -1, 1) === ']') && (mb_strlen($string) <= 255)) {
+      $string = mb_substr($string, 1, -1);
+      if (!empty($data) && ($value = NestedArray::getValue($data, explode(':', $string)))) {
+        return $value;
+      }
+      if ($this->hasTokenData($string)) {
+        return $this->getTokenData($string);
+      }
+    }
+    return isset($options) ? $this->replace($text, $data, $options, $bubbleable_metadata) : $this->replaceClear($text, $data, [], $bubbleable_metadata);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function scan($text) {
-    return $this->token->scan($text);
+    return $this->token->scan($text) + $this->scanRootLevelTokens($text);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function scanRootLevelTokens($text): array {
+    preg_match_all('/
+      \[             # [ - pattern start
+      ([^\s\[\]:]+)  # match $type not containing whitespace : [ or ]
+      \]             # ] - pattern end
+      /x', $text, $matches);
+
+    $tokens = $matches[1];
+
+    $results = [];
+    $tokenCount = count($tokens);
+    for ($i = 0; $i < $tokenCount; $i++) {
+      $results['_eca_root_token'][$tokens[$i]] = $matches[0][$i];
+    }
+
+    return $results;
   }
 
   /**
@@ -393,7 +418,7 @@ trait TokenDecoratorTrait {
     $key = mb_strtolower(trim($key));
 
     if (!empty($key)) {
-      if ($key[0] === '[' && $key[mb_strlen($key) - 1] === ']') {
+      if ((mb_substr($key, 0, 1) === '[') && (mb_substr($key, -1, 1) === ']')) {
         // Remove the brackets coming from Token syntax.
         $key = mb_substr($key, 1, -1);
       }

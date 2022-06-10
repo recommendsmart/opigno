@@ -797,6 +797,9 @@ function social_group_form_alter(&$form, FormStateInterface $form_state, $form_i
 
   // Perform alterations on joining / leaving groups.
   if (in_array($form_id, $action_forms)) {
+    if (isset($form['path'])) {
+      $form['path']['#access'] = FALSE;
+    }
 
     // Add cancel option on join and leave form.
     $form['actions']['cancel'] = [
@@ -1183,13 +1186,14 @@ function _social_group_grant_admin_role($uid, $gid) {
     // Check what roles are there.
     $roles = [];
     if ($membership instanceof GroupMembership) {
-      foreach ($membership->getGroupContent()->group_roles as $group_role_ref) {
-        $roles[] = $group_role_ref->target_id;
+      foreach ($membership->getGroupContent()->get('group_roles') as $group_role_ref) {
+        /** @var \Drupal\Core\Field\EntityReferenceFieldItemList $group_role_ref */
+        $roles[] = $group_role_ref->getValue();
       }
 
       // No admin? Add it.
       if (!in_array($admin_role, $roles)) {
-        $membership->getGroupContent()->group_roles[] = ['target_id' => $admin_role];
+        $membership->getGroupContent()->set('group_roles', ['target_id' => $admin_role]);
         $membership->getGroupContent()->save();
       }
     }
@@ -1328,16 +1332,19 @@ function social_group_field_widget_form_alter(&$element, FormStateInterface $for
   $field_definition = $context['items']->getFieldDefinition();
 
   // Unset the visibility field options which are not enabled.
-  if ($field_definition->getType() == 'entity_access_field') {
+  if ($field_definition->getType() === 'entity_access_field') {
     $default_value = $context['items']->getValue();
-    if (isset($default_value[0]['value'])) {
-      $element['#default_value'] = $default_value[0]['value'];
-    }
-    else {
-      $default_visibility = \Drupal::configFactory()
-        ->get('entity_access_by_field.settings')
-        ->get('default_visibility');
-      $element['#default_value'] = $default_visibility;
+    $field_cardinality = $field_definition->getFieldStorageDefinition()->getCardinality();
+    if ($field_cardinality === 1) {
+      if (isset($default_value[0]['value'])) {
+        $element['#default_value'] = $default_value[0]['value'];
+      }
+      else {
+        $default_visibility = \Drupal::configFactory()
+          ->get('entity_access_by_field.settings')
+          ->get('default_visibility');
+        $element['#default_value'] = $default_visibility;
+      }
     }
     $entity = $form_state->getFormObject()->getEntity();
 
@@ -1345,9 +1352,9 @@ function social_group_field_widget_form_alter(&$element, FormStateInterface $for
     if (!empty($current_group)) {
       $group_type = $current_group->getGroupType();
       $group_type_id = $group_type->id();
-      // If it's an existing entity we dont need to set the default
+      // If it's an existing entity we don't need to set the default
       // rather follow the saved one.
-      if (!$entity->id()) {
+      if (!$entity->id() && $field_cardinality === 1) {
         $element['#default_value'] = \Drupal::service('social_group.helper_service')
           ->getDefaultGroupVisibility($group_type_id);
       }
@@ -1721,6 +1728,15 @@ function social_group_preprocess_views_view(&$variables) {
       ->getViewBuilder('block')
       ->view($entity);
   }
+
+  if ($view->id() === 'activity_stream_group') {
+    $group = _social_group_get_current_group();
+    if ($group instanceof GroupInterface) {
+      $variables['#cache']['tags'][] = 'group:' . $group->id();
+      $variables['#cache']['contexts'][] = 'route.group';
+      $variables['#cache']['contexts'][] = 'user.group_permissions';
+    }
+  }
 }
 
 /**
@@ -1908,19 +1924,35 @@ function social_group_get_all_groups() {
  * Implements hook_entity_base_field_info_alter().
  */
 function social_group_entity_base_field_info_alter(&$fields, EntityTypeInterface $entity_type) {
-  if ($entity_type->id() === 'node' && isset($fields['groups'])) {
-    /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $fields */
-    $fields['groups']
-      ->setLabel(t('Group'))
-      ->setDescription('')
-      ->setSetting('handler', 'social')
-      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
-      ->setDisplayOptions('form', [
-        'type' => 'social_group_selector_widget',
-        'settings' => [],
-        'weight' => 16,
-      ])
-      ->setDisplayConfigurable('form', TRUE);
+  if (!isset($fields['groups'])) {
+    return;
+  }
+
+  $entity_types = ['node', 'user'];
+  if (in_array($entity_type->id(), $entity_types)) {
+    if ($entity_type->id() === 'node') {
+      /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $fields */
+      $fields['groups']
+        ->setLabel(t('Group'))
+        ->setDescription('')
+        ->setSetting('handler', 'social')
+        ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+        ->setDisplayOptions('form', [
+          'type' => 'social_group_selector_widget',
+          'settings' => [],
+          'weight' => 16,
+        ])
+        ->setDisplayConfigurable('form', TRUE);
+    }
+
+    // Remove 'group_type_<group_type>' fields from the node and user entities
+    // as these fields providing issues with cross posting and translations.
+    // Also, we do not use these fields in Open Social, so we can disable them.
+    /** @var \Drupal\group\Entity\GroupType $group_type */
+    foreach (\Drupal::service('entity_type.manager')->getStorage('group_type')->loadMultiple() as $group_type) {
+      $field_name = 'groups_type_' . $group_type->id();
+      unset($fields[$field_name]);
+    }
   }
 }
 
@@ -2074,45 +2106,43 @@ function social_group_get_allowed_visibility_options_per_group_type($group_type_
       $visibility_options['group'] = TRUE;
       break;
 
-    case 'flexible_group':
+    default:
       if (empty($group)) {
         $group = _social_group_get_current_group();
       }
-      if ($group !== NULL) {
+      if ($group !== NULL && $group->hasField('field_group_allowed_visibility')) {
         $visibility_options['public'] = FALSE;
         $visibility_options['community'] = FALSE;
         $visibility_options['group'] = FALSE;
         // Try to retrieve allowed options from Group directly.
-        $allowed_options = $group->get('field_group_allowed_visibility')
-          ->getValue();
+        $allowed_options = $group->get('field_group_allowed_visibility')->getValue();
         foreach ($allowed_options as $option) {
           $value = $option['value'];
           $visibility_options[$value] = TRUE;
         }
       }
-      break;
-
-    default:
-      $config = \Drupal::config('entity_access_by_field.settings');
-      $visibility_options['public'] = TRUE;
-      if ($config->get('disable_public_visibility') === 1 && !$account->hasPermission('override disabled public visibility')) {
-        // This is a new entity.
-        if (!$entity) {
-          $visibility_options['public'] = FALSE;
-        }
-        else {
-          /** @var \Drupal\node\Entity\Node $entity */
-          if ($entity->hasField('field_content_visibility')) {
-            $current_visibility = $entity->get('field_content_visibility')
-              ->getString();
-            if ($current_visibility !== 'public') {
-              $visibility_options['public'] = FALSE;
+      else {
+        $config = \Drupal::config('entity_access_by_field.settings');
+        $visibility_options['public'] = TRUE;
+        if ($config->get('disable_public_visibility') === 1 && !$account->hasPermission('override disabled public visibility')) {
+          // This is a new entity.
+          if (!$entity) {
+            $visibility_options['public'] = FALSE;
+          }
+          else {
+            /** @var \Drupal\node\Entity\Node $entity */
+            if ($entity->hasField('field_content_visibility')) {
+              $current_visibility = $entity->get('field_content_visibility')
+                ->getString();
+              if ($current_visibility !== 'public') {
+                $visibility_options['public'] = FALSE;
+              }
             }
           }
         }
+        $visibility_options['community'] = TRUE;
+        $visibility_options['group'] = FALSE;
       }
-      $visibility_options['community'] = TRUE;
-      $visibility_options['group'] = FALSE;
       break;
   }
 
@@ -2126,30 +2156,66 @@ function social_group_get_allowed_visibility_options_per_group_type($group_type_
  * Implements hook_views_query_alter().
  */
 function social_group_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
-  if (empty($view->rowPlugin) || !($view->rowPlugin instanceof EntityRow) || $view->rowPlugin->getEntityTypeId() != 'group') {
+  if (\Drupal::currentUser()->isAuthenticated()) {
     return;
   }
-  $account = \Drupal::currentUser()->getAccount();
-  if ($account->isAuthenticated()) {
-    // Get all groups for LU.
-    /** @var \Drupal\social_group\SocialGroupHelperServiceInterface $group_helper */
-    $group_helper = \Drupal::service('social_group.helper_service');
-    $my_groups = $group_helper->getAllGroupsForUser($account->id());
-    if (!empty($my_groups)) {
-      // Get all hidden groups.
-      $hidden_groups = \Drupal::entityTypeManager()
-        ->getStorage('group')
-        ->loadByProperties([
-          'type' => 'closed_group',
-        ]);
 
-      // Get all hidden groups that the current user is not a member of
-      // and remove them from showing in the view.
-      $ids = array_diff(array_keys($hidden_groups), $my_groups);
-      if ($ids) {
-        /** @var \Drupal\views\Plugin\views\query\Sql $query */
-        $query->addWhere('group_membership', 'groups_field_data.id', $ids, 'NOT IN');
+  if (
+    empty($view->rowPlugin) ||
+    !($view->rowPlugin instanceof EntityRow) ||
+    $view->rowPlugin->getEntityTypeId() !== 'group'
+  ) {
+    return;
+  }
+
+  $found = FALSE;
+
+  /** @var \Drupal\views\Plugin\views\query\Sql $query */
+  $where = $query->where;
+  foreach ($where as &$conditions) {
+    foreach ($conditions['conditions'] as &$condition) {
+      if ($condition['field'] === 'groups_field_data.type') {
+        $found = TRUE;
+        break 2;
       }
+    }
+  }
+
+  if (!$found) {
+    unset($condition);
+
+    $condition = [
+      'field' => 'groups_field_data.type',
+      'operator' => 'not in',
+    ];
+  }
+
+  $hiddens = isset($condition) && $condition['operator'] === 'not in';
+
+  // Define the variable as array otherwise it can be interpreted as string
+  // And breaking the code below.
+  $condition['value'] = [];
+
+  /** @var \Drupal\group\Entity\GroupTypeInterface $group_type */
+  foreach (GroupType::loadMultiple() as $group_type) {
+    $new = !in_array($group_type->id(), $condition['value']);
+    $permissions = $group_type->getAnonymousRole()->getPermissions();
+    $hidden = !in_array('view group', $permissions);
+
+    if ($new && $hiddens === $hidden) {
+      $condition['value'][] = $group_type->id();
+    }
+  }
+
+  if (!$found) {
+    if (isset($conditions)) {
+      $conditions['conditions'][] = $condition;
+    }
+    else {
+      $query->where[] = [
+        'conditions' => [$condition],
+        'type' => 'AND',
+      ];
     }
   }
 }
@@ -2326,6 +2392,11 @@ function social_group_entity_operation_alter(array &$operations, EntityInterface
     ];
 
     foreach ($operations as $key => &$operation) {
+      // Remove users' view page from actions.
+      if ($operation['url']->getRouteName() === 'entity.user.canonical') {
+        unset($operations[$key]);
+        continue;
+      }
       if (isset($titles[$key])) {
         $operation['title'] = $titles[$key];
       }
@@ -2809,4 +2880,19 @@ function social_group_preprocess_page(array &$variables) {
       $variables['page']['complementary_top'] = [];
     }
   }
+}
+
+/**
+ * Implements hook_social_core_default_main_menu_links_alter().
+ */
+function social_group_social_core_default_main_menu_links_alter(array &$links) {
+  $link = \Drupal::entityTypeManager()->getStorage('menu_link_content')
+    ->loadByProperties([
+      'title' => 'All groups',
+      'menu_name' => 'main',
+      'link' => 'internal:/all-groups',
+    ]);
+  $link = end($link);
+
+  $links[] = $link;
 }

@@ -20,9 +20,9 @@ use Drupal\eca_base\Event\CustomEvent;
 class BaseEvent extends EventBase {
 
   /**
-   * @return array[]
+   * {@inheritdoc}
    */
-  public static function actions(): array {
+  public static function definitions(): array {
     $actions = [];
     $actions['eca_cron'] = [
       'label' => 'ECA cron event',

@@ -4,6 +4,7 @@ namespace Drupal\eca_log\Plugin\Action;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\eca\Plugin\Action\ConfigurableActionBase;
 use Drupal\eca\Plugin\OptionsInterface;
 
@@ -28,13 +29,12 @@ class LogMessage extends ConfigurableActionBase implements OptionsInterface {
     $severity = (int) $this->configuration['severity'];
     $message = $this->configuration['message'];
     $context = [];
-    $i = 0;
-    foreach ($this->tokenServices->scan($message) as $type) {
-      foreach ($type as $token) {
-        $i++;
-        $id = '%arg' . $i;
-        $message = str_replace($token, $id, $message);
-        $context[$id] = $this->tokenServices->replaceClear($token);
+    foreach ($this->tokenServices->scan($message) as $type => $tokens) {
+      $replacements = $this->tokenServices->generate($type, $tokens, [], ['clear' => TRUE], new BubbleableMetadata());
+      foreach ($replacements as $original_token => $replacement_value) {
+        $context_argument = '%token__' . mb_substr(str_replace(':', '_', $original_token), 1, -1);
+        $message = str_replace($original_token, $context_argument, $message);
+        $context[$context_argument] = $replacement_value;
       }
     }
     \Drupal::logger($channel)->log($severity, $message, $context);

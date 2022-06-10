@@ -36,8 +36,8 @@ class EntityFieldValueChanged extends ConditionBase {
    */
   public function defaultConfiguration(): array {
     return [
-        'field_name' => '',
-      ] + parent::defaultConfiguration();
+      'field_name' => '',
+    ] + parent::defaultConfiguration();
   }
 
   /**

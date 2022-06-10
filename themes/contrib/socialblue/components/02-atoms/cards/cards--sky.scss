@@ -215,6 +215,50 @@
       }
     }
 
+    .follow-user-wrapper {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 1.75rem;
+
+      @include for-phone-only {
+        margin-bottom: 1rem;
+      }
+
+      .flag-follow-user,
+      .hero-footer__cta {
+        flex: 0 0 100%;
+        max-width: 100%;
+
+        @include for-tablet-portrait-up {
+          flex: 0 0 calc(50% - 5px);
+          max-width: calc(50% - 5px);
+        }
+      }
+
+      .flag-follow-user {
+        padding: 6px 12px;
+        font-weight: 400;
+
+        @include for-phone-only {
+          margin-bottom: .5rem;
+        }
+
+        @include for-tablet-portrait-up {
+          margin-right: 5px;
+        }
+      }
+
+      .hero-footer__cta {
+        padding-bottom: 0;
+
+        @include for-tablet-portrait-up {
+          margin-left: 5px;
+          padding-bottom: 0;
+        }
+      }
+    }
+
     .card__actionbar {
       padding: 1.5rem 0;
 
@@ -320,7 +364,7 @@
 
     &--about {
       font-size: 1rem;
-      line-height: 24px;
+      line-height: 1.625rem;
 
       &-job,
       &-organization {

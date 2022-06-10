@@ -4,6 +4,7 @@ namespace Drupal\flow_ui;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 
 /**
  * Defines a class to build a UI listing of Flow config entities.
@@ -42,10 +43,36 @@ class FlowUiListBuilder extends ConfigEntityListBuilder {
     $build = parent::render();
 
     $build['table']['#empty'] = $this->t(
-      'No Flow configuration items available.',
+      'Currently no Flow items are available. Have a look at the <a href=":url" target="_blank" rel="noreferrer noopener">README</a> for knowing how to create your first flow.',
+      [':url' => 'https://git.drupalcode.org/project/flow/-/blob/1.0.x/README.md#4-usage']
     );
 
     return $build;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDefaultOperations(EntityInterface $entity) {
+    /** @var \Drupal\flow\Entity\FlowInterface $flow */
+    $flow = $entity;
+
+    $operations = [];
+
+    $target_type = \Drupal::entityTypeManager()->getDefinition($flow->getTargetEntityTypeId());
+    $bundle_type_id = $target_type->getBundleEntityType() ?: 'bundle';
+
+    $operations['edit'] = [
+      'title' => t('Edit'),
+      'weight' => 10,
+      'url' => Url::fromRoute("entity.flow.{$target_type->id()}.task_mode", [
+        'entity_type_id' => $target_type->id(),
+        $bundle_type_id => $flow->getTargetBundle(),
+        'flow_task_mode' => $flow->getTaskMode(),
+      ]),
+    ];
+
+    return $operations;
   }
 
 }

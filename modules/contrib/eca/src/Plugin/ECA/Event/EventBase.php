@@ -6,7 +6,7 @@ use Drupal\eca\Entity\Objects\EcaEvent;
 use Drupal\eca\Plugin\EcaBase;
 
 /**
- *
+ * Base class for ECA event plugins.
  */
 abstract class EventBase extends EcaBase implements EventInterface {
 

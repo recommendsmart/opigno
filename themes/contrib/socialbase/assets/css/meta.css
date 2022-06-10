@@ -32,7 +32,7 @@
 
 .metainfo__content a {
   text-decoration: underline;
-  color: #4d4d4d;
+  color: #343434;
 }
 
 .metainfo__content .badge--toggle {
@@ -118,9 +118,9 @@
   display: flex;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
   margin-bottom: 15px;
 }
 
@@ -135,6 +135,7 @@
   display: inline-block;
   vertical-align: middle;
   fill: #222222;
+  margin-top: 5px;
   margin-right: 12px;
 }
 

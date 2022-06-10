@@ -16,7 +16,7 @@ function lazy_requirements($phase) {
   }
 
   $settings = \Drupal::config('lazy.settings');
-  $library_path = $settings->get('libraryPath');
+  $library_path = $settings->get('libraryPath') ?? '/libraries/lazysizes';
   $library_js = $settings->get('minified') ? '/lazysizes.min.js' : '/lazysizes.js';
 
   $requirements['lazy_lazysizes'] = [
@@ -129,32 +129,11 @@ function lazy__update_migrate_config() {
   $selector = $config->get('selector') ?: $config->get('lazysizes.lazyClass');
   $errorClass = $config->get('errorClass') ?: $config->get('lazysizes.errorClass');
   $src = $config->get('src') ?: $config->get('lazysizes.srcAttr');
-  $image_fields = (array) $config->get('image_fields');
-
-  $image_fields_updated = [];
-  foreach ($image_fields as $image_field => $bool) {
-    $parts = explode('--', $image_field);
-    $key = implode('--', [$parts[0], $parts[1], $parts[3], $parts[2]]);
-    $image_fields_updated[$key] = TRUE;
-  }
-
-  $alter_tag = (array) $config->get('alter_tag');
-  foreach ($alter_tag as $key => $value) {
-    $alter_tag[$key] = (string) $value;
-  }
-
-  $formatters = $config->get('formatters') ?: [];
-  foreach ($formatters as $key => $value) {
-    $formatters[$key] = (string) $value;
-  }
 
   $config
     ->set('lazysizes.lazyClass', $selector)
     ->set('lazysizes.errorClass', $errorClass)
     ->set('lazysizes.srcAttr', $src)
-    ->set('image_fields', $image_fields_updated)
-    ->set('alter_tag', $alter_tag)
-    ->set('formatters', $formatters)
     ->clear('errorClass')
     ->clear('loadInvisible')
     ->clear('offset')
@@ -259,5 +238,17 @@ function lazy_update_8308() {
       'negate' => 0,
     ])
     ->clear('disabled_paths')
+    ->save(TRUE);
+}
+
+/**
+ * Remove legacy configuration settings.
+ */
+function lazy_update_8309() {
+  $config = \Drupal::configFactory()->getEditable('lazy.settings');
+  $config
+    ->clear('image_fields')
+    ->clear('alter_tag')
+    ->clear('formatters')
     ->save(TRUE);
 }

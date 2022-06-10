@@ -3,7 +3,6 @@
 namespace Drupal\Tests\eca_content\Kernel;
 
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\eca\Service\Conditions;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
@@ -21,6 +20,12 @@ use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUser;
  */
 class EntityExistsTest extends KernelTestBase {
 
+  /**
+   * The modules.
+   *
+   * @var string[]
+   *   The modules.
+   */
   protected static $modules = [
     'system',
     'user',
@@ -117,8 +122,7 @@ class EntityExistsTest extends KernelTestBase {
       'unchanged' => FALSE,
     ];
     /** @var \Drupal\eca_content\Plugin\ECA\Condition\EntityExists $condition */
-    $condition = $condition_manager->createInstance('eca_entity_exists', [
-    ] + $defaults);
+    $condition = $condition_manager->createInstance('eca_entity_exists', [] + $defaults);
     $condition->setContextValue('entity', $node);
     $this->assertFalse($condition->evaluate(), 'User without permissions must not have access.');
 
@@ -126,8 +130,7 @@ class EntityExistsTest extends KernelTestBase {
     $account_switcher->switchTo(User::load(1));
 
     /** @var \Drupal\eca_content\Plugin\ECA\Condition\EntityExists $condition */
-    $condition = $condition_manager->createInstance('eca_entity_exists', [
-    ] + $defaults);
+    $condition = $condition_manager->createInstance('eca_entity_exists', [] + $defaults);
     $condition->setContextValue('entity', $node);
     $this->assertTrue($condition->evaluate(), 'User with permissions must have access.');
 
@@ -172,7 +175,7 @@ class EntityExistsTest extends KernelTestBase {
       'from' => 'id',
       'entity_type' => 'node',
       'entity_id' => '[mynode:nid]',
-      'latest_revision' => Conditions::OPTION_YES,
+      'latest_revision' => TRUE,
     ] + $defaults);
     $token_services->addTokenData('mynode', $node);
     $condition->setContextValue('entity', $node);
@@ -180,7 +183,7 @@ class EntityExistsTest extends KernelTestBase {
 
     $node->title = 'Changed on runtime';
     $condition = $condition_manager->createInstance('eca_entity_exists', [
-      'unchanged' => Conditions::OPTION_YES,
+      'unchanged' => TRUE,
     ] + $defaults);
     $condition->setContextValue('entity', $node);
     $this->assertTrue($condition->evaluate(), 'Node must exist because it is stored in the database.');

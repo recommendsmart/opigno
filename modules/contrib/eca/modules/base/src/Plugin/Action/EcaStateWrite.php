@@ -27,9 +27,9 @@ class EcaStateWrite extends ConfigurableActionBase {
    */
   public function defaultConfiguration(): array {
     return [
-        'key' => '',
-        'value' => '',
-      ] + parent::defaultConfiguration();
+      'key' => '',
+      'value' => '',
+    ] + parent::defaultConfiguration();
   }
 
   /**

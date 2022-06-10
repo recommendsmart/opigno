@@ -67,7 +67,9 @@ class FieldBundleListBuilder extends EntityListBuilder {
 
     $total = $this->getStorage()
       ->getQuery()
+      ->accessCheck(TRUE)
       ->count()
+      ->accessCheck(TRUE)
       ->execute();
 
     $build['summary']['#markup'] = $this->t('Total field bundles: @total', ['@total' => $total]);

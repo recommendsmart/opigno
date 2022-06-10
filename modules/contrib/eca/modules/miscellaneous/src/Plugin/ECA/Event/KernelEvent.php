@@ -26,9 +26,9 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class KernelEvent extends EventBase {
 
   /**
-   * @return array[]
+   * {@inheritdoc}
    */
-  public static function actions(): array {
+  public static function definitions(): array {
     return [
       'view' => [
         'label' => 'Controller does not return a Response instance',

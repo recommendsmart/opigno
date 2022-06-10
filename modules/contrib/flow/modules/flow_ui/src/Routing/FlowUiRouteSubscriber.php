@@ -35,6 +35,16 @@ class FlowUiRouteSubscriber extends RouteSubscriberBase {
    * {@inheritdoc}
    */
   protected function alterRoutes(RouteCollection $collection) {
+    $route = new Route(
+      "/admin/structure/flow",
+      [
+        '_title' => 'Flow (automation)',
+        '_entity_list' => 'flow',
+      ],
+      ['_permission' => 'administer flow'],
+      ['_flow_ui' => TRUE]
+    );
+    $collection->add("entity.flow.collection", $route);
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
       if (!$route_name = $entity_type->get('field_ui_base_route')) {
         continue;
@@ -63,7 +73,10 @@ class FlowUiRouteSubscriber extends RouteSubscriberBase {
         $defaults['bundle'] = !$entity_type->hasKey('bundle') ? $entity_type_id : '';
       }
 
-      $requirements = ['_permission' => 'administer flow+administer ' . $entity_type_id . ' flow'];
+      // Use permissions as requirement when no task mode is provided.
+      $permissions = ['_permission' => 'administer flow+administer ' . $entity_type_id . ' flow'];
+      // Use custom access as requirement when a task mode is provided.
+      $custom_acccess = ['_custom_access' => '\Drupal\flow_ui\Controller\FlowUiController::customFlowAccess'];
 
       $route = new Route(
         "$path/flow",
@@ -71,7 +84,7 @@ class FlowUiRouteSubscriber extends RouteSubscriberBase {
           '_title' => 'Manage flow',
           'flow_task_mode' => FlowTaskMode::service()->getDefaultTaskMode(),
         ] + $defaults,
-        $requirements,
+        $custom_acccess,
         $options
       );
       $collection->add("entity.flow.{$entity_type_id}.default", $route);
@@ -80,61 +93,112 @@ class FlowUiRouteSubscriber extends RouteSubscriberBase {
         [
           '_title' => 'Manage flow',
         ] + $defaults,
-        $requirements,
+        $custom_acccess,
         $options
       );
       $collection->add("entity.flow.{$entity_type_id}.task_mode", $route);
+      $route = new Route(
+        "$path/flow/{flow_task_mode}/delete",
+        [
+          '_title' => 'Delete flow',
+          '_controller' => '\Drupal\flow_ui\Controller\FlowUiController::flowDeleteForm',
+        ] + $defaults,
+        $custom_acccess,
+        $options
+      );
+      $collection->add("entity.flow.{$entity_type_id}.delete", $route);
+      $route = new Route(
+        "$path/flow/custom/add",
+        [
+          '_title' => 'Add custom flow',
+          '_controller' => '\Drupal\flow_ui\Controller\FlowUiController::customAddForm',
+        ] + $defaults,
+        $permissions,
+        $options
+      );
+      $collection->add("entity.flow.{$entity_type_id}.custom.add", $route);
 
       $route = new Route(
-        "$path/flow/{flow_task_mode}/add/{flow_task_plugin}/{flow_subject_plugin}",
+        "$path/flow/{flow_task_mode}/task/add/{flow_task_plugin}/{flow_subject_plugin}",
         [
           '_title' => 'Add task',
           '_controller' => '\Drupal\flow_ui\Controller\FlowUiController::taskAddForm',
         ] + $defaults,
-        $requirements,
+        $custom_acccess,
         $options
       );
       $collection->add("flow.task.{$entity_type_id}.add", $route);
       $route = new Route(
-        "$path/flow/{flow_task_mode}/edit/{flow_task_index}",
+        "$path/flow/{flow_task_mode}/task/edit/{flow_task_index}",
         [
           '_title' => 'Edit task',
           '_controller' => '\Drupal\flow_ui\Controller\FlowUiController::taskEditForm',
         ] + $defaults,
-        $requirements,
+        $custom_acccess,
         $options
       );
       $collection->add("flow.task.{$entity_type_id}.edit", $route);
       $route = new Route(
-        "$path/flow/{flow_task_mode}/enable/{flow_task_index}",
+        "$path/flow/{flow_task_mode}/task/enable/{flow_task_index}",
         [
           '_title' => 'Enable task',
           '_controller' => '\Drupal\flow_ui\Controller\FlowUiController::taskEnableForm',
         ] + $defaults,
-        $requirements,
+        $custom_acccess,
         $options
       );
       $collection->add("flow.task.{$entity_type_id}.enable", $route);
       $route = new Route(
-        "$path/flow/{flow_task_mode}/disable/{flow_task_index}",
+        "$path/flow/{flow_task_mode}/task/disable/{flow_task_index}",
         [
           '_title' => 'Disable task',
           '_controller' => '\Drupal\flow_ui\Controller\FlowUiController::taskDisableForm',
         ] + $defaults,
-        $requirements,
+        $custom_acccess,
         $options
       );
       $collection->add("flow.task.{$entity_type_id}.disable", $route);
       $route = new Route(
-        "$path/flow/{flow_task_mode}/delete/{flow_task_index}",
+        "$path/flow/{flow_task_mode}/task/delete/{flow_task_index}",
         [
           '_title' => 'Delete task',
           '_controller' => '\Drupal\flow_ui\Controller\FlowUiController::taskDeleteForm',
         ] + $defaults,
-        $requirements,
+        $custom_acccess,
         $options
       );
       $collection->add("flow.task.{$entity_type_id}.delete", $route);
+
+      $route = new Route(
+        "$path/flow/{flow_task_mode}/qualifier/add/{flow_qualifier_plugin}/{flow_subject_plugin}",
+        [
+          '_title' => 'Add qualifier',
+          '_controller' => '\Drupal\flow_ui\Controller\FlowUiController::qualifierAddForm',
+        ] + $defaults,
+        $custom_acccess,
+        $options
+      );
+      $collection->add("flow.qualifier.{$entity_type_id}.add", $route);
+      $route = new Route(
+        "$path/flow/{flow_task_mode}/qualifier/edit/{flow_qualifier_index}",
+        [
+          '_title' => 'Edit qualifier',
+          '_controller' => '\Drupal\flow_ui\Controller\FlowUiController::qualifierEditForm',
+        ] + $defaults,
+        $custom_acccess,
+        $options
+      );
+      $collection->add("flow.qualifier.{$entity_type_id}.edit", $route);
+      $route = new Route(
+        "$path/flow/{flow_task_mode}/qualifier/delete/{flow_qualifier_index}",
+        [
+          '_title' => 'Delete qualifier',
+          '_controller' => '\Drupal\flow_ui\Controller\FlowUiController::qualifierDeleteForm',
+        ] + $defaults,
+        $custom_acccess,
+        $options
+      );
+      $collection->add("flow.qualifier.{$entity_type_id}.delete", $route);
     }
   }
 

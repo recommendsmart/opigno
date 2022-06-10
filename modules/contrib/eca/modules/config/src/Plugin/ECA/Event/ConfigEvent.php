@@ -27,9 +27,9 @@ use Drupal\eca\Event\Tag;
 class ConfigEvent extends EventBase {
 
   /**
-   * @return array[]
+   * {@inheritdoc}
    */
-  public static function actions(): array {
+  public static function definitions(): array {
     $actions = [
       'delete' => [
         'label' => 'Delete config',

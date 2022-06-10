@@ -11,6 +11,26 @@ use Drupal\Core\Entity\EntityPublishedInterface;
 interface FieldSuggestionInterface extends ContentEntityInterface, EntityPublishedInterface {
 
   /**
+   * Check if it's an ignored entity.
+   *
+   * @return bool
+   *   TRUE, if so.
+   */
+  public function isIgnored();
+
+  /**
+   * Mark a suggestion as ignored or pinned.
+   *
+   * @param bool $ignored
+   *   The suggestion type will be the following:
+   *   - TRUE: The ignored suggestion.
+   *   - FALSE: The pinned suggestion.
+   *
+   * @return $this
+   */
+  public function setIgnored(bool $ignored);
+
+  /**
    * Check if it has excluded entities.
    *
    * @return bool
@@ -48,5 +68,13 @@ interface FieldSuggestionInterface extends ContentEntityInterface, EntityPublish
    * @return $this
    */
   public function setOnce();
+
+  /**
+   * Gets value.
+   *
+   * @return string
+   *   The suggestion.
+   */
+  public function value();
 
 }

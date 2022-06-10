@@ -8,6 +8,7 @@ use Drupal\node\NodeInterface;
 /**
  * Model test for cross references.
  *
+ * @group eca
  * @group eca_model
  */
 class CrossRefTest extends Base {
@@ -30,11 +31,13 @@ class CrossRefTest extends Base {
     parent::setUp();
     $this->installEntitySchema('node');
     $this->installSchema('node', ['node_access']);
-    $this->switchUser(1);
+    $this->switchUser();
   }
 
   /**
    * Tests cross references.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function testCrossReference(): void {
 
@@ -108,11 +111,18 @@ class CrossRefTest extends Base {
   }
 
   /**
+   * Provides several assertions for a given set of arguments.
+   *
    * @param \Drupal\node\NodeInterface $node1
+   *   The first node.
    * @param \Drupal\node\NodeInterface $node2
+   *   The second node.
    * @param string $title1
+   *   The first title.
    * @param string $title2
+   *   The second title.
    * @param array $messages
+   *   The list of expected messages.
    */
   private function assertNodesAndMessages(NodeInterface &$node1, NodeInterface &$node2, string $title1, string $title2, array $messages): void {
     $node1 = Node::load($node1->id());

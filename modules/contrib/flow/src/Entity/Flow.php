@@ -5,6 +5,8 @@ namespace Drupal\flow\Entity;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\flow\Plugin\FlowQualifierCollection;
 use Drupal\flow\Plugin\FlowSubjectCollection;
 use Drupal\flow\Plugin\FlowTaskCollection;
 
@@ -26,7 +28,13 @@ use Drupal\flow\Plugin\FlowTaskCollection;
  *     "targetEntityType",
  *     "targetBundle",
  *     "taskMode",
- *     "tasks"
+ *     "tasks",
+ *     "custom"
+ *   },
+ *   lookup_keys = {
+ *     "targetEntityType",
+ *     "targetBundle",
+ *     "custom.BaseMode"
  *   }
  * )
  */
@@ -59,6 +67,13 @@ class Flow extends ConfigEntityBase implements FlowInterface {
    * @var array
    */
   protected array $tasks = [];
+
+  /**
+   * Custom flow settings.
+   *
+   * @var array
+   */
+  protected array $custom = [];
 
   /**
    * {@inheritdoc}
@@ -120,6 +135,10 @@ class Flow extends ConfigEntityBase implements FlowInterface {
       'bundle' => $this->getTargetBundle(),
       'task_mode' => $this->getTaskMode(),
     ];
+    if ($this->isCustom()) {
+      $flow_keys['custom_task_mode'] = $flow_keys['task_mode'];
+      $flow_keys['task_mode'] = $this->custom['baseMode'];
+    }
     foreach ($this->tasks as $i => $task) {
       if (isset($filter) && !($task == NestedArray::mergeDeep($task, $filter))) {
         continue;
@@ -139,6 +158,10 @@ class Flow extends ConfigEntityBase implements FlowInterface {
       'bundle' => $this->getTargetBundle(),
       'task_mode' => $this->getTaskMode(),
     ];
+    if ($this->isCustom()) {
+      $flow_keys['custom_task_mode'] = $flow_keys['task_mode'];
+      $flow_keys['task_mode'] = $this->custom['baseMode'];
+    }
     foreach ($this->tasks as $i => $task) {
       if (isset($filter) && !($task == NestedArray::mergeDeep($task, $filter))) {
         continue;
@@ -166,6 +189,8 @@ class Flow extends ConfigEntityBase implements FlowInterface {
     return [
       'task.plugins' => $this->getTasks(),
       'subject.plugins' => $this->getSubjects(),
+      'qualifier.plugins' => $this->getQualifiers(),
+      'qualifying.plugins' => $this->getQualifyingSubjects(),
     ];
   }
 
@@ -206,6 +231,7 @@ class Flow extends ConfigEntityBase implements FlowInterface {
         'targetBundle' => $bundle,
         'taskMode' => $task_mode,
         'tasks' => [],
+        'custom' => [],
       ]);
     }
 
@@ -216,6 +242,7 @@ class Flow extends ConfigEntityBase implements FlowInterface {
    * {@inheritdoc}
    */
   public function calculateDependencies() {
+    parent::calculateDependencies();
     $etm = \Drupal::entityTypeManager();
     $entity_type = $etm->getDefinition($this->getTargetEntityTypeId());
     if ($bundle_entity_type_id = $entity_type->getBundleEntityType()) {
@@ -223,7 +250,89 @@ class Flow extends ConfigEntityBase implements FlowInterface {
         $this->dependencies[$bundle_config->getConfigDependencyKey()][] = $bundle_config->getConfigDependencyName();
       }
     }
-    return parent::calculateDependencies();
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCustom(): bool {
+    return !empty($this->custom);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCustomFlow(): array {
+    return \Drupal::entityTypeManager()->getStorage('flow')->loadByProperties([
+      'targetEntityType' => $this->getTargetEntityTypeId(),
+      'targetBundle' => $this->getTargetBundle(),
+      'custom.baseMode' => $this->getTaskMode(),
+    ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getQualifiers(?array $filter = NULL): FlowQualifierCollection {
+    $configs = [];
+    $flow_keys = [
+      'entity_type_id' => $this->getTargetEntityTypeId(),
+      'bundle' => $this->getTargetBundle(),
+      'task_mode' => $this->getTaskMode(),
+    ];
+    if ($this->isCustom()) {
+      $flow_keys['custom_task_mode'] = $flow_keys['task_mode'];
+      $flow_keys['task_mode'] = $this->custom['baseMode'];
+    }
+    if (!empty($this->custom['qualifiers'])) {
+      foreach ($this->custom['qualifiers'] as $i => $qualifier) {
+        if (isset($filter) && !($qualifier == NestedArray::mergeDeep($qualifier, $filter))) {
+          continue;
+        }
+        $configs[$i] = $qualifier + $flow_keys;
+      }
+    }
+    return new FlowQualifierCollection(\Drupal::service('plugin.manager.flow.qualifier'), $configs);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getQualifyingSubjects(?array $filter = NULL): FlowSubjectCollection {
+    $configs = [];
+    $flow_keys = [
+      'entity_type_id' => $this->getTargetEntityTypeId(),
+      'bundle' => $this->getTargetBundle(),
+      'task_mode' => $this->getTaskMode(),
+    ];
+    if ($this->isCustom()) {
+      $flow_keys['custom_task_mode'] = $flow_keys['task_mode'];
+      $flow_keys['task_mode'] = $this->custom['baseMode'];
+    }
+    if (!empty($this->custom['qualifiers'])) {
+      foreach ($this->custom['qualifiers'] as $i => $qualifier) {
+        if (isset($filter) && !($qualifier == NestedArray::mergeDeep($qualifier, $filter))) {
+          continue;
+        }
+        $subject = $qualifier['subject'];
+        unset($qualifier['subject']);
+        $configs[$i] = $subject + $flow_keys + ['qualifier' => $qualifier];
+      }
+    }
+    return new FlowSubjectCollection(\Drupal::service('plugin.manager.flow.subject'), $configs);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    parent::postSave($storage, $update);
+    // Clear cached definitions of Flow plugins, as some of them may need
+    // information from configured flow.
+    \Drupal::service('plugin.manager.flow.subject')->clearCachedDefinitions();
+    \Drupal::service('plugin.manager.flow.task')->clearCachedDefinitions();
+    \Drupal::service('plugin.manager.flow.qualifier')->clearCachedDefinitions();
   }
 
 }

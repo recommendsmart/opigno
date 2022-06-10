@@ -5,6 +5,7 @@ namespace Drupal\designs\Plugin\designs\content;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -12,7 +13,10 @@ use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Plugin\PluginFormFactoryInterface;
 use Drupal\Core\Plugin\PluginWithFormsInterface;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Render\PreviewFallbackInterface;
 use Drupal\designs\DesignContentBase;
+use Drupal\layout_builder\Plugin\Block\InlineBlock;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -197,7 +201,23 @@ class BlockContent extends DesignContentBase implements ContainerFactoryPluginIn
       return [];
     }
 
-    return $plugin->build();
+    $content = $plugin->build();
+
+    $build = [
+      '#theme' => 'block',
+      '#configuration' => $plugin->getConfiguration(),
+      '#plugin_id' => $plugin->getPluginId(),
+      '#base_plugin_id' => $plugin->getBaseId(),
+      '#derivative_plugin_id' => $plugin->getDerivativeId(),
+    ];
+
+    if (isset($content['#attributes'])) {
+      $build['#attributes'] = $content['#attributes'];
+      unset($content['#attributes']);
+    }
+    $build['content'] = $content;
+
+    return $build;
   }
 
   /**

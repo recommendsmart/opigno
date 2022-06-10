@@ -10,7 +10,10 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
 interface EcaInterface extends PluginInspectionInterface {
 
   /**
+   * Provides a list of configuration fields for modellers.
+   *
    * @return array
+   *   The list of configuration fields.
    */
   public function fields(): array;
 

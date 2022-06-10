@@ -9,6 +9,7 @@ use Drupal\Core\Url;
 use Drupal\flow\Flow;
 use Drupal\flow\FlowCompatibility;
 use Drupal\flow\FlowTaskMode;
+use Drupal\flow\Plugin\FlowQualifierManager;
 use Drupal\flow\Plugin\FlowSubjectManager;
 use Drupal\flow\Plugin\FlowTaskManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -33,23 +34,33 @@ class FlowForm extends EntityForm {
   protected FlowSubjectManager $subjectManager;
 
   /**
+   * The Flow qualifier manager.
+   *
+   * @var \Drupal\flow\Plugin\FlowQualifierManager
+   */
+  protected FlowQualifierManager $qualifierManager;
+
+  /**
    * Constructs a new FlowForm.
    *
    * @param \Drupal\flow\Plugin\FlowTaskManager $task_manager
    *   The Flow task manager.
    * @param \Drupal\flow\Plugin\FlowSubjectManager $subject_manager
    *   The Flow subject manager.
+   * @param \Drupal\flow\Plugin\FlowQualifierManager $qualifier_manager
+   *   The Flow qualifier manager.
    */
-  public function __construct(FlowTaskManager $task_manager, FlowSubjectManager $subject_manager) {
+  public function __construct(FlowTaskManager $task_manager, FlowSubjectManager $subject_manager, FlowQualifierManager $qualifier_manager) {
     $this->taskManager = $task_manager;
     $this->subjectManager = $subject_manager;
+    $this->qualifierManager = $qualifier_manager;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    $instance = new static($container->get('plugin.manager.flow.task'), $container->get('plugin.manager.flow.subject'));
+    $instance = new static($container->get('plugin.manager.flow.task'), $container->get('plugin.manager.flow.subject'), $container->get('plugin.manager.flow.qualifier'));
     $instance->setEntityTypeManager($container->get('entity_type.manager'));
     $instance->setModuleHandler($container->get('module_handler'));
     return $instance;
@@ -64,12 +75,164 @@ class FlowForm extends EntityForm {
     $target_type = $this->entityTypeManager->getDefinition($flow->getTargetEntityTypeId());
     $bundle_type_id = $target_type->getBundleEntityType() ?: 'bundle';
 
+    if (!$flow->getStatus()) {
+      $this->messenger()->addWarning($this->t('This configuration is not active and thus will not get applied. Please contact your site administrator if that is not an expected status.'));
+    }
+
     $form = parent::buildForm($form, $form_state);
     $weight = 0;
+    $custom = $flow->isCustom() ? $flow->get('custom') : FALSE;
 
+    if ($custom) {
+      $task_subjects = $flow->getSubjects();
+      $form['custom'] = [
+        '#type' => 'fieldset',
+        '#title' => $this->t('Qualifiers'),
+        '#weight' => $weight++,
+      ];
+      $qualifiers = $flow->getQualifiers();
+      $qualifying_subjects = $flow->getQualifyingSubjects();
+      if ($qualifiers->count()) {
+        $form['custom']['qualifiers'] = [
+          '#attributes' => ['id' => Html::getUniqueId('flow-qualifiers')],
+          '#type' => 'table',
+          '#parents' => ['custom'],
+          '#header' => [
+            $this->t('Qualifier'),
+            $this->t('Subject'),
+            $this->t('Operations'),
+          ],
+          '#weight' => 10,
+        ];
+        /** @var \Drupal\flow\Plugin\FlowQualifierInterface $qualifier */
+        foreach ($qualifiers as $i => $qualifier) {
+          $subject = $qualifying_subjects->get($i);
+          $form['custom']['qualifiers'][$i]['qualifier'] = [
+            '#type' => 'markup',
+            '#markup' => $qualifier->getPluginDefinition()['label'],
+            '#weight' => 10,
+          ];
+          $form['custom']['qualifiers'][$i]['subject'] = [
+            '#type' => 'markup',
+            '#markup' => $subject->getPluginDefinition()['label'],
+            '#weight' => 20,
+          ];
+          $operations = [];
+          if ($flow->access('update')) {
+            $operations['edit'] = [
+              'title' => $this->t('Edit'),
+              'url' => Url::fromRoute("flow.qualifier.{$target_type->id()}.edit", [
+                'entity_type_id' => $target_type->id(),
+                $bundle_type_id => $flow->getTargetBundle(),
+                'flow_task_mode' => $flow->getTaskMode(),
+                'flow_qualifier_index' => $i,
+              ]),
+              'weight' => 10,
+            ];
+          }
+          if ($flow->access('delete')) {
+            $in_use = FALSE;
+            foreach ($task_subjects as $task_subject) {
+              if (FlowCompatibility::validate($flow, $task_subject, $qualifier)) {
+                $in_use = TRUE;
+                break;
+              }
+            }
+            if (!$in_use) {
+              $operations['delete'] = [
+                'title' => $this->t('Delete'),
+                'url' => Url::fromRoute("flow.qualifier.{$target_type->id()}.delete", [
+                  'entity_type_id' => $target_type->id(),
+                  $bundle_type_id => $flow->getTargetBundle(),
+                  'flow_task_mode' => $flow->getTaskMode(),
+                  'flow_qualifier_index' => $i,
+                ]),
+                'weight' => 20,
+              ];
+            }
+          }
+          $form['custom']['qualifiers'][$i]['operations'] = [
+            '#type' => 'operations',
+            '#links' => $operations,
+            '#weight' => 30,
+          ];
+        }
+      }
+      else {
+        $form['custom']['qualifiers']['empty'] = [
+          '#type' => 'markup',
+          '#markup' => $this->t('No qualifiers have been added yet.'),
+          '#weight' => 10,
+        ];
+      }
+
+      $weight += 100;
+      $wrapper_id = Html::getUniqueId('flow-add-qualifier');
+      $form['add_qualifier'] = [
+        '#type' => $qualifiers->count() ? 'details' : 'fieldset',
+        '#title' => $this->t('Add new qualifier'),
+        '#prefix' => '<div id="' . $wrapper_id . '">',
+        '#suffix' => '</div>',
+        '#weight' => $weight++,
+      ];
+      $form['add_qualifier']['table'] = [
+        '#type' => 'table',
+        '#weight' => 10,
+        '#header' => [$this->t('Qualifier'), $this->t('Subject'), ''],
+        '#attributes' => [
+          'class' => ['flow-form-add-qualifier'],
+        ],
+      ];
+      // As the select lists may be large, use the select2 widget when available.
+      $select_widget = $this->moduleHandler->moduleExists('select2') ? 'select2' : 'select';
+      $form['add_qualifier']['table'][0] = [
+        '#parents' => ['add_qualifier'],
+      ];
+      $form['add_qualifier']['table'][0]['qualifier'] = [
+        '#type' => $select_widget,
+        '#options' => $this->getQualifierOptions($form, $form_state),
+        '#default_value' => '_none',
+        '#empty_value' => '_none',
+        '#weight' => 10,
+        '#ajax' => [
+          'callback' => [static::class, 'addQualifierAjax'],
+          'wrapper' => $wrapper_id,
+        ],
+      ];
+      $form['add_qualifier']['table'][0]['subject'] = [
+        '#type' => $select_widget,
+        '#options' => $this->getQualifyingSubjectOptions($form, $form_state),
+        '#default_value' => '_none',
+        '#empty_value' => '_none',
+        '#weight' => 20,
+        '#ajax' => [
+          'callback' => [static::class, 'addQualifierAjax'],
+          'wrapper' => $wrapper_id,
+        ],
+      ];
+      if ($form_state->getValue(['add_qualifier', 'qualifier'], '_none') !== '_none'
+        && $form_state->getValue(['add_qualifier', 'subject'], '_none') !== '_none') {
+        $form['add_qualifier']['table'][0]['link'] = [
+          '#type' => 'link',
+          '#attributes' => [
+            'class' => ['button', 'button-action', 'button--primary'],
+          ],
+          '#title' => $this->t('Add qualifier'),
+          '#url' => Url::fromRoute("flow.qualifier.{$target_type->id()}.add", [
+            'entity_type_id' => $target_type->id(),
+            $bundle_type_id => $flow->getTargetBundle(),
+            'flow_task_mode' => $flow->getTaskMode(),
+            'flow_qualifier_plugin' => $form_state->getValue(['add_qualifier', 'qualifier']),
+            'flow_subject_plugin' => $form_state->getValue(['add_qualifier', 'subject']),
+          ]),
+        ];
+      }
+    }
+
+    $mode = $custom ? $custom['baseMode'] : $flow->getTaskMode();
     $execution_options = [
-      'now' => $this->t('On @mode', ['@mode' => $flow->getTaskMode()]),
-      'after' => $this->t('After @mode', ['@mode' => $flow->getTaskMode()]),
+      'now' => $this->t('On @mode', ['@mode' => $mode]),
+      'after' => $this->t('After @mode', ['@mode' => $mode]),
       'queue' => $this->t('Background queue'),
     ];
 
@@ -223,6 +386,17 @@ class FlowForm extends EntityForm {
       '#suffix' => '</div>',
       '#weight' => $weight++,
     ];
+
+    if ($custom && !$qualifiers->count()) {
+      $form['add_task']['need_qualifier'] = [
+        '#type' => 'markup',
+        '#markup' => $this->t('Tasks can be added when at least one qualifier has been added above.'),
+        '#weight' => 10,
+      ];
+      $form['actions']['#weight'] = $weight++;
+      return $form;
+    }
+
     $form['add_task']['table'] = [
       '#type' => 'table',
       '#weight' => 10,
@@ -319,10 +493,11 @@ class FlowForm extends EntityForm {
     $task_modes = FlowTaskMode::service()->getAvailableTaskModes();
 
     $t_args = [
-      '%task_mode' => $task_modes[$config->getTaskMode()],
+      '%label' => $config->isCustom() ? $config->get('custom')['label'] : $task_modes[$config->getTaskMode()],
       '%type' => \Drupal::entityTypeManager()->getDefinition($config->getTargetEntityTypeId())->getLabel(),
     ];
-    $message = $this->t('The %task_mode flow configuration for %type has been saved.', $t_args);
+    $message = $config->isCustom() ? $this->t('The custom %label flow configuration for %type has been saved.', $t_args)
+      : $this->t('The %label flow configuration for %type has been saved.', $t_args);
 
     $this->messenger()->addStatus($message);
   }
@@ -344,12 +519,13 @@ class FlowForm extends EntityForm {
     $flow_keys = [
       'entity_type_id' => $config->getTargetEntityTypeId(),
       'bundle' => $config->getTargetBundle(),
-      'task_mode' => $config->getTaskMode(),
+      'task_mode' => $config->isCustom() ? $config->get('custom')['baseMode'] : $config->getTaskMode(),
     ];
 
     $options = ['_none' => $this->t('- Select a subject -')];
     $task_plugin_id = $form_state->getValue(['add_task', 'task'], '_none');
     $task_plugins = [];
+    $qualifier_plugins = $config->isCustom() ? $config->getQualifiers(Flow::$filter) : [];
     if ($task_plugin_id !== '_none') {
       $task_plugins[] = $this->taskManager->createInstance($task_plugin_id, $flow_keys);
     }
@@ -360,9 +536,30 @@ class FlowForm extends EntityForm {
     }
     foreach ($this->subjectManager->getDefinitions() as $id => $definition) {
       $plugin = $this->subjectManager->createInstance($id, $flow_keys);
+      if ($config->isCustom()) {
+        if ($plugin->getBaseId() !== 'qualified') {
+          // Only qualified subjects are allowed for custom flow.
+          continue;
+        }
+        $qualifier_exists = FALSE;
+        /** @var \Drupal\flow\Plugin\FlowQualifierInterface $qualifier */
+        foreach ($qualifier_plugins as $qualifier_plugin) {
+          if (FlowCompatibility::validate($config, $plugin, $qualifier_plugin)) {
+            $qualifier_exists = TRUE;
+            break;
+          }
+        }
+        if (!$qualifier_exists) {
+          continue;
+        }
+      }
+      elseif ($plugin->getBaseId() === 'qualified') {
+        // Qualified subjects are only available in custom flow.
+        continue;
+      }
       $is_compatible = FALSE;
       foreach ($task_plugins as $task_plugin) {
-        if (FlowCompatibility::validate($this->entity, $plugin, $task_plugin)) {
+        if (FlowCompatibility::validate($config, $plugin, $task_plugin)) {
           $is_compatible = TRUE;
           break;
         }
@@ -391,7 +588,7 @@ class FlowForm extends EntityForm {
     $flow_keys = [
       'entity_type_id' => $config->getTargetEntityTypeId(),
       'bundle' => $config->getTargetBundle(),
-      'task_mode' => $config->getTaskMode(),
+      'task_mode' => $config->isCustom() ? $config->get('custom')['baseMode'] : $config->getTaskMode(),
     ];
 
     $options = ['_none' => $this->t('- Select a task -')];
@@ -409,7 +606,105 @@ class FlowForm extends EntityForm {
       $plugin = $this->taskManager->createInstance($id, $flow_keys);
       $is_compatible = FALSE;
       foreach ($subject_plugins as $subject_plugin) {
-        if (FlowCompatibility::validate($this->entity, $plugin, $subject_plugin)) {
+        if (FlowCompatibility::validate($config, $plugin, $subject_plugin)) {
+          $is_compatible = TRUE;
+          break;
+        }
+      }
+      if ($is_compatible) {
+        $options[$id] = $definition['label'];
+      }
+    }
+    return $options;
+  }
+
+  /**
+   * Get available qualifier options.
+   *
+   * @param array $form
+   *   The current form build array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The according form state.
+   *
+   * @return array
+   *   The qualifier options.
+   */
+  protected function getQualifierOptions (array $form, FormStateInterface $form_state): array {
+    /** @var \Drupal\flow\Entity\FlowInterface $config */
+    $config = $this->entity;
+    $flow_keys = [
+      'entity_type_id' => $config->getTargetEntityTypeId(),
+      'bundle' => $config->getTargetBundle(),
+      'task_mode' => $config->isCustom() ? $config->get('custom')['baseMode'] : $config->getTaskMode(),
+    ];
+
+    $options = ['_none' => $this->t('- Select a qualifier -')];
+    $subject_plugin_id = $form_state->getValue(['add_qualifier', 'subject'], '_none');
+    $subject_plugins = [];
+    if ($subject_plugin_id !== '_none') {
+      $subject_plugins[] = $this->subjectManager->createInstance($subject_plugin_id, $flow_keys);
+    }
+    else {
+      foreach (array_keys($this->subjectManager->getDefinitions()) as $subject_plugin_id) {
+        $subject_plugins[] = $this->subjectManager->createInstance($subject_plugin_id, $flow_keys);
+      }
+    }
+    foreach ($this->qualifierManager->getDefinitions() as $id => $definition) {
+      $plugin = $this->qualifierManager->createInstance($id, $flow_keys);
+      $is_compatible = FALSE;
+      foreach ($subject_plugins as $subject_plugin) {
+        if (FlowCompatibility::validate($config, $plugin, $subject_plugin)) {
+          $is_compatible = TRUE;
+          break;
+        }
+      }
+      if ($is_compatible) {
+        $options[$id] = $definition['label'];
+      }
+    }
+    return $options;
+  }
+
+  /**
+   * Get available qualifying subject options.
+   *
+   * @param array $form
+   *   The current form build array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The according form state.
+   *
+   * @return array
+   *   The qualifying subject options.
+   */
+  protected function getQualifyingSubjectOptions(array $form, FormStateInterface $form_state): array {
+    /** @var \Drupal\flow\Entity\FlowInterface $config */
+    $config = $this->entity;
+    $flow_keys = [
+      'entity_type_id' => $config->getTargetEntityTypeId(),
+      'bundle' => $config->getTargetBundle(),
+      'task_mode' => $config->isCustom() ? $config->get('custom')['baseMode'] : $config->getTaskMode(),
+    ];
+
+    $options = ['_none' => $this->t('- Select a subject -')];
+    $qualifier_plugin_id = $form_state->getValue(['add_qualifier', 'qualifier'], '_none');
+    $qualifier_plugins = [];
+    if ($qualifier_plugin_id !== '_none') {
+      $qualifier_plugins[] = $this->qualifierManager->createInstance($qualifier_plugin_id, $flow_keys);
+    }
+    else {
+      foreach (array_keys($this->qualifierManager->getDefinitions()) as $qualifier_plugin_id) {
+        $qualifier_plugins[] = $this->qualifierManager->createInstance($qualifier_plugin_id, $flow_keys);
+      }
+    }
+    foreach ($this->subjectManager->getDefinitions() as $id => $definition) {
+      $plugin = $this->subjectManager->createInstance($id, $flow_keys);
+      if ($plugin->getBaseId() === 'qualified') {
+        // Qualifying subjects cannot be already qualified.
+        continue;
+      }
+      $is_compatible = FALSE;
+      foreach ($qualifier_plugins as $qualifier_plugin) {
+        if (FlowCompatibility::validate($config, $plugin, $qualifier_plugin)) {
           $is_compatible = TRUE;
           break;
         }
@@ -434,6 +729,59 @@ class FlowForm extends EntityForm {
    */
   public static function addTaskAjax(array $form, FormStateInterface $form_state): array {
     return $form['add_task'];
+  }
+
+  /**
+   * Ajax callback for adding a new qualifier.
+   *
+   * @param array $form
+   *   The current form build array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The according form state.
+   *
+   * @return array
+   *   The part of the form that got refreshed via Ajax.
+   */
+  public static function addQualifierAjax(array $form, FormStateInterface $form_state): array {
+    return $form['add_qualifier'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function actions(array $form, FormStateInterface $form_state) {
+    $actions = [];
+
+    $actions['submit'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Save'),
+      '#submit' => ['::submitForm', '::save'],
+      '#weight' => 10,
+    ];
+
+    /** @var \Drupal\flow\Entity\FlowInterface $flow */
+    $flow = $this->entity;
+    $target_type = $this->entityTypeManager->getDefinition($flow->getTargetEntityTypeId());
+    $bundle_type_id = $target_type->getBundleEntityType() ?: 'bundle';
+
+    if (!$flow->isNew() && !$flow->getTasks()->count() && (!$flow->isCustom() || !$flow->getQualifiers()->count())) {
+      $actions['delete'] = [
+        '#type' => 'link',
+        '#title' => $this->t('Delete'),
+        '#access' => $this->entity->access('delete'),
+        '#attributes' => [
+          'class' => ['button', 'button--danger'],
+        ],
+        '#url' => Url::fromRoute("entity.flow.{$target_type->id()}.delete", [
+          'entity_type_id' => $target_type->id(),
+          $bundle_type_id => $flow->getTargetBundle(),
+          'flow_task_mode' => $flow->getTaskMode(),
+        ]),
+        '#weight' => 20,
+      ];
+    }
+
+    return $actions;
   }
 
 }

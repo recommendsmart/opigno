@@ -6,6 +6,7 @@
   padding: 8px 1rem;
   list-style: none;
   font-size: 16px;
+  line-height: 1.625rem;
   margin-bottom: 0;
 }
 
@@ -15,7 +16,7 @@
 
 .breadcrumb a {
   display: inline-block;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .breadcrumb a:hover {

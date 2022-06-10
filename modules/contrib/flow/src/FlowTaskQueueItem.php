@@ -81,6 +81,16 @@ class FlowTaskQueueItem {
   }
 
   /**
+   * Whether processing of the operation is complete.
+   *
+   * @return bool
+   *   Returns TRUE if operation is complete, FALSE otherwise.
+   */
+  public function isFinished(): bool {
+    return $this->finished;
+  }
+
+  /**
    * Get the entity that triggered the flow.
    *
    * @return \Drupal\Core\Entity\EntityInterface

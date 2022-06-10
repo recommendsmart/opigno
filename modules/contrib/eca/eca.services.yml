@@ -17,6 +17,12 @@ services:
     decorates: logger.channel.eca
     arguments: ['eca', '@eca.configurable_logger_channel.inner', '@config.factory']
 
+  eca.default_event_subscriber:
+    abstract: true
+    arguments: ['@eca.processor', '@eca.service.token']
+    calls:
+      - [setEntityTypeManager, ['@entity_type.manager']]
+
   plugin.manager.eca.modeller:
     class: Drupal\eca\PluginManager\Modeller
     parent: default_plugin_manager
@@ -29,13 +35,16 @@ services:
 
   eca.service.modeller:
     class: Drupal\eca\Service\Modellers
-    arguments: ['@entity_type.manager', '@plugin.manager.eca.modeller', '@plugin.manager.eca.event',  '@eca.service.action',  '@eca.service.condition', '@logger.channel.eca']
+    arguments: ['@entity_type.manager', '@plugin.manager.eca.modeller', '@plugin.manager.eca.event',  '@eca.service.action',  '@eca.service.condition', '@logger.channel.eca', '@file_system', '@config.storage.export', '@config.factory']
   eca.service.action:
     class: Drupal\eca\Service\Actions
     arguments: ['@plugin.manager.action', '@logger.channel.eca', '@entity_type.manager']
   eca.service.condition:
     class: Drupal\eca\Service\Conditions
     arguments: ['@plugin.manager.eca.condition', '@logger.channel.eca', '@entity_type.manager', '@current_user', '@language_manager', '@eca.service.token']
+  eca.service.yaml_parser:
+    class: Drupal\eca\Service\YamlParser
+    arguments: ['@eca.token_services']
 
   eca.trigger_event:
     class: Drupal\eca\Event\TriggerEvent
@@ -52,14 +61,23 @@ services:
       - [setDecoratedToken, ['@eca.service.token.inner']]
     tags:
       - { name: service_collector, tag: eca.token_data_provider, call: addTokenDataProvider }
-  eca.service.token_browser:
-    class: Drupal\eca\Service\TokenBrowserService
-    arguments: ['@module_handler','@entity_type.manager']
   eca.execution.token_subscriber:
     class: Drupal\eca\EventSubscriber\EcaExecutionTokenSubscriber
     arguments: ['@eca.token_services']
     tags:
       - { name: event_subscriber }
+  eca.execution.content_subscriber:
+    class: Drupal\eca\EventSubscriber\EcaExecutionContentSubscriber
+    parent: eca.default_event_subscriber
+    tags:
+      - { name: event_subscriber }
+  eca.execution.form_subscriber:
+    class: Drupal\eca\EventSubscriber\EcaExecutionFormSubscriber
+    parent: eca.default_event_subscriber
+    tags:
+      - { name: event_subscriber }
 
 parameters:
   eca.max_recursion_level: 1
+  # Override following parameter as blank to disable documentation links at all.
+  eca.default_documentation_domain: "https://ecaguide.org"

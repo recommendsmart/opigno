@@ -248,6 +248,7 @@ class TaxonomiesEntityListFilter extends EntityListFilterBase implements Contain
       ->fields('t', ['tid']);
     $query->addJoin('inner', 'taxonomy_term_field_data', 'td', 't.tid = td.tid');
     $query->condition('td.vid', $parameters['settings']['field_reference']);
+    $query->condition('td.langcode', $langcode);
     $query->orderBy('td.weight', $parameters['settings']['order']);
 
     if ($parameters['settings']['exclude']) {

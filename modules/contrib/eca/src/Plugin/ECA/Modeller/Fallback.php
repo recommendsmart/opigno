@@ -32,7 +32,7 @@ class Fallback extends ModellerBase {
   /**
    * {@inheritdoc}
    */
-  public function save(string $model_data, string $filename = NULL): bool {
+  public function save(string $data, string $filename = NULL, bool $status = NULL): bool {
     return FALSE;
   }
 
@@ -66,7 +66,7 @@ class Fallback extends ModellerBase {
   /**
    * {@inheritdoc}
    */
-  public function clone(): Eca {
+  public function clone(): ?Eca {
     return $this->eca;
   }
 
@@ -82,6 +82,13 @@ class Fallback extends ModellerBase {
    */
   public function getFilename(): string {
     return '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setModeldata(string $data): ModellerInterface {
+    return $this;
   }
 
   /**

@@ -102,3 +102,8 @@ services:
   commerce_order.price_calculator:
     class: Drupal\commerce_order\PriceCalculator
     arguments: ['@commerce_order.adjustment_transformer', '@commerce_order.chain_order_type_resolver', '@commerce_price.chain_price_resolver', '@entity_type.manager', '@request_stack']
+
+  commerce_order.entity_accessible_availability_checker:
+    class: Drupal\commerce_order\EntityAccessibleAvailabilityChecker
+    tags:
+      - { name: commerce_order.availability_checker }

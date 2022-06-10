@@ -58,7 +58,7 @@ class SetFieldValue extends FieldUpdateActionBase implements EcaFieldUpdateActio
     $form['field_name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Field name'),
-      '#description' => $this->t('The name of the field, that should be changed; identified by the field ID. This property supports tokens.'),
+      '#description' => $this->t('The machine name of the field, that should be changed. This property supports tokens. Example: <em>body.value</em>'),
       '#default_value' => $this->configuration['field_name'],
       '#weight' => -10,
     ];

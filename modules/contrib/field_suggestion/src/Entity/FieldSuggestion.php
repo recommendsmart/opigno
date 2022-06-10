@@ -24,8 +24,8 @@ use Drupal\field_suggestion\FieldSuggestionInterface;
  *   bundle_label = @Translation("Field suggestion type"),
  *   handlers = {
  *     "form" = {
- *       "default" = "Drupal\Core\Entity\ContentEntityForm",
- *       "edit" = "Drupal\Core\Entity\ContentEntityForm",
+ *       "default" = "Drupal\field_suggestion\Form\FieldSuggestionForm",
+ *       "edit" = "Drupal\field_suggestion\Form\FieldSuggestionForm",
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
  *     },
  *     "route_provider" = {
@@ -64,6 +64,22 @@ class FieldSuggestion extends ContentEntityBase implements FieldSuggestionInterf
   /**
    * {@inheritdoc}
    */
+  public function isIgnored() {
+    return (bool) $this->get('ignore')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setIgnored(bool $ignored) {
+    $this->set('ignore', $ignored);
+
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function hasExcluded() {
     return !$this->get('exclude')->isEmpty();
   }
@@ -85,6 +101,19 @@ class FieldSuggestion extends ContentEntityBase implements FieldSuggestionInterf
   /**
    * {@inheritdoc}
    */
+  public function value() {
+    /** @var \Drupal\field_suggestion\Service\FieldSuggestionHelperInterface $helper */
+    $helper = \Drupal::service('field_suggestion.helper');
+
+    $items = $this->get($helper->field($this->bundle()))->getValue();
+    $item = reset($items);
+
+    return reset($item);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
     $fields += static::publishedBaseFieldDefinitions($entity_type);
@@ -96,6 +125,10 @@ class FieldSuggestion extends ContentEntityBase implements FieldSuggestionInterf
     $fields['field_name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Field name'))
       ->setRequired(TRUE);
+
+    $fields['ignore'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Ignore'))
+      ->setReadOnly(TRUE);
 
     $fields['once']
       ->setLabel(t('Allowed number of usages'))

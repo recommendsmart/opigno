@@ -201,7 +201,7 @@ interface TokenInterface {
    *   method creates a local one, and applies the collected metadata to the
    *   Renderer's currently active render context.
    *
-   * @return string
+   * @return \Drupal\Component\Render\MarkupInterface|string
    *   The token result is the entered HTML text with tokens replaced. The
    *   caller is responsible for choosing the right escaping / sanitization. If
    *   the result is intended to be used as plain text, using
@@ -229,9 +229,41 @@ interface TokenInterface {
    * @param \Drupal\Core\Render\BubbleableMetadata|null $bubbleable_metadata
    *   See description in ::replace().
    *
+   * @return \Drupal\Component\Render\MarkupInterface|string
+   *   See description in ::replace().
+   *
    * @see ::replace()
    */
   public function replaceClear($text, array $data = [], array $options = [], BubbleableMetadata $bubbleable_metadata = NULL);
+
+  /**
+   * Returns data when text matches with a data key or runs string replacement.
+   *
+   * Some components may allow direct usage of data, if it is being addressed
+   * with an existing data key. For example, when the $text argument is "[node]"
+   * and the Token service has a node entity available, that is keyed with
+   * "node", then this method returns that node entity. If however, the $text
+   * argument would be "A text using [node:title] stuff", then this argument is
+   * not treated for direct data access - instead this method passes the string
+   * through regular token replacement and returns the replacement result.
+   *
+   * @param string $text
+   *   See description in ::replace().
+   * @param array $data
+   *   See description in ::replace().
+   * @param array|null $options
+   *   See description in ::replace(). If not specified otherwise, the "clear"
+   *   option is set to TRUE, which is the equivalent to ::replaceClear().
+   * @param \Drupal\Core\Render\BubbleableMetadata|null $bubbleable_metadata
+   *   See description in ::replace().
+   *
+   * @return mixed
+   *   Either the data or the passed text, replaced with tokens.
+   *
+   * @see ::getTokenData()
+   * @see ::replace()
+   */
+  public function getOrReplace($text, array $data = [], ?array $options = NULL, BubbleableMetadata $bubbleable_metadata = NULL);
 
   /**
    * Builds a list of all token-like patterns that appear in the text.
@@ -245,6 +277,25 @@ interface TokenInterface {
    * @see \Drupal\Core\Utility\Token
    */
   public function scan($text);
+
+  /**
+   * Scans the text for root-level tokens (Tokens without further keys).
+   *
+   * Tokens ususally consist of two parts: the type and a name. We allow
+   * users to set Tokens without specifying any of these, for example [list].
+   * Therefore extra work is needed to support this scheme.
+   *
+   * Root-level tokens will be converted into "real" tokens by prepending
+   * an explicit token type "_eca_root_token" that will then be properly
+   * handled by the rest of the Token string replacement pipeline.
+   *
+   * @param mixed $text
+   *   The text to scan.
+   *
+   * @return array
+   *   An associative array of discovered root-level tokens, grouped by type.
+   */
+  public function scanRootLevelTokens($text): array;
 
   /**
    * Returns a list of tokens that begin with a specific prefix.

@@ -27,7 +27,7 @@
   padding: 0 1px;
   line-height: 1;
   fill: transparent;
-  stroke: #4d4d4d;
+  stroke: #343434;
   stroke-width: 15px;
   -webkit-transition: 0.3s;
   transition: 0.3s;
@@ -48,7 +48,7 @@ svg[class^="icon-vote"] {
 
 .vote-widget a.disable-status .icon-vote {
   fill: transparent;
-  stroke: #4d4d4d;
+  stroke: #343434;
 }
 
 .voted-like .icon-vote {
@@ -125,8 +125,8 @@ svg[class^="icon-vote"] {
   }
   .vote-like a:hover.voted-like .icon-vote,
   .vote-like a:hover.disable-status .icon-vote {
-    fill: #4d4d4d;
-    stroke: #4d4d4d;
+    fill: #343434;
+    stroke: #343434;
     -webkit-transform: none;
             transform: none;
   }

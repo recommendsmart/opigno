@@ -3,15 +3,17 @@
 namespace Drupal\eca_content\Event;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\eca\Event\ConfigurableEventInterface;
 use Drupal\eca\Event\TokenReceiverInterface;
 use Drupal\eca\Event\TokenReceiverTrait;
+use Drupal\eca_content\Service\EntityTypes;
 
 /**
- * Provides a custom event that is entity aware.
+ * Provides an entity aware custom event.
  *
  * @package Drupal\eca_content\Event
  */
-class ContentEntityCustomEvent extends ContentEntityBaseEntity implements TokenReceiverInterface {
+class ContentEntityCustomEvent extends ContentEntityBaseEntity implements ConfigurableEventInterface, TokenReceiverInterface {
 
   use TokenReceiverTrait;
 
@@ -31,9 +33,11 @@ class ContentEntityCustomEvent extends ContentEntityBaseEntity implements TokenR
 
   /**
    * Provides a custom event that is entity aware.
-
+   *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The entity for which the custom event got triggered.
+   * @param \Drupal\eca_content\Service\EntityTypes $entity_types
+   *   The entity service.
    * @param string $event_id
    *   The (optional) ID for this event, so that it only applies, if it matches
    *   the given event ID in the arguments.
@@ -43,21 +47,23 @@ class ContentEntityCustomEvent extends ContentEntityBaseEntity implements TokenR
    *   if that ID matches this ID. To trigger all custom events, the event ID
    *   should be omitted or left empty.
    */
-  public function __construct(ContentEntityInterface $entity, string $event_id, array $arguments) {
-    parent::__construct($entity);
+  public function __construct(ContentEntityInterface $entity, EntityTypes $entity_types, string $event_id, array $arguments) {
+    parent::__construct($entity, $entity_types);
     $this->eventId = $event_id;
     $this->arguments = $arguments;
   }
 
   /**
-   * @return string[]
+   * {@inheritdoc}
    */
   public static function fields(): array {
-    return [[
-      'name' => 'event_id',
-      'label' => 'Event ID',
-      'type' => 'String',
-    ]];
+    return [
+      [
+        'name' => 'event_id',
+        'label' => 'Event ID',
+        'type' => 'String',
+      ],
+    ];
   }
 
   /**

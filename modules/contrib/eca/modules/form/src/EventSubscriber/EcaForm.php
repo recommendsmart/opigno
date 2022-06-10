@@ -6,7 +6,7 @@ use Drupal\eca\EventSubscriber\EcaBase;
 use Drupal\eca_form\Plugin\ECA\Event\FormEvent;
 
 /**
- * ECA event subscriber.
+ * ECA event subscriber regarding form events.
  */
 class EcaForm extends EcaBase {
 
@@ -15,8 +15,8 @@ class EcaForm extends EcaBase {
    */
   public static function getSubscribedEvents(): array {
     $events = [];
-    foreach (FormEvent::actions() as $action) {
-      $events[$action['event_name']][] = ['onEvent'];
+    foreach (FormEvent::definitions() as $definition) {
+      $events[$definition['event_name']][] = ['onEvent'];
     }
     return $events;
   }

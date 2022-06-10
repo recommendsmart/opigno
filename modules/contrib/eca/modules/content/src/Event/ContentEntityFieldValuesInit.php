@@ -3,7 +3,7 @@
 namespace Drupal\eca_content\Event;
 
 /**
- * Class ContentEntityFieldValuesInit
+ * Provides an event when a content entity field value is being initialized.
  *
  * @package Drupal\eca_content\Event
  */

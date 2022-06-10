@@ -27,9 +27,9 @@ use Drupal\locale\LocaleEvents;
 class DrupalCoreEvent extends EventBase {
 
   /**
-   * @return array[]
+   * {@inheritdoc}
    */
-  public static function actions(): array {
+  public static function definitions(): array {
     $actions = [];
     if (class_exists(BlockContentEvents::class)) {
       $actions['block_content_get_dependency'] = [

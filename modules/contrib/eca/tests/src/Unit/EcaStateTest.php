@@ -11,22 +11,29 @@ use Drupal\eca\EcaState;
  * Tests to EcaState class.
  *
  * @group eca
+ * @group eca_core
  */
 class EcaStateTest extends EcaUnitTestBase {
 
   private const TEST_KEY = 'test_key';
 
   /**
+   * Key value factory service.
+   *
    * @var \Drupal\Core\KeyValueStore\KeyValueFactoryInterface
    */
   protected KeyValueFactoryInterface $keyValueFactory;
 
   /**
+   * Key value store.
+   *
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    */
   protected KeyValueStoreInterface $keyValueStore;
 
   /**
+   * Time service.
+   *
    * @var \Drupal\Component\Datetime\TimeInterface
    */
   protected TimeInterface $time;
@@ -43,16 +50,15 @@ class EcaStateTest extends EcaUnitTestBase {
 
   /**
    * Tests if the timestamp has expired.
-   *
-   * @return void
    */
   public function testIfTimestampHasExpired(): void {
-    $storedTimestamp = 1515506400; //2018/01/09 15:00:00
-    $currentTimestamp = 1515510000; //2018/01/09 16:00:00
-
+    // 2018/01/09 15:00:00
+    $storedTimestamp = 1515506400;
+    // 2018/01/09 16:00:00
+    $currentTimestamp = 1515510000;
     $this->keyValueStore->expects($this->once())->method('getMultiple')
       ->willReturn([
-        'timestamp.' . self::TEST_KEY => $storedTimestamp
+        'timestamp.' . self::TEST_KEY => $storedTimestamp,
       ]);
     $this->keyValueFactory->expects($this->once())->method('get')
       ->with('eca')->willReturn($this->keyValueStore);
@@ -81,11 +87,10 @@ class EcaStateTest extends EcaUnitTestBase {
 
   /**
    * Tests the get and set methods.
-   *
-   * @return void
    */
   public function testGetterAndSetter(): void {
-    $currentTimestamp = 1515510000; //2018/01/09 16:00:00
+    // 2018/01/09 16:00:00
+    $currentTimestamp = 1515510000;
     $this->time->expects($this->once())->method('getRequestTime')
       ->willReturn($currentTimestamp);
     $this->keyValueFactory->expects($this->once())->method('get')

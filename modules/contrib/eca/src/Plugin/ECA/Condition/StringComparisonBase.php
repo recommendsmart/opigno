@@ -3,7 +3,6 @@
 namespace Drupal\eca\Plugin\ECA\Condition;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\eca\Service\Conditions;
 use Drupal\eca\Plugin\OptionsInterface;
 
 /**
@@ -37,6 +36,7 @@ abstract class StringComparisonBase extends ConditionBase implements OptionsInte
    * Get the left/first string value for comparison.
    *
    * @return string
+   *   The left value for comparison.
    */
   abstract protected function getLeftValue(): string;
 
@@ -44,6 +44,7 @@ abstract class StringComparisonBase extends ConditionBase implements OptionsInte
    * Get the right/second string value for comparison.
    *
    * @return string
+   *   The right value for comparison.
    */
   abstract protected function getRightValue(): string;
 
@@ -74,7 +75,7 @@ abstract class StringComparisonBase extends ConditionBase implements OptionsInte
    *   Returns TRUE if case sensitive, FALSE otherwise.
    */
   protected function caseSensitive(): bool {
-    return $this->configuration['case'] === Conditions::OPTION_YES;
+    return $this->configuration['case'];
   }
 
   /**
@@ -111,7 +112,7 @@ abstract class StringComparisonBase extends ConditionBase implements OptionsInte
 
       case static::COMPARE_TYPE_NATURAL:
         $leftValue = 0;
-        $rightValue = strnatcmp($rightValue, $leftValue);
+        $rightValue = strnatcmp($leftValue, $rightValue);
         break;
 
       case static::COMPARE_TYPE_COUNT:
@@ -164,10 +165,10 @@ abstract class StringComparisonBase extends ConditionBase implements OptionsInte
    */
   public function defaultConfiguration(): array {
     return [
-        'operator' => static::COMPARE_EQUALS,
-        'type' => static::COMPARE_TYPE_VALUE,
-        'case' => FALSE,
-      ] + parent::defaultConfiguration();
+      'operator' => static::COMPARE_EQUALS,
+      'type' => static::COMPARE_TYPE_VALUE,
+      'case' => FALSE,
+    ] + parent::defaultConfiguration();
   }
 
   /**

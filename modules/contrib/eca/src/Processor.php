@@ -91,7 +91,9 @@ class Processor {
    * Main method that executes ECA config regards applying events.
    *
    * @param \Drupal\Component\EventDispatcher\Event $event
+   *   The event being triggered.
    * @param string $event_name
+   *   The event name that was triggered.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
@@ -112,7 +114,7 @@ class Processor {
         $this->logger->debug('Check %eventlabel (%eventid) from ECA %ecalabel (%ecaid) for event %event.', $context);
         if ($ecaEvent->applies($event, $event_name)) {
           // We need to check whether this is the root of all execution calls,
-          // for being able to purge the execution history once it is not
+          // for being able to purge the whole execution history once it is not
           // needed anymore.
           $is_root_execution = empty($this->executionHistory);
           // Take a look for a repetitive execution order. If we find one,
@@ -125,9 +127,9 @@ class Processor {
             continue;
           }
 
-          // Temporarily keep in mind what execution was applied here. If that
-          // behavior starts to repeat, we'll halt the execution pipeline to
-          // prevent infinite recursion.
+          // Temporarily keep in mind on which ECA event object execution is
+          // about to be applied. If that behavior starts to repeat, then halt
+          // the execution pipeline to prevent infinite recursion.
           $this->executionHistory[] = $ecaEvent;
 
           $before_event = new BeforeInitialExecutionEvent($eca, $ecaEvent, $event);
@@ -136,6 +138,10 @@ class Processor {
           // Now that we have any required context, we may execute the logic.
           $this->logger->info('Start %eventlabel (%eventid) from ECA %ecalabel (%ecaid) for event %event.', $context);
           $this->executeSuccessors($eca, $ecaEvent, $event, $context);
+          // At this point, no nested triggering of events happened or was
+          // prevented by something else. Therefore remove the last added
+          // item from the history stack as it's not needed anymore.
+          array_pop($this->executionHistory);
 
           $this->eventDispatcher->dispatch(new AfterInitialExecutionEvent($eca, $ecaEvent, $event, $before_event->getPrestate(NULL)), EcaEvents::AFTER_INITIAL_EXECUTION);
 
@@ -155,9 +161,13 @@ class Processor {
    * Executes the successors.
    *
    * @param \Drupal\eca\Entity\Eca $eca
+   *   The ECA config entity.
    * @param \Drupal\eca\Entity\Objects\EcaObject $eca_object
+   *   The ECA item that was just executed and looks for its successors.
    * @param \Drupal\Component\EventDispatcher\Event $event
+   *   The event that was originally triggered.
    * @param array $context
+   *   List of key value pairs, used to generate meaningful log messages.
    */
   protected function executeSuccessors(Eca $eca, EcaObject $eca_object, Event $event, array $context): void {
     $executedSuccessorIds = [];
@@ -195,6 +205,7 @@ class Processor {
     if (!in_array($ecaEvent, $this->executionHistory, TRUE)) {
       return FALSE;
     }
+    $block_size = -1;
     $recursion_level = 1;
     $executed_block = [];
     $entry = end($this->executionHistory);

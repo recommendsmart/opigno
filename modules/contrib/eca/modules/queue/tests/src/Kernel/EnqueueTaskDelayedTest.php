@@ -17,6 +17,9 @@ use Drupal\user\UserInterface;
  */
 class EnqueueTaskDelayedTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'system',
     'user',
@@ -27,6 +30,8 @@ class EnqueueTaskDelayedTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function setUp(): void {
     parent::setUp();
@@ -38,8 +43,12 @@ class EnqueueTaskDelayedTest extends KernelTestBase {
 
   /**
    * Tests EnqueueTaskDelayed.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Exception
    */
-  public function testEnqueueTaskDelayed() {
+  public function testEnqueueTaskDelayed(): void {
     /** @var \Drupal\Core\Action\ActionManager $action_manager */
     $action_manager = \Drupal::service('plugin.manager.action');
     /** @var \Drupal\eca\Token\TokenInterface $token_services */
@@ -58,8 +67,7 @@ class EnqueueTaskDelayedTest extends KernelTestBase {
       'delay_unit' => (string) EnqueueTaskDelayed::DELAY_MINUTES,
     ];
     /** @var \Drupal\eca_queue\Plugin\Action\EnqueueTask $action */
-    $action = $action_manager->createInstance('eca_enqueue_task_delayed', [
-    ] + $defaults);
+    $action = $action_manager->createInstance('eca_enqueue_task_delayed', [] + $defaults);
     $this->assertTrue($action->access(NULL, User::load(0)), 'Access must be granted.');
     $this->assertTrue($action->access(NULL, User::load(1)), 'Access must be granted.');
     $this->assertSame(0, $queue->numberOfItems(), 'Queue must be empty before execution.');
@@ -68,16 +76,14 @@ class EnqueueTaskDelayedTest extends KernelTestBase {
     $queue->deleteItem($queue->claimItem());
 
     // Repeat the same thing.
-    $action = $action_manager->createInstance('eca_enqueue_task_delayed', [
-    ] + $defaults);
+    $action = $action_manager->createInstance('eca_enqueue_task_delayed', [] + $defaults);
     $this->assertTrue($action->access(NULL, User::load(0)), 'Access must be granted.');
     $this->assertTrue($action->access(NULL, User::load(1)), 'Access must be granted.');
     $this->assertSame(0, $queue->numberOfItems(), 'Queue must be empty before execution.');
     $action->execute();
     $this->assertSame(1, $queue->numberOfItems(), 'Queue must have exactly one item after execution.');
     // One more time, without clearing beforehand.
-    $action = $action_manager->createInstance('eca_enqueue_task_delayed', [
-    ] + $defaults);
+    $action = $action_manager->createInstance('eca_enqueue_task_delayed', [] + $defaults);
     $this->assertSame(1, $queue->numberOfItems(), 'Queue must be unchanged before execution.');
     $action->execute();
     $this->assertSame(2, $queue->numberOfItems(), 'Queue must have exactly two items after execution.');
@@ -106,7 +112,7 @@ class EnqueueTaskDelayedTest extends KernelTestBase {
         'event_queue' => [
           'plugin' => 'eca_queue:processing_task',
           'label' => 'ECA processing task',
-          'fields' => [
+          'configuration' => [
             'task_name' => 'delayed_task',
             'task_value' => '',
           ],
@@ -115,11 +121,13 @@ class EnqueueTaskDelayedTest extends KernelTestBase {
           ],
         ],
       ],
+      'conditions' => [],
+      'gateways' => [],
       'actions' => [
         'action_enqueue' => [
           'plugin' => 'eca_enqueue_task_delayed',
           'label' => 'Enqueue another item',
-          'fields' => [
+          'configuration' => [
             'task_name' => 'another_task',
             'task_value' => 'delayed_task_value',
             'tokens' => '',
@@ -140,7 +148,7 @@ class EnqueueTaskDelayedTest extends KernelTestBase {
     $item = $queue->claimItem();
     /** @var \Drupal\eca_queue\Task $task */
     $task = $item->data;
-    $this->assertTrue($task instanceof Task, 'Task item must be a task object.');
+    $this->assertInstanceOf(Task::class, $task, 'Task item must be a task object.');
     $this->assertTrue($task->isDueForProcessing(), 'Task must be due for processing, because delay is set to 0.');
     $queue_worker->processItem($item->data);
     $queue->deleteItem($item);
@@ -148,7 +156,7 @@ class EnqueueTaskDelayedTest extends KernelTestBase {
     $item = $queue->claimItem();
     /** @var \Drupal\eca_queue\Task $task */
     $task = $item->data;
-    $this->assertTrue($task instanceof Task, 'Newly created queue item must be a Task object.');
+    $this->assertInstanceOf(Task::class, $task, 'Newly created queue item must be a Task object.');
     $this->assertEquals('another_task', $task->getTaskName(), 'Task name must match with the one added via ECA configuration.');
     $this->assertEquals('delayed_task_value', $task->getTaskValue(), 'Task value must match with the one added via ECA configuration.');
     $this->assertFalse($task->hasData('entity'), 'No entity data must have been passed to the task.');
@@ -167,14 +175,14 @@ class EnqueueTaskDelayedTest extends KernelTestBase {
     }
     finally {
       $this->assertTrue(isset($exception));
-      $this->assertEquals('Task is not yet due for processing.', $e->getMessage());
+      $this->assertEquals('Task is not yet due for processing.', $exception->getMessage());
     }
     $this->assertSame(1, $queue->numberOfItems(), 'Queue must be unchanged.');
     // Now create another ECA config, that one will react upon the name of
     // the newly created task item, but it is not yet due for processing and
     // therefore the queue must remain unchanged.
     $eca_config_values['id'] .= '_2';
-    $eca_config_values['events']['event_queue']['fields']['task_name'] = 'another_task';
+    $eca_config_values['events']['event_queue']['configuration']['task_name'] = 'another_task';
     Eca::create($eca_config_values)->trustData()->save();
     $this->assertSame(1, $queue->numberOfItems(), 'Queue must be unchanged.');
     $exception = NULL;
@@ -186,7 +194,7 @@ class EnqueueTaskDelayedTest extends KernelTestBase {
     }
     finally {
       $this->assertTrue(isset($exception));
-      $this->assertEquals('Task is not yet due for processing.', $e->getMessage());
+      $this->assertEquals('Task is not yet due for processing.', $exception->getMessage());
     }
     $this->assertSame(1, $queue->numberOfItems(), 'Queue must be unchanged.');
 
@@ -204,15 +212,15 @@ class EnqueueTaskDelayedTest extends KernelTestBase {
       'delay_value' => '100',
       'delay_unit' => (string) EnqueueTaskDelayed::DELAY_SECONDS,
     ] + $defaults);
-    $action->execute(User::load(1));
+    $action->execute();
     $item = $queue->claimItem();
     /** @var \Drupal\eca_queue\Task $task */
     $task = $item->data;
-    $this->assertTrue($task instanceof Task, 'Newly created queue item must be a Task object.');
+    $this->assertInstanceOf(Task::class, $task, 'Newly created queue item must be a Task object.');
     $this->assertEquals('user_task', $task->getTaskName(), 'Task name must match with the one defined via plugin configuration.');
     $this->assertEquals('anonymous', $task->getTaskValue(), 'Task value must match with the one defined via plugin configuration.');
     $this->assertTrue($task->hasData('entity'), 'Entity data must have been passed to the task.');
-    $this->assertTrue($task->getData('entity') instanceof UserInterface, 'The passed entity Token must be a user.');
+    $this->assertInstanceOf(UserInterface::class, $task->getData('entity'), 'The passed entity Token must be a user.');
     $this->assertSame('0', (string) $task->getData('entity')->id(), 'The loaded entity be the anonymous user.');
     $this->assertFalse($task->hasData('admin'), 'No admin user data must have been passed to the task.');
     $this->assertFalse($task->isDueForProcessing(), 'Task must not be due for processing.');
@@ -226,15 +234,15 @@ class EnqueueTaskDelayedTest extends KernelTestBase {
       'delay_value' => '0',
       'delay_unit' => (string) EnqueueTaskDelayed::DELAY_SECONDS,
     ] + $defaults);
-    $action->execute(NULL);
+    $action->execute();
     $item = $queue->claimItem();
     /** @var \Drupal\eca_queue\Task $task */
     $task = $item->data;
-    $this->assertTrue($task instanceof Task, 'Newly created queue item must be a Task object.');
+    $this->assertInstanceOf(Task::class, $task, 'Newly created queue item must be a Task object.');
     $this->assertEquals('user_task', $task->getTaskName(), 'Task name must match with the one defined via plugin configuration.');
     $this->assertEquals('1', $task->getTaskValue(), 'Task value must match with the one defined via plugin configuration.');
     $this->assertTrue($task->hasData('entity'), 'Entity data must have been passed to the task.');
-    $this->assertTrue($task->getData('entity') instanceof UserInterface, 'The passed entity Token must be a user.');
+    $this->assertInstanceOf(UserInterface::class, $task->getData('entity'), 'The passed entity Token must be a user.');
     $this->assertSame('0', (string) $task->getData('entity')->id(), 'The loaded entity must be the anonymous user ID.');
     $this->assertTrue($task->hasData('admin'), 'Admin user data must have been passed to the task.');
     $this->assertSame('1', (string) $task->getData('admin')->id(), 'The loaded admin user must be the admin user account, as it was defined in the Token environment.');

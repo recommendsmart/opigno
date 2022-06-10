@@ -8,11 +8,13 @@ use Drupal\flow\Event\FlowEndEvent;
 use Drupal\flow\Entity\EntitySaveHandler;
 use Drupal\flow\Entity\Flow as Entity;
 use Drupal\flow\Entity\FlowInterface;
+use Drupal\flow\Event\FlowRuntimeContext;
 use Drupal\flow\Exception\TaskRecursionException;
 use Drupal\flow\Helpers\EventDispatcherTrait;
+use Drupal\flow\Plugin\flow\Subject\Qualified;
 
 /**
- * The Flow engine that applies Flow configurations accordingly.
+ * Engine for applying configured flow.
  */
 class Flow {
 
@@ -94,9 +96,15 @@ class Flow {
    *   (optional) The component that is telling Flow about this need.
    */
   public static function needsSave(EntityInterface $entity, $component = NULL): void {
-    if (!in_array($entity, self::$save, TRUE)) {
-      self::$save[] = $entity;
+    foreach ($entity->referencedEntities() as $referenced) {
+      if ($referenced->isNew() && !in_array($referenced, self::$save, TRUE)) {
+        array_push(self::$save, $referenced);
+      }
     }
+    if (($index = array_search($entity, self::$save, TRUE)) !== FALSE) {
+      unset(self::$save[$index]);
+    }
+    array_push(self::$save, $entity);
     EntitySaveHandler::service()->saveIfRequired(self::$save);
   }
 
@@ -122,7 +130,7 @@ class Flow {
   }
 
   /**
-   * Applies configured Flow on the given entity using the specified task mode.
+   * Applies configured flow on the given entity using the specified task mode.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity where to apply the flow.
@@ -135,6 +143,9 @@ class Flow {
    */
   public function apply(EntityInterface $entity, string $task_mode): void {
     if (!self::isActive() || !($flow = Entity::getFlow($entity->getEntityTypeId(), $entity->bundle(), $task_mode))) {
+      return;
+    }
+    if (!$flow->getStatus()) {
       return;
     }
 
@@ -152,15 +163,53 @@ class Flow {
     }
     $stack = &self::$stack[$task_mode];
     array_push($stack, $entity);
-    $this->getEventDispatcher()->dispatch(new FlowBeginEvent($entity, $task_mode), FlowEvents::BEGIN);
+    $runtime_context = new FlowRuntimeContext($flow);
+    $this->getEventDispatcher()->dispatch(new FlowBeginEvent($entity, $task_mode, $runtime_context), FlowEvents::BEGIN);
 
-    if (self::isActive()) {
+    if (self::isActive() && $flow->getStatus()) {
       $queue = FlowTaskQueue::service();
+
+      // Add the tasks with their according subjects.
       $tasks = $flow->getTasks(self::$filter);
       $subjects = $flow->getSubjects(self::$filter);
       foreach ($tasks as $i => $task) {
         $subject = $subjects->get($i);
-        $queue->add(new FlowTaskQueueItem($entity, $task_mode, $task, $subject));
+        $item = new FlowTaskQueueItem($entity, $task_mode, $task, $subject);
+        $queue->add($item);
+        $runtime_context->addTaskQueueItem($item);
+      }
+
+      // Also add tasks from custom flow, if any.
+      if (!$flow->isCustom()) {
+        foreach ($flow->getCustomFlow() as $custom_flow) {
+          if (!$custom_flow->getStatus()) {
+            continue;
+          }
+
+          $tasks = $custom_flow->getTasks(self::$filter);
+          $subjects = $custom_flow->getSubjects(self::$filter);
+          foreach ($tasks as $i => $task) {
+            /** @var \Drupal\flow\Plugin\FlowSubjectInterface $subject */
+            $subject = $subjects->get($i);
+
+            // Custom flow includes a mechanic for qualified subjects. Therefore
+            // prepare qualifying subjects according to this configuration.
+            if ($subject instanceof Qualified) {
+              $qualifiers = $custom_flow->getQualifiers(self::$filter);
+              /** @var \Drupal\flow\Plugin\FlowSubjectInterface $qualifying */
+              foreach ($custom_flow->getQualifyingSubjects(self::$filter) as $k => $qualifying) {
+                $qualifier = $qualifiers->get($k);
+                if (($subject->getEntityTypeId() === $qualifying->getEntityTypeId()) && ($subject->getEntityBundle() === $qualifying->getEntityBundle())) {
+                  $subject->addQualifying($qualifying, $qualifier);
+                }
+              }
+            }
+
+            $item = new FlowTaskQueueItem($entity, $task_mode, $task, $subject);
+            $queue->add($item);
+            $runtime_context->addTaskQueueItem($item);
+          }
+        }
       }
 
       // We now have all imminent tasks, so process them one by one.
@@ -177,7 +226,7 @@ class Flow {
       }
     }
 
-    $this->getEventDispatcher()->dispatch(new FlowEndEvent($entity, $task_mode), FlowEvents::END);
+    $this->getEventDispatcher()->dispatch(new FlowEndEvent($entity, $task_mode, $runtime_context), FlowEvents::END);
     array_pop($stack);
   }
 

@@ -20,6 +20,11 @@
           align-items: center;
 }
 
+.socialblue--sky .hero__banner .hero-footer__share > .card__title:empty,
+.socialblue--sky .hero__banner .hero-footer__share > .card__block {
+  padding: 0;
+}
+
 .socialblue--sky .hero__banner .hero-footer__share > span {
   padding-right: 1.25rem;
   font-size: .875rem;
@@ -207,8 +212,12 @@
   margin-bottom: 0;
 }
 
-.socialblue--sky .hero__banner .hero-footer__list .meta-engage .hero_btn-group .add-to-calendar .caret {
+.socialblue--sky .hero__banner .hero-footer__list .meta-engage .hero_btn-group .btn .caret {
   margin-left: 10px;
+}
+
+.socialblue--sky .hero__banner .hero-footer__list .meta-engage .hero_btn-group .btn + .dropdown-menu {
+  top: 100%;
 }
 
 .socialblue--sky .hero__banner .hero-footer__list .meta-engage .hero_btn-group .meta-addtocal {
@@ -866,7 +875,8 @@
   .socialblue--sky .hero__banner .hero-footer__list .meta-engage .hero_btn-group > * + * {
     margin-top: 1rem;
   }
-  .socialblue--sky .hero__banner .hero-footer__list .meta-engage .hero_btn-group .btn {
+  .socialblue--sky .hero__banner .hero-footer__list .meta-engage .hero_btn-group > * .btn,
+  .socialblue--sky .hero__banner .hero-footer__list .meta-engage .hero_btn-group > * .dropdown {
     width: 100%;
   }
   .socialblue--sky .hero__banner .hero-footer__list .meta-engage .hero_btn-group .meta-addtocal .btn {

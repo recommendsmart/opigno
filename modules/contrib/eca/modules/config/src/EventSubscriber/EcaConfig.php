@@ -15,8 +15,8 @@ class EcaConfig extends EcaBase {
    */
   public static function getSubscribedEvents(): array {
     $events = [];
-    foreach (ConfigEvent::actions() as $action) {
-      $events[$action['event_name']][] = ['onEvent'];
+    foreach (ConfigEvent::definitions() as $definition) {
+      $events[$definition['event_name']][] = ['onEvent'];
     }
     return $events;
   }

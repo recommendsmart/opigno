@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\eca\Plugin\Action\ActionBase;
 use Drupal\eca\Plugin\Action\ConfigurableActionBase;
+use Drupal\eca\Plugin\DataType\DataTransferObject;
 use Drupal\eca_queue\Task;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -24,14 +25,14 @@ class EnqueueTask extends ConfigurableActionBase {
    *
    * @var \Drupal\Core\Queue\QueueFactory
    */
-  protected $queueFactory;
+  protected QueueFactory $queueFactory;
 
   /**
    * The name of the queue.
    *
    * @var string
    */
-  static protected $queueName = 'eca_task';
+  static protected string $queueName = 'eca_task';
 
   /**
    * {@inheritdoc}
@@ -54,7 +55,7 @@ class EnqueueTask extends ConfigurableActionBase {
     $data = [];
     $token_names = trim($this->configuration['tokens'] ?? '');
     if ($token_names !== '') {
-      foreach (explode(',', $token_names) as $token_name) {
+      foreach (DataTransferObject::buildArrayFromUserInput($token_names) as $token_name) {
         $token_name = trim($token_name);
         if ($this->tokenServices->hasTokenData($token_name)) {
           $data[$token_name] = $this->tokenServices->getTokenData($token_name);
@@ -97,6 +98,7 @@ class EnqueueTask extends ConfigurableActionBase {
    * Can be overwritten by sub-classes, if the support delays.
    *
    * @return int
+   *   The delay in seconds for the task to be created.
    */
   protected function getEarliestProcessingTime(): int {
     return 0;

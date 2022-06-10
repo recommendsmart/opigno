@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Hook implementations for the node singles module.
+ */
+
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -10,158 +15,151 @@ use Drupal\node_singles\Form\SingleNodeTypeDeleteConfirm;
 /**
  * Implements @see hook_entity_operation_alter().
  */
-function node_singles_entity_operation_alter(array &$operations, EntityInterface $entity): void
-{
-    /** @var EntityInterface|null $single */
-    $single = \Drupal::service('node_singles')->getSingleByBundle($entity->bundle());
+function node_singles_entity_operation_alter(array &$operations, EntityInterface $entity): void {
+  /** @var \Drupal\Core\Entity\EntityInterface|null $single */
+  $single = \Drupal::service('node_singles')->getSingleByBundle($entity->bundle());
 
-    if ($entity->getEntityTypeId() !== 'node' || !$single) {
-        return;
-    }
+  if ($entity->getEntityTypeId() !== 'node' || !$single) {
+    return;
+  }
 
-    $operations['view'] = [
-        'title' => t('View'),
-        'weight' => 5,
-        'url' => Url::fromRoute('entity.node.canonical', ['node' => $entity->id()]),
-    ];
+  $operations['view'] = [
+    'title' => t('View'),
+    'weight' => 5,
+    'url' => Url::fromRoute('entity.node.canonical', ['node' => $entity->id()]),
+  ];
 
-    if (!empty($operations['edit'])) {
-        $operations['edit']['weight'] = 4;
-    }
+  if (!empty($operations['edit'])) {
+    $operations['edit']['weight'] = 4;
+  }
 
-    if (!empty($operations['delete'])) {
-        $operations['delete']['weight'] = 15;
-    }
+  if (!empty($operations['delete'])) {
+    $operations['delete']['weight'] = 15;
+  }
 
-    $nodeType = NodeType::load($entity->bundle());
-    $nodeTypeOperations = \Drupal::entityTypeManager()
-        ->getListBuilder('node_type')
-        ->getOperations($nodeType);
+  $nodeType = NodeType::load($entity->bundle());
+  $nodeTypeOperations = \Drupal::entityTypeManager()
+    ->getListBuilder('node_type')
+    ->getOperations($nodeType);
 
-    if (isset($nodeTypeOperations['edit'])) {
-        $nodeTypeOperations['edit']['title'] = t('Edit type');
-        $nodeTypeOperations['edit-type'] = $nodeTypeOperations['edit'];
-        unset($nodeTypeOperations['edit']);
-    }
+  if (isset($nodeTypeOperations['edit'])) {
+    $nodeTypeOperations['edit']['title'] = t('Edit type');
+    $nodeTypeOperations['edit-type'] = $nodeTypeOperations['edit'];
+    unset($nodeTypeOperations['edit']);
+  }
 
-    $operations += $nodeTypeOperations;
+  $operations += $nodeTypeOperations;
 }
 
 /**
  * Implements @see hook_menu_links_discovered_alter().
  */
-function node_singles_menu_links_discovered_alter(array &$links): void
-{
-    // Remove single node add menu links added by modules like admin_toolbar_tools.
-    // The node access handler should deal with this, but it doesn't for user 1.
-    $singles = \Drupal::getContainer()->get('node_singles')->getAllSingles();
-    foreach ($links as $name => $link) {
-        if (
-            isset($link['route_name'])
-            && $link['route_name'] === 'node.add'
-            && isset($singles[$link['route_parameters']['node_type']])
-        ) {
-            unset($links[$name]);
-        }
+function node_singles_menu_links_discovered_alter(array &$links): void {
+  // Remove single node add menu links added by modules like
+  // admin_toolbar_tools. The node access handler should deal
+  // with this, but it doesn't for user 1.
+  $singles = \Drupal::getContainer()->get('node_singles')->getAllSingles();
+  foreach ($links as $name => $link) {
+    if (
+          isset($link['route_name'])
+          && $link['route_name'] === 'node.add'
+          && isset($singles[$link['route_parameters']['node_type']])
+      ) {
+      unset($links[$name]);
     }
+  }
 }
 
 /**
  * Implements @see hook_entity_insert().
  */
-function node_singles_entity_insert(EntityInterface $entity): void
-{
-    \Drupal::getContainer()
-        ->get('node_singles.node_type_update.subscriber')
-        ->checkForSingles($entity);
+function node_singles_entity_insert(EntityInterface $entity): void {
+  \Drupal::getContainer()
+    ->get('node_singles.node_type_update.subscriber')
+    ->checkForSingles($entity);
 }
 
 /**
  * Implements @see hook_entity_update().
  */
-function node_singles_entity_update(EntityInterface $entity): void
-{
-    \Drupal::getContainer()
-        ->get('node_singles.node_type_update.subscriber')
-        ->checkForSingles($entity);
+function node_singles_entity_update(EntityInterface $entity): void {
+  \Drupal::getContainer()
+    ->get('node_singles.node_type_update.subscriber')
+    ->checkForSingles($entity);
 }
 
 /**
  * Implements @see hook_form_BASE_FORM_ID_alter().
  */
-function node_singles_form_node_type_form_alter(array &$form, FormStateInterface $formState): void
-{
-    \Drupal::getContainer()
-        ->get('node_singles.node_type_form.subscriber')
-        ->alterNodeTypeForm($form, $formState);
+function node_singles_form_node_type_form_alter(array &$form, FormStateInterface $formState): void {
+  \Drupal::getContainer()
+    ->get('node_singles.node_type_form.subscriber')
+    ->alterNodeTypeForm($form, $formState);
 }
 
 /**
  * Implements @see hook_form_BASE_FORM_ID_alter().
  */
-function node_singles_form_node_form_alter(array &$form): void
-{
-    \Drupal::getContainer()
-        ->get('node_singles.node_form.subscriber')
-        ->formAlter($form);
+function node_singles_form_node_form_alter(array &$form): void {
+  \Drupal::getContainer()
+    ->get('node_singles.node_form.subscriber')
+    ->formAlter($form);
 }
 
 /**
  * Implements @see hook_entity_type_alter().
  */
-function node_singles_entity_type_alter(array &$entityTypes): void
-{
-    $entityTypes['node']->setHandlerClass('access', SingleNodeAccessControlHandler::class);
-    $entityTypes['node_type']->setFormClass('delete', SingleNodeTypeDeleteConfirm::class);
+function node_singles_entity_type_alter(array &$entityTypes): void {
+  $entityTypes['node']->setHandlerClass('access', SingleNodeAccessControlHandler::class);
+  $entityTypes['node_type']->setFormClass('delete', SingleNodeTypeDeleteConfirm::class);
 }
 
 /**
  * Implements @see hook_form_FORM_ID_alter().
+ *
  * Hide some single node permissions since they aren't relevant.
  */
-function node_singles_form_user_admin_permissions_alter(&$form, FormStateInterface $form_state, $form_id): void
-{
-    $singles = \Drupal::getContainer()->get('node_singles')->getAllSingles();
+function node_singles_form_user_admin_permissions_alter(&$form, FormStateInterface $form_state, $form_id): void {
+  $singles = \Drupal::getContainer()->get('node_singles')->getAllSingles();
 
-    foreach ($singles as $single) {
-        $permissions = [
-            sprintf('create %s content', $single->id()),
-            sprintf('delete any %s content', $single->id()),
-            sprintf('delete own %s content', $single->id()),
-        ];
+  foreach ($singles as $single) {
+    $permissions = [
+      sprintf('create %s content', $single->id()),
+      sprintf('delete any %s content', $single->id()),
+      sprintf('delete own %s content', $single->id()),
+    ];
 
-        foreach ($permissions as $permission) {
-            if (isset($form['permissions'][$permission])) {
-                // Unsetting because #access = false doesn't work
-                // @see https://www.drupal.org/project/drupal/issues/3123459
-                unset($form['permissions'][$permission]);
-            }
-        }
+    foreach ($permissions as $permission) {
+      if (isset($form['permissions'][$permission])) {
+        // Unsetting because #access = false doesn't work.
+        // @see https://www.drupal.org/project/drupal/issues/3123459
+        unset($form['permissions'][$permission]);
+      }
     }
+  }
 }
 
 /**
  * Implements @see hook_views_data_alter().
  */
-function node_singles_views_data_alter(array &$data): void
-{
-    $data['node']['node_singles'] = [
-        'title' => t('Single nodes'),
-        'filter' => [
-            'title' => t('Single nodes'),
-            'help' => t('Filter single nodes.'),
-            'field' => 'type',
-            'id' => 'node_singles',
-        ],
-    ];
+function node_singles_views_data_alter(array &$data): void {
+  $data['node']['node_singles'] = [
+    'title' => t('Single nodes'),
+    'filter' => [
+      'title' => t('Single nodes'),
+      'help' => t('Filter single nodes.'),
+      'field' => 'type',
+      'id' => 'node_singles',
+    ],
+  ];
 
-    $data['node']['node_non_singles'] = [
-        'title' => t('Non-single nodes'),
-        'filter' => [
-            'title' => t('Non-single nodes'),
-            'help' => t('Filter non-single nodes.'),
-            'field' => 'type',
-            'id' => 'node_non_singles',
-        ],
-    ];
+  $data['node']['node_non_singles'] = [
+    'title' => t('Non-single nodes'),
+    'filter' => [
+      'title' => t('Non-single nodes'),
+      'help' => t('Filter non-single nodes.'),
+      'field' => 'type',
+      'id' => 'node_non_singles',
+    ],
+  ];
 }

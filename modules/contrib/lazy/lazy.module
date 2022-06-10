@@ -8,6 +8,7 @@
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Field\FormatterInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Template\AttributeHelper;
 use Drupal\Core\Url;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\file\Entity\File;
@@ -158,8 +159,9 @@ function lazy_preprocess_field(&$variables) {
   ) {
     foreach ($variables['items'] as $key => $item) {
       $variables['items'][$key]['content']['#item_attributes']['data-lazy'] = $element['#third_party_settings']['lazy'];
-      if ($variables['items'][$key]['content']['#theme'] === 'image_formatter') {
-        $variables['items'][$key]['content']['#item_attributes']['data-lazy']['fid'] = $element[$key]['#item']->getValue()['target_id'];
+      $item_values = (array) $element[$key]['#item']->getValue();
+      if (isset($item_values['target_id'])) {
+        $variables['items'][$key]['content']['#item_attributes']['data-lazy']['fid'] = $item_values['target_id'];
       }
     }
   }
@@ -202,11 +204,14 @@ function lazy_process_variables(array &$variables) {
         // Serve as a data URI?
         if ($placeholder_data_uri) {
           // Requesting the URL will cause the image to be created.
-          $content = file_get_contents($placeholder_image_url);
+          $content = @file_get_contents($placeholder_image_url);
           // Get the mime-type of the styled image, falls back to original.
-          $mime_type = function_exists('mime_content_type') ? mime_content_type($style->buildUri($file->getFileUri())) : $file->getMimeType();
+          $mime_type = function_exists('mime_content_type') ? @mime_content_type($style->buildUri($file->getFileUri())) : $file->getMimeType();
           // Build the data URI with matching mime-type.
           $placeholder_image_url = "data:${mime_type};base64," . base64_encode($content);
+        }
+        else {
+          $placeholder_image_url = file_url_transform_relative($placeholder_image_url);
         }
         $variables['attributes']['src'] = $placeholder_image_url;
       }
@@ -235,7 +240,7 @@ function lazy_process_variables(array &$variables) {
  * Implements template_preprocess_image().
  */
 function lazy_preprocess_image(&$variables) {
-  if (array_key_exists('data-lazy', $variables['attributes'])) {
+  if (AttributeHelper::attributeExists('data-lazy', $variables['attributes'])) {
     lazy_process_variables($variables);
     // We don't need `data-lazy` attribute anymore.
     unset($variables['attributes']['data-lazy']);
@@ -246,11 +251,11 @@ function lazy_preprocess_image(&$variables) {
  * Implements template_preprocess_responsive_image().
  */
 function lazy_preprocess_responsive_image(&$variables) {
-  if (array_key_exists('data-lazy', $variables['attributes'])) {
+  if (AttributeHelper::attributeExists('data-lazy', $variables['attributes'])) {
     // The `data-lazy` attribute will be removed in `lazy_preprocess_image()`.
     $lazy_service = \Drupal::service('lazy');
-    if ($lazy_service->isEnabled()) {
-      $config = $lazy_service->getSettings();
+    $config = $lazy_service->getSettings();
+    if ($lazy_service->isEnabled() && !$config['preferNative']) {
       foreach ($variables['sources'] as $source) {
         if (isset($source['srcset'])) {
           $source[$config['lazysizes']['srcsetAttr']] = $source['srcset'];

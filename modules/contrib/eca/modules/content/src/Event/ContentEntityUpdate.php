@@ -3,7 +3,7 @@
 namespace Drupal\eca_content\Event;
 
 /**
- * Class ContentEntityUpdate
+ * Provides an event when a content entity is being updated.
  *
  * @package Drupal\eca_content\Event
  */

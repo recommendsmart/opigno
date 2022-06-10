@@ -10,7 +10,7 @@ use Drupal\eca\Plugin\OptionsInterface;
  *
  * @EcaCondition(
  *   id = "eca_current_user_permission",
- *   label = "Current user's permission"
+ *   label = "Current user has permission"
  * )
  */
 class CurrentUserPermission extends BaseUser implements OptionsInterface {
@@ -27,8 +27,8 @@ class CurrentUserPermission extends BaseUser implements OptionsInterface {
    */
   public function defaultConfiguration(): array {
     return [
-        'permission' => '',
-      ] + parent::defaultConfiguration();
+      'permission' => '',
+    ] + parent::defaultConfiguration();
   }
 
   /**
@@ -63,7 +63,7 @@ class CurrentUserPermission extends BaseUser implements OptionsInterface {
       /** @var \Drupal\user\PermissionHandler $handler */
       $handler = \Drupal::service('user.permissions');
       foreach ($handler->getPermissions() as $permission => $def) {
-        $permissions[$permission] = $def['title'];
+        $permissions[$permission] = strip_tags($def['title']);
       }
       return $permissions;
     }

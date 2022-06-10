@@ -2,9 +2,12 @@
 
 namespace Drupal\eca\Plugin\DataType;
 
+use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
+use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\Plugin\DataType\Map;
 use Drupal\Core\TypedData\PrimitiveInterface;
@@ -15,7 +18,7 @@ use Drupal\eca\TypedData\DataTransferObjectDefinition;
  * Defines the "dto" data type.
  *
  * A Data Transfer Object (DTO) allows attachment of arbitrary properties.
- * A DTO can also be used as a list, items may be dynamically added by using '+'
+ * A DTO can also be used as a list: items may be dynamically added by using '+'
  * and removed by using '-'. Example: $dto->set('+', $value).
  *
  * @DataType(
@@ -50,6 +53,10 @@ class DataTransferObject extends Map {
    *
    * @return static
    *   The DTO instance.
+   *
+   * @throws \InvalidArgumentException
+   *   When the passed values don't meet the requirements as documented for
+   *   the $values paramenter in ::setValue().
    */
   public static function create($value = NULL, ?TypedDataInterface $parent = NULL, ?string $name = NULL, bool $notify = TRUE): DataTransferObject {
     $manager = \Drupal::typedDataManager();
@@ -81,12 +88,98 @@ class DataTransferObject extends Map {
   }
 
   /**
+   * Creates a DTO from user input.
+   *
+   * User input may be a Yaml-formatted hash of values, or an unformatted
+   * sequence of values, separated with comma and optionally with a colon for
+   * keyed values. Plain values without separator (comma or new line) will use
+   * the string representation instead of an array of properties.
+   *
+   * @param string $user_input
+   *   The user input as string.
+   *
+   * @return \Drupal\eca\Plugin\DataType\DataTransferObject
+   *   A DTO instance, holding values from the user input.
+   */
+  public static function fromUserInput(string $user_input): DataTransferObject {
+    if (mb_strpos($user_input, PHP_EOL)) {
+      try {
+        $values = Yaml::decode($user_input);
+        if (is_string($values)) {
+          // Only care for trying conversion of nested structures. For any other
+          // values, apply the other section below.
+          $values = [];
+        }
+      }
+      catch (InvalidDataTypeException $e) {
+        $values = [];
+      }
+    }
+    else {
+      $values = [];
+    }
+    if (empty($values) && ($user_input !== '')) {
+      $option = strtok($user_input, "," . PHP_EOL);
+      while ($option !== FALSE) {
+        $option = trim($option);
+        [$key, $value] = array_merge(explode(':', $option, 2), [$option]);
+        $key = trim($key);
+        $value = trim($value);
+        if (mb_substr($key, 0, 1) === '[' && mb_substr($value, -1, 1) === ']') {
+          // Prevent tokens from being split off.
+          $key = $value = $option;
+        }
+        if (mb_strlen($key) && mb_strlen($value)) {
+          $values[$key] = $value;
+        }
+        $option = strtok("," . PHP_EOL);
+      }
+    }
+
+    // Use the string representation directly if no sequence was provided.
+    if ((count($values) === 1) && (key($values) === current($values))) {
+      $values = current($values);
+    }
+
+    return static::create($values);
+  }
+
+  /**
+   * Shorthand method for building an array from user input.
+   *
+   * @param string $user_input
+   *   The user input as string.
+   *
+   * @return array
+   *   The built array, holding values from the user input.
+   *
+   * @see ::fromUserInput
+   */
+  public static function buildArrayFromUserInput(string $user_input): array {
+    return static::fromUserInput($user_input)->toArray();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
     // Make sure that the data definition reflects dynamically added properties.
     $this->definition = DataTransferObjectDefinition::create($definition->getDataType(), $this);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function toArray() {
+    $values = [];
+    foreach ($this->getProperties() as $name => $property) {
+      $values[$name] = $property instanceof ComplexDataInterface ? $property->toArray() : $property->getValue();
+    }
+    if (empty($values) && isset($this->stringRepresentation)) {
+      $values[] = $this->stringRepresentation;
+    }
+    return $values;
   }
 
   /**
@@ -102,6 +195,14 @@ class DataTransferObject extends Map {
       if (!$definition->isComputed()) {
         $value['types'][$name] = $definition->getDataType();
         $value['values'][$name] = $property->getValue();
+      }
+    }
+    if (isset($this->stringRepresentation)) {
+      if ($value) {
+        $value['_string_representation'] = $this->stringRepresentation;
+      }
+      else {
+        $value = $this->stringRepresentation;
       }
     }
     return $value;
@@ -127,6 +228,10 @@ class DataTransferObject extends Map {
    *   (optional) Whether to notify the parent object of the change. Defaults to
    *   TRUE. If a property is updated from a parent object, set it to FALSE to
    *   avoid being notified again.
+   *
+   * @throws \InvalidArgumentException
+   *   When the passed values don't meet the requirements as documented for
+   *   the $values paramenter.
    */
   public function setValue($values, $notify = TRUE) {
     if ($values instanceof TypedDataInterface) {
@@ -148,6 +253,10 @@ class DataTransferObject extends Map {
       throw new \InvalidArgumentException("Invalid values given. Values must be represented as an associative array.");
     }
     else {
+      if (isset($values['_string_representation'])) {
+        $this->setStringRepresentation($values['_string_representation']);
+        unset($values['_string_representation']);
+      }
       if (empty($values['types']) || empty($values['values'])) {
         foreach ($values as $name => $value) {
           if (!($value instanceof TypedDataInterface)) {
@@ -156,6 +265,12 @@ class DataTransferObject extends Map {
             }
             elseif (is_scalar($value)) {
               $values[$name] = $this->wrapScalarValue($name, $value);
+            }
+            elseif (is_iterable($value)) {
+              $values[$name] = $this->wrapIterableValue($name, $value);
+            }
+            elseif (is_null($value)) {
+              unset($values[$name]);
             }
             else {
               throw new \InvalidArgumentException("Invalid values given. Values must be of scalar types, entities or typed data objects.");
@@ -211,13 +326,50 @@ class DataTransferObject extends Map {
   }
 
   /**
-   * Implements magic __toString() method.
+   * {@inheritdoc}
    */
-  public function __toString(): string {
+  public function getString() {
     if (isset($this->stringRepresentation)) {
       return $this->stringRepresentation;
     }
-    return '';
+
+    $values = [];
+    $is_assoc = FALSE;
+    foreach ($this->getProperties() as $name => $property) {
+      $value = $property instanceof ComplexDataInterface ? $property->toArray() : $property->getValue();
+      if (($value === NULL) || ($value === '') || (is_iterable($value) && !count($value))) {
+        // Skip empty items.
+        continue;
+      }
+      if (is_array($value)) {
+        // Convert entities to arrays for Yaml encoding below.
+        foreach ($value as $k => $v) {
+          if ($v instanceof EntityInterface) {
+            $value[$k] = $v->toArray();
+          }
+        }
+      }
+      if (is_int($name) || ctype_digit($name)) {
+        $values[] = $value;
+      }
+      else {
+        $values[$name] = $value;
+        if ($name !== $value) {
+          $is_assoc = TRUE;
+        }
+      }
+    }
+    if (!$is_assoc) {
+      $values = array_values($values);
+    }
+    return $values ? Yaml::encode($values) : '';
+  }
+
+  /**
+   * Implements magic __toString() method.
+   */
+  public function __toString(): string {
+    return $this->getString();
   }
 
   /**
@@ -280,6 +432,9 @@ class DataTransferObject extends Map {
     }
     elseif (is_scalar($value)) {
       $this->writePropertyValue($property_name, $this->wrapScalarValue($property_name, $value));
+    }
+    elseif (is_iterable($value)) {
+      $this->writePropertyValue($property_name, $this->wrapIterableValue($property_name, $value));
     }
     else {
       throw new \InvalidArgumentException("Invalid value given. Value must be of a scalar type, an entity or a typed data object.");
@@ -388,7 +543,7 @@ class DataTransferObject extends Map {
    *
    * @param string $name
    *   The property name.
-   * @param Drupal\Core\Entity\EntityInterface $value
+   * @param \Drupal\Core\Entity\EntityInterface $value
    *   The entity.
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface
@@ -402,6 +557,25 @@ class DataTransferObject extends Map {
       'parent' => $this,
     ]);
     $instance->setValue($value, FALSE);
+    return $instance;
+  }
+
+  /**
+   * Wraps an iterable value by a Typed Data object.
+   *
+   * @param string $name
+   *   The property name.
+   * @param mixed $value
+   *   The iterable value.
+   *
+   * @return \Drupal\Core\TypedData\TypedDataInterface
+   *   The Typed Data object.
+   */
+  protected function wrapIterableValue($name, $value) {
+    $instance = static::create(NULL, $this, $name, FALSE);
+    foreach ($value as $k => $v) {
+      $instance->set($k, $v, FALSE);
+    }
     return $instance;
   }
 

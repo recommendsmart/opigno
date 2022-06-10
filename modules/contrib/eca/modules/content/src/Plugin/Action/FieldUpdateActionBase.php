@@ -18,19 +18,19 @@ use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\eca\Plugin\Action\ActionBase;
 use Drupal\eca\Plugin\Action\ConfigurableActionTrait;
 use Drupal\eca\Plugin\OptionsInterface;
-use Drupal\eca\Service\Conditions;
 use Drupal\eca\TypedData\PropertyPathTrait;
 use Drupal\field\FieldStorageConfigInterface;
 
 /**
  * Replaces Drupal\Core\Field\FieldUpdateActionBase.
  *
- * We need to replace the core base class because within the ECA context
- * entities should not be saved after modifying a field value.
+ * <p>We need to replace the core base class because within the ECA context
+ * entities should not be saved after modifying a field value.</p>
  *
- * The replacement is achieved with PHP's class_alias(), see eca_content.module
+ * <p>The replacement is achieved with PHP's class_alias(),
+ * see eca_content.module.</p>
  */
-abstract class FieldUpdateActionBase extends ActionBase  implements ConfigurableInterface, DependentPluginInterface, PluginFormInterface, OptionsInterface {
+abstract class FieldUpdateActionBase extends ActionBase implements ConfigurableInterface, DependentPluginInterface, PluginFormInterface, OptionsInterface {
 
   use ConfigurableActionTrait;
   use PropertyPathTrait;
@@ -47,8 +47,8 @@ abstract class FieldUpdateActionBase extends ActionBase  implements Configurable
    * {@inheritdoc}
    */
   public function defaultConfiguration(): array {
-    if (!($this instanceof EcaFieldUpdateActionInterface)) {
-      return [];
+    if (!($this instanceof SetFieldValue)) {
+      return parent::defaultConfiguration();
     }
     return [
       'method' => 'set:clear',
@@ -62,7 +62,7 @@ abstract class FieldUpdateActionBase extends ActionBase  implements Configurable
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
-    if (!($this instanceof EcaFieldUpdateActionInterface)) {
+    if (!($this instanceof SetFieldValue)) {
       return $form;
     }
     $form['method'] = [
@@ -97,9 +97,10 @@ abstract class FieldUpdateActionBase extends ActionBase  implements Configurable
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
-    if (!($this instanceof EcaFieldUpdateActionInterface)) {
+    if (!($this instanceof SetFieldValue)) {
       return;
     }
+
     $this->configuration['method'] = $form_state->getValue('method');
     $this->configuration['strip_tags'] = $form_state->getValue('strip_tags');
     $this->configuration['trim'] = $form_state->getValue('trim');
@@ -127,14 +128,18 @@ abstract class FieldUpdateActionBase extends ActionBase  implements Configurable
   }
 
   /**
-   * Helper function to save the entity only outside ECA context or when
-   * requested explicitly.
+   * The save method.
+   *
+   * <p>Helper function to save the entity only outside ECA context or when
+   * requested explicitly.</p>
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The entity which might have to be saved.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   protected function save(ContentEntityInterface $entity): void {
-    if (empty($entity->eca_context) || (($this->configuration['save_entity'] ?? Conditions::OPTION_NO) === Conditions::OPTION_YES)) {
+    if (empty($entity->eca_context) || $this->configuration['save_entity']) {
       $entity->save();
     }
   }
@@ -196,10 +201,10 @@ abstract class FieldUpdateActionBase extends ActionBase  implements Configurable
           $value = array_key_exists($property_name, $value) ? $value[$property_name] : reset($value);
         }
         if (is_scalar($value) || is_null($value)) {
-          if (($this->configuration['strip_tags'] ?? Conditions::OPTION_NO) === Conditions::OPTION_YES) {
+          if ($this->configuration['strip_tags']) {
             $value = preg_replace('/[\t\n\r\0\x0B]/', '', strip_tags((string) $value));
           }
-          if (($this->configuration['trim'] ?? Conditions::OPTION_NO) === Conditions::OPTION_YES) {
+          if ($this->configuration['trim']) {
             $value = trim((string) $value);
           }
           if ($value === '' || $value === NULL) {
@@ -375,19 +380,19 @@ abstract class FieldUpdateActionBase extends ActionBase  implements Configurable
             ksort($current_values);
             break;
 
-            case 'append':
-              $current_num = count($current_values);
-              foreach ($values as $i => $value) {
-                if (!$is_unlimited && $cardinality <= $current_num) {
-                  break;
-                }
-                if (!isset($existing[$i])) {
-                  array_push($current_values, $value);
-                  $current_num++;
-                  $values_changed = TRUE;
-                }
+          case 'append':
+            $current_num = count($current_values);
+            foreach ($values as $i => $value) {
+              if (!$is_unlimited && $cardinality <= $current_num) {
+                break;
               }
-              break;
+              if (!isset($existing[$i])) {
+                array_push($current_values, $value);
+                $current_num++;
+                $values_changed = TRUE;
+              }
+            }
+            break;
 
           case 'prepend':
             $current_num = count($current_values);

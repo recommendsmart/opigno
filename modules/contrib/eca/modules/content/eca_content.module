@@ -1,6 +1,13 @@
 <?php
 
+/**
+ * @file
+ * ECA Content submodule.
+ */
+
+/* @noinspection ClassConstantCanBeUsedInspection */
 if (!class_exists('Drupal\Core\Field\FieldUpdateActionBase', FALSE)) {
+  /* @noinspection PhpIgnoredClassAliasDeclaration */
   class_alias('Drupal\eca_content\Plugin\Action\FieldUpdateActionBase', 'Drupal\Core\Field\FieldUpdateActionBase');
 }
 
@@ -11,7 +18,10 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\eca_content\HookHandler;
 
 /**
+ * Eca content hooh handler.
+ *
  * @return \Drupal\eca_content\HookHandler
+ *   The content hook handler.
  */
 function _eca_content_hook_handler(): HookHandler {
   return \Drupal::service('eca_content.hook_handler');
@@ -162,6 +172,10 @@ function eca_content_entity_field_values_init(FieldableEntityInterface $entity) 
  *
  * Updates existing ECA configuration dependencies that already refer to field
  * configurations having the same field name.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Core\Entity\EntityStorageException
  */
 function eca_content_field_config_insert(EntityInterface $entity) {
   $eca_configs = \Drupal::entityTypeManager()->getStorage('eca')->loadMultiple();
@@ -187,8 +201,8 @@ function eca_content_field_config_insert(EntityInterface $entity) {
       if (!in_array($type, ['config', 'module'])) {
         continue;
       }
-      $uses_field = in_array($field_storage_config_id, $dependencies);
-      if ($uses_field && !in_array($field_field_config_id, $dependencies)) {
+      $uses_field = in_array($field_storage_config_id, $dependencies, TRUE);
+      if ($uses_field && !in_array($field_field_config_id, $dependencies, TRUE)) {
         $eca->addRuntimeDependency($field_config->getConfigDependencyKey(), $field_field_config_id);
         $to_save[$eca->id()] = $eca;
       }

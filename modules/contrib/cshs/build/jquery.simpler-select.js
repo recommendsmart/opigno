@@ -122,7 +122,7 @@ function _createClass(Constructor, protoProps, staticProps) {
           this.options.push({
             group: group,
             value: option.value,
-            label: option.innerText.trim(),
+            label: option.text.trim(),
             // `undefined` and `''` results in an `undefined`.
             parent: option.dataset.parent || undefined
           });

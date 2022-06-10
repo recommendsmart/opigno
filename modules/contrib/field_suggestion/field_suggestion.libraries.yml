@@ -1,0 +1,8 @@
+base:
+  version: VERSION
+  js:
+    field_suggestion.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.form

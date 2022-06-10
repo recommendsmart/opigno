@@ -1,0 +1,100 @@
+<?php
+
+namespace Drupal\{{ machine_name }}\Plugin\ECA\Condition;
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\eca\Plugin\ECA\Condition\ConditionBase;
+{% if options %}
+use Drupal\eca\Plugin\OptionsInterface;
+{% endif %}
+
+/**
+ * Plugin implementation of the ECA condition "{{ purpose }}".
+ *
+ * @EcaCondition(
+ *   id = "{{ machine_name }}_{{ id }}",
+ *   label = @Translation("{{ purpose }}"),
+ *   description = @Translation("{{ description }}"),
+{% if context %}
+ *   context_definitions = {
+{% for i,item in context %}
+ *   {% if i > 0 %}, {% else %}  {% endif %}"{{ item|trim }}" = @ContextDefinition("{{ item|trim }}", label = @Translation("{{ item|trim|camelize }}"))
+{% endfor %}
+ *   }
+{% endif %}
+ * )
+ */
+class {{ class }} extends ConditionBase {% if options %}implements OptionsInterface {% endif %}{
+
+  /**
+   * {@inheritdoc}
+   */
+  public function evaluate(): bool {
+{% if context %}
+    ${{ context[0] }} = $this->getValueFromContext('{{ context[0] }}');
+{% endif %}
+    $result = TRUE;
+    return $this->negationCheck($result);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration(): array {
+    return [
+      'field1' => '',
+{% if options %}
+      'field2' => '',
+{% endif %}
+    ] + parent::defaultConfiguration();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
+    $form['field1'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Label of field 1'),
+      '#default_value' => $this->configuration['field1'],
+    ];
+{% if options %}
+    $form['field2'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Label of field 2'),
+      '#options' => $this->getOptions('field2'),
+      '#default_value' => $this->configuration['field2'],
+    ];
+{% endif %}
+    return parent::buildConfigurationForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
+    $this->configuration['field1'] = $form_state->getValue('field1');
+{% if options %}
+    $this->configuration['field2'] = $form_state->getValue('field2');
+{% endif %}
+    parent::submitConfigurationForm($form, $form_state);
+  }
+
+{% if options %}
+  /**
+   * {@inheritdoc}
+   */
+  public function getOptions(string $id): ?array {
+    switch ($id) {
+      case 'field2':
+        return [
+          'option1' => $this->t('Label 1'),
+          'option2' => $this->t('Label 2'),
+          'option3' => $this->t('Label 3'),
+        ];
+    }
+    return NULL;
+  }
+
+{% endif %}
+}

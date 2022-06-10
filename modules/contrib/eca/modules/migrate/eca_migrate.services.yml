@@ -2,6 +2,6 @@ services:
 
   eca_migrate.subscriber:
     class: Drupal\eca_migrate\EventSubscriber\EcaMigrate
-    arguments: ['@eca.processor', '@eca.service.token']
+    parent: eca.default_event_subscriber
     tags:
       - { name: event_subscriber }

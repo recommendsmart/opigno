@@ -13,7 +13,6 @@ use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\eca\EcaState;
-use Drupal\eca\Service\Conditions;
 use Drupal\eca\Token\TokenInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -26,6 +25,8 @@ abstract class ConditionBase extends PluginBase implements ConditionInterface, C
   use ContextAwarePluginTrait;
 
   /**
+   * Event dispatcher.
+   *
    * @var \Drupal\Component\EventDispatcher\Event
    */
   protected Event $event;
@@ -45,6 +46,8 @@ abstract class ConditionBase extends PluginBase implements ConditionInterface, C
   protected EntityTypeBundleInfoInterface $entityTypeBundleInfo;
 
   /**
+   * Symfony request stack.
+   *
    * @var \Symfony\Component\HttpFoundation\RequestStack
    */
   protected RequestStack $requestStack;
@@ -57,6 +60,8 @@ abstract class ConditionBase extends PluginBase implements ConditionInterface, C
   protected TokenInterface $tokenServices;
 
   /**
+   * User account.
+   *
    * @var \Drupal\Core\Session\AccountProxyInterface
    */
   protected AccountProxyInterface $currentUser;
@@ -69,6 +74,8 @@ abstract class ConditionBase extends PluginBase implements ConditionInterface, C
   protected TimeInterface $time;
 
   /**
+   * ECA state service.
+   *
    * @var \Drupal\eca\EcaState
    */
   protected EcaState $state;
@@ -109,13 +116,13 @@ abstract class ConditionBase extends PluginBase implements ConditionInterface, C
   /**
    * Returns the named value from context, if available.
    *
-   * @param $name
+   * @param string $name
    *   The name of the value that should be returned.
    *
    * @return mixed|null
    *   The named value, if available. NULL otherwise.
    */
-  public function getValueFromContext($name) {
+  public function getValueFromContext(string $name) {
     try {
       return $this->getContextValue($name);
     }
@@ -150,14 +157,7 @@ abstract class ConditionBase extends PluginBase implements ConditionInterface, C
    * {@inheritdoc}
    */
   public function isNegated(): bool {
-    $negated = $this->configuration['negate'] ?? FALSE;
-    if ($negated === Conditions::OPTION_YES) {
-      $negated = TRUE;
-    }
-    elseif ($negated === Conditions::OPTION_NO) {
-      $negated = FALSE;
-    }
-    return $negated;
+    return $this->configuration['negate'] ?? FALSE;
   }
 
   /**
@@ -196,8 +196,7 @@ abstract class ConditionBase extends PluginBase implements ConditionInterface, C
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
-    $negated = $form_state->getValue('negate', FALSE);
-    $this->configuration['negate'] = $negated && ($negated !== Conditions::OPTION_NO);
+    $this->configuration['negate'] = (bool) $form_state->getValue('negate', FALSE);
     if ($form_state->hasValue('context_mapping')) {
       $this->setContextMapping($form_state->getValue('context_mapping'));
     }
@@ -208,8 +207,8 @@ abstract class ConditionBase extends PluginBase implements ConditionInterface, C
    */
   public function getConfiguration(): array {
     return [
-        'id' => $this->getPluginId(),
-      ] + $this->configuration;
+      'id' => $this->getPluginId(),
+    ] + $this->configuration;
   }
 
   /**

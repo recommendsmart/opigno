@@ -3,7 +3,7 @@
 namespace Drupal\eca_content\Event;
 
 /**
- * Class ContentEntityDelete
+ * Provides an event when a content entity is being deleted.
  *
  * @package Drupal\eca_content\Event
  */

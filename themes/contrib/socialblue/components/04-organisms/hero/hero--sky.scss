@@ -30,6 +30,11 @@
         justify-content: flex-start;
       }
 
+      > .card__title:empty,
+      > .card__block {
+        padding: 0;
+      }
+
       > span {
         padding-right: 1.25rem;
         font-size: .875rem;
@@ -262,6 +267,11 @@
               + * {
                 margin-top: 1rem;
               }
+
+              .btn,
+              .dropdown {
+                width: 100%;
+              }
             }
           }
 
@@ -276,17 +286,17 @@
               font-size: 1rem;
             }
 
-            @include for-tablet-landscape-down {
-              width: 100%;
-            }
-
             @include for-phone-only {
               font-size: .75rem;
             }
-          }
 
-          .add-to-calendar .caret {
-            margin-left: 10px;
+            .caret {
+              margin-left: 10px;
+            }
+
+            + .dropdown-menu {
+              top: 100%;
+            }
           }
 
           .meta-addtocal {

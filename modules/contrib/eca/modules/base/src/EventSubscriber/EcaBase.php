@@ -15,8 +15,8 @@ class EcaBase extends EcaBaseSubscriber {
    */
   public static function getSubscribedEvents(): array {
     $events = [];
-    foreach (BaseEvent::actions() as $action) {
-      $events[$action['event_name']][] = ['onEvent'];
+    foreach (BaseEvent::definitions() as $definition) {
+      $events[$definition['event_name']][] = ['onEvent'];
     }
     return $events;
   }

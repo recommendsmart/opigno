@@ -7,7 +7,7 @@ dependencies:
   - designs:designs
   - drupal:layout_discovery
 
-# Information added by Drupal.org packaging script on 2022-03-26
-version: '1.0.7'
+# Information added by Drupal.org packaging script on 2022-04-12
+version: '1.0.8'
 project: 'designs'
-datestamp: 1648316587
+datestamp: 1649726613

@@ -1,6 +1,6 @@
 services:
   eca_base.commands:
     class: Drupal\eca_base\Commands\EcaBaseCommands
-    arguments: []
+    arguments: ['@event_dispatcher']
     tags:
       - { name: drush.command }

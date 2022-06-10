@@ -1,4 +1,4 @@
-# Flow
+# Flow (automation)
 
 **This module automates your workflow on content.**
 
@@ -26,9 +26,11 @@ entity type and a bundle (for example node type "article").
 
 Out of the box you can:
 
-* Merge field values (with Token support)
+* Merge and prepopulate field values (with Token support)
 * Create further content (such as taxonomy terms, nodes, comments etc.)
 * Relate content with each other (including back-references)
+* Send a mail or display a message (when using Actions for Flow sub-module)
+* Create custom flow with qualifiers (e.g. when an article got published).
 
 You can extend this by either writing your own task plugins, or installing
 further modules. You can decide whether your task is to be executed immediately
@@ -78,7 +80,21 @@ or a "Tags" taxonomy term.
 When adding a new task, it is not enabled immediately. To enable the task,
 select the newly created task in the Flow configuration and choose "Enable".
 
-## 4.1 The default form display mode
+## 4.1 Custom flow
+
+If you have tasks that need to be run for a certain subset of your content only,
+such as an article that just got published, you can create custom flow for that.
+
+To create custom flow, navigate to the "Manage flow" section of your targeted
+content type, and click on the "+ add" link that is right besides the available
+task mode tabs.
+
+Once you have added your custom flow, then you can add a qualifier, which is
+responsible to qualify your targeted subject. Flow comes with a "congruent
+content" qualifier implementation out of the box. This one can qualify content
+when a specified field value is contained.
+
+## 4.2 The default form display mode
 
 Some configurations of tasks and subjects, for example for merging content
 values, make use of a form to enter values for content fields. Flow uses the
@@ -89,7 +105,7 @@ That means that you can adjust the way fields are being displayed within Flow
 configurations by adding a "flow" form display mode for your content at
 /admin/structure/display-modes/form and configure that form display accordingly.
 
-## 4.2 The Flow task queue
+## 4.3 The Flow task queue
 
 When you have tasks that operate on a large amount of subjects (for example when
 using a View for loading subject items), Flow automatically enqueues the

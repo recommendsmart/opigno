@@ -25,16 +25,26 @@ class FlowEvent extends Event {
   protected string $taskMode;
 
   /**
+   * The runtime context.
+   *
+   * @var \Drupal\flow\Event\RuntimeContextInterface
+   */
+  protected RuntimeContextInterface $runtimeContext;
+
+  /**
    * Constructs a new FlowEvent object.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity for which flow is being applied.
    * @param string $task_mode
    *   The applied task mode.
+   * @param \Drupal\flow\Event\RuntimeContextInterface $runtime_context
+   *   The runtime context.
    */
-  public function __construct(EntityInterface $entity, string $task_mode) {
+  public function __construct(EntityInterface $entity, string $task_mode, RuntimeContextInterface $runtime_context) {
     $this->entity = $entity;
     $this->taskMode = $task_mode;
+    $this->runtimeContext = $runtime_context;
   }
 
   /**
@@ -55,6 +65,16 @@ class FlowEvent extends Event {
    */
   public function getTaskMode(): string {
     return $this->taskMode;
+  }
+
+  /**
+   * Get the runtime context.
+   *
+   * @return \Drupal\flow\Event\RuntimeContextInterface
+   *   The runtime context.
+   */
+  public function getRuntimeContext(): RuntimeContextInterface {
+    return $this->runtimeContext;
   }
 
 }

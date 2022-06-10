@@ -10,7 +10,7 @@ use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 /**
  * The interface implemented by all flow task plugins.
  */
-interface FlowTaskInterface extends PluginInspectionInterface, DerivativeInspectionInterface, ConfigurableInterface, PluginWithSettingsInterface, ThirdPartySettingsInterface {
+interface FlowTaskInterface extends PluginInspectionInterface, DerivativeInspectionInterface, ConfigurableInterface, PluginWithSettingsInterface, ThirdPartySettingsInterface, FlowPluginInterface {
 
   /**
    * Operates the task on the given subject.

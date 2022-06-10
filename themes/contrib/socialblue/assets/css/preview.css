@@ -30,6 +30,39 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Almarai';
+  src: url("../font/Almarai/Almarai-Light.ttf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  unicode-range: U+0600-06FF;
+  /* We do this to only download the font when arabic characters are available on the page.*/
+}
+
+@font-face {
+  font-family: 'Almarai';
+  src: url("../font/Almarai/Almarai-Regular.ttf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  unicode-range: U+0600-06FF;
+}
+
+@font-face {
+  font-family: 'Almarai';
+  src: url("../font/Almarai/Almarai-Bold.ttf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  unicode-range: U+0600-06FF;
+}
+
+@font-face {
+  font-family: 'Almarai';
+  src: url("../font/Almarai/Almarai-ExtraBold.ttf") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+  unicode-range: U+0600-06FF;
+}
+
 code,
 kbd,
 pre,
@@ -58,53 +91,76 @@ pre {
   border-radius: 10px;
 }
 
-.field--name-field-introduction-text a:not(.btn),
-.field--name-field-featured-items-description a:not(.btn),
-.field--name-field-featured-description a:not(.btn),
-.field--name-field-accord-description a:not(.btn),
-.field--name-field-accord-item-description a:not(.btn),
-.paragraph--type--image-text .field--name-field-text a:not(.btn),
-.paragraph--type--text-image .field--name-field-text a:not(.btn),
-.paragraph--type--text .field--name-field-text a:not(.btn),
-.course-full .card__body p a:not(.btn),
-.teaser--course p a:not(.btn),
-.comment__text p a:not(.btn),
-.body-text a:not(.btn),
-.block--intro-text .block--intro-text__content a:not(.btn),
-.basic-block .field--name-field-text-block a:not(.btn),
-.hero--dashboard .field--name-field-text-block a:not(.btn) {
+.field--name-field-introduction-text *:not(.badge):not(.section__title) > a:not(.btn),
+.field--name-field-featured-items-description *:not(.badge):not(.section__title) > a:not(.btn),
+.field--name-field-featured-description *:not(.badge):not(.section__title) > a:not(.btn),
+.field--name-field-accord-description *:not(.badge):not(.section__title) > a:not(.btn),
+.field--name-field-accord-item-description *:not(.badge):not(.section__title) > a:not(.btn),
+.field--name-field-phase-description *:not(.badge):not(.section__title) > a:not(.btn),
+.paragraph--type--image-text .field--name-field-text *:not(.badge):not(.section__title) > a:not(.btn),
+.paragraph--type--text-image .field--name-field-text *:not(.badge):not(.section__title) > a:not(.btn),
+.paragraph--type--text .field--name-field-text *:not(.badge):not(.section__title) > a:not(.btn),
+.scorm-form--body *:not(.badge):not(.section__title) > a:not(.btn),
+.quiz-form__text *:not(.badge):not(.section__title) > a:not(.btn),
+.course-full .card__body *:not(.badge):not(.section__title) > a:not(.btn),
+.teaser--course *:not(.badge):not(.section__title) > a:not(.btn),
+.body-text *:not(.badge):not(.section__title) > a:not(.btn),
+.block--intro-text .block--intro-text__content *:not(.badge):not(.section__title) > a:not(.btn),
+.block-inline-blockkpi-analytics .field--name-body *:not(.badge):not(.section__title) > a:not(.btn),
+.basic-block .field--name-field-text-block *:not(.badge):not(.section__title) > a:not(.btn),
+.hero--dashboard .field--name-field-text-block *:not(.badge):not(.section__title) > a:not(.btn),
+.certificate-footer .bottom *:not(.badge):not(.section__title) > a:not(.btn),
+.certificate-header .description *:not(.badge):not(.section__title) > a:not(.btn) {
   text-decoration: underline;
 }
 
-.field--name-field-introduction-text a:not(.btn):hover, .field--name-field-introduction-text a:not(.btn):focus,
-.field--name-field-featured-items-description a:not(.btn):hover,
-.field--name-field-featured-items-description a:not(.btn):focus,
-.field--name-field-featured-description a:not(.btn):hover,
-.field--name-field-featured-description a:not(.btn):focus,
-.field--name-field-accord-description a:not(.btn):hover,
-.field--name-field-accord-description a:not(.btn):focus,
-.field--name-field-accord-item-description a:not(.btn):hover,
-.field--name-field-accord-item-description a:not(.btn):focus,
-.paragraph--type--image-text .field--name-field-text a:not(.btn):hover,
-.paragraph--type--image-text .field--name-field-text a:not(.btn):focus,
-.paragraph--type--text-image .field--name-field-text a:not(.btn):hover,
-.paragraph--type--text-image .field--name-field-text a:not(.btn):focus,
-.paragraph--type--text .field--name-field-text a:not(.btn):hover,
-.paragraph--type--text .field--name-field-text a:not(.btn):focus,
-.course-full .card__body p a:not(.btn):hover,
-.course-full .card__body p a:not(.btn):focus,
-.teaser--course p a:not(.btn):hover,
-.teaser--course p a:not(.btn):focus,
-.comment__text p a:not(.btn):hover,
-.comment__text p a:not(.btn):focus,
-.body-text a:not(.btn):hover,
-.body-text a:not(.btn):focus,
-.block--intro-text .block--intro-text__content a:not(.btn):hover,
-.block--intro-text .block--intro-text__content a:not(.btn):focus,
-.basic-block .field--name-field-text-block a:not(.btn):hover,
-.basic-block .field--name-field-text-block a:not(.btn):focus,
-.hero--dashboard .field--name-field-text-block a:not(.btn):hover,
-.hero--dashboard .field--name-field-text-block a:not(.btn):focus {
+.field--name-field-introduction-text *:not(.badge):not(.section__title) > a:not(.btn):hover, .field--name-field-introduction-text *:not(.badge):not(.section__title) > a:not(.btn):focus,
+.field--name-field-featured-items-description *:not(.badge):not(.section__title) > a:not(.btn):hover,
+.field--name-field-featured-items-description *:not(.badge):not(.section__title) > a:not(.btn):focus,
+.field--name-field-featured-description *:not(.badge):not(.section__title) > a:not(.btn):hover,
+.field--name-field-featured-description *:not(.badge):not(.section__title) > a:not(.btn):focus,
+.field--name-field-accord-description *:not(.badge):not(.section__title) > a:not(.btn):hover,
+.field--name-field-accord-description *:not(.badge):not(.section__title) > a:not(.btn):focus,
+.field--name-field-accord-item-description *:not(.badge):not(.section__title) > a:not(.btn):hover,
+.field--name-field-accord-item-description *:not(.badge):not(.section__title) > a:not(.btn):focus,
+.field--name-field-phase-description *:not(.badge):not(.section__title) > a:not(.btn):hover,
+.field--name-field-phase-description *:not(.badge):not(.section__title) > a:not(.btn):focus,
+.paragraph--type--image-text .field--name-field-text *:not(.badge):not(.section__title) > a:not(.btn):hover,
+.paragraph--type--image-text .field--name-field-text *:not(.badge):not(.section__title) > a:not(.btn):focus,
+.paragraph--type--text-image .field--name-field-text *:not(.badge):not(.section__title) > a:not(.btn):hover,
+.paragraph--type--text-image .field--name-field-text *:not(.badge):not(.section__title) > a:not(.btn):focus,
+.paragraph--type--text .field--name-field-text *:not(.badge):not(.section__title) > a:not(.btn):hover,
+.paragraph--type--text .field--name-field-text *:not(.badge):not(.section__title) > a:not(.btn):focus,
+.scorm-form--body *:not(.badge):not(.section__title) > a:not(.btn):hover,
+.scorm-form--body *:not(.badge):not(.section__title) > a:not(.btn):focus,
+.quiz-form__text *:not(.badge):not(.section__title) > a:not(.btn):hover,
+.quiz-form__text *:not(.badge):not(.section__title) > a:not(.btn):focus,
+.course-full .card__body *:not(.badge):not(.section__title) > a:not(.btn):hover,
+.course-full .card__body *:not(.badge):not(.section__title) > a:not(.btn):focus,
+.teaser--course *:not(.badge):not(.section__title) > a:not(.btn):hover,
+.teaser--course *:not(.badge):not(.section__title) > a:not(.btn):focus,
+.body-text *:not(.badge):not(.section__title) > a:not(.btn):hover,
+.body-text *:not(.badge):not(.section__title) > a:not(.btn):focus,
+.block--intro-text .block--intro-text__content *:not(.badge):not(.section__title) > a:not(.btn):hover,
+.block--intro-text .block--intro-text__content *:not(.badge):not(.section__title) > a:not(.btn):focus,
+.block-inline-blockkpi-analytics .field--name-body *:not(.badge):not(.section__title) > a:not(.btn):hover,
+.block-inline-blockkpi-analytics .field--name-body *:not(.badge):not(.section__title) > a:not(.btn):focus,
+.basic-block .field--name-field-text-block *:not(.badge):not(.section__title) > a:not(.btn):hover,
+.basic-block .field--name-field-text-block *:not(.badge):not(.section__title) > a:not(.btn):focus,
+.hero--dashboard .field--name-field-text-block *:not(.badge):not(.section__title) > a:not(.btn):hover,
+.hero--dashboard .field--name-field-text-block *:not(.badge):not(.section__title) > a:not(.btn):focus,
+.certificate-footer .bottom *:not(.badge):not(.section__title) > a:not(.btn):hover,
+.certificate-footer .bottom *:not(.badge):not(.section__title) > a:not(.btn):focus,
+.certificate-header .description *:not(.badge):not(.section__title) > a:not(.btn):hover,
+.certificate-header .description *:not(.badge):not(.section__title) > a:not(.btn):focus {
+  text-decoration: none;
+}
+
+.comment__text p a:not(.btn) {
+  text-decoration: underline;
+}
+
+.comment__text p a:not(.btn):hover, .comment__text p a:not(.btn):focus {
   text-decoration: none;
 }
 
@@ -114,6 +170,10 @@ blockquote {
 
 strong {
   font-weight: 500;
+}
+
+:lang(ar) {
+  font-family: "Almarai", "montserrat", sans-serif;
 }
 
 .text-primary {
@@ -312,14 +372,14 @@ a.brand-secondary:focus {
 .brand-accent {
   background-color: #ffc142;
   border-color: #ffc142;
-  color: #4d4d4d;
+  color: #343434;
 }
 
 a.brand-accent:hover,
 a.brand-accent:focus {
   background-color: #ffb00f;
   border-color: #ffb00f;
-  color: #4d4d4d;
+  color: #343434;
 }
 
 .brand-user {
@@ -338,22 +398,22 @@ a.brand-user:focus {
 .default-light {
   background-color: #e6e6e6;
   border-color: #e6e6e6;
-  color: #4d4d4d;
+  color: #343434;
 }
 
 a.default-light:hover,
 a.default-light:focus {
   background-color: #cdcdcd;
   border-color: #cdcdcd;
-  color: #4d4d4d;
+  color: #343434;
 }
 
 body {
   font-family: "montserrat", sans-serif;
-  font-weight: 300;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #4d4d4d;
+  color: #343434;
   background-color: #f3f3f3;
 }
 
@@ -534,8 +594,14 @@ body {
   color: #fff;
 }
 
+.badge a:focus {
+  outline: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
 .badge__icon {
-  fill: #4d4d4d;
+  fill: #343434;
 }
 
 .badge--pill {
@@ -544,13 +610,27 @@ body {
 
 .badge-default {
   background-color: #e6e6e6;
-  color: #4d4d4d;
+  color: #343434;
   -webkit-transition: 0.3s;
   transition: 0.3s;
 }
 
-.badge-default[href]:hover, .badge-default[href]:focus {
+.badge-default[href]:hover, .badge-default[href]:focus,
+[href] .badge-default:hover,
+[href] .badge-default:focus {
   background-color: #cdcdcd;
+}
+
+.badge-default [href]:hover, .badge-default [href]:focus {
+  color: #1b1b1b;
+}
+
+.ui-widget-content .badge-default [href] {
+  color: #343434;
+}
+
+.ui-widget-content .badge-default [href]:hover, .ui-widget-content .badge-default [href]:focus {
+  color: #1b1b1b;
 }
 
 .badge-primary {
@@ -560,8 +640,22 @@ body {
   transition: 0.3s;
 }
 
-.badge-primary[href]:hover, .badge-primary[href]:focus {
+.badge-primary[href]:hover, .badge-primary[href]:focus,
+[href] .badge-primary:hover,
+[href] .badge-primary:focus {
   background-color: #1a8dbe;
+}
+
+.badge-primary [href]:hover, .badge-primary [href]:focus {
+  color: #e6e6e6;
+}
+
+.ui-widget-content .badge-primary [href] {
+  color: #fff;
+}
+
+.ui-widget-content .badge-primary [href]:hover, .ui-widget-content .badge-primary [href]:focus {
+  color: #e6e6e6;
 }
 
 .badge-secondary {
@@ -571,19 +665,47 @@ body {
   transition: 0.3s;
 }
 
-.badge-secondary[href]:hover, .badge-secondary[href]:focus {
+.badge-secondary[href]:hover, .badge-secondary[href]:focus,
+[href] .badge-secondary:hover,
+[href] .badge-secondary:focus {
   background-color: #17607f;
+}
+
+.badge-secondary [href]:hover, .badge-secondary [href]:focus {
+  color: #e6e6e6;
+}
+
+.ui-widget-content .badge-secondary [href] {
+  color: #fff;
+}
+
+.ui-widget-content .badge-secondary [href]:hover, .ui-widget-content .badge-secondary [href]:focus {
+  color: #e6e6e6;
 }
 
 .badge-accent {
   background-color: #ffc142;
-  color: #4d4d4d;
+  color: #343434;
   -webkit-transition: 0.3s;
   transition: 0.3s;
 }
 
-.badge-accent[href]:hover, .badge-accent[href]:focus {
+.badge-accent[href]:hover, .badge-accent[href]:focus,
+[href] .badge-accent:hover,
+[href] .badge-accent:focus {
   background-color: #ffb00f;
+}
+
+.badge-accent [href]:hover, .badge-accent [href]:focus {
+  color: #1b1b1b;
+}
+
+.ui-widget-content .badge-accent [href] {
+  color: #343434;
+}
+
+.ui-widget-content .badge-accent [href]:hover, .ui-widget-content .badge-accent [href]:focus {
+  color: #1b1b1b;
 }
 
 .badge-success {
@@ -593,8 +715,22 @@ body {
   transition: 0.3s;
 }
 
-.badge-success[href]:hover, .badge-success[href]:focus {
+.badge-success[href]:hover, .badge-success[href]:focus,
+[href] .badge-success:hover,
+[href] .badge-success:focus {
   background-color: #449d44;
+}
+
+.badge-success [href]:hover, .badge-success [href]:focus {
+  color: #e6e6e6;
+}
+
+.ui-widget-content .badge-success [href] {
+  color: #fff;
+}
+
+.ui-widget-content .badge-success [href]:hover, .ui-widget-content .badge-success [href]:focus {
+  color: #e6e6e6;
 }
 
 .badge-info {
@@ -604,8 +740,22 @@ body {
   transition: 0.3s;
 }
 
-.badge-info[href]:hover, .badge-info[href]:focus {
+.badge-info[href]:hover, .badge-info[href]:focus,
+[href] .badge-info:hover,
+[href] .badge-info:focus {
   background-color: #1a9bcb;
+}
+
+.badge-info [href]:hover, .badge-info [href]:focus {
+  color: #e6e6e6;
+}
+
+.ui-widget-content .badge-info [href] {
+  color: #fff;
+}
+
+.ui-widget-content .badge-info [href]:hover, .ui-widget-content .badge-info [href]:focus {
+  color: #e6e6e6;
 }
 
 .badge-warning {
@@ -615,8 +765,22 @@ body {
   transition: 0.3s;
 }
 
-.badge-warning[href]:hover, .badge-warning[href]:focus {
+.badge-warning[href]:hover, .badge-warning[href]:focus,
+[href] .badge-warning:hover,
+[href] .badge-warning:focus {
   background-color: #cc6d00;
+}
+
+.badge-warning [href]:hover, .badge-warning [href]:focus {
+  color: #e6e6e6;
+}
+
+.ui-widget-content .badge-warning [href] {
+  color: #fff;
+}
+
+.ui-widget-content .badge-warning [href]:hover, .ui-widget-content .badge-warning [href]:focus {
+  color: #e6e6e6;
 }
 
 .badge-danger {
@@ -626,16 +790,30 @@ body {
   transition: 0.3s;
 }
 
-.badge-danger[href]:hover, .badge-danger[href]:focus {
+.badge-danger[href]:hover, .badge-danger[href]:focus,
+[href] .badge-danger:hover,
+[href] .badge-danger:focus {
   background-color: #c9302c;
 }
 
+.badge-danger [href]:hover, .badge-danger [href]:focus {
+  color: #e6e6e6;
+}
+
+.ui-widget-content .badge-danger [href] {
+  color: #fff;
+}
+
+.ui-widget-content .badge-danger [href]:hover, .ui-widget-content .badge-danger [href]:focus {
+  color: #e6e6e6;
+}
+
 a .badge-default {
-  color: #4d4d4d;
+  color: #343434;
 }
 
 a .badge-default:hover {
-  color: #4d4d4d;
+  color: #343434;
 }
 
 .btn {
@@ -647,17 +825,17 @@ a .badge-default:hover {
 }
 
 .btn-default {
-  color: #4d4d4d;
+  color: #343434;
   background-color: #ffffff;
   border-color: #adadad;
-  fill: #4d4d4d;
+  fill: #343434;
 }
 
 .btn-default:focus, .btn-default.focus, .btn-default:hover, .btn-default:active, .btn-default.active,
 .open > .btn-default.dropdown-toggle {
   background-color: #e6e6e6;
   border-color: #8e8e8e;
-  color: #4d4d4d;
+  color: #343434;
 }
 
 .btn-default.disabled:hover, .btn-default.disabled:focus, .btn-default.disabled.focus, .btn-default[disabled]:hover, .btn-default[disabled]:focus, .btn-default[disabled].focus,
@@ -809,7 +987,7 @@ fieldset[disabled]
 
 .btn-flat:hover .icon-inline, .btn-flat:focus .icon-inline,
 .open .dropdown-toggle .btn-flat .icon-inline {
-  fill: #4d4d4d;
+  fill: #343434;
 }
 
 .btn-flat:active, .btn-flat.active {
@@ -1489,7 +1667,7 @@ fieldset strong {
   margin: 0;
   padding-top: 1.25rem;
   padding-bottom: .5rem;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 #edit-author-info label,
@@ -1501,7 +1679,7 @@ fieldset strong {
 .field--type-address label,
 .enrollment-methods label,
 .field--name-field-discussion-date label {
-  font-weight: 300;
+  font-weight: 400;
   margin-bottom: .5rem;
 }
 
@@ -1658,7 +1836,7 @@ fieldset strong {
 }
 
 .enrollment-methods .panel-body .panel-heading header {
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .nav > li > a:hover,
@@ -1719,6 +1897,10 @@ fieldset strong {
   background-color: transparent;
 }
 
+.navbar-default .navbar-nav.main {
+  margin-right: 5px;
+}
+
 .navbar-default .dropdown-menu {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
@@ -1733,7 +1915,7 @@ fieldset strong {
 .navbar-default .dropdown-menu > li > a.is-active,
 .navbar-default .dropdown-menu > li > button.is-active {
   background-color: #e6e6e6;
-  color: #4d4d4d;
+  color: #343434;
   font-weight: 500;
 }
 
@@ -1816,6 +1998,32 @@ fieldset strong {
   background: linear-gradient(to right, rgba(31, 128, 170, 0), #1f80aa);
 }
 
+.header-top > .container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+.header-top .navbar-header {
+  padding: 2rem 1rem;
+}
+
+.header-top .navbar-header {
+  margin-right: auto;
+}
+
+.header-top .navbar-brand,
+.navbar-second-line .navbar-brand {
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+}
+
 .nav-tabs {
   border-bottom: 1px solid transparent;
 }
@@ -1880,7 +2088,7 @@ fieldset strong {
 }
 
 .teaser .badge__label {
-  color: #4d4d4d;
+  color: #343434;
 }
 
 .comments {
@@ -1974,7 +2182,7 @@ fieldset strong {
 }
 
 .site-footer .dropdown-menu > li > a {
-  color: #4d4d4d;
+  color: #343434;
 }
 
 .site-footer .dropdown-menu > li > a:hover, .site-footer .dropdown-menu > li > a:focus {
@@ -2133,20 +2341,20 @@ fieldset[disabled] .btn-secondary.focus {
 }
 
 .badge-accent {
-  color: #4d4d4d;
+  color: #343434;
   background-color: #ffc142;
   border-color: #ffc142;
 }
 
 .btn-accent {
-  color: #4d4d4d;
+  color: #343434;
   background-color: #ffc142;
   border-color: #ffc142;
 }
 
 .btn-accent:focus, .btn-accent.focus, .btn-accent:hover, .btn-accent:active, .btn-accent.active,
 .open > .btn-accent.dropdown-toggle, .btn-accent.dropdown-toggle:hover {
-  color: #4d4d4d;
+  color: #343434;
   background-color: #ffc142;
   border-color: #ffc142;
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.2)), to(rgba(0, 0, 0, 0.2)));
@@ -2157,7 +2365,7 @@ fieldset[disabled] .btn-secondary.focus {
 fieldset[disabled] .btn-accent:hover,
 fieldset[disabled] .btn-accent:focus,
 fieldset[disabled] .btn-accent.focus {
-  color: #4d4d4d;
+  color: #343434;
   background-color: #ffc142;
   border-color: #ffc142;
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.2)), to(rgba(0, 0, 0, 0.2)));
@@ -2202,21 +2410,30 @@ fieldset[disabled] .btn-accent.focus {
   border-color: #1f80aa;
 }
 
-.field--name-field-introduction-text a:not(.btn),
-.field--name-field-featured-items-description a:not(.btn),
-.field--name-field-featured-description a:not(.btn),
-.field--name-field-accord-description a:not(.btn),
-.field--name-field-accord-item-description a:not(.btn),
-.paragraph--type--image-text .field--name-field-text a,
-.paragraph--type--text-image .field--name-field-text a,
-.paragraph--type--text .field--name-field-text a,
-.course-full .card__body p a,
-.teaser--course p a,
-.comment__text p a:not(.btn),
-.body-text a:not(.btn),
-.block--intro-text .block--intro-text__content a,
-.basic-block .field--name-field-text-block a,
-.hero--dashboard .field--name-field-text-block a {
+.field--name-field-introduction-text *:not(.badge):not(.section__title) > a:not(.btn),
+.field--name-field-featured-items-description *:not(.badge):not(.section__title) > a:not(.btn),
+.field--name-field-featured-description *:not(.badge):not(.section__title) > a:not(.btn),
+.field--name-field-accord-description *:not(.badge):not(.section__title) > a:not(.btn),
+.field--name-field-accord-item-description *:not(.badge):not(.section__title) > a:not(.btn),
+.field--name-field-phase-description *:not(.badge):not(.section__title) > a:not(.btn),
+.quiz-form__text *:not(.badge):not(.section__title) > a:not(.btn),
+.scorm-form--body *:not(.badge):not(.section__title) > a:not(.btn),
+.body-text *:not(.badge):not(.section__title) > a:not(.btn),
+.paragraph--type--image-text .field--name-field-text *:not(.badge):not(.section__title) > a:not(.btn),
+.paragraph--type--text-image .field--name-field-text *:not(.badge):not(.section__title) > a:not(.btn),
+.paragraph--type--text .field--name-field-text *:not(.badge):not(.section__title) > a:not(.btn),
+.course-full .card__body *:not(.badge):not(.section__title) > a:not(.btn),
+.teaser--course *:not(.badge):not(.section__title) > a:not(.btn),
+.block--intro-text .block--intro-text__content *:not(.badge):not(.section__title) > a:not(.btn),
+.block-inline-blockkpi-analytics .field--name-body *:not(.badge):not(.section__title) > a:not(.btn),
+.basic-block .field--name-field-text-block *:not(.badge):not(.section__title) > a:not(.btn),
+.hero--dashboard .field--name-field-text-block *:not(.badge):not(.section__title) > a:not(.btn),
+.certificate-footer .bottom *:not(.badge):not(.section__title) > a:not(.btn),
+.certificate-header .description *:not(.badge):not(.section__title) > a:not(.btn) {
+  color: #33b5e5;
+}
+
+.comment__text p a:not(.btn) {
   color: #33b5e5;
 }
 
@@ -2271,29 +2488,107 @@ blockquote {
   background-color: #1f1f1f;
 }
 
+.navbar-default.navbar-second-line {
+  background-color: #004494;
+}
+
+.navbar-default.navbar-second-line .navbar-nav > li > a,
+.navbar-default.navbar-second-line .navbar-nav > li > button {
+  color: #fffff1;
+  fill: #fffff1;
+}
+
+.navbar-default.navbar-second-line .navbar-nav > li > a:hover, .navbar-default.navbar-second-line .navbar-nav > li > a:focus,
+.navbar-default.navbar-second-line .navbar-nav > li > button:hover,
+.navbar-default.navbar-second-line .navbar-nav > li > button:focus {
+  color: #002f67;
+  background-color: #f2f5f9;
+}
+
+.navbar-default.navbar-second-line .navbar-nav > li > a:hover .navbar-nav__icon, .navbar-default.navbar-second-line .navbar-nav > li > a:focus .navbar-nav__icon,
+.navbar-default.navbar-second-line .navbar-nav > li > button:hover .navbar-nav__icon,
+.navbar-default.navbar-second-line .navbar-nav > li > button:focus .navbar-nav__icon {
+  fill: #002f67;
+}
+
+.navbar-default.navbar-second-line .navbar-nav > .open > a, .navbar-default.navbar-second-line .navbar-nav > .open > a:hover, .navbar-default.navbar-second-line .navbar-nav > .open > a:focus,
+.navbar-default.navbar-second-line .navbar-nav > .open > button,
+.navbar-default.navbar-second-line .navbar-nav > .open > button:hover,
+.navbar-default.navbar-second-line .navbar-nav > .open > button:focus {
+  background-color: #f2f5f9;
+  color: #002f67;
+}
+
+.navbar-default.navbar-second-line .navbar-nav > li > a.is-active, .navbar-default.navbar-second-line .navbar-nav > li > a.is-active:hover, .navbar-default.navbar-second-line .navbar-nav > li > a.is-active:focus,
+.navbar-default.navbar-second-line .navbar-nav > li > button.is-active,
+.navbar-default.navbar-second-line .navbar-nav > li > button.is-active:hover,
+.navbar-default.navbar-second-line .navbar-nav > li > button.is-active:focus,
+.navbar-default.navbar-second-line .navbar-nav > .active > a,
+.navbar-default.navbar-second-line .navbar-nav > .active > a:hover,
+.navbar-default.navbar-second-line .navbar-nav > .active > a:focus,
+.navbar-default.navbar-second-line .navbar-nav > .active > button,
+.navbar-default.navbar-second-line .navbar-nav > .active > button:hover,
+.navbar-default.navbar-second-line .navbar-nav > .active > button:focus {
+  color: #002f67;
+  fill: #002f67;
+  background-color: #f2f5f9;
+}
+
+.navbar-default.navbar-second-line .navbar-nav > .dropdown > .dropdown-menu {
+  background-color: #f2f5f9;
+}
+
+.navbar-default.navbar-second-line .navbar-nav > .dropdown > .dropdown-menu a {
+  color: #002f67;
+}
+
+.navbar-default.navbar-second-line .navbar-nav__icon {
+  fill: #fffff1;
+}
+
+.header-top {
+  background-color: #333333;
+}
+
 .navbar-default .navbar-nav > li > a,
-.navbar-default .navbar-nav > li > button {
+.navbar-default .navbar-nav > li > button,
+.header-top .navbar-nav > li > a,
+.header-top .navbar-nav > li > button {
   color: #ffffff;
   fill: #ffffff;
 }
 
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus,
 .navbar-default .navbar-nav > li > button:hover,
-.navbar-default .navbar-nav > li > button:focus {
+.navbar-default .navbar-nav > li > button:focus,
+.header-top .navbar-nav > li > a:hover,
+.header-top .navbar-nav > li > a:focus,
+.header-top .navbar-nav > li > button:hover,
+.header-top .navbar-nav > li > button:focus {
   color: #f3f3f3;
   background-color: #1f1f1f;
 }
 
 .navbar-default .navbar-nav > li > a:hover .navbar-nav__icon, .navbar-default .navbar-nav > li > a:focus .navbar-nav__icon,
 .navbar-default .navbar-nav > li > button:hover .navbar-nav__icon,
-.navbar-default .navbar-nav > li > button:focus .navbar-nav__icon {
+.navbar-default .navbar-nav > li > button:focus .navbar-nav__icon,
+.header-top .navbar-nav > li > a:hover .navbar-nav__icon,
+.header-top .navbar-nav > li > a:focus .navbar-nav__icon,
+.header-top .navbar-nav > li > button:hover .navbar-nav__icon,
+.header-top .navbar-nav > li > button:focus .navbar-nav__icon {
   fill: #f3f3f3;
 }
 
 .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus,
 .navbar-default .navbar-nav > .open > button,
 .navbar-default .navbar-nav > .open > button:hover,
-.navbar-default .navbar-nav > .open > button:focus {
+.navbar-default .navbar-nav > .open > button:focus,
+.header-top .navbar-nav > .open > a,
+.header-top .navbar-nav > .open > a:hover,
+.header-top .navbar-nav > .open > a:focus,
+.header-top .navbar-nav > .open > button,
+.header-top .navbar-nav > .open > button:hover,
+.header-top .navbar-nav > .open > button:focus {
   background-color: #1f1f1f;
   color: #f3f3f3;
 }
@@ -2307,10 +2602,54 @@ blockquote {
 .navbar-default .navbar-nav > .active > a:focus,
 .navbar-default .navbar-nav > .active > button,
 .navbar-default .navbar-nav > .active > button:hover,
-.navbar-default .navbar-nav > .active > button:focus {
+.navbar-default .navbar-nav > .active > button:focus,
+.header-top .navbar-nav > li > a.is-active,
+.header-top .navbar-nav > li > a.is-active:hover,
+.header-top .navbar-nav > li > a.is-active:focus,
+.header-top .navbar-nav > li > button.is-active,
+.header-top .navbar-nav > li > button.is-active:hover,
+.header-top .navbar-nav > li > button.is-active:focus,
+.header-top .navbar-nav > .active > a,
+.header-top .navbar-nav > .active > a:hover,
+.header-top .navbar-nav > .active > a:focus,
+.header-top .navbar-nav > .active > button,
+.header-top .navbar-nav > .active > button:hover,
+.header-top .navbar-nav > .active > button:focus {
   color: #f3f3f3;
   fill: #f3f3f3;
   background-color: #1f1f1f;
+}
+
+.navbar-second-line + main .search-take-over .form-text,
+.navbar-second-line + main .search-take-over svg {
+  color: #fffff1;
+  fill: #fffff1;
+}
+
+.navbar-second-line + main .search-take-over .form-text::-webkit-input-placeholder {
+  color: #fffff1 !important;
+}
+
+.navbar-second-line + main .search-take-over .form-text::-moz-placeholder {
+  color: #fffff1 !important;
+}
+
+.navbar-second-line + main .search-take-over .form-text:-ms-input-placeholder {
+  color: #fffff1 !important;
+}
+
+.navbar-second-line + main .search-take-over .form-text:-moz-placeholder {
+  color: #fffff1 !important;
+}
+
+.navbar-second-line + main .search-take-over .form-text:focus {
+  border-color: #fffff1;
+  -webkit-box-shadow: 0 2px 0 0 #fffff1;
+          box-shadow: 0 2px 0 0 #fffff1;
+}
+
+.navbar-second-line + main .search--with-suggestions .spinner > div {
+  background-color: #fffff1;
 }
 
 html:not(.js) .navbar-default .dropdown:focus > a,
@@ -2327,7 +2666,7 @@ html:not(.js) .navbar-default .dropdown:hover > button .navbar-nav__icon {
 }
 
 .dropdown.has-alert.has-alert--desktop > a:before {
-  color: #4d4d4d;
+  color: #343434;
   background-color: #ffc142;
 }
 
@@ -2368,6 +2707,10 @@ html:not(.js) .navbar-default .dropdown:hover > button .navbar-nav__icon {
   background-color: #333333;
 }
 
+.navbar-second-line .navbar__open-search-block {
+  background-color: #004494;
+}
+
 .search--with-suggestions .spinner > div {
   background-color: #ffffff;
 }
@@ -2377,7 +2720,7 @@ html:not(.js) .navbar-default .dropdown:hover > button .navbar-nav__icon {
 }
 
 .vote-widget--social-vote .vote-vote {
-  color: #4d4d4d;
+  color: #343434;
   background-color: #ffc142;
 }
 
@@ -2434,6 +2777,33 @@ html:not(.js) .navbar-default .dropdown:hover > button .navbar-nav__icon {
 
 .social-gtranslate-list--desktop.open > a:focus .select-icon, .social-gtranslate-list--desktop.open > a:hover .select-icon {
   fill: #f3f3f3;
+}
+
+.navbar-second-line .social-gtranslate-list--desktop > a {
+  color: #fffff1;
+  background-color: #004494;
+}
+
+.navbar-second-line .social-gtranslate-list--desktop > a:after {
+  color: #fffff1;
+}
+
+.navbar-second-line .social-gtranslate-list--desktop > a .select-icon {
+  fill: #fffff1;
+}
+
+.navbar-second-line .social-gtranslate-list--desktop > a:focus, .navbar-second-line .social-gtranslate-list--desktop > a:hover {
+  color: #002f67;
+  fill: #002f67;
+  background-color: #f2f5f9;
+}
+
+.navbar-second-line .social-gtranslate-list--desktop > a:focus:after, .navbar-second-line .social-gtranslate-list--desktop > a:hover:after {
+  color: #002f67;
+}
+
+.navbar-second-line .social-gtranslate-list--desktop > a:focus .select-icon, .navbar-second-line .social-gtranslate-list--desktop > a:hover .select-icon {
+  fill: #002f67;
 }
 
 #sliding-popup {
@@ -2499,12 +2869,12 @@ html:not(.js) .navbar-default .dropdown:hover > button .navbar-nav__icon {
 }
 
 .badge.badge-active {
-  color: #4d4d4d;
+  color: #343434;
   background-color: #ffc142;
 }
 
 .phase.phase-past:not(:last-child):before {
-  color: #4d4d4d;
+  color: #343434;
   background-color: #ffc142;
 }
 
@@ -2513,7 +2883,7 @@ html:not(.js) .navbar-default .dropdown:hover > button .navbar-nav__icon {
 }
 
 .phase.phase-active:before {
-  color: #4d4d4d;
+  color: #343434;
   background-color: #ffc142;
 }
 
@@ -2767,7 +3137,7 @@ html:not(.js) .navbar-default .dropdown:hover > button .navbar-nav__icon {
     margin-top: 20px;
   }
   .dropdown.has-alert > a:before {
-    color: #4d4d4d;
+    color: #343434;
     background-color: #ffc142;
   }
 }
@@ -2784,12 +3154,12 @@ html:not(.js) .navbar-default .dropdown:hover > button .navbar-nav__icon {
   }
   .navbar-default .navbar-nav .open .dropdown-menu > li > a,
   .navbar-default .navbar-nav .open .dropdown-menu > li > button {
-    color: #4d4d4d;
+    color: #343434;
   }
   .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus,
   .navbar-default .navbar-nav .open .dropdown-menu > li > button:hover,
   .navbar-default .navbar-nav .open .dropdown-menu > li > button:focus {
-    color: #404040;
+    color: #272727;
     background-color: #f5f5f5;
   }
   .navbar-default .navbar-nav .open .dropdown-menu > .active > a, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus,
@@ -2803,13 +3173,27 @@ html:not(.js) .navbar-default .dropdown:hover > button .navbar-nav__icon {
   .navbar-default .navbar-nav .open .dropdown-menu > .disabled > button,
   .navbar-default .navbar-nav .open .dropdown-menu > .disabled > button:hover,
   .navbar-default .navbar-nav .open .dropdown-menu > .disabled > button:focus {
-    color: #4d4d4d;
+    color: #343434;
     background-color: #777;
   }
-  .navbar-default .navbar-nav li > ul > li.expanded > .dropdown-menu {
+  .header-top .navbar-header {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  .navbar-default.navbar-second-line .navbar-nav li > ul > li.expanded > .dropdown-menu {
+    background-color: #f2f5f9;
+  }
+  .navbar-default.navbar-second-line .navbar-nav li > ul > li.expanded > .dropdown-menu > li:focus, .navbar-default.navbar-second-line .navbar-nav li > ul > li.expanded > .dropdown-menu > li:hover, .navbar-default.navbar-second-line .navbar-nav li > ul > li.expanded > .dropdown-menu > li.active {
+    background: #004494;
+  }
+  .navbar-default .navbar-nav li > ul > li.expanded > .dropdown-menu,
+  .header-top .navbar-nav li > ul > li.expanded > .dropdown-menu {
     background-color: #1f1f1f;
   }
-  .navbar-default .navbar-nav li > ul > li.expanded > .dropdown-menu > li:focus, .navbar-default .navbar-nav li > ul > li.expanded > .dropdown-menu > li:hover, .navbar-default .navbar-nav li > ul > li.expanded > .dropdown-menu > li.active {
+  .navbar-default .navbar-nav li > ul > li.expanded > .dropdown-menu > li:focus, .navbar-default .navbar-nav li > ul > li.expanded > .dropdown-menu > li:hover, .navbar-default .navbar-nav li > ul > li.expanded > .dropdown-menu > li.active,
+  .header-top .navbar-nav li > ul > li.expanded > .dropdown-menu > li:focus,
+  .header-top .navbar-nav li > ul > li.expanded > .dropdown-menu > li:hover,
+  .header-top .navbar-nav li > ul > li.expanded > .dropdown-menu > li.active {
     background: #333333;
   }
   .navbar-collapse .dropdown-menu li a {
@@ -2818,5 +3202,12 @@ html:not(.js) .navbar-default .dropdown:hover > button .navbar-nav__icon {
   .navbar-collapse .dropdown-menu li a:hover, .navbar-collapse .dropdown-menu li a:focus {
     color: #f3f3f3;
     background-color: #1f1f1f;
+  }
+  .navbar-collapse .dropdown-menu.navbar-second-line {
+    background-color: #004494;
+  }
+  .navbar-collapse .dropdown-menu.navbar-second-line li a:hover, .navbar-collapse .dropdown-menu.navbar-second-line li a:focus {
+    color: #002f67;
+    background-color: #f2f5f9;
   }
 }

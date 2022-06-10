@@ -3,7 +3,7 @@
 namespace Drupal\eca_user\Event;
 
 /**
- * Class UserLogin
+ * Provides an event for when a user logs into a new session.
  *
  * @package Drupal\eca_user\Event
  */

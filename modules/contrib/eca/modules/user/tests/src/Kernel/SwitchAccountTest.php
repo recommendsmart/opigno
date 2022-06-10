@@ -13,6 +13,9 @@ use Drupal\user\Entity\User;
  */
 class SwitchAccountTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'system',
     'user',
@@ -23,6 +26,8 @@ class SwitchAccountTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function setUp(): void {
     parent::setUp();
@@ -34,8 +39,10 @@ class SwitchAccountTest extends KernelTestBase {
 
   /**
    * Tests SwitchAccount.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
-  public function testSwitchAccount() {
+  public function testSwitchAccount(): void {
     /** @var \Drupal\Core\Action\ActionManager $action_manager */
     $action_manager = \Drupal::service('plugin.manager.action');
     /** @var \Drupal\eca\Token\TokenInterface $token_services */
@@ -46,8 +53,7 @@ class SwitchAccountTest extends KernelTestBase {
       'user_id' => NULL,
     ];
     /** @var \Drupal\eca_user\Plugin\Action\SwitchAccount $action */
-    $action = $action_manager->createInstance('eca_switch_account', [
-    ] + $defaults);
+    $action = $action_manager->createInstance('eca_switch_account', [] + $defaults);
     $this->assertSame(0, \Drupal::currentUser()->id(), 'User UID must not have been changed yet.');
     $this->assertTrue($action->access(NULL), 'Access must be granted.');
     $this->assertTrue($action->access(User::load(0)), 'Access must be granted.');
@@ -59,28 +65,28 @@ class SwitchAccountTest extends KernelTestBase {
     /** @var \Drupal\eca_user\Plugin\Action\SwitchAccount $action */
     $action = $action_manager->createInstance('eca_switch_account', [
       'user_id' => '1',
-      ] + $defaults);
-    $this->assertSame((string) 0, (string) \Drupal::currentUser()->id(), 'User UID must not have been changed yet.');
+    ] + $defaults);
+    $this->assertSame("0", (string) \Drupal::currentUser()->id(), 'User UID must not have been changed yet.');
     $this->assertTrue($action->access(NULL), 'Access must be granted.');
     $this->assertTrue($action->access(User::load(0)), 'Access must be granted.');
     $action->execute();
-    $this->assertSame((string) 1, (string) \Drupal::currentUser()->id(), 'User UID must have been changed.');
+    $this->assertSame("1", (string) \Drupal::currentUser()->id(), 'User UID must have been changed.');
     $action->cleanupAfterSuccessors();
-    $this->assertSame((string) 0, (string) \Drupal::currentUser()->id(), 'User UID must have been changed back to previous UID.');
+    $this->assertSame("0", (string) \Drupal::currentUser()->id(), 'User UID must have been changed back to previous UID.');
 
     $user2 = User::load(2);
     $token_services->addTokenData('user2', $user2);
     /** @var \Drupal\eca_user\Plugin\Action\SwitchAccount $action */
     $action = $action_manager->createInstance('eca_switch_account', [
       'user_id' => '[user2:uid]',
-      ] + $defaults);
-    $this->assertSame((string) 0, (string) \Drupal::currentUser()->id(), 'User UID must not have been changed yet.');
+    ] + $defaults);
+    $this->assertSame("0", (string) \Drupal::currentUser()->id(), 'User UID must not have been changed yet.');
     $this->assertTrue($action->access(NULL), 'Access must be granted.');
     $this->assertTrue($action->access(User::load(0)), 'Access must be granted.');
     $action->execute();
-    $this->assertSame((string) 2, (string) \Drupal::currentUser()->id(), 'User UID must have been changed to UID 2.');
+    $this->assertSame("2", (string) \Drupal::currentUser()->id(), 'User UID must have been changed to UID 2.');
     $action->cleanupAfterSuccessors();
-    $this->assertSame((string) 0, (string) \Drupal::currentUser()->id(), 'User UID must have been changed back to previous UID.');
+    $this->assertSame("0", (string) \Drupal::currentUser()->id(), 'User UID must have been changed back to previous UID.');
   }
 
 }

@@ -27,8 +27,8 @@ class CurrentUserId extends BaseUser {
    */
   public function defaultConfiguration(): array {
     return [
-        'user_id' => '',
-      ] + parent::defaultConfiguration();
+      'user_id' => '',
+    ] + parent::defaultConfiguration();
   }
 
   /**

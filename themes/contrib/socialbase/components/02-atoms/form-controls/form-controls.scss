@@ -140,6 +140,12 @@ form:not(.layout-builder-configure-block) {
     }
   }
 
+  &.enroll-invite-email-form {
+    fieldset:first-child {
+      margin-top: 0;
+    }
+  }
+
   details,
   fieldset {
     fieldset {

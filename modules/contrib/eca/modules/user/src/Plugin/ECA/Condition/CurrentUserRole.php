@@ -30,8 +30,8 @@ class CurrentUserRole extends BaseUser implements OptionsInterface {
    */
   public function defaultConfiguration(): array {
     return [
-        'role' => '',
-      ] + parent::defaultConfiguration();
+      'role' => '',
+    ] + parent::defaultConfiguration();
   }
 
   /**

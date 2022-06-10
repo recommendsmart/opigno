@@ -3,7 +3,7 @@
 namespace Drupal\eca_content\Event;
 
 /**
- * Class ContentEntityBundleCreate
+ * Provides an event when a content entity bundle is being created.
  *
  * @package Drupal\eca_content\Event
  */

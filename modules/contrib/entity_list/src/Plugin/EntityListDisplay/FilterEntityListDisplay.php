@@ -212,7 +212,7 @@ class FilterEntityListDisplay extends DefaultEntityListDisplay {
           $filters = array_keys($params ?? []);
 
           if (!empty($filters)) {
-            $rendered_items[$item['region']] = $this->formBuilder->getForm(
+            $rendered_item = $this->formBuilder->getForm(
               'Drupal\entity_list\Form\EntityListFilterForm',
               $this->entity,
               $filters,
@@ -235,7 +235,7 @@ class FilterEntityListDisplay extends DefaultEntityListDisplay {
           $filters = array_keys($params ?? []);
 
           if (!empty($filters)) {
-            $rendered_items[$item['region']] = $this->formBuilder->getForm(
+            $rendered_item = $this->formBuilder->getForm(
               'Drupal\entity_list\Form\EntityListSortableFilterForm',
               $this->entity,
               $filters,

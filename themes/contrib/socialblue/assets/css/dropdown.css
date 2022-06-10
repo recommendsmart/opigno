@@ -3,7 +3,7 @@
 }
 
 .dropdown-menu > li > a {
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .dropdown-menu > .disabled > a, .dropdown-menu > .disabled > a:hover, .dropdown-menu > .disabled > a:focus,
@@ -52,12 +52,8 @@
 }
 
 .dropdown.has-alert.has-alert--desktop > a:before {
-  color: #4d4d4d;
+  color: #343434;
   background-color: #ffc142;
-}
-
-.meta-addtocal .dropdown-menu {
-  min-width: 100%;
 }
 
 @media (min-width: 900px) {
@@ -71,7 +67,7 @@
     left: 0;
   }
   .dropdown.has-alert > a:before {
-    color: #4d4d4d;
+    color: #343434;
     background-color: #ffc142;
   }
 }

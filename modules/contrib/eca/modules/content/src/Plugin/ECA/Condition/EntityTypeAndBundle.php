@@ -6,7 +6,8 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eca\Plugin\ECA\Condition\ConditionBase;
 use Drupal\eca\Plugin\OptionsInterface;
-use Drupal\eca_content\EntityTypeTrait;
+use Drupal\eca_content\Service\EntityTypes;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the ECA condition for entity type and bundle.
@@ -21,7 +22,21 @@ use Drupal\eca_content\EntityTypeTrait;
  */
 class EntityTypeAndBundle extends ConditionBase implements OptionsInterface {
 
-  use EntityTypeTrait;
+  /**
+   * The entity types service.
+   *
+   * @var \Drupal\eca_content\Service\EntityTypes
+   */
+  protected EntityTypes $entityTypes;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): EntityTypeAndBundle {
+    $plugin = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $plugin->entityTypes = $container->get('eca_content.service.entity_types');
+    return $plugin;
+  }
 
   /**
    * {@inheritdoc}
@@ -29,7 +44,7 @@ class EntityTypeAndBundle extends ConditionBase implements OptionsInterface {
   public function evaluate(): bool {
     $entity = $this->getValueFromContext('entity');
     if ($entity instanceof EntityInterface) {
-      $result = $this->bundleFieldApplies($entity, $this->configuration['type']);
+      $result = $this->entityTypes->bundleFieldApplies($entity, $this->configuration['type']);
       return $this->negationCheck($result);
     }
     return FALSE;
@@ -40,8 +55,8 @@ class EntityTypeAndBundle extends ConditionBase implements OptionsInterface {
    */
   public function defaultConfiguration(): array {
     return [
-        'type' => '',
-      ] + parent::defaultConfiguration();
+      'type' => '',
+    ] + parent::defaultConfiguration();
   }
 
   /**
@@ -72,7 +87,7 @@ class EntityTypeAndBundle extends ConditionBase implements OptionsInterface {
   public function getOptions(string $id): ?array {
     if ($id === 'type') {
       $options = [];
-      foreach ($this->bundleField()['extras']['choices'] as $item) {
+      foreach ($this->entityTypes->bundleField()['extras']['choices'] as $item) {
         $options[$item['value']] = $item['name'];
       }
       return $options;

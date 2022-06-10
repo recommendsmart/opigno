@@ -149,6 +149,22 @@
   flex: 1;
   padding: 20px;
   position: relative;
+
+  // Margin styles for introduction and summary field on the profile teaser.
+  .field--name-field-profile-self-introduction,
+  .field--name-field-profile-summary {
+    margin-bottom: 0.75rem;
+
+    > * {
+      &:first-child {
+        margin-top: 0;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
 }
 
 // A line of content giving information about the content.
@@ -282,11 +298,6 @@
     text-align: center;
     overflow: visible;
     display: block;
-
-    a {
-      display: block;
-      height: 100%;
-    }
 
     img {
       display: block;

@@ -3,113 +3,215 @@
 namespace Drupal\eca_content\Event;
 
 /**
- * Contains all events triggered by Calunda module regarding content entities.
+ * Content entity events.
  */
 final class ContentEntityEvents {
 
   /**
-   * Identifier for the \Drupal\eca_content\Event\ContentEntityBundleCreate event.
+   * Identifies \Drupal\eca_content\Event\ContentEntityBundleCreate event.
+   *
+   * @Event
+   *
+   * @var string
    */
   public const BUNDLECREATE = 'eca.content_entity.bundlecreate';
 
   /**
-   * Identifier for the \Drupal\eca_content\Event\ContentEntityBundleDelete event.
+   * Identifies \Drupal\eca_content\Event\ContentEntityBundleDelete event.
+   *
+   * @Event
+   *
+   * @var string
    */
   public const BUNDLEDELETE = 'eca.content_entity.bundledelete';
 
   /**
-   * Identifier for the \Drupal\eca_content\Event\ContentEntityCreate event.
+   * Identifies \Drupal\eca_content\Event\ContentEntityCreate event.
+   *
+   * @Event
+   *
+   * @var string
    */
   public const CREATE = 'eca.content_entity.create';
 
   /**
-   * Identifier for the \Drupal\eca_content\Event\ContentEntityRevisionCreate event.
+   * Identifies \Drupal\eca_content\Event\ContentEntityRevisionCreate event.
+   *
+   * @Event
+   *
+   * @var string
    */
   public const REVISIONCREATE = 'eca.content_entity.revisioncreate';
 
   /**
-   * Identifier for the \Drupal\eca_content\Event\ContentEntityPreLoad event.
+   * Identifies \Drupal\eca_content\Event\ContentEntityPreLoad event.
+   *
+   * @Event
+   *
+   * @var string
    */
   public const PRELOAD = 'eca.content_entity.preload';
 
   /**
-   * Identifier for the \Drupal\eca_content\Event\ContentEntityLoad event.
+   * Identifies \Drupal\eca_content\Event\ContentEntityLoad event.
+   *
+   * @Event
+   *
+   * @var string
    */
   public const LOAD = 'eca.content_entity.load';
 
   /**
-   * Identifier for the \Drupal\eca_content\Event\ContentEntityStorageLoad event.
+   * Identifies \Drupal\eca_content\Event\ContentEntityStorageLoad event.
+   *
+   * @Event
+   *
+   * @var string
    */
   public const STORAGELOAD = 'eca.content_entity.storageload';
 
   /**
-   * Identifier for the \Drupal\eca_content\Event\ContentEntityPreSave event.
+   * Identifies \Drupal\eca_content\Event\ContentEntityPreSave event.
+   *
+   * @Event
+   *
+   * @var string
    */
   public const PRESAVE = 'eca.content_entity.presave';
 
   /**
-   * Identifier for the \Drupal\eca_content\Event\ContentEntityInsert event.
+   * Identifies \Drupal\eca_content\Event\ContentEntityInsert event.
+   *
+   * @Event
+   *
+   * @var string
    */
   public const INSERT = 'eca.content_entity.insert';
 
   /**
-   * Identifier for the \Drupal\eca_content\Event\ContentEntityUpdate event.
+   * Identifies \Drupal\eca_content\Event\ContentEntityUpdate event.
+   *
+   * @Event
+   *
+   * @var string
    */
   public const UPDATE = 'eca.content_entity.update';
 
   /**
-   * Identifier for the \Drupal\eca_content\Event\ContentEntityTranslationCreate event.
+   * Identifies \Drupal\eca_content\Event\ContentEntityTranslationCreate event.
+   *
+   * @Event
+   *
+   * @var string
    */
   public const TRANSLATIONCREATE = 'eca.content_entity.translationcreate';
 
   /**
-   * Identifier for the \Drupal\eca_content\Event\ContentEntityTranslationInsert event.
+   * Identifies \Drupal\eca_content\Event\ContentEntityTranslationInsert event.
+   *
+   * @Event
+   *
+   * @var string
    */
   public const TRANSLATIONINSERT = 'eca.content_entity.translationsinsert';
 
   /**
-   * Identifier for the \Drupal\eca_content\Event\ContentEntityTranslationDelete event.
+   * Identifies \Drupal\eca_content\Event\ContentEntityTranslationDelete event.
+   *
+   * @Event
+   *
+   * @var string
    */
   public const TRANSLATIONDELETE = 'eca.content_entity.translationdelete';
 
   /**
-   * Identifier for the \Drupal\eca_content\Event\ContentEntityPreDelete event.
+   * Identifies \Drupal\eca_content\Event\ContentEntityPreDelete event.
+   *
+   * @Event
+   *
+   * @var string
    */
   public const PREDELETE = 'eca.content_entity.predelete';
 
   /**
-   * Identifier for the \Drupal\eca_content\Event\ContentEntityDelete event.
+   * Identifies \Drupal\eca_content\Event\ContentEntityDelete event.
+   *
+   * @Event
+   *
+   * @var string
    */
   public const DELETE = 'eca.content_entity.delete';
 
   /**
-   * Identifier for the \Drupal\eca_content\Event\ContentEntityRevisionDelete event.
+   * Identifies \Drupal\eca_content\Event\ContentEntityRevisionDelete event.
+   *
+   * @Event
+   *
+   * @var string
    */
   public const REVISIONDELETE = 'eca.content_entity.revisiondelete';
 
   /**
-   * Identifier for the \Drupal\eca_content\Event\ContentEntityView event.
+   * Identifies \Drupal\eca_content\Event\ContentEntityView event.
+   *
+   * @Event
+   *
+   * @var string
    */
   public const VIEW = 'eca.content_entity.view';
 
   /**
-   * Identifier for the \Drupal\eca_content\Event\ContentEntityPrepareView event.
+   * Identifies \Drupal\eca_content\Event\ContentEntityPrepareView event.
+   *
+   * @Event
+   *
+   * @var string
    */
   public const PREPAREVIEW = 'eca.content_entity.prepareview';
 
   /**
-   * Identifier for the \Drupal\eca_content\Event\ContentEntityPrepareForm event.
+   * Identifies \Drupal\eca_content\Event\ContentEntityPrepareForm event.
+   *
+   * @Event
+   *
+   * @var string
    */
   public const PREPAREFORM = 'eca.content_entity.prepareform';
 
   /**
-   * Identifier for the \Drupal\eca_content\Event\ContentEntityFieldValuesInit event.
+   * Identifies \Drupal\eca_content\Event\ContentEntityFieldValuesInit event.
+   *
+   * @Event
+   *
+   * @var string
    */
   public const FIELDVALUESINIT = 'eca.content_entity.fieldvaluesinit';
 
   /**
-   * Identifier for the \Drupal\eca_content\Event\ContentEntityCustomEvent event.
+   * Identifies \Drupal\eca_content\Event\ContentEntityCustomEvent event.
+   *
+   * @Event
+   *
+   * @var string
    */
   public const CUSTOM = 'eca.content_entity.custom';
+
+  /**
+   * Identifies \Drupal\eca_content\Event\ReferenceSelection event.
+   *
+   * @Event
+   *
+   * @var string
+   */
+  public const REFERENCE_SELECTION = 'eca.content_entity.reference_selection';
+
+  /**
+   * Identifies \Drupal\eca_content\Event\OptionsSelection event.
+   *
+   * @Event
+   *
+   * @var string
+   */
+  public const OPTIONS_SELECTION = 'eca.content_entity.options_selection';
 
 }

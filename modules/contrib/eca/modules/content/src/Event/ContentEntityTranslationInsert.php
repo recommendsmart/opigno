@@ -3,7 +3,7 @@
 namespace Drupal\eca_content\Event;
 
 /**
- * Class ContentEntityTranslationInsert
+ * Provides an event when a content entity translation is being inserted.
  *
  * @package Drupal\eca_content\Event
  */

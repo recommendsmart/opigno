@@ -1,11 +1,19 @@
 <?php
 
+/**
+ * @file
+ * ECA User submodule.
+ */
+
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eca_user\HookHandler;
 use Drupal\user\UserInterface;
 
 /**
+ * Helper function to return the hook handler service.
+ *
  * @return \Drupal\eca_user\HookHandler
+ *   The hook handler service.
  */
 function _eca_user_hook_handler(): HookHandler {
   return \Drupal::service('eca_user.hook_handler');

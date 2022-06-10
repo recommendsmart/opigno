@@ -46,11 +46,30 @@ class EntityListFilterFormBase extends FormBase {
       }
     }
 
+    $this->unsetEmptyValues($params);
+
     if (!empty($params['page'])) {
       unset($params['page']);
     }
 
     $url = Url::fromRoute('<current>', $params);
     $form_state->setRedirectUrl($url);
+  }
+
+  /**
+   * Avoid long urls by removing any empty parameter.
+   *
+   * @param array $values
+   *   The values to filter.
+   */
+  private function unsetEmptyValues(array &$values): void {
+    foreach ($values as $key => &$value) {
+      if (is_array($value)) {
+        $this->unsetEmptyValues($value);
+      }
+      if (empty($value) || $value === '0') {
+        unset($values[$key]);
+      }
+    }
   }
 }

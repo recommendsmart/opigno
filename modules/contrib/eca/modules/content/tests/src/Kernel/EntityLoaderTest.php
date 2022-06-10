@@ -3,7 +3,6 @@
 namespace Drupal\Tests\eca_content\Kernel;
 
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\eca\Service\Conditions;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
@@ -11,7 +10,6 @@ use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
-use Drupal\user\Entity\User;
 use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUser;
 
 /**
@@ -22,6 +20,12 @@ use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUser;
  */
 class EntityLoaderTest extends KernelTestBase {
 
+  /**
+   * The modules.
+   *
+   * @var string[]
+   *   The modules.
+   */
   protected static $modules = [
     'system',
     'user',
@@ -145,13 +149,13 @@ class EntityLoaderTest extends KernelTestBase {
       'from' => 'id',
       'entity_type' => 'node',
       'entity_id' => '[mynode:nid]',
-      'latest_revision' => Conditions::OPTION_YES,
-      ] + $defaults);
+      'latest_revision' => TRUE,
+    ] + $defaults);
     $this->assertTrue($entity instanceof NodeInterface, 'Entity must exist.');
     $this->assertEquals($node->id(), $entity->id(), 'Node ID must match up.');
 
     $node->title = 'Changed on runtime';
-    $entity = $entity_loader->loadEntity($node, ['unchanged' => Conditions::OPTION_YES] + $defaults);
+    $entity = $entity_loader->loadEntity($node, ['unchanged' => TRUE] + $defaults);
     $this->assertTrue($entity instanceof NodeInterface, 'Entity must exist as it is stored in the database.');
     $this->assertEquals($node->id(), $entity->id(), 'Node ID must match up.');
     $this->assertEquals('456', $entity->label(), 'Node title must be the unchanged one.');

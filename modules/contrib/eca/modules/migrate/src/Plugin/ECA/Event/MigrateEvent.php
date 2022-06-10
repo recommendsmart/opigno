@@ -24,9 +24,9 @@ use Drupal\migrate\Event\MigrateRowDeleteEvent;
 class MigrateEvent extends EventBase {
 
   /**
-   * @return array[]
+   * {@inheritdoc}
    */
-  public static function actions(): array {
+  public static function definitions(): array {
     $actions = [];
     $actions['idmap_message'] = [
       'label' => 'Save message to ID map',

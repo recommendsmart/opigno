@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\r4032login\Functional;
 
+use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -46,8 +47,7 @@ class RedirectToProtectedFrontPageTest extends BrowserTestBase {
     // Assert there is the redirection since the node is not published.
     $this->drupalGet('<front>');
 
-    $currentUrl = str_replace($this->baseUrl . '/', '', $this->getUrl());
-    $this->assertEquals('user/login?destination=/', $currentUrl);
+    $this->assertEquals($this->getAbsoluteUrl('user/login?destination=' . Url::fromUserInput('/admin')->toString()), $this->getUrl());
   }
 
 }

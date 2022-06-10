@@ -12,6 +12,8 @@ use Drupal\Core\State\State;
 class EcaState extends State {
 
   /**
+   * Time service.
+   *
    * @var \Drupal\Component\Datetime\TimeInterface
    */
   protected TimeInterface $time;
@@ -22,11 +24,15 @@ class EcaState extends State {
    * This extends Drupal core's state service with an ECA related store.
    *
    * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
+   *   The key value factory service.
    * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    *
    * @noinspection MagicMethodsValidityInspection
+   * @noinspection PhpMissingParentConstructorInspection
    */
   public function __construct(KeyValueFactoryInterface $key_value_factory, TimeInterface $time) {
+    // Do not call parent's constructor as we are overwriting its values.
     $this->keyValueStore = $key_value_factory->get('eca');
     $this->time = $time;
   }
@@ -51,6 +57,7 @@ class EcaState extends State {
    *   The identifier for the timestamp.
    *
    * @return int
+   *   The stored timestamp.
    */
   public function getTimestamp(string $key): int {
     return $this->get($this->timestampKey($key), 0);
@@ -60,12 +67,15 @@ class EcaState extends State {
    * Receive current timestamp.
    *
    * @return int
+   *   The current timestamp.
    */
   public function getCurrentTimestamp(): int {
     return $this->time->getRequestTime();
   }
 
   /**
+   * Determine if the given state key has expired.
+   *
    * @param string $key
    *   The identifier for the timestamp.
    * @param int $timeout

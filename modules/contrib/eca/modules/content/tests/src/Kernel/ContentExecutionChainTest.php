@@ -3,11 +3,10 @@
 namespace Drupal\Tests\eca_content\Kernel;
 
 use Drupal\eca\Entity\Eca;
-use Drupal\eca\Entity\EcaStorage;
-use Drupal\eca\Service\Conditions;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\node\NodeInterface;
 use Drupal\user\Entity\User;
 
 /**
@@ -18,6 +17,12 @@ use Drupal\user\Entity\User;
  */
 class ContentExecutionChainTest extends KernelTestBase {
 
+  /**
+   * The modules.
+   *
+   * @var string[]
+   *   The modules.
+   */
   protected static $modules = [
     'system',
     'user',
@@ -81,9 +86,9 @@ class ContentExecutionChainTest extends KernelTestBase {
     $unpublished_node = Node::load($unpublished_node->id());
 
     // This config does the following:
-    //   1. Loads the published node and sets its title
-    //   2. Loads the unpublished node and sets its title
-    //   3. Loads the published node again and sets its title yet again
+    // 1. Loads the published node and sets its title
+    // 2. Loads the unpublished node and sets its title
+    // 3. Loads the published node again and sets its title yet again.
     $eca_config_values = [
       'langcode' => 'en',
       'status' => TRUE,
@@ -95,7 +100,7 @@ class ContentExecutionChainTest extends KernelTestBase {
         'event_presave' => [
           'plugin' => 'content_entity:presave',
           'label' => 'Presaving content',
-          'fields' => [
+          'configuration' => [
             'type' => 'node article',
           ],
           'successors' => [
@@ -103,11 +108,13 @@ class ContentExecutionChainTest extends KernelTestBase {
           ],
         ],
       ],
+      'conditions' => [],
+      'gateways' => [],
       'actions' => [
         'action_load_published' => [
           'plugin' => 'eca_token_load_entity',
           'label' => 'Load published node',
-          'fields' => [
+          'configuration' => [
             'token_name' => 'mynode',
             'from' => 'id',
             'entity_type' => 'node',
@@ -115,8 +122,8 @@ class ContentExecutionChainTest extends KernelTestBase {
             'revision_id' => '',
             'properties' => '',
             'langcode' => '_interface',
-            'latest_revision' => Conditions::OPTION_NO,
-            'unchanged' => Conditions::OPTION_NO,
+            'latest_revision' => FALSE,
+            'unchanged' => FALSE,
           ],
           'successors' => [
             ['id' => 'action_set_published_title', 'condition' => ''],
@@ -125,13 +132,13 @@ class ContentExecutionChainTest extends KernelTestBase {
         'action_set_published_title' => [
           'plugin' => 'eca_set_field_value',
           'label' => 'Set title of published node',
-          'fields' => [
+          'configuration' => [
             'field_name' => 'title',
             'field_value' => 'Changed published TITLE for the first time!',
             'method' => 'set:clear',
-            'strip_tags' => Conditions::OPTION_NO,
-            'trim' => Conditions::OPTION_NO,
-            'save_entity' => Conditions::OPTION_NO,
+            'strip_tags' => FALSE,
+            'trim' => FALSE,
+            'save_entity' => FALSE,
             'object' => 'mynode',
           ],
           'successors' => [
@@ -141,7 +148,7 @@ class ContentExecutionChainTest extends KernelTestBase {
         'action_load_unpublished' => [
           'plugin' => 'eca_token_load_entity',
           'label' => 'Load unpublished node',
-          'fields' => [
+          'configuration' => [
             'token_name' => 'mynode',
             'from' => 'id',
             'entity_type' => 'node',
@@ -149,8 +156,8 @@ class ContentExecutionChainTest extends KernelTestBase {
             'revision_id' => '',
             'properties' => '',
             'langcode' => '_interface',
-            'latest_revision' => Conditions::OPTION_NO,
-            'unchanged' => Conditions::OPTION_NO,
+            'latest_revision' => FALSE,
+            'unchanged' => FALSE,
           ],
           'successors' => [
             ['id' => 'action_set_unpublished_title', 'condition' => ''],
@@ -159,13 +166,13 @@ class ContentExecutionChainTest extends KernelTestBase {
         'action_set_unpublished_title' => [
           'plugin' => 'eca_set_field_value',
           'label' => 'Set title of unpublished node',
-          'fields' => [
+          'configuration' => [
             'field_name' => 'title',
             'field_value' => 'Changed TITLE of unpublished!',
             'method' => 'set:clear',
-            'strip_tags' => Conditions::OPTION_NO,
-            'trim' => Conditions::OPTION_NO,
-            'save_entity' => Conditions::OPTION_NO,
+            'strip_tags' => FALSE,
+            'trim' => FALSE,
+            'save_entity' => FALSE,
             'object' => 'mynode',
           ],
           'successors' => [
@@ -175,7 +182,7 @@ class ContentExecutionChainTest extends KernelTestBase {
         'action_load_published_again' => [
           'plugin' => 'eca_token_load_entity',
           'label' => 'Load published node again',
-          'fields' => [
+          'configuration' => [
             'token_name' => 'mynode',
             'from' => 'id',
             'entity_type' => 'node',
@@ -183,8 +190,8 @@ class ContentExecutionChainTest extends KernelTestBase {
             'revision_id' => '',
             'properties' => '',
             'langcode' => '_interface',
-            'latest_revision' => Conditions::OPTION_NO,
-            'unchanged' => Conditions::OPTION_NO,
+            'latest_revision' => FALSE,
+            'unchanged' => FALSE,
           ],
           'successors' => [
             ['id' => 'action_set_published_title_again', 'condition' => ''],
@@ -193,13 +200,13 @@ class ContentExecutionChainTest extends KernelTestBase {
         'action_set_published_title_again' => [
           'plugin' => 'eca_set_field_value',
           'label' => 'Set title of published node',
-          'fields' => [
+          'configuration' => [
             'field_name' => 'title',
             'field_value' => 'Finally changed the published TITLE!',
             'method' => 'set:clear',
-            'strip_tags' => Conditions::OPTION_NO,
-            'trim' => Conditions::OPTION_NO,
-            'save_entity' => Conditions::OPTION_NO,
+            'strip_tags' => FALSE,
+            'trim' => FALSE,
+            'save_entity' => FALSE,
             'object' => 'mynode',
           ],
           'successors' => [],
@@ -234,7 +241,6 @@ class ContentExecutionChainTest extends KernelTestBase {
     // The next test will execute the same configuration on a non-priviledged
     // user. That user only has update access to the published node, therefore
     // the unpublished one must not be changed by ECA.
-
     // Disable the ECA config first to do some value resets without executing.
     $ecaConfig->disable()->trustData()->save();
     $published_node->title->value = 'Published node';
@@ -287,6 +293,230 @@ class ContentExecutionChainTest extends KernelTestBase {
     $this->assertEquals('Changed published TITLE for the first time!', $published_node->label(), 'Title of published node must have been changed by ECA configuration only once, because subsequent actions tried to load an inaccessible node.');
 
     $account_switcher->switchBack();
+  }
+
+  /**
+   * Tests an execution chain of multiple saving operations.
+   */
+  public function testEntitySaving() {
+    /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
+    $account_switcher = \Drupal::service('account_switcher');
+    $account_switcher->switchTo(User::load(1));
+
+    $eca_config_values = [
+      'langcode' => 'en',
+      'status' => TRUE,
+      'id' => 'save_node_process',
+      'label' => 'ECA saving node multiple times',
+      'modeller' => 'fallback',
+      'version' => '1.0.0',
+      'events' => [
+        'event_presave' => [
+          'plugin' => 'content_entity:insert',
+          'label' => 'Inserted node',
+          'configuration' => [
+            'type' => 'node article',
+          ],
+          'successors' => [
+            ['id' => 'action_load_node', 'condition' => ''],
+          ],
+        ],
+      ],
+      'conditions' => [],
+      'gateways' => [],
+      'actions' => [
+        'action_load_node' => [
+          'plugin' => 'eca_token_load_entity',
+          'label' => 'Load node',
+          'configuration' => [
+            'token_name' => 'mynode',
+            'from' => 'current',
+            'entity_type' => '',
+            'entity_id' => '',
+            'revision_id' => '',
+            'properties' => '',
+            'langcode' => '_interface',
+            'latest_revision' => FALSE,
+            'unchanged' => FALSE,
+          ],
+          'successors' => [
+            ['id' => 'action_set_title', 'condition' => ''],
+          ],
+        ],
+        'action_set_title' => [
+          'plugin' => 'eca_set_field_value',
+          'label' => 'Set title of node',
+          'configuration' => [
+            'field_name' => 'title',
+            'field_value' => 'Changed title of node!',
+            'method' => 'set:clear',
+            'strip_tags' => FALSE,
+            'trim' => FALSE,
+            'save_entity' => FALSE,
+            'object' => 'mynode',
+          ],
+          'successors' => [
+            ['id' => 'action_set_new_revision_false', 'condition' => ''],
+          ],
+        ],
+        'action_set_new_revision_false' => [
+          'plugin' => 'eca_set_new_revision',
+          'label' => 'Flag node to NOT set new revision',
+          'configuration' => [
+            'object' => 'mynode',
+            'new_revision' => FALSE,
+          ],
+          'successors' => [
+            ['id' => 'action_save_node_no_new_revision', 'condition' => ''],
+          ],
+        ],
+        'action_save_node_no_new_revision' => [
+          'plugin' => 'eca_save_entity',
+          'label' => 'Save node (no new revision)',
+          'configuration' => [
+            'object' => 'mynode',
+          ],
+          'successors' => [
+            ['id' => 'action_set_title_once_more', 'condition' => ''],
+          ],
+        ],
+        'action_set_title_once_more' => [
+          'plugin' => 'eca_set_field_value',
+          'label' => 'Set title of node once more',
+          'configuration' => [
+            'field_name' => 'title',
+            'field_value' => 'Changed title of node once more!',
+            'method' => 'set:clear',
+            'strip_tags' => FALSE,
+            'trim' => FALSE,
+            'save_entity' => FALSE,
+            'object' => 'mynode',
+          ],
+          'successors' => [
+            ['id' => 'action_set_new_revision_true', 'condition' => ''],
+          ],
+        ],
+        'action_set_new_revision_true' => [
+          'plugin' => 'eca_set_new_revision',
+          'label' => 'Flag node to set new revision',
+          'configuration' => [
+            'object' => 'mynode',
+            'new_revision' => TRUE,
+          ],
+          'successors' => [
+            ['id' => 'action_save_node_with_new_revision', 'condition' => ''],
+          ],
+        ],
+        'action_save_node_with_new_revision' => [
+          'plugin' => 'eca_save_entity',
+          'label' => 'Save node (new revision)',
+          'configuration' => [
+            'object' => 'mynode',
+          ],
+          'successors' => [],
+        ],
+      ],
+    ];
+    $ecaConfig = Eca::create($eca_config_values);
+    $ecaConfig->trustData()->save();
+
+    $node = Node::create([
+      'type' => 'article',
+      'title' => 'Original title',
+      'langcode' => 'en',
+      'uid' => 1,
+      'status' => 1,
+    ]);
+    $node->save();
+    $node = Node::load($node->id());
+
+    $this->assertEquals('Changed title of node once more!', $node->label());
+    $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
+    $query->accessCheck(FALSE);
+    $query->condition('type', 'article');
+    $query->condition('nid', $node->id());
+    $query->sort('vid');
+    $query->allRevisions();
+    $vids = $query->execute();
+    $this->assertSame(2, count($vids), "Node must have exactly two revisions.");
+    $revision = \Drupal::entityTypeManager()->getStorage('node')->loadRevision(key($vids));
+    $this->assertEquals("Changed title of node!", $revision->label());
+
+    $account_switcher->switchBack();
+  }
+
+  /**
+   * Tests CRUD actions on a content entity.
+   */
+  public function testCrudActions(): void {
+    /** @var \Drupal\Core\Action\ActionManager $action_manager */
+    $action_manager = \Drupal::service('plugin.manager.action');
+    /** @var \Drupal\eca\Token\TokenInterface $token_services */
+    $token_services = \Drupal::service('eca.token_services');
+    /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
+    $account_switcher = \Drupal::service('account_switcher');
+
+    $node = Node::create([
+      'type' => 'article',
+      'title' => $this->randomMachineName(),
+    ]);
+    $node->save();
+
+    /** @var \Drupal\eca_content\Plugin\Action\NewEntity $new_action */
+    $title = $this->randomMachineName();
+    $new_action = $action_manager->createInstance('eca_new_entity', [
+      'token_name' => 'node',
+      'type' => 'node article',
+      'langcode' => 'en',
+      'label' => $title,
+      'published' => TRUE,
+      'owner' => '1',
+    ]);
+    /** @var \Drupal\eca_content\Plugin\Action\SaveEntity $save_action */
+    $save_action = $action_manager->createInstance('eca_save_entity', [
+      'object' => 'node',
+    ]);
+    /** @var \Drupal\eca_content\Plugin\Action\DeleteEntity $delete_action */
+    $delete_action = $action_manager->createInstance('eca_delete_entity', [
+      'object' => 'node',
+    ]);
+    $this->assertFalse($new_action->access(NULL), 'User without permissions must not have access.');
+    $this->assertFalse($save_action->access($node), 'User without permissions must not have access.');
+    $this->assertFalse($delete_action->access($node), 'User without permissions must not have access.');
+
+    // Now switching to priviledged user.
+    $account_switcher->switchTo(User::load(1));
+    $this->assertTrue($new_action->access(NULL), 'User with permission must have access.');
+    $this->assertTrue($save_action->access($node), 'User with permission must have access.');
+    $this->assertTrue($delete_action->access($node), 'User with permission must have access.');
+    $new_action->execute();
+
+    $node = $token_services->getTokenData('node');
+    $this->assertTrue($node instanceof NodeInterface);
+    $this->assertTrue($node->isNew());
+    $this->assertEquals($title, $node->label());
+
+    $storage = \Drupal::entityTypeManager()->getStorage('node');
+    $this->assertEmpty($storage->loadByProperties(['title' => $title]), 'Node must not yet have been saved.');
+
+    $save_action->execute($node);
+    $node = $storage->loadByProperties(['title' => $title]);
+    $node = reset($node);
+    $this->assertTrue($node instanceof NodeInterface);
+    $this->assertFalse($node->isNew());
+    $this->assertEquals($title, $node->label());
+
+    $title = $this->randomMachineName();
+    $node->title->value = $title;
+    $save_action->execute($node);
+    $node = $storage->loadByProperties(['title' => $title]);
+    $node = reset($node);
+    $this->assertTrue($node instanceof NodeInterface);
+    $this->assertFalse($node->isNew());
+    $this->assertEquals($title, $node->label());
+
+    $delete_action->execute($node);
+    $this->assertEmpty($storage->loadByProperties(['title' => $title]));
   }
 
 }

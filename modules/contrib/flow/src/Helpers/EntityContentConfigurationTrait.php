@@ -2,14 +2,13 @@
 
 namespace Drupal\flow\Helpers;
 
-use Drupal\Core\Entity\ContentEntityForm;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
-use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
-use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Form\SubformState;
+use Drupal\Core\Form\SubformStateInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\flow\Flow;
 use Drupal\flow\Helpers\EntityFromStackTrait;
@@ -118,57 +117,80 @@ trait EntityContentConfigurationTrait {
     ];
     // We need to use a process callback for embedding the entity fields,
     // because the fields to embed need to know their "#parents".
+    $wrapper_id = Html::getUniqueId('entity-content-fields');
+    $entity = $this->getConfiguredContentEntity();
     $form['values'] = [
-      '#process' => [[$this, 'processForm']],
+      '#prefix' => '<div id="' . $wrapper_id . '">',
+      '#suffix' => '</div>',
+      '#wrapper_id' => $wrapper_id,
+      '#flow__entity' => $entity,
+      '#flow__form_display' => $this->entityFormDisplay,
+      '#process' => [[static::class, 'processContentConfigurationForm']],
     ];
     return $form;
   }
 
   /**
-   * Form process callback that embeds the fields of the entity to configure.
+   * Process callback to insert the content entity form.
    *
-   * @param array &$form
-   *   The form element.
+   * @param array $element
+   *   The containing element.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
-   * @param array &$complete_form
-   *   The complete form.
    *
    * @return array
-   *   The form element, enriched by the entity form.
+   *   The containing element, with the content entity form inserted.
    */
-  public function processForm(array &$form, FormStateInterface $form_state, array &$complete_form): array {
-    $entity_form_object = $this->getEntityFormObject();
-    $subform_state = SubformState::createForSubform($form, $complete_form, $form_state);
-    $form = $entity_form_object->buildForm($form, $subform_state);
-    unset($form['actions']);
-    return $form;
+  public static function processContentConfigurationForm(array $element, FormStateInterface $form_state) {
+    $entity = $element['#flow__entity'];
+    $form_display_mode = $element['#flow__form_display'];
+    $wrapper_id = $element['#wrapper_id'];
+    $form_display = EntityFormDisplay::collectRenderDisplay($entity, $form_display_mode);
+    $content_config_entities = $form_state->get('flow__content_configuration') ?? [];
+    $content_config_entities[$wrapper_id] = [$entity, $form_display];
+    $form_state->set('flow__content_configuration', $content_config_entities);
+    $form_display->buildForm($entity, $element, $form_state);
+    return $element;
   }
 
   /**
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-    if (!$form_state->hasValue(['values'])) {
+    if (!$form_state->hasValue(['values']) || !isset($form['values']['#wrapper_id'])) {
+      return;
+    }
+    $wrapper_id = $form['values']['#wrapper_id'];
+    $content_config_entities = $form_state->get('flow__content_configuration') ?? [];
+    if (!isset($content_config_entities[$wrapper_id])) {
       return;
     }
 
-    $entity_form_object = $this->getEntityFormObject();
-    $entity_form_state = (new FormState())
-      ->disableCache()
-      ->setFormObject($entity_form_object)
-      ->setFormState($form_state->getCacheableArray())
-      ->setValues($form_state->getValue(['values']));
-    $entity_form = [];
-    $entity_form_object->buildForm($entity_form, $entity_form_state);
-    $this->getFormBuilder()->prepareForm($entity_form_object->getFormId(), $entity_form, $entity_form_state);
-    $entity_form_object->validateForm($entity_form, $entity_form_state);
-    $form_state
-      ->setFormState($entity_form_state->getCacheableArray())
-      ->setValue('values', $entity_form_state->getValues());
-    $form_state->setLimitValidationErrors($entity_form_state->getLimitValidationErrors());
-    foreach ($entity_form_state->getErrors() as $name => $error) {
-      $form_state->setErrorByName($name, $error);
+    $complete_form_state = $form_state instanceof SubformStateInterface ? $form_state->getCompleteFormState() : $form_state;
+    [$entity, $form_display] = $content_config_entities[$wrapper_id];
+    $extracted = $form_display->extractFormValues($entity, $form['values'], $complete_form_state);
+    // Extract the values of fields that are not rendered through widgets, by
+    // simply copying from top-level form values. This leaves the fields that
+    // are not being edited within this form untouched.
+    // @see \Drupal\Tests\field\Functional\NestedFormTest::testNestedEntityFormEntityLevelValidation()
+    foreach ($form_state->getValue(['values']) as $name => $values) {
+      if ($entity->hasField($name) && !isset($extracted[$name])) {
+        $entity->set($name, $values);
+      }
+    }
+    $form_display->validateFormValues($entity, $form['values'], $complete_form_state);
+  }
+
+  /**
+   * Disables an element and all of its child elements.
+   *
+   * @param array &$element
+   *   The render element to disable.
+   */
+  protected function disableAccessAllElements(array &$element): void {
+    $element['#access'] = FALSE;
+    foreach (Element::children($element) as $key) {
+      $this->disableAccessAllElements($element[$key]);
     }
   }
 
@@ -176,91 +198,40 @@ trait EntityContentConfigurationTrait {
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    if (!$form_state->hasValue(['values'])) {
+    if (!$form_state->hasValue(['values']) || !isset($form['values']['#wrapper_id'])) {
+      return;
+    }
+    $wrapper_id = $form['values']['#wrapper_id'];
+    $content_config_entities = $form_state->get('flow__content_configuration') ?? [];
+    if (!isset($content_config_entities[$wrapper_id])) {
       return;
     }
 
-    $entity_form_object = $this->getEntityFormObject();
-    $entity_form_state = (new FormState())
-      ->disableCache()
-      ->setFormObject($entity_form_object)
-      ->setFormState($form_state->getCacheableArray())
-      ->setValues($form_state->getValue(['values']));
-    $entity_form = [];
-    $entity_form_object->buildForm($entity_form, $entity_form_state);
-    $this->getFormBuilder()->prepareForm($entity_form_object->getFormId(), $entity_form, $entity_form_state);
-    $entity_form_object->submitForm($entity_form, $entity_form_state);
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    [$entity] = $content_config_entities[$wrapper_id];
 
-    $this->configuredContentEntity = $entity_form_object->getEntity();
-    $values = $this->getSerializer()->normalize($this->configuredContentEntity, get_class($this->configuredContentEntity));
-
-    foreach ($values as $field_name => &$field_values) {
-      $is_reference_field = FALSE;
-      $target_is_content = FALSE;
-      $item_list = $this->configuredContentEntity->get($field_name);
-      if ($item_list instanceof EntityReferenceFieldItemListInterface) {
-        $is_reference_field = TRUE;
-        $item_definition = $item_list->getFieldDefinition()->getFieldStorageDefinition();
-        $target_entity_type = $this->getEntityTypeManager()->getDefinition($item_definition->getSetting('target_type'));
-        $target_is_content = $target_entity_type->entityClassImplements(ContentEntityInterface::class);
-      }
-
-      foreach ($field_values as &$field_value) {
-        if ($is_reference_field) {
-          // No usage for the url info.
-          unset($field_value['url']);
-        }
-        // For content entity references, rely on the UUID. For any other
-        // entity (that is always a config entity at this time) rely on the ID.
-        // One exception is made for users that have ID 0 (anonymous) and
-        // ID 1 (admin).
-        if ($target_is_content) {
-          if ($target_entity_type->id() === 'user' && isset($field_value['target_id']) && in_array($field_value['target_id'], [0, 1])) {
-            unset($field_value['target_uuid']);
-          }
-          elseif (!empty($field_value['target_uuid'])) {
-            unset($field_value['target_id']);
-          }
-        }
-        else {
-          unset($field_value['target_uuid']);
-        }
-
-        // @todo Remove this workaround once #2972988 is fixed.
-        unset($field_value['processed']);
-
+    $form_display = EntityFormDisplay::collectRenderDisplay($entity, $this->entityFormDisplay, TRUE);
+    $complete_form_state = $form_state instanceof SubformStateInterface ? $form_state->getCompleteFormState() : $form_state;
+    $extracted = $form_display->extractFormValues($entity, $form['values'], $complete_form_state);
+    foreach ($form_state->getValue(['values']) as $name => $values) {
+      if ($entity->hasField($name) && !isset($extracted[$name])) {
+        $entity->set($name, $values);
       }
     }
 
-    $entity_type = $this->configuredContentEntity->getEntityType();
-    // Remove the UUID as it won't be used at all for configuration, and do a
-    // little cleanup by filtering out empty values. Also only include field
-    // values that are available on the used form display mode.
-    $uuid_key = $entity_type->hasKey('uuid') ? $entity_type->getKey('uuid') : 'uuid';
-    unset($values[$uuid_key]);
-    // Remove the created and changed timestamp, as it does not make sense to
-    // store as configuration.
-    unset($values['created'], $values['changed']);
+    // Filter field values that are not available on the form display mode.
+    $entity_type = $entity->getEntityType();
     $entity_keys = $entity_type->getKeys();
-    $form_display = EntityFormDisplay::collectRenderDisplay($this->configuredContentEntity, $this->entityFormDisplay, TRUE);
     $components = $form_display->getComponents();
-    foreach ($values as $k_1 => $v_1) {
-      if ((!isset($components[$k_1]) && !in_array($k_1, $entity_keys)) || (!is_scalar($v_1) && empty($v_1))) {
+    foreach (array_keys($values) as $k_1) {
+      if (!isset($components[$k_1]) && !in_array($k_1, $entity_keys)) {
         unset($values[$k_1]);
       }
-      elseif (is_iterable($v_1)) {
-        $is_empty = TRUE;
-        foreach ($v_1 as $v_2) {
-          if (!empty($v_2) || (!is_null($v_2) && $v_2 !== '' && $v_2 !== 0 && $v_2 !== '0')) {
-            $is_empty = FALSE;
-            break;
-          }
-        }
-        if ($is_empty) {
-          unset($values[$k_1]);
-        }
-      }
     }
+
+    $this->setConfiguredContentEntity($entity);
+    $values = $this->toConfigArray($entity);
+
     $this->settings['values'] = $values;
   }
 
@@ -291,7 +262,7 @@ trait EntityContentConfigurationTrait {
           }
         });
       }
-      $this->configuredContentEntity = $this->getSerializer()->denormalize($values, $this->getEntityTypeManager()->getDefinition($entity_type_id)->getClass());
+      $this->setConfiguredContentEntity($this->fromConfigArray($values, $this->getEntityTypeManager()->getDefinition($entity_type_id)->getClass()));
     }
     finally {
       Flow::setActive($flow_is_active);
@@ -320,24 +291,6 @@ trait EntityContentConfigurationTrait {
    */
   public function setConfiguredContentEntity(ContentEntityInterface $entity): void {
     $this->configuredContentEntity = $entity;
-  }
-
-  /**
-   * Get the form object used for configuring the field values to merge.
-   *
-   * @return \Drupal\Core\Entity\ContentEntityFormInterface
-   *   The form object.
-   */
-  protected function getEntityFormObject(): ContentEntityFormInterface {
-    if (!isset($this->entityForm)) {
-      $this->entityForm = ContentEntityForm::create(\Drupal::getContainer());
-      $this->entityForm->setModuleHandler(\Drupal::moduleHandler());
-      $this->entityForm->setEntityTypeManager(\Drupal::entityTypeManager());
-      $this->entityForm->setStringTranslation(\Drupal::translation());
-      $this->entityForm->setEntity($this->configuredContentEntity);
-      $this->entityForm->setOperation($this->entityFormDisplay);
-    }
-    return $this->entityForm;
   }
 
 }

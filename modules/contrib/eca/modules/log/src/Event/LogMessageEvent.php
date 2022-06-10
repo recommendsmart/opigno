@@ -5,25 +5,32 @@ namespace Drupal\eca_log\Event;
 use Drupal\Component\EventDispatcher\Event;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\eca\Event\ConditionalApplianceInterface;
+use Drupal\eca\Event\ConfigurableEventInterface;
 
 /**
- * Class LogMessageEvent
+ * Provides an event when a log message is being submitted.
  *
  * @package Drupal\eca_log\Event
  */
-class LogMessageEvent extends Event implements ConditionalApplianceInterface {
+class LogMessageEvent extends Event implements ConditionalApplianceInterface, ConfigurableEventInterface {
 
   /**
+   * Log message severity.
+   *
    * @var int
    */
   protected int $severity;
 
   /**
+   * Log message.
+   *
    * @var string
    */
   protected string $message;
 
   /**
+   * Log message context.
+   *
    * @var array
    */
   protected array $context;
@@ -32,8 +39,11 @@ class LogMessageEvent extends Event implements ConditionalApplianceInterface {
    * Construct a LogMessageEvent.
    *
    * @param int $severity
+   *   Log message severity.
    * @param string $message
+   *   Log message.
    * @param array $context
+   *   Log message context.
    */
   public function __construct(int $severity, string $message, array $context) {
     $this->severity = $severity;
@@ -42,7 +52,7 @@ class LogMessageEvent extends Event implements ConditionalApplianceInterface {
   }
 
   /**
-   * @return string[]
+   * {@inheritdoc}
    */
   public static function fields(): array {
     return [
@@ -58,7 +68,7 @@ class LogMessageEvent extends Event implements ConditionalApplianceInterface {
         'extras' => [
           'choices' => self::severities(),
         ],
-      ]
+      ],
     ];
   }
 
@@ -80,6 +90,7 @@ class LogMessageEvent extends Event implements ConditionalApplianceInterface {
    * Prepare log levels for drop down fields.
    *
    * @return array
+   *   The list of log levels with severity value and name.
    */
   protected static function severities(): array {
     $severities = [];

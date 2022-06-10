@@ -2,83 +2,92 @@
 
 namespace Drupal\eca\Plugin\ECA\Modeller;
 
-use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\eca\EcaState;
 use Drupal\eca\Entity\Eca;
 use Drupal\eca\Plugin\EcaBase;
 use Drupal\eca\Service\Actions;
 use Drupal\eca\Service\Conditions;
 use Drupal\eca\Service\Modellers;
-use Drupal\eca\Service\TokenBrowserService;
-use Drupal\eca\Token\TokenInterface;
+use Drupal\eca_ui\Service\TokenBrowserService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- *
+ * Base class for ECA modeller plugins.
  */
 abstract class ModellerBase extends EcaBase implements ModellerInterface {
 
   use StringTranslationTrait;
 
   /**
+   * ECA action service.
+   *
    * @var \Drupal\eca\Service\Actions
    */
   protected Actions $actionServices;
 
   /**
+   * ECA condition service.
+   *
    * @var \Drupal\eca\Service\Conditions
    */
   protected Conditions $conditionServices;
 
   /**
+   * ECA modeller service.
+   *
    * @var \Drupal\eca\Service\Modellers
    */
   protected Modellers $modellerServices;
 
   /**
-   * @var \Drupal\eca\Service\TokenBrowserService
+   * ECA token browser service.
+   *
+   * @var \Drupal\eca_ui\Service\TokenBrowserService
    */
   protected TokenBrowserService $tokenBrowserService;
 
   /**
+   * Logger service.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   */
+  protected LoggerChannelInterface $logger;
+
+  /**
+   * The documentation domain. May be NULL if not enabled or specified.
+   *
+   * @var string|null
+   */
+  protected ?string $documentationDomain;
+
+  /**
+   * ECA config entity.
+   *
    * @var \Drupal\eca\Entity\Eca
    */
   protected Eca $eca;
 
   /**
-   * {@inheritdoc}
+   * Error flag.
+   *
+   * @var bool
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Actions $action_services, Conditions $condition_services, Modellers $modeller_services, TokenBrowserService $token_browser_service, TokenInterface $token_services, AccountProxyInterface $current_user, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, RequestStack $request_stack, EcaState $state) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $token_services, $current_user, $entity_type_manager, $entity_type_bundle_info, $request_stack, $state);
-    $this->actionServices = $action_services;
-    $this->conditionServices = $condition_services;
-    $this->modellerServices = $modeller_services;
-    $this->tokenBrowserService = $token_browser_service;
-  }
+  protected bool $hasError = FALSE;
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): EcaBase {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('eca.service.action'),
-      $container->get('eca.service.condition'),
-      $container->get('eca.service.modeller'),
-      $container->get('eca.service.token_browser'),
-      $container->get('eca.token_services'),
-      $container->get('current_user'),
-      $container->get('entity_type.manager'),
-      $container->get('entity_type.bundle.info'),
-      $container->get('request_stack'),
-      $container->get('eca.state')
-    );
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->actionServices = $container->get('eca.service.action');
+    $instance->conditionServices = $container->get('eca.service.condition');
+    $instance->modellerServices = $container->get('eca.service.modeller');
+    $instance->tokenBrowserService = $container->get('eca_ui.service.token_browser');
+    $instance->logger = $container->get('logger.channel.eca');
+    $instance->documentationDomain = $container->getParameter('eca.default_documentation_domain') ?
+      $container->get('config.factory')->get('eca.settings')->get('documentation_domain') : NULL;
+    return $instance;
   }
 
   /**
@@ -108,6 +117,13 @@ abstract class ModellerBase extends EcaBase implements ModellerInterface {
    */
   public function edit(): array {
     return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasError(): bool {
+    return $this->hasError;
   }
 
 }

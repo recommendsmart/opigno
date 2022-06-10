@@ -10,7 +10,7 @@
 }
 
 .badge__icon {
-  fill: #4d4d4d;
+  fill: #343434;
 }
 
 .badge--pill {
@@ -19,7 +19,7 @@
 
 .badge-default {
   background-color: #e6e6e6;
-  color: #4d4d4d;
+  color: #343434;
   -webkit-transition: 0.3s;
   transition: 0.3s;
 }
@@ -31,15 +31,15 @@
 }
 
 .badge-default [href]:hover, .badge-default [href]:focus {
-  color: #343434;
+  color: #1b1b1b;
 }
 
 .ui-widget-content .badge-default [href] {
-  color: #4d4d4d;
+  color: #343434;
 }
 
 .ui-widget-content .badge-default [href]:hover, .ui-widget-content .badge-default [href]:focus {
-  color: #343434;
+  color: #1b1b1b;
 }
 
 .badge-primary {
@@ -94,7 +94,7 @@
 
 .badge-accent {
   background-color: #ffc142;
-  color: #4d4d4d;
+  color: #343434;
   -webkit-transition: 0.3s;
   transition: 0.3s;
 }
@@ -106,15 +106,15 @@
 }
 
 .badge-accent [href]:hover, .badge-accent [href]:focus {
-  color: #343434;
+  color: #1b1b1b;
 }
 
 .ui-widget-content .badge-accent [href] {
-  color: #4d4d4d;
+  color: #343434;
 }
 
 .ui-widget-content .badge-accent [href]:hover, .ui-widget-content .badge-accent [href]:focus {
-  color: #343434;
+  color: #1b1b1b;
 }
 
 .badge-success {
@@ -218,9 +218,9 @@
 }
 
 a .badge-default {
-  color: #4d4d4d;
+  color: #343434;
 }
 
 a .badge-default:hover {
-  color: #4d4d4d;
+  color: #343434;
 }

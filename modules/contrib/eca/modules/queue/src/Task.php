@@ -80,6 +80,7 @@ class Task implements DataProviderInterface {
    * Determine if the task is due for processing.
    *
    * @return bool
+   *   TRUE, if this task is due for processing, FALSE otherwise.
    */
   public function isDueForProcessing(): bool {
     return \Drupal::time()->getCurrentTime() >= $this->notBefore;

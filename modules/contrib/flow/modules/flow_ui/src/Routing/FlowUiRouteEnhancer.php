@@ -37,7 +37,7 @@ class FlowUiRouteEnhancer implements EnhancerInterface {
    * {@inheritdoc}
    */
   public function enhance(array $defaults, Request $request) {
-    if (!$this->applies($defaults[RouteObjectInterface::ROUTE_OBJECT])) {
+    if (!$this->applies($defaults[RouteObjectInterface::ROUTE_OBJECT]) || !isset($defaults['entity_type_id'])) {
       return $defaults;
     }
     if (($bundle = $this->entityTypeManager->getDefinition($defaults['entity_type_id'])->getBundleEntityType()) && isset($defaults[$bundle])) {

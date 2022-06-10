@@ -2,7 +2,6 @@
 
 namespace Drupal\eca_misc\Plugin;
 
-use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -12,11 +11,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
  * @see \Drupal\eca_misc\Plugin\ECA\Condition\RouteMatch
  */
 trait RouteTrait {
-
-  /**
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected RouteMatchInterface $routeMatch;
 
   /**
    * {@inheritdoc}
@@ -33,35 +27,31 @@ trait RouteTrait {
   }
 
   /**
-   * Builds and return the reoute match depending on the plugin configuration.
+   * Builds and returns the route match depending on the plugin configuration.
    *
    * @return \Drupal\Core\Routing\RouteMatchInterface
+   *   The route match applicable to the current configuration.
    */
   protected function getRouteMatch(): RouteMatchInterface {
-    if (!isset($this->routeMatch)) {
-      $requestStack = $this->requestStack ?? \Drupal::requestStack();
-      switch ($this->configuration['request']) {
-        case RouteInterface::ROUTE_MAIN:
-          $request = $requestStack->getMasterRequest();
-          break;
+    /** @var \Drupal\Core\Routing\CurrentRouteMatch $currentRouteMatch */
+    $currentRouteMatch = \Drupal::service('current_route_match');
+    switch ($this->configuration['request']) {
+      case RouteInterface::ROUTE_MAIN:
+        return $currentRouteMatch->getMasterRouteMatch();
 
-        case RouteInterface::ROUTE_PARENT:
-          $request = $requestStack->getParentRequest();
-          break;
+      case RouteInterface::ROUTE_PARENT:
+        return $currentRouteMatch->getParentRouteMatch();
 
-        case RouteInterface::ROUTE_CURRENT:
-          $request = $requestStack->getCurrentRequest();
-          break;
+      case RouteInterface::ROUTE_CURRENT:
+      default:
+        return $currentRouteMatch;
 
-      }
     }
-    if (isset($request)) {
-      $this->routeMatch = RouteMatch::createFromRequest($request);
-    }
-    return $this->routeMatch;
   }
 
   /**
+   * Provides a form field for ECA modellers to select the request type.
+   *
    * Builds the configuration form for route related plugins to decide, which
    * request (main, parent or current) should be used for route matches.
    *

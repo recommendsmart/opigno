@@ -4,15 +4,16 @@ namespace Drupal\eca_base\Event;
 
 use Drupal\Component\EventDispatcher\Event;
 use Drupal\eca\Event\ConditionalApplianceInterface;
+use Drupal\eca\Event\ConfigurableEventInterface;
 use Drupal\eca\Event\TokenReceiverInterface;
 use Drupal\eca\Event\TokenReceiverTrait;
 
 /**
- * Class CustomEvent
+ * Provides a custom event.
  *
  * @package Drupal\eca_base\Event
  */
-class CustomEvent extends Event implements ConditionalApplianceInterface, TokenReceiverInterface {
+class CustomEvent extends Event implements ConditionalApplianceInterface, ConfigurableEventInterface, TokenReceiverInterface {
 
   use TokenReceiverTrait;
 
@@ -32,7 +33,7 @@ class CustomEvent extends Event implements ConditionalApplianceInterface, TokenR
 
   /**
    * Provides a custom event.
-
+   *
    * @param string $event_id
    *   The (optional) ID for this event, so that it only applies, if it matches
    *   the given event ID in the arguments.
@@ -48,14 +49,16 @@ class CustomEvent extends Event implements ConditionalApplianceInterface, TokenR
   }
 
   /**
-   * @return string[]
+   * {@inheritdoc}
    */
   public static function fields(): array {
-    return [[
-      'name' => 'event_id',
-      'label' => 'Event ID',
-      'type' => 'String',
-    ]];
+    return [
+      [
+        'name' => 'event_id',
+        'label' => 'Event ID',
+        'type' => 'String',
+      ],
+    ];
   }
 
   /**

@@ -166,9 +166,8 @@ class LazyForm extends ConfigFormBase {
           $field_name_and_mode = "${field_name}-${entity_mode}";
           $link_text = "${entity_type}.${entity_bundle}.${field_name}.${entity_mode}";
 
-          $links['field'][$field_name_and_mode] = [
-            'title' => $link_text,
-            'url' => Url::fromRoute("entity.entity_view_display.${entity_type}.view_mode",
+          $url_manage_display = $this->moduleHandler->moduleExists('field_ui') ?
+            Url::fromRoute("entity.entity_view_display.${entity_type}.view_mode",
               [
                 $key => $entity_bundle,
                 'view_mode_name' => $entity_mode,
@@ -178,7 +177,12 @@ class LazyForm extends ConfigFormBase {
                   'destination' => Url::fromRoute('lazy.config_form')->toString(),
                 ],
               ]
-            ),
+            ) :
+            Url::fromRoute('<nolink>');
+
+          $links['field'][$field_name_and_mode] = [
+            'title' => $link_text,
+            'url' => $url_manage_display,
           ];
         }
       }

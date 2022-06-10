@@ -3,6 +3,7 @@
 namespace Drupal\flow;
 
 use Drupal\flow\Entity\FlowInterface;
+use Drupal\flow\Plugin\FlowQualifierInterface;
 use Drupal\flow\Plugin\FlowSubjectInterface;
 use Drupal\flow\Plugin\FlowTaskInterface;
 
@@ -44,7 +45,7 @@ final class FlowCompatibility {
         if ($flow_bundle !== $object->getTargetBundle()) {
           return FALSE;
         }
-        $task_modes = $task_modes ?: [$object->getTaskMode()];
+        $task_modes = $task_modes ?? ($object->isCustom() ? [$object->get('custom')['baseMode'], $object->getTaskMode()] : [$object->getTaskMode()]);
         $targets = $targets ?: [$flow_type_id => [$flow_bundle]];
         if (!in_array($object->getTaskMode(), $task_modes)) {
           return FALSE;
@@ -53,7 +54,7 @@ final class FlowCompatibility {
           return FALSE;
         }
       }
-      elseif ($object instanceof FlowSubjectInterface || $object instanceof FlowTaskInterface) {
+      elseif ($object instanceof FlowSubjectInterface || $object instanceof FlowTaskInterface || $object instanceof FlowQualifierInterface) {
         $definition = $object->getPluginDefinition();
         $plugin_entity_type_id = $plugin_entity_type_id ?: $definition['entity_type'];
         $plugin_bundle = $plugin_bundle ?: $definition['bundle'];

@@ -4,6 +4,7 @@ namespace Drupal\Tests\flow\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
+use Drupal\user\Entity\User;
 
 /**
  * Tests merging field values using Flow.
@@ -33,6 +34,8 @@ class MergeTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->installConfig(static::$modules);
+    User::create(['uid' => 0, 'status' => 0, 'name' => ''])->save();
+    User::create(['uid' => 1, 'name' => 'admin'])->save();
   }
 
   /**
@@ -54,6 +57,7 @@ class MergeTest extends KernelTestBase {
     $this->assertEquals('First page!', (string) $node->label());
     $this->assertEquals('The "First page" got merged.', $node->body->value);
     $this->assertEquals('Merged summary value.', $node->body->summary);
+    $this->assertSame((string) $node->uid->target_id, '0', "UID must not have been changed.");
   }
 
 }

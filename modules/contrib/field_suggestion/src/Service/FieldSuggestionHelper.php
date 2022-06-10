@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Class FieldSuggestionHelper.
@@ -59,6 +60,21 @@ class FieldSuggestionHelper implements FieldSuggestionHelperInterface {
       $field_name,
     ]);
 
+    $storage = $this->entityTypeManager->getStorage('field_suggestion');
+
+    $ids = $storage->getQuery()
+      ->condition('ignore', TRUE)
+      ->condition('entity_type', $entity_type_id)
+      ->condition('field_name', $field_name)
+      ->execute();
+
+    foreach ($ids as $id) {
+      /** @var \Drupal\field_suggestion\FieldSuggestionInterface $entity */
+      $entity = $storage->load($id);
+
+      $items[] = $entity->value();
+    }
+
     $this->moduleHandler->alter(self::HOOK, $items, $entity_type_id, $field_name);
 
     return $items;
@@ -72,11 +88,12 @@ class FieldSuggestionHelper implements FieldSuggestionHelperInterface {
       ->create(['id' => $field_type])
       ->save();
 
+    /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
     $field_storage = $this->entityTypeManager->getStorage('field_storage_config')
       ->create([
         'type' => $field_type,
         'entity_type' => 'field_suggestion',
-        'field_name' => 'field_suggestion_' . $field_type,
+        'field_name' => $this->field($field_type),
       ]);
 
     $field_storage->save();
@@ -91,6 +108,19 @@ class FieldSuggestionHelper implements FieldSuggestionHelperInterface {
     $this->entityDisplayRepository->getFormDisplay('field_suggestion', $field_type)
       ->setComponent($field_storage->getName(), ['weight' => 0])
       ->save();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function field($type) {
+    $name = 'field_suggestion_' . $type;
+
+    if (mb_strlen($name) > FieldStorageConfig::NAME_MAX_LENGTH) {
+      $name = mb_substr($name, 0, FieldStorageConfig::NAME_MAX_LENGTH);
+    }
+
+    return $name;
   }
 
 }

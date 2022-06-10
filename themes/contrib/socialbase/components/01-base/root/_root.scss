@@ -38,6 +38,7 @@ body {
 
   @include for-tablet-portrait-up {
     font-size: $font-size-base;
+    line-height: 1.625rem;
   }
 
 }
