@@ -110,7 +110,7 @@ class Shipping extends TaxTypeBase {
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['strategy'] = [
       '#type' => 'radios',
-      '#title' => t('Strategy'),
+      '#title' => $this->t('Strategy'),
       '#options' => [
         'default' => $this->t("Apply the default (standard) rate of the order's tax type"),
         'highest' => $this->t('Apply the highest rate found on the order'),
@@ -333,6 +333,10 @@ class Shipping extends TaxTypeBase {
     foreach ($order->getItems() as $order_item) {
       $order_item_total = $order_item->getTotalPrice();
       $order_item_tax_adjustments = $order_item->getAdjustments(['tax']);
+      // This order item is tax exempt, skip it.
+      if (!$order_item_tax_adjustments) {
+        continue;
+      }
       $order_item_tax_adjustment = reset($order_item_tax_adjustments);
       $percentage = $order_item_tax_adjustment->getPercentage();
       if (!isset($groups[$percentage])) {
@@ -354,6 +358,12 @@ class Shipping extends TaxTypeBase {
     $subtotal = $order->getSubtotalPrice()->getNumber();
     foreach ($groups as $percentage => $group) {
       $order_item_total = $group['order_item_total'];
+      // If the order item total is zero, the group ratio cannot be
+      // properly calculated.
+      if ($order_item_total->isZero()) {
+        $groups[$percentage]['ratio'] = '0';
+        continue;
+      }
       $groups[$percentage]['ratio'] = $order_item_total->divide($subtotal)->getNumber();
     }
 

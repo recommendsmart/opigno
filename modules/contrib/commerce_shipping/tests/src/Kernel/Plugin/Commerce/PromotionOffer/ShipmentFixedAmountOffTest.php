@@ -37,17 +37,18 @@ class ShipmentFixedAmountOffTest extends ShippingKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_promotion',
   ];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('commerce_promotion');
+    $this->installSchema('commerce_promotion', ['commerce_promotion_usage']);
 
     $first_variation = ProductVariation::create([
       'type' => 'default',

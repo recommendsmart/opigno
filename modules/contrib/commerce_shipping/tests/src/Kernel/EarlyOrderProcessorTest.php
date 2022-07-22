@@ -49,14 +49,14 @@ class EarlyOrderProcessorTest extends ShippingKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_checkout',
   ];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->processor = $this->container->get('commerce_shipping.early_order_processor');

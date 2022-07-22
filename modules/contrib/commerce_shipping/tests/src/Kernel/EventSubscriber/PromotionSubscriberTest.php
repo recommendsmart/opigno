@@ -49,14 +49,14 @@ class PromotionSubscriberTest extends ShippingKernelTestBase implements ServiceM
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_promotion',
   ];
 
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('commerce_promotion');
@@ -126,7 +126,7 @@ class PromotionSubscriberTest extends ShippingKernelTestBase implements ServiceM
     $promotion->save();
     // Now run the subscriber.
     $subscriber->onCalculate($event);
-    $this->assertEqual(count($event->getRates()), 1);
+    $this->assertCount(1, $event->getRates());
   }
 
   /**

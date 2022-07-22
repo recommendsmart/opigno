@@ -5,6 +5,7 @@ namespace Drupal\commerce_shipping\EventSubscriber;
 use Drupal\commerce_order\Entity\OrderInterface;
 use Drupal\commerce_promotion\Entity\CouponInterface;
 use Drupal\commerce_promotion\Entity\PromotionInterface;
+use Drupal\commerce_promotion\Plugin\Commerce\PromotionOffer\CombinationOfferInterface;
 use Drupal\commerce_promotion\PromotionOfferManager;
 use Drupal\commerce_shipping\Event\ShippingEvents;
 use Drupal\commerce_shipping\Event\ShippingRatesEvent;
@@ -73,13 +74,14 @@ class PromotionSubscriber implements EventSubscriberInterface {
     }
 
     // Clone the entities to avoid modifying the original data.
-    $fake_shipment = clone $shipment;
-    $fake_order = clone $order;
+    $fake_shipment = $shipment->createDuplicate();
+    $fake_order = $order->createDuplicate();
     $fake_order->set('shipments', [$fake_shipment]);
     // Re-fetch the shipment to acquire a reference.
     /** @var \Drupal\commerce_shipping\Entity\ShipmentInterface[] $fake_shipments */
     $fake_shipments = $fake_order->get('shipments')->referencedEntities();
     $fake_shipment = reset($fake_shipments);
+    $fake_shipment->order_id->entity = $fake_order;
     // Calculate the discounted amounts.
     foreach ($rates as $rate) {
       $shipping_method->getPlugin()->selectRate($fake_shipment, $rate);
@@ -117,6 +119,20 @@ class PromotionSubscriber implements EventSubscriberInterface {
     }
     $promotions = array_filter($promotions, function (PromotionInterface $promotion) {
       $offer = $promotion->getOffer();
+      // If this is a combination offer, check if there is a display inclusive
+      // shipment promotion offer configured.
+      if ($offer instanceof CombinationOfferInterface) {
+        foreach ($offer->getOffers() as $configured_offer) {
+          if (!$configured_offer instanceof ShipmentPromotionOfferInterface) {
+            continue;
+          }
+          if ($configured_offer->isDisplayInclusive()) {
+            return TRUE;
+          }
+        }
+
+        return FALSE;
+      }
       assert($offer instanceof ShipmentPromotionOfferInterface);
 
       return $offer->isDisplayInclusive();
@@ -154,7 +170,8 @@ class PromotionSubscriber implements EventSubscriberInterface {
   protected function getOfferIds() {
     $definitions = $this->offerManager->getDefinitions();
     $definitions = array_filter($definitions, function ($definition) {
-      return is_subclass_of($definition['class'], ShipmentPromotionOfferInterface::class);
+      return is_subclass_of($definition['class'], ShipmentPromotionOfferInterface::class) ||
+        is_subclass_of($definition['class'], CombinationOfferInterface::class);
     });
     $offer_ids = array_keys($definitions);
 

@@ -9,15 +9,12 @@ use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -29,7 +26,8 @@ use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\Queue\QueueGarbageCollectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Site\Settings;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\Url;
 use GuzzleHttp\Exception\TransferException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -1369,14 +1367,19 @@ function system_page_top() {
 }
 
 /**
- * Implements hook_entity_field_access().
+ * Implements hook_file_download().
  */
-function system_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
-  if ($items) {
-    $entity_type = $items->getEntity()->getEntityType();
-    if ($entity_type->hasKey('langcode') && $entity_type->getKey('langcode') === $field_definition->getName()) {
-      return AccessResult::forbidden();
+function system_file_download($uri) {
+  $core_schemes = ['public', 'private', 'temporary'];
+  $additional_public_schemes = array_diff(Settings::get('file_additional_public_schemes', []), $core_schemes);
+  if ($additional_public_schemes) {
+    $scheme = StreamWrapperManager::getScheme($uri);
+    if (in_array($scheme, $additional_public_schemes, TRUE)) {
+      return [
+        // Returning any header grants access, and setting the 'Cache-Control'
+        //// header is appropriate for public files.
+        'Cache-Control' => 'public',
+        ];
     }
   }
-  return AccessResult::neutral();
 }

@@ -4,17 +4,19 @@ namespace Drupal\Tests\commerce_shipping\Kernel;
 
 use Drupal\commerce_order\Entity\OrderType;
 use Drupal\commerce_product\Entity\ProductVariationType;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Tests\commerce_order\Kernel\OrderKernelTestBase;
 
 /**
  * Provides a base class for Shipping kernel tests.
  */
-abstract class ShippingKernelTestBase extends OrderKernelTestBase {
+abstract class ShippingKernelTestBase extends OrderKernelTestBase implements ServiceModifierInterface {
 
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'physical',
     'path',
     'commerce_shipping',
@@ -24,7 +26,7 @@ abstract class ShippingKernelTestBase extends OrderKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('commerce_shipping_method');
@@ -51,6 +53,15 @@ abstract class ShippingKernelTestBase extends OrderKernelTestBase {
     // Create the order field.
     $field_definition = commerce_shipping_build_shipment_field_definition($order_type->id());
     $this->container->get('commerce.configurable_field_manager')->createField($field_definition);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function alter(ContainerBuilder $container) {
+    if ($container->hasDefinition('commerce_order.entity_accessible_availability_checker')) {
+      $container->removeDefinition('commerce_order.entity_accessible_availability_checker');
+    }
   }
 
 }

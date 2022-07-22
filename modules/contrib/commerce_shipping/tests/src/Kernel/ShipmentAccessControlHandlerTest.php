@@ -16,7 +16,7 @@ class ShipmentAccessControlHandlerTest extends ShippingKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create uid: 1 here so that it's skipped in test cases.
@@ -53,13 +53,18 @@ class ShipmentAccessControlHandlerTest extends ShippingKernelTestBase {
 
     $account = $this->createUser([], ['update default commerce_order']);
     $this->assertFalse($shipment->access('view', $account));
-    $this->assertFalse($shipment->access('update', $account));
+    $this->assertTrue($shipment->access('update', $account));
+    $this->assertFalse($shipment->access('delete', $account));
+
+    $account = $this->createUser([], ['view commerce_order', 'update default commerce_order']);
+    $this->assertTrue($shipment->access('view', $account));
+    $this->assertTrue($shipment->access('update', $account));
     $this->assertFalse($shipment->access('delete', $account));
 
     $account = $this->createUser([], [
       'manage default commerce_shipment',
     ]);
-    $this->assertFalse($shipment->access('view', $account));
+    $this->assertTrue($shipment->access('view', $account));
     $this->assertTrue($shipment->access('update', $account));
     $this->assertTrue($shipment->access('delete', $account));
 

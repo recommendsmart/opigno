@@ -78,6 +78,7 @@ class ShipmentListBuilder extends EntityListBuilder {
   protected function getEntityIds() {
     $order_id = $this->routeMatch->getRawParameter('commerce_order');
     $query = $this->getStorage()->getQuery()
+      ->accessCheck(FALSE)
       ->condition('order_id', $order_id)
       ->sort($this->entityType->getKey('id'));
 
@@ -113,7 +114,7 @@ class ShipmentListBuilder extends EntityListBuilder {
       '#title' => $entity->label(),
     ] + $entity->toUrl()->toRenderArray();
     $row['tracking'] = $entity->getTrackingCode();
-    $row['amount'] = $this->currencyFormatter->format($amount->getNumber(), $amount->getCurrencyCode());
+    $row['amount'] = !empty($amount) ? $this->currencyFormatter->format($amount->getNumber(), $amount->getCurrencyCode()) : '';
     $row['state'] = $entity->getState()->getLabel();
 
     return $row + parent::buildRow($entity);
@@ -124,8 +125,9 @@ class ShipmentListBuilder extends EntityListBuilder {
    */
   protected function getDefaultOperations(EntityInterface $entity) {
     $operations = parent::getDefaultOperations($entity);
+    $order = $entity->getOrder();
 
-    if ($entity->getOrder()->access('resend_receipt')) {
+    if ($order && $order->access('resend_receipt')) {
       $operations['resend_confirmation'] = [
         'title' => $this->t('Resend confirmation'),
         'weight' => 20,

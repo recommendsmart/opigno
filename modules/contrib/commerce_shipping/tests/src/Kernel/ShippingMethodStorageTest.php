@@ -3,6 +3,7 @@
 namespace Drupal\Tests\commerce_shipping\Kernel;
 
 use Drupal\commerce_order\Entity\Order;
+use Drupal\commerce_order\Entity\OrderInterface;
 use Drupal\commerce_price\Price;
 use Drupal\commerce_shipping\Entity\Shipment;
 use Drupal\commerce_shipping\Entity\ShippingMethod;
@@ -56,7 +57,7 @@ class ShippingMethodStorageTest extends ShippingKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'address',
     'entity_reference_revisions',
     'profile',
@@ -68,7 +69,7 @@ class ShippingMethodStorageTest extends ShippingKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $user = $this->createUser(['mail' => strtolower($this->randomString()) . '@example.com']);
@@ -170,6 +171,12 @@ class ShippingMethodStorageTest extends ShippingKernelTestBase {
     $shipping_methods = $this->storage->loadMultipleForShipment($this->shipment);
     $this->assertCount(1, $shipping_methods);
     $this->assertEquals($shipping_method1->id(), reset($shipping_methods)->id());
+
+    // The shipping method is no longer restricted to a single store.
+    $shipping_method2->set('stores', NULL);
+    $shipping_method2->save();
+    $shipping_methods = $this->storage->loadMultipleForShipment($this->shipment);
+    $this->assertCount(2, $shipping_methods);
   }
 
   /**
@@ -242,6 +249,7 @@ class ShippingMethodStorageTest extends ShippingKernelTestBase {
 
     // Change the order email to disqualify the first shipping method.
     $this->order->setEmail('test@admin.com');
+    $this->order->setRefreshState(OrderInterface::REFRESH_SKIP);
     $this->order->save();
     $this->shipment = $this->reloadEntity($this->shipment);
     $shipping_methods = $this->storage->loadMultipleForShipment($this->shipment);

@@ -6,6 +6,7 @@ use Drupal\commerce\ConditionGroup;
 use Drupal\commerce\Plugin\Commerce\Condition\ConditionInterface;
 use Drupal\commerce\Plugin\Commerce\Condition\ParentEntityAwareInterface;
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 
@@ -68,6 +69,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  * )
  */
 class ShippingMethod extends ContentEntityBase implements ShippingMethodInterface {
+  use EntityChangedTrait;
 
   /**
    * {@inheritdoc}
@@ -222,6 +224,10 @@ class ShippingMethod extends ContentEntityBase implements ShippingMethodInterfac
    * {@inheritdoc}
    */
   public function applies(ShipmentInterface $shipment) {
+    // First, check if the shipping method applies for the given shipment.
+    if ($this->getPlugin() && !$this->getPlugin()->applies($shipment)) {
+      return FALSE;
+    }
     $conditions = $this->getConditions();
     if (!$conditions) {
       // Shipping methods without conditions always apply.
@@ -235,10 +241,13 @@ class ShippingMethod extends ContentEntityBase implements ShippingMethodInterfac
       /** @var \Drupal\commerce\Plugin\Commerce\Condition\ConditionInterface $condition */
       return $condition->getEntityTypeId() == 'commerce_shipment';
     });
-    $order_conditions = new ConditionGroup($order_conditions, $this->getConditionOperator());
-    $shipment_conditions = new ConditionGroup($shipment_conditions, $this->getConditionOperator());
+    $operator = $this->getConditionOperator();
+    $order_conditions = new ConditionGroup($order_conditions, $operator);
+    $shipment_conditions = new ConditionGroup($shipment_conditions, $operator);
 
-    return $order_conditions->evaluate($shipment->getOrder()) && $shipment_conditions->evaluate($shipment);
+    return $operator === 'OR'
+      ? $order_conditions->evaluate($shipment->getOrder()) || $shipment_conditions->evaluate($shipment)
+      : $order_conditions->evaluate($shipment->getOrder()) && $shipment_conditions->evaluate($shipment);
   }
 
   /**
@@ -273,7 +282,7 @@ class ShippingMethod extends ContentEntityBase implements ShippingMethodInterfac
       ->setLabel(t('Stores'))
       ->setDescription(t('The stores for which the shipping method is valid.'))
       ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
-      ->setRequired(TRUE)
+      ->setSetting('optional_label', t('Restrict to specific stores'))
       ->setSetting('target_type', 'commerce_store')
       ->setSetting('handler', 'default')
       ->setDisplayOptions('form', [
@@ -343,9 +352,7 @@ class ShippingMethod extends ContentEntityBase implements ShippingMethodInterfac
         'type' => 'integer',
         'weight' => 0,
       ])
-      ->setDisplayOptions('form', [
-        'type' => 'hidden',
-      ]);
+      ->setDisplayConfigurable('form', TRUE);
 
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Enabled'))
@@ -359,7 +366,34 @@ class ShippingMethod extends ContentEntityBase implements ShippingMethodInterfac
         'weight' => 20,
       ]);
 
+    $fields['created'] = BaseFieldDefinition::create('created')
+      ->setLabel(t('Created'))
+      ->setDescription(t('The time when the shipping method was created.'))
+      ->setTranslatable(TRUE)
+      ->setDisplayConfigurable('form', FALSE)
+      ->setDisplayConfigurable('view', FALSE);
+
+    $fields['changed'] = BaseFieldDefinition::create('changed')
+      ->setLabel(t('Changed'))
+      ->setDescription(t('The time when the shipping method was last edited.'))
+      ->setTranslatable(TRUE);
+
     return $fields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCreatedTime() {
+    return $this->get('created')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setCreatedTime($timestamp) {
+    $this->set('created', $timestamp);
+    return $this;
   }
 
 }

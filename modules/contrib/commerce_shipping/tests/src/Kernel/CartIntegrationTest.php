@@ -7,7 +7,6 @@ use Drupal\commerce_price\Price;
 use Drupal\commerce_product\Entity\ProductVariation;
 use Drupal\physical\Weight;
 use Drupal\profile\Entity\Profile;
-use Drupal\Tests\commerce_cart\Traits\CartManagerTestTrait;
 
 /**
  * Tests integration with the Cart module.
@@ -16,12 +15,10 @@ use Drupal\Tests\commerce_cart\Traits\CartManagerTestTrait;
  */
 class CartIntegrationTest extends ShippingKernelTestBase {
 
-  use CartManagerTestTrait;
-
   /**
    * The sample product variations.
    *
-   * @var \Drupal\commerce_product\Entity\ProductVariationInterface[[
+   * @var \Drupal\commerce_product\Entity\ProductVariationInterface[]
    */
   protected $variations = [];
 
@@ -42,11 +39,17 @@ class CartIntegrationTest extends ShippingKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected static $modules = [
+    'commerce_cart',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
 
-    $this->installCommerceCart();
-
+    $this->installConfig(['commerce_cart']);
     $first_variation = ProductVariation::create([
       'type' => 'default',
       'sku' => 'test-product-01',

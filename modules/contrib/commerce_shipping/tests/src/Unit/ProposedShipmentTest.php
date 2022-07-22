@@ -25,7 +25,7 @@ class ProposedShipmentTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $shipping_profile = $this->prophesize(ProfileInterface::class);
@@ -86,7 +86,7 @@ class ProposedShipmentTest extends UnitTestCase {
       'declared_value' => new Price('10', 'USD'),
     ]);
     $items = $this->proposedShipment->getItems();
-    $this->assertArrayEquals($expected_items, $items);
+    $this->assertEquals($expected_items, $items);
   }
 
   /**

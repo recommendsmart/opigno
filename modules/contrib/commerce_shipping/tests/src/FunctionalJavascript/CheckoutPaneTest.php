@@ -69,11 +69,12 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'commerce_payment',
     'commerce_payment_example',
     'commerce_promotion',
     'commerce_shipping_test',
+    'commerce_tax',
     'telephone',
   ];
 
@@ -94,7 +95,7 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Limit the available countries.
@@ -323,8 +324,17 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
     $this->assertNotNull($first_radio_button);
     $this->assertNotNull($second_radio_button);
     $this->assertNotEmpty($first_radio_button->getAttribute('checked'));
+
     // Confirm that the description for overnight shipping is shown.
     $this->assertSession()->pageTextContains('At your door tomorrow morning');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $selector = '//div[@data-drupal-selector="edit-order-summary"]';
+    $this->assertSession()->elementTextContains('xpath', $selector, 'Shipping $9.99');
+    $second_radio_button->click();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->elementTextContains('xpath', $selector, 'Shipping $16.99');
+    $first_radio_button->click();
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
     $this->submitForm([
       'payment_information[add_payment_method][payment_details][number]' => '4111111111111111',
@@ -425,6 +435,8 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
       $this->assertSession()->elementTextContains('xpath', $selector, 'Overnight shipping: $19.99 $16.99');
       $this->assertSession()->elementTextContains('xpath', $selector, 'At your door tomorrow morning');
     }
+    $this->assertSession()->pageTextContains('Shipment #1 $9.99');
+    $this->assertSession()->pageTextContains('Shipment #2 $9.99');
     $this->submitForm([
       'payment_information[add_payment_method][payment_details][number]' => '4111111111111111',
       'payment_information[add_payment_method][payment_details][expiration][month]' => '02',
@@ -514,6 +526,8 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
     $this->assertNotEmpty($first_radio_button->getAttribute('checked'));
     // Confirm that the description for overnight shipping is shown.
     $this->assertSession()->pageTextContains('At your door tomorrow morning');
+    $selector = '//div[@data-drupal-selector="edit-order-summary"]';
+    $this->assertSession()->elementTextContains('xpath', $selector, 'Shipping $9.99');
 
     // Complete the order information step.
     $address = [
@@ -610,6 +624,8 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
     $first_radio_button = $page->findField('Standard shipping: $9.99');
     $this->assertNotNull($first_radio_button);
     $this->assertNotEmpty($first_radio_button->getAttribute('checked'));
+    $selector = '//div[@data-drupal-selector="edit-order-summary"]';
+    $this->assertSession()->elementTextContains('xpath', $selector, 'Shipping $9.99');
 
     $this->submitForm([
       'payment_information[add_payment_method][payment_details][number]' => '4111111111111111',
@@ -773,6 +789,8 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
     $this->firstShippingMethod->set('conditions', $conditions)->save();
     $conditions['target_plugin_configuration']['zone']['territories'][0]['country_code'] = 'FR';
     $this->secondShippingMethod->set('conditions', $conditions)->save();
+    // Check if the shipping adjustment is removed in the summary.
+    $order_summary_selector = '//div[@data-drupal-selector="edit-order-summary"]';
 
     $this->drupalGet($this->firstProduct->toUrl()->toString());
     $this->submitForm([], 'Add to cart');
@@ -793,6 +811,7 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
     else {
       $this->assertSession()->waitForText('Standard shipping');
     }
+    $this->assertSession()->elementTextContains('xpath', $order_summary_selector, 'Shipping $9.99');
     $this->getSession()->getPage()->fillField('shipping_information[shipping_profile][select_address]', '_new');
     $this->assertSession()->assertWaitOnAjaxRequest();
 
@@ -816,7 +835,9 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
     else {
       $this->assertSession()->waitForText('There are no shipping rates available for this address.');
     }
+    $this->assertSession()->elementTextNotContains('xpath', $order_summary_selector, 'Shipping $9.99');
     $this->assertSession()->pageTextContains('There are no shipping rates available for this address.');
+
     $this->assertSession()->pageTextNotContains('An illegal choice has been detected. Please contact the site administrator.');
 
     $address_us = [
@@ -847,6 +868,8 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
     $this->assertNull($first_radio_button);
     $this->assertNotNull($second_radio_button);
     $this->assertNotEmpty($second_radio_button->getAttribute('checked'));
+    $selector = '//div[@data-drupal-selector="edit-order-summary"]';
+    $this->assertSession()->elementTextContains('xpath', $selector, 'Shipping $16.99');
     // commerce_field_widget_form_alter() removes the description. Probably a
     // bug.
     $this->assertSession()->pageTextNotContains('At your door tomorrow morning');
@@ -886,6 +909,240 @@ class CheckoutPaneTest extends CommerceWebDriverTestBase {
       [FALSE],
       [TRUE],
     ];
+  }
+
+  /**
+   * Tests that the order summary is properly refreshed.
+   */
+  public function testOrderSummaryRefresh() {
+    // Create a tax type that applies to French addresses, to ensure the tax
+    // adjustment is shown in the order summary when selecting the FR address.
+    /** @var \Drupal\commerce_tax\Entity\TaxTypeInterface $tax_type */
+    $this->store->set('tax_registrations', ['FR'])->save();
+    $this->createEntity('commerce_tax_type', [
+      'id' => 'fr_vat',
+      'label' => 'French VAT',
+      'plugin' => 'custom',
+      'configuration' => [
+        'display_inclusive' => TRUE,
+        'display_label' => 'vat',
+        'round' => TRUE,
+        'rates' => [
+          [
+            'id' => 'standard',
+            'label' => 'Standard',
+            'percentage' => '0.2',
+          ],
+        ],
+        'territories' => [
+          ['country_code' => 'FR'],
+        ],
+      ],
+      'status' => TRUE,
+    ]);
+    $address_fr = [
+      'given_name' => 'John',
+      'family_name' => 'Smith',
+      'address_line1' => '38 rue du sentier',
+      'locality' => 'Paris',
+      'postal_code' => '75002',
+      'country_code' => 'FR',
+    ];
+    $default_profile = $this->createEntity('profile', [
+      'type' => 'customer',
+      'uid' => $this->adminUser->id(),
+      'address' => $this->defaultAddress,
+      'is_default' => TRUE,
+    ]);
+    $another_profile = $this->createEntity('profile', [
+      'type' => 'customer',
+      'uid' => $this->adminUser->id(),
+      'address' => $address_fr,
+    ]);
+    $this->drupalGet($this->firstProduct->toUrl()->toString());
+    $this->submitForm([], 'Add to cart');
+    $this->drupalGet('checkout/1');
+    $this->assertRenderedAddress($this->defaultAddress, 'shipping_information[shipping_profile]');
+    $this->assertSession()->pageTextContains('Overnight shipping: $19.99 $16.99');
+    $this->assertSession()->pageTextContains('Standard shipping');
+    $selector = '//div[@data-drupal-selector="edit-order-summary"]';
+    $this->assertSession()->elementTextContains('xpath', $selector, 'Shipping $9.99');
+    $second_radio_button = $this->getSession()->getPage()->findField('Overnight shipping: $19.99 $16.99');
+    $second_radio_button->click();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->elementTextContains('xpath', $selector, 'Shipping $16.99');
+    $this->getSession()->getPage()->pressButton('shipping_edit');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->getSession()->getPage()->fillField('shipping_information[shipping_profile][address][0][address][address_line1]', '9 Drupal Avenue');
+    $this->getSession()->getPage()->findButton('Recalculate shipping')->click();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->submitForm([
+      'payment_information[add_payment_method][payment_details][number]' => '4111111111111111',
+      'payment_information[add_payment_method][payment_details][expiration][month]' => '02',
+      'payment_information[add_payment_method][payment_details][expiration][year]' => '2026',
+      'payment_information[add_payment_method][payment_details][security_code]' => '123',
+    ], 'Continue to review');
+    $this->assertSession()->pageTextNotContains('The content has either been modified by another user');
+    foreach ($this->defaultAddress as $property => $value) {
+      if ($property != 'country_code') {
+        $this->assertSession()->pageTextContains($value);
+      }
+    }
+    $this->assertSession()->pageTextContains('Overnight shipping');
+    $this->assertSession()->pageTextNotContains('Standard shipping');
+    $conditions = [
+      'target_plugin_id' => 'shipment_address',
+      'target_plugin_configuration' => [
+        'zone' => [
+          'territories' => [
+            [
+              'country_code' => 'US',
+            ],
+          ],
+        ],
+      ],
+    ];
+    $this->firstShippingMethod->set('conditions', $conditions)->save();
+    $conditions['target_plugin_configuration']['zone']['territories'][0]['country_code'] = 'FR';
+    $this->secondShippingMethod->set('conditions', $conditions)->save();
+    $this->assertSession()->pageTextContains('Shipping information');
+    // Go back to the order info page, attempt switching between different
+    // addresses.
+    $this->getSession()->getPage()->clickLink('Go back');
+    $this->getSession()->getPage()->fillField('shipping_information[shipping_profile][select_address]', 2);
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertRenderedAddress($address_fr, 'shipping_information[shipping_profile]');
+    $this->assertSession()->elementTextContains('xpath', $selector, 'Shipping $9.99');
+    // Ensure the tax is properly displayed in the summary when switching to the
+    // FR address and assert that it's removed after switching back to the US
+    // address.
+    $this->assertSession()->elementTextContains('xpath', $selector, 'VAT $1.60');
+    $this->getSession()->getPage()->fillField('shipping_information[shipping_profile][select_address]', 1);
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->elementTextNotContains('xpath', $selector, 'VAT $1.60');
+    $this->getSession()->getPage()->fillField('shipping_information[shipping_profile][select_address]', 2);
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->elementTextContains('xpath', $selector, 'VAT $1.60');
+    $this->submitForm([], 'Continue to review');
+    $this->assertSession()->pageTextContains('Standard shipping');
+    $this->assertSession()->pageTextNotContains('Overnight shipping');
+    $this->assertSession()->elementTextContains('xpath', $selector, 'VAT $1.60');
+  }
+
+  /**
+   * Tests the payment gateway filtering by shipping method.
+   */
+  public function testPaymentGatewayCondition() {
+    $checkout_flow = CheckoutFlow::load('shipping');
+    $checkout_flow_configuration = $checkout_flow->get('configuration');
+    $checkout_flow_configuration['panes']['payment_information'] = [
+      'step' => 'review',
+      'weight' => 3,
+    ];
+    $checkout_flow->set('configuration', $checkout_flow_configuration);
+    $checkout_flow->save();
+
+    $payment_gateway = PaymentGateway::create([
+      'id' => 'cash_on_delivery',
+      'label' => 'Manual',
+      'plugin' => 'manual',
+      'configuration' => [
+        'display_label' => 'Cash on delivery',
+        'instructions' => [
+          'value' => 'Sample payment instructions.',
+          'format' => 'plain_text',
+        ],
+      ],
+      'conditions' => [
+        [
+          'plugin' => 'order_shipping_method',
+          'configuration' => [
+            'shipping_methods' => [$this->secondShippingMethod->uuid()],
+          ],
+        ],
+      ],
+      'weight' => 10,
+    ]);
+    $payment_gateway->save();
+
+    $this->drupalGet($this->firstProduct->toUrl()->toString());
+    $this->submitForm([], 'Add to cart');
+    $this->drupalGet('checkout/1');
+    $page = $this->getSession()->getPage();
+
+    $address = [
+      'given_name' => 'John',
+      'family_name' => 'Smith',
+      'address_line1' => 'Hauptstrasse 38',
+      'locality' => 'Berlin',
+      'postal_code' => '75002',
+    ];
+
+    $address_prefix = 'shipping_information[shipping_profile][address][0][address]';
+    $page->fillField($address_prefix . '[country_code]', 'DE');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    foreach ($address as $property => $value) {
+      $page->fillField($address_prefix . '[' . $property . ']', $value);
+    }
+    $page->findButton('Recalculate shipping')->click();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $page->selectFieldOption('shipping_information[shipments][0][shipping_method][0]', '2--default');
+    $this->submitForm([], 'Continue to review');
+
+    $this->assertSession()->pageTextContains('Credit card');
+    $this->assertSession()->pageTextContains('Cash on delivery');
+
+    $this->clickLink('Go back');
+    $page->selectFieldOption('shipping_information[shipments][0][shipping_method][0]', '1--default');
+    $this->assertSession()->pageTextNotContains('Cash on delivery');
+    $this->submitForm([], 'Continue to review');
+  }
+
+  /**
+   * Tests that the shipping method doesn't change.
+   */
+  public function testSelectedShippingMethodPersists() {
+    $this->createEntity('profile', [
+      'type' => 'customer',
+      'uid' => $this->adminUser->id(),
+      'address' => $this->defaultAddress,
+    ]);
+
+    $this->drupalGet($this->firstProduct->toUrl()->toString());
+    $this->submitForm([], 'Add to cart');
+    $this->drupalGet($this->secondProduct->toUrl()->toString());
+    $this->submitForm([], 'Add to cart');
+
+    $this->drupalGet('checkout/1');
+    $this->assertSession()->pageTextContains('Shipping information');
+    $this->assertRenderedAddress($this->defaultAddress, 'shipping_information[shipping_profile]');
+    $this->assertRenderedAddress($this->defaultAddress, 'payment_information[add_payment_method][billing_information]');
+
+    // Confirm that shipping method selection is available, because the
+    // selected profile has a complete address.
+    $this->assertSession()->pageTextContains('Shipping method');
+    $page = $this->getSession()->getPage();
+    $first_radio_button = $page->findField('Standard shipping: $9.99');
+    // The $19.99 is displayed crossed out, but Mink strips HTML.
+    $second_radio_button = $page->findField('Overnight shipping: $19.99 $16.99');
+    $this->assertNotNull($first_radio_button);
+    $this->assertNotNull($second_radio_button);
+    $this->assertNotEmpty($first_radio_button->getAttribute('checked'));
+
+    $this->submitForm([
+      'payment_information[add_payment_method][payment_details][number]' => '4111111111111111',
+      'payment_information[add_payment_method][payment_details][expiration][month]' => '02',
+      'payment_information[add_payment_method][payment_details][expiration][year]' => '2024',
+      'payment_information[add_payment_method][payment_details][security_code]' => '123',
+    ], 'Continue to review');
+    $this->assertSession()->pageTextContains('Standard shipping');
+    $this->assertSession()->pageTextNotContains('Overnight shipping');
+    $page->clickLink('Go back');
+    $first_radio_button = $page->findField('Standard shipping: $9.99');
+    $second_radio_button = $page->findField('Overnight shipping: $19.99 $16.99');
+    $this->assertNotNull($first_radio_button);
+    $this->assertNotNull($second_radio_button);
+    $this->assertNotEmpty($first_radio_button->getAttribute('checked'));
   }
 
   /**
