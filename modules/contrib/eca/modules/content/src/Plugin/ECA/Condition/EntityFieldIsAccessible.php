@@ -2,10 +2,9 @@
 
 namespace Drupal\eca_content\Plugin\ECA\Condition;
 
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eca\Plugin\ECA\Condition\ConditionBase;
-use Drupal\eca\Plugin\OptionsInterface;
 
 /**
  * Plugin implementation of the ECA condition for entity field is accessible.
@@ -19,14 +18,14 @@ use Drupal\eca\Plugin\OptionsInterface;
  *   }
  * )
  */
-class EntityFieldIsAccessible extends ConditionBase implements OptionsInterface {
+class EntityFieldIsAccessible extends ConditionBase {
 
   /**
    * {@inheritdoc}
    */
   public function evaluate(): bool {
     $entity = $this->getValueFromContext('entity');
-    if (!($entity instanceof ContentEntityInterface)) {
+    if (!($entity instanceof FieldableEntityInterface)) {
       return FALSE;
     }
     $field_name = trim((string) $this->tokenServices->replaceClear($this->configuration['field_name'] ?? ''));
@@ -57,14 +56,18 @@ class EntityFieldIsAccessible extends ConditionBase implements OptionsInterface 
       '#title' => $this->t('Field machine name'),
       '#default_value' => $this->configuration['field_name'] ?? '',
       '#required' => TRUE,
-      '#weight' => 10,
+      '#weight' => -20,
     ];
     $form['operation'] = [
       '#title' => $this->t('Operation'),
-      '#options' => $this->getOptions('operation'),
+      '#options' => [
+        'view' => $this->t('View'),
+        'edit' => $this->t('Edit'),
+        'delete' => $this->t('Delete'),
+      ],
       '#default_value' => $this->configuration['operation'] ?? 'view',
       '#required' => TRUE,
-      '#weight' => 20,
+      '#weight' => -10,
     ];
     return parent::buildConfigurationForm($form, $form_state);
   }
@@ -76,24 +79,6 @@ class EntityFieldIsAccessible extends ConditionBase implements OptionsInterface 
     $this->configuration['field_name'] = $form_state->getValue('field_name');
     $this->configuration['operation'] = $form_state->getValue('operation');
     parent::submitConfigurationForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getOptions(string $id): ?array {
-    switch ($id) {
-
-      case 'operation':
-        return [
-          'view' => $this->t('View'),
-          'edit' => $this->t('Edit'),
-          'delete' => $this->t('Delete'),
-        ];
-
-    }
-
-    return NULL;
   }
 
 }

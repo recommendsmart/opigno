@@ -3,12 +3,11 @@
 namespace Drupal\eca\Plugin\ECA\Condition;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\eca\Plugin\OptionsInterface;
 
 /**
  * Base class for ECA condition plugins to compare strings.
  */
-abstract class StringComparisonBase extends ConditionBase implements OptionsInterface {
+abstract class StringComparisonBase extends ConditionBase {
 
   public const COMPARE_EQUALS = 'equal';
   public const COMPARE_BEGINS_WITH = 'beginswith';
@@ -181,20 +180,20 @@ abstract class StringComparisonBase extends ConditionBase implements OptionsInte
       '#title' => $this->t('Comparison operator'),
       '#default_value' => $this->getOperator(),
       '#options' => $this->getOptions('operator'),
-      '#weight' => -9,
+      '#weight' => -80,
     ];
     $form['type'] = [
       '#type' => 'select',
       '#title' => $this->t('Comparison type'),
       '#default_value' => $this->getType(),
       '#options' => $this->getOptions('type'),
-      '#weight' => -5,
+      '#weight' => -60,
     ];
     $form['case'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Case sensitive comparison'),
       '#default_value' => $this->caseSensitive(),
-      '#weight' => -4,
+      '#weight' => -50,
     ];
     return $form;
   }
@@ -210,9 +209,18 @@ abstract class StringComparisonBase extends ConditionBase implements OptionsInte
   }
 
   /**
-   * {@inheritdoc}
+   * Returns a keyed array of values with all available options.
+   *
+   * This can be overwritten by sub-classes if their implementation requires
+   * a different set of options.
+   *
+   * @param string $id
+   *   The id of the configuration value for which to receive the options.
+   *
+   * @return array|null
+   *   The keyed array with option values. NULL if the field $id has no options.
    */
-  public function getOptions(string $id): ?array {
+  protected function getOptions(string $id): ?array {
     if ($id === 'operator') {
       return [
         static::COMPARE_EQUALS => $this->t('equals'),

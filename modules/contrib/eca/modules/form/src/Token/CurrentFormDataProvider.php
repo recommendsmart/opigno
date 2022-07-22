@@ -9,7 +9,6 @@ use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\eca\EventSubscriber\EcaExecutionFormSubscriber;
 use Drupal\eca\Plugin\DataType\DataTransferObject;
 use Drupal\eca\Token\DataProviderInterface;
-use Drupal\eca\Token\TokenServices;
 
 /**
  * Provides data of the current form.
@@ -96,18 +95,6 @@ class CurrentFormDataProvider implements DataProviderInterface {
         return $dto;
 
       default:
-        $form_object = $form_state->getFormObject();
-        if ($form_object instanceof EntityFormInterface) {
-          $entity = $form_object->getEntity();
-          $types = ['entity', $entity->getEntityTypeId()];
-          $token_type = TokenServices::get()->getTokenType($entity);
-          if ($token_type !== $entity->getEntityTypeId()) {
-            $types[] = $token_type;
-          }
-          if (in_array($key, $types)) {
-            return $entity;
-          }
-        }
         return NULL;
 
     }

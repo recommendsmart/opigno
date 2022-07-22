@@ -2,6 +2,7 @@
 
 namespace Drupal\eca_config\EventSubscriber;
 
+use Drupal\Core\Config\ConfigEvents;
 use Drupal\eca\EventSubscriber\EcaBase;
 use Drupal\eca_config\Plugin\ECA\Event\ConfigEvent;
 
@@ -16,7 +17,11 @@ class EcaConfig extends EcaBase {
   public static function getSubscribedEvents(): array {
     $events = [];
     foreach (ConfigEvent::definitions() as $definition) {
-      $events[$definition['event_name']][] = ['onEvent'];
+      // Call subscribed validate listeners as early as possible, so that we are
+      // not affected from stopped event propagation.
+      // @see \Drupal\system\SystemConfigSubscriber::getSubscribedEvents()
+      $priority = $definition['event_name'] === ConfigEvents::IMPORT_VALIDATE ? 1024 : 0;
+      $events[$definition['event_name']][] = ['onEvent', $priority];
     }
     return $events;
   }

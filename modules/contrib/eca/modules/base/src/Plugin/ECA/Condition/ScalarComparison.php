@@ -47,13 +47,13 @@ class ScalarComparison extends StringComparisonBase {
       '#type' => 'textarea',
       '#title' => $this->t('First value'),
       '#default_value' => $this->getLeftValue(),
-      '#weight' => -10,
+      '#weight' => -90,
     ];
     $form['right'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Second value'),
       '#default_value' => $this->getRightValue(),
-      '#weight' => -8,
+      '#weight' => -70,
     ];
     return parent::buildConfigurationForm($form, $form_state);
   }

@@ -24,6 +24,7 @@ use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupType;
 use Drupal\group\GroupMembership;
+use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\social_group\Controller\SocialGroupController;
@@ -933,6 +934,29 @@ function social_group_form_alter(&$form, FormStateInterface $form_state, $form_i
         '#limit_validation_errors' => [],
       ];
       array_unshift($form['actions']['submit']['#submit'], '_social_group_delete_group');
+    }
+
+    // Move "path" field to "Settings" section if the "Social Path Manager"
+    // module is disabled.
+    if (!\Drupal::moduleHandler()->moduleExists('social_path_manager')) {
+      if (!empty($form['path'])) {
+        $form['path']['#type'] = 'fieldset';
+        if (Element::isVisibleElement($form['path'])) {
+          if (!empty($form['#fieldgroups']['group_settings'])) {
+            $form['path']['#group'] = 'group_settings';
+            $form['#fieldgroups']['group_settings']->children[] = 'path';
+          }
+        }
+      }
+    }
+
+    // Hide default field group "advanced" for group entities.
+    if (!empty($form['advanced']) && Element::isVisibleElement($form['advanced'])) {
+      // Hide revision fields.
+      $form['advanced']['#access'] =
+      $form['revision']['#access'] =
+      $form['revision_log']['#access'] =
+      $form['revision_information']['#access'] = FALSE;
     }
   }
 
@@ -1899,6 +1923,17 @@ function _social_group_delete_group() {
 }
 
 /**
+ * Get all public groups.
+ */
+function social_group_get_all_public_groups(): array {
+  $query = \Drupal::service('entity_type.manager')
+    ->getStorage('group')
+    ->getQuery()
+    ->condition('type', 'public_group');
+  return $query->execute();
+}
+
+/**
  * Get all open groups.
  */
 function social_group_get_all_open_groups() {
@@ -1910,7 +1945,7 @@ function social_group_get_all_open_groups() {
 }
 
 /**
- * Get all open groups.
+ * Get all groups.
  */
 function social_group_get_all_groups() {
   $query = \Drupal::service('entity_type.manager')
@@ -2894,5 +2929,8 @@ function social_group_social_core_default_main_menu_links_alter(array &$links) {
     ]);
   $link = end($link);
 
-  $links[] = $link;
+  // Ensure that the end() doesn't return FALSE, and we have link instance.
+  if ($link instanceof MenuLinkContentInterface) {
+    $links[] = $link;
+  }
 }

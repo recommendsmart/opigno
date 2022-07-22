@@ -56,7 +56,7 @@ actions:
         id: save_tag
         condition: ''
   save_tag:
-    plugin: 'eca_save_entity'
+    plugin: eca_save_entity
     label: 'Save tag'
     configuration:
       object: tag

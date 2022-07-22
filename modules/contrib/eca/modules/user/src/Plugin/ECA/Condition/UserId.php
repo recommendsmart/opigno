@@ -19,7 +19,9 @@ class UserId extends CurrentUserId {
    */
   public function evaluate(): bool {
     if ($account = $this->loadUserAccount()) {
-      $result = (int) $this->configuration['user_id'] === $account->id();
+      // We need to cast the ID to string to avoid false positives when an
+      // empty string value get compared to integed 0.
+      $result = (string) $this->configuration['user_id'] === (string) $account->id();
       return $this->negationCheck($result);
     }
     return FALSE;

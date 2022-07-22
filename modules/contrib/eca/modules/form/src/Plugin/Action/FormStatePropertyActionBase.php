@@ -31,7 +31,7 @@ abstract class FormStatePropertyActionBase extends FormActionBase {
       '#title' => $this->t('Name of property'),
       '#description' => $this->t('Nested properties are supported by using dot notation. Example: <em>level1.level2</em>'),
       '#default_value' => $this->configuration['property_name'],
-      '#weight' => -10,
+      '#weight' => -50,
     ];
     return $form;
   }

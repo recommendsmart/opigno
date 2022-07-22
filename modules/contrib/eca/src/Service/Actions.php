@@ -3,13 +3,15 @@
 namespace Drupal\eca\Service;
 
 use Drupal\Component\Plugin\ConfigurableInterface;
-use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
-use Drupal\Core\Action\ActionInterface;
+use Drupal\Core\Action\ActionInterface as CoreActionInterface;
 use Drupal\Core\Action\ActionManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
-use Drupal\eca_content\Plugin\Action\FieldUpdateActionBase;
+use Drupal\Core\Plugin\PluginFormInterface;
+use Drupal\eca\Plugin\Action\ActionInterface;
+use Drupal\eca\PluginManager\Action;
 
 /**
  * Service class for Drupal core actions in ECA.
@@ -42,15 +44,15 @@ class Actions {
   /**
    * Actions constructor.
    *
-   * @param \Drupal\Core\Action\ActionManager $action_manager
+   * @param \Drupal\eca\PluginManager\Action $action_manager
    *   The action plugin manager.
    * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
    *   The logger channel service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type managewr service.
    */
-  public function __construct(ActionManager $action_manager, LoggerChannelInterface $logger, EntityTypeManagerInterface $entity_type_manager) {
-    $this->actionManager = $action_manager;
+  public function __construct(Action $action_manager, LoggerChannelInterface $logger, EntityTypeManagerInterface $entity_type_manager) {
+    $this->actionManager = $action_manager->getDecoratedActionManager();
     $this->logger = $logger;
     $this->entityTypeManager = $entity_type_manager;
   }
@@ -78,8 +80,11 @@ class Actions {
         try {
           $actions[] = $this->actionManager->createInstance($plugin_id);
         }
-        catch (PluginException $e) {
-          // Can be ignored.
+        catch (\Exception $e) {
+          $this->logger->error('The action plugin %pluginid can not be initialized. ECA is ignoring this action. The issue with this action: %msg', [
+            '%pluginid' => $plugin_id,
+            '%msg' => $e->getMessage(),
+          ]);
         }
       }
       $this->sortPlugins($actions);
@@ -92,24 +97,52 @@ class Actions {
    *
    * @param \Drupal\Core\Action\ActionInterface $action
    *   The action plugin for which the fields need to be prepared.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
    *
    * @return array
    *   The list of fields for this action.
    */
-  public function fields(ActionInterface $action): array {
-    $fields = [];
-    if (($action instanceof ConfigurableInterface || $action instanceof FieldUpdateActionBase) && $config = $action->defaultConfiguration()) {
-      $this->prepareConfigFields($fields, $config, $action);
+  public function getConfigurationForm(CoreActionInterface $action, FormStateInterface $form_state): array {
+    if ($action instanceof PluginFormInterface) {
+      $form = $action->buildConfigurationForm([], $form_state);
+    }
+    elseif ($action instanceof ConfigurableInterface) {
+      $form = [];
+      foreach ($action->defaultConfiguration() as $key => $value) {
+        $form[$key] = [
+          '#type' => 'textfield',
+          '#title' => self::convertKeyToLabel($key),
+          '#default_value' => $value,
+        ];
+      }
+    }
+    else {
+      $form = [];
     }
 
     try {
       $actionType = $action->getPluginDefinition()['type'] ?? '';
+      $actionConfig = ($action instanceof ConfigurableInterface) ? $action->getConfiguration() : [];
       if ($actionType === 'entity' || $this->entityTypeManager->getDefinition($actionType, FALSE)) {
-        $fields[] = [
-          'name' => 'object',
-          'label' => 'Entity',
-          'type' => 'String',
-          'value' => '',
+        $form['object'] = [
+          '#type' => 'textfield',
+          '#title' => $this->t('Entity'),
+          '#description' => $this->t('Provide the token name of the %type that this action should operate with.', [
+            '%type' => $actionType,
+          ]),
+          '#default_value' => $actionConfig['object'] ?? '',
+          '#weight' => 2,
+        ];
+      }
+      if (!($action instanceof ActionInterface) && ($action instanceof ConfigurableInterface)) {
+        // @todo Consider a form validate and submit method for this service.
+        $form['replace_tokens'] = [
+          '#type' => 'checkbox',
+          '#title' => $this->t('Replace tokens'),
+          '#description' => $this->t('When enabled, tokens will be replaced <em>before</em> executing the action. <strong>Please note:</strong> Actions might already take care of replacing tokens on their own. Therefore use this option only with care and when it makes sense.'),
+          '#default_value' => $actionConfig['replace_tokens'] ?? FALSE,
+          '#weight' => 5,
         ];
       }
     }
@@ -117,7 +150,7 @@ class Actions {
       // Can be ignore as we set $exception_on_invalid to FALSE.
     }
 
-    return $fields;
+    return $form;
   }
 
 }

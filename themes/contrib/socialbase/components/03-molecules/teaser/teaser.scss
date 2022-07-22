@@ -164,6 +164,10 @@
         margin-bottom: 0;
       }
     }
+
+    + .teaser__content--badges {
+      margin-top: -.75rem;
+    }
   }
 }
 
@@ -345,6 +349,8 @@
   .teaser--small__details {
     display: flex;
     flex-direction: column;
+    flex: 0 0 calc(100% - 60px);
+    max-width: calc(100% - 60px);
     margin-left: 1rem;
 
     [dir='rtl'] & {
@@ -354,6 +360,7 @@
   }
 
   .teaser--small__meta {
+    display: flex;
     color: $text-muted;
 
     a {
@@ -364,6 +371,10 @@
         text-decoration: underline;
       }
     }
+  }
+
+  .teaser__content-text {
+
   }
 
   &:last-child {

@@ -6,7 +6,7 @@ package: ECA
 dependencies:
   - eca:eca
 
-# Information added by Drupal.org packaging script on 2022-05-17
-version: '1.0.0-beta12'
+# Information added by Drupal.org packaging script on 2022-07-13
+version: '1.0.0-rc4'
 project: 'eca'
-datestamp: 1652805551
+datestamp: 1657702152

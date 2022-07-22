@@ -113,13 +113,13 @@ class Morris.Bar extends Morris.Grid
       if path != ""
         if @options.animate
           rPath = @raphael.path(straightPath)
-                          .attr('stroke', @options.barColors[nb+ii])
+                          .attr('stroke', @colorFor(coord, nb+ii, 'bar'))
                           .attr('stroke-width', @lineWidthForSeries(ii))
-          do (rPath, path) =>
+          do (rPath, path) ->
             rPath.animate {path}, 500, '<>'
         else
           rPath = @raphael.path(path)
-                          .attr('stroke', @options.barColors[nb+ii])
+                          .attr('stroke', @colorFor(coord, nb+ii, 'bar'))
                           .attr('stroke-width', @lineWidthForSeries(ii))
 
   drawBarPoints: ->
@@ -132,13 +132,13 @@ class Morris.Bar extends Morris.Grid
         if row._y2[nb+ii]?
           if @options.horizontal is not true
             circle = @raphael.circle(row._x, row._y2[nb+ii], @pointSizeForSeries(ii))
-              .attr('fill', @options.barColors[nb+ii])
+              .attr('fill', @colorFor(row, nb+ii, 'bar'))
               .attr('stroke-width', 1)
               .attr('stroke', '#ffffff')
             @seriesPoints[ii].push(circle)
           else
             circle = @raphael.circle(row._y2[nb+ii], row._x, @pointSizeForSeries(ii))
-              .attr('fill', @options.barColors[nb+ii])
+              .attr('fill', @colorFor(row, nb+ii, 'bar'))
               .attr('stroke-width', 1)
               .attr('stroke', '#ffffff')
             @seriesPoints[ii].push(circle)
@@ -252,7 +252,8 @@ class Morris.Bar extends Morris.Grid
       @data[idx].label_x = []
       @data[idx].label_y = []
       @seriesBars[idx] = []
-      lastTop = 0
+      lastTop = null
+      lastBottom = null
       if @options.rightAxisBar is true
         nb = row._y.length
       else
@@ -284,9 +285,10 @@ class Morris.Bar extends Morris.Grid
               @drawBar(@yStart, @xStart + idx * groupWidth, @ySize, groupWidth, @options.verticalGridColor, @options.verticalGridOpacity, @options.barRadius)
 
 
-          top -= lastTop if @options.stacked
+
           if not @options.horizontal
-            lastTop += size
+            top += lastTop-bottom if @options.stacked and lastTop?
+            lastTop = top
             if size == 0 && @options.showZero then size = 1
             @seriesBars[idx][sidx] = @drawBar(left, top, barWidth, size, @colorFor(row, sidx, 'bar'),
                 @options.barOpacity, @options.barRadius)
@@ -296,22 +298,24 @@ class Morris.Bar extends Morris.Grid
               else
                 depth = -7
               if size>@options.dataLabelsSize || !@options.stacked || @options.dataLabelsPosition=='force_outside'
-                @data[idx].label_x[sidx] = left+barWidth/2;
-                @data[idx].label_y[sidx] = top+depth;
+                @data[idx].label_x[sidx] = left+barWidth/2
+                @data[idx].label_y[sidx] = top+depth
 
           else
-            lastTop -= size
+            lastBottom = bottom
+            top = lastTop if @options.stacked and lastTop?
+            lastTop = top + size
             if size == 0 then size = 1
             @seriesBars[idx][sidx] = @drawBar(top, left, size, barWidth, @colorFor(row, sidx, 'bar'),
                 @options.barOpacity, @options.barRadius)
             if @options.dataLabels
               if @options.stacked || @options.dataLabelsPosition=='inside'
-                  @data[idx].label_x[sidx] = top + size / 2;
-                  @data[idx].label_y[sidx] = left + barWidth / 2;
+                @data[idx].label_x[sidx] = top + size / 2
+                @data[idx].label_y[sidx] = left + barWidth / 2
 
-                else
-                  @data[idx].label_x[sidx] = top + size + 5;
-                  @data[idx].label_y[sidx] = left + barWidth / 2;
+              else
+                @data[idx].label_x[sidx] = top + size + 5
+                @data[idx].label_y[sidx] = left + barWidth / 2
 
             if @options.inBarValue and
                 barWidth > @options.gridTextSize + 2*@options.inBarValueMinTopMargin
@@ -401,17 +405,17 @@ class Morris.Bar extends Morris.Grid
     if @options.hideHover isnt false
       @hover.hide()
 
-  escapeHTML:(string) =>
+  escapeHTML:(string) ->
     map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#x27;',
-        "/": '&#x2F;',
-    };
-    reg = /[&<>"'/]/ig;
-    return string.replace(reg, (match)=>(map[match]));
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#x27;',
+      "/": '&#x2F;',
+    }
+    reg = /[&<>"'/]/ig
+    return string.replace(reg, (match)->(map[match]))
 
   # hover content for a point
   #

@@ -40,7 +40,7 @@ class FormFieldGetValue extends ConfigurableActionBase {
       '#default_value' => $this->configuration['token_name'],
       '#description' => $this->t('The field value will be loaded into this specified token.'),
       '#required' => TRUE,
-      '#weight' => -5,
+      '#weight' => -45,
     ];
     return $this->buildFormFieldConfigurationForm($form, $form_state);
   }

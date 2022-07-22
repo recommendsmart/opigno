@@ -2,7 +2,6 @@
 
 namespace Drupal\eca\Service;
 
-use Drupal\Component\EventDispatcher\Event;
 use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -120,38 +119,10 @@ class Conditions {
   }
 
   /**
-   * Prepares all the fields of an action plugin for modellers.
+   * Asserts the condition identified by $condition_id in context of an event.
    *
-   * @param \Drupal\eca\Plugin\ECA\Condition\ConditionInterface $condition
-   *   The condition plugin for which the fields need to be prepared.
-   *
-   * @return array
-   *   The list of fields for this condition.
-   */
-  public function fields(ConditionInterface $condition): array {
-    $fields = [];
-    if ($config = $condition->defaultConfiguration()) {
-      $this->prepareConfigFields($fields, $config, $condition);
-    }
-
-    /** @var \Drupal\Core\Plugin\Context\ContextDefinition $definition */
-    foreach ($condition->getPluginDefinition()['context_definitions'] ?? [] as $key => $definition) {
-      $fields[] = [
-        'name' => $key,
-        'label' => $definition->getLabel(),
-        'type' => 'String',
-        'value' => '',
-      ];
-    }
-
-    return $fields;
-  }
-
-  /**
-   * Aeerts the condition identified by $condition_id in context of an event.
-   *
-   * @param \Drupal\Component\EventDispatcher\Event $event
-   *   The event in which context the conditions needs to be aeerted.
+   * @param \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event $event
+   *   The event in which context the conditions needs to be asserted.
    * @param string|bool $condition_id
    *   The ID of the condition to be asserted or FALSE, if the sequence flow
    *   does not have any condition.
@@ -165,11 +136,12 @@ class Conditions {
    * @return bool
    *   TRUE, if the condition can be asserted, FALSE otherwise.
    */
-  public function assertCondition(Event $event, $condition_id, ?array $condition, array $context): bool {
+  public function assertCondition(object $event, $condition_id, ?array $condition, array $context): bool {
     if (empty($condition_id)) {
       $this->logger->info('Unconditional %successorlabel (%successorid) from ECA %ecalabel (%ecaid) for event %event.', $context);
       return TRUE;
     }
+    $context['%conditionid'] = $condition_id;
     if ($condition === NULL) {
       $this->logger->error('Non existant condition %conditionid for %successorlabel from ECA %ecalabel (%ecaid) for event %event.', $context);
       return FALSE;

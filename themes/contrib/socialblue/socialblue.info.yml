@@ -120,7 +120,7 @@ regions:
   sidebar_second: Sidebar Second
   footer: Footer
 
-# Information added by Drupal.org packaging script on 2022-05-16
-version: '2.2.2'
+# Information added by Drupal.org packaging script on 2022-06-21
+version: '2.2.4'
 project: 'socialblue'
-datestamp: 1652694478
+datestamp: 1655793812

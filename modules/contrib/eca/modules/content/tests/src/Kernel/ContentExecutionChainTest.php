@@ -2,12 +2,25 @@
 
 namespace Drupal\Tests\eca_content\Kernel;
 
+use Drupal\Core\Entity\ContentEntityFormInterface;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Form\FormState;
 use Drupal\eca\Entity\Eca;
+use Drupal\eca_form\Event\FormEvents;
+use Drupal\eca_form\Event\FormProcess;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\user\Entity\User;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Execution chain tests using plugins of eca_content.
@@ -43,6 +56,7 @@ class ContentExecutionChainTest extends KernelTestBase {
     $this->installEntitySchema('node');
     $this->installSchema('node', ['node_access']);
     $this->installConfig(static::$modules);
+    User::create(['uid' => 0, 'name' => 'anonymous'])->save();
     User::create(['uid' => 1, 'name' => 'admin'])->save();
     User::create(['uid' => 2, 'name' => 'authenticated'])->save();
     // Create the Article content type with revisioning and translation enabled.
@@ -517,6 +531,335 @@ class ContentExecutionChainTest extends KernelTestBase {
 
     $delete_action->execute($node);
     $this->assertEmpty($storage->loadByProperties(['title' => $title]));
+  }
+
+  /**
+   * Tests execution core's "action_goto_action" using tokens.
+   *
+   * The core action itself doesn't support Tokens, but ECA takes care of that.
+   */
+  public function testRedirectAction(): void {
+    // This config does the following:
+    // 1. It reacts upon saving a node
+    // 2. It sets a redirect using core's "action_goto_action" action.
+    $eca_config_values = [
+      'langcode' => 'en',
+      'status' => TRUE,
+      'id' => 'redirect_after_save',
+      'label' => 'ECA redirect after save',
+      'modeller' => 'fallback',
+      'version' => '1.0.0',
+      'events' => [
+        'event_insert' => [
+          'plugin' => 'content_entity:insert',
+          'label' => 'Insert content',
+          'configuration' => [
+            'type' => 'node article',
+          ],
+          'successors' => [
+            ['id' => 'redirect', 'condition' => ''],
+          ],
+        ],
+      ],
+      'conditions' => [],
+      'gateways' => [],
+      'actions' => [
+        'redirect' => [
+          'plugin' => 'action_goto_action',
+          'label' => 'Do redirect',
+          'configuration' => [
+            'url' => '/eca-redirect/[node:nid]',
+            'replace_tokens' => TRUE,
+          ],
+          'successors' => [],
+        ],
+      ],
+    ];
+    $ecaConfig = Eca::create($eca_config_values);
+    $ecaConfig->trustData()->save();
+
+    /** @var \Drupal\node\NodeInterface $article */
+    $article = Node::create([
+      'type' => 'article',
+      'tnid' => 0,
+      'uid' => 0,
+      'title' => $this->randomMachineName(),
+    ]);
+    // Saving the new article executes above ECA configuration.
+    $article->save();
+
+    // Add a listener to the kernel response event, so that we can assert
+    // for an existing redirect.
+    /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher */
+    $event_dispatcher = \Drupal::service('event_dispatcher');
+    $response = NULL;
+    $event_dispatcher->addListener(KernelEvents::RESPONSE, static function ($event) use (&$response) {
+      /** @var \Symfony\Component\HttpKernel\Event\ResponseEvent $event */
+      $response = $event->getResponse();
+    }, -1000);
+
+    // Fake a response event that executes the added listener.
+    $response_event = new ResponseEvent(\Drupal::service('http_kernel'), Request::createFromGlobals(), HttpKernelInterface::MASTER_REQUEST, new Response());
+    $event_dispatcher->dispatch($response_event, KernelEvents::RESPONSE);
+
+    $this->assertTrue($response instanceof RedirectResponse);
+    /** @var \Symfony\Component\HttpFoundation\RedirectResponse $response */
+    $this->assertEquals("/eca-redirect/{$article->id()}", mb_substr($response->getTargetUrl(), -15));
+  }
+
+  /**
+   * Tests an execution chain using entity form components.
+   */
+  public function testEntityFormComponents(): void {
+    // Install the base module for executing "eca_token_set_value".
+    // Also install the form module for reacting upon form processing.
+    /** @var \Drupal\Core\Extension\ModuleInstaller $module_installer */
+    $module_installer = \Drupal::service('module_installer');
+    $module_installer->install(['eca_base', 'eca_form', 'options']);
+
+    // Create a single-value list field that makes use of FieldOptions.
+    FieldStorageConfig::create([
+      'field_name' => 'field_selection',
+      'type' => 'list_string',
+      'entity_type' => 'node',
+      'settings' => [
+        'allowed_values' => [],
+        'allowed_values_function' => 'Drupal\eca_content\FieldOptions::eventBasedValues',
+      ],
+      'module' => 'options',
+      'cardinality' => 1,
+    ])->save();
+    FieldConfig::create([
+      'field_name' => 'field_selection',
+      'label' => 'Selection',
+      'entity_type' => 'node',
+      'bundle' => 'article',
+      'default_value' => [],
+      'field_type' => 'list_string',
+    ])->save();
+    // Create a single-value entity reference field.
+    FieldStorageConfig::create([
+      'field_name' => 'field_content',
+      'type' => 'entity_reference',
+      'entity_type' => 'node',
+      'settings' => [
+        'target_type' => 'node',
+      ],
+      'module' => 'core',
+      'cardinality' => 1,
+    ])->save();
+    FieldConfig::create([
+      'field_name' => 'field_content',
+      'label' => 'Content',
+      'entity_type' => 'node',
+      'bundle' => 'article',
+      'default_value' => [],
+      'settings' => [
+        'handler' => 'eca',
+        'handler_settings' => [
+          'field_name' => 'field_content',
+        ],
+      ],
+      'field_type' => 'entity_reference',
+    ])->save();
+
+    EntityFormDisplay::collectRenderDisplay(Node::create(['type' => 'article']), 'default')->save();
+    $form_display = EntityFormDisplay::load('node.article.default');
+    $form_display->setComponent('field_selection', ['type' => 'options_select']);
+    $form_display->setComponent('field_content', ['type' => 'options_select']);
+    $form_display->save();
+
+    // Create a new custom form display that is basically just a copy of the
+    // default form display.
+    EntityFormDisplay::create([
+      'targetEntityType' => 'node',
+      'bundle' => 'article',
+      'mode' => 'custom',
+      'status' => TRUE,
+      'content' => $form_display->get('content'),
+      'hidden' => $form_display->get('hidden'),
+      'dependencies' => $form_display->get('dependencies'),
+    ])->trustData()->setSyncing(TRUE)->save();
+
+    // Create two article nodes for referencing.
+    $nids = [];
+    $article = Node::create([
+      'type' => 'article',
+      'tnid' => 0,
+      'uid' => 0,
+      'title' => $this->randomMachineName(),
+    ]);
+    $article->save();
+    $nids[] = (int) $article->id();
+    $article = Node::create([
+      'type' => 'article',
+      'tnid' => 0,
+      'uid' => 0,
+      'title' => $this->randomMachineName(),
+    ]);
+    $article->save();
+    $nids[] = (int) $article->id();
+
+    // This config does the following:
+    // 1. Reacts upon options selection and entity reference selection
+    //    and sets custom allowed values.
+    // 2. Reacts upon preparing a form to set a different form display.
+    // 3. Reacts upon form processing and checks whether the form display
+    //    had been changed accordingly. It sets a custom form state property
+    //    for asserting that this condition was met.
+    $eca_config_values = [
+      'langcode' => 'en',
+      'status' => TRUE,
+      'id' => 'entity_form_components',
+      'label' => 'ECA entity form components',
+      'modeller' => 'fallback',
+      'version' => '1.0.0',
+      'events' => [
+        'options_selection' => [
+          'plugin' => 'content_entity:options_selection',
+          'label' => 'Options selection',
+          'configuration' => [
+            'type' => 'node article',
+            'field_name' => 'field_selection',
+            'token_name' => 'options',
+          ],
+          'successors' => [
+            ['id' => 'set_options', 'condition' => ''],
+          ],
+        ],
+        'content_selection' => [
+          'plugin' => 'content_entity:reference_selection',
+          'label' => 'Content reference selection',
+          'configuration' => [
+            'type' => 'node article',
+            'field_name' => 'field_content',
+            'token_name' => 'content',
+          ],
+          'successors' => [
+            ['id' => 'set_references', 'condition' => ''],
+          ],
+        ],
+        'prepare_form' => [
+          'plugin' => 'content_entity:prepareform',
+          'label' => 'Prepare form',
+          'configuration' => [
+            'type' => 'node article',
+          ],
+          'successors' => [
+            ['id' => 'set_custom_display', 'condition' => ''],
+          ],
+        ],
+        'process_form' => [
+          'plugin' => 'form:form_process',
+          'label' => 'Process form',
+          'configuration' => [
+            'form_id' => '',
+            'entity_type_id' => 'node',
+            'bundle' => 'article',
+            'operation' => '',
+          ],
+          'successors' => [
+            ['id' => 'set_form_state_property', 'condition' => 'display_mode'],
+          ],
+        ],
+      ],
+      'conditions' => [
+        'display_mode' => [
+          'plugin' => 'eca_content_form_display_mode',
+          'configuration' => [
+            'display_mode' => 'custom',
+          ],
+        ],
+      ],
+      'gateways' => [],
+      'actions' => [
+        'set_options' => [
+          'plugin' => 'eca_token_set_value',
+          'label' => 'Set allowed options',
+          'configuration' => [
+            'token_name' => 'options',
+            'token_value' => <<<YAML
+custom1: Custom Value One
+custom2: Custom Value Two
+YAML,
+            'use_yaml' => TRUE,
+          ],
+          'successors' => [],
+        ],
+        'set_references' => [
+          'plugin' => 'eca_token_set_value',
+          'label' => 'Set allowed content',
+          'configuration' => [
+            'token_name' => 'content',
+            'token_value' => <<<YAML
+0: {$nids[0]}
+1: {$nids[1]}
+YAML,
+            'use_yaml' => TRUE,
+          ],
+          'successors' => [],
+        ],
+        'set_custom_display' => [
+          'plugin' => 'eca_content_set_form_display',
+          'label' => 'Set custom display',
+          'configuration' => [
+            'display_mode' => 'custom',
+          ],
+          'successors' => [],
+        ],
+        'set_form_state_property' => [
+          'plugin' => 'eca_form_state_set_property_value',
+          'label' => 'Set custom form state property',
+          'configuration' => [
+            'property_name' => 'customprop',
+            'property_value' => 'Success!',
+            'use_yaml' => FALSE,
+          ],
+          'successors' => [],
+        ],
+      ],
+    ];
+    $ecaConfig = Eca::create($eca_config_values);
+    $ecaConfig->trustData()->save();
+
+    $article = Node::create([
+      'type' => 'article',
+      'tnid' => 0,
+      'uid' => 0,
+      'title' => $this->randomMachineName(),
+    ]);
+    // Saving the new article executes above ECA configuration.
+    $article->save();
+
+    /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher */
+    $event_dispatcher = \Drupal::service('event_dispatcher');
+    $form_builder = \Drupal::formBuilder();
+
+    $form = NULL;
+    $form_display_mode = NULL;
+    $event_dispatcher->addListener(FormEvents::PROCESS, function (FormProcess $event) use (&$form, &$form_display_mode) {
+      $form_object = $event->getFormState()->getFormObject();
+      if ($form_object instanceof ContentEntityFormInterface) {
+        $form_display_mode = $form_object->getFormDisplay($event->getFormState())->getMode();
+      }
+      $form = $event->getForm();
+    });
+
+    $form_object = \Drupal::entityTypeManager()->getFormObject('node', 'default');
+    $form_object->setEntity($article);
+    $form_state = new FormState();
+    $form_builder->buildForm($form_object, $form_state);
+
+    $this->assertTrue(isset($form['field_selection']['widget']['#options']));
+    $this->assertSame([
+      '_none' => '- None -',
+      'custom1' => 'Custom Value One',
+      'custom2' => 'Custom Value Two',
+    ], $form['field_selection']['widget']['#options']);
+    $this->assertTrue(isset($form['field_content']['widget']['#options']));
+    $this->assertSame(array_merge(['_none'], $nids), array_keys($form['field_content']['widget']['#options']));
+    $this->assertEquals('custom', $form_display_mode);
+    $this->assertEquals('Success!', $form_state->get(['eca', 'customprop']));
   }
 
 }

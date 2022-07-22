@@ -34,7 +34,7 @@ class FormFieldSetError extends FormFieldValidateActionBase {
       '#title' => $this->t('Message'),
       '#description' => $this->t('The error message to be shown regards the form field. Supports tokens.'),
       '#default_value' => $this->configuration['message'],
-      '#weight' => -9,
+      '#weight' => -49,
     ];
     return $form;
   }

@@ -1,6 +1,8 @@
 langcode: en
 status: true
 dependencies:
+  config:
+    - views.view.user_admin_people
   module:
     - eca_base
     - eca_content
@@ -67,4 +69,5 @@ actions:
     label: Msg
     configuration:
       message: 'User [entity:name]'
+      replace_tokens: false
     successors: {  }

@@ -6,33 +6,33 @@ use Cron\CronExpression;
 use Drupal\Component\EventDispatcher\Event;
 use Drupal\eca\EcaState;
 use Drupal\eca\Event\ConditionalApplianceInterface;
-use Drupal\eca\Event\ConfigurableEventInterface;
 
 /**
  * Provides a cron event.
  *
+ * @internal
+ *   This class is not meant to be used as a public API. It is subject for name
+ *   change or may be removed completely, also on minor version updates.
+ *
  * @package Drupal\eca_base\Event
  */
-class CronEvent extends Event implements ConditionalApplianceInterface, ConfigurableEventInterface {
+class CronEvent extends Event implements ConditionalApplianceInterface {
 
   /**
    * ECA state service.
    *
    * @var \Drupal\eca\EcaState
    */
-  protected EcaState $store;
+  protected EcaState $state;
 
   /**
-   * {@inheritdoc}
+   * Constructs a new CronEvent object.
+   *
+   * @param \Drupal\eca\EcaState $state
+   *   The ECA state service.
    */
-  public static function fields(): array {
-    return [
-      [
-        'name' => 'frequency',
-        'label' => 'Frequency (UTC)',
-        'type' => 'String',
-      ],
-    ];
+  public function __construct(EcaState $state) {
+    $this->state = $state;
   }
 
   /**
@@ -64,19 +64,6 @@ class CronEvent extends Event implements ConditionalApplianceInterface, Configur
   }
 
   /**
-   * Initializes the ECA key value store service once and returns it.
-   *
-   * @return \Drupal\eca\EcaState
-   *   The ECA key value store.
-   */
-  protected function keyValueStore(): EcaState {
-    if (!isset($this->store)) {
-      $this->store = \Drupal::service('eca.state');
-    }
-    return $this->store;
-  }
-
-  /**
    * Determines, if the cron with $id is due for next execution.
    *
    * It receives the last execution time of this event cron and calculates
@@ -92,14 +79,17 @@ class CronEvent extends Event implements ConditionalApplianceInterface, Configur
    *   TRUE, if the event $id is due for next execution, FALSE otherwise.
    */
   protected function isDue(string $id, string $frequency): bool {
-    $cron = new CronExpression($frequency);
-    $lastRun = $this->keyValueStore()->getTimestamp('cron-' . $id);
-    $dt = new \DateTime();
-    $dt
-      ->setTimezone(new \DateTimeZone('UTC'))
-      ->setTimestamp($lastRun);
+    $currentTime = $this->state->getCurrentTimestamp();
+    $lastRun = $this->state->getTimestamp('cron-' . $id);
+
+    // Cron's maximum granularity is on minute level. Therefore we round the
+    // current time to the last passed minute. That way we avoid accidental
+    // concurrent runs.
+    $currentTime -= ($currentTime % 60);
+    $lastRun -= ($lastRun % 60);
+
     try {
-      return $this->keyValueStore()->getCurrentTimestamp() > $cron->getNextRunDate($dt)->getTimestamp();
+      return $currentTime >= $this->getNextRunTimestamp($lastRun, $frequency);
     }
     catch (\Exception $e) {
       // @todo Log this exception.
@@ -108,13 +98,38 @@ class CronEvent extends Event implements ConditionalApplianceInterface, Configur
   }
 
   /**
+   * Calculates the timestamp for the next execution.
+   *
+   * @param int $lastRunTimestamp
+   *   Timestamp, when it was executed last or 0 if it never ran before.
+   * @param string $frequency
+   *   The frequency as a cron pattern.
+   *
+   * @return int
+   *   Timestamp for next execution.
+   *
+   * @throws \Exception
+   */
+  public function getNextRunTimestamp(int $lastRunTimestamp, string $frequency): int {
+    $cron = new CronExpression($frequency);
+    $dt = new \DateTime();
+    $dt
+      ->setTimezone(new \DateTimeZone('UTC'))
+      ->setTimestamp($lastRunTimestamp);
+    return $cron->getNextRunDate($dt)->getTimestamp();
+  }
+
+  /**
    * Stores the execution time for the modeller event $id in ECA state.
    *
    * @param string $id
    *   The id of the modeller event.
+   * @param int|null $timestamp
+   *   (optional) The timestamp value to store. When not given, the current time
+   *   will be used.
    */
-  protected function storeTimestamp(string $id): void {
-    $this->keyValueStore()->setTimestamp('cron-' . $id);
+  protected function storeTimestamp(string $id, ?int $timestamp = NULL): void {
+    $this->state->setTimestamp('cron-' . $id, $timestamp);
   }
 
 }

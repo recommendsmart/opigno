@@ -42,13 +42,13 @@ class EcaStateRead extends ConfigurableActionBase {
       '#type' => 'textfield',
       '#title' => $this->t('State key'),
       '#default_value' => $this->configuration['key'],
-      '#weight' => -10,
+      '#weight' => -20,
     ];
     $form['token_name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Name of token'),
       '#default_value' => $this->configuration['token_name'],
-      '#weight' => -9,
+      '#weight' => -10,
     ];
     return $form;
   }

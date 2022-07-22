@@ -55,7 +55,7 @@ class CurrentUserPermissionTest extends KernelTestBase {
     /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
     $account_switcher = \Drupal::service('account_switcher');
 
-    /** @var \Drupal\eca_content\Plugin\ECA\Condition\EntityExists $condition */
+    /** @var \Drupal\eca_user\Plugin\ECA\Condition\CurrentUserPermission $condition */
     $condition = $condition_manager->createInstance('eca_current_user_permission', ['permission' => 'this permission does not exist']);
     $this->assertFalse($condition->evaluate(), 'Non-existent permission must evaluate to false.');
 
@@ -69,7 +69,6 @@ class CurrentUserPermissionTest extends KernelTestBase {
     $account_switcher->switchTo(User::load(2));
 
     // Create a plugin for evaluating user permission.
-    /** @var \Drupal\eca_content\Plugin\ECA\Condition\EntityExists $condition */
     $condition = $condition_manager->createInstance('eca_current_user_permission', ['permission' => 'this permission does not exist']);
     $this->assertFalse($condition->evaluate(), 'Non-existent permission must evaluate to false.');
 

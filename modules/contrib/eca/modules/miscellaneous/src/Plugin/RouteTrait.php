@@ -13,20 +13,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
 trait RouteTrait {
 
   /**
-   * {@inheritdoc}
-   */
-  public function getOptions(string $id): ?array {
-    if ($id === 'request') {
-      return [
-        RouteInterface::ROUTE_CURRENT => $this->t('current'),
-        RouteInterface::ROUTE_PARENT => $this->t('parent'),
-        RouteInterface::ROUTE_MAIN => $this->t('main'),
-      ];
-    }
-    return parent::getOptions($id);
-  }
-
-  /**
    * Builds and returns the route match depending on the plugin configuration.
    *
    * @return \Drupal\Core\Routing\RouteMatchInterface
@@ -63,8 +49,12 @@ trait RouteTrait {
       '#type' => 'select',
       '#title' => $this->t('Request'),
       '#default_value' => $this->configuration['request'],
-      '#options' => $this->getOptions('request'),
-      '#weight' => -11,
+      '#options' => [
+        RouteInterface::ROUTE_CURRENT => $this->t('current'),
+        RouteInterface::ROUTE_PARENT => $this->t('parent'),
+        RouteInterface::ROUTE_MAIN => $this->t('main'),
+      ],
+      '#weight' => -110,
     ];
   }
 

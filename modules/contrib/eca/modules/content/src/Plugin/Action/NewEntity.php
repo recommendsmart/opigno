@@ -7,8 +7,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eca\Plugin\Action\ConfigurableActionBase;
-use Drupal\eca\Plugin\OptionsInterface;
-use Drupal\eca_content\Service\EntityTypes;
+use Drupal\eca\Service\ContentEntityTypes;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,14 +19,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   type = "entity"
  * )
  */
-class NewEntity extends ConfigurableActionBase implements OptionsInterface {
+class NewEntity extends ConfigurableActionBase {
 
   /**
    * The entity type service.
    *
-   * @var \Drupal\eca_content\Service\EntityTypes
+   * @var \Drupal\eca\Service\ContentEntityTypes
    */
-  protected EntityTypes $entityTypes;
+  protected ContentEntityTypes $entityTypes;
 
   /**
    * The instantiated entity.
@@ -41,7 +40,7 @@ class NewEntity extends ConfigurableActionBase implements OptionsInterface {
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): NewEntity {
     $plugin = parent::create($container, $configuration, $plugin_id, $plugin_definition);
-    $plugin->entityTypes = $container->get('eca_content.service.entity_types');
+    $plugin->entityTypes = $container->get('eca.service.content_entity_types');
     return $plugin;
   }
 
@@ -68,38 +67,38 @@ class NewEntity extends ConfigurableActionBase implements OptionsInterface {
       '#type' => 'textfield',
       '#title' => $this->t('Name of token'),
       '#default_value' => $this->configuration['token_name'],
-      '#weight' => -10,
+      '#weight' => -60,
     ];
     $form['type'] = [
       '#type' => 'select',
       '#title' => $this->t('Type'),
-      '#options' => $this->getOptions('type'),
+      '#options' => $this->entityTypes->getTypesAndBundles(FALSE, FALSE),
       '#default_value' => $this->configuration['type'],
-      '#weight' => -9,
+      '#weight' => -50,
     ];
     $form['langcode'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Language code'),
       '#default_value' => $this->configuration['langcode'],
-      '#weight' => -8,
+      '#weight' => -40,
     ];
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Entity label'),
       '#default_value' => $this->configuration['label'],
-      '#weight' => -7,
+      '#weight' => -30,
     ];
     $form['published'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Published'),
       '#default_value' => $this->shouldPublish(),
-      '#weight' => -6,
+      '#weight' => -20,
     ];
     $form['owner'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Owner UID'),
       '#default_value' => $this->configuration['owner'],
-      '#weight' => -5,
+      '#weight' => -10,
     ];
     return $form;
   }
@@ -120,29 +119,14 @@ class NewEntity extends ConfigurableActionBase implements OptionsInterface {
   /**
    * {@inheritdoc}
    */
-  public function getOptions(string $id): ?array {
-    if ($id === 'type') {
-      $types = [];
-      $this->entityTypes->bundleField(FALSE, FALSE);
-      foreach ($this->entityTypes->getTypesAndBundles() as $info) {
-        $types[$info['value']] = $info['name'];
-      }
-      return $types;
-    }
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     /** @var \Drupal\Core\Access\AccessResultInterface $access_result */
     $access_result = parent::access($object, $account, TRUE);
     if ($access_result->isAllowed() && !empty($this->configuration['type'])) {
       $account = $account ?? $this->currentUser;
       [$entity_type_id, $bundle] = array_pad(explode(' ', $this->configuration['type'], 2), 2, NULL);
-      if ($bundle === NULL || $bundle === '' || $bundle === '_all') {
-        $access_result = AccessResult::forbidden(sprintf('Cannot determine access without a specified bundle.', $entity_type_id));
+      if ($bundle === NULL || $bundle === '' || $bundle === ContentEntityTypes::ALL) {
+        $access_result = AccessResult::forbidden('Cannot determine access without a specified bundle.');
       }
       elseif (!$this->entityTypeManager->hasDefinition($entity_type_id)) {
         // @todo This should be taken care of by a submit validation handler.
@@ -177,14 +161,14 @@ class NewEntity extends ConfigurableActionBase implements OptionsInterface {
       $values[$entity_keys['langcode']] = $langcode;
     }
     if (isset($entity_keys['label']) && isset($config['label'])) {
-      $values[$entity_keys['label']] = trim($this->tokenServices->replace($config['label'], [], ['clear' => TRUE]));
+      $values[$entity_keys['label']] = trim((string) $this->tokenServices->replace($config['label'], [], ['clear' => TRUE]));
     }
     if (isset($entity_keys['published'])) {
       $values[$entity_keys['published']] = (int) $this->shouldPublish();
     }
     if (isset($entity_keys['owner'])) {
       if (!empty($config['owner'])) {
-        $owner_id = trim($this->tokenServices->replace($config['owner'], [], ['clear' => TRUE]));
+        $owner_id = trim((string) $this->tokenServices->replace($config['owner'], [], ['clear' => TRUE]));
       }
       if (!isset($owner_id) || $owner_id === '') {
         $owner_id = $this->currentUser->id();

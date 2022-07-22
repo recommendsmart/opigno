@@ -114,21 +114,21 @@ class EnqueueTask extends ConfigurableActionBase {
       '#title' => $this->t('Task name'),
       '#description' => $this->t('When reacting upon the event "ECA processing queued task", you can use this name to identify the task.'),
       '#default_value' => $this->configuration['task_name'],
-      '#weight' => 10,
+      '#weight' => -50,
     ];
     $form['task_value'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Task value'),
       '#description' => $this->t('You may optionally define a task value here for more granular task control.'),
       '#default_value' => $this->configuration['task_value'],
-      '#weight' => 20,
+      '#weight' => -40,
     ];
     $form['tokens'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Tokens to forward'),
       '#default_value' => $this->configuration['tokens'],
       '#description' => $this->t('Comma separated list of token names from the current context, that will be put into the task.'),
-      '#weight' => 30,
+      '#weight' => -30,
     ];
     return $form;
   }

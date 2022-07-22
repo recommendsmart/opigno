@@ -134,3 +134,7 @@ eca.wrapper.successor:
     condition:
       type: string
       label: 'Condition'
+
+eca_action_configuration:
+  type: ignore
+  label: 'ECA action configuration'

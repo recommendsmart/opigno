@@ -9,7 +9,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\eca\Plugin\Action\ConfigurableActionBase;
 use Drupal\eca_content\Event\ContentEntityCustomEvent;
 use Drupal\eca_content\Event\ContentEntityEvents;
-use Drupal\eca_content\Service\EntityTypes;
+use Drupal\eca\Service\ContentEntityTypes;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -25,6 +25,13 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class TriggerContentEntityCustomEvent extends ConfigurableActionBase {
 
   /**
+   * Overrides \Drupal\eca\Plugin\ActionActionInterface::EXTERNALLY_AVAILABLE.
+   *
+   * @var bool
+   */
+  public const EXTERNALLY_AVAILABLE = TRUE;
+
+  /**
    * The event dispatcher.
    *
    * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
@@ -34,9 +41,9 @@ class TriggerContentEntityCustomEvent extends ConfigurableActionBase {
   /**
    * The entity types service.
    *
-   * @var \Drupal\eca_content\Service\EntityTypes
+   * @var \Drupal\eca\Service\ContentEntityTypes
    */
-  protected EntityTypes $entityTypes;
+  protected ContentEntityTypes $entityTypes;
 
   /**
    * {@inheritdoc}
@@ -44,7 +51,7 @@ class TriggerContentEntityCustomEvent extends ConfigurableActionBase {
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): TriggerContentEntityCustomEvent {
     $plugin = parent::create($container, $configuration, $plugin_id, $plugin_definition);
     $plugin->eventDispatcher = $container->get('event_dispatcher');
-    $plugin->entityTypes = $container->get('eca_content.service.entity_types');
+    $plugin->entityTypes = $container->get('eca.service.content_entity_types');
     return $plugin;
   }
 
@@ -88,14 +95,14 @@ class TriggerContentEntityCustomEvent extends ConfigurableActionBase {
       '#type' => 'textfield',
       '#title' => $this->t('Event ID'),
       '#default_value' => $this->configuration['event_id'],
-      '#weight' => -10,
+      '#weight' => -20,
     ];
     $form['tokens'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Tokens to forward'),
       '#default_value' => $this->configuration['tokens'],
       '#description' => $this->t('Comma separated list of token names from the current context, that will be forwarded to the triggered event. These tokens are then also available for subsequent conditions and actions within the current process.'),
-      '#weight' => -9,
+      '#weight' => -10,
     ];
     return $form;
   }

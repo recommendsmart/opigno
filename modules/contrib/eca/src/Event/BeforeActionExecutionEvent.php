@@ -28,9 +28,9 @@ class BeforeActionExecutionEvent extends Event {
   /**
    * The triggering system event.
    *
-   * @var \Drupal\Component\EventDispatcher\Event
+   * @var \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event
    */
-  protected Event $event;
+  protected object $event;
 
   /**
    * The predecessor.
@@ -55,12 +55,12 @@ class BeforeActionExecutionEvent extends Event {
    *   The action object as part of an ECA configuration.
    * @param mixed &$object
    *   The object that the action operates on.
-   * @param \Drupal\Component\EventDispatcher\Event $event
+   * @param \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event $event
    *   The triggering system event.
    * @param \Drupal\eca\Entity\Objects\EcaObject $predecessor
    *   The predecessor.
    */
-  public function __construct(EcaAction $ecaAction, &$object, Event $event, EcaObject $predecessor) {
+  public function __construct(EcaAction $ecaAction, &$object, object $event, EcaObject $predecessor) {
     $this->ecaAction = $ecaAction;
     $this->object = $object;
     $this->event = $event;
@@ -90,10 +90,10 @@ class BeforeActionExecutionEvent extends Event {
   /**
    * Get the applying system event.
    *
-   * @return \Drupal\Component\EventDispatcher\Event
+   * @return \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event
    *   The applying system event.
    */
-  public function getEvent(): Event {
+  public function getEvent(): object {
     return $this->event;
   }
 

@@ -54,6 +54,7 @@ actions:
     label: Msg
     configuration:
       message: 'Message 0: [entity:title]'
+      replace_tokens: false
     successors:
       -
         id: Activity_03j3ob6
@@ -105,18 +106,21 @@ actions:
     label: Msg
     configuration:
       message: 'Message 1: [entity:title]'
+      replace_tokens: false
     successors: {  }
   Activity_1p5hvp4:
     plugin: action_message_action
     label: Msg
     configuration:
       message: 'Message set current user: [entity:title]'
+      replace_tokens: false
     successors: {  }
   Activity_1gguvde:
     plugin: action_message_action
     label: Msg
     configuration:
       message: 'Message without event: [entity:title]'
+      replace_tokens: false
     successors: {  }
   Activity_00ca469:
     plugin: eca_trigger_custom_event

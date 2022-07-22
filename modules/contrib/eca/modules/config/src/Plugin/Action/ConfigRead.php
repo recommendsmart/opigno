@@ -2,7 +2,10 @@
 
 namespace Drupal\eca_config\Plugin\Action;
 
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\eca\Plugin\Action\ActionBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Action to read configuration.
@@ -16,6 +19,23 @@ use Drupal\Core\Form\FormStateInterface;
 class ConfigRead extends ConfigActionBase {
 
   /**
+   * The typed config manager.
+   *
+   * @var \Drupal\Core\Config\TypedConfigManagerInterface|null
+   */
+  protected ?TypedConfigManagerInterface $typedConfigManager = NULL;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): ActionBase {
+    /** @var \Drupal\eca_config\Plugin\Action\ConfigRead $instance */
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->setTypedConfigManager($container->get('config.typed'));
+    return $instance;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function execute(): void {
@@ -27,7 +47,27 @@ class ConfigRead extends ConfigActionBase {
     $config_factory = $this->getConfigFactory();
 
     $config = $include_overridden ? $config_factory->get($config_name) : $config_factory->getEditable($config_name);
-    $value = $config->get($config_key);
+    if ($include_overridden) {
+      // No usage of typed config when overridden values shall be included.
+      // This prevents the DTO from accidentally saving overriden values.
+      $value = $config->get($config_key);
+    }
+    else {
+      $value = $this->typedConfigManager->createFromNameAndData($config->getName(), $config->get());
+      if ($config_key !== '') {
+        $key_parts = explode('.', $config_key);
+        while (($key = array_shift($key_parts)) !== NULL) {
+          foreach ($value as $k => $element) {
+            if ($k === $key) {
+              $value = $element;
+              break;
+            }
+          }
+          $value = NULL;
+          break;
+        }
+      }
+    }
 
     $token->addTokenData($token_name, $value);
   }
@@ -52,14 +92,14 @@ class ConfigRead extends ConfigActionBase {
       '#title' => $this->t('Include overridden'),
       '#description' => $this->t('Whether to apply module and settings.php overrides to values.'),
       '#default_value' => $this->configuration['include_overridden'],
-      '#weight' => -7,
+      '#weight' => -70,
     ];
     $form['token_name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Name of token'),
       '#default_value' => $this->configuration['token_name'],
       '#description' => $this->t('The targeted configuration value will be loaded into this specified token.'),
-      '#weight' => -6,
+      '#weight' => -60,
     ];
     return $form;
   }
@@ -71,6 +111,16 @@ class ConfigRead extends ConfigActionBase {
     $this->configuration['token_name'] = $form_state->getValue('token_name');
     $this->configuration['include_overridden'] = $form_state->getValue('include_overridden');
     parent::submitConfigurationForm($form, $form_state);
+  }
+
+  /**
+   * Set the typed config manager.
+   *
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $manager
+   *   The manager.
+   */
+  public function setTypedConfigManager(TypedConfigManagerInterface $manager) {
+    $this->typedConfigManager = $manager;
   }
 
 }

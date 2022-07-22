@@ -28,7 +28,7 @@ class FormAddGroupElement extends FormActionBase {
     if (!($form = &$this->getCurrentForm())) {
       return;
     }
-    $name = trim($this->tokenServices->replace($this->configuration['name']));
+    $name = trim((string) $this->tokenServices->replace($this->configuration['name']));
     if ($name === '') {
       throw new \InvalidArgumentException('Cannot use an empty string as element name');
     }
@@ -130,7 +130,7 @@ class FormAddGroupElement extends FormActionBase {
       '#type' => 'textfield',
       '#title' => $this->t('Element name'),
       '#description' => $this->t('The element name is a machine name and is used for being identified when rendering the form. Example: <em>name_info</em>'),
-      '#weight' => 10,
+      '#weight' => -10,
       '#default_value' => $this->configuration['name'],
       '#required' => TRUE,
     ];
@@ -138,7 +138,7 @@ class FormAddGroupElement extends FormActionBase {
       '#type' => 'textfield',
       '#title' => $this->t('Title'),
       '#description' => $this->t('This will be shown to the user in the form as grouping title.'),
-      '#weight' => 20,
+      '#weight' => -9,
       '#default_value' => $this->configuration['title'],
       '#required' => TRUE,
     ];
@@ -146,33 +146,33 @@ class FormAddGroupElement extends FormActionBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Open'),
       '#default_value' => $this->configuration['open'],
-      '#weight' => 30,
+      '#weight' => -8,
     ];
     $form['weight'] = [
       '#type' => 'number',
       '#title' => $this->t('Element weight'),
       '#description' => $this->t('The lower the weight, the element appears before other elements having a higher weight.'),
       '#default_value' => $this->configuration['weight'],
-      '#weight' => 40,
+      '#weight' => -7,
       '#required' => TRUE,
     ];
     $form['fields'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Fields'),
       '#description' => $this->t('Machine names of form fields that should be grouped together. Define multiple values separated with comma. Example: <em>first_name,last_name</em>'),
-      '#weight' => 50,
+      '#weight' => -6,
       '#default_value' => $this->configuration['fields'],
     ];
     $form['introduction_text'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Introduction text'),
-      '#weight' => 60,
+      '#weight' => -5,
       '#default_value' => $this->configuration['introduction_text'],
     ];
     $form['summary_value'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Summary value'),
-      '#weight' => 70,
+      '#weight' => -4,
       '#default_value' => $this->configuration['summary_value'],
     ];
     return $form;

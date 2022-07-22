@@ -49,7 +49,7 @@ class UserEvent extends EventBase {
       'floodblockip' => [
         'label' => 'Flood blocked IP',
         'event_name' => CoreUserEvents::FLOOD_BLOCKED_IP,
-        'event_class' => UserCancel::class,
+        'event_class' => UserFloodEvent::class,
         'tags' => Tag::WRITE | Tag::PERSISTENT | Tag::AFTER,
       ],
       'floodblockuser' => [

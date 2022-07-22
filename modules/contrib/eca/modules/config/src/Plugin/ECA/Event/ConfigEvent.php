@@ -2,18 +2,14 @@
 
 namespace Drupal\eca_config\Plugin\ECA\Event;
 
-use Drupal\config_translation\Event\ConfigMapperPopulateEvent;
-use Drupal\config_translation\Event\ConfigTranslationEvents;
 use Drupal\eca\Plugin\ECA\Event\EventBase;
-use Drupal\language\Config\LanguageConfigOverrideCrudEvent;
-use Drupal\language\Config\LanguageConfigOverrideEvents;
 use Drupal\Core\Config\ConfigCollectionInfo;
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigImporterEvent;
 use Drupal\Core\Config\ConfigRenameEvent;
 use Drupal\Core\Config\Importer\MissingContentEvent;
-use Drupal\Core\Config\StorageTransformEvent;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\eca\Event\Tag;
 
 /**
@@ -73,42 +69,22 @@ class ConfigEvent extends EventBase {
         'event_class' => ConfigCrudEvent::class,
         'tags' => Tag::CONFIG | Tag::WRITE | Tag::PERSISTENT | Tag::AFTER,
       ],
-      'storage_transform_export' => [
-        'label' => 'Start config export',
-        'event_name' => ConfigEvents::STORAGE_TRANSFORM_EXPORT,
-        'event_class' => StorageTransformEvent::class,
-        'tags' => Tag::CONFIG | Tag::WRITE | Tag::PERSISTENT | Tag::BEFORE,
-      ],
-      'storage_transform_import' => [
-        'label' => 'Start config import',
-        'event_name' => ConfigEvents::STORAGE_TRANSFORM_IMPORT,
-        'event_class' => StorageTransformEvent::class,
-        'tags' => Tag::CONFIG | Tag::WRITE | Tag::PERSISTENT | Tag::BEFORE,
-      ],
     ];
-    if (class_exists(ConfigTranslationEvents::class)) {
-      $actions['populate_mapper'] = [
-        'label' => 'Config manager populated',
-        'event_name' => ConfigTranslationEvents::POPULATE_MAPPER,
-        'event_class' => ConfigMapperPopulateEvent::class,
-        'tags' => Tag::CONFIG | Tag::WRITE | Tag::RUNTIME | Tag::AFTER,
-      ];
-    }
-    if (class_exists(LanguageConfigOverrideEvents::class)) {
-      $actions['delete_override'] = [
-        'label' => 'Delete config override',
-        'event_name' => LanguageConfigOverrideEvents::DELETE_OVERRIDE,
-        'event_class' => LanguageConfigOverrideCrudEvent::class,
-        'tags' => Tag::CONFIG | Tag::WRITE | Tag::PERSISTENT | Tag::AFTER,
-      ];
-      $actions['save_override'] = [
-        'label' => 'Save config override',
-        'event_name' => LanguageConfigOverrideEvents::SAVE_OVERRIDE,
-        'event_class' => LanguageConfigOverrideCrudEvent::class,
-        'tags' => Tag::CONFIG | Tag::WRITE | Tag::PERSISTENT | Tag::AFTER,
-      ];
-    }
     return $actions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
+    if ($this->eventClass() === ConfigCrudEvent::class) {
+      $form['help'] = [
+        '#type' => 'markup',
+        '#markup' => $this->t('This event provides two tokens: <em>"[config:*]"</em> to access properties of a configuration, and <em>"[config_name]"</em> to get the machine name of a configuration (e.g. "system.site").'),
+        '#weight' => 10,
+      ];
+    }
+    return $form;
   }
 
 }

@@ -31,7 +31,9 @@ class FormFieldSetOptions extends FormFieldActionBase {
    */
   public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     $result = parent::access($object, $account, TRUE);
-    $element = &$this->getTargetElement();
+    if ($element = &$this->getTargetElement()) {
+      $element = &$this->jumpToFirstFieldChild($element);
+    }
     $result = $result->andIf(AccessResult::allowedIf(isset($element['#options'])));
     return $return_as_object ? $result : $result->isAllowed();
   }

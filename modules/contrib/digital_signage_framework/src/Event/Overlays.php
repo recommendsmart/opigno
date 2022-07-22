@@ -4,14 +4,13 @@ namespace Drupal\digital_signage_framework\Event;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\digital_signage_framework\DeviceInterface;
-use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Class Overlays
  *
  * @package Drupal\digital_signage_framework\Event
  */
-class Overlays extends Event {
+class Overlays extends \Symfony\Contracts\EventDispatcher\Event {
 
   /**
    * @var array

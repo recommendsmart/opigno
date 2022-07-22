@@ -6,6 +6,7 @@ use Drupal\eca\EcaEvents;
 use Drupal\eca\Event\AfterInitialExecutionEvent;
 use Drupal\eca\Event\BeforeInitialExecutionEvent;
 use Drupal\eca\Event\FormEventInterface;
+use Drupal\Core\Entity\EntityFormInterface;
 
 /**
  * Adds currently involved form events into a publicly available stack.
@@ -32,7 +33,7 @@ class EcaExecutionFormSubscriber extends EcaBase {
   /**
    * Subscriber method before initial execution.
    *
-   * Adds a form data provider to the Token service.
+   * Adds the event to the stack, and the form entity to the Token service.
    *
    * @param \Drupal\eca\Event\BeforeInitialExecutionEvent $before_event
    *   The according event.
@@ -41,6 +42,28 @@ class EcaExecutionFormSubscriber extends EcaBase {
     $event = $before_event->getEvent();
     if ($event instanceof FormEventInterface) {
       array_unshift($this->eventStack, $event);
+      $form_state = $event->getFormState();
+      $form_object = $form_state->getFormObject();
+      if ($form_object instanceof EntityFormInterface) {
+        // Only build automatically when the form state is submitted and has no
+        // errors. For any other case, there is "eca_form_build_entity".
+        if ($event->getForm() && $form_state->isSubmitted() && $form_state->isValidationComplete() && !$form_state->hasAnyErrors()) {
+          if (empty($form_state->getValues())) {
+            // @see \Drupal\eca_form\Plugin\Action\FormBuildEntity::execute()
+            $form_state = clone $form_state;
+            $form_state->setValues($form_state->getUserInput());
+          }
+          // Building the entity creates a clone of it.
+          $entity = $form_object->buildEntity($event->getForm(), $form_state);
+        }
+        else {
+          $entity = $form_object->getEntity();
+        }
+        $this->tokenService->addTokenData('entity', $entity);
+        if ($token_type = $this->tokenService->getTokenTypeForEntityType($entity->getEntityTypeId())) {
+          $this->tokenService->addTokenData($token_type, $entity);
+        }
+      }
     }
   }
 

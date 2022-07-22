@@ -13,6 +13,7 @@ use Drupal\eca\Event\BeforeInitialExecutionEvent;
 use Drupal\eca\Plugin\CleanupInterface;
 use Drupal\eca\Plugin\ObjectWithPluginInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\Event as ContractsEvent;
 
 /**
  * Executes enabled ECA config regards applying events.
@@ -90,15 +91,20 @@ class Processor {
   /**
    * Main method that executes ECA config regards applying events.
    *
-   * @param \Drupal\Component\EventDispatcher\Event $event
+   * @param \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event $event
    *   The event being triggered.
    * @param string $event_name
    *   The event name that was triggered.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \InvalidArgumentException
+   *   When the given event is not of a documented object type.
    */
-  public function execute(Event $event, string $event_name): void {
+  public function execute(object $event, string $event_name): void {
+    if (!($event instanceof Event) && !($event instanceof ContractsEvent)) {
+      throw new \InvalidArgumentException(sprintf('Passed $event parameter is not of an expected event object type, %s given', get_class($event)));
+    }
     $context = [
       '%event' => get_class($event),
     ];
@@ -132,7 +138,7 @@ class Processor {
           // the execution pipeline to prevent infinite recursion.
           $this->executionHistory[] = $ecaEvent;
 
-          $before_event = new BeforeInitialExecutionEvent($eca, $ecaEvent, $event);
+          $before_event = new BeforeInitialExecutionEvent($eca, $ecaEvent, $event, $event_name);
           $this->eventDispatcher->dispatch($before_event, EcaEvents::BEFORE_INITIAL_EXECUTION);
 
           // Now that we have any required context, we may execute the logic.
@@ -143,7 +149,7 @@ class Processor {
           // item from the history stack as it's not needed anymore.
           array_pop($this->executionHistory);
 
-          $this->eventDispatcher->dispatch(new AfterInitialExecutionEvent($eca, $ecaEvent, $event, $before_event->getPrestate(NULL)), EcaEvents::AFTER_INITIAL_EXECUTION);
+          $this->eventDispatcher->dispatch(new AfterInitialExecutionEvent($eca, $ecaEvent, $event, $event_name, $before_event->getPrestate(NULL)), EcaEvents::AFTER_INITIAL_EXECUTION);
 
           if ($is_root_execution) {
             // Forget what we've done here. We only take care for nested
@@ -164,12 +170,12 @@ class Processor {
    *   The ECA config entity.
    * @param \Drupal\eca\Entity\Objects\EcaObject $eca_object
    *   The ECA item that was just executed and looks for its successors.
-   * @param \Drupal\Component\EventDispatcher\Event $event
+   * @param \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event $event
    *   The event that was originally triggered.
    * @param array $context
    *   List of key value pairs, used to generate meaningful log messages.
    */
-  protected function executeSuccessors(Eca $eca, EcaObject $eca_object, Event $event, array $context): void {
+  protected function executeSuccessors(Eca $eca, EcaObject $eca_object, object $event, array $context): void {
     $executedSuccessorIds = [];
     foreach ($eca->getSuccessors($eca_object, $event, $context) as $successor) {
       $context['%actionlabel'] = $successor->getLabel();

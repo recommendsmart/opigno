@@ -46,15 +46,12 @@ actions:
     label: Msg
     configuration:
       message: 'Node [node:nid] ([entity:title]) was updated and ECA recognized this.'
+      replace_tokens: false
     successors: {  }
   Activity_1a19oxh:
     plugin: node_make_sticky_action
     label: 'Make stícky'
     configuration:
-      method: 'set:clear'
-      strip_tags: false
-      trim: false
-      save_entity: false
       object: ''
     successors:
       -
@@ -64,10 +61,6 @@ actions:
     plugin: node_promote_action
     label: 'Promote to front page'
     configuration:
-      method: 'set:clear'
-      strip_tags: false
-      trim: false
-      save_entity: false
       object: ''
     successors:
       -
@@ -81,12 +74,14 @@ actions:
     label: Msg
     configuration:
       message: 'Made node [entity:title] sticky'
+      replace_tokens: false
     successors: {  }
   Activity_10999pm:
     plugin: action_message_action
     label: Msg
     configuration:
       message: 'Promoted article [entity:title] to front page'
+      replace_tokens: false
     successors: {  }
   Activity_0t82j94:
     plugin: eca_set_field_value
@@ -108,6 +103,7 @@ actions:
     label: Msg
     configuration:
       message: 'Updated title of article'
+      replace_tokens: false
     successors: {  }
   Activity_1fmd24b:
     plugin: eca_token_load_user_current

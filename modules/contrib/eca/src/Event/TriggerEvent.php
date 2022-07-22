@@ -55,19 +55,23 @@ class TriggerEvent {
    *   The plugin ID of the ECA-related event ("EcaEvent").
    * @param mixed &$args
    *   Arguments that shall be passed to the constructor of the event object.
+   *
+   * @return \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event|null
+   *   The dispatched event, or NULL if no event was dispatched.
    */
-  public function dispatchFromPlugin(string $plugin_id, &...$args): void {
+  public function dispatchFromPlugin(string $plugin_id, &...$args): ?object {
     try {
       /** @var \Drupal\eca\Plugin\ECA\Event\EventInterface $event_plugin */
       $event_plugin = $this->eventPluginManager->createInstance($plugin_id);
     }
     catch (PluginException $e) {
       // @todo Log this exception.
-      return;
+      return NULL;
     }
     $event_class = $event_plugin->eventClass();
     $event = new $event_class(...$args);
     $this->eventDispatcher->dispatch($event, $event_plugin->eventName());
+    return $event;
   }
 
 }

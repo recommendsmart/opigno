@@ -136,6 +136,10 @@ trait PropertyPathTrait {
         }
       }
 
+      if ($data === NULL) {
+        return NULL;
+      }
+
       $value = $data->getValue();
       if (!($value instanceof EntityInterface) && method_exists($data, 'getEntity') && ($entity = $data->getEntity())) {
         $value = $entity;

@@ -46,14 +46,14 @@ class ListCount extends ConfigurableActionBase {
       '#title' => $this->t('Token containing the list'),
       '#description' => $this->t('Provide the name of the token that contains a list from which the number of items should be counted.'),
       '#default_value' => $this->configuration['list_token'],
-      '#weight' => -10,
+      '#weight' => -20,
     ];
     $form['token_name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Name of token'),
       '#description' => $this->t('Provide the name of a new token where the result should be stored.'),
       '#default_value' => $this->configuration['token_name'],
-      '#weight' => -9,
+      '#weight' => -10,
     ];
     return $form;
   }

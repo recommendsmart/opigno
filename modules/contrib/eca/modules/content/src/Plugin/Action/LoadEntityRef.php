@@ -2,10 +2,11 @@
 
 namespace Drupal\eca_content\Plugin\Action;
 
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\eca\TypedData\PropertyPathTrait;
 
 /**
  * Load referenced entity into token environment.
@@ -19,28 +20,44 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class LoadEntityRef extends LoadEntity {
 
+  use PropertyPathTrait;
+
   /**
    * {@inheritdoc}
    */
-  protected function loadEntity($entity = NULL): ?EntityInterface {
-    $entity = parent::loadEntity($entity);
+  protected function doLoadEntity($entity = NULL): ?EntityInterface {
+    $entity = parent::doLoadEntity($entity);
+    $this->entity = NULL;
     if (is_null($entity)) {
       return NULL;
     }
-    if (!($entity instanceof ContentEntityInterface)) {
-      throw new \InvalidArgumentException('No content entity provided.');
+    if (!($entity instanceof EntityInterface)) {
+      throw new \InvalidArgumentException('No entity provided.');
     }
     $reference_field_name = $this->configuration['field_name_entity_ref'];
-    if (!$entity->hasField($reference_field_name)) {
-      throw new \InvalidArgumentException(sprintf('Field %s does not exist for entity type %s/%s.', $reference_field_name, $entity->getEntityTypeId(), $entity->bundle()));
+    if (($entity instanceof FieldableEntityInterface) && $entity->hasField($reference_field_name)) {
+      $item_list = $entity->get($reference_field_name);
+      if (!($item_list instanceof EntityReferenceFieldItemListInterface)) {
+        throw new \InvalidArgumentException(sprintf('Field %s is not an entity reference field for entity type %s/%s.', $reference_field_name, $entity->getEntityTypeId(), $entity->bundle()));
+      }
+      $referenced = $item_list->referencedEntities();
+      $this->entity = $referenced ? reset($referenced) : NULL;
+      return $this->entity;
     }
-    $item_list = $entity->get($reference_field_name);
-    if (!($item_list instanceof EntityReferenceFieldItemListInterface)) {
-      throw new \InvalidArgumentException(sprintf('Field %s is not an entity reference field for entity type %s/%s.', $reference_field_name, $entity->getEntityTypeId(), $entity->bundle()));
+    elseif ($property = $this->getTypedProperty($entity->getTypedData(), $reference_field_name, ['access' => FALSE, 'auto_item' => FALSE])) {
+      if (is_scalar($property->getValue())) {
+        $property = $property->getParent();
+      }
+      if (isset($property->entity) && ($property->entity instanceof EntityInterface)) {
+        $this->entity = $property->entity;
+      }
+      elseif ($property->getValue() instanceof EntityInterface) {
+        $this->entity = $property->getValue();
+      }
+      return $this->entity;
     }
-    $referenced = $item_list->referencedEntities();
-    $this->entity = $referenced ? reset($referenced) : NULL;
-    return $this->entity ?? NULL;
+
+    throw new \InvalidArgumentException(sprintf('Field %s does not exist for entity type %s/%s.', $reference_field_name, $entity->getEntityTypeId(), $entity->bundle()));
   }
 
   /**
@@ -61,7 +78,7 @@ class LoadEntityRef extends LoadEntity {
       '#type' => 'textfield',
       '#title' => $this->t('Field name entity reference'),
       '#default_value' => $this->configuration['field_name_entity_ref'],
-      '#weight' => -8,
+      '#weight' => -80,
     ];
     return $form;
   }

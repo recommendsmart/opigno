@@ -43,7 +43,7 @@ class EntityBasicsTest extends Base {
     $this->disableEcaModel('eca_test_0002');
     $this->disableEcaModel('eca_test_0003');
     $this->assertStatusMessages([
-      "Message set current user: ",
+      "Message set current user: [entity:title]",
     ]);
 
     $title = $this->randomMachineName();
@@ -91,7 +91,7 @@ class EntityBasicsTest extends Base {
     $this->disableEcaModel('eca_test_0002');
     $this->disableEcaModel('eca_test_0003');
     $this->assertStatusMessages([
-      "Message set current user: ",
+      "Message set current user: [entity:title]",
     ]);
 
     $title = $this->randomMachineName();
@@ -146,10 +146,10 @@ class EntityBasicsTest extends Base {
     $this->assertStatusMessages([
       // The event "Set current user" is not entity aware and won't replace the
       // entity token.
-      "Message set current user: ",
+      "Message set current user: [entity:title]",
       // The custom event "Cplain" is not entity aware and won't replace the
       // entity token.
-      "Message without event: ",
+      "Message without event: [entity:title]",
       // The event "Pre-save" is entity aware and replaces the entity token.
       "Message 0: $title",
       // The custom event "C1" is entity aware and replaces the entity token.

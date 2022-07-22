@@ -9,6 +9,7 @@ use Drupal\Core\Url;
 use Drupal\flow\Flow;
 use Drupal\flow\FlowCompatibility;
 use Drupal\flow\FlowTaskMode;
+use Drupal\flow\Plugin\flow\Subject\Reference;
 use Drupal\flow\Plugin\FlowQualifierManager;
 use Drupal\flow\Plugin\FlowSubjectManager;
 use Drupal\flow\Plugin\FlowTaskManager;
@@ -537,14 +538,15 @@ class FlowForm extends EntityForm {
     foreach ($this->subjectManager->getDefinitions() as $id => $definition) {
       $plugin = $this->subjectManager->createInstance($id, $flow_keys);
       if ($config->isCustom()) {
-        if ($plugin->getBaseId() !== 'qualified') {
-          // Only qualified subjects are allowed for custom flow.
+        if (strpos($id, 'qualified:') === FALSE) {
+          // Only qualified subjects and items from qualified subjects are
+          // allowed for custom flow.
           continue;
         }
         $qualifier_exists = FALSE;
         /** @var \Drupal\flow\Plugin\FlowQualifierInterface $qualifier */
         foreach ($qualifier_plugins as $qualifier_plugin) {
-          if (FlowCompatibility::validate($config, $plugin, $qualifier_plugin)) {
+          if (FlowCompatibility::validate($config, $plugin instanceof Reference ? $plugin->getSourceSubject() : $plugin, $qualifier_plugin)) {
             $qualifier_exists = TRUE;
             break;
           }
@@ -553,8 +555,9 @@ class FlowForm extends EntityForm {
           continue;
         }
       }
-      elseif ($plugin->getBaseId() === 'qualified') {
-        // Qualified subjects are only available in custom flow.
+      elseif (strpos($id, 'qualified:') !== FALSE) {
+        // Qualified subjects and items from qualified subjects are only
+        // available in custom flow.
         continue;
       }
       $is_compatible = FALSE;
@@ -598,8 +601,10 @@ class FlowForm extends EntityForm {
       $subject_plugins[] = $this->subjectManager->createInstance($subject_plugin_id, $flow_keys);
     }
     else {
-      foreach (array_keys($this->subjectManager->getDefinitions()) as $subject_plugin_id) {
-        $subject_plugins[] = $this->subjectManager->createInstance($subject_plugin_id, $flow_keys);
+      foreach (array_keys($this->getSubjectOptions($form, $form_state)) as $subject_plugin_id) {
+        if ($subject_plugin_id !== '_none') {
+          $subject_plugins[] = $this->subjectManager->createInstance($subject_plugin_id, $flow_keys);
+        }
       }
     }
     foreach ($this->taskManager->getDefinitions() as $id => $definition) {
@@ -629,7 +634,7 @@ class FlowForm extends EntityForm {
    * @return array
    *   The qualifier options.
    */
-  protected function getQualifierOptions (array $form, FormStateInterface $form_state): array {
+  protected function getQualifierOptions(array $form, FormStateInterface $form_state): array {
     /** @var \Drupal\flow\Entity\FlowInterface $config */
     $config = $this->entity;
     $flow_keys = [
@@ -698,7 +703,7 @@ class FlowForm extends EntityForm {
     }
     foreach ($this->subjectManager->getDefinitions() as $id => $definition) {
       $plugin = $this->subjectManager->createInstance($id, $flow_keys);
-      if ($plugin->getBaseId() === 'qualified') {
+      if (strpos($id, 'qualified:') !== FALSE) {
         // Qualifying subjects cannot be already qualified.
         continue;
       }

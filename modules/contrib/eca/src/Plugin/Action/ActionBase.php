@@ -3,7 +3,6 @@
 namespace Drupal\eca\Plugin\Action;
 
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Component\EventDispatcher\Event;
 use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\ActionBase as CoreActionBase;
@@ -23,9 +22,9 @@ abstract class ActionBase extends CoreActionBase implements ContainerFactoryPlug
   /**
    * Triggered event leading to this action.
    *
-   * @var \Drupal\Component\EventDispatcher\Event
+   * @var \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event
    */
-  protected Event $event;
+  protected object $event;
 
   /**
    * The entity type manager service.
@@ -97,7 +96,7 @@ abstract class ActionBase extends CoreActionBase implements ContainerFactoryPlug
   /**
    * {@inheritdoc}
    */
-  public function setEvent(Event $event): ActionInterface {
+  public function setEvent(object $event): ActionInterface {
     $this->event = $event;
     return $this;
   }
@@ -105,7 +104,7 @@ abstract class ActionBase extends CoreActionBase implements ContainerFactoryPlug
   /**
    * {@inheritdoc}
    */
-  public function getEvent(): Event {
+  public function getEvent(): object {
     return $this->event;
   }
 

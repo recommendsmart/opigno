@@ -2,15 +2,20 @@
 
 namespace Drupal\eca_log\Logger;
 
-use Drupal\Core\Logger\LoggerChannel;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Core\Logger\RfcLoggerTrait;
 use Drupal\eca_log\Event\LogMessageEvent;
 use Drupal\eca_log\LogEvents;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Trigger an ECA LogMessageEvent for each created log message.
  */
-class EcaLog extends LoggerChannel {
+class EcaLog implements LoggerInterface {
+
+  use RfcLoggerTrait;
+  use DependencySerializationTrait;
 
   /**
    * Event dispatcher.
@@ -26,7 +31,6 @@ class EcaLog extends LoggerChannel {
    *   Event dispatcher.
    */
   public function __construct(EventDispatcherInterface $event_dispatcher) {
-    parent::__construct('');
     $this->eventDispatcher = $event_dispatcher;
   }
 

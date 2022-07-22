@@ -3,7 +3,6 @@
 namespace Drupal\eca\Plugin\ECA\Condition;
 
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Component\EventDispatcher\Event;
 use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -25,11 +24,11 @@ abstract class ConditionBase extends PluginBase implements ConditionInterface, C
   use ContextAwarePluginTrait;
 
   /**
-   * Event dispatcher.
+   * The triggered event.
    *
-   * @var \Drupal\Component\EventDispatcher\Event
+   * @var \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event
    */
-  protected Event $event;
+  protected object $event;
 
   /**
    * The entity type manager service.
@@ -141,7 +140,7 @@ abstract class ConditionBase extends PluginBase implements ConditionInterface, C
   /**
    * {@inheritdoc}
    */
-  public function setEvent(Event $event): ConditionInterface {
+  public function setEvent(object $event): ConditionInterface {
     $this->event = $event;
     return $this;
   }
@@ -149,7 +148,7 @@ abstract class ConditionBase extends PluginBase implements ConditionInterface, C
   /**
    * {@inheritdoc}
    */
-  public function getEvent(): Event {
+  public function getEvent(): object {
     return $this->event;
   }
 
@@ -177,12 +176,26 @@ abstract class ConditionBase extends PluginBase implements ConditionInterface, C
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
+    $i = 1;
     $form['negate'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Negate the condition'),
       '#default_value' => $this->configuration['negate'],
-      '#weight' => 1,
+      '#weight' => $i,
     ];
+    /** @var \Drupal\Core\Plugin\Context\ContextDefinition $definition */
+    foreach ($this->getPluginDefinition()['context_definitions'] ?? [] as $key => $definition) {
+      $i++;
+      $form[$key] = [
+        '#type' => 'textfield',
+        '#title' => $definition->getLabel(),
+        '#default_value' => $this->configuration[$key],
+        '#description' => $this->t('Provide the token name of the %key that this condition should operate with.', [
+          '%key' => $key,
+        ]),
+        '#weight' => $i,
+      ];
+    }
     return $form;
   }
 
@@ -197,6 +210,9 @@ abstract class ConditionBase extends PluginBase implements ConditionInterface, C
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     $this->configuration['negate'] = (bool) $form_state->getValue('negate', FALSE);
+    foreach ($this->getPluginDefinition()['context_definitions'] ?? [] as $key => $definition) {
+      $this->configuration[$key] = $form_state->getValue($key);
+    }
     if ($form_state->hasValue('context_mapping')) {
       $this->setContextMapping($form_state->getValue('context_mapping'));
     }
@@ -206,9 +222,7 @@ abstract class ConditionBase extends PluginBase implements ConditionInterface, C
    * {@inheritdoc}
    */
   public function getConfiguration(): array {
-    return [
-      'id' => $this->getPluginId(),
-    ] + $this->configuration;
+    return $this->configuration;
   }
 
   /**
@@ -223,9 +237,13 @@ abstract class ConditionBase extends PluginBase implements ConditionInterface, C
    * {@inheritdoc}
    */
   public function defaultConfiguration(): array {
-    return [
+    $values = [
       'negate' => FALSE,
     ];
+    foreach ($this->getPluginDefinition()['context_definitions'] ?? [] as $key => $definition) {
+      $values[$key] = '';
+    }
+    return $values;
   }
 
   /**

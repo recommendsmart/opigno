@@ -14,7 +14,7 @@ use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\eca\Entity\Eca;
 use Drupal\eca\Entity\EcaTrait;
-use Drupal\eca\Event\ContentEntityEventInterface;
+use Drupal\eca\Event\EntityEventInterface;
 use Drupal\eca\Event\FormEventInterface;
 use Drupal\eca\Plugin\Action\ActionInterface;
 use Drupal\eca\Plugin\ECA\Condition\ConditionInterface;
@@ -187,7 +187,7 @@ abstract class EcaObject {
    *
    * @param \Drupal\eca\Entity\Objects\EcaObject $predecessor
    *   The item preceeding this one.
-   * @param \Drupal\Component\EventDispatcher\Event $event
+   * @param \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event $event
    *   The event that was originally triggered.
    * @param array $context
    *   List of key value pairs, used to generate meaningful log messages.
@@ -195,7 +195,7 @@ abstract class EcaObject {
    * @return bool
    *   TRUE, if the item was executed, FALSE otherwise.
    */
-  public function execute(EcaObject $predecessor, Event $event, array $context): bool {
+  public function execute(EcaObject $predecessor, object $event, array $context): bool {
     $this->predecessor = $predecessor;
     return TRUE;
   }
@@ -312,7 +312,7 @@ abstract class EcaObject {
       if (method_exists($plugin, 'getEvent')) {
         // As a last resort, ask the triggering event for an entity.
         $event = $plugin->getEvent();
-        if ($event instanceof ContentEntityEventInterface && ($entity = $event->getEntity())) {
+        if ($event instanceof EntityEventInterface && ($entity = $event->getEntity())) {
           return [$entity];
         }
         if ($event instanceof FormEventInterface && ($form_object = $event->getFormState()->getFormObject())) {

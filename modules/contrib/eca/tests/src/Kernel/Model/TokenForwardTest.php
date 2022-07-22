@@ -50,7 +50,7 @@ class TokenForwardTest extends Base {
     $node->save();
 
     $this->assertStatusMessages([
-      "From CE1: we received user '' and node ''",
+      "From CE1: we received user '[some_user:account-name]' and node '[entity:title]'",
       "From CE2: we received user '" . self::USER_1_NAME . "' and node '$title'",
     ]);
     $this->assertNoMessages();

@@ -65,6 +65,12 @@
 @media (max-width: 599px) {
   .dropdown-menu.dropdown-menu--visibility {
     left: 0;
+    width: 100%;
+  }
+  .dropdown-menu.dropdown-menu--visibility a {
+    overflow: visible;
+    text-overflow: inherit;
+    white-space: normal;
   }
   .dropdown.has-alert > a:before {
     color: #343434;

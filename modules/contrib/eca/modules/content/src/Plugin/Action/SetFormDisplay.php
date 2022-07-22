@@ -70,7 +70,7 @@ class SetFormDisplay extends ConfigurableActionBase {
     if (!($form_object instanceof ContentEntityFormInterface)) {
       return NULL;
     }
-    $display_mode = trim($this->tokenServices->replaceClear($this->configuration['display_mode'] ?? 'default'));
+    $display_mode = trim((string) $this->tokenServices->replaceClear($this->configuration['display_mode'] ?? 'default'));
     if ($display_mode === '') {
       return NULL;
     }
@@ -102,7 +102,7 @@ class SetFormDisplay extends ConfigurableActionBase {
       '#title' => $this->t('Form display mode'),
       '#description' => $this->t('The machine name of the display mode. Please note: This action only works when reacting upon the event "Prepare content entity form".'),
       '#default_value' => $this->configuration['display_mode'],
-      '#weight' => -9,
+      '#weight' => -10,
     ];
     return $form;
   }
@@ -120,7 +120,7 @@ class SetFormDisplay extends ConfigurableActionBase {
    */
   public function calculateDependencies(): array {
     $dependencies = parent::calculateDependencies();
-    $display_mode = trim($this->tokenServices->replaceClear($this->configuration['display_mode'] ?? 'default'));
+    $display_mode = trim((string) $this->tokenServices->replaceClear($this->configuration['display_mode'] ?? 'default'));
     if ($display_mode !== '') {
       foreach (EntityFormDisplay::loadMultiple() as $display) {
         if ($display->get('mode') === $display_mode) {

@@ -27,7 +27,7 @@ class FormAddContainerElement extends FormActionBase {
     if (!($form = &$this->getCurrentForm())) {
       return;
     }
-    $name = trim($this->tokenServices->replace($this->configuration['name']));
+    $name = trim((string) $this->tokenServices->replace($this->configuration['name']));
     if ($name === '') {
       throw new \InvalidArgumentException('Cannot use an empty string as element name');
     }
@@ -68,7 +68,7 @@ class FormAddContainerElement extends FormActionBase {
       '#type' => 'textfield',
       '#title' => $this->t('Element name'),
       '#description' => $this->t('The element name is a machine name and is used for being identified when rendering the form. Example: <em>name_info</em>'),
-      '#weight' => 10,
+      '#weight' => -10,
       '#default_value' => $this->configuration['name'],
       '#required' => TRUE,
     ];
@@ -77,14 +77,14 @@ class FormAddContainerElement extends FormActionBase {
       '#title' => $this->t('Optional'),
       '#description' => $this->t('Indicates whether the container should render when it has no visible children.'),
       '#default_value' => $this->configuration['optional'],
-      '#weight' => 30,
+      '#weight' => -9,
     ];
     $form['weight'] = [
       '#type' => 'number',
       '#title' => $this->t('Element weight'),
       '#description' => $this->t('The lower the weight, the element appears before other elements having a higher weight.'),
       '#default_value' => $this->configuration['weight'],
-      '#weight' => 40,
+      '#weight' => -8,
       '#required' => TRUE,
     ];
     return $form;

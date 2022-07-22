@@ -2,13 +2,15 @@
 
 namespace Drupal\eca\Plugin\ECA\Event;
 
+use Drupal\Component\Plugin\ConfigurableInterface;
+use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\eca\Entity\Objects\EcaEvent;
-use Drupal\eca\Plugin\EcaInterface;
 
 /**
  * Interface for ECA event plugins.
  */
-interface EventInterface extends EcaInterface {
+interface EventInterface extends PluginFormInterface, ConfigurableInterface, PluginInspectionInterface {
 
   /**
    * Provides a list of events.

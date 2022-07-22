@@ -3,17 +3,20 @@
 namespace Drupal\eca_content\Event;
 
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\eca\Event\ConfigurableEventInterface;
 use Drupal\eca\Event\TokenReceiverInterface;
 use Drupal\eca\Event\TokenReceiverTrait;
-use Drupal\eca_content\Service\EntityTypes;
+use Drupal\eca\Service\ContentEntityTypes;
 
 /**
  * Provides an entity aware custom event.
  *
+ * @internal
+ *   This class is not meant to be used as a public API. It is subject for name
+ *   change or may be removed completely, also on minor version updates.
+ *
  * @package Drupal\eca_content\Event
  */
-class ContentEntityCustomEvent extends ContentEntityBaseEntity implements ConfigurableEventInterface, TokenReceiverInterface {
+class ContentEntityCustomEvent extends ContentEntityBaseEntity implements TokenReceiverInterface {
 
   use TokenReceiverTrait;
 
@@ -36,7 +39,7 @@ class ContentEntityCustomEvent extends ContentEntityBaseEntity implements Config
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The entity for which the custom event got triggered.
-   * @param \Drupal\eca_content\Service\EntityTypes $entity_types
+   * @param \Drupal\eca\Service\ContentEntityTypes $entity_types
    *   The entity service.
    * @param string $event_id
    *   The (optional) ID for this event, so that it only applies, if it matches
@@ -47,23 +50,10 @@ class ContentEntityCustomEvent extends ContentEntityBaseEntity implements Config
    *   if that ID matches this ID. To trigger all custom events, the event ID
    *   should be omitted or left empty.
    */
-  public function __construct(ContentEntityInterface $entity, EntityTypes $entity_types, string $event_id, array $arguments) {
+  public function __construct(ContentEntityInterface $entity, ContentEntityTypes $entity_types, string $event_id, array $arguments) {
     parent::__construct($entity, $entity_types);
     $this->eventId = $event_id;
     $this->arguments = $arguments;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function fields(): array {
-    return [
-      [
-        'name' => 'event_id',
-        'label' => 'Event ID',
-        'type' => 'String',
-      ],
-    ];
   }
 
   /**

@@ -84,7 +84,7 @@ class Morris.Line extends Morris.Grid
         if row._y[index]?
           @data[idx].label_x[index] = row._x
           @data[idx].label_y[index] = row._y[index] - 10
-        
+
         if row._y2?
           if row._y2[index]?
             @data[idx].label_x[index] = row._x
@@ -141,17 +141,17 @@ class Morris.Line extends Morris.Grid
       @hover.hide()
       @hilight()
 
-  escapeHTML:(string) =>
+  escapeHTML:(string) ->
     map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#x27;',
-        "/": '&#x2F;',
-    };
-    reg = /[&<>"'/]/ig;
-    return string.replace(reg, (match)=>(map[match]));
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#x27;',
+      "/": '&#x2F;',
+    }
+    reg = /[&<>"'/]/ig
+    return string.replace(reg, (match)->(map[match]))
 
   # hover content for a point
   #
@@ -177,7 +177,7 @@ class Morris.Line extends Morris.Grid
 
     if @options.hoverReversed is true then order = order.reverse()
 
-    axis = -1;
+    axis = -1
     for j in order by -1
       if @options.labels[j] is false
         continue
@@ -191,12 +191,12 @@ class Morris.Line extends Morris.Grid
           #{@yLabelFormat(row.y[j], j)}
         </div>
       """ + content
-    
+
     content = "<div class='morris-hover-row-label'>"+@escapeHTML(row.label)+"</div>" + content
 
     if typeof @options.hoverCallback is 'function'
       content = @options.hoverCallback(index, @options, content, row.src)
-    
+
     if axis > @options.nbYkeys2 then [content, row._x, row._ymax2]
     else [content, row._x, row._ymax]
 
@@ -215,7 +215,7 @@ class Morris.Line extends Morris.Grid
         # Expect something like lineType: {"key1":"jagged","key2":"smooth","key3":"step","key4":"stepNoRiser",}
       if @options.lineType[@options.ykeys[i]] isnt undefined
         lineType = @options.lineType[@options.ykeys[i]]
-      
+
       nb = @options.ykeys.length - @options.nbYkeys2
       if i < nb
         coords = ({x: r._x, y: r._y[i]} for r in @data when r._y[i] isnt undefined)
@@ -319,7 +319,7 @@ class Morris.Line extends Morris.Grid
       if @hasToShow(i)
         if @options.trendLine isnt false and
             @options.trendLine is true or @options.trendLine[i] is true
-          if @data.length > 0 
+          if @data.length > 0
             @_drawTrendLine i
 
         @_drawLineFor i
@@ -334,7 +334,7 @@ class Morris.Line extends Morris.Grid
       circle = null
       if row._y[index]?
         circle = @drawLinePoint(row._x, row._y[index], @colorFor(row, index, 'point'), index)
-      
+
       if row._y2?
         if row._y2[index]?
           circle = @drawLinePoint(row._x, row._y2[index], @colorFor(row, index, 'point'), index)
@@ -380,34 +380,34 @@ class Morris.Line extends Morris.Grid
     data[0].y = @transY(@data[0].x * a + b)
     data[1].x = @transX(@data[@data.length - 1].x)
     data[1].y = @transY(@data[@data.length - 1].x * a + b)
-    
-    if @options.trendLineType != 'linear' 
+
+    if @options.trendLineType != 'linear'
       if typeof regression is 'function'
         t_off_x = (@xmax - @xmin)/30
         data = []
         if @options.trendLineType == 'polynomial'
-          reg = regression('polynomial', plots, 2);
+          reg = regression('polynomial', plots, 2)
           for i in [0..30]
             t_x = @xmin + i * t_off_x
             t_y = reg.equation[2] * t_x * t_x + reg.equation[1] * t_x + reg.equation[0]
             data.push({x: @transX(t_x), y: @transY(t_y)})
 
         else if @options.trendLineType == 'logarithmic'
-          reg = regression('logarithmic', plots);
+          reg = regression('logarithmic', plots)
           for i in [0..30]
             t_x = @xmin + i * t_off_x
             t_y = reg.equation[0] + reg.equation[1] * Math.log(t_x)
             data.push({x: @transX(t_x), y: @transY(t_y)})
 
         else if @options.trendLineType == 'exponential'
-          reg = regression('exponential', plots);
+          reg = regression('exponential', plots)
           for i in [0..30]
             t_x = @xmin + i * t_off_x
             t_y = reg.equation[0] + Math.exp(reg.equation[1] * t_x)
             data.push({x: @transX(t_x), y: @transY(t_y)})
 
         console.log('Regression formula is: '+reg.string+', r2:'+reg.r2)
-      else 
+      else
         console.log('Warning: regression() is undefined, please ensure that regression.js is loaded')
 
     if !isNaN(a)
@@ -525,7 +525,7 @@ class Morris.Line extends Morris.Grid
             if @options.lineType != 'vertical'
               straightPath += ','+row._x+','+@transY(@ymin)
             else
-              row_x = row._x-(this.options.ykeys.length-1)*(this.options.lineWidth / this.options.ykeys.length)+lineIndex*this.options.lineWidth;
+              row_x = row._x-(this.options.ykeys.length-1)*(this.options.lineWidth / this.options.ykeys.length)+lineIndex*this.options.lineWidth
               straightPath += 'M'+row_x+','+@transY(0)+'L'+row_x+','+@transY(0)+'L'+row_x+','+@transY(0)
             if @options.lineType == 'step' then straightPath += ','+row._x+','+@transY(@ymin)
 
@@ -535,10 +535,10 @@ class Morris.Line extends Morris.Grid
                       .attr('class', @options.extraClassLine)
                       .attr('class', 'line_'+lineIndex)
       if @options.cumulative
-        do (rPath, path) =>
+        do (rPath, path) ->
           rPath.animate {path}, 600, '<>'
       else
-        do (rPath, path) =>
+        do (rPath, path) ->
           rPath.animate {path}, 500, '<>'
     else
       @raphael.path(path)

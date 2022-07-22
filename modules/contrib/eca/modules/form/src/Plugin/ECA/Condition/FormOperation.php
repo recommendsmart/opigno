@@ -73,7 +73,7 @@ class FormOperation extends StringComparisonBase {
       '#title' => $this->t('Operation'),
       '#description' => $this->t('The machine name of the operation. Example: <em>default, save, delete</em>'),
       '#default_value' => $this->configuration['operation'],
-      '#weight' => -8,
+      '#weight' => -70,
     ];
     return $form;
   }

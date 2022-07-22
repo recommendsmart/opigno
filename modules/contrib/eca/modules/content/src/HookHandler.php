@@ -9,29 +9,33 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\eca\Event\BaseHookHandler;
 use Drupal\eca\Event\TriggerEvent;
-use Drupal\eca_content\Service\EntityTypes;
+use Drupal\eca\Service\ContentEntityTypes;
 
 /**
  * The handler for hook implementations within the eca_content.module file.
+ *
+ * @internal
+ *   This class is not meant to be used as a public API. It is subject for name
+ *   change or may be removed completely, also on minor version updates.
  */
 class HookHandler extends BaseHookHandler {
 
   /**
    * The entity types service.
    *
-   * @var \Drupal\eca_content\Service\EntityTypes
+   * @var \Drupal\eca\Service\ContentEntityTypes
    */
-  protected EntityTypes $entityTypes;
+  protected ContentEntityTypes $entityTypes;
 
   /**
    * Constructor.
    *
    * @param \Drupal\eca\Event\TriggerEvent $trigger_event
    *   The trigger event.
-   * @param \Drupal\eca_content\Service\EntityTypes $entityTypes
+   * @param \Drupal\eca\Service\ContentEntityTypes $entityTypes
    *   The entity types Service.
    */
-  public function __construct(TriggerEvent $trigger_event, EntityTypes $entityTypes) {
+  public function __construct(TriggerEvent $trigger_event, ContentEntityTypes $entityTypes) {
     parent::__construct($trigger_event);
     $this->entityTypes = $entityTypes;
   }
@@ -45,7 +49,7 @@ class HookHandler extends BaseHookHandler {
    *   The bundle.
    */
   public function bundleCreate(string $entity_type_id, string $bundle): void {
-    $this->triggerEvent->dispatchFromPlugin('content_entity:bundlecreate', $entity_type_id, $bundle);
+    $this->triggerEvent->dispatchFromPlugin('content_entity:bundlecreate', $entity_type_id, $bundle, $this->entityTypes);
   }
 
   /**
@@ -57,7 +61,7 @@ class HookHandler extends BaseHookHandler {
    *   The bundle.
    */
   public function bundleDelete(string $entity_type_id, string $bundle): void {
-    $this->triggerEvent->dispatchFromPlugin('content_entity:bundledelete', $entity_type_id, $bundle);
+    $this->triggerEvent->dispatchFromPlugin('content_entity:bundledelete', $entity_type_id, $bundle, $this->entityTypes);
   }
 
   /**

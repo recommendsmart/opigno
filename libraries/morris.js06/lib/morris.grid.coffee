@@ -194,7 +194,10 @@ class Morris.Grid extends Morris.EventEmitter
         if idx < @options.ykeys.length - @options.nbYkeys2
           if yval? and @hasToShow(idx)
             if @cumulative
-              total += yval
+              if total < 0 and yval > 0
+                total = yval
+              else
+                total += yval
             else
               if ymax?
                 ymax = Math.max(yval, ymax)
@@ -204,7 +207,7 @@ class Morris.Grid extends Morris.EventEmitter
           if @cumulative and total?
             ymax = Math.max(total, ymax)
             ymin = Math.min(total, ymin)
-        else 
+        else
           if yval? and @hasToShow(idx)
             if @cumulative
               total = yval
@@ -270,13 +273,13 @@ class Morris.Grid extends Morris.EventEmitter
         step = (@ymax - @ymin) / (@options.numLines - 1)
 
         if @options.gridIntegers
-          step = Math.max(1, Math.round(step));
+          step = Math.max(1, Math.round(step))
 
         @grid = for y in [@ymin..@ymax] by step
           parseFloat(y.toFixed(2))
 
       if (@options.ymax2 == @gridDefaults.ymax2 and
-          @options.ymin2 == @gridDefaults.ymin2 and 
+          @options.ymin2 == @gridDefaults.ymin2 and
           @options.nbYkeys2 > 0)
         # calculate 'magic' grid placement
         @grid2 = @autoGridLines(@ymin2, @ymax2, @options.numLines)
@@ -345,7 +348,7 @@ class Morris.Grid extends Morris.EventEmitter
       @top = @options.padding
       @bottom = @elementHeight - @options.padding
       if @options.axes in [true, 'both', 'y']
-        if @grid? 
+        if @grid?
           yLabelWidths = for gridLine in @grid
             @measureText(@yAxisFormat(gridLine)).width
 
@@ -462,7 +465,7 @@ class Morris.Grid extends Morris.EventEmitter
     else
       if @options.nbYkeys2 == 0 || (i <= @options.ykeys.length - @options.nbYkeys2 - 1)
         "#{@options.preUnits}#{Morris.commas(label)}#{@options.postUnits}"
-      else 
+      else
         "#{@options.preUnits2}#{Morris.commas(label)}#{@options.postUnits2}"
 
   yLabelFormat_noUnit: (label, i) ->
@@ -729,7 +732,7 @@ class Morris.Grid extends Morris.EventEmitter
       luma = 0.2126 * r + 0.7152 * g + 0.0722 * b
       if luma >= 128
         return false
-      else 
+      else
         return true
     else
       return false
@@ -812,10 +815,10 @@ Morris.parseDate = (date) ->
       parseInt(o[3], 10)).getTime()
   else if p
     # calculate number of weeks in year given
-    ret = new Date(parseInt(p[1], 10), 0, 1);
+    ret = new Date(parseInt(p[1], 10), 0, 1)
     # first thursday in year (ISO 8601 standard)
     if ret.getDay() isnt 4
-      ret.setMonth(0, 1 + ((4 - ret.getDay()) + 7) % 7);
+      ret.setMonth(0, 1 + ((4 - ret.getDay()) + 7) % 7)
     # add weeks
     ret.getTime() + parseInt(p[2], 10) * 604800000
   else if q

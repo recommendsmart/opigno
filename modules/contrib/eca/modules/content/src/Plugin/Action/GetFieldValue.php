@@ -5,7 +5,6 @@ namespace Drupal\eca_content\Plugin\Action;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eca\Plugin\Action\ConfigurableActionBase;
@@ -52,14 +51,14 @@ class GetFieldValue extends ConfigurableActionBase {
       '#title' => $this->t('Field name'),
       '#description' => $this->t('The machine name of the field, that holds the value. This property supports tokens.'),
       '#default_value' => $this->configuration['field_name'],
-      '#weight' => -10,
+      '#weight' => -20,
     ];
     $form['token_name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Name of token'),
       '#default_value' => $this->configuration['token_name'],
       '#description' => $this->t('The field value will be loaded into this specified token.'),
-      '#weight' => -5,
+      '#weight' => -10,
     ];
     return $form;
   }
@@ -78,7 +77,7 @@ class GetFieldValue extends ConfigurableActionBase {
    */
   public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
     $result = AccessResult::forbidden();
-    if (!($object instanceof AccessibleInterface)) {
+    if (!($object instanceof AccessibleInterface) || !($object instanceof EntityInterface)) {
       return $return_as_object ? $result : $result->isAllowed();
     }
 
@@ -91,7 +90,7 @@ class GetFieldValue extends ConfigurableActionBase {
     $options = ['access' => 'view'];
     $metadata = [];
     $field_name = $this->getFieldName();
-    $read_target = $this->getTypedProperty(EntityAdapter::createFromEntity($entity), $field_name, $options, $metadata);
+    $read_target = $this->getTypedProperty($entity->getTypedData(), $field_name, $options, $metadata);
     if (!isset($metadata['access']) || (!$read_target && $metadata['access']->isAllowed())) {
       throw new \InvalidArgumentException(sprintf("The provided field %s does not exist as a property path on the %s entity having ID %s.", $field_name, $entity->getEntityTypeId(), $entity->id()));
     }
@@ -111,7 +110,7 @@ class GetFieldValue extends ConfigurableActionBase {
     $metadata = [];
     $token_name = $this->configuration['token_name'];
     $field_name = $this->getFieldName();
-    $read_target = $this->getTypedProperty(EntityAdapter::createFromEntity($entity), $field_name, $options, $metadata);
+    $read_target = $this->getTypedProperty($entity->getTypedData(), $field_name, $options, $metadata);
     if (!isset($metadata['access']) || (!$read_target && $metadata['access']->isAllowed())) {
       throw new \InvalidArgumentException(sprintf("The provided field %s does not exist as a property path on the %s entity having ID %s.", $field_name, $entity->getEntityTypeId(), $entity->id()));
     }

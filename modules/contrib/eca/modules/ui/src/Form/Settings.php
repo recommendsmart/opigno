@@ -52,7 +52,7 @@ class Settings extends ConfigFormBase {
       '#title' => $this->t('Log level'),
       '#options' => RfcLogLevel::getLevels(),
       '#default_value' => $config->get('log_level'),
-      '#weight' => 10,
+      '#weight' => -20,
     ];
     if ($this->defaultDocumentationDomain) {
       $form['documentation_domain'] = [
@@ -60,7 +60,7 @@ class Settings extends ConfigFormBase {
         '#title' => $this->t('Documentation domain'),
         '#description' => $this->t('This domain is used for creating links to further documentation resources about ECA plugins. The official documentation resource is <a href=":url" target="_blank" rel="noreferrer nofollow">:url</a>. Leave blank to disable documentation links at all.', [':url' => $this->defaultDocumentationDomain]),
         '#default_value' => $config->get('documentation_domain'),
-        '#weight' => 20,
+        '#weight' => -10,
       ];
     }
     return parent::buildForm($form, $form_state);

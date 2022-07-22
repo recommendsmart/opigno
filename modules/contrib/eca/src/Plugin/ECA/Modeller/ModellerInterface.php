@@ -249,6 +249,14 @@ interface ModellerInterface extends PluginInspectionInterface {
   public function readComponents(Eca $eca): ModellerInterface;
 
   /**
+   * Returns the associated ECA config entity.
+   *
+   * @return \Drupal\eca\Entity\Eca
+   *   The associated ECA config entity.
+   */
+  public function getEca(): Eca;
+
+  /**
    * Determines, if during ::readComponents at least one error occured.
    *
    * @return bool

@@ -18,6 +18,13 @@ use Drupal\eca_base\Event\CustomEvent;
 class TriggerCustomEvent extends ConfigurableActionBase {
 
   /**
+   * Overrides \Drupal\eca\Plugin\ActionActionInterface::EXTERNALLY_AVAILABLE.
+   *
+   * @var bool
+   */
+  public const EXTERNALLY_AVAILABLE = TRUE;
+
+  /**
    * {@inheritdoc}
    */
   public function execute(): void {
@@ -46,14 +53,14 @@ class TriggerCustomEvent extends ConfigurableActionBase {
       '#type' => 'textfield',
       '#title' => $this->t('Event ID'),
       '#default_value' => $this->configuration['event_id'],
-      '#weight' => -10,
+      '#weight' => -20,
     ];
     $form['tokens'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Tokens to forward'),
       '#default_value' => $this->configuration['tokens'],
       '#description' => $this->t('Comma separated list of token names from the current context, that will be forwarded to the triggered event. These tokens are then also available for subsequent conditions and actions within the current process.'),
-      '#weight' => -9,
+      '#weight' => -10,
     ];
     return $form;
   }

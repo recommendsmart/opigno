@@ -3,7 +3,6 @@
 namespace Drupal\eca_queue\Plugin\Action;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\eca\Plugin\OptionsInterface;
 
 /**
  * Enqueue a Task with a delay.
@@ -13,7 +12,7 @@ use Drupal\eca\Plugin\OptionsInterface;
  *   label = @Translation("Enqueue a task with a delay")
  * )
  */
-class EnqueueTaskDelayed extends EnqueueTask implements OptionsInterface {
+class EnqueueTaskDelayed extends EnqueueTask {
 
   public const DELAY_SECONDS = 1;
   public const DELAY_MINUTES = 60;
@@ -26,7 +25,7 @@ class EnqueueTaskDelayed extends EnqueueTask implements OptionsInterface {
    * {@inheritdoc}
    */
   protected function getEarliestProcessingTime(): int {
-    return \Drupal::time()->getRequestTime() +
+    return \Drupal::time()->getCurrentTime() +
       (int) $this->tokenServices->replaceClear($this->configuration['delay_value']) * (int) $this->configuration['delay_unit'];
   }
 
@@ -43,37 +42,27 @@ class EnqueueTaskDelayed extends EnqueueTask implements OptionsInterface {
   /**
    * {@inheritdoc}
    */
-  public function getOptions(string $id): ?array {
-    if ($id === 'delay_unit') {
-      return [
-        static::DELAY_SECONDS => $this->t('seconds'),
-        static::DELAY_MINUTES => $this->t('minutes'),
-        static::DELAY_HOURS => $this->t('hours'),
-        static::DELAY_DAYS => $this->t('days'),
-        static::DELAY_WEEKS => $this->t('weeks'),
-        static::DELAY_MONTHS => $this->t('months'),
-      ];
-    }
-    return NULL;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
     $form = parent::buildConfigurationForm($form, $form_state);
     $form['delay_value'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Delay value'),
       '#default_value' => $this->configuration['delay_value'],
-      '#weight' => 40,
+      '#weight' => -20,
     ];
     $form['delay_unit'] = [
       '#type' => 'select',
       '#title' => $this->t('Delay unit'),
       '#default_value' => $this->configuration['delay_unit'],
-      '#options' => $this->getOptions('delay_unit'),
-      '#weight' => 50,
+      '#options' => [
+        static::DELAY_SECONDS => $this->t('seconds'),
+        static::DELAY_MINUTES => $this->t('minutes'),
+        static::DELAY_HOURS => $this->t('hours'),
+        static::DELAY_DAYS => $this->t('days'),
+        static::DELAY_WEEKS => $this->t('weeks'),
+        static::DELAY_MONTHS => $this->t('months'),
+      ],
+      '#weight' => -10,
     ];
     return $form;
   }

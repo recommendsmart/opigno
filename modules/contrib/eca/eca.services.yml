@@ -15,7 +15,7 @@ services:
   eca.configurable_logger_channel:
     class: Drupal\eca\ConfigurableLoggerChannel
     decorates: logger.channel.eca
-    arguments: ['eca', '@eca.configurable_logger_channel.inner', '@config.factory']
+    arguments: ['eca', '@eca.configurable_logger_channel.inner', '@config.factory', '@module_handler']
 
   eca.default_event_subscriber:
     abstract: true
@@ -32,19 +32,31 @@ services:
   plugin.manager.eca.condition:
     class: Drupal\eca\PluginManager\Condition
     parent: default_plugin_manager
+  plugin.manager.eca.action:
+    decorates: plugin.manager.action
+    parent: plugin.manager.action
+    class: Drupal\eca\PluginManager\Action
+    calls:
+      - [setDecoratedActionManager, ['@plugin.manager.eca.action.inner']]
 
   eca.service.modeller:
     class: Drupal\eca\Service\Modellers
     arguments: ['@entity_type.manager', '@plugin.manager.eca.modeller', '@plugin.manager.eca.event',  '@eca.service.action',  '@eca.service.condition', '@logger.channel.eca', '@file_system', '@config.storage.export', '@config.factory']
   eca.service.action:
     class: Drupal\eca\Service\Actions
-    arguments: ['@plugin.manager.action', '@logger.channel.eca', '@entity_type.manager']
+    arguments: ['@plugin.manager.eca.action', '@logger.channel.eca', '@entity_type.manager']
   eca.service.condition:
     class: Drupal\eca\Service\Conditions
     arguments: ['@plugin.manager.eca.condition', '@logger.channel.eca', '@entity_type.manager', '@current_user', '@language_manager', '@eca.service.token']
   eca.service.yaml_parser:
     class: Drupal\eca\Service\YamlParser
     arguments: ['@eca.token_services']
+  eca.service.content_entity_types:
+    class: Drupal\eca\Service\ContentEntityTypes
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info']
+  eca.service.dependency_calculation:
+    class: Drupal\eca\Service\DependencyCalculation
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info', '@entity_field.manager', '@eca.token_services']
 
   eca.trigger_event:
     class: Drupal\eca\Event\TriggerEvent
@@ -66,8 +78,13 @@ services:
     arguments: ['@eca.token_services']
     tags:
       - { name: event_subscriber }
-  eca.execution.content_subscriber:
-    class: Drupal\eca\EventSubscriber\EcaExecutionContentSubscriber
+  eca.execution.entity_subscriber:
+    class: Drupal\eca\EventSubscriber\EcaExecutionEntitySubscriber
+    parent: eca.default_event_subscriber
+    tags:
+      - { name: event_subscriber }
+  eca.execution.event_data_subscriber:
+    class: Drupal\eca\EventSubscriber\EcaExecutionEventDataSubscriber
     parent: eca.default_event_subscriber
     tags:
       - { name: event_subscriber }

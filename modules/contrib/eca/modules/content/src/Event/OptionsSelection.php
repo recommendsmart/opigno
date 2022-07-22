@@ -5,10 +5,14 @@ namespace Drupal\eca_content\Event;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\eca_content\Service\EntityTypes;
+use Drupal\eca\Service\ContentEntityTypes;
 
 /**
  * Dispatches on event-based options selection.
+ *
+ * @internal
+ *   This class is not meant to be used as a public API. It is subject for name
+ *   change or may be removed completely, also on minor version updates.
  */
 class OptionsSelection extends FieldSelectionBase {
 
@@ -32,7 +36,7 @@ class OptionsSelection extends FieldSelectionBase {
   /**
    * The according entity.
    *
-   * @var \Drupal\Core\Entity\FieldableEntityInterface
+   * @var \Drupal\Core\Entity\FieldableEntityInterface|null
    */
   public ?FieldableEntityInterface $entity;
 
@@ -71,7 +75,7 @@ class OptionsSelection extends FieldSelectionBase {
       return FALSE;
     }
 
-    if (!EntityTypes::get()->bundleFieldApplies($entity, $arguments['type'])) {
+    if (!ContentEntityTypes::get()->bundleFieldApplies($entity, $arguments['type'])) {
       return FALSE;
     }
     if (!empty($arguments['field_name']) && (trim($arguments['field_name']) !== $field_name)) {

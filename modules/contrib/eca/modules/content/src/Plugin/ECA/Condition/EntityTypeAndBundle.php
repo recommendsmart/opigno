@@ -5,8 +5,7 @@ namespace Drupal\eca_content\Plugin\ECA\Condition;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eca\Plugin\ECA\Condition\ConditionBase;
-use Drupal\eca\Plugin\OptionsInterface;
-use Drupal\eca_content\Service\EntityTypes;
+use Drupal\eca\Service\ContentEntityTypes;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,21 +19,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   }
  * )
  */
-class EntityTypeAndBundle extends ConditionBase implements OptionsInterface {
+class EntityTypeAndBundle extends ConditionBase {
 
   /**
    * The entity types service.
    *
-   * @var \Drupal\eca_content\Service\EntityTypes
+   * @var \Drupal\eca\Service\ContentEntityTypes
    */
-  protected EntityTypes $entityTypes;
+  protected ContentEntityTypes $entityTypes;
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): EntityTypeAndBundle {
     $plugin = parent::create($container, $configuration, $plugin_id, $plugin_definition);
-    $plugin->entityTypes = $container->get('eca_content.service.entity_types');
+    $plugin->entityTypes = $container->get('eca.service.content_entity_types');
     return $plugin;
   }
 
@@ -67,7 +66,7 @@ class EntityTypeAndBundle extends ConditionBase implements OptionsInterface {
       '#type' => 'select',
       '#title' => $this->t('Entity type (and bundle)'),
       '#default_value' => $this->configuration['type'],
-      '#options' => $this->getOptions('type'),
+      '#options' => $this->entityTypes->getTypesAndBundles(),
       '#weight' => -10,
     ];
     return parent::buildConfigurationForm($form, $form_state);
@@ -79,20 +78,6 @@ class EntityTypeAndBundle extends ConditionBase implements OptionsInterface {
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     $this->configuration['type'] = $form_state->getValue('type');
     parent::submitConfigurationForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getOptions(string $id): ?array {
-    if ($id === 'type') {
-      $options = [];
-      foreach ($this->entityTypes->bundleField()['extras']['choices'] as $item) {
-        $options[$item['value']] = $item['name'];
-      }
-      return $options;
-    }
-    return NULL;
   }
 
 }

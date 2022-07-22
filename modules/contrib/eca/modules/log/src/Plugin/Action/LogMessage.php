@@ -6,7 +6,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\eca\Plugin\Action\ConfigurableActionBase;
-use Drupal\eca\Plugin\OptionsInterface;
 
 /**
  * Write a log message.
@@ -16,7 +15,7 @@ use Drupal\eca\Plugin\OptionsInterface;
  *   label = @Translation("Log Message")
  * )
  */
-class LogMessage extends ConfigurableActionBase implements OptionsInterface {
+class LogMessage extends ConfigurableActionBase {
 
   /**
    * {@inheritdoc}
@@ -60,20 +59,20 @@ class LogMessage extends ConfigurableActionBase implements OptionsInterface {
       '#type' => 'textfield',
       '#title' => $this->t('Channel'),
       '#default_value' => $this->configuration['channel'],
-      '#weight' => -10,
+      '#weight' => -30,
     ];
     $form['severity'] = [
       '#type' => 'select',
       '#title' => $this->t('Severity'),
       '#default_value' => $this->configuration['severity'],
-      '#options' => $this->getOptions('severity'),
-      '#weight' => -9,
+      '#options' => RfcLogLevel::getLevels(),
+      '#weight' => -20,
     ];
     $form['message'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Message'),
       '#default_value' => $this->configuration['message'],
-      '#weight' => -8,
+      '#weight' => -10,
     ];
     return $form;
   }
@@ -86,16 +85,6 @@ class LogMessage extends ConfigurableActionBase implements OptionsInterface {
     $this->configuration['severity'] = $form_state->getValue('severity');
     $this->configuration['message'] = $form_state->getValue('message');
     parent::submitConfigurationForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getOptions(string $id): ?array {
-    if ($id === 'severity') {
-      return RfcLogLevel::getLevels();
-    }
-    return NULL;
   }
 
 }

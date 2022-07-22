@@ -4,15 +4,14 @@ namespace Drupal\eca_modeller_bpmn;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Component\Utility\Random;
-use Drupal\Core\Action\ActionInterface;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Form\FormState;
 use Drupal\eca\Entity\Eca;
 use Drupal\eca\Entity\Model;
-use Drupal\eca\Plugin\ECA\Condition\ConditionInterface;
-use Drupal\eca\Plugin\ECA\Event\EventInterface;
+use Drupal\eca\Plugin\ECA\EcaPluginBase;
 use Drupal\eca\Plugin\ECA\Modeller\ModellerBase;
 use Drupal\eca\Plugin\ECA\Modeller\ModellerInterface;
-use Drupal\eca\Plugin\EcaBase;
+use Drupal\eca\Service\Modellers;
 use Mtownsend\XmlToArray\XmlToArray;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -84,6 +83,26 @@ abstract class ModellerBpmnBase extends ModellerBase {
   }
 
   /**
+   * Prepares data for a new and empty BPMN model.
+   *
+   * @return string
+   *   The model data.
+   */
+  public function prepareEmptyModelData(string &$id): string {
+    $id = $this->generateId();
+    $emptyBpmn = file_get_contents($this->extensionPathResolver->getPath('module', 'eca_modeller_bpmn') . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'empty.bpmn');
+    return str_replace([
+      'SIDPLACEHOLDER1',
+      'SIDPLACEHOLDER2',
+      'IDPLACEHOLDER',
+    ], [
+      'sid-' . $this->uuid->generate(),
+      'sid-' . $this->uuid->generate(),
+      $id,
+    ], $emptyBpmn);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function generateId(): string {
@@ -100,6 +119,7 @@ abstract class ModellerBpmnBase extends ModellerBase {
     $this->setConfigEntity($eca);
     if ($save) {
       $this->save($model_data, $filename);
+      $eca = $this->getEca();
     }
     return $eca;
   }
@@ -145,7 +165,7 @@ abstract class ModellerBpmnBase extends ModellerBase {
 
         }
         foreach ($objects as $object) {
-          if ($template['id'] === $object['@attributes']['modelerTemplate']) {
+          if (isset($object['@attributes']['modelerTemplate']) && $template['id'] === $object['@attributes']['modelerTemplate']) {
             $fields = $this->findFields($object[$idxExtension]);
             $id = $object['@attributes']['id'];
             /** @var \DOMElement $element */
@@ -330,7 +350,7 @@ abstract class ModellerBpmnBase extends ModellerBase {
       explode(',', $this->findProperty($this->xmlModel[$process][$extensions], 'Tags')) :
       [];
     array_walk($tags, static function (&$item) {
-      $item = trim($item);
+      $item = trim((string) $item);
     });
     return $tags;
   }
@@ -430,6 +450,8 @@ abstract class ModellerBpmnBase extends ModellerBase {
    * {@inheritdoc}
    */
   public function readComponents(Eca $eca): ModellerInterface {
+    $this->eca = $eca;
+    $this->eca->resetComponents();
     $idxExtension = $this->xmlNsPrefix() . 'extensionElements';
 
     $this->hasError = FALSE;
@@ -439,11 +461,13 @@ abstract class ModellerBpmnBase extends ModellerBase {
         $pluginId = $this->findProperty($sequenceFlow[$idxExtension], 'pluginid');
         $condition = $this->findAttribute($sequenceFlow, 'id');
         if (!empty($pluginId) && !empty($condition)) {
-          $eca->addCondition(
+          if (!$eca->addCondition(
             $condition,
             $pluginId,
             $this->findFields($sequenceFlow[$idxExtension])
-          );
+          )) {
+            $this->hasError = TRUE;
+          }
         }
         else {
           $condition = '';
@@ -465,13 +489,19 @@ abstract class ModellerBpmnBase extends ModellerBase {
 
     foreach ($this->getStartEvents() as $startEvent) {
       $extension = $startEvent[$idxExtension] ?? [];
-      $eca->addEvent(
+      $pluginId = $this->findProperty($extension, 'pluginid');
+      if (empty($pluginId)) {
+        continue;
+      }
+      if (!$eca->addEvent(
         $this->findAttribute($startEvent, 'id'),
-        $this->findProperty($extension, 'pluginid'),
+        $pluginId,
         $this->findAttribute($startEvent, 'name'),
         $this->findFields($extension),
         $flow[$this->findAttribute($startEvent, 'id')] ?? []
-      );
+      )) {
+        $this->hasError = TRUE;
+      }
     }
 
     foreach ($this->getTasks() as $task) {
@@ -503,15 +533,16 @@ abstract class ModellerBpmnBase extends ModellerBase {
    *   The list of all templates.
    */
   protected function getTemplates(): array {
+    $form_state = new FormState();
     $templates = [];
     foreach ($this->modellerServices->events() as $event) {
-      $templates[] = $this->prepareEventTemplate($event);
+      $templates[] = $this->properties($event, 'event', 'bpmn:Event', $event->buildConfigurationForm([], $form_state));
     }
     foreach ($this->conditionServices->conditions() as $condition) {
-      $templates[] = $this->prepareConditionTemplate($condition);
+      $templates[] = $this->properties($condition, 'condition', 'bpmn:SequenceFlow', $condition->buildConfigurationForm([], $form_state));
     }
     foreach ($this->actionServices->actions() as $action) {
-      $templates[] = $this->prepareActionTemplate($action);
+      $templates[] = $this->properties($action, 'action', 'bpmn:Task', $this->actionServices->getConfigurationForm($action, $form_state));
     }
     return $templates;
   }
@@ -530,18 +561,20 @@ abstract class ModellerBpmnBase extends ModellerBase {
    * @param \Drupal\Component\Plugin\PluginInspectionInterface $plugin
    *   The event, condition or action plugin for which the template should
    *   be build.
+   * @param string $plugin_type
+   *   The string identifying the plugin type, which is one of event, condition
+   *   or action.
    * @param string $applies_to
    *   The string to tell the modeller, to which object type the template will
    *   apply. Valid values are "bpmn:Event", "bpmn:sequenceFlow" or "bpmn:task".
-   * @param array $fields
-   *   An array of fields, received from the event, condition or action plugin
-   *   definition.
+   * @param array $form
+   *   An array containing the configuration form of the plugin.
    *
    * @return array
    *   The completed template for BPMN modellers for the given plugin and its
    *   fields.
    */
-  protected function properties(PluginInspectionInterface $plugin, string $applies_to, array $fields): array {
+  protected function properties(PluginInspectionInterface $plugin, string $plugin_type, string $applies_to, array $form): array {
     $properties = [
       [
         'label' => 'Plugin ID',
@@ -553,7 +586,7 @@ abstract class ModellerBpmnBase extends ModellerBase {
         ],
       ],
     ];
-    foreach ($fields as $field) {
+    foreach ($this->prepareConfigFields($form) as $field) {
       if (!isset($field['value'])) {
         $value = '';
       }
@@ -592,10 +625,10 @@ abstract class ModellerBpmnBase extends ModellerBase {
     $pluginDefinition = $plugin->getPluginDefinition();
     $template = [
       'name' => (string) $pluginDefinition['label'],
-      'id' => 'org.drupal.' . $this->pluginType($applies_to) . '.' . $plugin->getPluginId(),
+      'id' => 'org.drupal.' . $plugin_type . '.' . $plugin->getPluginId(),
       'category' => [
         'id' => $pluginDefinition['provider'],
-        'name' => EcaBase::$modules[$pluginDefinition['provider']],
+        'name' => EcaPluginBase::$modules[$pluginDefinition['provider']],
       ],
       'appliesTo' => [$applies_to],
       'properties' => $properties,
@@ -603,29 +636,10 @@ abstract class ModellerBpmnBase extends ModellerBase {
     if (isset($pluginDefinition['description'])) {
       $template['description'] = (string) $pluginDefinition['description'];
     }
-    if ($doc_url = $this->pluginDocUrl($plugin, $applies_to)) {
+    if ($doc_url = $this->pluginDocUrl($plugin, $plugin_type)) {
       $template['documentationRef'] = $doc_url;
     }
     return $template;
-  }
-
-  /**
-   * Provides the plugin type derived from the string to what it applies.
-   *
-   * @param string $applies_to
-   *   BPMN identifier to what the plugin applies.
-   *
-   * @return string
-   *   The type of plugin.
-   */
-  protected function pluginType(string $applies_to): string {
-    if ($applies_to === 'bpmn:Event') {
-      return 'event';
-    }
-    if ($applies_to === 'bpmn:SequenceFlow') {
-      return 'condition';
-    }
-    return 'action';
   }
 
   /**
@@ -633,61 +647,22 @@ abstract class ModellerBpmnBase extends ModellerBase {
    *
    * @param \Drupal\Component\Plugin\PluginInspectionInterface $plugin
    *   The plugin for which the documentation URL should be build.
-   * @param string $applies_to
-   *   The identifier of the plugin types in BPMN terminology.
+   * @param string $plugin_type
+   *   The string identifying the plugin type, which is one of event, condition
+   *   or action.
    *
    * @return string|null
    *   The URL to the offsite documentation, or NULL if no URL was generated.
    */
-  protected function pluginDocUrl(PluginInspectionInterface $plugin, string $applies_to): ?string {
+  protected function pluginDocUrl(PluginInspectionInterface $plugin, string $plugin_type): ?string {
     if (!($domain = $this->documentationDomain)) {
       return NULL;
     }
-    $type = $this->pluginType($applies_to);
     $provider = $plugin->getPluginDefinition()['provider'];
     $basePath = (mb_strpos($provider, 'eca_') === 0) ?
       str_replace('_', '/', $provider) :
       $provider;
-    return sprintf('%s/plugins/%s/%ss/%s/', $domain, $basePath, $type, str_replace([':'], '_', $plugin->getPluginId()));
-  }
-
-  /**
-   * Prepares and returns the template of the given event for BPMN modellers.
-   *
-   * @param \Drupal\eca\Plugin\ECA\Event\EventInterface $event
-   *   The event plugin for which the template should be build.
-   *
-   * @return array
-   *   The completed template for BPMN modellers for the given event.
-   */
-  protected function prepareEventTemplate(EventInterface $event): array {
-    return $this->properties($event, 'bpmn:Event', $event->fields());
-  }
-
-  /**
-   * Returns the template of the given condition for BPMN modellers.
-   *
-   * @param \Drupal\eca\Plugin\ECA\Condition\ConditionInterface $condition
-   *   The condition plugin for which the template should be build.
-   *
-   * @return array
-   *   The completed template for BPMN modellers for the given condition.
-   */
-  protected function prepareConditionTemplate(ConditionInterface $condition): array {
-    return $this->properties($condition, 'bpmn:SequenceFlow', $this->conditionServices->fields($condition));
-  }
-
-  /**
-   * Prepares and returns the template of the given action for BPMN modellers.
-   *
-   * @param \Drupal\Core\Action\ActionInterface $action
-   *   The action plugin for which the template should be build.
-   *
-   * @return array
-   *   The completed template for BPMN modellers for the given action.
-   */
-  protected function prepareActionTemplate(ActionInterface $action): array {
-    return $this->properties($action, 'bpmn:Task', $this->actionServices->fields($action));
+    return sprintf('%s/plugins/%s/%ss/%s/', $domain, $basePath, $plugin_type, str_replace([':'], '_', $plugin->getPluginId()));
   }
 
   /**
@@ -748,6 +723,168 @@ abstract class ModellerBpmnBase extends ModellerBase {
       }
     }
     return $fields;
+  }
+
+  /**
+   * Helper function to prepare a config field for actions and conditions.
+   *
+   * @param array $form
+   *   The array to which the fields should be added.
+   */
+  protected function prepareConfigFields(array $form): array {
+    $fields = [];
+    foreach ($form as $key => $definition) {
+      $label = $definition['#title'] ?? Modellers::convertKeyToLabel($key);
+      $description = $definition['#description'] ?? NULL;
+      $value = $definition['#default_value'] ?? '';
+      $weight = $definition['#weight'] ?? 0;
+      $type = 'String';
+      if (isset($definition['#type'])) {
+        // @todo Map to more proper property types of bpmn-js.
+        switch ($definition['#type']) {
+
+          case 'hidden':
+          case 'actions':
+            // The modellers can't handle these types, so we ignore them for
+            // the templates.
+            continue 2;
+
+          case 'textarea':
+            $type = 'Text';
+            break;
+
+          case 'checkbox':
+            $fields[] = $this->checkbox($key, $label, $weight, $description, $value);
+            continue 2;
+
+          case 'checkboxes':
+          case 'radios':
+          case 'select':
+            $fields[] = $this->optionsField($key, $label, $weight, $description, $definition['#options'], (string) $value);
+            continue 2;
+
+        }
+      }
+      if (is_bool($value)) {
+        $fields[] = $this->checkbox($key, $label, $weight, $description, $value);
+        continue;
+      }
+      if (is_array($value)) {
+        $value = implode(',', $value);
+      }
+      $field = [
+        'name' => $key,
+        'label' => $label,
+        'weight' => $weight,
+        'type' => $type,
+        'value' => $value,
+      ];
+      if ($description !== NULL) {
+        $field['description'] = $description;
+      }
+      $fields[] = $field;
+    }
+
+    // Sort fields by weight.
+    usort($fields, static function ($f1, $f2) {
+      $l1 = (int) $f1['weight'];
+      $l2 = (int) $f2['weight'];
+      if ($l1 < $l2) {
+        return -1;
+      }
+      if ($l1 > $l2) {
+        return 1;
+      }
+      return 0;
+    });
+
+    return $fields;
+  }
+
+  /**
+   * Prepares a field with options as a drop-down.
+   *
+   * @param string $name
+   *   The field name.
+   * @param string $label
+   *   The field label.
+   * @param int $weight
+   *   The field weight for sorting.
+   * @param string|null $description
+   *   The optional field description.
+   * @param array $options
+   *   Key/value list of available options.
+   * @param string $value
+   *   The default value for the field.
+   *
+   * @return array
+   *   Prepared option field.
+   */
+  protected function optionsField(string $name, string $label, int $weight, ?string $description, array $options, string $value): array {
+    $choices = [];
+    foreach ($options as $optionValue => $optionName) {
+      $choices[] = [
+        'name' => (string) $optionName,
+        'value' => (string) $optionValue,
+      ];
+    }
+    $field = [
+      'name' => $name,
+      'label' => $label,
+      'weight' => $weight,
+      'type' => 'Dropdown',
+      'value' => $value,
+      'extras' => [
+        'choices' => $choices,
+      ],
+    ];
+    if ($description !== NULL) {
+      $field['description'] = $description;
+    }
+    return $field;
+  }
+
+  /**
+   * Prepares a field as a checkbox.
+   *
+   * @param string $name
+   *   The field name.
+   * @param string $label
+   *   The field label.
+   * @param int $weight
+   *   The field weight for sorting.
+   * @param string|null $description
+   *   The optional field description.
+   * @param bool $value
+   *   The default value for the field.
+   *
+   * @return array
+   *   Prepared checkbox field.
+   */
+  protected function checkbox(string $name, string $label, int $weight, ?string $description, bool $value): array {
+    $field = [
+      'name' => $name,
+      'label' => $label,
+      'weight' => $weight,
+      'type' => 'Dropdown',
+      'value' => $value,
+      'extras' => [
+        'choices' => [
+          [
+            'name' => 'no',
+            'value' => 'no',
+          ],
+          [
+            'name' => 'yes',
+            'value' => 'yes',
+          ],
+        ],
+      ],
+    ];
+    if ($description !== NULL) {
+      $field['description'] = $description;
+    }
+    return $field;
   }
 
 }

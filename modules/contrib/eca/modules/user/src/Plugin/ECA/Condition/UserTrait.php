@@ -28,15 +28,24 @@ trait UserTrait {
    *   The configured user entity if found, NULL otherwise.
    */
   protected function loadUserAccount(): ?UserInterface {
-    $account = $this->tokenServices->replaceClear($this->configuration['account']);
+    $account = $this->tokenServices->getOrReplace($this->configuration['account']);
     if ($account instanceof AccountInterface) {
-      $account = $account->id();
+      if (!($account instanceof UserInterface)) {
+        $account = $account->id();
+      }
+    }
+    elseif (!is_numeric($account)) {
+      $account = $this->tokenServices->replaceClear($this->configuration['account']);
+
+      // @see user_tokens().
+      if ((string) $account === 'not yet assigned') {
+        $account = 0;
+      }
     }
     if (is_numeric($account)) {
       /** @var \Drupal\user\UserInterface $account */
       try {
-        $account = $this->entityTypeManager->getStorage('user')
-          ->load(($account));
+        $account = $this->entityTypeManager->getStorage('user')->load($account);
       }
       catch (InvalidPluginDefinitionException | PluginNotFoundException $e) {
         $account = NULL;
@@ -63,7 +72,7 @@ trait UserTrait {
       '#type' => 'textfield',
       '#title' => $this->t('User account'),
       '#default_value' => $this->configuration['account'],
-      '#weight' => -11,
+      '#weight' => -20,
     ];
     return $form;
   }

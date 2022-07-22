@@ -8,6 +8,10 @@ use Drupal\eca_queue\Task;
 
 /**
  * Dispatches when a queued ECA task is being processed.
+ *
+ * @internal
+ *   This class is not meant to be used as a public API. It is subject for name
+ *   change or may be removed completely, also on minor version updates.
  */
 class ProcessingTaskEvent extends Event implements ConditionalApplianceInterface {
 
@@ -42,8 +46,8 @@ class ProcessingTaskEvent extends Event implements ConditionalApplianceInterface
    * {@inheritdoc}
    */
   public function appliesForLazyLoadingWildcard(string $wildcard): bool {
-    $task_name = mb_strtolower(trim($this->task->getTaskName()));
-    $task_value = mb_strtolower(trim($this->task->getTaskValue()));
+    $task_name = mb_strtolower(trim((string) $this->task->getTaskName()));
+    $task_value = mb_strtolower(trim((string) $this->task->getTaskValue()));
     return in_array($wildcard, [
       '*',
       $task_name,
@@ -62,7 +66,7 @@ class ProcessingTaskEvent extends Event implements ConditionalApplianceInterface
     if ($argument_task_name !== '' && $argument_task_name !== mb_strtolower(trim($task_name))) {
       return FALSE;
     }
-    if ($argument_task_value !== '' && (!isset($task_value) || ($argument_task_value !== mb_strtolower(trim($task_value))))) {
+    if ($argument_task_value !== '' && (!isset($task_value) || ($argument_task_value !== mb_strtolower(trim((string) $task_value))))) {
       return FALSE;
     }
     return TRUE;

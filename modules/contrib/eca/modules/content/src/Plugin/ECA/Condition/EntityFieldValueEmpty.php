@@ -2,9 +2,10 @@
 
 namespace Drupal\eca_content\Plugin\ECA\Condition;
 
-use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eca\Plugin\ECA\Condition\ConditionBase;
+use Drupal\eca\TypedData\PropertyPathTrait;
 
 /**
  * Plugin implementation of the ECA condition for empty entity field value.
@@ -19,16 +20,20 @@ use Drupal\eca\Plugin\ECA\Condition\ConditionBase;
  */
 class EntityFieldValueEmpty extends ConditionBase {
 
+  use PropertyPathTrait;
+
   /**
    * {@inheritdoc}
    */
   public function evaluate(): bool {
     $entity = $this->getValueFromContext('entity');
     $field_name = $this->tokenServices->replaceClear($this->configuration['field_name']);
-    if ($entity instanceof FieldableEntityInterface && $entity->hasField($field_name)) {
-      return $this->negationCheck($entity->get($field_name)->isEmpty());
+    $options = ['access' => FALSE, 'auto_item' => FALSE];
+    if (($entity instanceof EntityInterface) && ($property = $this->getTypedProperty($entity->getTypedData(), $field_name, $options))) {
+      return $this->negationCheck(method_exists($property, 'isEmpty') ? $property->isEmpty() : empty($property->getValue()));
     }
-    return TRUE;
+    // Stop execution chain when field or property does not exist.
+    return FALSE;
   }
 
   /**

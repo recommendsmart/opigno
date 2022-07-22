@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @package Drupal\digital_signage_framework\Event
  */
-class Rendered extends Event {
+class Rendered extends \Symfony\Contracts\EventDispatcher\Event {
 
   /**
    * @var \Symfony\Component\HttpFoundation\Response

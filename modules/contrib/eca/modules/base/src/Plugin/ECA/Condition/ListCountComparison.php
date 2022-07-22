@@ -41,7 +41,7 @@ class ListCountComparison extends ScalarComparison {
   /**
    * {@inheritdoc}
    */
-  public function getOptions(string $id): ?array {
+  protected function getOptions(string $id): ?array {
     if ($id === 'operator') {
       return [
         static::COMPARE_EQUALS => $this->t('equals'),

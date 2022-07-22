@@ -70,13 +70,13 @@ class TokenLoadRouteParameter extends ConfigurableActionBase {
       '#type' => 'textfield',
       '#title' => $this->t('Name of route parameter'),
       '#default_value' => $this->configuration['parameter_name'],
-      '#weight' => -8,
+      '#weight' => -20,
     ];
     $form['token_name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Name of token'),
       '#default_value' => $this->configuration['token_name'],
-      '#weight' => -7,
+      '#weight' => -10,
     ];
     return $form;
   }

@@ -72,7 +72,7 @@ class FormTriggered extends StringComparisonBase {
       '#title' => $this->t('Trigger name'),
       '#description' => $this->t('The trigger name is the machine name of the form submit element. Example: <em>submit</em>. A custom trigger name can be defined for example with the action <em>"Form: add submit button"</em>.'),
       '#default_value' => $this->configuration['trigger_name'],
-      '#weight' => -8,
+      '#weight' => -70,
     ];
     return $form;
   }

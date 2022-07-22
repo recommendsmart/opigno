@@ -24,6 +24,8 @@ use Drupal\user\Entity\User;
  */
 class RouteTest extends KernelTestBase {
 
+  use \Prophecy\PhpUnit\ProphecyTrait;
+
   /**
    * {@inheritdoc}
    */

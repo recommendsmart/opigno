@@ -38,7 +38,7 @@ abstract class FormAddFieldActionBase extends FormActionBase {
     if (!($form = &$this->getCurrentForm())) {
       return;
     }
-    $name = trim($this->tokenServices->replace($this->configuration['name']));
+    $name = trim((string) $this->tokenServices->replace($this->configuration['name']));
     if ($name === '') {
       throw new \InvalidArgumentException('Cannot use an empty string as field name.');
     }
@@ -142,7 +142,7 @@ abstract class FormAddFieldActionBase extends FormActionBase {
     $form['default_value'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Default value'),
-      '#weight' => 0,
+      '#weight' => -30,
       '#default_value' => $this->configuration['default_value'],
     ];
     $form['weight'] = [
@@ -150,7 +150,7 @@ abstract class FormAddFieldActionBase extends FormActionBase {
       '#title' => $this->t('Element weight'),
       '#description' => $this->t('The lower the weight, the submit action appears before other submit actions having a higher weight.'),
       '#default_value' => $this->configuration['weight'],
-      '#weight' => 10,
+      '#weight' => -20,
       '#required' => TRUE,
     ];
     return $form;

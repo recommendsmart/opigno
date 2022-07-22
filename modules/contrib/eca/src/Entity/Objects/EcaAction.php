@@ -2,8 +2,7 @@
 
 namespace Drupal\eca\Entity\Objects;
 
-use Drupal\Component\EventDispatcher\Event;
-use Drupal\Core\Action\ConfigurableActionBase;
+use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\eca\Plugin\Action\ActionInterface;
 use Drupal\eca\Entity\Eca;
 use Drupal\Core\Action\ActionInterface as CoreActionInterface;
@@ -56,7 +55,7 @@ class EcaAction extends EcaObject implements ObjectWithPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function execute(EcaObject $predecessor, Event $event, array $context): bool {
+  public function execute(EcaObject $predecessor, object $event, array $context): bool {
     if (!parent::execute($predecessor, $event, $context)) {
       return FALSE;
     }
@@ -66,10 +65,11 @@ class EcaAction extends EcaObject implements ObjectWithPluginInterface {
     if ($this->plugin instanceof ActionInterface) {
       $this->plugin->setEvent($event);
     }
-    elseif ($this->plugin instanceof ConfigurableActionBase) {
+    elseif (($this->plugin instanceof ConfigurableInterface) && !empty($this->plugin->getConfiguration()['replace_tokens'])) {
       // When this action plugin is not related with ECA directly, that external
       // action plugin might provide configuration input where it makes sense
-      // to apply Token replacement.
+      // to apply Token replacement. This will only be applied when this action
+      // is explicitly configured with Token replacement enabled.
       $token = $this->token();
       $fields = $this->plugin->getConfiguration();
       array_walk_recursive($fields, static function (&$value) use ($token) {
@@ -107,7 +107,7 @@ class EcaAction extends EcaObject implements ObjectWithPluginInterface {
         $exception_thrown = TRUE;
       }
       finally {
-        $this->eventDispatcher()->dispatch(new AfterActionExecutionEvent($this, $object, $event, $predecessor, $before_event->getPrestate(NULL), $access_granted, $exception_thrown));
+        $this->eventDispatcher()->dispatch(new AfterActionExecutionEvent($this, $object, $event, $predecessor, $before_event->getPrestate(NULL), $access_granted, $exception_thrown), EcaEvents::AFTER_ACTION_EXECUTION);
       }
     }
 

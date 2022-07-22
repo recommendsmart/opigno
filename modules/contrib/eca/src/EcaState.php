@@ -38,15 +38,18 @@ class EcaState extends State {
   }
 
   /**
-   * Stores the request time in ECA's key/value store.
+   * Stores the given or current time in ECA's key/value store.
    *
    * @param string $key
    *   The identifier for the timestamp.
+   * @param int|null $timestamp
+   *   (optional) The timestamp value to store. Skip this argument to store
+   *   the current time.
    *
    * @return $this
    */
-  public function setTimestamp(string $key): EcaState {
-    $this->set($this->timestampKey($key), $this->getCurrentTimestamp());
+  public function setTimestamp(string $key, ?int $timestamp = NULL): EcaState {
+    $this->set($this->timestampKey($key), $timestamp ?? $this->getCurrentTimestamp());
     return $this;
   }
 
@@ -64,13 +67,13 @@ class EcaState extends State {
   }
 
   /**
-   * Receive current timestamp.
+   * Receive the current time as timestamp.
    *
    * @return int
    *   The current timestamp.
    */
   public function getCurrentTimestamp(): int {
-    return $this->time->getRequestTime();
+    return $this->time->getCurrentTime();
   }
 
   /**

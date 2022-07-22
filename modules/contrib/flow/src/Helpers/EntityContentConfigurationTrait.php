@@ -146,6 +146,22 @@ trait EntityContentConfigurationTrait {
     $form_display_mode = $element['#flow__form_display'];
     $wrapper_id = $element['#wrapper_id'];
     $form_display = EntityFormDisplay::collectRenderDisplay($entity, $form_display_mode);
+
+    // A very special treatment for the moderation state field that is coming
+    // from core's content_moderation module. We need to wrap the according
+    // widget with a decorator that prevents that widget from manipulating
+    // entity values. This happens when the configured moderation state differs
+    // from the initial state.
+    if ($form_display->getComponent('moderation_state')) {
+      $closure = \Closure::fromCallable(function () {
+        /** @var \Drupal\Core\Entity\Entity\EntityFormDisplay $this */
+        $this->getRenderer('moderation_state');
+        $workaround_class = 'Drupal\flow\Workaround\ModerationStateWidgetWorkaround';
+        $this->plugins['moderation_state'] = new $workaround_class($this->plugins['moderation_state']);
+      });
+      $closure->call($form_display);
+    }
+
     $content_config_entities = $form_state->get('flow__content_configuration') ?? [];
     $content_config_entities[$wrapper_id] = [$entity, $form_display];
     $form_state->set('flow__content_configuration', $content_config_entities);

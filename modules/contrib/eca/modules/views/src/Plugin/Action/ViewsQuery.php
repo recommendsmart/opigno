@@ -9,7 +9,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\ListDataDefinition;
 use Drupal\Core\TypedData\Plugin\DataType\ItemList;
 use Drupal\eca\Plugin\Action\ConfigurableActionBase;
-use Drupal\eca\Plugin\OptionsInterface;
 use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
@@ -22,7 +21,7 @@ use Drupal\views\ViewExecutable;
  *   label = @Translation("Views: Execute query")
  * )
  */
-class ViewsQuery extends ConfigurableActionBase implements OptionsInterface {
+class ViewsQuery extends ConfigurableActionBase {
 
   /**
    * The executable view.
@@ -92,30 +91,34 @@ class ViewsQuery extends ConfigurableActionBase implements OptionsInterface {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
     $form = parent::buildConfigurationForm($form, $form_state);
+    $views = [];
+    foreach (View::loadMultiple() as $view) {
+      $views[$view->id()] = $view->label();
+    }
     $form['token_name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Name of token'),
       '#default_value' => $this->configuration['token_name'],
-      '#weight' => -10,
+      '#weight' => -60,
     ];
     $form['view_id'] = [
       '#type' => 'select',
       '#title' => $this->t('View'),
       '#default_value' => $this->configuration['view_id'],
-      '#weight' => -9,
-      '#options' => $this->getOptions('view_id'),
+      '#weight' => -50,
+      '#options' => $views,
     ];
     $form['display_id'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Display'),
       '#default_value' => $this->configuration['display_id'],
-      '#weight' => -8,
+      '#weight' => -40,
     ];
     $form['arguments'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Arguments'),
       '#default_value' => $this->configuration['arguments'],
-      '#weight' => -7,
+      '#weight' => -30,
     ];
     return $form;
   }
@@ -129,20 +132,6 @@ class ViewsQuery extends ConfigurableActionBase implements OptionsInterface {
     $this->configuration['display_id'] = $form_state->getValue('display_id');
     $this->configuration['arguments'] = $form_state->getValue('arguments');
     parent::submitConfigurationForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getOptions(string $id): ?array {
-    if ($id === 'view_id') {
-      $views = [];
-      foreach (View::loadMultiple() as $view) {
-        $views[$view->id()] = $view->label();
-      }
-      return $views;
-    }
-    return NULL;
   }
 
   /**
@@ -189,7 +178,7 @@ class ViewsQuery extends ConfigurableActionBase implements OptionsInterface {
    *   The view ID.
    */
   protected function getViewId(): string {
-    return trim($this->tokenServices->replaceClear($this->configuration['view_id']));
+    return trim((string) $this->tokenServices->replaceClear($this->configuration['view_id']));
   }
 
   /**
@@ -199,7 +188,7 @@ class ViewsQuery extends ConfigurableActionBase implements OptionsInterface {
    *   The display ID.
    */
   protected function getDisplayId(): string {
-    return trim($this->tokenServices->replaceClear($this->configuration['display_id']));
+    return trim((string) $this->tokenServices->replaceClear($this->configuration['display_id']));
   }
 
   /**
@@ -209,7 +198,7 @@ class ViewsQuery extends ConfigurableActionBase implements OptionsInterface {
    *   The arguments, multiple arguments are seraparated by "/".
    */
   protected function getArguments(): string {
-    return trim($this->tokenServices->replaceClear($this->configuration['arguments']));
+    return trim((string) $this->tokenServices->replaceClear($this->configuration['arguments']));
   }
 
   /**

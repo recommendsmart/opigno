@@ -8,7 +8,8 @@
     "commerceguys/addressing": "^1.0.7",
     "drupal/address": "^1.0",
     "drupal/geolocation": "^3.10",
-    "drupal/search_api_location": "^1.0"
+    "drupal/search_api_location": "^1.0",
+    "goalgorilla/open_social": "^11.1"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master"

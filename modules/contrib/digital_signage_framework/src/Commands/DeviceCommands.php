@@ -3,11 +3,9 @@
 namespace Drupal\digital_signage_framework\Commands;
 
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
-use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\digital_signage_framework\Emergency;
 use Drupal\digital_signage_framework\Entity\Device;
 use Drupal\digital_signage_framework\PlatformPluginManager;
-use Drupal\digital_signage_framework\SequenceItem;
 use Drush\Commands\DrushCommands;
 use InvalidArgumentException;
 

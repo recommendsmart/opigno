@@ -28,9 +28,16 @@ class AfterInitialExecutionEvent extends Event {
   /**
    * The applied system event.
    *
-   * @var \Drupal\Component\EventDispatcher\Event
+   * @var \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event
    */
-  protected Event $event;
+  protected object $event;
+
+  /**
+   * The name of the applying system event.
+   *
+   * @var string
+   */
+  protected string $eventName;
 
   /**
    * Array holding arbitrary variables the represent a pre-execution state.
@@ -48,15 +55,18 @@ class AfterInitialExecutionEvent extends Event {
    *   The ECA configuration.
    * @param \Drupal\eca\Entity\Objects\EcaEvent $ecaEvent
    *   The ECA event object.
-   * @param \Drupal\Component\EventDispatcher\Event $event
+   * @param \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event $event
    *   The applied system event.
+   * @param string $event_name
+   *   The name of the applying system event.
    * @param array &$prestate
    *   Array holding arbitrary variables of a prestate (if any).
    */
-  public function __construct(Eca $eca, EcaEvent $ecaEvent, Event $event, array &$prestate) {
+  public function __construct(Eca $eca, EcaEvent $ecaEvent, object $event, string $event_name, array &$prestate) {
     $this->eca = $eca;
     $this->ecaEvent = $ecaEvent;
     $this->event = $event;
+    $this->eventName = $event_name;
     $this->prestate = &$prestate;
   }
 
@@ -83,11 +93,21 @@ class AfterInitialExecutionEvent extends Event {
   /**
    * Get the applied system event.
    *
-   * @return \Drupal\Component\EventDispatcher\Event
+   * @return \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event
    *   The applied system event.
    */
-  public function getEvent(): Event {
+  public function getEvent(): object {
     return $this->event;
+  }
+
+  /**
+   * Get the name of the applying system event.
+   *
+   * @return string
+   *   The name of the applying system event.
+   */
+  public function getEventName(): string {
+    return $this->eventName;
   }
 
   /**

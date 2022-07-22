@@ -53,7 +53,7 @@ class FormGetErrors extends FormActionBase {
       '#description' => $this->t('The token will hold the list of existing form errors, keyed by form element. For example, when token name is defines as "<em>errors</em>", then a specific element may be accessed with <em>[errors:&lt;field_name&gt;]</em>.'),
       '#default_value' => $this->configuration['token_name'],
       '#required' => TRUE,
-      '#weight' => -9,
+      '#weight' => -49,
     ];
     return $form;
   }

@@ -6,7 +6,7 @@ use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\eca_content\Service\EntityTypes;
+use Drupal\eca\Service\ContentEntityTypes;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -41,76 +41,39 @@ class EntityTypesTest extends TestCase {
   }
 
   /**
-   * Tests the method bundleField without content entity types.
+   * Tests the method getTypesAndBundles without content entity types.
    */
-  public function testBundleFieldWithoutTypes(): void {
+  public function testGetTypesAndBundlesWithoutTypes(): void {
     $this->entityTypeManager->expects($this->once())
       ->method('getDefinitions')->willReturn([]);
-    $entityTypeHelper = new EntityTypes($this->entityTypeManager, $this->entityTypeBundleInfo);
-    $this->assertEquals([], $entityTypeHelper->bundleField());
+    $entityTypeHelper = new ContentEntityTypes($this->entityTypeManager, $this->entityTypeBundleInfo);
+    $this->assertEquals([], $entityTypeHelper->getTypesAndBundles());
   }
 
   /**
-   * Tests the method bundleField without content entity types and include any.
+   * Tests getTypesAndBundles without content entity types and include any.
    */
-  public function testBundleFieldWithoutTypesIncludeAny(): void {
+  public function testGetTypesAndBundlesWithoutTypesIncludeAny(): void {
     $expected = [
-      'name' => 'type',
-      'label' => 'Type (and bundle)',
-      'type' => 'Dropdown',
-      'value' => '_all',
-      'extras' => [
-        'choices' => [
-          0 => [
-            'name' => '- any -',
-            'value' => '_all',
-          ],
-        ],
-      ],
+      ContentEntityTypes::ALL => '- any -',
     ];
     $this->entityTypeManager->expects($this->once())
       ->method('getDefinitions')->willReturn([]);
-    $entityTypeHelper = new EntityTypes($this->entityTypeManager, $this->entityTypeBundleInfo);
-    $this->assertEquals($expected, $entityTypeHelper->bundleField(TRUE));
+    $entityTypeHelper = new ContentEntityTypes($this->entityTypeManager, $this->entityTypeBundleInfo);
+    $this->assertEquals($expected, $entityTypeHelper->getTypesAndBundles(TRUE));
   }
 
   /**
-   * Tests the method bundleField with entity types and include any bundles.
+   * Tests getTypesAndBundles with entity types and include any bundles.
    */
-  public function testBundleFieldWithTypesIncludeAnyBundles(): void {
+  public function testGetTypesAndBundlesWithTypesIncludeAnyBundles(): void {
     $expected = [
-      'name' => 'type',
-      'label' => 'Type (and bundle)',
-      'type' => 'Dropdown',
-      'value' => 'Comment _all',
-      'extras' => [
-        'choices' => [
-          0 => [
-            'name' => 'Comment: - any -',
-            'value' => 'Comment _all',
-          ],
-          1 => [
-            'name' => 'Comment: Article',
-            'value' => 'Comment bundleKey2',
-          ],
-          2 => [
-            'name' => 'Comment: Node',
-            'value' => 'Comment bundleKey1',
-          ],
-          3 => [
-            'name' => 'Content: - any -',
-            'value' => 'Content _all',
-          ],
-          4 => [
-            'name' => 'Content: Article',
-            'value' => 'Content bundleKey2',
-          ],
-          5 => [
-            'name' => 'Content: Node',
-            'value' => 'Content bundleKey1',
-          ],
-        ],
-      ],
+      'Comment ' . ContentEntityTypes::ALL => 'Comment: - any -',
+      'Comment bundleKey2' => 'Comment: Article',
+      'Comment bundleKey1' => 'Comment: Node',
+      'Content ' . ContentEntityTypes::ALL => 'Content: - any -',
+      'Content bundleKey2' => 'Content: Article',
+      'Content bundleKey1' => 'Content: Node',
     ];
     $labels = [
       'Content' => 'Content',
@@ -120,41 +83,21 @@ class EntityTypesTest extends TestCase {
     $this->entityTypeManager->expects($this->once())
       ->method('getDefinitions')
       ->willReturn($this->getContentEntityTypesByLabels($labels));
-    $entityTypeHelper = new EntityTypes($this->entityTypeManager, $this->entityTypeBundleInfo);
-    $this->assertEquals($expected, $entityTypeHelper->bundleField());
+    $entityTypeHelper = new ContentEntityTypes($this->entityTypeManager, $this->entityTypeBundleInfo);
+    $this->assertEquals($expected, $entityTypeHelper->getTypesAndBundles());
   }
 
   /**
-   * Tests the method bundleField.
+   * Tests the method getTypesAndBundles.
    *
    * <p>Include content entity types and without the flag any bundles.</p>
    */
-  public function testBundleFieldWithoutAnyBundlesFlag(): void {
+  public function testGetTypesAndBundlesWithoutAnyBundlesFlag(): void {
     $expected = [
-      'name' => 'type',
-      'label' => 'Type (and bundle)',
-      'type' => 'Dropdown',
-      'value' => 'Comment bundleKey2',
-      'extras' => [
-        'choices' => [
-          0 => [
-            'name' => 'Comment: Article',
-            'value' => 'Comment bundleKey2',
-          ],
-          1 => [
-            'name' => 'Comment: Node',
-            'value' => 'Comment bundleKey1',
-          ],
-          2 => [
-            'name' => 'Content: Article',
-            'value' => 'Content bundleKey2',
-          ],
-          3 => [
-            'name' => 'Content: Node',
-            'value' => 'Content bundleKey1',
-          ],
-        ],
-      ],
+      'Comment bundleKey2' => 'Comment: Article',
+      'Comment bundleKey1' => 'Comment: Node',
+      'Content bundleKey2' => 'Content: Article',
+      'Content bundleKey1' => 'Content: Node',
     ];
     $labels = [
       'Content' => 'Content',
@@ -164,33 +107,19 @@ class EntityTypesTest extends TestCase {
     $this->entityTypeManager->expects($this->once())
       ->method('getDefinitions')
       ->willReturn($this->getContentEntityTypesByLabels($labels));
-    $entityTypeHelper = new EntityTypes($this->entityTypeManager, $this->entityTypeBundleInfo);
-    $this->assertEquals($expected, $entityTypeHelper->bundleField(FALSE, FALSE));
+    $entityTypeHelper = new ContentEntityTypes($this->entityTypeManager, $this->entityTypeBundleInfo);
+    $this->assertEquals($expected, $entityTypeHelper->getTypesAndBundles(FALSE, FALSE));
   }
 
   /**
-   * Tests the method bundleField.
+   * Tests the method getTypesAndBundles.
    *
    * <p>Include content entity types and without the flag any bundles.</p>
    */
-  public function testBundleFieldNoBundles(): void {
+  public function testGetTypesAndBundlesNoBundles(): void {
     $expected = [
-      'name' => 'type',
-      'label' => 'Type (and bundle)',
-      'type' => 'Dropdown',
-      'value' => 'Comment _all',
-      'extras' => [
-        'choices' => [
-          0 => [
-            'name' => 'Comment: - any -',
-            'value' => 'Comment _all',
-          ],
-          1 => [
-            'name' => 'Content: - any -',
-            'value' => 'Content _all',
-          ],
-        ],
-      ],
+      'Comment ' . ContentEntityTypes::ALL => 'Comment: - any -',
+      'Content ' . ContentEntityTypes::ALL => 'Content: - any -',
     ];
     $labels = [
       'Content' => 'Content',
@@ -200,8 +129,8 @@ class EntityTypesTest extends TestCase {
     $this->entityTypeManager->expects($this->once())
       ->method('getDefinitions')
       ->willReturn($this->getContentEntityTypesByLabels($labels, FALSE));
-    $entityTypeHelper = new EntityTypes($this->entityTypeManager, $this->entityTypeBundleInfo);
-    $this->assertEquals($expected, $entityTypeHelper->bundleField());
+    $entityTypeHelper = new ContentEntityTypes($this->entityTypeManager, $this->entityTypeBundleInfo);
+    $this->assertEquals($expected, $entityTypeHelper->getTypesAndBundles());
   }
 
   /**
@@ -247,27 +176,32 @@ class EntityTypesTest extends TestCase {
    * Tests method with all types.
    */
   public function testBundleFieldAppliesAllTypes(): void {
-    $entityTypeHelper = new EntityTypes($this->entityTypeManager, $this->entityTypeBundleInfo);
-    $this->assertTrue($entityTypeHelper->bundleFieldApplies($this->createMock(EntityInterface::class),
-      '_all'));
+    $entityTypeHelper = new ContentEntityTypes($this->entityTypeManager, $this->entityTypeBundleInfo);
+    $entityMock = $this->createMock(EntityInterface::class);
+    $entityMock->method('getEntityTypeId')->willReturn('node');
+    $entityMock->method('bundle')->willReturn('article');
+    $this->assertTrue($entityTypeHelper->bundleFieldApplies(
+      $entityMock,
+      ContentEntityTypes::ALL));
   }
 
   /**
    * Tests method with all bundles.
    */
   public function testBundleFieldAppliesAllBundle(): void {
-    $entityTypeHelper = new EntityTypes($this->entityTypeManager, $this->entityTypeBundleInfo);
+    $entityTypeHelper = new ContentEntityTypes($this->entityTypeManager, $this->entityTypeBundleInfo);
     $entity = $this->createMock(EntityInterface::class);
     $entity->expects($this->once())->method('getEntityTypeId')
       ->willReturn('test');
-    $this->assertTrue($entityTypeHelper->bundleFieldApplies($entity, 'test _all'));
+    $entity->method('bundle')->willReturn('testbundle');
+    $this->assertTrue($entityTypeHelper->bundleFieldApplies($entity, 'test ' . ContentEntityTypes::ALL));
   }
 
   /**
    * Tests method with equal types and bundle.
    */
   public function testBundleFieldApplies(): void {
-    $entityTypeHelper = new EntityTypes($this->entityTypeManager, $this->entityTypeBundleInfo);
+    $entityTypeHelper = new ContentEntityTypes($this->entityTypeManager, $this->entityTypeBundleInfo);
     $entity = $this->createMock(EntityInterface::class);
     $entity->expects($this->once())->method('getEntityTypeId')
       ->willReturn('test_id');
@@ -280,7 +214,7 @@ class EntityTypesTest extends TestCase {
    * Tests method with non-equal bundle.
    */
   public function testBundleFieldAppliesFalse(): void {
-    $entityTypeHelper = new EntityTypes($this->entityTypeManager, $this->entityTypeBundleInfo);
+    $entityTypeHelper = new ContentEntityTypes($this->entityTypeManager, $this->entityTypeBundleInfo);
     $entity = $this->createMock(EntityInterface::class);
     $entity->expects($this->once())->method('getEntityTypeId')
       ->willReturn('test_id');

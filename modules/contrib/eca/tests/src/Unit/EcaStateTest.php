@@ -63,7 +63,7 @@ class EcaStateTest extends EcaUnitTestBase {
     $this->keyValueFactory->expects($this->once())->method('get')
       ->with('eca')->willReturn($this->keyValueStore);
 
-    $this->time->expects($this->exactly(3))->method('getRequestTime')
+    $this->time->expects($this->exactly(3))->method('getCurrentTime')
       ->willReturn($currentTimestamp);
 
     $ecaState = new EcaState($this->keyValueFactory, $this->time);
@@ -91,7 +91,7 @@ class EcaStateTest extends EcaUnitTestBase {
   public function testGetterAndSetter(): void {
     // 2018/01/09 16:00:00
     $currentTimestamp = 1515510000;
-    $this->time->expects($this->once())->method('getRequestTime')
+    $this->time->expects($this->once())->method('getCurrentTime')
       ->willReturn($currentTimestamp);
     $this->keyValueFactory->expects($this->once())->method('get')
       ->with('eca')->willReturn($this->keyValueStore);

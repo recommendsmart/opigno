@@ -23,14 +23,18 @@ Yasm module is an statistics module about your site contents, files and users.
 REQUIREMENTS
 ------------
 
-This module requires Drupal 8 or Drupal 9 core.
+This module requires Drupal 8/9/10 core.
 
 
 INSTALLATION
 ------------
 
-To install the Yasm module for Drupal 8 or Drupal 9, run the following command:
+To install the Yasm module run the following command:
 composer require drupal/yasm
+
+You can also add yasm submodules using:
+composer require drupal/yasm_charts
+composer require drupal/yasm_blocks
 
 For further information, see:
 https://www.drupal.org/docs/develop/using-composer/using-composer-to-manage-drupal-site-dependencies

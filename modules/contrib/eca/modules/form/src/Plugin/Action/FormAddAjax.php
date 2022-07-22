@@ -50,20 +50,20 @@ class FormAddAjax extends FormFieldActionBase {
       '#title' => $this->t('Disable validation errors'),
       '#description' => $this->t('Enable this option to completely suppress validation errors.'),
       '#default_value' => $this->configuration['disable_validation_errors'],
-      '#weight' => 10,
+      '#weight' => -10,
     ];
     $form['validate_fields'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Validate form fields'),
       '#description' => $this->t('Machine names of form fields that should be validated. Define multiple values separated with comma. Example: <em>first_name,last_name</em>. When no fields are defined at all and validation is not disabled above, then the whole form will be validated.'),
-      '#weight' => 20,
+      '#weight' => -9,
       '#default_value' => $this->configuration['validate_fields'],
     ];
     $form['target'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Target'),
       '#description' => $this->t('The machine name of the form element target to refresh via Ajax. When empty, then the whole form will be refreshed.'),
-      '#weight' => 30,
+      '#weight' => -8,
       '#default_value' => $this->configuration['target'],
     ];
     return $form;
@@ -98,6 +98,11 @@ class FormAddAjax extends FormFieldActionBase {
    */
   protected function doExecute(): void {
     $element = &$this->getTargetElement();
+    if (isset($element['widget'])) {
+      // Automatically jump to the widget form element, as it's being build
+      // by \Drupal\Core\Field\WidgetBase::form().
+      $element = &$element['widget'];
+    }
     if (trim($this->configuration['target']) !== '') {
       $original_field_name = $this->configuration['field_name'];
       $target_name = $this->tokenServices->replace($this->configuration['target']);
@@ -137,9 +142,10 @@ class FormAddAjax extends FormFieldActionBase {
     }
 
     $submit_handler = [HookHandler::class, 'submit'];
-    if (!empty($element['#submit']) && !in_array($submit_handler, $element['#submit'], TRUE)) {
+    if (empty($element['#submit']) || !in_array($submit_handler, $element['#submit'], TRUE)) {
       $element['#submit'][] = $submit_handler;
     }
+    $element['#submit'][] = [static::class, 'ajaxSubmit'];
   }
 
   /**
@@ -168,6 +174,18 @@ class FormAddAjax extends FormFieldActionBase {
       return $form;
     }
     return [];
+  }
+
+  /**
+   * Ajax submit handler that sets the form to rebuild.
+   *
+   * @param array $form
+   *   The form array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   */
+  public static function ajaxSubmit(array $form, FormStateInterface $form_state): void {
+    $form_state->setRebuild();
   }
 
 }

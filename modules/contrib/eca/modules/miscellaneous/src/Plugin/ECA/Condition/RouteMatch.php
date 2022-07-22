@@ -53,7 +53,7 @@ class RouteMatch extends StringComparisonBase {
       '#type' => 'textfield',
       '#title' => $this->t('Route name'),
       '#default_value' => $this->configuration['route'],
-      '#weight' => -8,
+      '#weight' => -70,
     ];
     return $form;
   }

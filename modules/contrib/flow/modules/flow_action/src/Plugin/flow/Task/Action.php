@@ -9,6 +9,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Utility\Token;
 use Drupal\flow\FlowTaskQueue;
 use Drupal\flow\Helpers\EntityFromStackTrait;
 use Drupal\flow\Helpers\ModuleHandlerTrait;
@@ -70,6 +71,7 @@ class Action extends FlowTaskBase implements PluginFormInterface {
   public function defaultConfiguration() {
     $default = [
       'settings' => [
+        'replace_tokens' => FALSE,
         'access_check' => 'check_access',
         'action' => [],
       ],
@@ -85,6 +87,14 @@ class Action extends FlowTaskBase implements PluginFormInterface {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $action = $this->getAction();
+    if ($action instanceof ConfigurableInterface) {
+      $form['replace_tokens'] = [
+        '#type' => 'checkbox',
+        '#title' => $this->t('Replace tokens before executing the action'),
+        '#weight' => -200,
+        '#default_value' => $this->settings['replace_tokens'] ?? FALSE,
+      ];
+    }
     $access_options = [
       '_none' => $this->t('- Select -'),
       'check_access' => $this->t('Always check access, only execute when granted'),
@@ -109,6 +119,11 @@ class Action extends FlowTaskBase implements PluginFormInterface {
           '#weight' => 10,
         ],
         '#weight' => -100,
+        '#states' => [
+          'visible' => [
+            ':input[name="task[settings][replace_tokens]"]' => ['checked' => TRUE],
+          ],
+        ],
       ];
       if (isset($this->configuration['entity_type_id']) && $this->moduleHandler->moduleExists('token')) {
         $form['token_info']['browser'] = [
@@ -156,6 +171,7 @@ class Action extends FlowTaskBase implements PluginFormInterface {
       $action_form_state = SubformState::createForSubform($form['action'], $form, $form_state);
       $action->submitConfigurationForm($form['action'], $action_form_state);
     }
+    $this->settings['replace_tokens'] = (bool) $form_state->getValue('replace_tokens', FALSE);
     $this->settings['access_check'] = $form_state->getValue('access_check');
     $this->settings['action'] = $action instanceof ConfigurableInterface ? $action->getConfiguration() : [];
   }
@@ -168,21 +184,33 @@ class Action extends FlowTaskBase implements PluginFormInterface {
     $access_check = $this->settings['access_check'] ?? 'check_access';
 
     if (($access_check === 'bypass_access') || $action->access($entity)) {
-      // Tokenize the action config, and pass through the used Token data.
+      // Pass through token data, and replace tokens in the configuration
+      // beforehand when configured accordingly.
       if ($action instanceof ConfigurableInterface) {
-        $previous_configuration = $action->getConfiguration();
+        $original_configuration = $action->getConfiguration();
+        $overridden_configuration = $original_configuration;
 
-        $tokenized_configuration = $previous_configuration;
         $token_data = [$this->getTokenTypeForEntityType($entity->getEntityTypeId()) => $entity];
         if ($this->entityFromStack && ($this->entityFromStack->getEntityTypeId() !== $entity->getEntityTypeId())) {
           $token_data[$this->getTokenTypeForEntityType($this->entityFromStack->getEntityTypeId())] = $this->entityFromStack;
         }
-        array_walk_recursive($tokenized_configuration, function (&$value) use (&$token_data) {
-          if (is_string($value) && !empty($value)) {
-            $value = $this->tokenReplace($value, $token_data);
+
+        // Gracefully override configuration values with token data.
+        foreach ($token_data as $type => $data) {
+          if (!isset($overridden_configuration[$type]) || is_object($overridden_configuration[$type])) {
+            $overridden_configuration[$type] = $data;
           }
-        });
-        $action->setConfiguration($tokenized_configuration + $token_data);
+        }
+
+        if ($this->shouldReplaceTokens($action)) {
+          array_walk_recursive($overridden_configuration, function (&$value) use (&$token_data) {
+            if (is_string($value) && !empty($value)) {
+              $value = $this->tokenReplace($value, $token_data);
+            }
+          });
+        }
+
+        $action->setConfiguration($overridden_configuration);
       }
 
       // Some actions want to unconditionally save the according entity and thus
@@ -197,7 +225,7 @@ class Action extends FlowTaskBase implements PluginFormInterface {
       finally {
         FlowTaskQueue::$logTaskRecursion = $log_task_recursion;
         if ($action instanceof ConfigurableInterface) {
-          $action->setConfiguration($previous_configuration);
+          $action->setConfiguration($original_configuration);
         }
       }
     }
@@ -221,6 +249,33 @@ class Action extends FlowTaskBase implements PluginFormInterface {
    */
   public function setAction(ActionInterface $action): void {
     $this->action = $action;
+  }
+
+  /**
+   * Determines whether tokens should be replaced before executing the action.
+   *
+   * @param \Drupal\Core\Action\ActionInterface $action
+   *   The action plugin instance.
+   *
+   * @return bool
+   *   Returns TRUE if tokens should be replaced, FALSE otherwise.
+   */
+  protected function shouldReplaceTokens(ActionInterface $action): bool {
+    if (TRUE === ($this->settings['replace_tokens'] ?? FALSE)) {
+      // Do a sensitive check whether it really makes sense to replace tokens.
+      // It does not make sense when the action itself is subject to replace
+      // tokens on its own.
+      return \Closure::fromCallable(function () {
+        foreach ((new \ReflectionClass($this))->getProperties() as $property) {
+          $property_name = $property->getName();
+          if (isset($this->$property_name) && ($this->$property_name instanceof Token)) {
+            return FALSE;
+          }
+        }
+        return TRUE;
+      })->call($action);
+    }
+    return FALSE;
   }
 
 }

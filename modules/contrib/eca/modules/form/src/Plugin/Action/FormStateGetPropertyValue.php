@@ -57,7 +57,7 @@ class FormStateGetPropertyValue extends FormStatePropertyActionBase {
       '#title' => $this->t('Name of token'),
       '#default_value' => $this->configuration['token_name'],
       '#required' => TRUE,
-      '#weight' => -9,
+      '#weight' => -49,
     ];
     return $form;
   }

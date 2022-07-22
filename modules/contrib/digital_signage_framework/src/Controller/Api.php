@@ -352,7 +352,7 @@ class Api implements ContainerInjectionInterface {
     }
 
     $event = new Rendered($response, $this->device);
-    $this->eventDispatcher->dispatch(DigitalSignageFrameworkEvents::RENDERED, $event);
+    $this->eventDispatcher->dispatch($event, DigitalSignageFrameworkEvents::RENDERED);
 
     return $event->getResponse();
   }
@@ -455,12 +455,12 @@ class Api implements ContainerInjectionInterface {
    */
   private function getSchedule(): JsonResponse {
     $underlays = new Underlays($this->device);
-    $this->eventDispatcher->dispatch(DigitalSignageFrameworkEvents::UNDERLAYS, $underlays);
+    $this->eventDispatcher->dispatch($underlays, DigitalSignageFrameworkEvents::UNDERLAYS);
     $overlays = new Overlays($this->device);
-    $this->eventDispatcher->dispatch(DigitalSignageFrameworkEvents::OVERLAYS, $overlays);
+    $this->eventDispatcher->dispatch($overlays, DigitalSignageFrameworkEvents::OVERLAYS);
 
     $event = new Libraries($this->device);
-    $this->eventDispatcher->dispatch(DigitalSignageFrameworkEvents::LIBRARIES, $event);
+    $this->eventDispatcher->dispatch($event, DigitalSignageFrameworkEvents::LIBRARIES);
     $libraries = $event->getLibraries();
     $libraries[] = 'digital_signage_framework/schedule.content';
     $libraries[] = 'digital_signage_framework/schedule.timer';
@@ -625,7 +625,7 @@ class Api implements ContainerInjectionInterface {
       }
     }
 
-    $this->eventDispatcher->dispatch(DigitalSignageFrameworkEvents::LIBRARIES, $event);
+    $this->eventDispatcher->dispatch($event, DigitalSignageFrameworkEvents::LIBRARIES);
     return $this->renderAssets($event->getLibraries(), $event->getSettings(), TRUE, $this->prepareHtmlHead($build));
   }
 
@@ -726,9 +726,9 @@ class Api implements ContainerInjectionInterface {
    */
   private function popupContent($output): AjaxResponse {
     $underlays = new Underlays($this->device);
-    $this->eventDispatcher->dispatch(DigitalSignageFrameworkEvents::UNDERLAYS, $underlays);
+    $this->eventDispatcher->dispatch($underlays, DigitalSignageFrameworkEvents::UNDERLAYS);
     $overlays = new Overlays($this->device);
-    $this->eventDispatcher->dispatch(DigitalSignageFrameworkEvents::OVERLAYS, $overlays);
+    $this->eventDispatcher->dispatch($overlays, DigitalSignageFrameworkEvents::OVERLAYS);
 
     $content = is_array($output) ? $this->renderer->renderRoot($output) : $output;
     /** @var array $build */

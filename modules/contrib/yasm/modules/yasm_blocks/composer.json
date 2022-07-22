@@ -16,7 +16,7 @@
     "source": "http://cgit.drupalcode.org/yasm"
   },
   "require":{
-    "drupal/core": "^8 || ^9",
+    "drupal/core": "^8 || ^9 || ^10",
     "drupal/yasm": "^2.0"
   }
 }

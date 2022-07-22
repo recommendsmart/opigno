@@ -1,6 +1,6 @@
 # Schema for the 'eca_content_event' selection handler settings.
 
-entity_reference_selection.eca_content_event:
+entity_reference_selection.eca:
   type: entity_reference_selection
   label: 'Handler settings of event-based selection with ECA'
   mapping:

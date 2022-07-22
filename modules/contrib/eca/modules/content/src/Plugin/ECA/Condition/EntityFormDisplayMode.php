@@ -73,7 +73,7 @@ class EntityFormDisplayMode extends StringComparisonBase {
       '#title' => $this->t('Form display mode'),
       '#description' => $this->t('The machine name of the display mode. Example: <em>default</em>'),
       '#default_value' => $this->configuration['display_mode'],
-      '#weight' => -8,
+      '#weight' => -70,
     ];
     return $form;
   }

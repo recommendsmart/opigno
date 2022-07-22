@@ -62,14 +62,14 @@ class FormFieldSetValue extends ConfigurableActionBase {
       '#title' => $this->t('Field value'),
       '#default_value' => $this->configuration['field_value'],
       '#description' => $this->t('This field supports tokens.'),
-      '#weight' => -5,
+      '#weight' => -45,
     ];
     $form['use_yaml'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Interpret above value as YAML format'),
       '#description' => $this->t('Nested data can be set using YAML format, for example <em>mykey: "My value"</em>. When using this format, this options needs to be enabled.'),
       '#default_value' => $this->configuration['use_yaml'],
-      '#weight' => -3,
+      '#weight' => -43,
     ];
     return $this->buildFormFieldConfigurationForm($form, $form_state);
   }

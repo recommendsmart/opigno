@@ -2,6 +2,7 @@
 
 namespace Drupal\eca_form\Plugin\ECA\Event;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\eca\Entity\Objects\EcaEvent;
 use Drupal\eca\Event\Tag;
 use Drupal\eca\Plugin\ECA\Event\EventBase;
@@ -63,33 +64,56 @@ class FormEvent extends EventBase {
   /**
    * {@inheritdoc}
    */
-  public function fields(): array {
-    $fields = [];
-    $fields[] = [
-      'name' => 'form_id',
-      'label' => 'Restrict by form ID',
-      'type' => 'String',
-      'description' => 'The form ID can be mostly found in the HTML &lt;form&gt; element as "id" attribute.',
+  public function defaultConfiguration(): array {
+    return [
+      'form_id' => '',
+      'entity_type_id' => '',
+      'bundle' => '',
+      'operation' => '',
+    ] + parent::defaultConfiguration();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
+    $form = parent::buildConfigurationForm($form, $form_state);
+    $form['form_id'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Restrict by form ID'),
+      '#default_value' => $this->configuration['form_id'],
+      '#description' => $this->t('The form ID can be mostly found in the HTML &lt;form&gt; element as "id" attribute.'),
     ];
-    $fields[] = [
-      'name' => 'entity_type_id',
-      'label' => 'Restrict by entity type ID',
-      'type' => 'String',
-      'description' => 'Example: <em>node, taxonomy_term, user</em>',
+    $form['entity_type_id'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Restrict by entity type ID'),
+      '#default_value' => $this->configuration['entity_type_id'],
+      '#description' => $this->t('Example: <em>node, taxonomy_term, user</em>'),
     ];
-    $fields[] = [
-      'name' => 'bundle',
-      'label' => 'Restrict by entity bundle',
-      'type' => 'String',
-      'description' => 'Example: <em>article, tags</em>',
+    $form['bundle'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Restrict by entity bundle'),
+      '#default_value' => $this->configuration['bundle'],
+      '#description' => $this->t('Example: <em>article, tags</em>'),
     ];
-    $fields[] = [
-      'name' => 'operation',
-      'label' => 'Restrict by operation',
-      'type' => 'String',
-      'description' => 'Example: <em>default, save, delete</em>',
+    $form['operation'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Restrict by operation'),
+      '#default_value' => $this->configuration['operation'],
+      '#description' => $this->t('Example: <em>default, save, delete</em>'),
     ];
-    return $fields;
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
+    parent::submitConfigurationForm($form, $form_state);
+    $this->configuration['form_id'] = $form_state->getValue('form_id');
+    $this->configuration['entity_type_id'] = $form_state->getValue('entity_type_id');
+    $this->configuration['bundle'] = $form_state->getValue('bundle');
+    $this->configuration['operation'] = $form_state->getValue('operation');
   }
 
   /**

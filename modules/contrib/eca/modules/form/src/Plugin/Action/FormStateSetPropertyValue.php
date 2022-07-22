@@ -91,14 +91,14 @@ class FormStateSetPropertyValue extends FormStatePropertyActionBase {
       '#title' => $this->t('Value of the property'),
       '#description' => $this->t('This field supports tokens.'),
       '#default_value' => $this->configuration['property_value'],
-      '#weight' => -9,
+      '#weight' => -49,
     ];
     $form['use_yaml'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Interpret above value as YAML format'),
       '#description' => $this->t('Nested data can be set using YAML format, for example <em>mykey: "My value"</em>. When using this format, this options needs to be enabled.'),
       '#default_value' => $this->configuration['use_yaml'],
-      '#weight' => -8,
+      '#weight' => -48,
     ];
     return $form;
   }

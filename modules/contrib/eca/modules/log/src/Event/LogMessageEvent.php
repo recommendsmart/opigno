@@ -3,16 +3,18 @@
 namespace Drupal\eca_log\Event;
 
 use Drupal\Component\EventDispatcher\Event;
-use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\eca\Event\ConditionalApplianceInterface;
-use Drupal\eca\Event\ConfigurableEventInterface;
 
 /**
  * Provides an event when a log message is being submitted.
  *
+ * @internal
+ *   This class is not meant to be used as a public API. It is subject for name
+ *   change or may be removed completely, also on minor version updates.
+ *
  * @package Drupal\eca_log\Event
  */
-class LogMessageEvent extends Event implements ConditionalApplianceInterface, ConfigurableEventInterface {
+class LogMessageEvent extends Event implements ConditionalApplianceInterface {
 
   /**
    * Log message severity.
@@ -54,27 +56,6 @@ class LogMessageEvent extends Event implements ConditionalApplianceInterface, Co
   /**
    * {@inheritdoc}
    */
-  public static function fields(): array {
-    return [
-      [
-        'name' => 'channel',
-        'label' => 'Type',
-        'type' => 'String',
-      ],
-      [
-        'name' => 'min_severity',
-        'label' => 'Minimum severity',
-        'type' => 'Dropdown',
-        'extras' => [
-          'choices' => self::severities(),
-        ],
-      ],
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function appliesForLazyLoadingWildcard(string $wildcard): bool {
     return TRUE;
   }
@@ -87,20 +68,33 @@ class LogMessageEvent extends Event implements ConditionalApplianceInterface, Co
   }
 
   /**
-   * Prepare log levels for drop down fields.
+   * Get the severity.
+   *
+   * @return int
+   *   The severity.
+   */
+  public function getSeverity(): int {
+    return $this->severity;
+  }
+
+  /**
+   * Get the message.
+   *
+   * @return string
+   *   The message.
+   */
+  public function getMessage(): string {
+    return $this->message;
+  }
+
+  /**
+   * Get the context.
    *
    * @return array
-   *   The list of log levels with severity value and name.
+   *   The context.
    */
-  protected static function severities(): array {
-    $severities = [];
-    foreach (RfcLogLevel::getLevels() as $level => $label) {
-      $severities[] = [
-        'name' => $label,
-        'value' => (string) $level,
-      ];
-    }
-    return $severities;
+  public function getContext(): array {
+    return $this->context;
   }
 
 }

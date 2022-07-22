@@ -2,9 +2,10 @@
 
 namespace Drupal\eca_content\Plugin\ECA\Condition;
 
-use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eca\Plugin\ECA\Condition\ConditionBase;
+use Drupal\eca\TypedData\PropertyPathTrait;
 
 /**
  * Plugin implementation of the ECA condition for changed entity field value.
@@ -19,14 +20,17 @@ use Drupal\eca\Plugin\ECA\Condition\ConditionBase;
  */
 class EntityFieldValueChanged extends ConditionBase {
 
+  use PropertyPathTrait;
+
   /**
    * {@inheritdoc}
    */
   public function evaluate(): bool {
     $entity = $this->getValueFromContext('entity');
     $field_name = $this->tokenServices->replaceClear($this->configuration['field_name']);
-    if ($entity instanceof FieldableEntityInterface && isset($entity->original) && $entity->hasField($field_name)) {
-      return $this->negationCheck($entity->get($field_name)->getValue() !== $entity->original->get($field_name)->getValue());
+    $options = ['access' => FALSE, 'auto_item' => FALSE];
+    if (($entity instanceof EntityInterface) && isset($entity->original) && ($entity->original instanceof EntityInterface) && ($property = $this->getTypedProperty($entity->getTypedData(), $field_name, $options)) && ($original_property = $this->getTypedProperty($entity->original->getTypedData(), $field_name, $options))) {
+      return $this->negationCheck($property->getValue() !== $original_property->getValue());
     }
     return FALSE;
   }

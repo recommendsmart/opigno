@@ -18,7 +18,13 @@ class CurrentUserId extends BaseUser {
    * {@inheritdoc}
    */
   public function evaluate(): bool {
-    $result = (int) $this->configuration['user_id'] === $this->currentUser->id();
+    // We need to cast the ID of the current user as we sometimes receive a
+    // string instead of an integer despite the fact that the interface at
+    // \Drupal\Core\Session\AccountInterface::id describes that an integer
+    // should be returned.
+    // We need to cast the ID to string to avoid false positives when an
+    // empty string value get compared to integed 0.
+    $result = (string) $this->configuration['user_id'] === (string) $this->currentUser->id();
     return $this->negationCheck($result);
   }
 

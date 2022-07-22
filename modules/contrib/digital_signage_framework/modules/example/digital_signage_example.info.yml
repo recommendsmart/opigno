@@ -7,7 +7,7 @@ dependencies:
   - digital_signage_framework:digital_signage_framework
 configure: digital_signage_example.settings
 
-# Information added by Drupal.org packaging script on 2022-01-25
-version: '2.4.7'
+# Information added by Drupal.org packaging script on 2022-07-11
+version: '2.4.10'
 project: 'digital_signage_framework'
-datestamp: 1643125296
+datestamp: 1657550005

@@ -40,7 +40,7 @@ class FormFieldValue extends StringComparisonBase {
     if (is_array($value)) {
       $first_val = NULL;
       array_walk_recursive($value, function ($v) use (&$first_val) {
-        if (!isset($first_val) && is_scalar($v) && trim($v) !== '') {
+        if (!isset($first_val) && is_scalar($v) && trim((string) $v) !== '') {
           $first_val = $v;
         }
       });
@@ -81,7 +81,7 @@ class FormFieldValue extends StringComparisonBase {
       '#title' => $this->t('Field value'),
       '#description' => $this->t('This field supports tokens.'),
       '#default_value' => $this->configuration['field_value'],
-      '#weight' => -8,
+      '#weight' => -70,
     ];
     return $this->buildFormFieldConfigurationForm($form, $form_state);
   }

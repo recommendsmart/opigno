@@ -2,11 +2,13 @@
 
 namespace Drupal\eca_user\EventSubscriber;
 
+use Drupal\Core\Session\AccountSetEvent;
 use Drupal\eca\EcaEvents;
 use Drupal\eca\Event\BeforeInitialExecutionEvent;
 use Drupal\eca\EventSubscriber\EcaBase;
 use Drupal\eca_user\Event\UserBase;
 use Drupal\eca_user\Plugin\ECA\Event\UserEvent;
+use Drupal\user\Event\UserFloodEvent;
 
 /**
  * ECA event subscriber.
@@ -24,7 +26,8 @@ class EcaUser extends EcaBase {
    */
   public function onBeforeInitialExecution(BeforeInitialExecutionEvent $before_event): void {
     $event = $before_event->getEvent();
-    if ($event instanceof UserBase && ($user = $this->entityTypeManager->getStorage('user')->load($event->getAccount()->id()))) {
+    $account_id = ($event instanceof UserBase || $event instanceof AccountSetEvent) ? $event->getAccount()->id() : ($event instanceof UserFloodEvent ? $event->getUid() : NULL);
+    if (isset($account_id) && ($user = $this->entityTypeManager->getStorage('user')->load($account_id))) {
       $this->tokenService->addTokenData('entity', $user);
       $this->tokenService->addTokenData('account', $user);
     }

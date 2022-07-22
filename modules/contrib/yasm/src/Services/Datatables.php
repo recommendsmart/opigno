@@ -19,31 +19,30 @@ class Datatables implements DatatablesInterface {
   protected $languageManager;
 
   /**
-   * An http client.
+   * The http client.
    *
    * @var \GuzzleHttp\ClientInterface
    */
   protected $httpClient;
 
   /**
-   * {@inheritdoc}
+   * The CDN url to access the language files.
+   *
+   * @var string
    */
-  public function getVersion() {
-    return '1.10.20';
-  }
+  private $localeCdn = 'https://cdn.datatables.net/plug-ins/1.12.1/i18n/';
 
   /**
-   * {@inheritdoc}
+   * The locale JSON file if exists.
    */
   public function getLocale() {
     try {
-      $languagesList = $this->languageManager->getStandardLanguageList();
       $currentLanguage = $this->languageManager->getCurrentLanguage();
       $langCode = $currentLanguage->getId();
 
-      $name = isset($languagesList[$langCode]) ? reset($languagesList[$langCode]) : $currentLanguage->getName();
-      if ($name) {
-        $url = 'https://cdn.datatables.net/plug-ins/' . $this->getVersion() . '/i18n/' . $name . '.json';
+      $localeFilename = $this->getLocaleFilename($langCode);
+      if ($localeFilename) {
+        $url = $this->localeCdn . $localeFilename . '.json';
         $response = $this->httpClient->get($url);
 
         return (200 == $response->getStatusCode()) ? $url : '';
@@ -54,6 +53,106 @@ class Datatables implements DatatablesInterface {
     catch (Exception $e) {
       return '';
     }
+  }
+    /**
+     * Maps drupal langcodes with datatables available language filenames.
+     */
+  private function getLocaleFilename(string $langCode) {
+      $map = [
+        'lug' => 'Ganda',
+        'af' => 'af',
+        'am' => 'am',
+        'ar' => 'ar',
+        'az' => 'az-AZ',
+        'be' => 'be',
+        'bg' => 'bg',
+        'bn' => 'bn',
+        'bs' => 'bs-BA',
+        'ca' => 'ca',
+        'co' => 'co',
+        'cs' => 'cs',
+        'cy' => 'cy',
+        'da' => 'da',
+        'de' => 'de-DE',
+        'el' => 'el',
+        'en' => 'en-GB',
+        'eo' => 'eo',
+        'es-AR' => 'es-AR',
+        'es-CL' => 'es-CL',
+        'es-CO' => 'es-CO',
+        'es' => 'es-ES',
+        'es-MX' => 'es-MX',
+        'et' => 'et',
+        'eu' => 'eu',
+        'fa' => 'fa',
+        'fi' => 'fi',
+        'fil' => 'fil',
+        'fr' =>  'fr-FR',
+        'ga' =>  'ga',
+        'gl' =>  'gl',
+        'gu' =>  'gu',
+        'he' =>  'he',
+        'hi' =>  'hi',
+        'hr' =>  'hr',
+        'hu' =>  'hu',
+        'hy' =>  'hy',
+        'id-ALT' => 'id-ALT',
+        'id' => 'id',
+        'is' => 'is',
+        'it' => 'it-IT',
+        'ja' => 'ja',
+        'jv' => 'jv',
+        'ka' => 'ka',
+        'kk' => 'kk',
+        'km' => 'km',
+        'kn' => 'kn',
+        'ko' => 'ko',
+        'ku' => 'ku',
+        'ky' => 'ky',
+        'lo' => 'lo',
+        'lt' => 'lt',
+        'lv' => 'lv',
+        'mk' => 'mk',
+        'mn' => 'mn',
+        'mr' => 'mr',
+        'ms' => 'ms',
+        'ne' => 'ne',
+        'nl' => 'nl-NL',
+        'no-NB' => 'no-NB',
+        'no' => 'no-NO',
+        'pa' => 'pa',
+        'pl' => 'pl',
+        'ps' => 'ps',
+        'pt-BR' => 'pt-BR',
+        'pt' => 'pt-PT',
+        'rm' => 'rm',
+        'ro' => 'ro',
+        'ru' => 'ru',
+        'si' => 'si',
+        'sk' => 'sk',
+        'sl' => 'sl',
+        'snd' => 'snd',
+        'sq' => 'sq',
+        'sr-SP' => 'sr-SP',
+        'sr' => 'sr',
+        'sv' => 'sv-SE',
+        'sw' => 'sw',
+        'ta' => 'ta',
+        'te' => 'te',
+        'tg' => 'tg',
+        'th' => 'th',
+        'tr' => 'tr',
+        'ug' => 'ug',
+        'uk' => 'uk',
+        'ur' => 'ur',
+        'uz-CR' => 'uz-CR',
+        'uz' => 'uz',
+        'vi' => 'vi',
+        'zh-HANT' => 'zh-HANT',
+        'zh' => 'zh',
+      ];
+
+      return $map[$langCode] ?? false;
   }
 
   /**

@@ -3,7 +3,6 @@
 namespace Drupal\eca_user\Plugin\ECA\Condition;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\eca\Plugin\OptionsInterface;
 
 /**
  * Plugin implementation of the ECA condition of the current user's permissions.
@@ -13,7 +12,7 @@ use Drupal\eca\Plugin\OptionsInterface;
  *   label = "Current user has permission"
  * )
  */
-class CurrentUserPermission extends BaseUser implements OptionsInterface {
+class CurrentUserPermission extends BaseUser {
 
   /**
    * {@inheritdoc}
@@ -36,11 +35,17 @@ class CurrentUserPermission extends BaseUser implements OptionsInterface {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
     $form = parent::buildConfigurationForm($form, $form_state);
+    $permissions = [];
+    /** @var \Drupal\user\PermissionHandler $handler */
+    $handler = \Drupal::service('user.permissions');
+    foreach ($handler->getPermissions() as $permission => $def) {
+      $permissions[$permission] = strip_tags($def['title']);
+    }
     $form['permission'] = [
       '#type' => 'select',
       '#title' => $this->t('Permission'),
       '#default_value' => $this->configuration['permission'],
-      '#options' => $this->getOptions('permission'),
+      '#options' => $permissions,
       '#weight' => -10,
     ];
     return $form;
@@ -52,22 +57,6 @@ class CurrentUserPermission extends BaseUser implements OptionsInterface {
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     $this->configuration['permission'] = $form_state->getValue('permission');
     parent::submitConfigurationForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getOptions(string $id): ?array {
-    if ($id === 'permission') {
-      $permissions = [];
-      /** @var \Drupal\user\PermissionHandler $handler */
-      $handler = \Drupal::service('user.permissions');
-      foreach ($handler->getPermissions() as $permission => $def) {
-        $permissions[$permission] = strip_tags($def['title']);
-      }
-      return $permissions;
-    }
-    return NULL;
   }
 
 }

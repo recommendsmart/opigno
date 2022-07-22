@@ -51,8 +51,8 @@ conditions:
   Flow_0i81v8o:
     plugin: eca_entity_field_value
     configuration:
-      field_name: field_other_node
       expected_value: '[entity:nid]'
+      field_name: field_other_node
       operator: equal
       type: value
       case: false
@@ -155,12 +155,14 @@ actions:
     label: Msg
     configuration:
       message: 'Node [entity:title] references [refentity:title]'
+      replace_tokens: false
     successors: {  }
   Activity_1cxcwjm:
     plugin: action_message_action
     label: Msg
     configuration:
       message: 'Node [entity:title] got updated'
+      replace_tokens: false
     successors: {  }
   Activity_1w7m4sk:
     plugin: eca_token_load_entity_ref
@@ -209,4 +211,5 @@ actions:
     label: Msg
     configuration:
       message: 'The title of the referenced node is [originalentity:field_other_node:entity:title].'
+      replace_tokens: false
     successors: {  }

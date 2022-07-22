@@ -6,9 +6,7 @@ use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
@@ -17,7 +15,6 @@ use Drupal\Core\TypedData\ListInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\eca\Plugin\Action\ActionBase;
 use Drupal\eca\Plugin\Action\ConfigurableActionTrait;
-use Drupal\eca\Plugin\OptionsInterface;
 use Drupal\eca\TypedData\PropertyPathTrait;
 use Drupal\field\FieldStorageConfigInterface;
 
@@ -30,7 +27,7 @@ use Drupal\field\FieldStorageConfigInterface;
  * <p>The replacement is achieved with PHP's class_alias(),
  * see eca_content.module.</p>
  */
-abstract class FieldUpdateActionBase extends ActionBase implements ConfigurableInterface, DependentPluginInterface, PluginFormInterface, OptionsInterface {
+abstract class FieldUpdateActionBase extends ActionBase implements ConfigurableInterface, DependentPluginInterface, PluginFormInterface {
 
   use ConfigurableActionTrait;
   use PropertyPathTrait;
@@ -69,26 +66,36 @@ abstract class FieldUpdateActionBase extends ActionBase implements ConfigurableI
       '#type' => 'select',
       '#title' => $this->t('Method'),
       '#default_value' => $this->configuration['method'],
-      '#weight' => -11,
-      '#options' => $this->getOptions('method'),
+      '#weight' => -40,
+      '#options' => [
+        'set:clear' => $this->t('Set and clear previous value'),
+        'set:empty' => $this->t('Set only when empty'),
+        'append:not_full' => $this->t('Append when not full yet'),
+        'append:drop_first' => $this->t('Append and drop first when full'),
+        'append:drop_last' => $this->t('Append and drop last when full'),
+        'prepend:not_full' => $this->t('Prepend when not full yet'),
+        'prepend:drop_first' => $this->t('Prepend and drop first when full'),
+        'prepend:drop_last' => $this->t('Prepend and drop last when full'),
+        'remove' => $this->t('Remove value instead of adding it'),
+      ],
     ];
     $form['strip_tags'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Strip tags'),
       '#default_value' => $this->configuration['strip_tags'],
-      '#weight' => 1,
+      '#weight' => -30,
     ];
     $form['trim'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Trim'),
       '#default_value' => $this->configuration['trim'],
-      '#weight' => 2,
+      '#weight' => -20,
     ];
     $form['save_entity'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Save entity'),
       '#default_value' => $this->configuration['save_entity'],
-      '#weight' => 3,
+      '#weight' => -10,
     ];
     return $form;
   }
@@ -108,38 +115,18 @@ abstract class FieldUpdateActionBase extends ActionBase implements ConfigurableI
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function getOptions(string $id): ?array {
-    if ($id === 'method') {
-      return [
-        'set:clear' => $this->t('Set and clear previous value'),
-        'set:empty' => $this->t('Set only when empty'),
-        'append:not_full' => $this->t('Append when not full yet'),
-        'append:drop_first' => $this->t('Append and drop first when full'),
-        'append:drop_last' => $this->t('Append and drop last when full'),
-        'prepend:not_full' => $this->t('Prepend when not full yet'),
-        'prepend:drop_first' => $this->t('Prepend and drop first when full'),
-        'prepend:drop_last' => $this->t('Prepend and drop last when full'),
-        'remove' => $this->t('Remove value instead of adding it'),
-      ];
-    }
-    return NULL;
-  }
-
-  /**
    * The save method.
    *
    * <p>Helper function to save the entity only outside ECA context or when
    * requested explicitly.</p>
    *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity which might have to be saved.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function save(ContentEntityInterface $entity): void {
-    if (empty($entity->eca_context) || $this->configuration['save_entity']) {
+  protected function save(FieldableEntityInterface $entity): void {
+    if (empty($entity->eca_context) || !empty($this->configuration['save_entity'])) {
       $entity->save();
     }
   }
@@ -148,18 +135,17 @@ abstract class FieldUpdateActionBase extends ActionBase implements ConfigurableI
    * {@inheritdoc}
    */
   public function execute($entity = NULL) {
-    if (!($entity instanceof EntityInterface)) {
+    if (!($entity instanceof FieldableEntityInterface)) {
       return;
     }
 
     $method_settings = explode(':', $this->configuration['method'] ?? ($this->defaultConfiguration()['method'] ?? 'set:clear'));
     $all_entities_to_save = [];
     $options = ['auto_append' => TRUE, 'access' => 'update'];
-    $entity_adapter = EntityAdapter::createFromEntity($entity);
     $values_changed = FALSE;
     foreach ($this->getFieldsToUpdate() as $field => $values) {
       $metadata = [];
-      if (!($update_target = $this->getTypedProperty($entity_adapter, $field, $options, $metadata))) {
+      if (!($update_target = $this->getTypedProperty($entity->getTypedData(), $field, $options, $metadata))) {
         throw new \InvalidArgumentException(sprintf("The provided field %s does not exist as a property path on the %s entity having ID %s.", $field, $entity->getEntityTypeId(), $entity->id()));
       }
       if (empty($metadata['entities'])) {
@@ -201,10 +187,10 @@ abstract class FieldUpdateActionBase extends ActionBase implements ConfigurableI
           $value = array_key_exists($property_name, $value) ? $value[$property_name] : reset($value);
         }
         if (is_scalar($value) || is_null($value)) {
-          if ($this->configuration['strip_tags']) {
+          if (!empty($this->configuration['strip_tags'])) {
             $value = preg_replace('/[\t\n\r\0\x0B]/', '', strip_tags((string) $value));
           }
-          if ($this->configuration['trim']) {
+          if (!empty($this->configuration['trim'])) {
             $value = trim((string) $value);
           }
           if ($value === '' || $value === NULL) {
@@ -439,7 +425,7 @@ abstract class FieldUpdateActionBase extends ActionBase implements ConfigurableI
    */
   public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
     $result = AccessResult::forbidden();
-    if (!($object instanceof AccessibleInterface)) {
+    if (!($object instanceof FieldableEntityInterface) || !($object instanceof AccessibleInterface)) {
       return $return_as_object ? $result : $result->isAllowed();
     }
 
@@ -453,7 +439,7 @@ abstract class FieldUpdateActionBase extends ActionBase implements ConfigurableI
     $options = ['auto_append' => TRUE, 'access' => 'update'];
     foreach (array_keys($this->getFieldsToUpdate()) as $field) {
       $metadata = [];
-      $update_target = $this->getTypedProperty(EntityAdapter::createFromEntity($entity), $field, $options, $metadata);
+      $update_target = $this->getTypedProperty($entity->getTypedData(), $field, $options, $metadata);
       if (!isset($metadata['access']) || (!$update_target && $metadata['access']->isAllowed())) {
         throw new \InvalidArgumentException(sprintf("The provided field %s does not exist as a property path on the %s entity having ID %s.", $field, $entity->getEntityTypeId(), $entity->id()));
       }

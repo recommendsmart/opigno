@@ -4,16 +4,19 @@ namespace Drupal\eca_base\Event;
 
 use Drupal\Component\EventDispatcher\Event;
 use Drupal\eca\Event\ConditionalApplianceInterface;
-use Drupal\eca\Event\ConfigurableEventInterface;
 use Drupal\eca\Event\TokenReceiverInterface;
 use Drupal\eca\Event\TokenReceiverTrait;
 
 /**
  * Provides a custom event.
  *
+ * @internal
+ *   This class is not meant to be used as a public API. It is subject for name
+ *   change or may be removed completely, also on minor version updates.
+ *
  * @package Drupal\eca_base\Event
  */
-class CustomEvent extends Event implements ConditionalApplianceInterface, ConfigurableEventInterface, TokenReceiverInterface {
+class CustomEvent extends Event implements ConditionalApplianceInterface, TokenReceiverInterface {
 
   use TokenReceiverTrait;
 
@@ -35,30 +38,14 @@ class CustomEvent extends Event implements ConditionalApplianceInterface, Config
    * Provides a custom event.
    *
    * @param string $event_id
-   *   The (optional) ID for this event, so that it only applies, if it matches
-   *   the given event ID in the arguments.
+   *   The ID for this event, so that it only applies, if it matches the given
+   *   event ID in the arguments. This could also be an empty string.
    * @param array $arguments
-   *   Additional arguments provided by the triggering context. This may at
-   *   least contain the key "event_id" to filter custom events to apply only
-   *   if that ID matches this ID. To trigger all custom events, the event ID
-   *   should be omitted or left empty.
+   *   (optional) Additional arguments provided by the triggering context.
    */
-  public function __construct(string $event_id, array $arguments) {
+  public function __construct(string $event_id, array $arguments = []) {
     $this->eventId = $event_id;
     $this->arguments = $arguments;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function fields(): array {
-    return [
-      [
-        'name' => 'event_id',
-        'label' => 'Event ID',
-        'type' => 'String',
-      ],
-    ];
   }
 
   /**

@@ -4,13 +4,17 @@ namespace Drupal\eca_content\Event;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\eca\Event\ContentEntityEventInterface;
-use Drupal\eca_content\Service\EntityTypes;
+use Drupal\eca\Event\EntityEventInterface;
+use Drupal\eca\Service\ContentEntityTypes;
 
 /**
  * Base class for content entity related events.
+ *
+ * @internal
+ *   This class is not meant to be used as a public API. It is subject for name
+ *   change or may be removed completely, also on minor version updates.
  */
-abstract class ContentEntityBaseEntity extends ContentEntityBase implements ContentEntityEventInterface {
+abstract class ContentEntityBaseEntity extends ContentEntityBase implements EntityEventInterface {
 
   /**
    * The entity.
@@ -22,19 +26,19 @@ abstract class ContentEntityBaseEntity extends ContentEntityBase implements Cont
   /**
    * The entity type service.
    *
-   * @var \Drupal\eca_content\Service\EntityTypes
+   * @var \Drupal\eca\Service\ContentEntityTypes
    */
-  protected EntityTypes $entityTypes;
+  protected ContentEntityTypes $entityTypes;
 
   /**
    * ContentEntityBaseEntity constructor.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The entity.
-   * @param \Drupal\eca_content\Service\EntityTypes $entity_types
+   * @param \Drupal\eca\Service\ContentEntityTypes $entity_types
    *   The entity type service.
    */
-  public function __construct(ContentEntityInterface $entity, EntityTypes $entity_types) {
+  public function __construct(ContentEntityInterface $entity, ContentEntityTypes $entity_types) {
     $entity->eca_context = TRUE;
     $this->entity = $entity;
     $this->entityTypes = $entity_types;
@@ -49,8 +53,7 @@ abstract class ContentEntityBaseEntity extends ContentEntityBase implements Cont
       '*',
       $entity->getEntityTypeId(),
       $entity->getEntityTypeId() . '::' . $entity->bundle(),
-    ]
-    );
+    ], TRUE);
   }
 
   /**

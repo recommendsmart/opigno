@@ -2,7 +2,6 @@
 
 namespace Drupal\eca\Plugin\ECA\Condition;
 
-use Drupal\Component\EventDispatcher\Event;
 use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
@@ -42,20 +41,19 @@ interface ConditionInterface extends PluginFormInterface, ConfigurableInterface,
   /**
    * Sets the event that triggered the process in which this condition occurs.
    *
-   * @param \Drupal\Component\EventDispatcher\Event $event
+   * @param \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event $event
    *   The triggering event.
    *
-   * @return \Drupal\eca\Plugin\ECA\Condition\ConditionInterface
-   *   This.
+   * @return $this
    */
-  public function setEvent(Event $event): ConditionInterface;
+  public function setEvent(object $event): ConditionInterface;
 
   /**
    * Gets the event that triggered the process in which this condition occurs.
    *
-   * @return \Drupal\Component\EventDispatcher\Event
+   * @return \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event
    *   The triggering event.
    */
-  public function getEvent(): Event;
+  public function getEvent(): object;
 
 }

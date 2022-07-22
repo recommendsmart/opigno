@@ -6,6 +6,13 @@
   &.dropdown-menu--visibility {
     @include for-phone-only {
       left: 0;
+      width: 100%;
+
+      a {
+        overflow: visible;
+        text-overflow: inherit;
+        white-space: normal;
+      }
     }
   }
 

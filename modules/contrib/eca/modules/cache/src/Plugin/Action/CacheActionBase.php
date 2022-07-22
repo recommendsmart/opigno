@@ -43,7 +43,7 @@ abstract class CacheActionBase extends ConfigurableActionBase {
       '#options' => $this->getBackendOptions(),
       '#default_value' => $this->configuration['backend'],
       '#required' => TRUE,
-      '#weight' => -9,
+      '#weight' => -60,
     ];
     $form['key'] = [
       '#type' => 'textfield',
@@ -51,7 +51,7 @@ abstract class CacheActionBase extends ConfigurableActionBase {
       '#description' => $this->t('The cache key is a unique machine name and identifies the cache item.'),
       '#default_value' => $this->configuration['key'],
       '#required' => TRUE,
-      '#weight' => -8,
+      '#weight' => -50,
     ];
     return $form;
   }

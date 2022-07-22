@@ -53,14 +53,15 @@ class FormExecutionChainTest extends KernelTestBase {
   }
 
   /**
-   * Tests execution chains using plugins of eca_form.
+   * Tests an execution chain setting form state property values.
    */
   public function testFormPropertyValues(): void {
     /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
     $account_switcher = \Drupal::service('account_switcher');
 
     // This config does the following:
-    // - It listens on all supported form events (build, validate, submit).
+    // 1. Reacts upon commonly supported form events (build, validate, submit).
+    // 2. Sets property values on a form state in different formats.
     $eca_config_values = [
       'langcode' => 'en',
       'status' => TRUE,
@@ -78,6 +79,32 @@ class FormExecutionChainTest extends KernelTestBase {
           'successors' => [
             [
               'id' => 'action_form_state_set_key1',
+              'condition' => '',
+            ],
+          ],
+        ],
+        'event_form_process' => [
+          'plugin' => 'form:form_process',
+          'label' => 'After building form',
+          'configuration' => [
+            'form_id' => 'user_form',
+          ],
+          'successors' => [
+            [
+              'id' => 'action_form_state_set_key4',
+              'condition' => '',
+            ],
+          ],
+        ],
+        'event_form_after_build' => [
+          'plugin' => 'form:form_after_build',
+          'label' => 'After building form',
+          'configuration' => [
+            'form_id' => 'user_form',
+          ],
+          'successors' => [
+            [
+              'id' => 'action_form_state_set_key5',
               'condition' => '',
             ],
           ],
@@ -184,6 +211,54 @@ class FormExecutionChainTest extends KernelTestBase {
           ],
           'successors' => [],
         ],
+        'action_form_state_set_key4' => [
+          'plugin' => 'eca_form_state_set_property_value',
+          'label' => 'Set key4 in form state as property value',
+          'configuration' => [
+            'property_name' => 'key4',
+            'property_value' => 'Value of key4',
+            'use_yaml' => FALSE,
+          ],
+          'successors' => [
+            [
+              'id' => 'action_form_state_get_key4',
+              'condition' => '',
+            ],
+          ],
+        ],
+        'action_form_state_get_key4' => [
+          'plugin' => 'eca_form_state_get_property_value',
+          'label' => 'Get key4 in form state as property value',
+          'configuration' => [
+            'property_name' => 'key4',
+            'token_name' => 'formstate:key4',
+          ],
+          'successors' => [],
+        ],
+        'action_form_state_set_key5' => [
+          'plugin' => 'eca_form_state_set_property_value',
+          'label' => 'Set key5 in form state as property value',
+          'configuration' => [
+            'property_name' => 'key5',
+            'property_value' => 'Value of key5',
+            'use_yaml' => FALSE,
+          ],
+          'successors' => [
+            [
+              'id' => 'action_form_state_get_key5',
+              'condition' => '',
+            ],
+          ],
+        ],
+        'action_form_state_get_key5' => [
+          'plugin' => 'eca_form_state_get_property_value',
+          'label' => 'Get key5 in form state as property value',
+          'configuration' => [
+            'property_name' => 'key5',
+            'token_name' => 'formstate:key5',
+          ],
+          'successors' => [],
+        ],
       ],
     ];
     $ecaConfig = Eca::create($eca_config_values);
@@ -204,6 +279,7 @@ class FormExecutionChainTest extends KernelTestBase {
       'name' => 'superadmin',
       'mail' => 'superadmin@examplesite.local',
       'current_pass' => '123',
+      'roles' => [],
     ]);
     $form_builder->submitForm($form_object, $form_state);
 
@@ -219,6 +295,14 @@ class FormExecutionChainTest extends KernelTestBase {
     $this->assertEquals('Value of key3', $form_state->get([
       'eca',
       'key3',
+    ]));
+    $this->assertEquals('Value of key4', $form_state->get([
+      'eca',
+      'key4',
+    ]));
+    $this->assertEquals('Value of key5', $form_state->get([
+      'eca',
+      'key5',
     ]));
 
     $account_switcher->switchBack();

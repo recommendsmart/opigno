@@ -1,0 +1,11 @@
+name: 'ECA test: basic array plugins'
+type: module
+description: 'Basic ECA array plugins useful for testing.'
+package: Testing
+dependencies:
+  - eca:eca
+
+# Information added by Drupal.org packaging script on 2022-07-13
+version: '1.0.0-rc4'
+project: 'eca'
+datestamp: 1657702152

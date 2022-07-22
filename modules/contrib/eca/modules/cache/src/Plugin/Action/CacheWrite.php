@@ -86,14 +86,14 @@ class CacheWrite extends CacheActionBase {
       '#title' => $this->t('Cache item value'),
       '#description' => $this->t('The value to cache. Supports tokens.'),
       '#default_value' => $this->configuration['value'],
-      '#weight' => -7,
+      '#weight' => -40,
     ];
     $form['use_yaml'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Interpret above config value as YAML format'),
       '#description' => $this->t('Nested data can be set using YAML format, for example <em>mykey: myvalue</em>. When using this format, this option needs to be enabled. When using tokens and YAML altogether, make sure that tokens are wrapped as a string. Example: <em>title: "[node:title]"</em>'),
       '#default_value' => $this->configuration['use_yaml'],
-      '#weight' => -6,
+      '#weight' => -30,
     ];
     $form['expire'] = [
       '#type' => 'number',
@@ -101,7 +101,7 @@ class CacheWrite extends CacheActionBase {
       '#description' => $this->t('The lifetime in seconds until the cached value is considered invalid. Set to -1 for unlimited lifetime.'),
       '#default_value' => $this->configuration['expire'],
       '#required' => TRUE,
-      '#weight' => -4,
+      '#weight' => -20,
     ];
     $form['tags'] = [
       '#type' => 'textarea',
@@ -110,7 +110,7 @@ class CacheWrite extends CacheActionBase {
         ':url' => 'https://www.drupal.org/docs/drupal-apis/cache-api/cache-tags',
       ]),
       '#default_value' => $this->configuration['tags'],
-      '#weight' => -3,
+      '#weight' => -10,
     ];
     return $form;
   }

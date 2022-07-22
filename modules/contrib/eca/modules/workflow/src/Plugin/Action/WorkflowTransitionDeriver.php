@@ -6,7 +6,7 @@ use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\workflows\Entity\Workflow;
 
 /**
- * Deriver for ECA Workflow event plugins.
+ * Deriver for ECA Workflow action plugins.
  */
 class WorkflowTransitionDeriver extends DeriverBase {
 

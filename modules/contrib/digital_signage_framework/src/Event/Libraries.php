@@ -3,14 +3,13 @@
 namespace Drupal\digital_signage_framework\Event;
 
 use Drupal\digital_signage_framework\DeviceInterface;
-use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Class Libraries
  *
  * @package Drupal\digital_signage_framework\Event
  */
-class Libraries extends Event {
+class Libraries extends \Symfony\Contracts\EventDispatcher\Event {
 
   /**
    * @var array

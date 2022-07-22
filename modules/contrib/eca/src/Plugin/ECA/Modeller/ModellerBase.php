@@ -2,10 +2,11 @@
 
 namespace Drupal\eca\Plugin\ECA\Modeller;
 
+use Drupal\Component\Uuid\UuidInterface;
+use Drupal\Core\Extension\ExtensionPathResolver;
 use Drupal\Core\Logger\LoggerChannelInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eca\Entity\Eca;
-use Drupal\eca\Plugin\EcaBase;
+use Drupal\eca\Plugin\ECA\EcaPluginBase;
 use Drupal\eca\Service\Actions;
 use Drupal\eca\Service\Conditions;
 use Drupal\eca\Service\Modellers;
@@ -15,9 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Base class for ECA modeller plugins.
  */
-abstract class ModellerBase extends EcaBase implements ModellerInterface {
-
-  use StringTranslationTrait;
+abstract class ModellerBase extends EcaPluginBase implements ModellerInterface {
 
   /**
    * ECA action service.
@@ -55,6 +54,20 @@ abstract class ModellerBase extends EcaBase implements ModellerInterface {
   protected LoggerChannelInterface $logger;
 
   /**
+   * Uuid service.
+   *
+   * @var \Drupal\Component\Uuid\UuidInterface
+   */
+  protected UuidInterface $uuid;
+
+  /**
+   * Extension path resolver service.
+   *
+   * @var \Drupal\Core\Extension\ExtensionPathResolver
+   */
+  protected ExtensionPathResolver $extensionPathResolver;
+
+  /**
    * The documentation domain. May be NULL if not enabled or specified.
    *
    * @var string|null
@@ -78,13 +91,15 @@ abstract class ModellerBase extends EcaBase implements ModellerInterface {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): EcaBase {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): EcaPluginBase {
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
     $instance->actionServices = $container->get('eca.service.action');
     $instance->conditionServices = $container->get('eca.service.condition');
     $instance->modellerServices = $container->get('eca.service.modeller');
     $instance->tokenBrowserService = $container->get('eca_ui.service.token_browser');
     $instance->logger = $container->get('logger.channel.eca');
+    $instance->uuid = $container->get('uuid');
+    $instance->extensionPathResolver = $container->get('extension.path.resolver');
     $instance->documentationDomain = $container->getParameter('eca.default_documentation_domain') ?
       $container->get('config.factory')->get('eca.settings')->get('documentation_domain') : NULL;
     return $instance;
@@ -117,6 +132,13 @@ abstract class ModellerBase extends EcaBase implements ModellerInterface {
    */
   public function edit(): array {
     return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEca(): Eca {
+    return $this->eca;
   }
 
   /**

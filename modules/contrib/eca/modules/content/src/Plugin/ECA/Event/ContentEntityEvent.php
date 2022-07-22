@@ -3,6 +3,7 @@
 namespace Drupal\eca_content\Plugin\ECA\Event;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\eca\Entity\Objects\EcaEvent;
@@ -34,7 +35,7 @@ use Drupal\eca_content\Event\ContentEntityView;
 use Drupal\eca_content\Event\FieldSelectionBase;
 use Drupal\eca_content\Event\OptionsSelection;
 use Drupal\eca_content\Event\ReferenceSelection;
-use Drupal\eca_content\Service\EntityTypes;
+use Drupal\eca\Service\ContentEntityTypes;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -50,16 +51,16 @@ class ContentEntityEvent extends EventBase implements CleanupInterface {
   /**
    * The entity type service.
    *
-   * @var \Drupal\eca_content\Service\EntityTypes
+   * @var \Drupal\eca\Service\ContentEntityTypes
    */
-  protected EntityTypes $entityTypes;
+  protected ContentEntityTypes $entityTypes;
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): ContentEntityEvent {
     $plugin = parent::create($container, $configuration, $plugin_id, $plugin_definition);
-    $plugin->entityTypes = $container->get('eca_content.service.entity_types');
+    $plugin->entityTypes = $container->get('eca.service.content_entity_types');
     return $plugin;
   }
 
@@ -212,26 +213,74 @@ class ContentEntityEvent extends EventBase implements CleanupInterface {
   /**
    * {@inheritdoc}
    */
-  public function fields(): array {
+  public function defaultConfiguration(): array {
     if ($this->eventClass() === ContentEntityCustomEvent::class) {
-      return ContentEntityCustomEvent::fields();
-    }
-    $fields = parent::fields();
-    $fields[] = $this->entityTypes->bundleField(TRUE);
-    if (is_subclass_of($this->eventClass(), FieldSelectionBase::class)) {
-      $fields[] = [
-        'name' => 'field_name',
-        'label' => 'Restrict by field (machine name)',
-        'type' => 'String',
-      ];
-      $fields[] = [
-        'name' => 'token_name',
-        'label' => 'Token name holding the selection',
-        'type' => 'String',
-        'value' => 'selection',
+      $values = [
+        'event_id' => '',
       ];
     }
-    return $fields;
+    else {
+      $values = [
+        'type' => ContentEntityTypes::ALL,
+      ];
+      if (is_subclass_of($this->eventClass(), FieldSelectionBase::class)) {
+        $values['field_name'] = '';
+        $values['token_name'] = '';
+      }
+    }
+    return $values + parent::defaultConfiguration();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
+    $form = parent::buildConfigurationForm($form, $form_state);
+    if ($this->eventClass() === ContentEntityCustomEvent::class) {
+      $form['event_id'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Event ID'),
+        '#default_value' => $this->configuration['event_id'],
+      ];
+    }
+    else {
+      $form['type'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Type (and bundle)'),
+        '#options' => $this->entityTypes->getTypesAndBundles(TRUE),
+        '#default_value' => $this->configuration['type'],
+      ];
+      if (is_subclass_of($this->eventClass(), FieldSelectionBase::class)) {
+        $form['field_name'] = [
+          '#type' => 'textfield',
+          '#title' => $this->t('Restrict by field (machine name)'),
+          '#default_value' => $this->configuration['field_name'],
+        ];
+        $form['token_name'] = [
+          '#type' => 'textfield',
+          '#title' => $this->t('Token name holding the selection'),
+          '#default_value' => $this->configuration['token_name'],
+        ];
+      }
+    }
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
+    parent::submitConfigurationForm($form, $form_state);
+    if ($this->eventClass() === ContentEntityCustomEvent::class) {
+      $this->configuration['event_id'] = $form_state->getValue('event_id');
+    }
+    else {
+      $this->configuration['type'] = $form_state->getValue('type');
+      if (is_subclass_of($this->eventClass(), FieldSelectionBase::class)) {
+        $this->configuration['field_name'] = $form_state->getValue('field_name');
+        $this->configuration['token_name'] = $form_state->getValue('token_name');
+      }
+    }
   }
 
   /**
@@ -247,8 +296,8 @@ class ContentEntityEvent extends EventBase implements CleanupInterface {
         return isset($configuration['event_id']) ? trim($configuration['event_id']) : '';
 
       case 'preload':
-        $type = $ecaEvent->getConfiguration()['type'] ?? '_all';
-        if ($type === '_all') {
+        $type = $ecaEvent->getConfiguration()['type'] ?? ContentEntityTypes::ALL;
+        if ($type === ContentEntityTypes::ALL) {
           return '*';
         }
         [$entityType] = explode(' ', $type);
@@ -257,13 +306,13 @@ class ContentEntityEvent extends EventBase implements CleanupInterface {
       case 'reference_selection':
       case 'options_selection':
         $config = $ecaEvent->getConfiguration();
-        $type = $config['type'] ?? '_all';
-        if ($type === '_all') {
+        $type = $config['type'] ?? ContentEntityTypes::ALL;
+        if ($type === ContentEntityTypes::ALL) {
           $wildcard = '*';
         }
         else {
-          [$entityType, $bundle] = array_merge(explode(' ', $type), ['_all']);
-          if ($bundle === '_all') {
+          [$entityType, $bundle] = array_merge(explode(' ', $type), [ContentEntityTypes::ALL]);
+          if ($bundle === ContentEntityTypes::ALL) {
             $wildcard = $entityType . '::*';
           }
           else {
@@ -279,12 +328,12 @@ class ContentEntityEvent extends EventBase implements CleanupInterface {
         return $wildcard;
 
       default:
-        $type = $ecaEvent->getConfiguration()['type'] ?? '_all';
-        if ($type === '_all') {
+        $type = $ecaEvent->getConfiguration()['type'] ?? ContentEntityTypes::ALL;
+        if ($type === ContentEntityTypes::ALL) {
           return '*';
         }
-        [$entityType, $bundle] = array_merge(explode(' ', $type), ['_all']);
-        if ($bundle === '_all') {
+        [$entityType, $bundle] = array_merge(explode(' ', $type), [ContentEntityTypes::ALL]);
+        if ($bundle === ContentEntityTypes::ALL) {
           return $entityType;
         }
         return $entityType . '::' . $bundle;

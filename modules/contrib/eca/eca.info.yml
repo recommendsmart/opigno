@@ -3,10 +3,8 @@ type: module
 description: 'Core module for ECA framework.'
 core_version_requirement: ^9 || ^10
 package: ECA
-dependencies:
-  - drupal:action
 
-# Information added by Drupal.org packaging script on 2022-05-17
-version: '1.0.0-beta12'
+# Information added by Drupal.org packaging script on 2022-07-13
+version: '1.0.0-rc4'
 project: 'eca'
-datestamp: 1652805551
+datestamp: 1657702152

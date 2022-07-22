@@ -4,13 +4,15 @@ namespace Drupal\eca\Plugin\DataType;
 
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Serialization\Yaml;
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Config\Config;
+use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\Plugin\DataType\Map;
 use Drupal\Core\TypedData\PrimitiveInterface;
+use Drupal\Core\TypedData\TraversableTypedDataInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\eca\TypedData\DataTransferObjectDefinition;
 
@@ -73,11 +75,13 @@ class DataTransferObject extends Map {
     }
     /** @var \Drupal\eca\Plugin\DataType\DataTransferObject $dto */
     if (isset($value)) {
-      if ($value instanceof ContentEntityInterface) {
+      if ($value instanceof EntityInterface) {
         $dto->setStringRepresentation($value->id());
-        $dto->setValue($value->getFields());
       }
-      elseif (is_scalar($value)) {
+      elseif ($value instanceof Config) {
+        $dto->setStringRepresentation($value->getName());
+      }
+      if (is_scalar($value)) {
         $dto->setStringRepresentation($value);
       }
       else {
@@ -121,7 +125,7 @@ class DataTransferObject extends Map {
     if (empty($values) && ($user_input !== '')) {
       $option = strtok($user_input, "," . PHP_EOL);
       while ($option !== FALSE) {
-        $option = trim($option);
+        $option = trim((string) $option);
         [$key, $value] = array_merge(explode(':', $option, 2), [$option]);
         $key = trim($key);
         $value = trim($value);
@@ -235,7 +239,20 @@ class DataTransferObject extends Map {
    */
   public function setValue($values, $notify = TRUE) {
     if ($values instanceof TypedDataInterface) {
-      $values = $values->getValue();
+      if (($values instanceof TraversableTypedDataInterface) && ($elements = static::traverseElements($values))) {
+        $values = $elements;
+      }
+      else {
+        $values = $values->getValue();
+      }
+    }
+    if ($values instanceof EntityInterface) {
+      $values = $values->getTypedData()->getProperties();
+    }
+    elseif ($values instanceof Config) {
+      /** @var \Drupal\Core\TypedData\TraversableTypedDataInterface $typed_config */
+      $typed_config = \Drupal::service('config.typed')->createFromNameAndData($values->getName(), $values->getRawData());
+      $values = static::traverseElements($typed_config);
     }
     if (is_null($values)) {
       // Shortcut to make this DTO empty.
@@ -430,6 +447,9 @@ class DataTransferObject extends Map {
     elseif ($value instanceof EntityInterface) {
       $this->writePropertyValue($property_name, $this->wrapEntityValue($property_name, $value));
     }
+    elseif ($value instanceof Config) {
+      $this->writePropertyValue($property_name, $this->wrapConfigValue($property_name, $value));
+    }
     elseif (is_scalar($value)) {
       $this->writePropertyValue($property_name, $this->wrapScalarValue($property_name, $value));
     }
@@ -510,6 +530,31 @@ class DataTransferObject extends Map {
   }
 
   /**
+   * Saves contained data that belongs to a saveable resource.
+   */
+  public function saveData(): void {
+    $saveables = [];
+    foreach ($this->properties as $property) {
+      $value = $property->getValue();
+      if ((($value instanceof EntityInterface) || ($value instanceof Config) && !($value instanceof ImmutableConfig)) && !in_array($value, $saveables, TRUE)) {
+        $saveables[] = $value;
+        continue;
+      }
+      $parent = NULL;
+      while (($property->getParent() !== $parent) && ($parent = $property->getParent())) {
+        $parent_value = $parent->getValue();
+        if ((($parent_value instanceof EntityInterface) || ($parent_value instanceof Config) && !($parent_value instanceof ImmutableConfig)) && !in_array($parent_value, $saveables, TRUE)) {
+          $saveables[] = $parent_value;
+          break;
+        }
+      }
+    }
+    foreach ($saveables as $saveable) {
+      $saveable->save();
+    }
+  }
+
+  /**
    * Wraps the scalar value by a Typed Data object.
    *
    * @param string $name
@@ -520,7 +565,7 @@ class DataTransferObject extends Map {
    * @return \Drupal\Core\TypedData\TypedDataInterface
    *   The Typed Data object.
    */
-  protected function wrapScalarValue($name, $value) {
+  protected function wrapScalarValue($name, $value): TypedDataInterface {
     $manager = $this->getTypedDataManager();
     $scalar_type = 'string';
     if (is_numeric($value)) {
@@ -549,7 +594,7 @@ class DataTransferObject extends Map {
    * @return \Drupal\Core\TypedData\TypedDataInterface
    *   The Typed Data object.
    */
-  protected function wrapEntityValue($name, EntityInterface $value) {
+  protected function wrapEntityValue($name, EntityInterface $value): TypedDataInterface {
     $manager = $this->getTypedDataManager();
     $instance = $manager->createInstance('entity', [
       'data_definition' => EntityDataDefinition::create($value->getEntityTypeId(), $value->bundle()),
@@ -558,6 +603,25 @@ class DataTransferObject extends Map {
     ]);
     $instance->setValue($value, FALSE);
     return $instance;
+  }
+
+  /**
+   * Wraps the config by a Typed Data object.
+   *
+   * @param string $name
+   *   The property name.
+   * @param \Drupal\Core\Config\Config $value
+   *   The config.
+   *
+   * @return \Drupal\Core\TypedData\TypedDataInterface
+   *   The Typed Data object.
+   */
+  protected function wrapConfigValue($name, Config $value) : TypedDataInterface {
+    /** @var \Drupal\Core\config\TypedConfigManager $manager */
+    $manager = \Drupal::service('config.typed');
+    /** @var \Drupal\Core\TypedData\TraversableTypedDataInterface $typed_config */
+    $typed_config = $manager->createFromNameAndData($value->getName(), $value->getRawData());
+    return $manager->create($typed_config->getDataDefinition(), $value->getRawData(), $name, $this);
   }
 
   /**
@@ -571,7 +635,7 @@ class DataTransferObject extends Map {
    * @return \Drupal\Core\TypedData\TypedDataInterface
    *   The Typed Data object.
    */
-  protected function wrapIterableValue($name, $value) {
+  protected function wrapIterableValue($name, $value): TypedDataInterface {
     $instance = static::create(NULL, $this, $name, FALSE);
     foreach ($value as $k => $v) {
       $instance->set($k, $v, FALSE);
@@ -587,7 +651,7 @@ class DataTransferObject extends Map {
    *   that items before that can safely be skipped (for example, when removing
    *   an item at a given index).
    */
-  protected function rekey(int $from_index = 0) {
+  protected function rekey(int $from_index = 0): void {
     $assoc = [];
     $sequence = [];
     foreach ($this->properties as $p_name => $p_val) {
@@ -604,6 +668,23 @@ class DataTransferObject extends Map {
     for ($i = $from_index; $i < count($sequence); $i++) {
       $this->properties[$i]->setContext($i, $this);
     }
+  }
+
+  /**
+   * Helper method to traverse and collect the traversed elements.
+   *
+   * @param \Drupal\Core\TypedData\TraversableTypedDataInterface $traversable
+   *   The traversable object.
+   *
+   * @return \Drupal\Core\TypedData\TypedDataInterface[]
+   *   The traversed elements.
+   */
+  protected static function traverseElements(TraversableTypedDataInterface $traversable): array {
+    $elements = [];
+    foreach ($traversable as $key => $element) {
+      $elements[$key] = $element;
+    }
+    return $elements;
   }
 
 }

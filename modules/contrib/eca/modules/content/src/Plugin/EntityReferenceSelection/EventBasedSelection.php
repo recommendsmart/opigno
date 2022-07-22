@@ -137,11 +137,11 @@ class EventBasedSelection extends SelectionPluginBase implements ContainerFactor
     $form['field_name'] = [
       '#type' => 'hidden',
       '#value' => $entity->getName(),
-      '#weight' => 0,
+      '#weight' => -20,
     ];
     $form['help'] = [
       '#markup' => $this->t('You can react upon this within ECA using the event <em>"Entity reference field selection"</em> and define which entities may be referenced from there.'),
-      '#weight' => 10,
+      '#weight' => -10,
     ];
     return $form;
   }

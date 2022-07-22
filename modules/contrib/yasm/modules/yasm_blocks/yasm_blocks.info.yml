@@ -3,12 +3,12 @@ description: YASM blocks with statistics info about site and current user.
 type: module
 package: statistics
 core: 8.x
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^8 || ^9 || ^10
 dependencies:
   - yasm:yasm
   - drupal:block
 
-# Information added by Drupal.org packaging script on 2022-01-14
-version: '2.0.3'
+# Information added by Drupal.org packaging script on 2022-07-01
+version: '2.0.4'
 project: 'yasm'
-datestamp: 1642159309
+datestamp: 1656678440

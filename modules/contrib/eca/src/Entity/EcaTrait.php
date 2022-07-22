@@ -7,10 +7,12 @@ use Drupal\Core\Cache\MemoryCache\MemoryCache;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\eca\PluginManager\Action;
 use Drupal\eca\Service\Conditions;
 use Drupal\eca\PluginManager\Condition;
 use Drupal\eca\PluginManager\Event;
 use Drupal\eca\PluginManager\Modeller;
+use Drupal\eca\Service\DependencyCalculation;
 use Drupal\eca\Token\TokenInterface;
 
 /**
@@ -21,72 +23,79 @@ trait EcaTrait {
   /**
    * ECA modeller plugin manager.
    *
-   * @var \Drupal\eca\PluginManager\Modeller
+   * @var \Drupal\eca\PluginManager\Modeller|null
    */
-  protected Modeller $modellerPluginManager;
+  protected ?Modeller $modellerPluginManager;
 
   /**
    * ECA event plugin manager.
    *
-   * @var \Drupal\eca\PluginManager\Event
+   * @var \Drupal\eca\PluginManager\Event|null
    */
-  protected Event $eventPluginManager;
+  protected ?Event $eventPluginManager;
 
   /**
    * ECA condition plugin manager.
    *
-   * @var \Drupal\eca\PluginManager\Condition
+   * @var \Drupal\eca\PluginManager\Condition|null
    */
-  protected Condition $conditionPluginManager;
+  protected ?Condition $conditionPluginManager;
 
   /**
    * Action plugin manager.
    *
-   * @var \Drupal\Core\Action\ActionManager
+   * @var \Drupal\Core\Action\ActionManager|null
    */
-  protected ActionManager $actionPluginManager;
+  protected ?ActionManager $actionPluginManager;
 
   /**
    * ECA condition service.
    *
-   * @var \Drupal\eca\Service\Conditions
+   * @var \Drupal\eca\Service\Conditions|null
    */
-  protected Conditions $conditionServices;
+  protected ?Conditions $conditionServices;
+
+  /**
+   * The dependency calculation service.
+   *
+   * @var \Drupal\eca\Service\DependencyCalculation|null
+   */
+  protected ?DependencyCalculation $dependencyCalculation;
 
   /**
    * Memory cache service.
    *
-   * @var \Drupal\Core\Cache\MemoryCache\MemoryCache
+   * @var \Drupal\Core\Cache\MemoryCache\MemoryCache|null
    */
-  protected MemoryCache $memoryCache;
+  protected ?MemoryCache $memoryCache;
 
   /**
    * Logger channel service.
    *
-   * @var \Drupal\Core\Logger\LoggerChannel
+   * @var \Drupal\Core\Logger\LoggerChannel|null
    */
-  protected LoggerChannel $logger;
+  protected ?LoggerChannel $logger;
 
   /**
    * ECA token service.
    *
-   * @var \Drupal\eca\Token\TokenInterface
+   * @var \Drupal\eca\Token\TokenInterface|null
    */
-  protected TokenInterface $token;
+  protected ?TokenInterface $token;
 
   /**
    * The entity field manager.
    *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface|null
    */
-  protected EntityFieldManagerInterface $entityFieldManager;
+  protected ?EntityFieldManagerInterface $entityFieldManager;
 
   /**
    * Messenger service.
    *
-   * @var \Drupal\Core\Messenger\MessengerInterface
+   * @var \Drupal\Core\Messenger\MessengerInterface|null
    */
-  protected MessengerInterface $messenger;
+  protected ?MessengerInterface $messenger;
 
   /**
    * Initializes the modeller plugin manager.
@@ -135,7 +144,7 @@ trait EcaTrait {
    */
   protected function actionPluginManager(): ActionManager {
     if (!isset($this->actionPluginManager)) {
-      $this->actionPluginManager = \Drupal::service('plugin.manager.action');
+      $this->actionPluginManager = Action::get()->getDecoratedActionManager();
     }
     return $this->actionPluginManager;
   }
@@ -151,6 +160,19 @@ trait EcaTrait {
       $this->conditionServices = \Drupal::service('eca.service.condition');
     }
     return $this->conditionServices;
+  }
+
+  /**
+   * Initializes the dependency calculation service.
+   *
+   * @return \Drupal\eca\Service\DependencyCalculation
+   *   The dependency calculation services.
+   */
+  protected function dependencyCalculation(): DependencyCalculation {
+    if (!isset($this->dependencyCalculation)) {
+      $this->dependencyCalculation = \Drupal::service('eca.service.dependency_calculation');
+    }
+    return $this->dependencyCalculation;
   }
 
   /**

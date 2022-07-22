@@ -20,7 +20,7 @@ abstract class ConfigActionBase extends ConfigurableActionBase {
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface|null
    */
-  protected ?ConfigFactoryInterface $configFactory;
+  protected ?ConfigFactoryInterface $configFactory = NULL;
 
   /**
    * {@inheritdoc}
@@ -64,14 +64,14 @@ abstract class ConfigActionBase extends ConfigurableActionBase {
       '#description' => $this->t('The config name, for example <em>system.site</em>.'),
       '#default_value' => $this->configuration['config_name'],
       '#required' => TRUE,
-      '#weight' => -9,
+      '#weight' => -90,
     ];
     $form['config_key'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Config key'),
       '#description' => $this->t('The config key, for example <em>page.front</em>. Leave empty to use the whole config.'),
       '#default_value' => $this->configuration['config_key'],
-      '#weight' => -8,
+      '#weight' => -80,
     ];
     return $form;
   }

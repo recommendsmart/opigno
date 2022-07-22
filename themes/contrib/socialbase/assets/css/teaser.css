@@ -101,6 +101,11 @@
   margin-bottom: 0;
 }
 
+.teaser__content .field--name-field-profile-self-introduction + .teaser__content--badges,
+.teaser__content .field--name-field-profile-summary + .teaser__content--badges {
+  margin-top: -.75rem;
+}
+
 .teaser__content-line {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -263,6 +268,10 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 calc(100% - 60px);
+          flex: 0 0 calc(100% - 60px);
+  max-width: calc(100% - 60px);
   margin-left: 1rem;
 }
 
@@ -272,6 +281,9 @@
 }
 
 .teaser--small .teaser--small__meta {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   color: #555555;
 }
 

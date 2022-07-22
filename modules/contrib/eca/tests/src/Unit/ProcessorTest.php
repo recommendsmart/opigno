@@ -11,7 +11,7 @@ use Drupal\eca\Token\TokenInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Tests the processor class.
+ * Unit tests for the ECA processor engine.
  *
  * @group eca
  * @group eca_core

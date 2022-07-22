@@ -133,15 +133,22 @@
   color: #343434;
 }
 
-.path-group .popover .popover-content .group-visibility-details {
+.path-group .popover .popover-content .group-visibility-details,
+.path-group .popover .popover-content .course-visibility-details {
   padding: .75rem;
   border-radius: 5px;
   background: #f3f3f3;
   margin-bottom: 1.5rem;
 }
 
-.path-group .popover .popover-content .group-visibility-details:last-child {
+.path-group .popover .popover-content .group-visibility-details:last-child,
+.path-group .popover .popover-content .course-visibility-details:last-child {
   margin-bottom: 0;
+}
+
+.path-group .popover .popover-content .group-visibility-details > *:empty,
+.path-group .popover .popover-content .course-visibility-details > *:empty {
+  display: none;
 }
 
 .path-group .popover .popover-content p {
@@ -166,4 +173,5 @@
   left: 0;
   width: 21px;
   height: 21px;
+  fill: #000;
 }

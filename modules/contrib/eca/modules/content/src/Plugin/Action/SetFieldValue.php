@@ -60,14 +60,14 @@ class SetFieldValue extends FieldUpdateActionBase implements EcaFieldUpdateActio
       '#title' => $this->t('Field name'),
       '#description' => $this->t('The machine name of the field, that should be changed. This property supports tokens. Example: <em>body.value</em>'),
       '#default_value' => $this->configuration['field_name'],
-      '#weight' => -10,
+      '#weight' => -20,
     ];
     $form['field_value'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Field value'),
       '#description' => $this->t('The new field value. This property supports tokens.'),
       '#default_value' => $this->configuration['field_value'],
-      '#weight' => -9,
+      '#weight' => -10,
     ];
     return $form;
   }

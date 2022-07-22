@@ -2,7 +2,6 @@
 
 namespace Drupal\eca\Entity;
 
-use Drupal\Component\EventDispatcher\Event;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -50,7 +49,7 @@ class EcaStorage extends ConfigEntityStorage {
   /**
    * Loads all ECA configurations that make use of the given event.
    *
-   * @param \Drupal\Component\EventDispatcher\Event $event
+   * @param \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event $event
    *   The event object.
    * @param string $event_name
    *   The name of the event.
@@ -58,7 +57,7 @@ class EcaStorage extends ConfigEntityStorage {
    * @return \Drupal\eca\Entity\Eca[]
    *   The configurations, keyed by entity ID.
    */
-  public function loadByEvent(Event $event, string $event_name): array {
+  public function loadByEvent(object $event, string $event_name): array {
     if (!isset($this->configByEvents)) {
       $cid = 'eca:storage:events';
       if ($cached = $this->cacheBackend->get($cid)) {

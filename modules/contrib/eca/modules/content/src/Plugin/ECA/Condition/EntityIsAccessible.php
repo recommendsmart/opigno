@@ -5,7 +5,6 @@ namespace Drupal\eca_content\Plugin\ECA\Condition;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eca\Plugin\ECA\Condition\ConditionBase;
-use Drupal\eca\Plugin\OptionsInterface;
 
 /**
  * Plugin implementation of the ECA condition for entity is accessible.
@@ -19,7 +18,7 @@ use Drupal\eca\Plugin\OptionsInterface;
  *   }
  * )
  */
-class EntityIsAccessible extends ConditionBase implements OptionsInterface {
+class EntityIsAccessible extends ConditionBase {
 
   /**
    * {@inheritdoc}
@@ -49,10 +48,15 @@ class EntityIsAccessible extends ConditionBase implements OptionsInterface {
   public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
     $form['operation'] = [
       '#title' => $this->t('Operation'),
-      '#options' => $this->getOptions('operation'),
+      '#options' => [
+        'create' => $this->t('Create (only for new entity)'),
+        'view' => $this->t('View'),
+        'update' => $this->t('Update'),
+        'delete' => $this->t('Delete'),
+      ],
       '#default_value' => $this->configuration['operation'] ?? 'view',
       '#required' => TRUE,
-      '#weight' => 10,
+      '#weight' => -10,
     ];
     return parent::buildConfigurationForm($form, $form_state);
   }
@@ -63,25 +67,6 @@ class EntityIsAccessible extends ConditionBase implements OptionsInterface {
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     $this->configuration['operation'] = $form_state->getValue('operation');
     parent::submitConfigurationForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getOptions(string $id): ?array {
-    switch ($id) {
-
-      case 'operation':
-        return [
-          'create' => $this->t('Create (only for new entity)'),
-          'view' => $this->t('View'),
-          'update' => $this->t('Update'),
-          'delete' => $this->t('Delete'),
-        ];
-
-    }
-
-    return NULL;
   }
 
 }

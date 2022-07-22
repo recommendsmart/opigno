@@ -1,7 +1,7 @@
 class Morris.Area extends Morris.Line
   # Initialise
   #
-  areaDefaults = 
+  areaDefaults =
     fillOpacity: 'auto'
     behaveLikeLine: false
     belowArea: true
@@ -29,7 +29,7 @@ class Morris.Area extends Morris.Line
         if @options.behaveLikeLine
           if y? then @transY(y) else y
         else
-          if y? 
+          if y?
             total += (y || 0)
             @transY(total)
       row._ymax = Math.max [].concat(y for y, i in row._y when y?)...
@@ -41,7 +41,7 @@ class Morris.Area extends Morris.Line
         if row._y[index]?
           @data[idx].label_x[index] = row._x
           @data[idx].label_y[index] = row._y[index] - 10
-        
+
         if row._y2?
           if row._y2[index]?
             @data[idx].label_x[index] = row._x
@@ -68,9 +68,9 @@ class Morris.Area extends Morris.Line
     path = @paths[index]
     if path isnt null
       if @options.belowArea is true
-          path = path + "L#{@transX(@xmax)},#{@bottom}L#{@transX(@xmin)},#{@bottom}Z"
-          @drawFilledPath path, @fillForSeries(index), index
-        
+        path = path + "L#{@transX(@xmax)},#{@bottom}L#{@transX(@xmin)},#{@bottom}Z"
+        @drawFilledPath path, @fillForSeries(index), index
+
       else
         coords = ({x: r._x, y: r._y[0]} for r in @data by - 1 when r._y[0] isnt undefined)
         pathBelow = Morris.Line.createPath coords, 'smooth', @bottom
@@ -91,17 +91,17 @@ class Morris.Area extends Morris.Line
       straightPath = Morris.Line.createPath coords, 'smooth', @bottom
       if @options.belowArea is true
         straightPath = straightPath + "L#{@transX(@xmax)},#{@bottom}L#{@transX(@xmin)},#{@bottom}Z"
-      else 
+      else
         coords = ({x: r._x, y: @transY(0)} for r in @data by - 1 when r._y[areaIndex] isnt undefined)
         pathBelow = Morris.Line.createPath coords, 'smooth', @bottom
         straightPath = straightPath + "L" + pathBelow.slice(1)
 
-      straightPath += 'Z';
+      straightPath += 'Z'
       rPath = @raphael.path(straightPath)
                       .attr('fill', fill)
                       .attr('fill-opacity', this.options.fillOpacity)
                       .attr('stroke', 'none')
-      do (rPath, path) =>
+      do (rPath, path) ->
         rPath.animate {path}, 500, '<>'
     else
       @raphael.path(path)

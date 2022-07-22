@@ -8,7 +8,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eca\Plugin\Action\ActionBase;
 use Drupal\eca\Plugin\Action\ConfigurableActionBase;
-use Drupal\eca\Plugin\OptionsInterface;
 use Drupal\eca_content\Service\EntityLoader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -22,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   type = "entity"
  * )
  */
-class LoadEntity extends ConfigurableActionBase implements OptionsInterface {
+class LoadEntity extends ConfigurableActionBase {
 
   /**
    * The entity loader.
@@ -53,7 +52,7 @@ class LoadEntity extends ConfigurableActionBase implements OptionsInterface {
    */
   public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     $access_result = AccessResult::forbidden();
-    if ($entity = $this->loadEntity($object)) {
+    if ($entity = $this->doLoadEntity($object)) {
       $access_result = $entity->access('view', $account, TRUE);
     }
     return $return_as_object ? $access_result : $access_result->isAllowed();
@@ -63,7 +62,7 @@ class LoadEntity extends ConfigurableActionBase implements OptionsInterface {
    * {@inheritdoc}
    */
   public function execute($entity = NULL): void {
-    $entity = $this->loadEntity($entity);
+    $entity = $this->doLoadEntity($entity);
 
     $token = $this->tokenServices;
     $config = &$this->configuration;
@@ -94,7 +93,7 @@ class LoadEntity extends ConfigurableActionBase implements OptionsInterface {
       '#type' => 'textfield',
       '#title' => $this->t('Name of token'),
       '#default_value' => $this->configuration['token_name'],
-      '#weight' => -10,
+      '#weight' => -90,
     ];
     return $this->entityLoader()->buildConfigurationForm($this->configuration, $form, $form_state);
   }
@@ -117,13 +116,6 @@ class LoadEntity extends ConfigurableActionBase implements OptionsInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function getOptions(string $id): ?array {
-    return $this->entityLoader()->getOptions($id);
-  }
-
-  /**
    * Loads the entity by using the currently given plugin configuration.
    *
    * @param \Drupal\Core\Entity\EntityInterface|null $entity
@@ -135,7 +127,7 @@ class LoadEntity extends ConfigurableActionBase implements OptionsInterface {
    * @throws \InvalidArgumentException
    *   When the provided argument is not NULL and not an entity object.
    */
-  protected function loadEntity($entity = NULL): ?EntityInterface {
+  protected function doLoadEntity($entity = NULL): ?EntityInterface {
     $this->entity = $this->entityLoader()->loadEntity($entity, $this->configuration);
     return $this->entity ?? NULL;
   }

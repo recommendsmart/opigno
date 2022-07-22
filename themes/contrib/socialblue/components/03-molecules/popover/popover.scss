@@ -96,7 +96,7 @@
   }
 }
 
-// Styles for the popover on the group page.
+// Styles for the popover on the group/course pages.
 .path-group {
   .popover {
     max-width: 378px !important;
@@ -127,7 +127,8 @@
         color: #343434;
       }
 
-      .group-visibility-details {
+      .group-visibility-details,
+      .course-visibility-details {
         padding: .75rem;
         border-radius: 5px;
         background: #f3f3f3;
@@ -135,6 +136,10 @@
 
         &:last-child {
           margin-bottom: 0;
+        }
+
+        > *:empty {
+          display: none;
         }
       }
 
@@ -160,6 +165,7 @@
         left: 0;
         width: 21px;
         height: 21px;
+        fill: #000;
       }
     }
   }

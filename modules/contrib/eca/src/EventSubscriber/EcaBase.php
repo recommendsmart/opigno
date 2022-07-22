@@ -2,7 +2,6 @@
 
 namespace Drupal\eca\EventSubscriber;
 
-use Drupal\Component\EventDispatcher\Event;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -66,15 +65,15 @@ abstract class EcaBase implements EventSubscriberInterface {
   /**
    * Callback handling all events subscribed by ECA (sub-)modules.
    *
-   * @param \Drupal\Component\EventDispatcher\Event $event
+   * @param \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event $event
    *   The triggered event that gets processed by the ECA processor.
    * @param string $event_name
    *   The specific event name that got triggered for that event.
    */
-  public function onEvent(Event $event, string $event_name): void {
+  public function onEvent(object $event, string $event_name): void {
     try {
       if (!Settings::get('eca_disable', FALSE)) {
-        $this->processor->execute($event, $event_name);
+        $this->processor->execute($this->prepareEvent($event, $event_name), $event_name);
       }
       elseif (\Drupal::currentUser()->hasPermission('administer eca')) {
         \Drupal::messenger()->addWarning('ECA is disabled in your settings.php file.');
@@ -83,6 +82,23 @@ abstract class EcaBase implements EventSubscriberInterface {
     catch (InvalidPluginDefinitionException | PluginNotFoundException $e) {
       // This is thrown during installation of eca and we can ignore this.
     }
+  }
+
+  /**
+   * Prepares the given event for being forwarded to the ECA processor.
+   *
+   * @param \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event $event
+   *   The triggered event that gets processed by the ECA processor.
+   * @param string &$event_name
+   *   The specific event name that got triggered for that event, passed by
+   *   reference.
+   *
+   * @return \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event
+   *   The prepared event. Can be an object other than the one that got passed
+   *   as parameter.
+   */
+  protected function prepareEvent(object $event, string &$event_name): object {
+    return $event;
   }
 
 }

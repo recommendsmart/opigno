@@ -27,7 +27,7 @@ class FormAddSubmitButton extends FormActionBase {
     if (!($form = &$this->getCurrentForm())) {
       return;
     }
-    $name = trim($this->tokenServices->replace($this->configuration['name']));
+    $name = trim((string) $this->tokenServices->replace($this->configuration['name']));
     if ($name === '') {
       throw new \InvalidArgumentException('Cannot use an empty string as trigger name');
     }
@@ -80,14 +80,14 @@ class FormAddSubmitButton extends FormActionBase {
       '#type' => 'textfield',
       '#title' => $this->t('Trigger name'),
       '#description' => $this->t('The trigger name must be a machine name and is used for being identified on form submission. Example: <em>accept</em>, <em>send</em>. It can later be accessed via token <em>[current-form:triggered]</em>.'),
-      '#weight' => 10,
+      '#weight' => -10,
       '#default_value' => $this->configuration['name'],
       '#required' => TRUE,
     ];
     $form['value'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Button label'),
-      '#weight' => 20,
+      '#weight' => -9,
       '#default_value' => $this->configuration['value'],
       '#required' => TRUE,
     ];
@@ -101,7 +101,7 @@ class FormAddSubmitButton extends FormActionBase {
         'danger' => $this->t('Danger'),
       ],
       '#default_value' => $this->configuration['button_type'],
-      '#weight' => 30,
+      '#weight' => -8,
       '#required' => TRUE,
     ];
     $form['weight'] = [
@@ -109,7 +109,7 @@ class FormAddSubmitButton extends FormActionBase {
       '#title' => $this->t('Element weight'),
       '#description' => $this->t('The lower the weight, the submit action appears before other submit actions having a higher weight.'),
       '#default_value' => $this->configuration['weight'],
-      '#weight' => 40,
+      '#weight' => -7,
       '#required' => TRUE,
     ];
     return $form;

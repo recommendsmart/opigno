@@ -4,8 +4,11 @@ namespace Drupal\eca\Plugin;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
 
 /**
  * Trait for ECA plugins making use of a form field.
@@ -62,27 +65,27 @@ trait FormFieldPluginTrait {
       '#description' => $this->t('The input name of the form field. This is mostly found in the "name" attribute of an &lt;input&gt; form element. This property supports tokens.'),
       '#default_value' => $this->configuration['field_name'],
       '#required' => TRUE,
-      '#weight' => -10,
+      '#weight' => -50,
     ];
     if ($this->useFilters) {
       $form['strip_tags'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Strip tags'),
         '#default_value' => $this->configuration['strip_tags'],
-        '#weight' => 10,
+        '#weight' => -10,
       ];
       $form['trim'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Trim'),
         '#default_value' => $this->configuration['trim'],
-        '#weight' => 20,
+        '#weight' => -9,
       ];
       $form['xss_filter'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Filter XSS'),
         '#description' => $this->t('Additionally filters out possible cross-site scripting (XSS) text.'),
         '#default_value' => $this->configuration['xss_filter'],
-        '#weight' => 30,
+        '#weight' => -8,
       ];
     }
     return $form;
@@ -179,6 +182,47 @@ trait FormFieldPluginTrait {
     }
 
     return $nothing;
+  }
+
+  /**
+   * Helper function to jump to the first child of an entity field in a form.
+   *
+   * @param array &$element
+   *   The form element that may contain the child. This variable will be
+   *   changed as it is being passed as reference.
+   */
+  protected function &jumpToFirstFieldChild(array &$element): array {
+    if (isset($element['widget'])) {
+      // Automatically jump to the widget form element, as it's being build
+      // by \Drupal\Core\Field\WidgetBase::form().
+      $element = &$element['widget'];
+    }
+    if (isset($element[0])) {
+      // Automatically jump to the first element.
+      $element = &$element[0];
+    }
+    // Try to get the main property name and address it if not specified
+    // otherwise.
+    $main_property = 'value';
+    $form_object = $this->getCurrentFormState() ? $this->getCurrentFormState()->getFormObject() : NULL;
+    if ($form_object instanceof EntityFormInterface) {
+      $entity = $form_object->getEntity();
+      if ($entity instanceof FieldableEntityInterface) {
+        $name_array = $this->getFieldNameAsArray();
+        $field_name = array_shift($name_array);
+        if ($entity->hasField($field_name)) {
+          $item_definition = $entity->get($field_name)->getFieldDefinition()->getItemDefinition();
+          if ($item_definition instanceof ComplexDataDefinitionInterface) {
+            $main_property = $item_definition->getMainPropertyName() ?? 'value';
+          }
+        }
+      }
+    }
+    if (isset($element[$main_property])) {
+      // Automatically jump to the main property key.
+      $element = &$element[$main_property];
+    }
+    return $element;
   }
 
   /**

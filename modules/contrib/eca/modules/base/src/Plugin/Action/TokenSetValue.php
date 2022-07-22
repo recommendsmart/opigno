@@ -81,20 +81,20 @@ class TokenSetValue extends ConfigurableActionBase {
       '#type' => 'textfield',
       '#title' => $this->t('Name of token'),
       '#default_value' => $this->configuration['token_name'],
-      '#weight' => -10,
+      '#weight' => -30,
     ];
     $form['token_value'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Value of the token'),
       '#default_value' => $this->configuration['token_value'],
-      '#weight' => -9,
+      '#weight' => -20,
     ];
     $form['use_yaml'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Interpret above value as YAML format'),
       '#description' => $this->t('Nested data can be set using YAML format, for example <em>mykey: "My value"</em>. When using this format, this option needs to be enabled. When using tokens and YAML altogether, make sure that tokens are wrapped as a string. Example: <em>title: "[node:title]"</em>'),
       '#default_value' => $this->configuration['use_yaml'],
-      '#weight' => -8,
+      '#weight' => -10,
     ];
     return $form;
   }

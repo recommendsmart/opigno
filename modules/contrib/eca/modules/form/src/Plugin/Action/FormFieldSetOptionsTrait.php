@@ -41,6 +41,7 @@ trait FormFieldSetOptionsTrait {
     if (!($element = &$this->getTargetElement())) {
       return;
     }
+    $element = &$this->jumpToFirstFieldChild($element);
     if (!isset($element['#options'])) {
       return;
     }
@@ -83,8 +84,8 @@ trait FormFieldSetOptionsTrait {
           elseif (is_object($value) && method_exists($value, '__toString')) {
             $value = (string) $value;
           }
-          if (is_scalar($value) && trim($value) !== '') {
-            $options_array[$key] = trim($value);
+          if (is_scalar($value) && trim((string) $value) !== '') {
+            $options_array[$key] = trim((string) $value);
           }
         }
       }
@@ -114,14 +115,14 @@ trait FormFieldSetOptionsTrait {
       '#title' => $this->t('Options'),
       '#description' => $this->t('Can be a comma-separated sequence of key-value pairs (e.g. <em>k1:v1,k2:v2</em> or a token that holds a list of key-value pairs. Alternatively use YAML syntax to define one key-value pair per line. Example: <em>key1: "value1"</em>. When using tokens and YAML altogether, make sure that tokens are wrapped as a string. Example: <em>title: "[node:title]"</em>'),
       '#default_value' => $this->configuration['options'],
-      '#weight' => -9,
+      '#weight' => -49,
     ];
     $form['use_yaml'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Interpret above value as YAML format'),
       '#description' => $this->t('When using YAML format to define the options above, this option needs to be enabled.'),
       '#default_value' => $this->configuration['use_yaml'],
-      '#weight' => -8,
+      '#weight' => -48,
     ];
     return $form;
   }

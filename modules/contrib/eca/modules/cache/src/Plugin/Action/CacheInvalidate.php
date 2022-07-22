@@ -38,7 +38,7 @@ class CacheInvalidate extends CacheActionBase {
         ':url' => 'https://www.drupal.org/docs/drupal-apis/cache-api/cache-tags',
       ]),
       '#default_value' => $this->configuration['tags'],
-      '#weight' => -6,
+      '#weight' => -30,
     ];
     return $form;
   }

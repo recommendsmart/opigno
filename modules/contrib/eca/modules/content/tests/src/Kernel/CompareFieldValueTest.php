@@ -92,6 +92,34 @@ class CompareFieldValueTest extends KernelTestBase {
     $condition = $this->conditionManager->createInstance('eca_entity_field_value', $config);
     $condition->setContextValue('entity', $this->node);
     $this->assertTrue($condition->evaluate(), $message);
+
+    // Additionally test when accessing a field property.
+    $config = [
+      'expected_value' => $field_value,
+      'operator' => $operator,
+      'field_name' => 'title.value',
+      'type' => StringComparisonBase::COMPARE_TYPE_VALUE,
+      'case' => FALSE,
+      'negate' => FALSE,
+    ];
+    /** @var \Drupal\eca_content\Plugin\ECA\Condition\EntityFieldValue $condition */
+    $condition = $this->conditionManager->createInstance('eca_entity_field_value', $config);
+    $condition->setContextValue('entity', $this->node);
+    $this->assertTrue($condition->evaluate(), $message);
+
+    // Additionally test negation.
+    $config = [
+      'expected_value' => $field_value,
+      'operator' => $operator,
+      'field_name' => 'title',
+      'type' => StringComparisonBase::COMPARE_TYPE_VALUE,
+      'case' => FALSE,
+      'negate' => TRUE,
+    ];
+    /** @var \Drupal\eca_content\Plugin\ECA\Condition\EntityFieldValue $condition */
+    $condition = $this->conditionManager->createInstance('eca_entity_field_value', $config);
+    $condition->setContextValue('entity', $this->node);
+    $this->assertFalse($condition->evaluate(), $message);
   }
 
   /**

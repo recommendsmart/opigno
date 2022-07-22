@@ -2,6 +2,7 @@
 
 namespace Drupal\eca_queue\Plugin\ECA\Event;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\eca\Entity\Objects\EcaEvent;
 use Drupal\eca\Event\Tag;
 use Drupal\eca\Plugin\ECA\Event\EventBase;
@@ -35,22 +36,48 @@ class QueueEvent extends EventBase {
   /**
    * {@inheritdoc}
    */
-  public function fields(): array {
+  public function defaultConfiguration(): array {
     if ($this->eventClass() === ProcessingTaskEvent::class) {
-      return [
-        [
-          'name' => 'task_name',
-          'label' => 'Task name',
-          'type' => 'String',
-        ],
-        [
-          'name' => 'task_value',
-          'label' => 'Task value (optional)',
-          'type' => 'String',
-        ],
+      $values = [
+        'task_name' => '',
+        'task_value' => '',
       ];
     }
-    return parent::fields();
+    else {
+      $values = [];
+    }
+    return $values + parent::defaultConfiguration();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
+    $form = parent::buildConfigurationForm($form, $form_state);
+    if ($this->eventClass() === ProcessingTaskEvent::class) {
+      $form['task_name'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Task name'),
+        '#default_value' => $this->configuration['task_name'],
+      ];
+      $form['task_value'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Task value (optional'),
+        '#default_value' => $this->configuration['task_value'],
+      ];
+    }
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
+    parent::submitConfigurationForm($form, $form_state);
+    if ($this->eventClass() === ProcessingTaskEvent::class) {
+      $this->configuration['task_name'] = $form_state->getValue('task_name');
+      $this->configuration['task_value'] = $form_state->getValue('task_value');
+    }
   }
 
   /**

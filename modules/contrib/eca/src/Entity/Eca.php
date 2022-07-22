@@ -2,24 +2,23 @@
 
 namespace Drupal\eca\Entity;
 
-use Drupal\Component\EventDispatcher\Event;
 use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Form\FormState;
+use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
 use Drupal\Core\Plugin\PluginFormInterface;
+use Drupal\eca\Entity\Objects\EcaAction;
 use Drupal\eca\Entity\Objects\EcaEvent;
 use Drupal\eca\Entity\Objects\EcaGateway;
 use Drupal\eca\Entity\Objects\EcaObject;
-use Drupal\eca\Entity\Objects\EcaAction;
-use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
-use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
-use Drupal\eca\Plugin\ECA\Condition\ConditionInterface;
 use Drupal\eca\Plugin\ECA\Modeller\ModellerInterface;
+use Drupal\eca\Plugin\PluginUsageInterface;
 
 /**
  * Defines the ECA entity type.
@@ -97,30 +96,30 @@ class Eca extends ConfigEntityBase implements EntityWithPluginCollectionInterfac
   /**
    * List of events.
    *
-   * @var array|null
+   * @var array
    */
-  protected ?array $events;
+  protected array $events = [];
 
   /**
    * List of conditions.
    *
-   * @var array|null
+   * @var array
    */
-  protected ?array $conditions;
+  protected array $conditions = [];
 
   /**
    * List of gateways.
    *
    * @var array|null
    */
-  protected ?array $gateways;
+  protected ?array $gateways = [];
 
   /**
    * List of actions.
    *
-   * @var array|null
+   * @var array
    */
-  protected ?array $actions;
+  protected array $actions = [];
 
   /**
    * Model config entity for the ECA config entity.
@@ -154,194 +153,41 @@ class Eca extends ConfigEntityBase implements EntityWithPluginCollectionInterfac
 
   /**
    * {@inheritdoc}
-   *
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   */
+  public function preSave(EntityStorageInterface $storage): void {
+    parent::preSave($storage);
+    foreach ([
+      'events' => $this->eventPluginManager(),
+      'conditions' => $this->conditionPluginManager(),
+      'actions' => $this->actionPluginManager(),
+    ] as $plugins => $manager) {
+      foreach ($this->{$plugins} as $id => $pluginDef) {
+        $plugin = $manager->createInstance($pluginDef['plugin'], $pluginDef['configuration']);
+        // Allows ECA plugins to react upon being added to an ECA entity.
+        if ($plugin instanceof PluginUsageInterface) {
+          $plugin->pluginUsed($this, $id);
+        }
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function calculateDependencies() {
-    if (static::$isTesting) {
+    // As ::trustData() states that dependencies are not calculated on save,
+    // calculation is skipped when flagged as trusted.
+    // @see Drupal\Core\Config\Entity\ConfigEntityInterface::trustData
+    if (static::$isTesting || $this->trustedData) {
       return $this;
     }
     parent::calculateDependencies();
-    if (!empty($this->events)) {
-      $entity_field_info = [];
-      foreach ($this->events as $component) {
-        $this->addDependenciesFromComponent($component, $entity_field_info);
+    foreach ($this->dependencyCalculation()->calculateDependencies($this) as $type => $names) {
+      foreach ($names as $name) {
+        $this->addDependency($type, $name);
       }
     }
     return $this;
-  }
-
-  /**
-   * Adds dependencies by reading from the given component.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   */
-  protected function addDependenciesFromComponent(array $component, array &$entity_field_info): void {
-    $plugin_id_parts = !empty($component['plugin']) ? explode(':', $component['plugin']) : [];
-    foreach ($plugin_id_parts as $id_part) {
-      $this->addEntityFieldInfo($id_part, $entity_field_info);
-    }
-    if (!empty($component['configuration'])) {
-      $this->addDependenciesFromFields($component['configuration'], $entity_field_info);
-    }
-    if (!empty($component['successors'])) {
-      foreach ($component['successors'] as $successor) {
-        if (empty($successor['id'])) {
-          continue;
-        }
-        $successor_id = $successor['id'];
-        foreach (['events', 'conditions', 'actions', 'gateways'] as $prop) {
-          if (isset($this->$prop[$successor_id])) {
-            $this->addDependenciesFromComponent($this->$prop[$successor_id], $entity_field_info);
-            break;
-          }
-        }
-      }
-    }
-  }
-
-  /**
-   * Adds dependencies from values of plugin config fields.
-   *
-   * @param array $fields
-   *   The config fields of an ECA-related plugin (event / condition / action).
-   * @param array &$entity_field_info
-   *   An array of collected entity field info, keyed by entity type ID.
-   *   This array will be expanded by further entity types that will be
-   *   additionally found.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   */
-  protected function addDependenciesFromFields(array $fields, array &$entity_field_info): void {
-    $variables = [];
-    foreach ($fields as $name => $field) {
-      if (!is_string($field)) {
-        if (is_array($field)) {
-          $this->addDependenciesFromFields($field, $entity_field_info);
-        }
-        continue;
-      }
-
-      if (mb_strpos('type', $name) !== FALSE) {
-        [$field, $bundle] = array_merge(explode(' ', $field, 2), ['_all']);
-      }
-      else {
-        preg_match_all('/
-          [^\s\[\]\{\}:\.]+  # match type not containing whitespace : . [ ] { }
-          [:\.]+             # separator (Token : or property path .)
-          [^\s\[\]\{\}]+     # match name not containing whitespace [ ] { }
-          /x', $field, $matches);
-      }
-
-      if (!isset($matches) || empty($matches[0])) {
-        // Calling ::addEntityFieldInfo() here, so that the entity type is
-        // present in case any subsequent plugin config field contains a field
-        // name for that.
-        $is_entity_type = $this->addEntityFieldInfo($field, $entity_field_info);
-        if (!$is_entity_type && !in_array($field, $variables, TRUE)) {
-          $variables[] = $field;
-        }
-        elseif ($is_entity_type) {
-          $entity_type_id = $field;
-          if (isset($bundle) && $bundle !== '_all' && ($bundle_dependency = $this->entityTypeManager()->getDefinition($entity_type_id)->getBundleConfigDependency($bundle))) {
-            $this->addDependency($bundle_dependency['type'], $bundle_dependency['name']);
-          }
-        }
-      }
-      else {
-        foreach ($matches[0] as $variable) {
-          if (!in_array($variable, $variables, TRUE)) {
-            $variables[] = $variable;
-          }
-        }
-      }
-    }
-    foreach ($variables as $variable) {
-      $variable_parts = mb_strpos($variable, ':') ? explode(':', $variable) : explode('.', $variable);
-      foreach ($variable_parts as $variable_part) {
-        if ($this->addEntityFieldInfo($variable_part, $entity_field_info)) {
-          // Mapped to an entity type, thus no need for a field lookup.
-          continue;
-        }
-        // Perform a lookup for used entity fields.
-        $field_config_storage = $this->entityTypeManager()->getStorage('field_config');
-        $info_item = end($entity_field_info);
-        while ($info_item) {
-          $entity_type_id = key($entity_field_info);
-          if (isset($info_item[$variable_part])) {
-            $field_name = $variable_part;
-            // Found an existing field, add its storage config as dependency.
-            // No break of the loop here, because any entity type that
-            // possibly holds a field with that name should be considered,
-            // as we cannot determine the underlying entity type of Token
-            // aliases in a bulletproof way.
-            $this->addDependency('config', $info_item[$field_name]);
-            // Include any field configuration from used bundles. Future
-            // additions of fields and new bundles will be handled via hook
-            // implementation.
-            $bundles = array_keys($this->entityTypeBundleInfo()->getBundleInfo($entity_type_id));
-            foreach ($bundles as $bundle) {
-              $field_definitions = $this->entityFieldManager()->getFieldDefinitions($entity_type_id, $bundle);
-              if (isset($field_definitions[$field_name])) {
-                $field_config_id = $entity_type_id . '.' . $bundle . '.' . $field_name;
-                /** @var \Drupal\field\FieldConfigInterface $field_config */
-                if ($field_config = $field_config_storage->load($field_config_id)) {
-                  $this->addDependency($field_config->getConfigDependencyKey(), 'field.field.' . $field_config->id());
-                }
-              }
-            }
-          }
-          $info_item = prev($entity_field_info);
-        }
-      }
-    }
-  }
-
-  /**
-   * Expands the field info array if the given variable is an entity type ID.
-   *
-   * @param string $variable
-   *   The variable that is or is not an entity type ID.
-   * @param array &$entity_field_info
-   *   The current list of entity field info, sorted in reverse order by found
-   *   entity types.
-   *
-   * @return bool
-   *   Returns TRUE if the given variable was resolved to an entity type ID.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   */
-  protected function addEntityFieldInfo(string $variable, array &$entity_field_info): bool {
-    if (!($entity_type_id = $this->token()->getEntityTypeForTokenType($variable))) {
-      return FALSE;
-    }
-    $entity_type_manager = $this->entityTypeManager();
-    if (isset($entity_field_info[$entity_type_id])) {
-      // Put the info item at the end of the list, as we want to handle
-      // found definitions by traversing in the reverse order they were found.
-      $item = $entity_field_info[$entity_type_id];
-      unset($entity_field_info[$entity_type_id]);
-      $entity_field_info += [$entity_type_id => $item];
-      return TRUE;
-    }
-    if ($entity_type_manager->hasDefinition($entity_type_id)) {
-      $definition = $entity_type_manager->getDefinition($entity_type_id);
-      $entity_field_info[$entity_type_id] = [];
-      if ($definition->entityClassImplements(FieldableEntityInterface::class)) {
-        foreach ($this->entityFieldManager()->getFieldStorageDefinitions($entity_type_id) as $field_name => $storage_definition) {
-          // Base fields don't have a manageable storage configuration, thus
-          // they are excluded here.
-          if (!$storage_definition->isBaseField()) {
-            $entity_field_info[$entity_type_id][$field_name] = "field.storage.$entity_type_id.$field_name";
-          }
-        }
-      }
-      return TRUE;
-    }
-    return FALSE;
   }
 
   /**
@@ -437,6 +283,19 @@ class Eca extends ConfigEntityBase implements EntityWithPluginCollectionInterfac
   }
 
   /**
+   * Reset all component (events, conditions, actions, gateways) arrays.
+   *
+   * This should be called by the modeller once before the methods
+   * ::addEvent, ::addCondition, ::addAction or ::addGateway will be used.
+   */
+  public function resetComponents(): void {
+    $this->events = [];
+    $this->conditions = [];
+    $this->actions = [];
+    $this->gateways = [];
+  }
+
+  /**
    * Add a condition item to this ECA config entity.
    *
    * @param string $id
@@ -446,24 +305,23 @@ class Eca extends ConfigEntityBase implements EntityWithPluginCollectionInterfac
    * @param array $fields
    *   The configuration for this condition.
    *
-   * @return $this
+   * @return bool
+   *   Returns TRUE if the condition's configuration is valid, FALSE otherwise.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   *   When the given condition plugin ID does not exist.
    */
-  public function addCondition(string $id, string $plugin_id, array $fields): Eca {
-
+  public function addCondition(string $id, string $plugin_id, array $fields): bool {
     $plugin = $this->conditionPluginManager()->createInstance($plugin_id, []);
-    if ($plugin instanceof ConditionInterface) {
-      // Convert potential strings from pseudo-checkboxes back to boolean.
-      foreach ($plugin->defaultConfiguration() as $key => $value) {
-        if (is_bool($value) && isset($fields[$key]) && !is_bool($fields[$key])) {
-          $fields[$key] = mb_strtolower($fields[$key]) === 'yes';
-        }
-      }
+    if (($plugin instanceof PluginFormInterface) && !$this->validatePlugin($plugin, $fields, 'action', $plugin_id, $id)) {
+      return FALSE;
     }
+
     $this->conditions[$id] = [
       'plugin' => $plugin_id,
       'configuration' => $fields,
     ];
-    return $this;
+    return TRUE;
   }
 
   /**
@@ -476,14 +334,15 @@ class Eca extends ConfigEntityBase implements EntityWithPluginCollectionInterfac
    * @param array $successors
    *   A list of successor items linked to this gateway.
    *
-   * @return $this
+   * @return bool
+   *   Returns TRUE if the gateway was successfully added, FALSE otherwise.
    */
-  public function addGateway(string $id, int $type, array $successors): Eca {
+  public function addGateway(string $id, int $type, array $successors): bool {
     $this->gateways[$id] = [
       'type' => $type,
       'successors' => $successors,
     ];
-    return $this;
+    return TRUE;
   }
 
   /**
@@ -500,9 +359,18 @@ class Eca extends ConfigEntityBase implements EntityWithPluginCollectionInterfac
    * @param array $successors
    *   A list of successor items linked to this event.
    *
-   * @return $this
+   * @return bool
+   *   Returns TRUE if the event's configuration is valid, FALSE otherwise.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   *   When the given event plugin ID does not exist.
    */
-  public function addEvent(string $id, string $plugin_id, string $label, array $fields, array $successors): Eca {
+  public function addEvent(string $id, string $plugin_id, string $label, array $fields, array $successors): bool {
+    $plugin = $this->eventPluginManager()->createInstance($plugin_id, []);
+    if (($plugin instanceof PluginFormInterface) && !$this->validatePlugin($plugin, $fields, 'action', $plugin_id, $label)) {
+      return FALSE;
+    }
+
     if (empty($label)) {
       $label = $id;
     }
@@ -512,7 +380,7 @@ class Eca extends ConfigEntityBase implements EntityWithPluginCollectionInterfac
       'configuration' => $fields,
       'successors' => $successors,
     ];
-    return $this;
+    return TRUE;
   }
 
   /**
@@ -534,44 +402,16 @@ class Eca extends ConfigEntityBase implements EntityWithPluginCollectionInterfac
    * @param array $successors
    *   A list of successor items linked to this action.
    *
-   * @return $this|null
-   *   This ECA config entity if the action's configuration is valid, NULL
-   *   otherwise.
+   * @return bool
+   *   Returns TRUE if the action's configuration is valid, FALSE otherwise.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
+   *   When the given action plugin ID does not exist.
    */
-  public function addAction(string $id, string $plugin_id, string $label, array $fields, array $successors): ?Eca {
-
-    // Process the plugin configuration validation callback, if applicable.
+  public function addAction(string $id, string $plugin_id, string $label, array $fields, array $successors): bool {
     $plugin = $this->actionPluginManager()->createInstance($plugin_id, []);
-    if ($plugin instanceof PluginFormInterface && $plugin instanceof ConfigurableInterface) {
-      // Convert potential strings from pseudo-checkboxes back to boolean.
-      foreach ($plugin->defaultConfiguration() as $key => $value) {
-        if (is_bool($value) && isset($fields[$key]) && !is_bool($fields[$key])) {
-          $fields[$key] = mb_strtolower($fields[$key]) === 'yes';
-        }
-      }
-      // Build form.
-      $form_state = new FormState();
-      $form = $plugin->buildConfigurationForm([], $form_state);
-      // Set form field values, simulating the user filling and submitting
-      // the form.
-      $form_state->setValues($fields);
-      if (!in_array($plugin_id, self::$ignoreConfigValidationActions, TRUE)) {
-        // Validate the form.
-        $plugin->validateConfigurationForm($form, $form_state);
-      }
-      // Check for errors.
-      if ($errors = $form_state->getErrors()) {
-        foreach ($errors as $error) {
-          $this->messenger()->addError($error);
-        }
-        return NULL;
-      }
-      // Simulate submitting the form.
-      $plugin->submitConfigurationForm($form, $form_state);
-      // Collect the resulting form field values.
-      $fields = $plugin->getConfiguration() + $fields;
+    if (($plugin instanceof PluginFormInterface) && !$this->validatePlugin($plugin, $fields, 'action', $plugin_id, $label)) {
+      return FALSE;
     }
 
     if (empty($label)) {
@@ -583,7 +423,68 @@ class Eca extends ConfigEntityBase implements EntityWithPluginCollectionInterfac
       'configuration' => $fields,
       'successors' => $successors,
     ];
-    return $this;
+    return TRUE;
+  }
+
+  /**
+   * Validate the configuration of an event, condition or action plugin.
+   *
+   * @param \Drupal\Core\Plugin\PluginFormInterface $plugin
+   *   The plugin to be validated.
+   * @param array $fields
+   *   The configuration values to be validated.
+   * @param string $type
+   *   The plugin type, either event, condition or action.
+   * @param string $plugin_id
+   *   The plugin id.
+   * @param string $label
+   *   The label in the model.
+   *
+   * @return bool
+   *   TRUE, if configuration form validation has no errors. FALSE otherwise.
+   */
+  protected function validatePlugin(PluginFormInterface $plugin, array &$fields, string $type, string $plugin_id, string $label): bool {
+    if ($plugin instanceof ConfigurableInterface) {
+      // Convert potential strings from pseudo-checkboxes back to boolean.
+      foreach ($plugin->defaultConfiguration() as $key => $value) {
+        if (is_bool($value) && isset($fields[$key]) && !is_bool($fields[$key])) {
+          $fields[$key] = mb_strtolower($fields[$key]) === 'yes';
+        }
+      }
+      // When "replace_tokens" exists, also convert that one back to boolean.
+      // @see \Drupal\eca\Service\Actions::getConfigurationForm()
+      if (isset($fields['replace_tokens'])) {
+        if (!empty($fields['replace_tokens']) && is_string($fields['replace_tokens'])) {
+          $fields['replace_tokens'] = mb_strtolower($fields['replace_tokens']) === 'yes';
+        }
+        else {
+          $fields['replace_tokens'] = (bool) $fields['replace_tokens'];
+        }
+      }
+    }
+    // Build form.
+    $form_state = new FormState();
+    $form = $plugin->buildConfigurationForm([], $form_state);
+    // Set form field values, simulating the user filling and submitting
+    // the form.
+    $form_state->setValues($fields);
+    if (!in_array($plugin_id, self::$ignoreConfigValidationActions, TRUE)) {
+      // Validate the form.
+      $plugin->validateConfigurationForm($form, $form_state);
+    }
+    // Check for errors.
+    if ($errors = $form_state->getErrors()) {
+      foreach ($errors as $error) {
+        $errorMsg = sprintf('%s "%s" (%s): %s', $type, $plugin->getPluginDefinition()['label'], $label, $error);
+        $this->messenger()->addError($errorMsg);
+      }
+      return FALSE;
+    }
+    // Simulate submitting the form.
+    $plugin->submitConfigurationForm($form, $form_state);
+    // Collect the resulting form field values.
+    $fields = $plugin->getConfiguration() + $fields;
+    return TRUE;
   }
 
   /**
@@ -601,15 +502,9 @@ class Eca extends ConfigEntityBase implements EntityWithPluginCollectionInterfac
       if ($event_config = $used_event->getConfiguration()) {
         $first_key = key($event_config);
         $first_value = current($event_config);
-        foreach ($plugin->fields() as $plugin_field) {
-          if (isset($plugin_field['name'], $plugin_field['extras']['choices']) && ($plugin_field['name'] === $first_key)) {
-            foreach ($plugin_field['extras']['choices'] as $choice) {
-              if (isset($choice['name'], $choice['value']) && $choice['value'] === $first_value) {
-                $first_value = $choice['name'];
-                break 2;
-              }
-            }
-          }
+        $form = $plugin->buildConfigurationForm([], new FormState());
+        if (isset($form[$first_key]['#options'][$first_value])) {
+          $first_value = $form[$first_key]['#options'][$first_value];
         }
         $event_info .= ' (' . $first_value . ')';
       }
@@ -644,7 +539,7 @@ class Eca extends ConfigEntityBase implements EntityWithPluginCollectionInterfac
    *
    * @param \Drupal\eca\Entity\Objects\EcaObject $eca_object
    *   The ECA item, for which the successors are requested.
-   * @param \Drupal\Component\EventDispatcher\Event $event
+   * @param \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event $event
    *   The originally triggered event in which context to determine the list
    *   of valid successors.
    * @param array $context
@@ -654,14 +549,14 @@ class Eca extends ConfigEntityBase implements EntityWithPluginCollectionInterfac
    * @return \Drupal\eca\Entity\Objects\EcaObject[]
    *   The list of valid successors.
    */
-  public function getSuccessors(EcaObject $eca_object, Event $event, array $context): array {
+  public function getSuccessors(EcaObject $eca_object, object $event, array $context): array {
     $successors = [];
     foreach ($eca_object->getSuccessors() as $successor) {
-      $context['%successorlabel'] = $successor['label'] ?? 'noname';
       $context['%successorid'] = $successor['id'];
       if ($action = $this->actions[$successor['id']] ?? FALSE) {
+        $context['%successorlabel'] = $action['label'] ?? 'noname';
         $this->logger()->debug('Check action successor %successorlabel (%successorid) from ECA %ecalabel (%ecaid) for event %event.', $context);
-        if ($successorObject = $this->getEcaObject('action', $action['plugin'], $successor['id'], $successor['label'] ?? 'noname', $action['configuration'] ?? [], $action['successors'] ?? [], $eca_object->getEvent())) {
+        if ($successorObject = $this->getEcaObject('action', $action['plugin'], $successor['id'], $action['label'] ?? 'noname', $action['configuration'] ?? [], $action['successors'] ?? [], $eca_object->getEvent())) {
           if ($this->conditionServices()->assertCondition($event, $successor['condition'], $this->conditions[$successor['condition']] ?? NULL, $context)) {
             $successors[] = $successorObject;
           }
@@ -671,15 +566,16 @@ class Eca extends ConfigEntityBase implements EntityWithPluginCollectionInterfac
         }
       }
       elseif ($gateway = $this->gateways[$successor['id']] ?? FALSE) {
+        $context['%successorlabel'] = $gateway['label'] ?? 'noname';
         $this->logger()->debug('Check gateway successor %successorlabel (%successorid) from ECA %ecalabel (%ecaid) for event %event.', $context);
-        $successorObject = new EcaGateway($this, $successor['id'], $successor['label'] ?? 'noname', $eca_object->getEvent(), $gateway['type']);
+        $successorObject = new EcaGateway($this, $successor['id'], $gateway['label'] ?? 'noname', $eca_object->getEvent(), $gateway['type']);
         $successorObject->setSuccessors($gateway['successors']);
         if ($this->conditionServices()->assertCondition($event, $successor['condition'], $this->conditions[$successor['condition']] ?? NULL, $context)) {
           $successors[] = $successorObject;
         }
       }
       else {
-        $this->logger()->error('Non existent successor %successorlabel (%successorid) from ECA %ecalabel (%ecaid) for event %event.', $context);
+        $this->logger()->error('Non existent successor (%successorid) from ECA %ecalabel (%ecaid) for event %event.', $context);
       }
     }
     return $successors;
@@ -800,6 +696,15 @@ class Eca extends ConfigEntityBase implements EntityWithPluginCollectionInterfac
   public function addRuntimeDependency(string $type, string $name): Eca {
     $this->addDependency($type, $name);
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    $this->memoryCache()->invalidateAll();
+    $storage->resetCache();
+    parent::postSave($storage, $update);
   }
 
 }

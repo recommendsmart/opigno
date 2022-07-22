@@ -78,7 +78,7 @@ class FormAddOptionsfield extends FormAddFieldActionBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Allow multiple values'),
       '#default_value' => $this->configuration['multiple'],
-      '#weight' => -5,
+      '#weight' => -45,
     ];
     return $form;
   }

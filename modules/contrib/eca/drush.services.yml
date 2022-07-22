@@ -4,15 +4,3 @@ services:
     arguments: ['@entity_type.manager', '@eca.service.modeller']
     tags:
       - { name: drush.command }
-  eca.generator.events:
-    class: Drupal\eca\Generators\EventsGenerator
-    tags:
-      -  { name: drush.generator.v2 }
-  eca.generator.condition:
-    class: Drupal\eca\Generators\ConditionGenerator
-    tags:
-      -  { name: drush.generator.v2 }
-  eca.generator.action:
-    class: Drupal\eca\Generators\ActionGenerator
-    tags:
-      -  { name: drush.generator.v2 }

@@ -2,7 +2,6 @@
 
 namespace Drupal\eca\Entity\Objects;
 
-use Drupal\Component\EventDispatcher\Event;
 use Drupal\eca\Event\ConditionalApplianceInterface;
 use Drupal\eca\Plugin\ECA\Event\EventInterface;
 use Drupal\eca\Entity\Eca;
@@ -41,16 +40,16 @@ class EcaEvent extends EcaObject implements ObjectWithPluginInterface {
   /**
    * Determines if the event should be executed.
    *
-   * @param \Drupal\Component\EventDispatcher\Event $event
-   *   The event dispatcher.
+   * @param \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event $event
+   *   The event being triggered.
    * @param string $event_name
-   *   The event name beim triggered.
+   *   The event name being triggered.
    *
    * @return bool
    *   TRUE, if this event should be executed in the current context, FALSE
    *   otherwise.
    */
-  public function applies(Event $event, string $event_name): bool {
+  public function applies(object $event, string $event_name): bool {
     if ($event_name === $this->plugin->eventName() && (!($event instanceof ConditionalApplianceInterface) || $event->applies($this->getId(), $this->configuration))) {
       if ($event instanceof ContentEntityBaseEntity) {
         return !empty($event->getEntity());

@@ -8,6 +8,7 @@ use Drupal\Core\Action\ActionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Form\FormState;
 use Drupal\eca\Entity\Eca;
 use Drupal\eca\Plugin\ECA\Condition\ConditionInterface;
 use Drupal\eca\Plugin\ECA\Event\EventInterface;
@@ -120,6 +121,8 @@ class DocsCommands extends DrushCommands {
    * @command eca:doc:plugins
    */
   public function plugins(): void {
+    @$this->fileSystem->mkdir('../mkdocs/include/plugins', NULL, TRUE);
+
     foreach ($this->modellerServices->events() as $event) {
       $this->pluginDoc($event);
     }
@@ -167,7 +170,7 @@ class DocsCommands extends DrushCommands {
       $this->sortNestedArrayAssoc($this->toc);
     }
     $content = Yaml::encode($this->toc);
-    $content = str_replace('- placeholder: ', '- ', $content);
+    $content = '0: ' . $key . '/index.md' . PHP_EOL . str_replace('- placeholder: ', '- ', $content);
     file_put_contents($filename, $content);
   }
 
@@ -177,7 +180,7 @@ class DocsCommands extends DrushCommands {
    * @param mixed $a
    *   The array to sort by key.
    */
-  private function sortNestedArrayAssoc(&$a) {
+  private function sortNestedArrayAssoc(&$a): void {
     if (!is_array($a)) {
       return;
     }
@@ -194,18 +197,32 @@ class DocsCommands extends DrushCommands {
    *   The ECA plugin for which documentation should be created.
    */
   private function pluginDoc(PluginInspectionInterface $plugin): void {
+    if (!empty($plugin->getPluginDefinition()['nodocs'])) {
+      return;
+    }
     $values = $this->getPluginValues($plugin);
-    $this->modules[$values['provider']] = $values;
     $id = str_replace(':', '_', $plugin->getPluginId());
+    $values['idfs'] = $id;
+    $this->modules[$values['provider']] = $values;
     $path = $values['path'];
     $filename = $path . '/' . $id . '.md';
     @$this->fileSystem->mkdir('../mkdocs/docs/' . $path, NULL, TRUE);
-    file_put_contents('../mkdocs/docs/' . $filename, $this->render(__DIR__ . '/plugin.md.twig', $values));
+    file_put_contents('../mkdocs/docs/' . $filename, $this->render(__DIR__ . '/../../templates/docs/plugin.md.twig', $values));
+
+    if (!file_exists('../mkdocs/include/plugins/' . $id . '.md')) {
+      file_put_contents('../mkdocs/include/plugins/' . $id . '.md', '');
+    }
+    @$this->fileSystem->mkdir('../mkdocs/include/fields/' . $id, NULL, TRUE);
+    foreach ($values['fields'] as $field) {
+      if (!file_exists('../mkdocs/include/fields/' . $id . '/' . $field['name'] . '.md')) {
+        file_put_contents('../mkdocs/include/fields/' . $id . '/' . $field['name'] . '.md', '');
+      }
+    }
 
     if (!isset($values['toc'][$values['provider_name']])) {
       // Initialize TOC for a new provider.
       $values['toc'][$values['provider_name']]['placeholder'] = $values['provider_path'] . '/index.md';
-      file_put_contents('../mkdocs/docs/' . $values['provider_path'] . '/index.md', $this->render(__DIR__ . '/provider.md.twig', $values));
+      file_put_contents('../mkdocs/docs/' . $values['provider_path'] . '/index.md', $this->render(__DIR__ . '/../../templates/docs/provider.md.twig', $values));
     }
     $values['toc'][$values['provider_name']][ucfirst($values['type']) . 's'][(string) $values['label']] = $filename;
   }
@@ -235,21 +252,22 @@ class DocsCommands extends DrushCommands {
       $basePath = $values['provider'];
       $values['toc'] = &$this->toc;
     }
+    $form_state = new FormState();
     if ($plugin instanceof EventInterface) {
       $type = 'event';
-      $fields = $plugin->fields();
+      $form = $plugin->buildConfigurationForm([], $form_state);
     }
     elseif ($plugin instanceof ConditionInterface) {
       $type = 'condition';
-      $fields = $this->conditionServices->fields($plugin);
+      $form = $plugin->buildConfigurationForm([], $form_state);
     }
     elseif ($plugin instanceof ActionInterface) {
       $type = 'action';
-      $fields = $this->actionServices->fields($plugin);
+      $form = $this->actionServices->getConfigurationForm($plugin, $form_state);
     }
     else {
       $type = 'error';
-      $fields = [];
+      $form = [];
     }
     $values['path'] = sprintf('plugins/%s/%ss',
       $basePath,
@@ -258,6 +276,14 @@ class DocsCommands extends DrushCommands {
     $values['provider_path'] = sprintf('plugins/%s',
       $basePath,
     );
+    $fields = [];
+    foreach ($form as $key => $def) {
+      $fields[] = [
+        'name' => $key,
+        'label' => $def['#title'] ?? $key,
+        'description' => $def['#description'] ?? '',
+      ];
+    }
     $values['type'] = $type;
     $values['fields'] = $fields;
     return $values;
@@ -298,7 +324,7 @@ class DocsCommands extends DrushCommands {
     $archiveFileName = '../mkdocs/docs/' . $values['library_path'] . '/' . $values['id'] . '/' . $values['model_filename'] . '.tar.gz';
     $values['dependencies'] = $this->modellerServices->exportArchive($eca, $archiveFileName);
 
-    file_put_contents('../mkdocs/docs/' . $values['library_path'] . '/' . $values['id'] . '.md', $this->render(__DIR__ . '/library.md.twig', $values));
+    file_put_contents('../mkdocs/docs/' . $values['library_path'] . '/' . $values['id'] . '.md', $this->render(__DIR__ . '/../../templates/docs/library.md.twig', $values));
     file_put_contents('../mkdocs/docs/' . $values['library_path'] . '/' . $values['id'] . '/' . $values['model_filename'] . '.xml', $model->getModeldata());
 
     $this->toc[$values['main_tag']][$values['label']] = $values['library_path'] . '/' . $values['id'] . '.md';

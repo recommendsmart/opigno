@@ -2,31 +2,41 @@
 
 namespace Drupal\eca\Plugin\Action;
 
-use Drupal\Component\EventDispatcher\Event;
-
 /**
  * Interface for ECA provided actions.
  */
 interface ActionInterface {
 
   /**
+   * Whether this action is available outside of the scope of ECA.
+   *
+   * Most ECA actions are only viable within the scope of ECA. Some actions
+   * however may also be useful elsewhere, for example in Views Bulk Operations.
+   * For such an action, override this constant in your action class and set
+   * it to TRUE. Default is FALSE, which means that this action will only be
+   * made available in ECA.
+   *
+   * @var bool
+   */
+  public const EXTERNALLY_AVAILABLE = FALSE;
+
+  /**
    * Sets the triggered event that leads to this action.
    *
-   * @param \Drupal\Component\EventDispatcher\Event $event
+   * @param \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event $event
    *   The triggered event.
    *
-   * @return \Drupal\eca\Plugin\Action\ActionInterface
-   *   This.
+   * @return $this
    */
-  public function setEvent(Event $event): ActionInterface;
+  public function setEvent(object $event): ActionInterface;
 
   /**
    * Get the triggered event that leads to this action.
    *
-   * @return \Drupal\Component\EventDispatcher\Event
+   * @return \Drupal\Component\EventDispatcher\Event|\Symfony\Contracts\EventDispatcher\Event
    *   The trigered event.
    */
-  public function getEvent(): Event;
+  public function getEvent(): object;
 
   /**
    * Gets default configuration for this plugin.

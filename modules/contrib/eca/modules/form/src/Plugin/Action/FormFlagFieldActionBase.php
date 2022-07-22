@@ -58,7 +58,7 @@ abstract class FormFlagFieldActionBase extends FormFieldActionBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Set as @flag', ['@flag' => $this->getFlagName(TRUE)]),
       '#default_value' => $this->configuration['flag'],
-      '#weight' => -9,
+      '#weight' => -49,
     ];
     return $form;
   }

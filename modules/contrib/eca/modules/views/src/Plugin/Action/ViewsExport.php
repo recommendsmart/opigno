@@ -92,19 +92,19 @@ class ViewsExport extends ViewsQuery {
       '#type' => 'checkbox',
       '#title' => $this->t('Store results also in a token?'),
       '#default_value' => $this->configuration['load_results_into_token'],
-      '#weight' => -11,
+      '#weight' => -70,
     ];
     $form['token_for_filename'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Token name for file name'),
       '#default_value' => $this->configuration['token_for_filename'],
-      '#weight' => -3,
+      '#weight' => -20,
     ];
     $form['filename'] = [
       '#type' => 'textfield',
       '#title' => $this->t('File name'),
       '#default_value' => $this->configuration['filename'],
-      '#weight' => -2,
+      '#weight' => -10,
     ];
     return $form;
   }

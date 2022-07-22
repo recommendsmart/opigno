@@ -2,6 +2,8 @@
 
 namespace Drupal\eca_log\Plugin\ECA\Event;
 
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\eca\Plugin\ECA\Event\EventBase;
 use Drupal\eca_log\Event\LogMessageEvent;
 use Drupal\eca_log\LogEvents;
@@ -32,11 +34,49 @@ class LogEvent extends EventBase {
   /**
    * {@inheritdoc}
    */
-  public function fields(): array {
+  public function defaultConfiguration(): array {
     if ($this->eventClass() === LogMessageEvent::class) {
-      return LogMessageEvent::fields();
+      $values = [
+        'channel' => '',
+        'min_severity' => '',
+      ];
     }
-    return parent::fields();
+    else {
+      $values = [];
+    }
+    return $values + parent::defaultConfiguration();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
+    $form = parent::buildConfigurationForm($form, $form_state);
+    if ($this->eventClass() === LogMessageEvent::class) {
+      $form['channel'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Type'),
+        '#default_value' => $this->configuration['channel'],
+      ];
+      $form['min_severity'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Minimum severity'),
+        '#options' => RfcLogLevel::getLevels(),
+        '#default_value' => $this->configuration['min_severity'],
+      ];
+    }
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
+    parent::submitConfigurationForm($form, $form_state);
+    if ($this->eventClass() === LogMessageEvent::class) {
+      $this->configuration['channel'] = $form_state->getValue('channel');
+      $this->configuration['min_severity'] = $form_state->getValue('min_severity');
+    }
   }
 
 }

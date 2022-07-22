@@ -3,7 +3,11 @@
 namespace Drupal\eca_base\Plugin\Action;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\eca\Plugin\Action\ActionBase;
 use Drupal\eca\Plugin\Action\ConfigurableActionBase;
+use Drupal\eca\Service\YamlParser;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Yaml\Exception\ParseException;
 
 /**
  * Action to store arbitrary value to ECA's key value store.
@@ -16,10 +20,42 @@ use Drupal\eca\Plugin\Action\ConfigurableActionBase;
 class EcaStateWrite extends ConfigurableActionBase {
 
   /**
+   * The YAML parser.
+   *
+   * @var \Drupal\eca\Service\YamlParser
+   */
+  protected YamlParser $yamlParser;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): ActionBase {
+    /** @var \Drupal\eca_base\Plugin\Action\EcaStateWrite $instance */
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->setYamlParser($container->get('eca.service.yaml_parser'));
+    return $instance;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function execute(): void {
-    $this->state->set($this->configuration['key'], $this->tokenServices->replaceClear($this->configuration['value']));
+    $value = $this->configuration['value'];
+
+    if ($this->configuration['use_yaml']) {
+      try {
+        $value = $this->yamlParser->parse($value);
+      }
+      catch (ParseException $e) {
+        \Drupal::logger('eca')->error('Tried parsing a state value item in action "eca_state_write" as YAML format, but parsing failed.');
+        return;
+      }
+    }
+    else {
+      $value = $this->tokenServices->getOrReplace($value);
+    }
+
+    $this->state->set($this->configuration['key'], $value);
   }
 
   /**
@@ -29,6 +65,7 @@ class EcaStateWrite extends ConfigurableActionBase {
     return [
       'key' => '',
       'value' => '',
+      'use_yaml' => FALSE,
     ] + parent::defaultConfiguration();
   }
 
@@ -41,13 +78,20 @@ class EcaStateWrite extends ConfigurableActionBase {
       '#type' => 'textfield',
       '#title' => $this->t('State key'),
       '#default_value' => $this->configuration['key'],
-      '#weight' => -10,
+      '#weight' => -30,
     ];
     $form['value'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Value of the token'),
       '#default_value' => $this->configuration['value'],
-      '#weight' => -9,
+      '#weight' => -20,
+    ];
+    $form['use_yaml'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Interpret above config value as YAML format'),
+      '#description' => $this->t('Nested data can be set using YAML format, for example <em>mykey: myvalue</em>. When using this format, this option needs to be enabled. When using tokens and YAML altogether, make sure that tokens are wrapped as a string. Example: <em>title: "[node:title]"</em>'),
+      '#default_value' => $this->configuration['use_yaml'],
+      '#weight' => -10,
     ];
     return $form;
   }
@@ -58,7 +102,18 @@ class EcaStateWrite extends ConfigurableActionBase {
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     $this->configuration['key'] = $form_state->getValue('key');
     $this->configuration['value'] = $form_state->getValue('value');
+    $this->configuration['use_yaml'] = $form_state->getValue('use_yaml');
     parent::submitConfigurationForm($form, $form_state);
+  }
+
+  /**
+   * Set the YAML parser.
+   *
+   * @param \Drupal\eca\Service\YamlParser $yaml_parser
+   *   The YAML parser.
+   */
+  public function setYamlParser(YamlParser $yaml_parser): void {
+    $this->yamlParser = $yaml_parser;
   }
 
 }

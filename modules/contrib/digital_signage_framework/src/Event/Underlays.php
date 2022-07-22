@@ -11,7 +11,7 @@ use Symfony\Component\EventDispatcher\Event;
  *
  * @package Drupal\digital_signage_framework\Event
  */
-class Underlays extends Event {
+class Underlays extends \Symfony\Contracts\EventDispatcher\Event {
 
   /**
    * @var array

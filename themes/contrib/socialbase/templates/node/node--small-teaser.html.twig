@@ -80,8 +80,12 @@
           {{ content['field_' ~ node.bundle ~ '_image'] }}
       {% else %}
         <svg class="teaser--small__type-icon">
-          <title>{{- node.bundle|clean_class|capitalize -}}</title>
-          <use xlink:href="#icon-{{- node.bundle|clean_class -}}"></use>
+          <title>{{- node.bundle|clean_class|capitalize -}}: &nbsp; {{- label|render|striptags|trim -}}</title>
+          {% if topic_type_icon %}
+            <use xlink:href="#{{- topic_type_icon -}}"></use>
+          {% else %}
+            <use xlink:href="#icon-{{- node.bundle|clean_class -}}"></use>
+          {% endif %}
         </svg>
       {% endif %}
     </div>

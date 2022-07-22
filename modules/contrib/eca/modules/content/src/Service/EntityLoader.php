@@ -16,7 +16,7 @@ use Drupal\eca\Token\TokenInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 
 /**
- * Service for loading entities from ECA plugins.
+ * Service for loading content entities from ECA plugins.
  */
 class EntityLoader {
 
@@ -100,26 +100,26 @@ class EntityLoader {
       '#title' => $this->t('Load entity from'),
       '#options' => $this->getOptions('from'),
       '#default_value' => $plugin_configuration['from'],
-      '#weight' => -9,
+      '#weight' => -70,
     ];
     $form['entity_type'] = [
       '#type' => 'select',
       '#title' => $this->t('Entity type'),
       '#options' => $this->getOptions('entity_type'),
       '#default_value' => $plugin_configuration['entity_type'],
-      '#weight' => -7,
+      '#weight' => -60,
     ];
     $form['entity_id'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Entity ID'),
       '#default_value' => $plugin_configuration['entity_id'],
-      '#weight' => -6,
+      '#weight' => -50,
     ];
     $form['revision_id'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Revision ID'),
       '#default_value' => $plugin_configuration['revision_id'],
-      '#weight' => -5,
+      '#weight' => -40,
     ];
     $form['properties'] = [
       '#type' => 'textarea',
@@ -132,19 +132,19 @@ class EntityLoader {
       '#title' => $this->t('Language'),
       '#options' => $this->getOptions('langcode'),
       '#default_value' => $plugin_configuration['langcode'],
-      '#weight' => -4,
+      '#weight' => -30,
     ];
     $form['latest_revision'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Load latest revision'),
       '#default_value' => $plugin_configuration['latest_revision'],
-      '#weight' => -3,
+      '#weight' => -20,
     ];
     $form['unchanged'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Load unchanged values'),
       '#default_value' => $plugin_configuration['unchanged'],
-      '#weight' => -2,
+      '#weight' => -10,
     ];
     return $form;
   }
@@ -191,7 +191,7 @@ class EntityLoader {
    * @return array|null
    *   The options, or NULL if it does not provide options for the given ID.
    */
-  public function getOptions(string $id): ?array {
+  protected function getOptions(string $id): ?array {
     if ($id === 'from') {
       return [
         'current' => $this->t('Current scope'),
@@ -250,7 +250,7 @@ class EntityLoader {
           && $config['entity_type'] !== '_none'
           && $config['entity_id'] !== ''
           && $this->entityTypeManager->hasDefinition($config['entity_type'])) {
-          $entity_id = trim($token->replaceClear($config['entity_id']));
+          $entity_id = trim((string) $token->replaceClear($config['entity_id']));
           if ($entity_id !== '') {
             $entity = $this->entityTypeManager->getStorage($config['entity_type'])->load($entity_id);
           }
@@ -307,7 +307,7 @@ class EntityLoader {
       }
       elseif ($config['revision_id'] !== '') {
         $entity = NULL;
-        $revision_id = trim($token->replaceClear($config['revision_id']));
+        $revision_id = trim((string) $token->replaceClear($config['revision_id']));
         if ($revision_id !== '') {
           $entity = $storage->loadRevision($revision_id);
         }

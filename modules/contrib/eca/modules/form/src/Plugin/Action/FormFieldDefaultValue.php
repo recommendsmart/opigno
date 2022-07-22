@@ -21,6 +21,7 @@ class FormFieldDefaultValue extends FormFieldActionBase {
    */
   public function execute(): void {
     if ($element = &$this->getTargetElement()) {
+      $element = &$this->jumpToFirstFieldChild($element);
       $value = $this->tokenServices->replaceClear($this->configuration['value']);
       $this->filterFormFieldValue($value);
       $element['#default_value'] = $value;
@@ -46,7 +47,7 @@ class FormFieldDefaultValue extends FormFieldActionBase {
       '#title' => $this->t('Value'),
       '#description' => $this->t('The default value to prepopulate. Supports tokens.'),
       '#default_value' => $this->configuration['value'],
-      '#weight' => -9,
+      '#weight' => -49,
     ];
     return $form;
   }

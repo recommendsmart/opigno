@@ -3,12 +3,10 @@
 namespace Drupal\eca_content\Plugin\ECA\Condition;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\ComplexDataInterface;
-use Drupal\Core\TypedData\ListInterface;
 use Drupal\Core\TypedData\PrimitiveInterface;
+use Drupal\Core\TypedData\TraversableTypedDataInterface;
 use Drupal\eca\Plugin\ECA\Condition\ConditionInterface;
 use Drupal\eca\Plugin\ECA\Condition\StringComparisonBase;
 use Drupal\eca\TypedData\PropertyPathTrait;
@@ -95,7 +93,7 @@ class EntityFieldValue extends StringComparisonBase {
    */
   protected function getFieldName(): string {
     if (!isset($this->fieldName)) {
-      $this->fieldName = (string) trim($this->tokenServices->replaceClear($this->configuration['field_name'] ?? ''));
+      $this->fieldName = trim((string) $this->tokenServices->replaceClear($this->configuration['field_name'] ?? ''));
     }
     return $this->fieldName;
   }
@@ -108,7 +106,7 @@ class EntityFieldValue extends StringComparisonBase {
    */
   protected function getExpectedValue(): string {
     if (!isset($this->expectedValue)) {
-      $this->expectedValue = trim($this->tokenServices->replaceClear($this->configuration['expected_value'] ?? ''));
+      $this->expectedValue = trim((string) $this->tokenServices->replaceClear($this->configuration['expected_value'] ?? ''));
     }
     return $this->expectedValue;
   }
@@ -160,14 +158,13 @@ class EntityFieldValue extends StringComparisonBase {
     $field_name = $this->getFieldName();
     $entity = $this->getEntity();
     $values = [];
-    if ($entity instanceof FieldableEntityInterface && $entity->hasField($field_name)) {
-      $options = [
-        'auto_append' => FALSE,
-        'auto_item' => FALSE,
-        'access' => FALSE,
-      ];
-      $list = $this->getTypedProperty(EntityAdapter::createFromEntity($entity), $field_name, $options);
-      if (!($list instanceof ListInterface)) {
+    $options = [
+      'auto_append' => FALSE,
+      'auto_item' => FALSE,
+      'access' => FALSE,
+    ];
+    if ($entity && ($list = $this->getTypedProperty($entity->getTypedData(), $field_name, $options))) {
+      if (!($list instanceof TraversableTypedDataInterface)) {
         $list = [$list];
       }
       /** @var \Drupal\Core\TypedData\TypedDataInterface $property */
@@ -204,13 +201,13 @@ class EntityFieldValue extends StringComparisonBase {
       '#type' => 'textfield',
       '#title' => $this->t('Field name'),
       '#default_value' => $this->configuration['field_name'] ?? '',
-      '#weight' => -10,
+      '#weight' => -90,
     ];
     $form['expected_value'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Expected field value'),
       '#default_value' => $this->configuration['expected_value'] ?? '',
-      '#weight' => -8,
+      '#weight' => -70,
     ];
     return parent::buildConfigurationForm($form, $form_state);
   }

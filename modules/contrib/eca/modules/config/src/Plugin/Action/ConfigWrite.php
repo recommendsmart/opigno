@@ -108,20 +108,20 @@ class ConfigWrite extends ConfigActionBase {
       '#title' => $this->t('Config value'),
       '#description' => $this->t('The value to set. Supports tokens.'),
       '#default_value' => $this->configuration['config_value'],
-      '#weight' => -7,
+      '#weight' => -70,
     ];
     $form['use_yaml'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Interpret above config value as YAML format'),
       '#description' => $this->t('Nested data can be set using YAML format, for example <em>front: /node</em>. When using this format, this option needs to be enabled. When using tokens and YAML altogether, make sure that tokens are wrapped as a string. Example: <em>front: "[myurl:path]"</em>'),
       '#default_value' => $this->configuration['use_yaml'],
-      '#weight' => -6,
+      '#weight' => -60,
     ];
     $form['save_config'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Save configuration'),
       '#default_value' => $this->configuration['save_config'],
-      '#weight' => -5,
+      '#weight' => -50,
     ];
     return $form;
   }
