@@ -185,11 +185,7 @@ class ComposerStaticInitc57549eb6c7c9f12f114a0a413c5516d
         array (
             'Drupal\\social\\Behat\\' => 20,
             'Drupal\\social\\' => 14,
-            'Drupal\\plugin\\' => 14,
-            'Drupal\\entity_version\\' => 22,
             'Drupal\\description_list_field\\' => 30,
-            'Drupal\\currency\\' => 16,
-            'Drupal\\aggrid\\' => 14,
             'Drupal\\Driver\\' => 14,
             'Drupal\\Core\\' => 12,
             'Drupal\\Composer\\Plugin\\Scaffold\\' => 32,
@@ -209,8 +205,6 @@ class ComposerStaticInitc57549eb6c7c9f12f114a0a413c5516d
             'Composer\\Installers\\' => 20,
             'Composer\\CaBundle\\' => 18,
             'Complex\\' => 8,
-            'Commercie\\Currency\\' => 19,
-            'Commercie\\CurrencyExchange\\' => 27,
             'CommerceGuys\\Intl\\' => 18,
             'CommerceGuys\\Addressing\\' => 24,
         ),
@@ -556,25 +550,9 @@ class ComposerStaticInitc57549eb6c7c9f12f114a0a413c5516d
         array (
             0 => __DIR__ . '/../..' . '/profiles/contrib/social/src',
         ),
-        'Drupal\\plugin\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/contrib/plugin/src',
-        ),
-        'Drupal\\entity_version\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/contrib/entity_version/src',
-        ),
         'Drupal\\description_list_field\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/contrib/description_list_field/src',
-        ),
-        'Drupal\\currency\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/contrib/currency/src',
-        ),
-        'Drupal\\aggrid\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/contrib/aggrid/src',
         ),
         'Drupal\\Driver\\' => 
         array (
@@ -639,14 +617,6 @@ class ComposerStaticInitc57549eb6c7c9f12f114a0a413c5516d
         'Complex\\' => 
         array (
             0 => __DIR__ . '/..' . '/markbaker/complex/classes/src',
-        ),
-        'Commercie\\Currency\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/commercie/currency/src',
-        ),
-        'Commercie\\CurrencyExchange\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/commercie/currency-exchange/src',
         ),
         'CommerceGuys\\Intl\\' => 
         array (

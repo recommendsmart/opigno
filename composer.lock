@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f3af52d47bf57bd7e6eb0020977a65e8",
+    "content-hash": "f69b0d2b94cd6c89fbb9dad83bd0b875",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -303,104 +303,6 @@
                 "source": "https://github.com/commerceguys/intl/tree/v1.1.1"
             },
             "time": "2021-10-30T18:07:14+00:00"
-        },
-        {
-            "name": "commercie/currency",
-            "version": "1.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Commercie/currency.git",
-                "reference": "64812cb8d5e8cdbc406c2f7c114399c814e2d898"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Commercie/currency/zipball/64812cb8d5e8cdbc406c2f7c114399c814e2d898",
-                "reference": "64812cb8d5e8cdbc406c2f7c114399c814e2d898",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": "~5.5 || ~7.0"
-            },
-            "require-dev": {
-                "justinrainbow/json-schema": "~1.4",
-                "phpunit/phpunit": "~4.0"
-            },
-            "suggest": {
-                "drupal/currency": "Integrates this package with Drupal."
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Commercie\\Currency\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Bart Feenstra",
-                    "email": "bart@mynameisbart.com",
-                    "homepage": "http://mynameisbart.com",
-                    "role": "Developer"
-                }
-            ],
-            "support": {
-                "issues": "https://github.com/Commercie/currency/issues",
-                "source": "https://github.com/Commercie/currency/tree/master"
-            },
-            "time": "2018-05-11T10:11:38+00:00"
-        },
-        {
-            "name": "commercie/currency-exchange",
-            "version": "1.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Commercie/currency-exchange.git",
-                "reference": "bb6a0c3b682aaed2eda205ceda5582673cb444af"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Commercie/currency-exchange/zipball/bb6a0c3b682aaed2eda205ceda5582673cb444af",
-                "reference": "bb6a0c3b682aaed2eda205ceda5582673cb444af",
-                "shasum": ""
-            },
-            "require": {
-                "ext-bcmath": "*",
-                "ext-json": "*",
-                "php": "~5.5 || ~7.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0"
-            },
-            "suggest": {
-                "commercie/currency-exchange-yahoo-finance": "Retrieves currency exchange rates from Yahoo! Finance.",
-                "drupal/currency": "Integrates this package with Drupal."
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Commercie\\CurrencyExchange\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Bart Feenstra",
-                    "email": "bart@mynameisbart.com"
-                }
-            ],
-            "description": "A library for retrieving currency exchange rates.",
-            "support": {
-                "issues": "https://github.com/Commercie/currency-exchange/issues",
-                "source": "https://github.com/Commercie/currency-exchange/tree/master"
-            },
-            "time": "2016-07-01T11:01:48+00:00"
         },
         {
             "name": "composer/ca-bundle",
@@ -1467,66 +1369,6 @@
             "homepage": "https://www.drupal.org/project/advancedqueue",
             "support": {
                 "source": "https://git.drupalcode.org/project/advancedqueue"
-            }
-        },
-        {
-            "name": "drupal/aggrid",
-            "version": "1.0.0-alpha46",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/aggrid.git",
-                "reference": "8.x-1.0-alpha46"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/aggrid-8.x-1.0-alpha46.zip",
-                "reference": "8.x-1.0-alpha46",
-                "shasum": "6ed618337278293e9aab377d7b62c39028eed1bd"
-            },
-            "require": {
-                "drupal/core": "^8 || ^9"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-1.0-alpha46",
-                    "datestamp": "1635464981",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Alpha releases are not covered by Drupal security advisories."
-                    }
-                },
-                "drush": {
-                    "services": {
-                        "drush.services.yml": "^9"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Drupal\\aggrid\\": "src/"
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Feranda (mferanda)",
-                    "homepage": "https://www.drupal.org/u/mferanda",
-                    "role": "Maintainer"
-                }
-            ],
-            "description": "Adds ag-Grid to Drupal 8 Form API",
-            "homepage": "https://www.drupal.org/project/aggrid",
-            "keywords": [
-                "Drupal"
-            ],
-            "support": {
-                "source": "http://cgit.drupalcode.org/aggrid",
-                "issues": "https://www.drupal.org/project/issues/aggrid",
-                "docs": "https://www.drupal.org/docs/8/modules/aggrid"
             }
         },
         {
@@ -3845,65 +3687,6 @@
             }
         },
         {
-            "name": "drupal/currency",
-            "version": "3.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/currency.git",
-                "reference": "8.x-3.3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/currency-8.x-3.3.zip",
-                "reference": "8.x-3.3",
-                "shasum": "9e4fa704caa3fdded1419aebb1c289abdf5c27d3"
-            },
-            "require": {
-                "commercie/currency": "~1.0",
-                "commercie/currency-exchange": "~1.0",
-                "drupal/core": "^8.8 || ^9",
-                "drupal/plugin": "^2.6",
-                "ext-bcmath": "*",
-                "php": "~7.1"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-3.3",
-                    "datestamp": "1595621136",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Drupal\\currency\\": "src"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Drupal\\Tests\\currency\\": "tests/src"
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Berdir",
-                    "homepage": "https://www.drupal.org/user/214652"
-                }
-            ],
-            "description": "Provides your Drupal site with currency conversion, currency information & metadata, and amount/price display functionality.",
-            "homepage": "https://www.drupal.org/project/currency",
-            "support": {
-                "source": "https://git.drupalcode.org/project/currency"
-            }
-        },
-        {
             "name": "drupal/custom_pub",
             "version": "1.0.0-beta3",
             "source": {
@@ -4160,50 +3943,6 @@
             "homepage": "https://www.drupal.org/project/description_list_field",
             "support": {
                 "source": "https://git.drupalcode.org/project/description_list_field"
-            }
-        },
-        {
-            "name": "drupal/designs",
-            "version": "1.0.8",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/designs.git",
-                "reference": "1.0.8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/designs-1.0.8.zip",
-                "reference": "1.0.8",
-                "shasum": "0e6dd3e82155646b639447f5708512a8897a8acf"
-            },
-            "require": {
-                "drupal/core": "^9"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "1.0.8",
-                    "datestamp": "1649726611",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "rhys",
-                    "homepage": "https://www.drupal.org/user/133285"
-                }
-            ],
-            "description": "Allows theme templates to be replaced with designs.",
-            "homepage": "https://www.drupal.org/project/designs",
-            "support": {
-                "source": "https://git.drupalcode.org/project/designs"
             }
         },
         {
@@ -4923,121 +4662,6 @@
             "homepage": "https://www.drupal.org/project/entity_reference_tree",
             "support": {
                 "source": "https://git.drupalcode.org/project/entity_reference_tree"
-            }
-        },
-        {
-            "name": "drupal/entity_version",
-            "version": "1.0.0-beta8",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/entity_version.git",
-                "reference": "8.x-1.0-beta8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/entity_version-8.x-1.0-beta8.zip",
-                "reference": "8.x-1.0-beta8",
-                "shasum": "dad25abd38cce7ff0437de324d719f2cefa93f13"
-            },
-            "require": {
-                "drupal/core": "^9.2",
-                "php": ">=7.4"
-            },
-            "require-dev": {
-                "composer/installers": "^1.11",
-                "drupal/config_devel": "^1.2",
-                "drupal/core-composer-scaffold": "^9.2",
-                "drupal/core-dev": "^9.2",
-                "drupal/entity_version_workflows-entity_version_workflows": "*",
-                "drush/drush": "^10.3",
-                "egulias/email-validator": "^2.1.22 || ^3.0",
-                "openeuropa/code-review": "^2.0",
-                "openeuropa/task-runner-drupal-project-symlink": "^1.0-beta5",
-                "phpspec/prophecy-phpunit": "^1 || ^2"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-1.0-beta8",
-                    "datestamp": "1644248369",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
-                    }
-                },
-                "composer-exit-on-patch-failure": true,
-                "enable-patching": true,
-                "installer-paths": {
-                    "build/core": [
-                        "type:drupal-core"
-                    ],
-                    "build/profiles/contrib/{$name}": [
-                        "type:drupal-profile"
-                    ],
-                    "build/modules/contrib/{$name}": [
-                        "type:drupal-module"
-                    ],
-                    "build/themes/contrib/{$name}": [
-                        "type:drupal-theme"
-                    ]
-                },
-                "drupal-scaffold": {
-                    "locations": {
-                        "web-root": "./build"
-                    }
-                },
-                "_readme": [
-                    "Explicit requirement for egulias/email-validator due to https://www.drupal.org/project/drupal/issues/3061074#comment-14300579. It can be removed when Drupal core 9.2 support is droppped."
-                ]
-            },
-            "autoload": {
-                "psr-4": {
-                    "Drupal\\entity_version\\": "./src/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Drupal\\Tests\\entity_version\\": "./tests/"
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "scripts": {
-                "post-install-cmd": [
-                    "./vendor/bin/run drupal:site-setup"
-                ],
-                "post-update-cmd": [
-                    "./vendor/bin/run drupal:site-setup"
-                ]
-            },
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Upchuk",
-                    "homepage": "https://www.drupal.org/user/1885838"
-                },
-                {
-                    "name": "ademarco",
-                    "homepage": "https://www.drupal.org/user/186696"
-                },
-                {
-                    "name": "hernani",
-                    "homepage": "https://www.drupal.org/user/448086"
-                },
-                {
-                    "name": "joevagyok",
-                    "homepage": "https://www.drupal.org/user/2876343"
-                },
-                {
-                    "name": "sardara",
-                    "homepage": "https://www.drupal.org/user/2353864"
-                }
-            ],
-            "description": "Entity Version.",
-            "homepage": "https://www.drupal.org/project/entity_version",
-            "support": {
-                "source": "https://git.drupalcode.org/project/entity_version"
             }
         },
         {
@@ -5903,60 +5527,6 @@
             "homepage": "https://www.drupal.org/project/freelinking",
             "support": {
                 "source": "https://git.drupalcode.org/project/freelinking"
-            }
-        },
-        {
-            "name": "drupal/friggeri_cv",
-            "version": "1.0.0-alpha1",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/friggeri_cv.git",
-                "reference": "1.0.0-alpha1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/friggeri_cv-1.0.0-alpha1.zip",
-                "reference": "1.0.0-alpha1",
-                "shasum": "980718a2f0c1550b5191e546f5d21893a776193d"
-            },
-            "require": {
-                "drupal/core": "^8 || ^9"
-            },
-            "require-dev": {
-                "drupal/inline_entity_form": "^1.0@RC",
-                "drupal/multiple_fields_remove_button": "^1.0@alpha",
-                "mikehaertl/phpwkhtmltopdf": "^2.4.2"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "1.0.0-alpha1",
-                    "datestamp": "1613429504",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Ara Martirosyan",
-                    "homepage": "https://www.drupal.org/u/ara-martirosyan",
-                    "role": "Maintainer"
-                }
-            ],
-            "description": "Friggeri CV",
-            "homepage": "https://www.drupal.org/project/friggeri_cv",
-            "keywords": [
-                "Drupal"
-            ],
-            "support": {
-                "source": "https://git.drupalcode.org/project/friggeri_cv",
-                "issues": "https://www.drupal.org/project/issues/friggeri_cv"
             }
         },
         {
@@ -8314,54 +7884,6 @@
             }
         },
         {
-            "name": "drupal/personal_notes",
-            "version": "2.1.3",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/personal_notes.git",
-                "reference": "2.1.3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/personal_notes-2.1.3.zip",
-                "reference": "2.1.3",
-                "shasum": "fca7a00f04b79fb20608bc383912614022ee035a"
-            },
-            "require": {
-                "drupal/core": "^8 || ^9"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "2.1.3",
-                    "datestamp": "1643745849",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "marty",
-                    "homepage": "https://www.drupal.org/user/30488"
-                },
-                {
-                    "name": "sagesolutions",
-                    "homepage": "https://www.drupal.org/user/2789573"
-                }
-            ],
-            "description": "Allow registered users to create and delete notes to themselves which display on a block.",
-            "homepage": "https://www.drupal.org/project/personal_notes",
-            "support": {
-                "source": "https://git.drupalcode.org/project/personal_notes"
-            }
-        },
-        {
             "name": "drupal/physical",
             "version": "1.1.0",
             "source": {
@@ -8419,68 +7941,6 @@
             "homepage": "http://drupal.org/project/physical",
             "support": {
                 "source": "https://git.drupalcode.org/project/physical"
-            }
-        },
-        {
-            "name": "drupal/plugin",
-            "version": "2.9.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/plugin.git",
-                "reference": "8.x-2.9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/plugin-8.x-2.9.zip",
-                "reference": "8.x-2.9",
-                "shasum": "e27f10361f508ddf4c23b884ef17e8b66c93c445"
-            },
-            "require": {
-                "drupal/core": "^8.7.7 || ^9"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-2.9",
-                    "datestamp": "1640100551",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Drupal\\plugin\\": "src"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Drupal\\Tests\\plugin\\": "tests/src"
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Berdir",
-                    "homepage": "https://www.drupal.org/user/214652"
-                },
-                {
-                    "name": "bradjones1",
-                    "homepage": "https://www.drupal.org/user/405824"
-                },
-                {
-                    "name": "joachim",
-                    "homepage": "https://www.drupal.org/user/107701"
-                }
-            ],
-            "description": "Provides tools that extend Drupal's plugin system.",
-            "homepage": "https://www.drupal.org/project/plugin",
-            "support": {
-                "source": "https://git.drupalcode.org/project/plugin"
             }
         },
         {
@@ -9918,53 +9378,6 @@
             "homepage": "http://drupal.org/project/storage",
             "support": {
                 "source": "https://git.drupalcode.org/project/storage"
-            }
-        },
-        {
-            "name": "drupal/subgroup",
-            "version": "1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/subgroup.git",
-                "reference": "1.0.2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/subgroup-1.0.2.zip",
-                "reference": "1.0.2",
-                "shasum": "b639010f910e51290ada283a7053a6cfc34d862c"
-            },
-            "require": {
-                "drupal/core": "^8.9 || ^9",
-                "drupal/group": "^1.3"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "1.0.2",
-                    "datestamp": "1620133642",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Kristiaan Van den Eynde",
-                    "homepage": "https://www.drupal.org/u/kristiaanvandeneynde",
-                    "role": "Maintainer"
-                }
-            ],
-            "description": "Allows you to structure groups into a hierarchical tree with permissions inheriting up or down",
-            "homepage": "http://drupal.org/project/subgroup",
-            "support": {
-                "source": "https://git.drupalcode.org/project/subgroup",
-                "issues": "https://drupal.org/project/issues/subgroup"
             }
         },
         {
@@ -18606,15 +18019,12 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "drupal/aggrid": 15,
         "drupal/feeds": 15,
         "drupal/book_pdf": 15,
-        "drupal/friggeri_cv": 15,
         "drupal/gcommerce": 10,
         "drupal/commerce_product_restriction": 20,
         "drupal/custom_pub": 10,
         "drupal/description_list_field": 15,
-        "drupal/entity_version": 10,
         "drupal/group_flex": 10,
         "drupal/entity_list": 15,
         "drupal/collapsible_fields": 10,
