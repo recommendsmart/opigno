@@ -45,7 +45,6 @@ class ComposerStaticInitc57549eb6c7c9f12f114a0a413c5516d
         '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
         '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
-        '9eb40347f70870d4d4c016d3dd2f5056' => __DIR__ . '/..' . '/jawira/plantuml-encoding/src/plantuml_functions.php',
         '029bffbd721800038bcfaf4916fa491c' => __DIR__ . '/..' . '/mtownsend/xml-to-array/src/helpers.php',
     );
 
