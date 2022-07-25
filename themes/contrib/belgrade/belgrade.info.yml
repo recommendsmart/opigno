@@ -1,0 +1,35 @@
+core: 8.x
+core_version_requirement: ^8 || ^9
+type: theme
+base theme: commerce_bootstrap
+
+name: 'Belgrade'
+description: 'Belgrade theme for Drupal Commerce.'
+package: 'Bootstrap'
+
+regions:
+  navigation: 'Navigation'
+  top_navigation: 'Navigation (Top bar)'
+  header: 'Header'
+  highlighted: 'Highlighted'
+  help: 'Help'
+  content: 'Content'
+  sidebar_first: 'Primary'
+  sidebar_second: 'Secondary'
+  footer: 'Footer'
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+
+libraries-override:
+  # Replace an entire library.
+  bootstrap/framework: belgrade/bootstrap-scripts
+
+libraries:
+  - 'belgrade/fonts'
+  - 'belgrade/theme'
+  - 'belgrade/color'
+
+# Information added by Drupal.org packaging script on 2021-05-21
+version: '8.x-1.1'
+project: 'belgrade'
+datestamp: 1621571468

@@ -57,7 +57,10 @@
         "drupal/field_fallback": "^1.0@beta",
         "drupal/access_records": "^1.0@beta",
         "drupal/commerce_demo": "^2.0",
-        "drupal/commerce": "^2.30"
+        "drupal/commerce": "^2.30",
+        "drupal/belgrade": "^1.1",
+        "drupal/orange_ecom_starter": "2.0.x-dev",
+        "drupal/estore": "^1.14"
     },
     "repositories": [
         {

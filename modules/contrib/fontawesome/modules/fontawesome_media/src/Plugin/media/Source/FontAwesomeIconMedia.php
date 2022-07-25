@@ -90,6 +90,14 @@ class FontAwesomeIconMedia extends MediaSourceBase {
       case 'fad':
         $srcFolder = 'duotone';
         break;
+
+      case 'fat':
+        $srcFolder = 'thin';
+        break;
+
+      case 'fak':
+        $srcFolder = 'kit';
+        break;
     }
 
     return 'libraries/fontawesome/svgs/' . $srcFolder . '/' . $icon
