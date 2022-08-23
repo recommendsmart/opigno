@@ -1,0 +1,23 @@
+{
+  "name": "drupal/group_roles_management",
+  "type": "drupal-module",
+  "description": "Group roles management module allows a role to manage other roles.",
+  "homepage": "https://www.drupal.org/project/group_roles_management",
+  "authors": [
+    {
+      "name": "Nikolay Lobachev",
+      "homepage": "https://www.drupal.org/u/lobsterr",
+      "role": "Maintainer"
+    }
+  ],
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/group_roles_management",
+    "source": "https://git.drupalcode.org/project/group_roles_management"
+  },
+  "license": "GPL-2.0-or-later",
+  "minimum-stability": "dev",
+  "require": {
+    "drupal/group": "^1.0",
+    "drupal/core": "^8.8 || ^9 || ^10"
+  }
+}
