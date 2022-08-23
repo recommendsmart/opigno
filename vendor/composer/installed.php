@@ -3,7 +3,7 @@
         'name' => 'goalgorilla/social_template',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '7168889c1cdd07f42a38551c789bf7bee06fde84',
+        'reference' => 'cc1564cfc3df8f94f4001abea3675713af6a4402',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -1937,6 +1937,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'drupal/pdf' => array(
+            'pretty_version' => '1.1.0',
+            'version' => '1.1.0.0',
+            'reference' => '8.x-1.1',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/pdf',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'drupal/personal_notes' => array(
             'pretty_version' => '2.1.3',
             'version' => '2.1.3.0',
@@ -2619,7 +2628,7 @@
         'goalgorilla/social_template' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '7168889c1cdd07f42a38551c789bf7bee06fde84',
+            'reference' => 'cc1564cfc3df8f94f4001abea3675713af6a4402',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
