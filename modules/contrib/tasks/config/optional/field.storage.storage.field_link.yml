@@ -1,0 +1,19 @@
+uuid: d42c9c2b-7202-4fac-8177-487dfd2b3a04
+langcode: en
+status: true
+dependencies:
+  module:
+    - link
+    - storage
+id: storage.field_link
+field_name: field_link
+entity_type: storage
+type: link
+settings: {  }
+module: link
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,51 @@
+uuid: 7abc84b3-3e74-412e-92f0-7b42ec8b19db
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.storage.task.field_description
+    - field.field.storage.task.field_link
+    - storage.storage_type.task
+  module:
+    - link
+    - text
+id: storage.task.default
+targetEntityType: storage
+bundle: task
+mode: default
+content:
+  field_description:
+    weight: 3
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_link:
+    type: link
+    weight: 2
+    region: content
+    label: inline
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+  flag_status:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  name:
+    label: hidden
+    type: string
+    weight: 0
+    region: content
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+hidden:
+  search_api_excerpt: true
+  user_id: true

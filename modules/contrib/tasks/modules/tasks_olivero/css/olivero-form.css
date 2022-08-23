@@ -1,0 +1,35 @@
+/**
+ * @file
+ * Styles for Quick Links when used with the Olivero theme.
+ */
+#drupal-off-canvas #draggableviews-table-tasks-sort .dropbutton-action,
+#drupal-off-canvas #draggableviews-table-tasks-sort .dropbutton-action a {
+  max-width: 100%;
+}
+
+#drupal-off-canvas #draggableviews-table-tasks-sort {
+  margin: 0;
+  min-width: auto;
+}
+
+#drupal-off-canvas #draggableviews-table-tasks-sort td:first-child {
+  width: auto;
+}
+
+#drupal-off-canvas #field_icon-media-library-wrapper {
+  max-width: 100%;
+}
+
+#drupal-off-canvas .js-media-library-item-preview {
+  background-color: #fff;
+  padding: 0.75rem;
+}
+
+#drupal-off-canvas .js-media-library-widget input[type="submit"].js-hide {
+  display: none;
+}
+
+#drupal-off-canvas td .dropbutton-wrapper {
+  min-height: 26px;
+  margin-left: 0.6rem;
+}

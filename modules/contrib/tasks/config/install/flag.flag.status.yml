@@ -1,0 +1,29 @@
+uuid: 8ac15d88-7679-4c81-b33b-143a05124921
+langcode: en
+status: true
+dependencies:
+  module:
+    - storage
+id: status
+label: Status
+bundles: {  }
+entity_type: storage
+global: true
+weight: 0
+flag_short: 'Not Done'
+flag_long: ''
+flag_message: ''
+unflag_short: Done
+unflag_long: ''
+unflag_message: ''
+unflag_denied_text: ''
+flag_type: 'entity:storage'
+link_type: ajax_link
+flagTypeConfig:
+  show_in_links: {  }
+  show_as_field: true
+  show_on_form: false
+  show_contextual_link: false
+  extra_permissions:
+    owner: '0'
+linkTypeConfig: {  }

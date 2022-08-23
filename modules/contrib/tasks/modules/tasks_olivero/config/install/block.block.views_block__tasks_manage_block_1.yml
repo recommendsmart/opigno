@@ -1,0 +1,30 @@
+uuid: ac17dfd4-687b-4e06-9136-d12ffef60174
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.tasks_manage
+  module:
+    - system
+    - views
+  theme:
+    - olivero
+id: views_block__tasks_manage_block_1
+theme: olivero
+region: sidebar
+weight: -7
+provider: null
+plugin: 'views_block:tasks_manage-block_1'
+settings:
+  id: 'views_block:tasks_manage-block_1'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: ''
+  items_per_page: none
+  context_mapping: {  }
+visibility:
+  request_path:
+    id: request_path
+    pages: '/user/*'
+    negate: false

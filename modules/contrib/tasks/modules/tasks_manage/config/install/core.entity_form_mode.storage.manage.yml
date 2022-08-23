@@ -1,0 +1,10 @@
+uuid: 51e90fd7-fc9d-46c6-8215-f27052ce539f
+langcode: en
+status: true
+dependencies:
+  module:
+    - storage
+id: storage.manage
+label: Manage
+targetEntityType: storage
+cache: true

@@ -1,0 +1,43 @@
+uuid: 98cc6d8b-2299-4efa-a5cf-91fd309f0ac1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.storage.task.field_description
+    - field.field.storage.task.field_link
+    - storage.storage_type.task
+  module:
+    - link
+    - text
+id: storage.task.default
+targetEntityType: storage
+bundle: task
+mode: default
+content:
+  field_description:
+    weight: 2
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_link:
+    type: link_default
+    weight: 1
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  name:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  status: true
+  user_id: true

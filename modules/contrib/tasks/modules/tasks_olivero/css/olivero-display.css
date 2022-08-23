@@ -1,0 +1,113 @@
+/**
+ * @file
+ * Styles for Tasks when used with the Olivero theme.
+ */
+.view-id-tasks.view-display-id-block_1 .views-row,
+.view-id-tasks_manage.view-display-id-block_1 .views-row {
+  display: flex;
+  align-items: flex-start;
+}
+
+.view-id-tasks .views-field-name,
+.view-id-tasks_manage .views-field-name {
+  padding-top: 0.8rem;
+  line-height: 1.4rem;
+}
+
+.view-id-tasks .views-field-link-flag,
+.view-id-tasks_manage .views-field-link-flag {
+  width: 3rem;
+  height: 3rem;
+  min-width: 3rem;
+  position: relative;
+}
+
+.view-id-tasks .views-field-link-flag a,
+.view-id-tasks_manage .views-field-link-flag a {
+  font-size: 0;
+}
+
+.view-id-tasks .views-field-link-flag a::before,
+.view-id-tasks_manage .views-field-link-flag a::before {
+  -webkit-mask: url(../images/symbols.svg#unchecked) center center no-repeat;
+  mask: url(../images/symbols.svg#unchecked) center center no-repeat;
+  -webkit-mask-size: 1.5rem 1.5rem;
+  mask-size: 1.5rem 1.5rem;
+  width: 2.5rem;
+  height: 2.63rem;
+  display: inline-block;
+  background-color: #000;
+  content: '.';
+}
+
+.view-id-tasks .views-field-link-flag .action-unflag a::before,
+.view-id-tasks_manage .views-field-link-flag .action-unflag a::before {
+  -webkit-mask: url(../images/symbols.svg#checked) center center no-repeat;
+  mask: url(../images/symbols.svg#checked) center center no-repeat;
+  -webkit-mask-size: 1.5rem 1.5rem;
+  mask-size: 1.5rem 1.5rem;
+}
+
+.view-id-tasks .views-field-link-flag .ajax-progress,
+.view-id-tasks_manage .views-field-link-flag .ajax-progress {
+  position: absolute;
+  left: 0.75rem;
+  top: 1.8rem;
+  transform: translate(-50%, -50%);
+}
+
+.block-views-blocktasks-block-1 h2.block__title,
+.block-views-blocktasks-manage-block-1 h2.block__title {
+  float: left;
+  font-size: 1.4rem;
+  padding-top: 0.8rem;
+}
+
+.view-id-tasks.view-display-id-block_1 .view-header,
+.block-views-blocktasks-manage-block-1 .view-header {
+  margin-bottom: 1.5rem;
+  text-align: right;
+}
+
+.view-id-tasks .view-header .ajax-progress,
+.view-id-tasks_manage .view-header .ajax-progress {
+  position: absolute;
+  transform: translate(-250%, 80%);
+}
+
+.view-id-tasks .button--primary,
+.view-id-tasks_manage .button--primary {
+  font-size: 0;
+  padding-left: 0.3rem;
+  padding-right: 0.3rem;
+  position: relative;
+  height: 2.4rem;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.view-id-tasks .button--primary::before,
+.view-id-tasks_manage .button--primary::before {
+  display: inline-block;
+  background-color: #fff;
+  width: 1.5rem;
+  height: 1.5rem;
+  content: ".";
+  font-size: 0;
+}
+
+.view-id-tasks .coh-style-card-link-with-plus-icon::before,
+.view-id-tasks_manage .coh-style-card-link-with-plus-icon::before {
+  -webkit-mask: url(../images/symbols.svg#plus) center center no-repeat;
+  mask: url(../images/symbols.svg#plus) center center no-repeat;
+  -webkit-mask-size: 1.2rem 1.2rem;
+  mask-size: 1.2rem 1.2rem;
+}
+
+.view-id-tasks .coh-style-fake-link-with-icon::before,
+.view-id-tasks_manage .coh-style-fake-link-with-icon::before {
+  -webkit-mask: url(../images/symbols.svg#cog) center center no-repeat;
+  mask: url(../images/symbols.svg#cog) center center no-repeat;
+  -webkit-mask-size: 1.2rem 1.2rem;
+  mask-size: 1.2rem 1.2rem;
+}

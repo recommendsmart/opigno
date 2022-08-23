@@ -1,0 +1,30 @@
+uuid: 9d90ec2b-8bf0-4452-a454-e365edd5f7bd
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.tasks
+  module:
+    - system
+    - views
+  theme:
+    - olivero
+id: views_block__tasks_block_1
+theme: olivero
+region: sidebar
+weight: -8
+provider: null
+plugin: 'views_block:tasks-block_1'
+settings:
+  id: 'views_block:tasks-block_1'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: ''
+  items_per_page: none
+  context_mapping: {  }
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false

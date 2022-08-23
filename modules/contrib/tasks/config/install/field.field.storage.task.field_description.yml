@@ -1,0 +1,21 @@
+uuid: 91c8041f-a25d-4da9-aab4-f9dadacd6177
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.storage.field_description
+    - storage.storage_type.task
+  module:
+    - text
+id: storage.task.field_description
+field_name: field_description
+entity_type: storage
+bundle: task
+label: Description
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

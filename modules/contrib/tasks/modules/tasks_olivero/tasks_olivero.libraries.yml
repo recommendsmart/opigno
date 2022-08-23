@@ -1,0 +1,10 @@
+olivero_tweaks:
+  version: 1.x
+  css:
+    component:
+      css/olivero-form.css: {}
+olivero_display:
+  version: 1.x
+  css:
+    component:
+      css/olivero-display.css: {}

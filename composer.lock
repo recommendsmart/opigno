@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "574dfdd02817cce609c460c743d06f80",
+    "content-hash": "8be62904a6203c86efd20e7b6f5a98ab",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1243,6 +1243,51 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/social_pwa",
                 "error": "Invalid dependency: \"activity_send\" is an unknown drupal 8 package name"
+            }
+        },
+        {
+            "name": "drupal/add_content_by_bundle",
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/add_content_by_bundle.git",
+                "reference": "1.2.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/add_content_by_bundle-1.2.1.zip",
+                "reference": "1.2.1",
+                "shasum": "87438a2f50d192095fdb5a9e203224a0f3c0e643"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9 || ^10"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.2.1",
+                    "datestamp": "1655883538",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "mandclu",
+                    "homepage": "https://www.drupal.org/user/52136"
+                }
+            ],
+            "description": "Add Content by Bundle Views Area Plugin",
+            "homepage": "https://www.drupal.org/project/add_content_by_bundle",
+            "support": {
+                "source": "https://git.drupalcode.org/project/add_content_by_bundle",
+                "issues": "https://www.drupal.org/project/issues/add_content_by_bundle"
             }
         },
         {
@@ -4534,6 +4579,129 @@
             }
         },
         {
+            "name": "drupal/display_link_plus",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/display_link_plus.git",
+                "reference": "1.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/display_link_plus-1.0.0.zip",
+                "reference": "1.0.0",
+                "shasum": "e939bbb36adc0bafed41adf0fcb96d061f04c4a9"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0",
+                    "datestamp": "1612030286",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "mandclu",
+                    "homepage": "https://www.drupal.org/user/52136"
+                }
+            ],
+            "description": "Provides a views header/footer link to another display in the same view",
+            "homepage": "https://www.drupal.org/project/display_link_plus",
+            "support": {
+                "source": "https://git.drupalcode.org/project/display_link_plus"
+            }
+        },
+        {
+            "name": "drupal/draggableviews",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/draggableviews.git",
+                "reference": "2.0.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/draggableviews-2.0.1.zip",
+                "reference": "2.0.1",
+                "shasum": "e13a6c625fb8ca370a32b76dfd9f8bea9b2e27e9"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "require-dev": {
+                "drupal/draggableviews_demo": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.1",
+                    "datestamp": "1620931210",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Tyler Struyk (iStryker)",
+                    "homepage": "https://www.drupal.org/u/istryker",
+                    "email": "tyler.struyk@gmail.com",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Andrii Podanenko (podarok)",
+                    "homepage": "https://www.drupal.org/u/podarok",
+                    "email": "podarokua@gmail.com",
+                    "role": "Drupal 7 to 8 Porter"
+                },
+                {
+                    "name": "Yuriy Gerasimov (ygerasimov)",
+                    "homepage": "https://www.drupal.org/u/ygerasimov",
+                    "email": "yuriy.gerasimov@gmail.com",
+                    "role": "Ex Maintainer (D7)"
+                },
+                {
+                    "name": "Severin Unger (sevi)",
+                    "homepage": "https://www.drupal.org/u/sevi",
+                    "role": "Ex Maintainer (D6)"
+                },
+                {
+                    "name": "podarok",
+                    "homepage": "https://www.drupal.org/user/116002"
+                },
+                {
+                    "name": "sevi",
+                    "homepage": "https://www.drupal.org/user/199290"
+                },
+                {
+                    "name": "ygerasimov",
+                    "homepage": "https://www.drupal.org/user/257311"
+                }
+            ],
+            "description": "DraggableViews module makes views draggable.",
+            "homepage": "https://www.drupal.org/project/draggableviews",
+            "support": {
+                "source": "https://cgit.drupalcode.org/draggableviews",
+                "issues": "https://www.drupal.org/project/issues/draggableviews"
+            }
+        },
+        {
             "name": "drupal/dynamic_entity_reference",
             "version": "1.12.0",
             "source": {
@@ -6122,6 +6290,78 @@
             "homepage": "https://www.drupal.org/project/form_filter_fields",
             "support": {
                 "source": "https://git.drupalcode.org/project/form_filter_fields"
+            }
+        },
+        {
+            "name": "drupal/form_mode_control",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/form_mode_control.git",
+                "reference": "8.x-2.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/form_mode_control-8.x-2.1.zip",
+                "reference": "8.x-2.1",
+                "shasum": "5b6ee8cbc795ae269f615de6f8d13f4c33eda2b8"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9 || ^10"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-2.1",
+                    "datestamp": "1659299482",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Dakwamine",
+                    "homepage": "https://www.drupal.org/user/3517785"
+                },
+                {
+                    "name": "eme",
+                    "homepage": "https://www.drupal.org/user/542492"
+                },
+                {
+                    "name": "Flodevelop",
+                    "homepage": "https://www.drupal.org/user/735818"
+                },
+                {
+                    "name": "mandclu",
+                    "homepage": "https://www.drupal.org/user/52136"
+                },
+                {
+                    "name": "matio89",
+                    "homepage": "https://www.drupal.org/user/2320090"
+                },
+                {
+                    "name": "mh.marouan",
+                    "homepage": "https://www.drupal.org/user/3203501"
+                },
+                {
+                    "name": "MichaelB",
+                    "homepage": "https://www.drupal.org/user/2309046"
+                },
+                {
+                    "name": "snake_plissken",
+                    "homepage": "https://www.drupal.org/user/3624793"
+                }
+            ],
+            "description": "Allow you to use the form modes per role and per bundle / Entity.",
+            "homepage": "https://www.drupal.org/project/form_mode_control",
+            "support": {
+                "source": "https://git.drupalcode.org/project/form_mode_control"
             }
         },
         {
@@ -10717,6 +10957,72 @@
             "homepage": "https://www.drupal.org/project/switch_theme",
             "support": {
                 "source": "https://git.drupalcode.org/project/switch_theme"
+            }
+        },
+        {
+            "name": "drupal/tasks",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/tasks.git",
+                "reference": "1.0.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/tasks-1.0.2.zip",
+                "reference": "1.0.2",
+                "shasum": "2f164630eaa4c9c3e4d75d728e8e074a4cc57078"
+            },
+            "require": {
+                "drupal/add_content_by_bundle": "^1.0",
+                "drupal/core": "^8 || ^9 || ^10",
+                "drupal/display_link_plus": "^1.0",
+                "drupal/draggableviews": "^2.0",
+                "drupal/flag": "^4.0@beta",
+                "drupal/form_mode_control": "^2.0",
+                "drupal/storage": "^1.0"
+            },
+            "require-dev": {
+                "drupal/tasks_manage": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.2",
+                    "datestamp": "1660896546",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "jakeg",
+                    "homepage": "https://www.drupal.org/user/15674"
+                },
+                {
+                    "name": "mandclu",
+                    "homepage": "https://www.drupal.org/user/52136"
+                },
+                {
+                    "name": "moonray",
+                    "homepage": "https://www.drupal.org/user/68275"
+                },
+                {
+                    "name": "scor",
+                    "homepage": "https://www.drupal.org/user/52142"
+                }
+            ],
+            "description": "Initial configuration to provide a system for user-defined tasks, with a block to display them",
+            "homepage": "https://www.drupal.org/project/tasks",
+            "support": {
+                "source": "https://git.drupalcode.org/project/tasks",
+                "issues": "https://www.drupal.org/project/issues/tasks"
             }
         },
         {

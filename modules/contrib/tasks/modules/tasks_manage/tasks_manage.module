@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @file
+ * Contains tasks_manage.module.
+ */
+
+use Drupal\user\Entity\User;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function tasks_manage_form_storage_task_add_form_alter(&$form, $form_id, $form_state) {
+  $form['user_id']['widget'][0]['target_id']['#title'] = t('Task for');
+  $form['user_id']['widget'][0]['target_id']['#description'] = t('The user ID of the person to whom the task will be assigned.');
+  $uid = (int) \Drupal::request()->query->get('author');
+  if ($uid < 1) {
+    return;
+  }
+  // If a valid user ID passed as query param, set as task owner.
+  $user = User::load($uid);
+  if ($user) {
+    $form['user_id']['widget'][0]['target_id']['#default_value'] = $user;
+    $form['#title'] = t('Add task for %user', ['%user' => $user->label()]);
+  }
+}

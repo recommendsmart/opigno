@@ -1,0 +1,23 @@
+uuid: 462728a0-2dbf-4eee-a6a8-4c8d0743d9d3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.storage.field_link
+    - storage.storage_type.task
+  module:
+    - link
+id: storage.task.field_link
+field_name: field_link
+entity_type: storage
+bundle: task
+label: Link
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 17
+  title: 0
+field_type: link
