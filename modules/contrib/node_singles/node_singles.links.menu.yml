@@ -1,0 +1,6 @@
+node_singles.content:
+  title: 'Singles'
+  description: ''
+  route_name: node_singles.overview
+  parent: system.admin_content
+  weight: -1
