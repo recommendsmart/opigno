@@ -3,7 +3,7 @@
         'name' => 'goalgorilla/social_template',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'dde68d6570bd2306d7600e3cbe81dff79d8d76f7',
+        'reference' => '8e286cac95a3d022d529dab7fa0e7d30adffc2f9',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -2265,6 +2265,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'drupal/tms' => array(
+            'pretty_version' => '1.0.0',
+            'version' => '1.0.0.0',
+            'reference' => '1.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/tms',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'drupal/token' => array(
             'pretty_version' => '1.10.0',
             'version' => '1.10.0.0',
@@ -2529,7 +2538,7 @@
         'goalgorilla/social_template' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'dde68d6570bd2306d7600e3cbe81dff79d8d76f7',
+            'reference' => '8e286cac95a3d022d529dab7fa0e7d30adffc2f9',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

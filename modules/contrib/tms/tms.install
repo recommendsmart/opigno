@@ -1,0 +1,44 @@
+<?php
+
+
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\user\Entity\Role;
+
+/**
+ * Add some terms to the Category vocabulary.
+ */
+function tms_install() {
+// Add Priority Terms  
+  $vid = "priority";
+  $vocabularies = Vocabulary::loadMultiple();
+  if (isset($vocabularies[$vid])) {
+    $categories = ['Hight', 'Low', 'Medium']; // List of Status terms
+    foreach ($categories as $category) {
+      $term = Term::create(array(
+        'parent' => array(),
+        'name' => $category,
+        'vid' => $vid, 
+      ))->save();
+    }
+  }
+// Add Role
+$role = Role::loadMultiple();
+if (!isset($role['customer'])) {
+  Role::create([
+    'id' => 'customer',
+    'permissions' => ['add ticket entities'],    
+    'label' => 'customer',
+  ])->save();
+}
+if (!isset($role['agent'])) {
+  Role::create([
+    'id' => 'agent',
+    'permissions' => ['administer ticket entities'],    
+    'label' => 'Agent',
+  ])->save();
+}
+
+
+}
+

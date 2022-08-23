@@ -64,6 +64,7 @@
         "drupal/switch_theme": "1.0.x-dev",
         "drupal/tasks": "^1.0",
         "drupal/textarea_limit": "^2.0",
+        "drupal/tms": "^1.0",
         "drupal/type_tray": "^1.1",
         "drupal/user_bundle": "^1.1",
         "drupal/value_widget": "^1.0@alpha",
