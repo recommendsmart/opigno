@@ -59,6 +59,7 @@
         "drupal/shs": "^2.0@RC",
         "drupal/social_geolocation": "^2.2",
         "drupal/social_pwa": "^1.4",
+        "drupal/spn": "^2.0",
         "drupal/storage": "^1.1",
         "drupal/subgroup": "^1.0",
         "drupal/switch_theme": "1.0.x-dev",
