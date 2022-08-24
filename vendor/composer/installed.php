@@ -3,7 +3,7 @@
         'name' => 'goalgorilla/social_template',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '138b314032e6be07f59c7e5967efaacfbadaec19',
+        'reference' => 'ced0334a0b670163a195b982aa7e10023d0dc14a',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -1717,6 +1717,15 @@
                 0 => '9.3.21',
             ),
         ),
+        'drupal/maestro' => array(
+            'pretty_version' => '3.0.1-rc4',
+            'version' => '3.0.1.0-RC4',
+            'reference' => '3.0.1-rc4',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/maestro',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'drupal/mailsystem' => array(
             'pretty_version' => '4.4.0',
             'version' => '4.4.0.0',
@@ -2637,7 +2646,7 @@
         'goalgorilla/social_template' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '138b314032e6be07f59c7e5967efaacfbadaec19',
+            'reference' => 'ced0334a0b670163a195b982aa7e10023d0dc14a',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

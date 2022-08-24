@@ -1,0 +1,14 @@
+name: Maestro Webform Integration
+type: module
+description: Maestro Webform Integration Module.
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: Maestro
+dependencies:
+  - webform:webform
+  - maestro:maestro
+
+# Information added by Drupal.org packaging script on 2022-07-06
+version: '3.0.1-rc4'
+project: 'maestro'
+datestamp: 1657119075
