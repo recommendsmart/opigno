@@ -1,0 +1,9 @@
+quote.settings_form:
+  path: '/admin/config/content/quote'
+  defaults:
+    _form: '\Drupal\quote\Form\SettingsForm'
+    _title: 'Quote settings'
+  requirements:
+    _permission: 'administer quote'
+  options:
+    _admin_route: TRUE

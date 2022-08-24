@@ -1,0 +1,6 @@
+quote.settings_form:
+  title: 'Quote settings'
+  route_name: quote.settings_form
+  description: 'Global configuration of quote functionality.'
+  parent: system.admin_config_content
+  weight: 99

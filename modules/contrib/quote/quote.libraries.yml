@@ -1,0 +1,8 @@
+quote:
+  version: 1.x
+  js:
+    js/quote.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once

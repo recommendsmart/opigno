@@ -1,0 +1,19 @@
+{
+    "name": "drupal/quote",
+    "description": "Allows users to quote posts or comments.",
+    "type": "drupal-module",
+    "homepage": "https://www.drupal.org/project/quote",
+    "authors": [
+        {
+            "name": "Andrei Ivnitskii",
+            "homepage": "https://www.drupal.org/u/ivnish",
+            "role": "Maintainer"
+        }
+    ],
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/quote",
+        "source": "https://git.drupalcode.org/project/quote"
+    },
+    "minimum-stability": "dev",
+    "require": {}
+}

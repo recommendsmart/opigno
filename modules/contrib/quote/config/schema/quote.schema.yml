@@ -1,0 +1,30 @@
+quote.settings:
+  type: config_object
+  label: Settings
+  mapping:
+    quote_modes_quote_sel:
+      type: boolean
+    quote_modes_quote_all:
+      type: boolean
+    quote_modes_quote_reply_all:
+      type: boolean
+    quote_modes_quote_reply_sel:
+      type: boolean
+    quote_allow_comments:
+      type: boolean
+    quote_selector:
+      type: string
+    quote_limit:
+      type: integer
+    quote_selector_comment_quote_all:
+      type: string
+    quote_selector_node_quote_all:
+      type: string
+    quote_allow_types:
+      type: sequence
+      sequence:
+        type: string
+    quote_ckeditor_support:
+      type: boolean
+    quote_html_tags_support:
+      type: boolean
