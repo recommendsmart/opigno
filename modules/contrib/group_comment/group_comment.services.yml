@@ -1,0 +1,4 @@
+services:
+  group_comment.group_attachment:
+    class: Drupal\group_comment\GroupCommentAttachment
+    arguments: ['@plugin.manager.group_content_enabler', '@entity_type.manager', '@comment.manager', '@module_handler']

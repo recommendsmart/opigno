@@ -1,0 +1,3 @@
+access group_comment overview:
+  title: 'Access group comment overview'
+  description: 'Access the overview of all group comments, regardless of comment bundle'

@@ -1,0 +1,13 @@
+name: 'Group Comment'
+type: module
+description: 'Enables Group functionality for comments'
+package: Group
+core_version_requirement: ^9
+dependencies:
+  - drupal:comment
+  - group:group
+
+# Information added by Drupal.org packaging script on 2022-08-04
+version: '1.0.0-alpha2'
+project: 'group_comment'
+datestamp: 1659609941

@@ -3,7 +3,7 @@
         'name' => 'goalgorilla/social_template',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '082d26ce0de68f7ee5587f16a05466f8d477f25e',
+        'reference' => 'b96a42417f30e9dca1ff4a116c596975a2786226',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -1454,6 +1454,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'drupal/group_comment' => array(
+            'pretty_version' => '1.0.0-alpha2',
+            'version' => '1.0.0.0-alpha2',
+            'reference' => '1.0.0-alpha2',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/group_comment',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'drupal/group_flex' => array(
             'pretty_version' => '1.0.0-beta5',
             'version' => '1.0.0.0-beta5',
@@ -1471,6 +1480,17 @@
             'install_path' => __DIR__ . '/../../modules/contrib/group_mandatory',
             'aliases' => array(
                 0 => '1.0.x-dev',
+            ),
+            'dev_requirement' => false,
+        ),
+        'drupal/group_mapping_from_node' => array(
+            'pretty_version' => 'dev-1.x',
+            'version' => 'dev-1.x',
+            'reference' => '0636ac8fe8f7d70c5e86d05a969e5e33270189f6',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/group_mapping_from_node',
+            'aliases' => array(
+                0 => '1.x-dev',
             ),
             'dev_requirement' => false,
         ),
@@ -2673,7 +2693,7 @@
         'goalgorilla/social_template' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '082d26ce0de68f7ee5587f16a05466f8d477f25e',
+            'reference' => 'b96a42417f30e9dca1ff4a116c596975a2786226',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
