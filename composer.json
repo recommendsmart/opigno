@@ -63,6 +63,7 @@
         "drupal/personal_notes": "^2.1",
         "drupal/private_taxonomy": "^2.5",
         "drupal/radiostoslider": "^1.1",
+        "drupal/serial": "^1.0@alpha",
         "drupal/shs": "^2.0@RC",
         "drupal/social_geolocation": "^2.2",
         "drupal/social_pwa": "^1.4",
