@@ -1,0 +1,24 @@
+{
+    "name": "drupal/route_override",
+    "type": "drupal-module",
+    "license": "gpl-2.0-or-later",
+    "authors": [
+        {
+            "name": "Merlin",
+            "email": "merlin@geeks4change.net"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        }
+    ],
+    "require-dev": {
+        "drupal/core": "^9||^10",
+        "drupal/group": "^1.4"
+    },
+    "require": {
+        "drupal/cacheable_types": "^1@dev"
+    }
+}
