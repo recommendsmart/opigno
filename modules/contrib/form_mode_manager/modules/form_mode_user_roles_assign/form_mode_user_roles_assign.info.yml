@@ -1,0 +1,16 @@
+name: Form Mode Manager User Roles Assign
+type: module
+description: Allows to define automatic roles assignements for user register form.
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: Fields
+configure: form_mode_manager.admin_settings_roles_assign
+dependencies:
+  - drupal:field
+  - drupal:user
+  - form_mode_manager:form_mode_manager
+
+# Information added by Drupal.org packaging script on 2021-06-22
+version: '8.x-2.0-rc4'
+project: 'form_mode_manager'
+datestamp: 1624321245

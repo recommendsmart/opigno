@@ -1,0 +1,22 @@
+field.formatter.settings.editablefields_formatter:
+  type: mapping
+  label: 'Editable Fields formatter'
+  mapping:
+    form_mode:
+      type: string
+      label: 'Form mode'
+    bypass_access:
+      type: bool
+      label: 'Bypass access'
+    fallback_access:
+      type: bool
+      label: 'Fallback access'
+    display_mode_access:
+      type: string
+      label: 'Display mode access'
+    fallback_edit:
+      type: bool
+      label: 'Fallback edit'
+    display_mode_edit:
+      type: string
+      label: 'Display mode edit'
