@@ -1,0 +1,13 @@
+name: Group Node Field
+type: module
+description: Add groups directly from the node form.
+# core: 8.x
+package: Group
+dependencies:
+  - drupal:group
+
+# Information added by Drupal.org packaging script on 2019-01-02
+version: '8.x-1.0-alpha1'
+core: '8.x'
+project: 'gnode_field'
+datestamp: 1546464484

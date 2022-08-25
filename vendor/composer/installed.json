@@ -2322,6 +2322,75 @@
             "install-path": "../../modules/contrib/browser_back_button"
         },
         {
+            "name": "drupal/business_rules",
+            "version": "2.0.0-beta1",
+            "version_normalized": "2.0.0.0-beta1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/business_rules.git",
+                "reference": "2.0.0-beta1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/business_rules-2.0.0-beta1.zip",
+                "reference": "2.0.0-beta1",
+                "shasum": "3e50c68364a0e780117ab55f7cff064b5526afe3"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9",
+                "drupal/dbug": "*"
+            },
+            "require-dev": {
+                "drupal/group": "*",
+                "drupal/paragraphs": "*",
+                "drupal/sms": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.0-beta1",
+                    "datestamp": "1615910333",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Beta releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "C.E.A",
+                    "homepage": "https://www.drupal.org/user/3189629"
+                },
+                {
+                    "name": "colan",
+                    "homepage": "https://www.drupal.org/user/58704"
+                },
+                {
+                    "name": "pratik_kamble",
+                    "homepage": "https://www.drupal.org/user/3204909"
+                },
+                {
+                    "name": "rohit-rajput-sahab",
+                    "homepage": "https://www.drupal.org/user/2036406"
+                },
+                {
+                    "name": "yuriseki",
+                    "homepage": "https://www.drupal.org/user/1523064"
+                }
+            ],
+            "description": "Business Rules",
+            "homepage": "https://www.drupal.org/project/business_rules",
+            "support": {
+                "source": "https://git.drupalcode.org/project/business_rules"
+            },
+            "install-path": "../../modules/contrib/business_rules"
+        },
+        {
             "name": "drupal/cacheable_types",
             "version": "1.x-dev",
             "version_normalized": "1.9999999.9999999.9999999-dev",
@@ -3909,6 +3978,58 @@
             "install-path": "../../modules/contrib/consumers"
         },
         {
+            "name": "drupal/content_to_group",
+            "version": "1.0.0-alpha1",
+            "version_normalized": "1.0.0.0-alpha1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/content_to_group.git",
+                "reference": "1.0.0-alpha1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/content_to_group-1.0.0-alpha1.zip",
+                "reference": "1.0.0-alpha1",
+                "shasum": "21bfd79f372492af0873a5d704ba4f11158ea4e6"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9 || ^10",
+                "drupal/group": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0-alpha1",
+                    "datestamp": "1658842364",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "andileco",
+                    "homepage": "https://www.drupal.org/user/2054544"
+                },
+                {
+                    "name": "diaodiallo",
+                    "homepage": "https://www.drupal.org/user/3574365"
+                }
+            ],
+            "description": "Assign content to the selected group.",
+            "homepage": "https://www.drupal.org/project/content_to_group",
+            "support": {
+                "source": "https://git.drupalcode.org/project/content_to_group"
+            },
+            "install-path": "../../modules/contrib/content_to_group"
+        },
+        {
             "name": "drupal/core",
             "version": "9.3.21",
             "version_normalized": "9.3.21.0",
@@ -4761,6 +4882,57 @@
             "install-path": "../../modules/contrib/data_policy"
         },
         {
+            "name": "drupal/dbug",
+            "version": "2.0.0",
+            "version_normalized": "2.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/dbug.git",
+                "reference": "2.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/dbug-2.0.0.zip",
+                "reference": "2.0.0",
+                "shasum": "25dc98f97228da9852a08b7af876373b0e8e382d"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.0",
+                    "datestamp": "1613864836",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "colan",
+                    "homepage": "https://www.drupal.org/user/58704"
+                },
+                {
+                    "name": "yuriseki",
+                    "homepage": "https://www.drupal.org/user/1523064"
+                }
+            ],
+            "description": "Drupal version of ColdFusion's cfdump",
+            "homepage": "https://www.drupal.org/project/dbug",
+            "support": {
+                "source": "https://git.drupalcode.org/project/dbug"
+            },
+            "install-path": "../../modules/contrib/dbug"
+        },
+        {
             "name": "drupal/description_list_field",
             "version": "1.0.0-alpha4",
             "version_normalized": "1.0.0.0-alpha4",
@@ -5198,6 +5370,53 @@
                 "issues": "https://drupal.org/project/issues/eca"
             },
             "install-path": "../../modules/contrib/eca"
+        },
+        {
+            "name": "drupal/edit_entity",
+            "version": "1.0.0",
+            "version_normalized": "1.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/edit_entity.git",
+                "reference": "8.x-1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/edit_entity-8.x-1.0.zip",
+                "reference": "8.x-1.0",
+                "shasum": "45cf018efb3b12d9bc30ea566c7194562967421f"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.0",
+                    "datestamp": "1584030391",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "q__nt_n",
+                    "homepage": "https://www.drupal.org/user/3512064"
+                }
+            ],
+            "description": "Gives a \"Edit Entity\" button on admin toolbar.",
+            "homepage": "https://www.drupal.org/project/edit_entity",
+            "support": {
+                "source": "https://git.drupalcode.org/project/edit_entity"
+            },
+            "install-path": "../../modules/contrib/edit_entity"
         },
         {
             "name": "drupal/editor_advanced_link",
@@ -5739,6 +5958,61 @@
             "install-path": "../../modules/contrib/entity_list"
         },
         {
+            "name": "drupal/entity_reference_display",
+            "version": "1.4.0",
+            "version_normalized": "1.4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/entity_reference_display.git",
+                "reference": "8.x-1.4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/entity_reference_display-8.x-1.4.zip",
+                "reference": "8.x-1.4",
+                "shasum": "3bf53ec08ff3b2f63f950f8367a0f5539d59770a"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.4",
+                    "datestamp": "1594899402",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "kyberman",
+                    "homepage": "https://www.drupal.org/user/402924"
+                },
+                {
+                    "name": "murrayw",
+                    "homepage": "https://www.drupal.org/user/595658"
+                },
+                {
+                    "name": "wiifm",
+                    "homepage": "https://www.drupal.org/user/358731"
+                }
+            ],
+            "description": "Defines a field type for display mode selection for entity reference fields.",
+            "homepage": "https://www.drupal.org/project/entity_reference_display",
+            "support": {
+                "source": "https://git.drupalcode.org/project/entity_reference_display"
+            },
+            "install-path": "../../modules/contrib/entity_reference_display"
+        },
+        {
             "name": "drupal/entity_reference_revisions",
             "version": "1.9.0",
             "version_normalized": "1.9.0.0",
@@ -5964,6 +6238,119 @@
                 "source": "https://git.drupalcode.org/project/entity_version"
             },
             "install-path": "../../modules/contrib/entity_version"
+        },
+        {
+            "name": "drupal/entityconnect",
+            "version": "2.0.0-rc1",
+            "version_normalized": "2.0.0.0-RC1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/entityconnect.git",
+                "reference": "8.x-2.0-rc1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/entityconnect-8.x-2.0-rc1.zip",
+                "reference": "8.x-2.0-rc1",
+                "shasum": "651761da061a7d74e2b770038d7527ffadcb6a2a"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-2.0-rc1",
+                    "datestamp": "1597689919",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "RC releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "amaria",
+                    "homepage": "https://www.drupal.org/user/66428"
+                },
+                {
+                    "name": "jygastaud",
+                    "homepage": "https://www.drupal.org/user/660334"
+                },
+                {
+                    "name": "olmeta.david",
+                    "homepage": "https://www.drupal.org/user/720398"
+                }
+            ],
+            "description": "Allows for referenced entity to be created and edited from the entity reference field",
+            "homepage": "https://www.drupal.org/project/entityconnect",
+            "support": {
+                "source": "https://git.drupalcode.org/project/entityconnect"
+            },
+            "install-path": "../../modules/contrib/entityconnect"
+        },
+        {
+            "name": "drupal/entitygroupfield",
+            "version": "1.0.0-alpha2",
+            "version_normalized": "1.0.0.0-alpha2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/entitygroupfield.git",
+                "reference": "1.0.0-alpha2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/entitygroupfield-1.0.0-alpha2.zip",
+                "reference": "1.0.0-alpha2",
+                "shasum": "a6eedf0c4297f0c011a927ff0a916d57fd8c8829"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9",
+                "drupal/group": "~1.0"
+            },
+            "require-dev": {
+                "drupal/variationcache": "~1.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0-alpha2",
+                    "datestamp": "1598843615",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Derek Wright",
+                    "homepage": "https://www.drupal.org/u/dww",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Ivan Duarte",
+                    "homepage": "https://www.drupal.org/u/jidrone",
+                    "role": "Co-Maintainer"
+                }
+            ],
+            "description": "Defines a field to view and edit the groups associated with content.",
+            "homepage": "http://drupal.org/project/entitygroupfield",
+            "support": {
+                "source": "https://git.drupalcode.org/project/entitygroupfield",
+                "issues": "https://drupal.org/project/issues/entitygroupfield"
+            },
+            "install-path": "../../modules/contrib/entitygroupfield"
         },
         {
             "name": "drupal/estore",
@@ -6465,6 +6852,126 @@
                 "issues": "https://www.drupal.org/project/issues/field_group"
             },
             "install-path": "../../modules/contrib/field_group"
+        },
+        {
+            "name": "drupal/field_permissions",
+            "version": "1.2.0",
+            "version_normalized": "1.2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/field_permissions.git",
+                "reference": "8.x-1.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/field_permissions-8.x-1.2.zip",
+                "reference": "8.x-1.2",
+                "shasum": "0b1a5edfac518fe6005d015b3781774b41cdec76"
+            },
+            "require": {
+                "drupal/core": ">=8.9 <11"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.2",
+                    "datestamp": "1658941749",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                },
+                "branch-alias": {
+                    "dev-8.x-1.x": "1.x-dev"
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "japerry",
+                    "homepage": "https://www.drupal.org/user/45640"
+                },
+                {
+                    "name": "jhedstrom",
+                    "homepage": "https://www.drupal.org/user/208732"
+                },
+                {
+                    "name": "mariacha1",
+                    "homepage": "https://www.drupal.org/user/2210776"
+                },
+                {
+                    "name": "markus_petrux",
+                    "homepage": "https://www.drupal.org/user/39593"
+                },
+                {
+                    "name": "RobLoach",
+                    "homepage": "https://www.drupal.org/user/61114"
+                }
+            ],
+            "description": "The Field Permissions module allows site administrators to set field-level permissions to edit, view and create fields on any entity.",
+            "homepage": "https://www.drupal.org/project/field_permissions",
+            "support": {
+                "source": "https://git.drupalcode.org/project/field_permissions",
+                "issues": "https://www.drupal.org/project/issues/field_permissions"
+            },
+            "install-path": "../../modules/contrib/field_permissions"
+        },
+        {
+            "name": "drupal/field_permissions_group",
+            "version": "1.0.0-beta4",
+            "version_normalized": "1.0.0.0-beta4",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/field_permissions_group.git",
+                "reference": "1.0.0-beta4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/field_permissions_group-1.0.0-beta4.zip",
+                "reference": "1.0.0-beta4",
+                "shasum": "65b3bc0608b084bde8376cc8af1161291e05be21"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9",
+                "drupal/field_permissions": "*",
+                "drupal/group": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0-beta4",
+                    "datestamp": "1640507775",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Wietzehiha",
+                    "homepage": "https://www.drupal.org/user/3183901"
+                },
+                {
+                    "name": "jlscott",
+                    "homepage": "https://www.drupal.org/user/213325"
+                }
+            ],
+            "description": "Set field-level permissions to create, update or view fields within a group context.",
+            "homepage": "https://www.drupal.org/project/field_permissions_group",
+            "support": {
+                "source": "https://git.drupalcode.org/project/field_permissions_group"
+            },
+            "install-path": "../../modules/contrib/field_permissions_group"
         },
         {
             "name": "drupal/field_suggestion",
@@ -7187,6 +7694,70 @@
             "install-path": "../../modules/contrib/friggeri_cv"
         },
         {
+            "name": "drupal/frontend_editing",
+            "version": "1.1.0-alpha3",
+            "version_normalized": "1.1.0.0-alpha3",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/frontend_editing.git",
+                "reference": "1.1.0-alpha3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/frontend_editing-1.1.0-alpha3.zip",
+                "reference": "1.1.0-alpha3",
+                "shasum": "649eae1a3859b2b359aab065254a359a477d81ac"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9",
+                "drupal/paragraphs_edit": "^2.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.1.0-alpha3",
+                    "datestamp": "1638175970",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "a.dmitriiev",
+                    "homepage": "https://www.drupal.org/user/3235287"
+                },
+                {
+                    "name": "breidert",
+                    "homepage": "https://www.drupal.org/user/135619"
+                },
+                {
+                    "name": "hchonov",
+                    "homepage": "https://www.drupal.org/user/2901211"
+                },
+                {
+                    "name": "jcnventura",
+                    "homepage": "https://www.drupal.org/user/122464"
+                }
+            ],
+            "description": "Frontend editing.",
+            "homepage": "https://www.drupal.org/project/frontend_editing",
+            "keywords": [
+                "Drupal"
+            ],
+            "support": {
+                "source": "http://cgit.drupalcode.org/frontend_editing",
+                "issues": "http://drupal.org/project/issues/frontend_editing"
+            },
+            "install-path": "../../modules/contrib/frontend_editing"
+        },
+        {
             "name": "drupal/fullcalendar_view",
             "version": "5.1.7",
             "version_normalized": "5.1.7.0",
@@ -7658,6 +8229,42 @@
             "install-path": "../../modules/contrib/ginvite"
         },
         {
+            "name": "drupal/gnode",
+            "version": "1.5.0",
+            "version_normalized": "1.5.0.0",
+            "require": {
+                "drupal/core": "^9.3 || ^10",
+                "drupal/group": "*"
+            },
+            "type": "metapackage",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.5",
+                    "datestamp": "1660746007",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "kristiaanvandeneynde",
+                    "homepage": "https://www.drupal.org/user/1345130"
+                }
+            ],
+            "description": "Enables Group functionality for the Node module",
+            "homepage": "https://www.drupal.org/project/group",
+            "support": {
+                "source": "https://git.drupalcode.org/project/group"
+            },
+            "install-path": null
+        },
+        {
             "name": "drupal/graphql",
             "version": "4.1.0",
             "version_normalized": "4.1.0.0",
@@ -7895,6 +8502,56 @@
                 "issues": "https://drupal.org/project/issues/group_action"
             },
             "install-path": "../../modules/contrib/group_action"
+        },
+        {
+            "name": "drupal/group_clone_nodes",
+            "version": "1.0.0",
+            "version_normalized": "1.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/group_clone_nodes.git",
+                "reference": "1.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/group_clone_nodes-1.0.0.zip",
+                "reference": "1.0.0",
+                "shasum": "dc5da5d42fe2e8a9849b01149bb62f4d81801a8a"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9",
+                "drupal/gnode": "*",
+                "drupal/group": "*",
+                "drupal/views_bulk_operations": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0",
+                    "datestamp": "1659506079",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "nitin.k",
+                    "homepage": "https://www.drupal.org/user/2590178"
+                }
+            ],
+            "description": "Cloning nodes and assign them to groups.",
+            "homepage": "https://www.drupal.org/project/group_clone_nodes",
+            "support": {
+                "source": "https://git.drupalcode.org/project/group_clone_nodes"
+            },
+            "install-path": "../../modules/contrib/group_clone_nodes"
         },
         {
             "name": "drupal/group_comment",
@@ -8222,6 +8879,53 @@
                 "issues": "https://www.drupal.org/project/issues/group_roles_management"
             },
             "install-path": "../../modules/contrib/group_roles_management"
+        },
+        {
+            "name": "drupal/grouped_checkboxes",
+            "version": "1.0.0",
+            "version_normalized": "1.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/grouped_checkboxes.git",
+                "reference": "1.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/grouped_checkboxes-1.0.0.zip",
+                "reference": "1.0.0",
+                "shasum": "2bf83671f2c73718632651197c28b27e2df1ac5e"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ~9.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0",
+                    "datestamp": "1630404038",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "larowlan",
+                    "homepage": "https://www.drupal.org/user/395439"
+                }
+            ],
+            "description": "Provides a widget that groups checkboxes by their parents. Useful for grouping terms into their vocabularies.",
+            "homepage": "https://www.drupal.org/project/grouped_checkboxes",
+            "support": {
+                "source": "https://git.drupalcode.org/project/grouped_checkboxes"
+            },
+            "install-path": "../../modules/contrib/grouped_checkboxes"
         },
         {
             "name": "drupal/image_effects",
@@ -10208,6 +10912,58 @@
             "install-path": "../../modules/contrib/paragraphs"
         },
         {
+            "name": "drupal/paragraphs_edit",
+            "version": "2.0.0",
+            "version_normalized": "2.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/paragraphs_edit.git",
+                "reference": "8.x-2.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/paragraphs_edit-8.x-2.0.zip",
+                "reference": "8.x-2.0",
+                "shasum": "3b4a7634aecfc35bf45adf86b27d500660887df1"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9 || ^10",
+                "drupal/paragraphs": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-2.0",
+                    "datestamp": "1651758518",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "bbrala",
+                    "homepage": "https://www.drupal.org/user/3366066"
+                },
+                {
+                    "name": "casey",
+                    "homepage": "https://www.drupal.org/user/32403"
+                }
+            ],
+            "description": "Allows users to edit/clone and delete paragraphs.",
+            "homepage": "https://www.drupal.org/project/paragraphs_edit",
+            "support": {
+                "source": "https://git.drupalcode.org/project/paragraphs_edit"
+            },
+            "install-path": "../../modules/contrib/paragraphs_edit"
+        },
+        {
             "name": "drupal/pathauto",
             "version": "1.9.0",
             "version_normalized": "1.9.0.0",
@@ -10277,6 +11033,57 @@
                 "documentation": "https://www.drupal.org/docs/8/modules/pathauto"
             },
             "install-path": "../../modules/contrib/pathauto"
+        },
+        {
+            "name": "drupal/pbf",
+            "version": "1.3.0",
+            "version_normalized": "1.3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/pbf.git",
+                "reference": "8.x-1.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/pbf-8.x-1.3.zip",
+                "reference": "8.x-1.3",
+                "shasum": "a4fbf5a52b8d03896abc034999a81834e5e993b5"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.3",
+                    "datestamp": "1615236038",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "flocondetoile",
+                    "homepage": "https://www.drupal.org/user/2006064"
+                }
+            ],
+            "description": "Manage access entity by field",
+            "homepage": "https://www.drupal.org/project/pbf",
+            "keywords": [
+                "Drupal"
+            ],
+            "support": {
+                "source": "http://cgit.drupalcode.org/pbf",
+                "issues": "https://www.drupal.org/project/issues/pbf"
+            },
+            "install-path": "../../modules/contrib/pbf"
         },
         {
             "name": "drupal/pdf",

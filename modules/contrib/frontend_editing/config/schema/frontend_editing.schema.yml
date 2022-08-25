@@ -1,0 +1,12 @@
+# Schema for the configuration files of the frontend editing module.
+
+frontend_editing.settings:
+  type: config_object
+  label: 'Frontend Editing settings'
+  mapping:
+    entity_types:
+      type: sequence
+      label: 'Supported entity types'
+      sequence:
+        type: string
+        label: 'Entity type'

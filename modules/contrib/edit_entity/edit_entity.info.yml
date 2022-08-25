@@ -1,0 +1,11 @@
+name: Edit Entity
+type: module
+description: Gives a "Edit Entity" button on admin toolbar.
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: Custom
+
+# Information added by Drupal.org packaging script on 2020-03-12
+version: '8.x-1.0'
+project: 'edit_entity'
+datestamp: 1584030393

@@ -1,0 +1,4 @@
+field_permissions:
+  version: VERSION
+  js:
+    js/field_permissions_group.js: {}

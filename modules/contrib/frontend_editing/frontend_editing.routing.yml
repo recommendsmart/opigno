@@ -1,0 +1,20 @@
+frontend_editing.settings_form:
+  path: '/admin/config/frontend-editing'
+  defaults:
+    _title: 'Frontend Editing'
+    _form: 'Drupal\frontend_editing\Form\SettingsForm'
+  requirements:
+    _permission: 'administer frontend editing'
+
+frontend_editing.form:
+  path: '/frontend-editing/form/{type}/{id}/{display}'
+  defaults:
+    _controller: '\Drupal\frontend_editing\Controller\FrontendEditingController::getForm'
+    type: null
+    id: null
+    display: 'default'
+  requirements:
+    _permission: 'access frontend editing'
+    id: \d+
+  options:
+    _admin_route: 'TRUE'

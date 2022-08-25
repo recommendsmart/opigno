@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @file
+ * Provides functionality to clone nodes to the groups fast.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function group_clone_nodes_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.group_clone_nodes':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>ViewsBulkOperation module is used as required module.</p>';
+      $output .= '<p>This module clone nodes fast without extra interface.</p>';
+      $output .= '<p>1. No media/images files cloned.</p>';
+      $output .= '<p>2. Nodes are cloned and asigned to groups.</p>';
+      return $output;
+
+    default:
+  }
+}

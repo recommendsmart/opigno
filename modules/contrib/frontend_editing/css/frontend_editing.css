@@ -1,0 +1,142 @@
+/* Styles for editing container */
+.editing-container {
+  height: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: #f5f7fb;
+  padding: 2rem 1rem 0;
+  box-shadow: -0.2rem 0 1rem rgb(116 116 116 / 40%);
+  width: 30%;
+  min-width: 300px;
+  transition: width 0.5s;
+  overflow: auto;
+}
+.editing-container--wide {
+  width: 80%;
+}
+.editing-container--loading {
+  animation-duration: 1.8s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+  background: linear-gradient(to right, #f5f7fb 8%, #e7e7e7 38%, #f5f7fb 54%);
+  background-size: 1000px 640px;
+}
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+/* Styles for close button */
+.editing-container__close {
+  position: absolute;
+  right: 1rem;
+  top: 0.35rem;
+  width: 24px;
+  height: 24px;
+  opacity: 0.3;
+  cursor: pointer;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>');
+}
+
+/* Styles for width button */
+.editing-container__toggle {
+  position: absolute;
+  left: 1rem;
+  top: 0.35rem;
+  width: 24px;
+  height: 24px;
+  opacity: 0.5;
+  cursor: pointer;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-left"><polyline points="15 18 9 12 15 6"></polyline></svg>');
+}
+.editing-container--wide .editing-container__toggle {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg>');
+}
+
+/* Hover styles */
+.editing-container__close:hover,
+.editing-container__toggle:hover {
+  opacity: 1;
+}
+
+/* Styles for iframe*/
+#editing-container iframe {
+  height: 100%;
+  border: none;
+  width: 100%;
+}
+
+/* Style container of editable elements */
+.frontend-editing {
+  position: relative;
+}
+
+/* Styled for editing action */
+.frontend-editing--outline {
+  outline: 2px solid #d6d6d6;
+  z-index: 1;
+}
+
+/* Style editing icon */
+.frontend-editing__action {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  opacity: 0.4;
+  transition-duration: 0s;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #d6d6d6;
+  border-bottom-right-radius: 8px;
+  z-index: 1;
+}
+.frontend-editing__action:hover {
+  opacity: 1;
+}
+.frontend-editing__action--hidden {
+  display: none;
+}
+
+/* Style toggle */
+.frontent_editing_toggle {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>');
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+}
+.frontent_editing_toggle--disabled {
+  opacity: 0.4;
+}
+.frontent_editing_toggle--gin {
+  height: 3em;
+}
+.frontent_editing_toggle--seven {
+  height: 3em;
+  width: 3em;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>');
+}
+/* Position for Seven theme */
+.toolbar-tab--toggle-frontend-editing {
+  float: right !important;
+}
+/* Layout for small screens */
+@media (max-width: 450px) {
+  .editing-container,
+  .editing-container--wide {
+    width: 100%;
+  }
+  .editing-container__toggle {
+    display: none;
+  }
+}

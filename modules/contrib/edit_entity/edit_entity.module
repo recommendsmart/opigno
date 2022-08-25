@@ -1,0 +1,62 @@
+<?php
+
+use Drupal\Core\Url;
+use Drupal\user\Entity\User;
+
+/**
+ * Implements hook_toolbar().
+ */
+function edit_entity_toolbar() {
+  $items = [];
+
+  $manager = \Drupal::service('plugin.manager.menu.local_task');
+  $links = $manager->getLocalTasks(\Drupal::routeMatch()->getRouteName(), 0);
+  if (!empty($links)) {
+    $local_links = [];
+    foreach ($links['tabs'] as $route => $link) {
+      $local_links[$route] = $link['#link'];
+    }
+
+    foreach ($local_links as $route => $content) {
+      $regex = '/^entity\.([a-z_]*)\.canonical$/';
+      if (preg_match($regex, $route, $matches) === 1) {
+        $entity_type = $matches[1];
+        $entity_id = $content['url']->getRouteParameters()[$entity_type];
+        $entity_storage = \Drupal::entityTypeManager()->getStorage($entity_type);
+        $entity_label = $entity_storage->getEntityType()->getLabel();
+
+        // Check permission to edit current entity.
+        $entity = $entity_storage->load($entity_id);
+        $user = User::load(\Drupal::currentUser()->id());
+        $check = $entity->access('update', $user);
+
+        // Add button.
+        if ($check) {
+          $items['edit_entity'] = [
+            '#type' => 'toolbar_item',
+            'tab' => [
+              '#type' => 'link',
+              '#title' => 'Edit ' . $entity_label . ' ' . $content['url']->getRouteParameters()[$entity_type],
+              '#url' => Url::fromRoute('entity.' . $entity_type . '.edit_form', $content['url']->getRouteParameters()),
+              '#attributes' => [
+                'title' => t('Edit this entity'),
+                'class' => [
+                  'toolbar-icon',
+                  'toolbar-icon-edit',
+                ],
+              ],
+              '#cache' => [
+                'contexts' => [
+                  'url',
+                ],
+              ],
+            ],
+          ];
+        }
+      }
+    }
+  }
+
+  return $items;
+}
+

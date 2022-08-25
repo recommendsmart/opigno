@@ -1,0 +1,40 @@
+<?php
+
+use Drupal\group\Entity\Group;
+use Drupal\content_to_group\Util\ContentToGroupUtility;
+
+/**
+ * Implement hook_node_insert
+ *
+ * @param \Drupal\node\NodeInterface $node
+ */
+// todo add to group when update
+// todo include other content type
+function content_to_group_node_insert(Drupal\node\NodeInterface $node) {
+  $config = \Drupal::service('config.factory')
+    ->getEditable('content_to_group.settings');
+  $types = array_keys($config->get('types'));
+  if (in_array($node->bundle(), $types)) {
+    $contentToGroupUtility = new ContentToGroupUtility(\Drupal::entityTypeManager());
+    $field = $contentToGroupUtility->getGroupField($node);
+    if ($field !== NULL) {
+      if ($node->id()) {
+        $route_name = \Drupal::routeMatch()->getRouteName();
+        if ($route_name != 'entity.group_content.create_form') {
+          $gid = $node->get($field)
+            ->getValue()[0]["target_id"];
+          $group = Group::load($gid);
+          if ($group !== NULL) {
+            $type = 'group_node:' . $node->getType();
+            // Check if its not already in the group
+            $relation = $group->getContentByEntityId($type, $node->id());
+            if (!$relation) {
+              $group->addContent($node, $type);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

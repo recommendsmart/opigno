@@ -1,0 +1,3 @@
+field.widget.settings.grouped_checkboxes:
+  type: mapping
+  label: 'Grouped checkboxes/radio buttons settings'
