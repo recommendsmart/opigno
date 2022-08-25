@@ -1,0 +1,198 @@
+<?php
+
+/**
+ * @file
+ * Allows authors to tag a group from the node form.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for Drupal\node\NodeForm.
+ *
+ * Adds the Group form element to the node form.
+ */
+function group_mapping_from_node_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Current value for group list.
+  $current_groups = [];
+  // Load the Group plugin service.
+  /* @var Drupal\group\Plugin\GroupContentEnablerManager $group_plugin_service */
+  $group_plugin_service = Drupal::service('plugin.manager.group_content_enabler');
+  // A list of all installed content enabler plugin IDs.
+  $group_installed_content_plugins = $group_plugin_service->getInstalledIds();
+  // Load the current node object.
+  $node = $form_state->getFormObject()->getEntity();
+  // Plugin ID formation for current node type.
+  $plugin = 'group_node:' . $node->getType();
+
+  // Check if current node type is Group-enabled.
+  if (!in_array($plugin, $group_installed_content_plugins)) {
+    // Not Group-enabled, do not show the altered form.
+    return;
+  }
+
+  // Load current user.
+  $account = Drupal::currentUser();
+  // Check if current user has access to administer the content.
+  $access = $account->hasPermission('administer nodes');
+
+  // If node is not new then load the value of groups.
+  if ($form_state->getFormObject()->getOperation() == 'edit') {
+    $query = Drupal::database()->query("SELECT gid FROM {group_content_field_data} WHERE entity_id = :entity_id", [
+      ':entity_id' => $node->id(),
+    ]);
+    // Current groups.
+    $current_groups = $query->fetchCol();
+  }
+
+  // If access is given then create a configuration form section to node.
+  if ($access) {
+    // If node is new then collapse the configuration section for groups.
+    $collapsed = !($node->isNew());
+
+    // Add a new configuration section to the node editing screen.
+    $form['groups'] = [
+      '#title' => t('Group Mapping'),
+      '#type' => 'details',
+      '#weight' => 10,
+      '#open' => $collapsed,
+      '#group' => 'advanced',
+      '#tree' => TRUE,
+    ];
+
+    // Populate list of Existing Groups.
+    $form['groups']['group'] = [
+      '#title' => t('Select Group to map current node'),
+      '#type' => 'entity_autocomplete',
+      '#target_type' => 'group',
+      '#tags' => TRUE,
+      '#default_value' => !empty($current_groups) ? Drupal::entityTypeManager()->getStorage('group')->loadMultiple($current_groups) : '',
+      '#description' => t('Type in the group name to map the current node.'),
+    ];
+
+    // Custom valiation method to test group type based use cases.
+    $form['#validate'][] = 'group_mapping_from_node_custom_validation';
+    $form['actions']['save']['#submit'][] = 'group_mapping_from_node_custom_submit';
+    $form['actions']['submit']['#submit'][] = 'group_mapping_from_node_custom_submit';
+    // Attach new configuration section to entity.
+    $form['#entity_builders'][] = 'group_mapping_from_node_entity_builder';
+  }
+}
+
+/**
+ * Implements hook_form_submit().
+ */
+function group_mapping_from_node_custom_submit(&$form, FormStateInterface $form_state) {
+  // Load the current node object.
+  $node = $form_state->getFormObject()->getEntity();
+
+  // The list of Group IDs from the form field.
+  $group_ids = $node->groups['group'];
+
+  // Remove this node from any Groups that were removed from the field.
+  if ($form_state->getFormObject()->getOperation() == 'edit') {
+    // Get current group content.
+    $group_content = Drupal::entityTypeManager()->getStorage('group_content')->loadByProperties([
+      'entity_id' => $node->id(),
+    ]);
+
+    // Compare current group ids with field values.
+    $form_group_ids = [];
+    if (!empty($group_ids)) {
+      $form_group_ids = array_column($group_ids, 'target_id');
+    }
+    $current_groups_ids = array_map(function ($item) {
+      return $item->getGroup()->id();
+    }, $group_content);
+    $removed_groups = array_diff($current_groups_ids, $form_group_ids);
+
+    // Delete Group Content that associates this node with the removed groups.
+    if (!empty($removed_groups)) {
+      foreach ($removed_groups as $content_id => $gid) {
+        $content = $group_content[$content_id];
+        $content->delete();
+      }
+    }
+
+    // Only list newly added Groups to be added to the node.
+    $group_ids = array_diff($form_group_ids, $current_groups_ids);
+  }
+
+  // If groups are present, then add the node to them.
+  if (!empty($group_ids)) {
+    $plugin = 'group_node:' . $node->getType();
+    foreach ($group_ids as $group_id) {
+
+      // During node creation $group_id is an array, we need to extract target_id key.
+      if (isset($group_id['target_id'])) {
+        $group_id = $group_id['target_id'];
+      }
+
+      // Load the Group to be added to the node.
+      $group = Drupal::entityTypeManager()->getStorage('group')->load($group_id);
+
+      // Map node with chosen group.
+      if ($group) {
+        $group->addContent($node, $plugin);
+      }
+
+    }
+  }
+}
+
+/**
+ * Custom validation handler for node form.
+ */
+function group_mapping_from_node_custom_validation(&$form, FormStateInterface $form_state) {
+  // Load group based on the Group field submitted in node save.
+  $groups = $form_state->getValue('groups');
+
+  // Skip if the group field is empty.
+  if (empty($groups['group'])) {
+    return;
+  }
+
+  // Load the current node object.
+  $node = $form_state->getFormObject()->getEntity();
+
+  // Plugin ID formation for current node type.
+  $plugin = 'group_node:' . $node->getType();
+  foreach ($groups['group'] as $group_id) {
+    // Load the Group TYPE to test the plugin activation for current node.
+    $group = Drupal::entityTypeManager()->getStorage('group')->load($group_id['target_id']);
+    // Get the Group type of loaded Group.
+    $group_type = $group->get('type')->getValue();
+    // Load all different Group types available.
+    $group_types = Drupal::entityTypeManager()->getStorage('group_type')->load($group_type[0]['target_id']);
+    // Load Content Types enabled for the selected group.
+    $group_installed_content_plugins = $group_types->getInstalledContentPlugins()->getInstanceIds();
+    // Link URL for admin.
+    $link_url = Url::fromUri(
+      "internal:/admin/group/types/manage/" . $group_type[0]['target_id'] . "/content",
+      ['attributes' => ['target' => '_blank']]
+    );
+    $link = Link::fromTextAndUrl(t('here'), $link_url)->toString();
+
+    // Check if current node type is in Groups, then don't show the alter form.
+    if (!in_array($plugin, $group_installed_content_plugins)) {
+      $form_state->setErrorByName('groups', t('This content type is not valid for the <strong>Group Type</strong> plugin of selected group. Please click @here to enable node type plugin.', ['@here' => $link]));
+    }
+  }
+}
+
+/**
+ * Entity form builder to add the group information to the node.
+ */
+function group_mapping_from_node_entity_builder($entity_type, NodeInterface $entity, &$form, FormStateInterface $form_state) {
+  $entity->groups = $form_state->getValue('groups');
+
+  // Always save a revision for non-administrators.
+  if (!empty($entity->groups)) {
+    if (!Drupal::currentUser()->hasPermission('administer nodes')) {
+      $entity->setNewRevision();
+    }
+  }
+}

@@ -1,0 +1,6 @@
+'group.content_type.*.third_party.group_mandatory':
+  type: mapping
+  mapping:
+    mandatory:
+      type: boolean
+      label: Group is mandatory for content
