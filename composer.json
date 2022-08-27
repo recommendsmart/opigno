@@ -28,6 +28,7 @@
         "drupal/custom_pub": "^1.0@beta",
         "drupal/description_list_field": "^1.0@alpha",
         "drupal/designs": "^1.0",
+        "drupal/dxpr_theme": "^1.2",
         "drupal/eca": "^1.0@beta",
         "drupal/edit_entity": "^1.0",
         "drupal/editablefields": "^1.0",
