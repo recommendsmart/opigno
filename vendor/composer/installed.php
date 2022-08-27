@@ -256,6 +256,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'drupal/aristotle' => array(
+            'pretty_version' => '3.0.2',
+            'version' => '3.0.2.0',
+            'reference' => '3.0.2',
+            'type' => 'drupal-theme',
+            'install_path' => __DIR__ . '/../../themes/contrib/aristotle',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'drupal/automated_cron' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -920,6 +929,15 @@
             'reference' => '8.x-3.6',
             'type' => 'drupal-module',
             'install_path' => __DIR__ . '/../../modules/contrib/cshs',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'drupal/css_editor' => array(
+            'pretty_version' => '2.0.1',
+            'version' => '2.0.1.0',
+            'reference' => '2.0.1',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/css_editor',
             'aliases' => array(),
             'dev_requirement' => false,
         ),

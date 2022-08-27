@@ -10,6 +10,7 @@
         "drupal/access_records": "^1.0@beta",
         "drupal/aggrid": "^1.0@alpha",
         "drupal/allowed_formats": "^1.5",
+        "drupal/aristotle": "^3.0",
         "drupal/basket": "^2.0",
         "drupal/belgrade": "^1.1",
         "drupal/book_pdf": "^1.0@alpha",

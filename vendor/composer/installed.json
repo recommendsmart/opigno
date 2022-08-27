@@ -1799,6 +1799,70 @@
             "install-path": "../../modules/contrib/allowed_formats"
         },
         {
+            "name": "drupal/aristotle",
+            "version": "3.0.2",
+            "version_normalized": "3.0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/aristotle.git",
+                "reference": "3.0.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/aristotle-3.0.2.zip",
+                "reference": "3.0.2",
+                "shasum": "1a20d70a3f0a8504d2f433b14579d229c2947657"
+            },
+            "require": {
+                "drupal/core": "^9",
+                "drupal/css_editor": "^2.0"
+            },
+            "type": "drupal-theme",
+            "extra": {
+                "drupal": {
+                    "version": "3.0.2",
+                    "datestamp": "1648806100",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jamesap",
+                    "homepage": "https://www.drupal.org/user/2547544"
+                },
+                {
+                    "name": "axelm",
+                    "homepage": "https://www.drupal.org/user/1065700"
+                },
+                {
+                    "name": "spheresh",
+                    "homepage": "https://www.drupal.org/user/624860"
+                },
+                {
+                    "name": "vshamov",
+                    "homepage": "https://www.drupal.org/user/3689794"
+                },
+                {
+                    "name": "yuriy.korzhov",
+                    "homepage": "https://www.drupal.org/user/3477971"
+                }
+            ],
+            "description": "Aristotle.",
+            "homepage": "http://drupal.org/project/aristotle",
+            "support": {
+                "source": "https://git.drupalcode.org/project/aristotle"
+            },
+            "install-path": "../../themes/contrib/aristotle"
+        },
+        {
             "name": "drupal/basket",
             "version": "2.0.2",
             "version_normalized": "2.0.2.0",
@@ -4581,6 +4645,65 @@
                 "issues": "https://www.drupal.org/project/issues/cshs"
             },
             "install-path": "../../modules/contrib/cshs"
+        },
+        {
+            "name": "drupal/css_editor",
+            "version": "2.0.1",
+            "version_normalized": "2.0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/css_editor.git",
+                "reference": "2.0.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/css_editor-2.0.1.zip",
+                "reference": "2.0.1",
+                "shasum": "1b270932b1a67d0be4a49fe34f67a28d7eac94d7"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.1",
+                    "datestamp": "1646924130",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "caiosba",
+                    "homepage": "https://www.drupal.org/user/1774198"
+                },
+                {
+                    "name": "encelado",
+                    "homepage": "https://www.drupal.org/user/701446"
+                },
+                {
+                    "name": "infojunkie",
+                    "homepage": "https://www.drupal.org/user/48424"
+                },
+                {
+                    "name": "podarok",
+                    "homepage": "https://www.drupal.org/user/116002"
+                }
+            ],
+            "description": "Customize your CSS directly from the browser.",
+            "homepage": "https://www.drupal.org/project/css_editor",
+            "support": {
+                "source": "https://git.drupalcode.org/project/css_editor"
+            },
+            "install-path": "../../modules/contrib/css_editor"
         },
         {
             "name": "drupal/csv_serialization",
