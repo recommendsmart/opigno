@@ -75,6 +75,7 @@
         "drupal/menu_items_visibility": "^1.1",
         "drupal/micronode": "1.0.x-dev",
         "drupal/node_singles": "^3.0",
+        "drupal/opigno_statistics": "^3.0",
         "drupal/orange_ecom_starter": "2.0.x-dev",
         "drupal/pagerer": "^2.2",
         "drupal/pbf": "^1.3",

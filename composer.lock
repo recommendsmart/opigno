@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "af3903e5568a161a7d9e98175c5d6f88",
+    "content-hash": "e799d9e9d242606aab953788b4cdacbc",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -804,16 +804,16 @@
         },
         {
             "name": "doctrine/collections",
-            "version": "1.7.0",
+            "version": "1.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/collections.git",
-                "reference": "07d15c8a766e664ec271ae84e5dfc597aeeb03b1"
+                "reference": "d93dbc5ef2e6e98a5b16ca5b07c3e15de9fd9113"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/collections/zipball/07d15c8a766e664ec271ae84e5dfc597aeeb03b1",
-                "reference": "07d15c8a766e664ec271ae84e5dfc597aeeb03b1",
+                "url": "https://api.github.com/repos/doctrine/collections/zipball/d93dbc5ef2e6e98a5b16ca5b07c3e15de9fd9113",
+                "reference": "d93dbc5ef2e6e98a5b16ca5b07c3e15de9fd9113",
                 "shasum": ""
             },
             "require": {
@@ -868,9 +868,9 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/collections/issues",
-                "source": "https://github.com/doctrine/collections/tree/1.7.0"
+                "source": "https://github.com/doctrine/collections/tree/1.7.1"
             },
-            "time": "2022-08-18T05:44:45+00:00"
+            "time": "2022-08-23T18:47:41+00:00"
         },
         {
             "name": "doctrine/deprecations",
@@ -1077,6 +1077,76 @@
             },
             "abandoned": "roave/better-reflection",
             "time": "2020-10-27T21:46:55+00:00"
+        },
+        {
+            "name": "dompdf/dompdf",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dompdf/dompdf.git",
+                "reference": "79573d8b8a141ec8a17312515de8740eed014fa9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/79573d8b8a141ec8a17312515de8740eed014fa9",
+                "reference": "79573d8b8a141ec8a17312515de8740eed014fa9",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-mbstring": "*",
+                "masterminds/html5": "^2.0",
+                "phenx/php-font-lib": "^0.5.4",
+                "phenx/php-svg-lib": "^0.3.3 || ^0.4.0",
+                "php": "^7.1 || ^8.0"
+            },
+            "require-dev": {
+                "ext-json": "*",
+                "ext-zip": "*",
+                "mockery/mockery": "^1.3",
+                "phpunit/phpunit": "^7.5 || ^8 || ^9",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "suggest": {
+                "ext-gd": "Needed to process images",
+                "ext-gmagick": "Improves image processing performance",
+                "ext-imagick": "Improves image processing performance",
+                "ext-zlib": "Needed for pdf stream compression"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Dompdf\\": "src/"
+                },
+                "classmap": [
+                    "lib/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Ménager",
+                    "email": "fabien.menager@gmail.com"
+                },
+                {
+                    "name": "Brian Sweeney",
+                    "email": "eclecticgeek@gmail.com"
+                },
+                {
+                    "name": "Gabriel Bull",
+                    "email": "me@gabrielbull.com"
+                }
+            ],
+            "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
+            "homepage": "https://github.com/dompdf/dompdf",
+            "support": {
+                "issues": "https://github.com/dompdf/dompdf/issues",
+                "source": "https://github.com/dompdf/dompdf/tree/v2.0.0"
+            },
+            "time": "2022-06-21T21:14:57+00:00"
         },
         {
             "name": "dragonmantank/cron-expression",
@@ -2432,6 +2502,54 @@
             }
         },
         {
+            "name": "drupal/ckeditor_bgimage",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/ckeditor_bgimage.git",
+                "reference": "2.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/ckeditor_bgimage-2.0.0.zip",
+                "reference": "2.0.0",
+                "shasum": "80e7e43975b1f3aa97b5127066216f36433b887f"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.0",
+                    "datestamp": "1600193948",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "rafmagsou",
+                    "homepage": "https://www.drupal.org/user/3593445"
+                },
+                {
+                    "name": "thalles",
+                    "homepage": "https://www.drupal.org/user/3589086"
+                }
+            ],
+            "description": "This plugin module adds background image to CKEditor in Drupal 8",
+            "homepage": "https://www.drupal.org/project/ckeditor_bgimage",
+            "support": {
+                "source": "https://git.drupalcode.org/project/ckeditor_bgimage"
+            }
+        },
+        {
             "name": "drupal/collapsible_fields",
             "version": "1.0.0-beta4",
             "source": {
@@ -3705,6 +3823,57 @@
             "homepage": "https://www.drupal.org/project/commerce_wishlist",
             "support": {
                 "source": "https://git.drupalcode.org/project/commerce_wishlist"
+            }
+        },
+        {
+            "name": "drupal/config_rewrite",
+            "version": "1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/config_rewrite.git",
+                "reference": "8.x-1.5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/config_rewrite-8.x-1.5.zip",
+                "reference": "8.x-1.5",
+                "shasum": "c4740c74fc6e48069cada1fab4c809f1b99d31ac"
+            },
+            "require": {
+                "drupal/core": "^8.6 || ^9 || ^10",
+                "php": ">=7.1"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.5",
+                    "datestamp": "1659538494",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Brant Wynn (brantwynn)",
+                    "homepage": "https://www.drupal.org/u/brantwynn",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "saltednut",
+                    "homepage": "https://www.drupal.org/user/252788"
+                }
+            ],
+            "description": "Rewrites existing configuration on module installation via using a 'rewrite' folder in the config directory.",
+            "homepage": "https://www.drupal.org/project/config_rewrite",
+            "support": {
+                "source": "http://cgit.drupalcode.org/config_rewrite",
+                "issues": "https://www.drupal.org/project/issues/config_rewrite"
             }
         },
         {
@@ -5088,6 +5257,166 @@
             }
         },
         {
+            "name": "drupal/dropzonejs",
+            "version": "2.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/dropzonejs.git",
+                "reference": "8.x-2.6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/dropzonejs-8.x-2.6.zip",
+                "reference": "8.x-2.6",
+                "shasum": "3a14b26ade989e00bbbc9f6bbfa364fb5acb9367"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9"
+            },
+            "require-dev": {
+                "drupal/entity_browser": "^2.5"
+            },
+            "suggest": {
+                "enyo/dropzone": "Required to use drupal/dropzonejs. DropzoneJS is an open source library that provides drag’n’drop file uploads with image previews."
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-2.6",
+                    "datestamp": "1647857808",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Janez Urevc",
+                    "homepage": "https://drupal.org/u/slashrsm",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Christian Fritsch",
+                    "homepage": "https://drupal.org/u/chrfritsch",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Primoz Hmeljak",
+                    "homepage": "https://drupal.org/u/Primsi",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Qiangjun Ran",
+                    "homepage": "https://drupal.org/u/jungle",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "See other contributors",
+                    "homepage": "https://www.drupal.org/node/1998478/committers",
+                    "role": "contributor"
+                },
+                {
+                    "name": "jungle",
+                    "homepage": "https://www.drupal.org/user/2919723"
+                },
+                {
+                    "name": "slashrsm",
+                    "homepage": "https://www.drupal.org/user/744628"
+                },
+                {
+                    "name": "wouters_f",
+                    "homepage": "https://www.drupal.org/user/721548"
+                },
+                {
+                    "name": "zkday",
+                    "homepage": "https://www.drupal.org/user/888644"
+                }
+            ],
+            "description": "Drupal integration for DropzoneJS - An open source library that provides drag’n’drop file uploads with image previews.",
+            "homepage": "https://www.drupal.org/project/dropzonejs",
+            "keywords": [
+                "DropzoneJS",
+                "Drupal"
+            ],
+            "support": {
+                "source": "https://www.drupal.org/project/dropzonejs",
+                "issues": "https://www.drupal.org/project/issues/dropzonejs",
+                "#media": "http://drupal.slack.com"
+            }
+        },
+        {
+            "name": "drupal/dropzonejs_eb_widget",
+            "version": "2.6.0",
+            "require": {
+                "drupal/core": "^8.8 || ^9",
+                "drupal/dropzonejs": "*",
+                "drupal/entity_browser": "*"
+            },
+            "type": "metapackage",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-2.6",
+                    "datestamp": "1647857808",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Berdir",
+                    "homepage": "https://www.drupal.org/user/214652"
+                },
+                {
+                    "name": "Drupal Media Team",
+                    "homepage": "https://www.drupal.org/user/3260690"
+                },
+                {
+                    "name": "Drupal media CI",
+                    "homepage": "https://www.drupal.org/user/3057985"
+                },
+                {
+                    "name": "Primsi",
+                    "homepage": "https://www.drupal.org/user/282629"
+                },
+                {
+                    "name": "chr.fritsch",
+                    "homepage": "https://www.drupal.org/user/2103716"
+                },
+                {
+                    "name": "jungle",
+                    "homepage": "https://www.drupal.org/user/2919723"
+                },
+                {
+                    "name": "slashrsm",
+                    "homepage": "https://www.drupal.org/user/744628"
+                },
+                {
+                    "name": "wouters_f",
+                    "homepage": "https://www.drupal.org/user/721548"
+                },
+                {
+                    "name": "zkday",
+                    "homepage": "https://www.drupal.org/user/888644"
+                }
+            ],
+            "description": "DropzoneJS Entity browser widget.",
+            "homepage": "https://www.drupal.org/project/dropzonejs",
+            "support": {
+                "source": "https://git.drupalcode.org/project/dropzonejs"
+            }
+        },
+        {
             "name": "drupal/dxpr_theme",
             "version": "1.2.6",
             "source": {
@@ -5451,26 +5780,26 @@
         },
         {
             "name": "drupal/embed",
-            "version": "1.5.0",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/embed.git",
-                "reference": "8.x-1.5"
+                "reference": "8.x-1.6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/embed-8.x-1.5.zip",
-                "reference": "8.x-1.5",
-                "shasum": "88a447329d16988459e82392443e96d441d651b2"
+                "url": "https://ftp.drupal.org/files/projects/embed-8.x-1.6.zip",
+                "reference": "8.x-1.6",
+                "shasum": "6d2964775c3228d122cd61904786b3640fa83045"
             },
             "require": {
-                "drupal/core": "^8.7.7 || ^9"
+                "drupal/core": "^9.3 | ^10"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.5",
-                    "datestamp": "1653500382",
+                    "version": "8.x-1.6",
+                    "datestamp": "1661298150",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -5483,6 +5812,10 @@
             ],
             "authors": [
                 {
+                    "name": "cs_shadow",
+                    "homepage": "https://www.drupal.org/user/2828287"
+                },
+                {
                     "name": "Dave Reid",
                     "homepage": "https://www.drupal.org/user/53892"
                 },
@@ -5493,10 +5826,6 @@
                 {
                     "name": "Drupal Media Team",
                     "homepage": "https://www.drupal.org/user/3260690"
-                },
-                {
-                    "name": "cs_shadow",
-                    "homepage": "https://www.drupal.org/user/2828287"
                 },
                 {
                     "name": "phenaproxima",
@@ -5915,6 +6244,77 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/entity_list",
                 "issues": "https://www.drupal.org/project/issues/entity_list"
+            }
+        },
+        {
+            "name": "drupal/entity_print",
+            "version": "2.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/entity_print.git",
+                "reference": "8.x-2.6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/entity_print-8.x-2.6.zip",
+                "reference": "8.x-2.6",
+                "shasum": "d11303c4f38b97e262d561df80bba79e50922487"
+            },
+            "require": {
+                "dompdf/dompdf": "^1.2.1 || ^2.0.0",
+                "drupal/core": "^8 || ^9",
+                "php": "^7.1 || ^8.0"
+            },
+            "suggest": {
+                "mikehaertl/phpwkhtmltopdf": "PhpWkhtmlToPdf provides the PHP library to use Wkhtmltopdf"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-2.6",
+                    "datestamp": "1657729488",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Ben Dougherty",
+                    "homepage": "https://www.drupal.org/u/benjy"
+                },
+                {
+                    "name": "larowlan",
+                    "homepage": "https://www.drupal.org/user/395439"
+                },
+                {
+                    "name": "pameeela",
+                    "homepage": "https://www.drupal.org/user/1431110"
+                },
+                {
+                    "name": "Sam152",
+                    "homepage": "https://www.drupal.org/user/1485048"
+                },
+                {
+                    "name": "VladimirAus",
+                    "homepage": "https://www.drupal.org/user/673120"
+                }
+            ],
+            "description": "PDF print solution for any Drupal entity.",
+            "homepage": "http://drupal.org/project/entity_print",
+            "keywords": [
+                "PDF",
+                "drupal",
+                "print",
+                "web"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/entity_print"
             }
         },
         {
@@ -8776,6 +9176,68 @@
             }
         },
         {
+            "name": "drupal/h5p",
+            "version": "2.0.0-alpha2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/h5p.git",
+                "reference": "2.0.0-alpha2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/h5p-2.0.0-alpha2.zip",
+                "reference": "2.0.0-alpha2",
+                "shasum": "613598a7363993f21a11f9bd794ed0d87ba9e87d"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9",
+                "h5p/h5p-core": "1.24.2",
+                "h5p/h5p-editor": "1.24.4"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.0-alpha2",
+                    "datestamp": "1642679836",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "falcon",
+                    "homepage": "https://www.drupal.org/user/530912"
+                },
+                {
+                    "name": "icc",
+                    "homepage": "https://www.drupal.org/user/823190"
+                },
+                {
+                    "name": "otacke",
+                    "homepage": "https://www.drupal.org/user/3566173"
+                },
+                {
+                    "name": "paalj",
+                    "homepage": "https://www.drupal.org/user/1091732"
+                },
+                {
+                    "name": "thomasmars",
+                    "homepage": "https://www.drupal.org/user/3205159"
+                }
+            ],
+            "description": "Drupal H5P Module.",
+            "homepage": "http://drupal.org/project/h5p",
+            "support": {
+                "source": "https://git.drupalcode.org/project/h5p"
+            }
+        },
+        {
             "name": "drupal/image_effects",
             "version": "3.2.0",
             "source": {
@@ -10281,6 +10743,929 @@
             }
         },
         {
+            "name": "drupal/opigno_alter_entity_autocomplete",
+            "version": "3.0.3",
+            "require": {
+                "drupal/core": "^9",
+                "drupal/opigno_learning_path": "^3"
+            },
+            "type": "metapackage",
+            "extra": {
+                "drupal": {
+                    "version": "3.0.3",
+                    "datestamp": "1654003090",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jamesap",
+                    "homepage": "https://www.drupal.org/user/2547544"
+                },
+                {
+                    "name": "axelm",
+                    "homepage": "https://www.drupal.org/user/1065700"
+                },
+                {
+                    "name": "spheresh",
+                    "homepage": "https://www.drupal.org/user/624860"
+                },
+                {
+                    "name": "vshamov",
+                    "homepage": "https://www.drupal.org/user/3689794"
+                },
+                {
+                    "name": "yuriy.korzhov",
+                    "homepage": "https://www.drupal.org/user/3477971"
+                }
+            ],
+            "description": "The module alters entity autocomplete suggestion list.",
+            "homepage": "https://www.drupal.org/project/opigno_learning_path",
+            "support": {
+                "source": "https://git.drupalcode.org/project/opigno_learning_path"
+            }
+        },
+        {
+            "name": "drupal/opigno_certificate",
+            "version": "3.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/opigno_certificate.git",
+                "reference": "3.0.4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/opigno_certificate-3.0.4.zip",
+                "reference": "3.0.4",
+                "shasum": "00ffa6b7e5f5fa89b19cc21fa1b60488807c4747"
+            },
+            "require": {
+                "drupal/ckeditor_bgimage": "*",
+                "drupal/core": "^9",
+                "drupal/entity_print": "*",
+                "drupal/opigno_class": "*",
+                "drupal/token_filter": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "3.0.4",
+                    "datestamp": "1657815022",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "axelm",
+                    "homepage": "https://www.drupal.org/user/1065700"
+                },
+                {
+                    "name": "Jamesap",
+                    "homepage": "https://www.drupal.org/user/2547544"
+                },
+                {
+                    "name": "spheresh",
+                    "homepage": "https://www.drupal.org/user/624860"
+                },
+                {
+                    "name": "vshamov",
+                    "homepage": "https://www.drupal.org/user/3689794"
+                },
+                {
+                    "name": "yuriy.korzhov",
+                    "homepage": "https://www.drupal.org/user/3477971"
+                }
+            ],
+            "description": "Opigno certificate.",
+            "homepage": "http://drupal.org/project/opigno_certificate",
+            "support": {
+                "source": "https://git.drupalcode.org/project/opigno_certificate"
+            }
+        },
+        {
+            "name": "drupal/opigno_class",
+            "version": "3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/opigno_class.git",
+                "reference": "3.0.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/opigno_class-3.0.2.zip",
+                "reference": "3.0.2",
+                "shasum": "fb440e7ca1431f33ea82edbd82ff9762b27664ad"
+            },
+            "require": {
+                "drupal/config_rewrite": "*",
+                "drupal/core": "^9",
+                "drupal/group": "*",
+                "drupal/userprotect": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "3.0.2",
+                    "datestamp": "1648805982",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jamesap",
+                    "homepage": "https://www.drupal.org/user/2547544"
+                },
+                {
+                    "name": "axelm",
+                    "homepage": "https://www.drupal.org/user/1065700"
+                },
+                {
+                    "name": "spheresh",
+                    "homepage": "https://www.drupal.org/user/624860"
+                },
+                {
+                    "name": "vshamov",
+                    "homepage": "https://www.drupal.org/user/3689794"
+                },
+                {
+                    "name": "yuriy.korzhov",
+                    "homepage": "https://www.drupal.org/user/3477971"
+                }
+            ],
+            "description": "Opigno class.",
+            "homepage": "http://drupal.org/project/opigno_class",
+            "support": {
+                "source": "https://git.drupalcode.org/project/opigno_class"
+            }
+        },
+        {
+            "name": "drupal/opigno_course",
+            "version": "3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/opigno_course.git",
+                "reference": "3.0.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/opigno_course-3.0.2.zip",
+                "reference": "3.0.2",
+                "shasum": "0d276bbf63db2c077cd137d1df0562b5bf3048d9"
+            },
+            "require": {
+                "drupal/core": "^9",
+                "drupal/group": "*",
+                "drupal/opigno_class": "*",
+                "drupal/opigno_module": "*",
+                "drupal/opigno_module_group": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "3.0.2",
+                    "datestamp": "1648805958",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jamesap",
+                    "homepage": "https://www.drupal.org/user/2547544"
+                },
+                {
+                    "name": "axelm",
+                    "homepage": "https://www.drupal.org/user/1065700"
+                },
+                {
+                    "name": "spheresh",
+                    "homepage": "https://www.drupal.org/user/624860"
+                },
+                {
+                    "name": "vshamov",
+                    "homepage": "https://www.drupal.org/user/3689794"
+                },
+                {
+                    "name": "yuriy.korzhov",
+                    "homepage": "https://www.drupal.org/user/3477971"
+                }
+            ],
+            "description": "Opigno course.",
+            "homepage": "http://drupal.org/project/opigno_course",
+            "support": {
+                "source": "https://git.drupalcode.org/project/opigno_course"
+            }
+        },
+        {
+            "name": "drupal/opigno_cron",
+            "version": "3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/opigno_cron.git",
+                "reference": "3.0.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/opigno_cron-3.0.2.zip",
+                "reference": "3.0.2",
+                "shasum": "f90b30aff3100d1670432d166daa00c663beac24"
+            },
+            "require": {
+                "drupal/config_rewrite": "*",
+                "drupal/core": "^9",
+                "drupal/queue_ui": "*",
+                "drupal/ultimate_cron": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "3.0.2",
+                    "datestamp": "1648805955",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jamesap",
+                    "homepage": "https://www.drupal.org/user/2547544"
+                },
+                {
+                    "name": "axelm",
+                    "homepage": "https://www.drupal.org/user/1065700"
+                },
+                {
+                    "name": "spheresh",
+                    "homepage": "https://www.drupal.org/user/624860"
+                },
+                {
+                    "name": "vshamov",
+                    "homepage": "https://www.drupal.org/user/3689794"
+                },
+                {
+                    "name": "yuriy.korzhov",
+                    "homepage": "https://www.drupal.org/user/3477971"
+                }
+            ],
+            "description": "Opigno cron.",
+            "homepage": "http://drupal.org/project/opigno_cron",
+            "support": {
+                "source": "https://git.drupalcode.org/project/opigno_cron"
+            }
+        },
+        {
+            "name": "drupal/opigno_group_manager",
+            "version": "3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/opigno_group_manager.git",
+                "reference": "3.0.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/opigno_group_manager-3.0.2.zip",
+                "reference": "3.0.2",
+                "shasum": "fa89574bfa5448eba078a59fc22835052a19e8b5"
+            },
+            "require": {
+                "drupal/core": "^9",
+                "drupal/group": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "3.0.2",
+                    "datestamp": "1648805839",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jamesap",
+                    "homepage": "https://www.drupal.org/user/2547544"
+                },
+                {
+                    "name": "axelm",
+                    "homepage": "https://www.drupal.org/user/1065700"
+                },
+                {
+                    "name": "spheresh",
+                    "homepage": "https://www.drupal.org/user/624860"
+                },
+                {
+                    "name": "vshamov",
+                    "homepage": "https://www.drupal.org/user/3689794"
+                },
+                {
+                    "name": "yuriy.korzhov",
+                    "homepage": "https://www.drupal.org/user/3477971"
+                }
+            ],
+            "description": "Opigno group manager.",
+            "homepage": "http://drupal.org/project/opigno_group_manager",
+            "support": {
+                "source": "https://git.drupalcode.org/project/opigno_group_manager"
+            }
+        },
+        {
+            "name": "drupal/opigno_learning_path",
+            "version": "3.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/opigno_learning_path.git",
+                "reference": "3.0.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/opigno_learning_path-3.0.3.zip",
+                "reference": "3.0.3",
+                "shasum": "3800bed54844052a38e925491d33e4ef402b1528"
+            },
+            "require": {
+                "drupal/better_exposed_filters": "*",
+                "drupal/config_rewrite": "*",
+                "drupal/core": "^9",
+                "drupal/dropzonejs": "*",
+                "drupal/dropzonejs_eb_widget": "*",
+                "drupal/entity_browser": "*",
+                "drupal/group": "*",
+                "drupal/opigno_alter_entity_autocomplete": "*",
+                "drupal/opigno_certificate": "*",
+                "drupal/opigno_class": "*",
+                "drupal/opigno_course": "*",
+                "drupal/opigno_cron": "*",
+                "drupal/opigno_group_manager": "*",
+                "drupal/opigno_module": "*",
+                "drupal/opigno_module_group": "*",
+                "drupal/opigno_notification": "*",
+                "drupal/opigno_user_selection": "*",
+                "drupal/tft": "*",
+                "drupal/twig_field_value": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "3.0.3",
+                    "datestamp": "1654003090",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Jamesap",
+                    "homepage": "https://www.drupal.org/user/2547544"
+                },
+                {
+                    "name": "axelm",
+                    "homepage": "https://www.drupal.org/user/1065700"
+                },
+                {
+                    "name": "spheresh",
+                    "homepage": "https://www.drupal.org/user/624860"
+                },
+                {
+                    "name": "vshamov",
+                    "homepage": "https://www.drupal.org/user/3689794"
+                },
+                {
+                    "name": "yuriy.korzhov",
+                    "homepage": "https://www.drupal.org/user/3477971"
+                }
+            ],
+            "description": "Opigno Learning Path Module.",
+            "homepage": "http://drupal.org/project/opigno_learning_path",
+            "support": {
+                "source": "https://git.drupalcode.org/project/opigno_learning_path"
+            }
+        },
+        {
+            "name": "drupal/opigno_like",
+            "version": "3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/opigno_like.git",
+                "reference": "3.0.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/opigno_like-3.0.2.zip",
+                "reference": "3.0.2",
+                "shasum": "abd1456a72de3699ec3aa4e8b45613fa7a82207d"
+            },
+            "require": {
+                "drupal/core": "^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "3.0.2",
+                    "datestamp": "1648805734",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jamesap",
+                    "homepage": "https://www.drupal.org/user/2547544"
+                },
+                {
+                    "name": "axelm",
+                    "homepage": "https://www.drupal.org/user/1065700"
+                },
+                {
+                    "name": "spheresh",
+                    "homepage": "https://www.drupal.org/user/624860"
+                },
+                {
+                    "name": "vshamov",
+                    "homepage": "https://www.drupal.org/user/3689794"
+                },
+                {
+                    "name": "yuriy.korzhov",
+                    "homepage": "https://www.drupal.org/user/3477971"
+                }
+            ],
+            "description": "Opigno like.",
+            "homepage": "http://drupal.org/project/opigno_like",
+            "support": {
+                "source": "https://git.drupalcode.org/project/opigno_like"
+            }
+        },
+        {
+            "name": "drupal/opigno_messaging",
+            "version": "3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/opigno_messaging.git",
+                "reference": "3.0.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/opigno_messaging-3.0.2.zip",
+                "reference": "3.0.2",
+                "shasum": "1beb4f1ad6ddd16e2c50d50678fd5f29e0c379dd"
+            },
+            "require": {
+                "drupal/core": "^9",
+                "drupal/group": "*",
+                "drupal/opigno_statistics": "*",
+                "drupal/private_message": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "3.0.2",
+                    "datestamp": "1648805645",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jamesap",
+                    "homepage": "https://www.drupal.org/user/2547544"
+                },
+                {
+                    "name": "axelm",
+                    "homepage": "https://www.drupal.org/user/1065700"
+                },
+                {
+                    "name": "spheresh",
+                    "homepage": "https://www.drupal.org/user/624860"
+                },
+                {
+                    "name": "vshamov",
+                    "homepage": "https://www.drupal.org/user/3689794"
+                },
+                {
+                    "name": "yuriy.korzhov",
+                    "homepage": "https://www.drupal.org/user/3477971"
+                }
+            ],
+            "description": "Opigno messaging.",
+            "homepage": "http://drupal.org/project/opigno_messaging",
+            "support": {
+                "source": "https://git.drupalcode.org/project/opigno_messaging"
+            }
+        },
+        {
+            "name": "drupal/opigno_module",
+            "version": "3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/opigno_module.git",
+                "reference": "3.0.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/opigno_module-3.0.2.zip",
+                "reference": "3.0.2",
+                "shasum": "df8b6f1c0227d5c758460f49a33641b472ff720a"
+            },
+            "require": {
+                "drupal/core": "^9",
+                "drupal/h5p": "*",
+                "drupal/pdf": "1.x-dev#ec8d13d"
+            },
+            "require-dev": {
+                "drupal/h5p": "*",
+                "drupal/h5peditor": "*",
+                "drupal/opigno_class": "*",
+                "drupal/opigno_file_upload": "*",
+                "drupal/opigno_scorm": "*",
+                "drupal/opigno_tincan_api": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "3.0.2",
+                    "datestamp": "1648805389",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Jamesap",
+                    "homepage": "https://www.drupal.org/user/2547544"
+                },
+                {
+                    "name": "axelm",
+                    "homepage": "https://www.drupal.org/user/1065700"
+                },
+                {
+                    "name": "spheresh",
+                    "homepage": "https://www.drupal.org/user/624860"
+                },
+                {
+                    "name": "vshamov",
+                    "homepage": "https://www.drupal.org/user/3689794"
+                },
+                {
+                    "name": "yuriy.korzhov",
+                    "homepage": "https://www.drupal.org/user/3477971"
+                }
+            ],
+            "description": "Opigno Module Module.",
+            "homepage": "http://drupal.org/project/opigno_module",
+            "support": {
+                "source": "https://git.drupalcode.org/project/opigno_module"
+            }
+        },
+        {
+            "name": "drupal/opigno_module_group",
+            "version": "3.0.2",
+            "require": {
+                "drupal/core": "^9",
+                "drupal/opigno_module": "^3"
+            },
+            "type": "metapackage",
+            "extra": {
+                "drupal": {
+                    "version": "3.0.2",
+                    "datestamp": "1648805389",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jamesap",
+                    "homepage": "https://www.drupal.org/user/2547544"
+                },
+                {
+                    "name": "axelm",
+                    "homepage": "https://www.drupal.org/user/1065700"
+                },
+                {
+                    "name": "spheresh",
+                    "homepage": "https://www.drupal.org/user/624860"
+                },
+                {
+                    "name": "vshamov",
+                    "homepage": "https://www.drupal.org/user/3689794"
+                },
+                {
+                    "name": "yuriy.korzhov",
+                    "homepage": "https://www.drupal.org/user/3477971"
+                }
+            ],
+            "description": "Implement Module entity with Group content.",
+            "homepage": "https://www.drupal.org/project/opigno_module",
+            "support": {
+                "source": "https://git.drupalcode.org/project/opigno_module"
+            }
+        },
+        {
+            "name": "drupal/opigno_notification",
+            "version": "3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/opigno_notification.git",
+                "reference": "3.0.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/opigno_notification-3.0.2.zip",
+                "reference": "3.0.2",
+                "shasum": "47a46b37dcdba08a2a9abfd7c3886515898a25a1"
+            },
+            "require": {
+                "drupal/core": "^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "3.0.2",
+                    "datestamp": "1648805374",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jamesap",
+                    "homepage": "https://www.drupal.org/user/2547544"
+                },
+                {
+                    "name": "axelm",
+                    "homepage": "https://www.drupal.org/user/1065700"
+                },
+                {
+                    "name": "spheresh",
+                    "homepage": "https://www.drupal.org/user/624860"
+                },
+                {
+                    "name": "vshamov",
+                    "homepage": "https://www.drupal.org/user/3689794"
+                },
+                {
+                    "name": "yuriy.korzhov",
+                    "homepage": "https://www.drupal.org/user/3477971"
+                }
+            ],
+            "description": "Opigno notification.",
+            "homepage": "http://drupal.org/project/opigno_notification",
+            "support": {
+                "source": "https://git.drupalcode.org/project/opigno_notification"
+            }
+        },
+        {
+            "name": "drupal/opigno_social",
+            "version": "3.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/opigno_social.git",
+                "reference": "3.0.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/opigno_social-3.0.3.zip",
+                "reference": "3.0.3",
+                "shasum": "227970e78139e838f0a224ee3ed48f874e3212b5"
+            },
+            "require": {
+                "drupal/core": "^9",
+                "drupal/opigno_like": "*",
+                "drupal/opigno_messaging": "*",
+                "drupal/opigno_notification": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "3.0.3",
+                    "datestamp": "1654003115",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jamesap",
+                    "homepage": "https://www.drupal.org/user/2547544"
+                },
+                {
+                    "name": "axelm",
+                    "homepage": "https://www.drupal.org/user/1065700"
+                },
+                {
+                    "name": "spheresh",
+                    "homepage": "https://www.drupal.org/user/624860"
+                },
+                {
+                    "name": "vshamov",
+                    "homepage": "https://www.drupal.org/user/3689794"
+                },
+                {
+                    "name": "yuriy.korzhov",
+                    "homepage": "https://www.drupal.org/user/3477971"
+                }
+            ],
+            "description": "Opigno social.",
+            "homepage": "http://drupal.org/project/opigno_social",
+            "support": {
+                "source": "https://git.drupalcode.org/project/opigno_social"
+            }
+        },
+        {
+            "name": "drupal/opigno_statistics",
+            "version": "3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/opigno_statistics.git",
+                "reference": "3.0.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/opigno_statistics-3.0.2.zip",
+                "reference": "3.0.2",
+                "shasum": "2eada06559e31bbc53d470ba1a25057f2b78cad8"
+            },
+            "require": {
+                "drupal/core": "^9",
+                "drupal/group": "*",
+                "drupal/opigno_learning_path": "*",
+                "drupal/opigno_module": "*",
+                "drupal/opigno_social": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "3.0.2",
+                    "datestamp": "1648805009",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jamesap",
+                    "homepage": "https://www.drupal.org/user/2547544"
+                },
+                {
+                    "name": "axelm",
+                    "homepage": "https://www.drupal.org/user/1065700"
+                },
+                {
+                    "name": "spheresh",
+                    "homepage": "https://www.drupal.org/user/624860"
+                },
+                {
+                    "name": "vshamov",
+                    "homepage": "https://www.drupal.org/user/3689794"
+                },
+                {
+                    "name": "yuriy.korzhov",
+                    "homepage": "https://www.drupal.org/user/3477971"
+                }
+            ],
+            "description": "Opigno statistics.",
+            "homepage": "http://drupal.org/project/opigno_statistics",
+            "support": {
+                "source": "https://git.drupalcode.org/project/opigno_statistics"
+            }
+        },
+        {
+            "name": "drupal/opigno_user_selection",
+            "version": "3.0.3",
+            "require": {
+                "drupal/core": "^9",
+                "drupal/opigno_learning_path": "^3"
+            },
+            "type": "metapackage",
+            "extra": {
+                "drupal": {
+                    "version": "3.0.3",
+                    "datestamp": "1654003090",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jamesap",
+                    "homepage": "https://www.drupal.org/user/2547544"
+                },
+                {
+                    "name": "axelm",
+                    "homepage": "https://www.drupal.org/user/1065700"
+                },
+                {
+                    "name": "spheresh",
+                    "homepage": "https://www.drupal.org/user/624860"
+                },
+                {
+                    "name": "vshamov",
+                    "homepage": "https://www.drupal.org/user/3689794"
+                },
+                {
+                    "name": "yuriy.korzhov",
+                    "homepage": "https://www.drupal.org/user/3477971"
+                }
+            ],
+            "description": "Opigno User Selection Module",
+            "homepage": "https://www.drupal.org/project/opigno_learning_path",
+            "support": {
+                "source": "https://git.drupalcode.org/project/opigno_learning_path"
+            }
+        },
+        {
             "name": "drupal/orange_ecom_starter",
             "version": "dev-2.0.x",
             "source": {
@@ -10831,29 +12216,26 @@
         },
         {
             "name": "drupal/pdf",
-            "version": "1.1.0",
+            "version": "dev-1.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/pdf.git",
-                "reference": "8.x-1.1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/pdf-8.x-1.1.zip",
-                "reference": "8.x-1.1",
-                "shasum": "4ee049fc712f433e2a4f48aeaeb54351512ed2cc"
+                "reference": "c9b4600ee73b1555efe35c97b2260daf65a810a4"
             },
             "require": {
                 "drupal/core": "^8 || ^9"
             },
             "type": "drupal-module",
             "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
                 "drupal": {
-                    "version": "8.x-1.1",
-                    "datestamp": "1607548097",
+                    "version": "8.x-1.1+1-dev",
+                    "datestamp": "1660726104",
                     "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
+                        "status": "not-covered",
+                        "message": "Dev releases are not covered by Drupal security advisories."
                     }
                 }
             },
@@ -11260,6 +12642,89 @@
             "homepage": "http://drupal.org/project/profile",
             "support": {
                 "source": "https://git.drupalcode.org/project/profile"
+            }
+        },
+        {
+            "name": "drupal/queue_ui",
+            "version": "3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/queue_ui.git",
+                "reference": "3.1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/queue_ui-3.1.0.zip",
+                "reference": "3.1.0",
+                "shasum": "ac22f78dd8c8ad8b04430e26427995f63f070fdf"
+            },
+            "require": {
+                "drupal/core": "^9.2 || ^10"
+            },
+            "require-dev": {
+                "drupal/queue_order": "^2"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "3.1.0",
+                    "datestamp": "1657697420",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                },
+                "drush": {
+                    "services": {
+                        "drush.services.yml": "^9 || ^10 || ^11"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "floretan",
+                    "homepage": "https://www.drupal.org/user/2743951",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "coltrane",
+                    "homepage": "https://www.drupal.org/user/91990",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "tsphethean",
+                    "homepage": "https://www.drupal.org/user/66163",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "bceyssens",
+                    "homepage": "https://www.drupal.org/user/2811585",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "voleger",
+                    "homepage": "https://www.drupal.org/user/881620",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "voleger",
+                    "homepage": "https://www.drupal.org/user/3260314"
+                }
+            ],
+            "description": "Interface and manager for Drupal queues.",
+            "homepage": "https://www.drupal.org/project/queue_ui",
+            "keywords": [
+                "drupal",
+                "php",
+                "queue"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/queue_ui",
+                "issues": "https://www.drupal.org/project/issues/queue_ui"
             }
         },
         {
@@ -13051,6 +14516,71 @@
             }
         },
         {
+            "name": "drupal/tft",
+            "version": "3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/tft.git",
+                "reference": "3.0.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/tft-3.0.2.zip",
+                "reference": "3.0.2",
+                "shasum": "d51ba769c0821f3e94ee2f7b60fa76955fcfb2cf"
+            },
+            "require": {
+                "drupal/core": "^9",
+                "drupal/group": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "3.0.2",
+                    "datestamp": "1648806469",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jamesap",
+                    "homepage": "https://www.drupal.org/user/2547544"
+                },
+                {
+                    "name": "axelm",
+                    "homepage": "https://www.drupal.org/user/1065700"
+                },
+                {
+                    "name": "spheresh",
+                    "homepage": "https://www.drupal.org/user/624860"
+                },
+                {
+                    "name": "vshamov",
+                    "homepage": "https://www.drupal.org/user/3689794"
+                },
+                {
+                    "name": "wadmiraal",
+                    "homepage": "https://www.drupal.org/user/440510"
+                },
+                {
+                    "name": "yuriy.korzhov",
+                    "homepage": "https://www.drupal.org/user/3477971"
+                }
+            ],
+            "description": "Opigno tft.",
+            "homepage": "http://drupal.org/project/opigno_tft",
+            "support": {
+                "source": "https://git.drupalcode.org/project/tft"
+            }
+        },
+        {
             "name": "drupal/tms",
             "version": "1.0.0",
             "source": {
@@ -13170,6 +14700,119 @@
             "homepage": "https://www.drupal.org/project/token",
             "support": {
                 "source": "https://git.drupalcode.org/project/token"
+            }
+        },
+        {
+            "name": "drupal/token_filter",
+            "version": "1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/token_filter.git",
+                "reference": "8.x-1.4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/token_filter-8.x-1.4.zip",
+                "reference": "8.x-1.4",
+                "shasum": "d0d4ddc098c8e8002a0aefb066cb6cd7481a4658"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9",
+                "drupal/token": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.4",
+                    "datestamp": "1649114304",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "ademarco",
+                    "homepage": "https://www.drupal.org/user/186696"
+                },
+                {
+                    "name": "asciikewl",
+                    "homepage": "https://www.drupal.org/user/147292"
+                },
+                {
+                    "name": "darvanen",
+                    "homepage": "https://www.drupal.org/user/1068770"
+                },
+                {
+                    "name": "Dave Reid",
+                    "homepage": "https://www.drupal.org/user/53892"
+                },
+                {
+                    "name": "Deciphered",
+                    "homepage": "https://www.drupal.org/user/103796"
+                },
+                {
+                    "name": "pescetti",
+                    "homepage": "https://www.drupal.org/user/436244"
+                },
+                {
+                    "name": "pvhee",
+                    "homepage": "https://www.drupal.org/user/108811"
+                }
+            ],
+            "description": "This is a very simple module to make global token values available as an input filter.",
+            "homepage": "https://www.drupal.org/project/token_filter",
+            "support": {
+                "source": "https://git.drupalcode.org/project/token_filter"
+            }
+        },
+        {
+            "name": "drupal/twig_field_value",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/twig_field_value.git",
+                "reference": "2.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/twig_field_value-2.0.0.zip",
+                "reference": "2.0.0",
+                "shasum": "d2d0db6249493542bf9d568970f67d10ce143f90"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.0",
+                    "datestamp": "1587069998",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Sutharsan",
+                    "homepage": "https://www.drupal.org/user/73854"
+                }
+            ],
+            "description": "Twig filters for value(s) and label.",
+            "homepage": "https://www.drupal.org/project/twig_field_value",
+            "support": {
+                "source": "https://git.drupalcode.org/project/twig_field_value"
             }
         },
         {
@@ -13596,6 +15239,62 @@
             "homepage": "https://www.drupal.org/project/user_bundle",
             "support": {
                 "source": "https://git.drupalcode.org/project/user_bundle"
+            }
+        },
+        {
+            "name": "drupal/userprotect",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/userprotect.git",
+                "reference": "8.x-1.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/userprotect-8.x-1.1.zip",
+                "reference": "8.x-1.1",
+                "shasum": "485e240317a7fc1c0523b082f333c983ea3ca639"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "require-dev": {
+                "drupal/role_delegation": "^1.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.1",
+                    "datestamp": "1578341583",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "karschsp",
+                    "homepage": "https://www.drupal.org/user/138216"
+                },
+                {
+                    "name": "MegaChriz",
+                    "homepage": "https://www.drupal.org/user/654114"
+                }
+            ],
+            "description": "Allows admins to protect users from being edited or cancelled, on a per-user basis.",
+            "homepage": "https://www.drupal.org/project/userprotect",
+            "keywords": [
+                "Drupal",
+                "User Management"
+            ],
+            "support": {
+                "source": "http://cgit.drupalcode.org/userprotect",
+                "issues": "https://www.drupal.org/project/issues/userprotect"
             }
         },
         {
@@ -15061,6 +16760,128 @@
                 }
             ],
             "time": "2022-06-20T21:43:03+00:00"
+        },
+        {
+            "name": "h5p/h5p-core",
+            "version": "1.24.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/h5p/h5p-php-library.git",
+                "reference": "db3da7a1441ae6c9ffacbb8110f41758c85beaa0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/h5p/h5p-php-library/zipball/db3da7a1441ae6c9ffacbb8110f41758c85beaa0",
+                "reference": "db3da7a1441ae6c9ffacbb8110f41758c85beaa0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "h5p.classes.php",
+                    "h5p-development.class.php",
+                    "h5p-file-storage.interface.php",
+                    "h5p-default-storage.class.php",
+                    "h5p-event-base.class.php",
+                    "h5p-metadata.class.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Svein-Tore Griff With",
+                    "email": "with@joubel.com",
+                    "homepage": "http://joubel.com",
+                    "role": "CEO"
+                },
+                {
+                    "name": "Frode Petterson",
+                    "email": "frode.petterson@joubel.com",
+                    "homepage": "http://joubel.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "H5P Core functionality in PHP",
+            "homepage": "https://h5p.org",
+            "keywords": [
+                "content",
+                "h5p",
+                "hvp",
+                "interactive",
+                "quiz"
+            ],
+            "support": {
+                "issues": "https://github.com/h5p/h5p-php-library/issues",
+                "source": "https://github.com/h5p/h5p-php-library/tree/wp-1.15.2"
+            },
+            "time": "2021-04-22T09:30:45+00:00"
+        },
+        {
+            "name": "h5p/h5p-editor",
+            "version": "1.24.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/h5p/h5p-editor-php-library.git",
+                "reference": "dd70892f9e28c99f13bee2881601329d5c6c4a8e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/h5p/h5p-editor-php-library/zipball/dd70892f9e28c99f13bee2881601329d5c6c4a8e",
+                "reference": "dd70892f9e28c99f13bee2881601329d5c6c4a8e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "h5peditor.class.php",
+                    "h5peditor-file.class.php",
+                    "h5peditor-ajax.class.php",
+                    "h5peditor-storage.interface.php",
+                    "h5peditor-ajax.interface.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Svein-Tore Griff With",
+                    "email": "with@joubel.com",
+                    "homepage": "http://joubel.com",
+                    "role": "CEO"
+                },
+                {
+                    "name": "Frode Petterson",
+                    "email": "frode.petterson@joubel.com",
+                    "homepage": "http://joubel.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "H5P Editor functionality in PHP",
+            "homepage": "https://h5p.org",
+            "keywords": [
+                "content",
+                "editor",
+                "h5p",
+                "hvp",
+                "interactive",
+                "quiz"
+            ],
+            "support": {
+                "issues": "https://github.com/h5p/h5p-editor-php-library/issues",
+                "source": "https://github.com/h5p/h5p-editor-php-library/tree/1.24.4"
+            },
+            "time": "2022-01-20T10:17:49+00:00"
         },
         {
             "name": "html2text/html2text",
@@ -17677,6 +19498,52 @@
             "time": "2021-12-17T19:44:54+00:00"
         },
         {
+            "name": "phenx/php-svg-lib",
+            "version": "0.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dompdf/php-svg-lib.git",
+                "reference": "4498b5df7b08e8469f0f8279651ea5de9626ed02"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dompdf/php-svg-lib/zipball/4498b5df7b08e8469f0f8279651ea5de9626ed02",
+                "reference": "4498b5df7b08e8469f0f8279651ea5de9626ed02",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^7.1 || ^7.2 || ^7.3 || ^7.4 || ^8.0",
+                "sabberworm/php-css-parser": "^8.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Svg\\": "src/Svg"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Ménager",
+                    "email": "fabien.menager@gmail.com"
+                }
+            ],
+            "description": "A library to read, parse and export to PDF SVG files.",
+            "homepage": "https://github.com/PhenX/php-svg-lib",
+            "support": {
+                "issues": "https://github.com/dompdf/php-svg-lib/issues",
+                "source": "https://github.com/dompdf/php-svg-lib/tree/0.4.1"
+            },
+            "time": "2022-03-07T12:52:04+00:00"
+        },
+        {
             "name": "php-http/message-factory",
             "version": "v1.0.2",
             "source": {
@@ -18338,6 +20205,59 @@
                 "source": "https://github.com/ralouphie/getallheaders/tree/develop"
             },
             "time": "2019-03-08T08:55:37+00:00"
+        },
+        {
+            "name": "sabberworm/php-css-parser",
+            "version": "8.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sabberworm/PHP-CSS-Parser.git",
+                "reference": "e41d2140031d533348b2192a83f02d8dd8a71d30"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sabberworm/PHP-CSS-Parser/zipball/e41d2140031d533348b2192a83f02d8dd8a71d30",
+                "reference": "e41d2140031d533348b2192a83f02d8dd8a71d30",
+                "shasum": ""
+            },
+            "require": {
+                "ext-iconv": "*",
+                "php": ">=5.6.20"
+            },
+            "require-dev": {
+                "codacy/coverage": "^1.4",
+                "phpunit/phpunit": "^4.8.36"
+            },
+            "suggest": {
+                "ext-mbstring": "for parsing UTF-8 CSS"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sabberworm\\CSS\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Raphael Schweikert"
+                }
+            ],
+            "description": "Parser for CSS Files written in PHP",
+            "homepage": "https://www.sabberworm.com/blog/2010/6/10/php-css-parser",
+            "keywords": [
+                "css",
+                "parser",
+                "stylesheet"
+            ],
+            "support": {
+                "issues": "https://github.com/sabberworm/PHP-CSS-Parser/issues",
+                "source": "https://github.com/sabberworm/PHP-CSS-Parser/tree/8.4.0"
+            },
+            "time": "2021-12-11T13:40:54+00:00"
         },
         {
             "name": "scssphp/scssphp",
@@ -21046,16 +22966,16 @@
         },
         {
             "name": "symfony/string",
-            "version": "v6.1.3",
+            "version": "v6.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "f35241f45c30bcd9046af2bb200a7086f70e1d6b"
+                "reference": "290972cad7b364e3befaa74ba0ec729800fb161c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/f35241f45c30bcd9046af2bb200a7086f70e1d6b",
-                "reference": "f35241f45c30bcd9046af2bb200a7086f70e1d6b",
+                "url": "https://api.github.com/repos/symfony/string/zipball/290972cad7b364e3befaa74ba0ec729800fb161c",
+                "reference": "290972cad7b364e3befaa74ba0ec729800fb161c",
                 "shasum": ""
             },
             "require": {
@@ -21111,7 +23031,7 @@
                 "utf8"
             ],
             "support": {
-                "source": "https://github.com/symfony/string/tree/v6.1.3"
+                "source": "https://github.com/symfony/string/tree/v6.1.4"
             },
             "funding": [
                 {
@@ -21127,7 +23047,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-07-27T15:50:51+00:00"
+            "time": "2022-08-12T18:05:43+00:00"
         },
         {
             "name": "symfony/translation",
