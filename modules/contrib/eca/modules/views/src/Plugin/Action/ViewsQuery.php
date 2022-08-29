@@ -93,7 +93,9 @@ class ViewsQuery extends ConfigurableActionBase {
     $form = parent::buildConfigurationForm($form, $form_state);
     $views = [];
     foreach (View::loadMultiple() as $view) {
-      $views[$view->id()] = $view->label();
+      if ($view->status()) {
+        $views[$view->id()] = $view->label();
+      }
     }
     $form['token_name'] = [
       '#type' => 'textfield',
@@ -107,6 +109,7 @@ class ViewsQuery extends ConfigurableActionBase {
       '#default_value' => $this->configuration['view_id'],
       '#weight' => -50,
       '#options' => $views,
+      '#required' => TRUE,
     ];
     $form['display_id'] = [
       '#type' => 'textfield',

@@ -27,7 +27,6 @@ use Drupal\Core\ProxyClass\Lock\DatabaseLockBackend;
 use Drupal\config\StorageReplaceDataWrapper;
 use Drupal\eca\Service\Modellers;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -322,13 +321,20 @@ class Import extends FormBase {
       $replacement_storage = new StorageReplaceDataWrapper($active_storage);
       foreach ($source_storage->listAll() as $name) {
         $data = $source_storage->read($name);
-        $replacement_storage->replaceData($name, $data);
+        if (is_array($data)) {
+          $replacement_storage->replaceData($name, $data);
+        }
+        else {
+          $this->messenger()->addError($this->t('The contained config entity %name is invalid and got ignored.', [
+            '%name' => $name,
+          ]));
+        }
       }
       $source_storage = $replacement_storage;
 
       $storage_comparer = new StorageComparer($source_storage, $active_storage);
       if (!$storage_comparer->createChangelist()->hasChanges()) {
-        $this->messenger()->addStatus(('There are no changes to import.'));
+        $this->messenger()->addStatus('There are no changes to import.');
       }
       else {
         $config_importer = new ConfigImporter(
@@ -362,8 +368,7 @@ class Import extends FormBase {
           }
         }
       }
-      $fs = new Filesystem();
-      $fs->remove($source_storage_dir);
+      $this->fileSystem->delete($source_storage_dir);
     }
     $form_state->setRedirect('entity.eca.collection');
   }

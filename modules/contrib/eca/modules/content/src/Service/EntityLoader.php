@@ -270,7 +270,20 @@ class EntityLoader {
             \Drupal::logger('eca')->error('Tried parsing properties as YAML format for loading an entity, but parsing failed.');
           }
           if (is_array($properties) && !empty($properties)) {
-            $entities = $this->entityTypeManager->getStorage($config['entity_type'])->loadByProperties($properties);
+            $storage = $this->entityTypeManager->getStorage($config['entity_type']);
+            $query = $storage->getQuery();
+            $query->accessCheck(FALSE);
+            foreach ($properties as $name => $value) {
+              // Cast scalars to array so we can consistently use an IN
+              // condition.
+              // @see \Drupal\Core\Entity\EntityStorageBase::buildPropertyQuery
+              $query->condition($name, (array) $value, 'IN');
+            }
+            // Make sure to load at most one record.
+            $query->range(0, 1);
+
+            $result = $query->execute();
+            $entities = $result ? $storage->loadMultiple($result) : [];
             $entity = $entities ? reset($entities) : NULL;
           }
         }

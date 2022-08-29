@@ -34,6 +34,12 @@ class HookHandler extends BaseHookHandler {
    *   The form state.
    */
   public function alter(array &$form, FormStateInterface $form_state): void {
+    if (isset($form['#form_id']) && ($form['#form_id'] === 'system_modules_uninstall_confirm_form')) {
+      // When this module is being uninstalled via UI, it will lead to a fatal.
+      // To avoid this, the module uninstall confirm form is not supported.
+      // @see https://www.drupal.org/project/eca/issues/3305797
+      return;
+    }
     $this->triggerEvent->dispatchFromPlugin('form:form_build', $form, $form_state);
     // Add the handlers on class-level, to avoid expensive and possibly faulty
     // serialization of nested object references during form submissions.

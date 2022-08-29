@@ -451,16 +451,6 @@ class Eca extends ConfigEntityBase implements EntityWithPluginCollectionInterfac
           $fields[$key] = mb_strtolower($fields[$key]) === 'yes';
         }
       }
-      // When "replace_tokens" exists, also convert that one back to boolean.
-      // @see \Drupal\eca\Service\Actions::getConfigurationForm()
-      if (isset($fields['replace_tokens'])) {
-        if (!empty($fields['replace_tokens']) && is_string($fields['replace_tokens'])) {
-          $fields['replace_tokens'] = mb_strtolower($fields['replace_tokens']) === 'yes';
-        }
-        else {
-          $fields['replace_tokens'] = (bool) $fields['replace_tokens'];
-        }
-      }
     }
     // Build form.
     $form_state = new FormState();

@@ -760,7 +760,7 @@ abstract class ModellerBpmnBase extends ModellerBase {
           case 'checkboxes':
           case 'radios':
           case 'select':
-            $fields[] = $this->optionsField($key, $label, $weight, $description, $definition['#options'], (string) $value);
+            $fields[] = $this->optionsField($key, $label, $weight, $description, $definition['#options'], (string) $value, $definition['#required'] ?? FALSE);
             continue 2;
 
         }
@@ -816,17 +816,22 @@ abstract class ModellerBpmnBase extends ModellerBase {
    *   Key/value list of available options.
    * @param string $value
    *   The default value for the field.
+   * @param bool $required
+   *   The setting, if this field is required to be filled by the user.
    *
    * @return array
    *   Prepared option field.
    */
-  protected function optionsField(string $name, string $label, int $weight, ?string $description, array $options, string $value): array {
+  protected function optionsField(string $name, string $label, int $weight, ?string $description, array $options, string $value, bool $required = FALSE): array {
     $choices = [];
     foreach ($options as $optionValue => $optionName) {
       $choices[] = [
         'name' => (string) $optionName,
         'value' => (string) $optionValue,
       ];
+      if ($required && $value === '') {
+        $value = (string) $optionValue;
+      }
     }
     $field = [
       'name' => $name,
@@ -867,7 +872,7 @@ abstract class ModellerBpmnBase extends ModellerBase {
       'label' => $label,
       'weight' => $weight,
       'type' => 'Dropdown',
-      'value' => $value,
+      'value' => $value ? 'yes' : 'no',
       'extras' => [
         'choices' => [
           [
