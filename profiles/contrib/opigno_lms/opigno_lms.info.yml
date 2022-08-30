@@ -3,8 +3,7 @@ type: profile
 description: 'Install Opigno with commonly used features pre-configured.'
 core_version_requirement: ^9
 version: '3.0.4'
-distribution:
-  name: "Opigno LMS"
+
 dependencies:
   - views_infinite_scroll
   - better_exposed_filters
