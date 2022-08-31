@@ -71,10 +71,7 @@ final class SubdivisionRepositoryTest extends TestCase
         // Instantiate the subdivision repository and confirm that the
         // definition path was properly set.
         $subdivisionRepository = new SubdivisionRepository(null, 'vfs://resources/subdivision/');
-
-        $reflected_constraint = (new \ReflectionObject($subdivisionRepository))->getProperty('definitionPath');
-        $reflected_constraint->setAccessible(TRUE);
-        $definitionPath = $reflected_constraint->getValue($subdivisionRepository);
+        $definitionPath = $this->getObjectAttribute($subdivisionRepository, 'definitionPath');
         $this->assertEquals('vfs://resources/subdivision/', $definitionPath);
 
         return $subdivisionRepository;
@@ -152,13 +149,13 @@ final class SubdivisionRepositoryTest extends TestCase
         $this->assertCount(2, $subdivisions);
         $this->assertArrayHasKey('SC', $subdivisions);
         $this->assertArrayHasKey('SP', $subdivisions);
-        $this->assertEquals('SC', $subdivisions['SC']->getCode());
-        $this->assertEquals('SP', $subdivisions['SP']->getCode());
+        $this->assertEquals($subdivisions['SC']->getCode(), 'SC');
+        $this->assertEquals($subdivisions['SP']->getCode(), 'SP');
 
         $subdivisions = $subdivisionRepository->getAll(['BR', 'SC']);
         $this->assertCount(1, $subdivisions);
         $this->assertArrayHasKey('Abelardo Luz', $subdivisions);
-        $this->assertEquals('Abelardo Luz', $subdivisions['Abelardo Luz']->getCode());
+        $this->assertEquals($subdivisions['Abelardo Luz']->getCode(), 'Abelardo Luz');
     }
 
     /**

@@ -1,7 +1,0 @@
-name: Group Mandatory
-description: Add option to disallow content type without group.
-type: module
-core_version_requirement: ^8.8 || ^9
-dependencies:
-  - group:group
-  - route_override:route_override

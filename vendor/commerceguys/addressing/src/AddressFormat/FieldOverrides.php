@@ -54,7 +54,7 @@ final class FieldOverrides
      *
      * @return string[]
      */
-    public function getHiddenFields(): array
+    public function getHiddenFields()
     {
         return $this->hiddenFields;
     }
@@ -64,7 +64,7 @@ final class FieldOverrides
      *
      * @return string[]
      */
-    public function getOptionalFields(): array
+    public function getOptionalFields()
     {
         return $this->optionalFields;
     }
@@ -74,7 +74,7 @@ final class FieldOverrides
      *
      * @return string[]
      */
-    public function getRequiredFields(): array
+    public function getRequiredFields()
     {
         return $this->requiredFields;
     }

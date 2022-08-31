@@ -30,7 +30,7 @@ class AddressFormatRepository implements AddressFormatRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getAll(): array
+    public function getAll()
     {
         $definitions = $this->getDefinitions();
         $addressFormats = [];
@@ -50,7 +50,7 @@ class AddressFormatRepository implements AddressFormatRepositoryInterface
      *
      * @return array The processed definition.
      */
-    protected function processDefinition(string $countryCode, array $definition): array
+    protected function processDefinition($countryCode, array $definition)
     {
         $definition['country_code'] = $countryCode;
         // Merge-in defaults.
@@ -67,7 +67,7 @@ class AddressFormatRepository implements AddressFormatRepositoryInterface
      *
      * @return array The generic address format definition.
      */
-    protected function getGenericDefinition(): array
+    protected function getGenericDefinition()
     {
         return [
             'format' => "%givenName %familyName\n%organization\n%addressLine1\n%addressLine2\n%locality",
@@ -90,7 +90,7 @@ class AddressFormatRepository implements AddressFormatRepositoryInterface
      *
      * @return array The address format definitions.
      */
-    protected function getDefinitions(): array
+    protected function getDefinitions()
     {
         // @codingStandardsIgnoreStart
         $definitions = [
@@ -215,7 +215,7 @@ class AddressFormatRepository implements AddressFormatRepositoryInterface
             ],
             'BH' => [
                 'format' => "%givenName %familyName\n%organization\n%addressLine1\n%addressLine2\n%locality %postalCode",
-                'postal_code_pattern' => '(?:^|\b)(?:1[0-2]|[1-9])\d{2}(?:$|\b)',
+                'postal_code_pattern' => '(?:\d|1[0-2])\d{2}',
             ],
             'BJ' => [
                 'uppercase_fields' => [
@@ -268,7 +268,7 @@ class AddressFormatRepository implements AddressFormatRepositoryInterface
                 'postal_code_pattern' => '\d{5}',
             ],
             'BY' => [
-                'format' => "%organization\n%givenName %familyName\n%addressLine1\n%addressLine2\n%postalCode, %locality\n%administrativeArea",
+                'format' => "%administrativeArea\n%postalCode %locality\n%addressLine1\n%addressLine2\n%organization\n%givenName %familyName",
                 'postal_code_pattern' => '\d{6}',
             ],
             'CA' => [
@@ -628,7 +628,7 @@ class AddressFormatRepository implements AddressFormatRepositoryInterface
                 'subdivision_depth' => 1,
             ],
             'IE' => [
-                'format' => "%givenName %familyName\n%organization\n%addressLine1\n%addressLine2\n%dependentLocality\n%locality\n%administrativeArea\n%postalCode",
+                'format' => "%givenName %familyName\n%organization\n%addressLine1\n%addressLine2\n%dependentLocality\n%locality\n%administrativeArea %postalCode",
                 'administrative_area_type' => 'county',
                 'dependent_locality_type' => 'townland',
                 'postal_code_type' => 'eircode',
@@ -746,7 +746,7 @@ class AddressFormatRepository implements AddressFormatRepositoryInterface
             ],
             'KH' => [
                 'format' => "%familyName %givenName\n%organization\n%addressLine1\n%addressLine2\n%locality %postalCode",
-                'postal_code_pattern' => '\d{5,6}',
+                'postal_code_pattern' => '\d{5}',
             ],
             'KI' => [
                 'format' => "%givenName %familyName\n%organization\n%addressLine1\n%addressLine2\n%administrativeArea\n%locality",
@@ -1002,7 +1002,7 @@ class AddressFormatRepository implements AddressFormatRepositoryInterface
                 'subdivision_depth' => 1,
             ],
             'NA' => [
-                'format' => "%givenName %familyName\n%organization\n%addressLine1\n%addressLine2\n%locality\n%postalCode",
+                'format' => "%givenName %familyName\n%organization\n%addressLine1\n%addressLine2\n%localityn%postalCode",
                 'postal_code_pattern' => '\d{5}',
             ],
             'NC' => [

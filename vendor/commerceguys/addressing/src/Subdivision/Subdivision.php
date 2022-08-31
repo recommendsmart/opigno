@@ -3,7 +3,6 @@
 namespace CommerceGuys\Addressing\Subdivision;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 
 /**
  * Represents a country subdivision.
@@ -136,7 +135,7 @@ class Subdivision
      *
      * @return Subdivision|null The parent, or NULL if there is none.
      */
-    public function getParent(): ?Subdivision
+    public function getParent()
     {
         return $this->parent;
     }
@@ -149,7 +148,7 @@ class Subdivision
      *
      * @return string The two-letter country code.
      */
-    public function getCountryCode(): string
+    public function getCountryCode()
     {
         return $this->countryCode;
     }
@@ -162,7 +161,7 @@ class Subdivision
      *
      * @return string|null The subdivision locale, if defined.
      */
-    public function getLocale(): ?string
+    public function getLocale()
     {
         return $this->locale;
     }
@@ -179,7 +178,7 @@ class Subdivision
      *
      * @return string The subdivision code.
      */
-    public function getCode(): string
+    public function getCode()
     {
         return $this->code;
     }
@@ -192,7 +191,7 @@ class Subdivision
      *
      * @return string|null The subdivision local code, if defined.
      */
-    public function getLocalCode(): ?string
+    public function getLocalCode()
     {
         return $this->localCode;
     }
@@ -205,7 +204,7 @@ class Subdivision
      *
      * @return string The subdivision name.
      */
-    public function getName(): string
+    public function getName()
     {
         return $this->name;
     }
@@ -218,7 +217,7 @@ class Subdivision
      *
      * @return string|null The subdivision local name, if defined.
      */
-    public function getLocalName(): ?string
+    public function getLocalName()
     {
         return $this->localName;
     }
@@ -230,7 +229,7 @@ class Subdivision
      *
      * @return string|null The subdivision ISO 3166-2 code.
      */
-    public function getIsoCode(): ?string
+    public function getIsoCode()
     {
         return $this->isoCode;
     }
@@ -241,10 +240,8 @@ class Subdivision
      * This is a regular expression pattern used to validate postal codes.
      *
      * @return string|null The postal code pattern.
-     *
-     * @deprecated since commerceguys/addressing 1.1.0.
      */
-    public function getPostalCodePattern(): ?string
+    public function getPostalCodePattern()
     {
         return $this->postalCodePattern;
     }
@@ -253,10 +250,8 @@ class Subdivision
      * Gets the postal code pattern type.
      *
      * @return string|null The postal code pattern type.
-     *
-     * @deprecated since commerceguys/addressing 1.1.0.
      */
-    public function getPostalCodePatternType(): ?string
+    public function getPostalCodePatternType()
     {
         return $this->postalCodePatternType;
     }
@@ -264,9 +259,9 @@ class Subdivision
     /**
      * Gets the subdivision children.
      *
-     * @return ArrayCollection|LazySubdivisionCollection The subdivision children.
+     * @return Subdivision[] The subdivision children.
      */
-    public function getChildren(): Collection
+    public function getChildren()
     {
         return $this->children;
     }
@@ -276,7 +271,7 @@ class Subdivision
      *
      * @return bool TRUE if the subdivision has children, FALSE otherwise.
      */
-    public function hasChildren(): bool
+    public function hasChildren()
     {
         return !$this->children->isEmpty();
     }

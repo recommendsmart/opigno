@@ -14,6 +14,9 @@ final class AddressFormatHelper
      *
      * Applies field overrides, to ensure hidden fields are skipped.
      *
+     * @param string         $formatString   The format string.
+     * @param FieldOverrides $fieldOverrides The field overrides.
+     *
      * @return array An array of address fields grouped by line, in the same
      *               order as they appear in the format string. For example:
      *               [
@@ -23,9 +26,8 @@ final class AddressFormatHelper
      *                 [addressLine2],
      *                 [locality, administrativeArea, postalCode]
      *               ]
-     * @throws \ReflectionException
      */
-    public static function getGroupedFields(string $formatString, FieldOverrides $fieldOverrides = null): array
+    public static function getGroupedFields($formatString, FieldOverrides $fieldOverrides = null)
     {
         $groupedFields = [];
         $hiddenFields = $fieldOverrides ? $fieldOverrides->getHiddenFields() : [];
@@ -53,9 +55,12 @@ final class AddressFormatHelper
      * Applies field overrides to the required fields
      * specified by the address format.
      *
+     * @param AddressFormat $addressFormat   The address format.
+     * @param FieldOverrides $fieldOverrides The field overrides.
+     *
      * @return string[] The required fields.
      */
-    public static function getRequiredFields(AddressFormat $addressFormat, FieldOverrides $fieldOverrides): array
+    public static function getRequiredFields(AddressFormat $addressFormat, FieldOverrides $fieldOverrides)
     {
         $requiredFields = $addressFormat->getRequiredFields();
         $requiredFields = array_diff($requiredFields, $fieldOverrides->getOptionalFields());

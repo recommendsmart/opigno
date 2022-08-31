@@ -112,6 +112,11 @@ class AddressFormat
      */
     protected $subdivisionDepth;
 
+    /**
+     * Creates a new AddressFormat instance.
+     *
+     * @param array $definition The definition array.
+     */
     public function __construct(array $definition)
     {
         // Validate the presence of required properties.
@@ -177,7 +182,7 @@ class AddressFormat
      *
      * @return string The two-letter country code.
      */
-    public function getCountryCode(): string
+    public function getCountryCode()
     {
         return $this->countryCode;
     }
@@ -189,7 +194,7 @@ class AddressFormat
      *
      * @return string|null The locale, if defined.
      */
-    public function getLocale(): ?string
+    public function getLocale()
     {
         return $this->locale;
     }
@@ -210,7 +215,7 @@ class AddressFormat
      *
      * @return string The format string.
      */
-    public function getFormat(): string
+    public function getFormat()
     {
         return $this->format;
     }
@@ -225,7 +230,7 @@ class AddressFormat
      *
      * @return string|null The local format string, if defined.
      */
-    public function getLocalFormat(): ?string
+    public function getLocalFormat()
     {
         return $this->localFormat;
     }
@@ -235,7 +240,7 @@ class AddressFormat
      *
      * @return array An array of address fields.
      */
-    public function getUsedFields(): array
+    public function getUsedFields()
     {
         if (empty($this->usedFields)) {
             $this->usedFields = [];
@@ -254,7 +259,7 @@ class AddressFormat
      *
      * @return array An array of address fields.
      */
-    public function getUsedSubdivisionFields(): array
+    public function getUsedSubdivisionFields()
     {
         $fields = [
             AddressField::ADMINISTRATIVE_AREA,
@@ -273,7 +278,7 @@ class AddressFormat
      *
      * @return array An array of address fields.
      */
-    public function getRequiredFields(): array
+    public function getRequiredFields()
     {
         return $this->requiredFields;
     }
@@ -296,7 +301,7 @@ class AddressFormat
      * @return string|null The administrative area type, or null if the
      *                     administrative area field isn't used.
      */
-    public function getAdministrativeAreaType(): ?string
+    public function getAdministrativeAreaType()
     {
         return $this->administrativeAreaType;
     }
@@ -309,7 +314,7 @@ class AddressFormat
      * @return string|null The locality type, or null if the locality field
      *                     isn't used.
      */
-    public function getLocalityType(): ?string
+    public function getLocalityType()
     {
         return $this->localityType;
     }
@@ -322,7 +327,7 @@ class AddressFormat
      * @return string|null The dependent locality type, or null if the
      *                     dependent locality field isn't used.
      */
-    public function getDependentLocalityType(): ?string
+    public function getDependentLocalityType()
     {
         return $this->dependentLocalityType;
     }
@@ -335,7 +340,7 @@ class AddressFormat
      * @return string|null The postal code type, or null if the postal code
      *                     field isn't used.
      */
-    public function getPostalCodeType(): ?string
+    public function getPostalCodeType()
     {
         return $this->postalCodeType;
     }
@@ -349,7 +354,7 @@ class AddressFormat
      *
      * @return string|null The postal code pattern.
      */
-    public function getPostalCodePattern(): ?string
+    public function getPostalCodePattern()
     {
         return $this->postalCodePattern;
     }
@@ -362,7 +367,7 @@ class AddressFormat
      *
      * @return string|null The postal code prefix.
      */
-    public function getPostalCodePrefix(): ?string
+    public function getPostalCodePrefix()
     {
         return $this->postalCodePrefix;
     }
@@ -387,7 +392,7 @@ class AddressFormat
      *             2: administrative areas, localities.
      *             3: administrative areas, localities, dependent localities.
      */
-    public function getSubdivisionDepth(): int
+    public function getSubdivisionDepth()
     {
         return $this->subdivisionDepth;
     }

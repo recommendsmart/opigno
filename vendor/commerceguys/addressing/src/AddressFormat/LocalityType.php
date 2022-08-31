@@ -16,7 +16,12 @@ final class LocalityType extends AbstractEnum
     const POST_TOWN = 'post_town';
     const SUBURB = 'suburb';
 
-    public static function getDefault(): string
+    /**
+     * Gets the default value.
+     *
+     * @return string The default value.
+     */
+    public static function getDefault()
     {
         return static::CITY;
     }

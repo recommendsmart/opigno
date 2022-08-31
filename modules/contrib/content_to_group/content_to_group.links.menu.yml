@@ -1,5 +1,0 @@
-content_to_group.settings:
-  title: Content to Group
-  description: Assign content to a group.
-  route_name: content_to_group.settings
-  parent: system.admin_config

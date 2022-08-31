@@ -1,7 +1,0 @@
-content_to_group.settings:
-  path: 'admin/config/content-to-group-settings'
-  defaults:
-    _form: 'Drupal\content_to_group\Form\ContentToGroupSettingsForm'
-    _title: 'Assign Content to Group'
-  requirements:
-    _permission: 'administer site configuration'

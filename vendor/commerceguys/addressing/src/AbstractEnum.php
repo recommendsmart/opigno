@@ -22,9 +22,8 @@ abstract class AbstractEnum
      * Gets all available values.
      *
      * @return array The available values, keyed by constant.
-     * @throws \ReflectionException
      */
-    public static function getAll(): array
+    public static function getAll()
     {
         $class = get_called_class();
         if (!isset(static::$values[$class])) {
@@ -38,9 +37,11 @@ abstract class AbstractEnum
     /**
      * Gets the key of the provided value.
      *
+     * @param string $value The value.
+     *
      * @return string|false The key if found, false otherwise.
      */
-    public static function getKey(string $value)
+    public static function getKey($value)
     {
         return array_search($value, static::getAll(), true);
     }
@@ -48,9 +49,11 @@ abstract class AbstractEnum
     /**
      * Checks whether the provided value is defined.
      *
+     * @param string $value The value.
+     *
      * @return bool True if the value is defined, false otherwise.
      */
-    public static function exists(string $value): bool
+    public static function exists($value)
     {
         return in_array($value, static::getAll(), true);
     }
@@ -58,9 +61,11 @@ abstract class AbstractEnum
     /**
      * Asserts that the provided value is defined.
      *
+     * @param string $value The value.
+     *
      * @throws \InvalidArgumentException
      */
-    public static function assertExists(string $value): void
+    public static function assertExists($value)
     {
         if (static::exists($value) == false) {
             $class = substr(strrchr(get_called_class(), '\\'), 1);
@@ -70,8 +75,10 @@ abstract class AbstractEnum
 
     /**
      * Asserts that all provided values are defined.
+     *
+     * @param array $values The values.
      */
-    public static function assertAllExist(array $values): void
+    public static function assertAllExist(array $values)
     {
         foreach ($values as $value) {
             static::assertExists($value);

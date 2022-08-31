@@ -46,10 +46,7 @@ final class CountryRepositoryTest extends TestCase
         // Instantiate the country repository and confirm that the definition path
         // was properly set.
         $countryRepository = new CountryRepository('de', 'en', 'vfs://resources/country/');
-
-        $reflected_constraint = (new \ReflectionObject($countryRepository))->getProperty('definitionPath');
-        $reflected_constraint->setAccessible(TRUE);
-        $definitionPath = $reflected_constraint->getValue($countryRepository);
+        $definitionPath = $this->getObjectAttribute($countryRepository, 'definitionPath');
         $this->assertEquals('vfs://resources/country/', $definitionPath);
 
         return $countryRepository;
@@ -95,12 +92,11 @@ final class CountryRepositoryTest extends TestCase
      * @covers ::loadDefinitions
      *
      * @uses \CommerceGuys\Addressing\Locale
-     *
+     * @expectedException \CommerceGuys\Addressing\Exception\UnknownCountryException
      * @depends testConstructor
      */
     public function testGetInvalidCountry($countryRepository)
     {
-        $this->expectException(\CommerceGuys\Addressing\Exception\UnknownCountryException::class);
         $countryRepository->get('INVALID');
     }
 

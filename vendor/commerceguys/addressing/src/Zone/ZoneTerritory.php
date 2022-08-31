@@ -82,7 +82,7 @@ class ZoneTerritory
      *
      * @return string The country code.
      */
-    public function getCountryCode(): string
+    public function getCountryCode()
     {
         return $this->countryCode;
     }
@@ -92,7 +92,7 @@ class ZoneTerritory
      *
      * @return string|null The administrative area, or null if all should match.
      */
-    public function getAdministrativeArea(): ?string
+    public function getAdministrativeArea()
     {
         return $this->administrativeArea;
     }
@@ -102,7 +102,7 @@ class ZoneTerritory
      *
      * @return string|null The locality, or null if all should match.
      */
-    public function getLocality(): ?string
+    public function getLocality()
     {
         return $this->locality;
     }
@@ -112,7 +112,7 @@ class ZoneTerritory
      *
      * @return string|null The dependent locality, or null if all should match.
      */
-    public function getDependentLocality(): ?string
+    public function getDependentLocality()
     {
         return $this->dependentLocality;
     }
@@ -122,7 +122,7 @@ class ZoneTerritory
      *
      * @return string|null The included postal codes, or null if all should match.
      */
-    public function getIncludedPostalCodes(): ?string
+    public function getIncludedPostalCodes()
     {
         return $this->includedPostalCodes;
     }
@@ -132,7 +132,7 @@ class ZoneTerritory
      *
      * @return string|null The excluded postal codes, or null if all should match.
      */
-    public function getExcludedPostalCodes(): ?string
+    public function getExcludedPostalCodes()
     {
         return $this->excludedPostalCodes;
     }
@@ -140,9 +140,11 @@ class ZoneTerritory
     /**
      * Checks whether the provided address belongs to the territory.
      *
+     * @param \CommerceGuys\Addressing\AddressInterfacee $address The address.
+     *
      * @return bool True if the address belongs to the territory, false otherwise.
      */
-    public function match(AddressInterface $address): bool
+    public function match(AddressInterface $address)
     {
         if ($address->getCountryCode() != $this->countryCode) {
             return false;

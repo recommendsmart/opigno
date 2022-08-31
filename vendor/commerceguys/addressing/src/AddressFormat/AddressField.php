@@ -28,9 +28,8 @@ final class AddressField extends AbstractEnum
      * Gets the tokens (values prefixed with %).
      *
      * @return array An array of tokens, keyed by constant.
-     * @throws \ReflectionException
      */
-    public static function getTokens(): array
+    public static function getTokens()
     {
         $tokens = array_map(function ($field) {
             return '%' . $field;

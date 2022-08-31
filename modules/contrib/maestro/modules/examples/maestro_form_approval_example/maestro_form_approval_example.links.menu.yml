@@ -1,4 +1,0 @@
-maestro_form_example.menu:
-  title: Submit Request to Manager
-  route_name: maestro.start_process
-  route_parameters: { templateMachineName: form_approval_flow , redirect: taskconsole }

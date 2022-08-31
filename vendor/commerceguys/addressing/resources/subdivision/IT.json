@@ -424,7 +424,7 @@
 		"SS": {
 			"name": "Sassari",
 			"iso_code": "IT-SS",
-			"postal_code_pattern": "07[01]|08020"
+			"postal_code_pattern": "07[01]"
 		},
 		"SV": {
 			"name": "Savona",
@@ -446,10 +446,10 @@
 			"iso_code": "IT-SO",
 			"postal_code_pattern": "23[01]"
 		},
-		"SU": {
+		"SD": {
 			"name": "Sud Sardegna",
-			"iso_code": "IT-SU",
-			"postal_code_pattern": "090[1-5][0-9]|0906[0-6]|080[1-4]"
+			"iso_code": "IT-SD",
+			"postal_code_pattern": "090[1-5][0-9]|0906[0-6]"
 		},
 		"TA": {
 			"name": "Taranto",

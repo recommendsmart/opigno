@@ -1,4 +1,0 @@
-group_clone_nodes.clone_node:
-  title: Group Clone Nodes
-  route_name: view.group_clone_nodes.page_1
-  base_route: system.admin_content

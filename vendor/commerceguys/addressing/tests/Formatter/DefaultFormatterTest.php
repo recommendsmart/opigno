@@ -4,12 +4,9 @@ namespace CommerceGuys\Addressing\Tests\Formatter;
 
 use CommerceGuys\Addressing\Address;
 use CommerceGuys\Addressing\AddressFormat\AddressFormatRepository;
-use CommerceGuys\Addressing\AddressFormat\AddressFormatRepositoryInterface;
 use CommerceGuys\Addressing\Country\CountryRepository;
-use CommerceGuys\Addressing\Country\CountryRepositoryInterface;
 use CommerceGuys\Addressing\Formatter\DefaultFormatter;
 use CommerceGuys\Addressing\Subdivision\SubdivisionRepository;
-use CommerceGuys\Addressing\Subdivision\SubdivisionRepositoryInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -48,7 +45,7 @@ final class DefaultFormatterTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->addressFormatRepository = new AddressFormatRepository();
         $this->countryRepository = new CountryRepository();
@@ -59,41 +56,29 @@ final class DefaultFormatterTest extends TestCase
     /**
      * @covers ::__construct
      */
-    public function testConstructor(): void
+    public function testConstructor()
     {
         $formatter = new DefaultFormatter($this->addressFormatRepository, $this->countryRepository, $this->subdivisionRepository);
-
-        $reflected_constraint = (new \ReflectionObject($formatter))->getProperty('addressFormatRepository');
-        $reflected_constraint->setAccessible(TRUE);
-        $constraint = $reflected_constraint->getValue($formatter);
-        $this->assertInstanceOf(AddressFormatRepository::class, $constraint);
-
-        $reflected_constraint = (new \ReflectionObject($formatter))->getProperty('countryRepository');
-        $reflected_constraint->setAccessible(TRUE);
-        $constraint = $reflected_constraint->getValue($formatter);
-        $this->assertInstanceOf(CountryRepository::class, $constraint);
-
-        $reflected_constraint = (new \ReflectionObject($formatter))->getProperty('subdivisionRepository');
-        $reflected_constraint->setAccessible(TRUE);
-        $constraint = $reflected_constraint->getValue($formatter);
-        $this->assertInstanceOf(SubdivisionRepository::class, $constraint);
+        $this->assertEquals($this->addressFormatRepository, $this->getObjectAttribute($formatter, 'addressFormatRepository'));
+        $this->assertEquals($this->countryRepository, $this->getObjectAttribute($formatter, 'countryRepository'));
+        $this->assertEquals($this->subdivisionRepository, $this->getObjectAttribute($formatter, 'subdivisionRepository'));
     }
 
     /**
      * @covers ::__construct
+     * @expectedException \InvalidArgumentException
      */
     public function testUnrecognizedOption()
     {
-        $this->expectException(\InvalidArgumentException::class);
         $formatter = new DefaultFormatter($this->addressFormatRepository, $this->countryRepository, $this->subdivisionRepository, ['unrecognized' => '123']);
     }
 
     /**
      * @covers ::__construct
+     * @expectedException \InvalidArgumentException
      */
     public function testInvalidOption()
     {
-        $this->expectException(\InvalidArgumentException::class);
         $formatter = new DefaultFormatter($this->addressFormatRepository, $this->countryRepository, $this->subdivisionRepository, ['html' => 'INVALID']);
     }
 
@@ -287,8 +272,11 @@ final class DefaultFormatterTest extends TestCase
 
     /**
      * Asserts that the formatted address is valid.
+     *
+     * @param array  $expectedLines
+     * @param string $formattedAddress
      */
-    protected function assertFormattedAddress(array $expectedLines, string $formattedAddress)
+    protected function assertFormattedAddress(array $expectedLines, $formattedAddress)
     {
         $expectedLines = implode("\n", $expectedLines);
         $this->assertEquals($expectedLines, $formattedAddress);

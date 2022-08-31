@@ -1,27 +1,27 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace DrupalCodeGenerator\Helper;
 
-use DrupalCodeGenerator\Asset\File;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Console\Helper\Helper;
 use Twig\Environment;
 
 /**
  * Output dumper form generators.
  */
-class Renderer extends Helper implements LoggerAwareInterface {
-
-  use LoggerAwareTrait;
+class Renderer extends Helper {
 
   /**
    * The twig environment.
+   *
+   * @var \Twig\Environment
    */
-  protected Environment $twig;
+  protected $twig;
 
   /**
-   * Constructs the Renderer object.
+   * Constructs a generator command.
+   *
+   * @param \Twig\Environment $twig
+   *   The twig environment.
    */
   public function __construct(Environment $twig) {
     $this->twig = $twig;
@@ -30,8 +30,8 @@ class Renderer extends Helper implements LoggerAwareInterface {
   /**
    * {@inheritdoc}
    */
-  public function getName(): string {
-    return 'renderer';
+  public function getName() {
+    return 'dcg_renderer';
   }
 
   /**
@@ -45,54 +45,8 @@ class Renderer extends Helper implements LoggerAwareInterface {
    * @return string
    *   A string representing the rendered output.
    */
-  public function render(string $template, array $vars): string {
+  public function render($template, array $vars) {
     return $this->twig->render($template, $vars);
-  }
-
-  /**
-   * Renders a Twig string directly.
-   *
-   * @param string $inline_template
-   *   The template string to render.
-   * @param array $vars
-   *   (Optional) Template variables.
-   *
-   * @return string
-   *   A string representing the rendered output.
-   */
-  public function renderInline(string $inline_template, array $vars): string {
-    return $this->twig->createTemplate($inline_template)->render($vars);
-  }
-
-  /**
-   * Renders an asset.
-   *
-   * @param \DrupalCodeGenerator\Asset\File $asset
-   *   Asset to render.
-   */
-  public function renderAsset(File $asset): void {
-
-    $template = $asset->getTemplate();
-    $inline_template = $asset->getInlineTemplate();
-    // A generator may set content directly.
-    if (!$template && !$inline_template) {
-      return;
-    }
-
-    $content = '';
-    if ($header_template = $asset->getHeaderTemplate()) {
-      $content .= $this->render($header_template, $asset->getVars()) . "\n";
-    }
-
-    if ($template) {
-      $content .= $this->render($template, $asset->getVars());
-    }
-    elseif ($inline_template) {
-      $content .= $this->renderInline($inline_template, $asset->getVars());
-    }
-    $this->logger->debug('Rendered template: {template}', ['template' => $asset->getTemplate()]);
-
-    $asset->content($content);
   }
 
   /**
@@ -101,10 +55,8 @@ class Renderer extends Helper implements LoggerAwareInterface {
    * @param string $path
    *   A path where to look for templates.
    */
-  public function prependPath(string $path): void {
-    /** @var \Twig\Loader\FilesystemLoader $loader */
-    $loader = $this->twig->getLoader();
-    $loader->prependPath($path);
+  public function addPath($path) {
+    return $this->twig->getLoader()->addPath($path);
   }
 
 }

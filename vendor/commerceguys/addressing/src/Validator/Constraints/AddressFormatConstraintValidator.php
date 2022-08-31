@@ -33,6 +33,9 @@ class AddressFormatConstraintValidator extends ConstraintValidator
 
     /**
      * Creates an AddressFormatValidator instance.
+     *
+     * @param AddressFormatRepositoryInterface $addressFormatRepository
+     * @param SubdivisionRepositoryInterface   $subdivisionRepository
      */
     public function __construct(AddressFormatRepositoryInterface $addressFormatRepository = null, SubdivisionRepositoryInterface $subdivisionRepository = null)
     {
@@ -86,13 +89,13 @@ class AddressFormatConstraintValidator extends ConstraintValidator
     /**
      * Validates the provided subdivision values.
      *
-     * @param array $values        The field values, keyed by field constants.
+     * @param array                   $values        The field values, keyed by field constants.
      * @param AddressFormat           $addressFormat The address format.
      * @param AddressFormatConstraint $constraint    The constraint.
      *
      * @return array An array of found valid subdivisions.
      */
-    protected function validateSubdivisions(array $values, AddressFormat $addressFormat, AddressFormatConstraint $constraint): array
+    protected function validateSubdivisions($values, AddressFormat $addressFormat, $constraint)
     {
         if ($addressFormat->getSubdivisionDepth() < 1) {
             // No predefined subdivisions exist, nothing to validate against.
@@ -126,7 +129,15 @@ class AddressFormatConstraintValidator extends ConstraintValidator
         return $subdivisions;
     }
 
-    protected function validatePostalCode(string $postalCode, array $subdivisions, AddressFormat $addressFormat, AddressFormatConstraint $constraint): void
+    /**
+     * Validates the provided postal code.
+     *
+     * @param string                  $postalCode    The postal code.
+     * @param array                   $subdivisions  An array of found valid subdivisions.
+     * @param AddressFormat           $addressFormat The address format.
+     * @param AddressFormatConstraint $constraint    The constraint.
+     */
+    protected function validatePostalCode($postalCode, array $subdivisions, AddressFormat $addressFormat, $constraint)
     {
         if (empty($postalCode)) {
             // Nothing to validate.
@@ -136,18 +147,16 @@ class AddressFormatConstraintValidator extends ConstraintValidator
         // Resolve the available patterns.
         $fullPattern = $addressFormat->getPostalCodePattern();
         $startPattern = null;
-        if (!empty($constraint->extendedPostalCodeValidation)) {
-            foreach ($subdivisions as $subdivision) {
-                $pattern = $subdivision->getPostalCodePattern();
-                if (empty($pattern)) {
-                    continue;
-                }
+        foreach ($subdivisions as $subdivision) {
+            $pattern = $subdivision->getPostalCodePattern();
+            if (empty($pattern)) {
+                continue;
+            }
 
-                if ($subdivision->getPostalCodePatternType() == PatternType::FULL) {
-                    $fullPattern = $pattern;
-                } else {
-                    $startPattern = $pattern;
-                }
+            if ($subdivision->getPostalCodePatternType() == PatternType::FULL) {
+                $fullPattern = $pattern;
+            } else {
+                $startPattern = $pattern;
             }
         }
 
@@ -174,10 +183,12 @@ class AddressFormatConstraintValidator extends ConstraintValidator
     /**
      * Adds a violation.
      *
-     * @param string $message        The error message.
-     * @param mixed  $invalidValue   The invalid, validated value.
+     * @param string $field          The field.
+     * @param string        $message        The error message.
+     * @param mixed         $invalidValue   The invalid, validated value.
+     * @param AddressFormat $addressFormat The address format.
      */
-    protected function addViolation(string $field, string $message, $invalidValue, AddressFormat $addressFormat)
+    protected function addViolation($field, $message, $invalidValue, AddressFormat $addressFormat)
     {
         $this->context->buildViolation($message)
             ->atPath('[' . $field . ']')
@@ -192,7 +203,7 @@ class AddressFormatConstraintValidator extends ConstraintValidator
      *
      * @return array An array of values keyed by field constants.
      */
-    protected function extractAddressValues(AddressInterface $address): array
+    protected function extractAddressValues(AddressInterface $address)
     {
         $values = [];
         foreach (AddressField::getAll() as $field) {

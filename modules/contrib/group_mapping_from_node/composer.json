@@ -1,9 +1,0 @@
-{
-  "name": "drupal/group_mapping_from_node",
-  "description": "This module allows to tag a group from Node form.",
-  "type": "drupal-module",
-  "license": "GPL-2.0-or-later",
-  "require": {
-    "drupal/group": "~1.0"
-  }
-}

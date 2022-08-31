@@ -14,11 +14,10 @@ final class ZoneTerritoryTest extends TestCase
     /**
      * @covers ::__construct
      *
-     *
+     * @expectedException \InvalidArgumentException
      */
     public function testMissingProperty()
     {
-        $this->expectException(\InvalidArgumentException::class);
         $territory = new ZoneTerritory([]);
     }
 

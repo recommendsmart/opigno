@@ -1,7 +1,0 @@
-administer quote:
-  title: 'Administer Quote'
-  restrict access: FALSE
-
-use quote:
-  title: 'Use Quote'
-  restrict access: FALSE

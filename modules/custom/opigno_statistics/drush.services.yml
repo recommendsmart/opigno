@@ -1,5 +1,0 @@
-services:
-  opigno_statistics.update:
-    class: Drupal\opigno_statistics\Commands\StatisticsCommands
-    tags:
-      - { name: drush.command }

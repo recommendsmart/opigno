@@ -45,7 +45,7 @@ final class PostalLabelFormatterTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->addressFormatRepository = new AddressFormatRepository();
         $this->countryRepository = new CountryRepository();
@@ -56,11 +56,10 @@ final class PostalLabelFormatterTest extends TestCase
     /**
      * @covers ::format
      *
-     *
+     * @expectedException \InvalidArgumentException
      */
     public function testMissingOriginCountryCode()
     {
-        $this->expectException(\InvalidArgumentException::class);
         $address = new Address();
         $this->formatter->format($address);
     }

@@ -1,3 +1,0 @@
-permission_callbacks:
-  - Drupal\group_roles_management\Controller\PermissionsController::permissions
-

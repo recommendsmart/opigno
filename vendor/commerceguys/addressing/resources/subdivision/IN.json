@@ -30,9 +30,14 @@
 			"iso_code": "IN-CT",
 			"postal_code_pattern": "49"
 		},
-		"Dadra and Nagar Haveli and Daman and Diu": {
-			"name": "Dadra & Nagar Haveli & Daman & Diu",
-			"iso_code": "IN-DH",
+		"Dadra and Nagar Haveli": {
+			"name": "Dadra & Nagar Haveli",
+			"iso_code": "IN-DN",
+			"postal_code_pattern": "396"
+		},
+		"Daman and Diu": {
+			"name": "Daman & Diu",
+			"iso_code": "IN-DD",
 			"postal_code_pattern": "396|362"
 		},
 		"Delhi": {
@@ -71,10 +76,6 @@
 		"Kerala": {
 			"iso_code": "IN-KL",
 			"postal_code_pattern": "6[7-9]|6010|607008|777"
-		},
-		"Ladakh": {
-			"iso_code": "IN-LA",
-			"postal_code_pattern": "194"
 		},
 		"Lakshadweep": {
 			"iso_code": "IN-LD",

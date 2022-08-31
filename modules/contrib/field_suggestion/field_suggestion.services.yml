@@ -1,7 +1,0 @@
-services:
-  field_suggestion.helper:
-    class: Drupal\field_suggestion\Service\FieldSuggestionHelper
-    arguments:
-      - '@module_handler'
-      - '@entity_type.manager'
-      - '@entity_display.repository'

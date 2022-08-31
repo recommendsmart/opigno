@@ -1,172 +1,146 @@
 {
-    "name": "goalgorilla/social_template",
-    "description": "Social project template for composer based Open Social projects.",
+    "name": "opigno/opigno-composer",
+    "description": "Opigno LMS",
     "type": "project",
-    "license": "GPL-2.0+",
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "require": {
-        "php": "^7.4 || ^8.0",
-        "drupal/access_records": "^1.0@beta",
-        "drupal/aggrid": "^1.0@alpha",
-        "drupal/allowed_formats": "^1.5",
-        "drupal/aristotle": "^3.0",
-        "drupal/basket": "^2.0",
-        "drupal/belgrade": "^1.1",
-        "drupal/book_pdf": "^1.0@alpha",
-        "drupal/browser_back_button": "^1.1",
-        "drupal/business_rules": "^2.0@beta",
-        "drupal/collapsible_fields": "^1.0@beta",
-        "drupal/comments_order": "^3.0",
-        "drupal/commerce": "^2.30",
-        "drupal/commerce_demo": "^2.0",
-        "drupal/commerce_product_restriction": "1.0.x-dev",
-        "drupal/commerce_product_taxonomy_filter": "^1.0",
-        "drupal/commerce_transaction": "^1.0@beta",
-        "drupal/config_views": "^2.0@RC",
-        "drupal/content_to_group": "^1.0@alpha",
-        "drupal/cshs": "^3.5",
-        "drupal/custom_pub": "^1.0@beta",
-        "drupal/description_list_field": "^1.0@alpha",
-        "drupal/designs": "^1.0",
-        "drupal/dxpr_theme": "^1.2",
-        "drupal/eca": "^1.0@beta",
-        "drupal/edit_entity": "^1.0",
-        "drupal/editablefields": "^1.0",
-        "drupal/entity_browser": "^2.8",
-        "drupal/entity_clone": "^1.0@beta",
-        "drupal/entity_field_condition": "^1.3",
-        "drupal/entity_inherit": "^2.0@beta",
-        "drupal/entity_list": "^2.0@alpha",
-        "drupal/entity_reference_display": "^1.4",
-        "drupal/entity_reference_tree": "^2.0",
-        "drupal/entity_version": "^1.0@beta",
-        "drupal/entityconnect": "^2.0@RC",
-        "drupal/entitygroupfield": "^1.0@alpha",
-        "drupal/estore": "^1.14",
-        "drupal/features": "^3.12",
-        "drupal/feeds": "^3.0@beta",
-        "drupal/field_bundle": "^1.0@RC",
-        "drupal/field_fallback": "^1.0@beta",
-        "drupal/field_permissions": "^1.2",
-        "drupal/field_permissions_group": "^1.0@beta",
-        "drupal/field_suggestion": "^1.0",
-        "drupal/field_tools": "^1.0@alpha",
-        "drupal/file_de_duplicator": "^1.0",
-        "drupal/flow": "^1.0@alpha",
-        "drupal/form_filter_fields": "^1.4",
-        "drupal/form_mode_manager": "^2.0@RC",
-        "drupal/freelinking": "^3.2",
-        "drupal/friggeri_cv": "^1.0@alpha",
-        "drupal/frontend_editing": "^1.1@alpha",
-        "drupal/fullcalendar_view": "^5.1",
-        "drupal/gcommerce": "^1.0@beta",
-        "drupal/group_action": "^1.0@beta",
-        "drupal/group_clone_nodes": "^1.0",
-        "drupal/group_comment": "^1.0@alpha",
-        "drupal/group_flex": "^1.0@beta",
-        "drupal/group_mandatory": "1.0.x-dev",
-        "drupal/group_mapping_from_node": "1.x-dev",
-        "drupal/group_roles_management": "^1.0@alpha",
-        "drupal/grouped_checkboxes": "^1.0",
-        "drupal/job_scheduler": "^3.1",
-        "drupal/keep_referenced_entities": "^2.0",
-        "drupal/maestro": "^3.0@RC",
-        "drupal/menu_items_visibility": "^1.1",
-        "drupal/micronode": "1.0.x-dev",
-        "drupal/node_singles": "^3.0",
-        "drupal/opigno_statistics": "^3.0",
-        "drupal/orange_ecom_starter": "2.0.x-dev",
-        "drupal/pagerer": "^2.2",
-        "drupal/pbf": "^1.3",
-        "drupal/pdf": "^1.1",
-        "drupal/permissions_by_term": "^3.1",
-        "drupal/personal_notes": "^2.1",
-        "drupal/private_taxonomy": "^2.5",
-        "drupal/quote": "^3.0",
-        "drupal/rabbit_hole": "^1.0@beta",
-        "drupal/radiostoslider": "^1.1",
-        "drupal/serial": "^1.0@alpha",
-        "drupal/shs": "^2.0@RC",
-        "drupal/social_geolocation": "^2.2",
-        "drupal/social_pwa": "^1.4",
-        "drupal/spn": "^2.0",
-        "drupal/storage": "^1.1",
-        "drupal/subgroup": "^1.0",
-        "drupal/switch_theme": "1.0.x-dev",
-        "drupal/tasks": "^1.0",
-        "drupal/textarea_limit": "^2.0",
-        "drupal/tms": "^1.0",
-        "drupal/type_tray": "^1.1",
-        "drupal/user_bundle": "^1.1",
-        "drupal/value_widget": "^1.0@alpha",
-        "drupal/votingapi_reaction": "^1.2",
-        "drupal/votingapi_widgets": "^1.0@alpha",
-        "drupal/widget_type": "^1.5",
-        "drupal/yasm": "^2.0",
-        "drupal/yasm_blocks": "^2.0",
-        "drupal/yasm_charts": "^2.0",
-        "goalgorilla/open_social": "11.4.0",
-        "monolog/monolog": "^2.3.5"
-    },
-    "repositories": [
-        {
+    "license": "GPL-2.0-or-later",
+    "authors": [],
+    "repositories": {
+        "drupal": {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
         },
-        {
+        "asset-packagist": {
             "type": "composer",
             "url": "https://asset-packagist.org"
-        }
-    ],
-    "extra": {
-        "drupal-scaffold": {
-            "locations": {
-                "web-root": "./"
+        },
+        "enyo/dropzone": {
+            "type": "package",
+            "package": {
+                "name": "enyo/dropzone",
+                "version": "v5.5.0",
+                "type": "drupal-library",
+                "dist": {
+                    "url": "https://github.com/dropzone/dropzone/archive/refs/tags/v5.5.0.zip",
+                    "type": "zip"
+                }
             }
         },
-        "installer-types": [
-            "bower-asset",
-            "npm-asset"
-        ],
-        "installer-paths": {
-            "core": [
-                "drupal/core"
-            ],
-            "modules/contrib/{$name}": [
-                "type:drupal-module"
-            ],
-            "profiles/contrib/social": [
-                "goalgorilla/open_social"
-            ],
-            "profiles/contrib/{$name}": [
-                "type:drupal-profile"
-            ],
-            "themes/contrib/{$name}": [
-                "type:drupal-theme"
-            ],
-            "libraries/{$name}": [
-                "type:drupal-library",
-                "type:bower-asset",
-                "type:npm-asset"
-            ],
-            "drush/contrib/{$name}": [
-                "type:drupal-drush"
-            ]
+        "mozilla/pdf.js": {
+            "type": "package",
+            "package": {
+                "name": "mozilla/pdf.js",
+                "version": "v2.4.456",
+                "type": "drupal-library",
+                "dist": {
+                    "url": "https://github.com/mozilla/pdf.js/releases/download/v2.4.456/pdfjs-2.4.456-es5-dist.zip",
+                    "type": "zip"
+                }
+            }
         },
-        "enable-patching": true,
-        "patchLevel": {
-            "drupal/core": "-p2"
+        "kenwheeler/slick": {
+            "type": "package",
+            "package": {
+                "name": "kenwheeler/slick",
+                "version": "1.8.1",
+                "type": "drupal-library",
+                "dist": {
+                    "url": "https://github.com/kenwheeler/slick/archive/v1.8.1.zip",
+                    "type": "zip"
+                }
+            }
+        },
+        "furf/jquery-ui-touch-punch": {
+            "type": "package",
+            "package": {
+                "name": "furf/jquery-ui-touch-punch",
+                "version": "master",
+                "type": "drupal-library",
+                "dist": {
+                    "url": "https://github.com/furf/jquery-ui-touch-punch/archive/refs/heads/master.zip",
+                    "type": "zip"
+                }
+            }
+        },
+        "almende/vis": {
+            "type": "package",
+            "package": {
+                "name": "almende/vis",
+                "version": "v4.21.0",
+                "type": "drupal-library",
+                "dist": {
+                    "url": "https://github.com/almende/vis/archive/refs/tags/v4.21.0.zip",
+                    "type": "zip"
+                }
+            }
         }
     },
+    "require": {
+        "wikimedia/composer-merge-plugin": "2.0",
+        "composer/installers": "v1.12.0",
+        "cweagans/composer-patches": "1.7.1",
+        "drupal/core-composer-scaffold": "~9.3.0",
+        "opigno/opigno_lms": "^3.0.0"
+    },
+    "require-dev": {
+        "drush/drush": "^10",
+        "drupal/console": "~1.0"
+    },
+    "replace": {
+        "h5p/h5p-core": "*",
+        "h5p/h5p-editor": "*"
+    },
     "config": {
-        "sort-packages": true,
+        "sort-packages": false,
+        "preferred-install": {
+            "*": "dist"
+        },
         "allow-plugins": {
             "composer/installers": true,
             "cweagans/composer-patches": true,
             "drupal/core-composer-scaffold": true,
-            "oomphinc/composer-installers-extender": true,
-            "zaporylie/composer-drupal-optimizations": true
+            "wikimedia/composer-merge-plugin": true,
+            "drupal/console-extend-plugin": true,
+            "topfloor/composer-cleanup-vcs-dirs": true
+        }
+    },
+    "conflict": {
+        "drupal/drupal": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "installer-paths": {
+            "web/core": [
+                "type:drupal-core"
+            ],
+            "web/libraries/{$name}": [
+                "type:drupal-library"
+            ],
+            "web/modules/contrib/{$name}": [
+                "type:drupal-module"
+            ],
+            "web/profiles/contrib/{$name}": [
+                "type:drupal-profile"
+            ],
+            "web/themes/contrib/{$name}": [
+                "type:drupal-theme"
+            ],
+            "web/libraries/ckeditor": [
+                "type:drupal-library-ckeditor"
+            ],
+            "drush/Commands/{$name}": [
+                "type:drupal-drush"
+            ]
+        },
+        "drupal-scaffold": {
+            "locations": {
+                "web-root": "web/"
+            }
+        },
+        "enable-patching": true,
+        "composer-exit-on-patch-failure": false,
+        "patchLevel": {
+            "drupal/core": "-p2"
         }
     }
 }

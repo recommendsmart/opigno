@@ -11,13 +11,13 @@ class PostalCodeHelper
      * Checks whether the provided postal code matches the provided rules.
      *
      * @param string $postalCode  The postal code.
-     * @param ?string $includeRule The rule for included postal codes.
+     * @param string $includeRule The rule for included postal codes.
      * @param string $excludeRule (Optional) The rule for excluded postal codes.
      *
      * @return bool True if the provided postal code matches the provided
      *              rules, false otherwise.
      */
-    public static function match(string $postalCode, ?string $includeRule, ?string $excludeRule = ''): bool
+    public static function match($postalCode, $includeRule, $excludeRule = '')
     {
         $matchIncluded = true;
         if ($includeRule) {
@@ -42,7 +42,7 @@ class PostalCodeHelper
      * @return bool True if the provided postal code matches the provided
      *              rules, false otherwise.
      */
-    protected static function matchRule(string $postalCode, string $rule): bool
+    protected static function matchRule($postalCode, $rule)
     {
         if (substr($rule, 0, 1) == '/' && substr($rule, -1, 1) == '/') {
             $match = preg_match($rule, $postalCode);
@@ -62,7 +62,7 @@ class PostalCodeHelper
      *
      * @return array The list of postal codes.
      */
-    protected static function buildList(string $postalCodes): array
+    protected static function buildList($postalCodes)
     {
         $postalCodeList = [];
         foreach (explode(',', $postalCodes) as $postalCode) {

@@ -1,7 +1,0 @@
-frontend_editing:
-  version: 1.0
-  css:
-    theme:
-      css/frontend_editing.css: {}
-  js:
-    js/frontend_editing.js: {}

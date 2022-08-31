@@ -25,7 +25,12 @@ final class AdministrativeAreaType extends AbstractEnum
     const PROVINCE = 'province';
     const STATE = 'state';
 
-    public static function getDefault(): string
+    /**
+     * Gets the default value.
+     *
+     * @return string The default value.
+     */
+    public static function getDefault()
     {
         return static::PROVINCE;
     }

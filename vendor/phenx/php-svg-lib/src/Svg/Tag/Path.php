@@ -451,14 +451,7 @@ class Path extends Shape
             array(),
         );
 
-        $toX = $tx - $fx;
-        $toY = $ty - $fy;
-
-        if ($toX + $toY === 0) {
-            return;
-        }
-
-        $segsNorm = $this->arcToSegments($toX, $toY, $rx, $ry, $large, $sweep, $rot);
+        $segsNorm = $this->arcToSegments($tx - $fx, $ty - $fy, $rx, $ry, $large, $sweep, $rot);
 
         for ($i = 0, $len = count($segsNorm); $i < $len; $i++) {
             $segs[$i][0] = $segsNorm[$i][0] + $fx;

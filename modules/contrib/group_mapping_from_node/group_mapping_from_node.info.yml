@@ -1,6 +1,0 @@
-name: Group Mapping from Node
-description: This module allows to tag a group from Node form.
-core_version_requirement: ^8 || ^9
-type: module
-dependencies:
- - drupal:group

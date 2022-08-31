@@ -16,7 +16,12 @@ final class PostalCodeType extends AbstractEnum
     const POSTAL = 'postal';
     const ZIP = 'zip';
 
-    public static function getDefault(): string
+    /**
+     * Gets the default value.
+     *
+     * @return string The default value.
+     */
+    public static function getDefault()
     {
         return static::POSTAL;
     }
