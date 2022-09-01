@@ -26,7 +26,7 @@ dependencies:
   - twig_field_value:twig_field_value
 configure: opigno_learning_path.learning_path_settings
 
-# Information added by Drupal.org packaging script on 2022-04-01
-version: '3.0.2'
+# Information added by Drupal.org packaging script on 2022-05-31
+version: '3.0.3'
 project: 'opigno_learning_path'
-datestamp: 1648805793
+datestamp: 1654003096

@@ -1240,7 +1240,7 @@ function opigno_learning_path_form_group_form_alter(&$form, FormStateInterface $
     $group = \Drupal::routeMatch()->getParameter('group');
     $state = $group->get('field_learning_path_published')->value;
 
-    if ($state === 0) {
+    if ($state == 0) {
       $title = t('Publish');
       $route = 'opigno_learning_path.manager.publish';
     }

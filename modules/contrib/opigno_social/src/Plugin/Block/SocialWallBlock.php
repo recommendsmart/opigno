@@ -194,7 +194,10 @@ class SocialWallBlock extends BlockBase implements ContainerFactoryPluginInterfa
       '#posts' => $view,
       '#new_posts_link' => Link::createFromRoute($this->t('New post available'), 'opigno_social.display_new_posts', [], $options),
       '#attached' => array_merge_recursive([
-        'library' => ['opigno_social/post_comment'],
+        'library' => [
+          'opigno_social/post_comment',
+          'opigno_social/post_sharing',
+        ],
       ], $view_attachments),
     ];
   }

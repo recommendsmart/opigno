@@ -8,7 +8,7 @@ dependencies:
   - opigno_class:opigno_class
   - opigno_statistics:opigno_statistics
 
-# Information added by Drupal.org packaging script on 2022-04-01
-version: '3.0.2'
+# Information added by Drupal.org packaging script on 2022-05-31
+version: '3.0.3'
 project: 'opigno_dashboard'
-datestamp: 1648805955
+datestamp: 1654003096

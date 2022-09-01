@@ -29,7 +29,7 @@ interface BlockServiceInterface {
    * @return array
    *   The list of dashboard blocks to be rendered.
    */
-  public function getDashboardBlocksContents(): array;
+  public function getDashboardBlocksContents($need_render = TRUE): array;
 
   /**
    * Creates blocks instances.

@@ -4,7 +4,7 @@ package: Testing
 description: Provides cofiguration for testing certificates.
 core_version_requirement: ^9
 
-# Information added by Drupal.org packaging script on 2022-04-01
-version: '3.0.2'
+# Information added by Drupal.org packaging script on 2022-07-14
+version: '3.0.4'
 project: 'opigno_certificate'
-datestamp: 1648806077
+datestamp: 1657815025

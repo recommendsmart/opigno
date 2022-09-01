@@ -170,7 +170,7 @@ class BlockService implements BlockServiceInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDashboardBlocksContents(): array {
+  public function getDashboardBlocksContents($need_render = TRUE): array {
     $ids = [];
     foreach ($this->getAvailableBlocks() as $block) {
       $ids[] = $block['id'];
@@ -194,7 +194,7 @@ class BlockService implements BlockServiceInterface {
       }
 
       $render = $block->build();
-      $data['blocks'][$id] = $this->renderer->renderRoot($render);
+      $data['blocks'][$id] = $need_render ? $this->renderer->renderRoot($render) : $render;
       $attachments = $render['#attached'] ?? [];
       $data['attachments'] = array_merge_recursive($data['attachments'], $attachments);
     }

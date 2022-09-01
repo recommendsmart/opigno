@@ -6,7 +6,7 @@
 	"authors": [],
     "require": {
         "drupal/core-recommended":              "~9.3.0",
-        "dompdf/dompdf":                        "0.8.5",
+        "dompdf/dompdf":                        "~2.0.0",
         "rusticisoftware/tincan":               "~1.1.1",
         "drupal/calendar":                      "^1.0@alpha",
         "drupal/media_entity_browser":          "^2.0@alpha",
@@ -21,11 +21,11 @@
         "drupal/token":                         "~1.9.0",
         "drupal/token_filter":                  "^1.3.0",
         "drupal/views_templates":               "~1.1.0",
-        "drupal/entity_print":                  "~2.2.0",
+        "drupal/entity_print":                  "~2.6.0",
         "drupal/group":                         "~1.2.0",
         "drupal/popup_field_group":             "~1.6.0",
         "drupal/video":                         "^1.5.0@alpha",
-        "drupal/embed":                         "~1.4.0",
+        "drupal/embed":                         "~1.5.0",
         "drupal/entity_embed":                  "~1.2.0",
         "drupal/entity_browser":                "~2.6.0",
         "drupal/ctools":                        "~3.7.0",
@@ -106,11 +106,10 @@
                 "Ckeditor_bgimage Opigno certificate background image": "https://www.drupal.org/files/issues/2021-09-10/ckeditor_bgimage-opigno_certificate-3107667-9.patch"
             },
             "drupal/entity_print": {
-                "#2865185: Error generating document: Failed to generate PDF": "https://www.drupal.org/files/issues/2020-02-24/entity_print-2865185-error_generating_document-55.patch"
+              "#3295355-4 Absolute paths support": "https://www.drupal.org/files/issues/2022-07-13/3295355-4-entity-print-abs-paths.patch"
             },
             "dompdf/dompdf": {
-                "#3143778: Add support for file protocol in build_url": "https://www.drupal.org/files/issues/2020-05-29/dompdf_add_support_for_file_protocol_in_build_url-2099-2-3143778.patch",
-                "Fix autoloader for html5lib": "https://www.drupal.org/files/issues/2021-09-10/dompdf_fix_autoloader_for_html5lib-3232399-1.patch"
+              "#3295355-6 Absolute paths support": "https://www.drupal.org/files/issues/2022-07-14/3295355-6-dompdf-abs-paths.patch"
             },
             "drupal/group": {
                 "Fix access to the courses group": "https://www.drupal.org/files/issues/2020-08-14/group-course-3165140-4.patch"

@@ -9,7 +9,7 @@ dependencies:
   - opigno_like:opigno_like
   - drupal:views_infinite_scroll
 
-# Information added by Drupal.org packaging script on 2022-04-01
-version: '3.0.2'
+# Information added by Drupal.org packaging script on 2022-05-31
+version: '3.0.3'
 project: 'opigno_social'
-datestamp: 1648805146
+datestamp: 1654003118

@@ -281,11 +281,13 @@ function template_preprocess_opigno_certificate(array &$variables) {
     }
   }
 
-  // Add the background image and logo.
-  $bg_img = drupal_get_path('theme', 'aristotle') . '/assets/Logo-Opigno-circle.svg';
-  $variables['bg_image'] = file_exists($bg_img) ? file_url_transform_relative(base_path() . $bg_img) : '';
-  $logo = drupal_get_path('theme', 'aristotle') . '/assets/Logo-Opigno-3-dark.svg';
-  $variables['logo'] = file_exists($logo) ? file_url_transform_relative(base_path() . $logo) : '';
+  // Force absolute paths to support symlinked root.
+  $theme_base_path = \Drupal::service('extension.list.theme')->getPath('aristotle');
+  $absolute_base_path = DRUPAL_ROOT . '/' . $theme_base_path;
+  $bg_img = $absolute_base_path . '/assets/Logo-Opigno-circle.svg';
+  $variables['bg_image'] = file_exists($bg_img) ? $bg_img : '';
+  $logo = $absolute_base_path . '/assets/Logo-Opigno-3-dark.svg';
+  $variables['logo'] = file_exists($logo) ? $logo : '';
   $variables['awarded_to'] = $user->getDisplayName();
 
   // Helpful $content variable for templates.
