@@ -110,22 +110,22 @@
     "prefer-stable": true,
     "extra": {
         "installer-paths": {
-            "web/core": [
+            "core": [
                 "type:drupal-core"
             ],
-            "web/libraries/{$name}": [
+            "libraries/{$name}": [
                 "type:drupal-library"
             ],
-            "web/modules/contrib/{$name}": [
+            "modules/contrib/{$name}": [
                 "type:drupal-module"
             ],
-            "web/profiles/contrib/{$name}": [
+            "profiles/contrib/{$name}": [
                 "type:drupal-profile"
             ],
-            "web/themes/contrib/{$name}": [
+            "themes/contrib/{$name}": [
                 "type:drupal-theme"
             ],
-            "web/libraries/ckeditor": [
+            "libraries/ckeditor": [
                 "type:drupal-library-ckeditor"
             ],
             "drush/Commands/{$name}": [
@@ -134,7 +134,7 @@
         },
         "drupal-scaffold": {
             "locations": {
-                "web-root": "web/"
+                "web-root": "./"
             }
         },
         "enable-patching": true,
