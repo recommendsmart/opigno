@@ -3,7 +3,7 @@
         'name' => 'opigno/opigno-composer',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'fe4f704ea6a3a82ad29652afe0840b38a88efcd8',
+        'reference' => '32f36f8b949dd6b8cd679f17b94476bd19fbc117',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -2106,7 +2106,7 @@
         'opigno/opigno-composer' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'fe4f704ea6a3a82ad29652afe0840b38a88efcd8',
+            'reference' => '32f36f8b949dd6b8cd679f17b94476bd19fbc117',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
