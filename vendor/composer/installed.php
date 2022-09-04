@@ -3,7 +3,7 @@
         'name' => 'opigno/opigno-composer',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '32f36f8b949dd6b8cd679f17b94476bd19fbc117',
+        'reference' => '2e911cb2d10df45e9b61f53404e7d2c1065eae45',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -280,6 +280,15 @@
             'reference' => '8.x-1.9',
             'type' => 'drupal-module',
             'install_path' => __DIR__ . '/../../modules/contrib/address',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'drupal/admin_toolbar' => array(
+            'pretty_version' => '3.1.1',
+            'version' => '3.1.1.0',
+            'reference' => '3.1.1',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/admin_toolbar',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
@@ -960,6 +969,15 @@
             'replaced' => array(
                 0 => '9.3.21',
             ),
+        ),
+        'drupal/gin_toolbar' => array(
+            'pretty_version' => '1.0.0-beta22',
+            'version' => '1.0.0.0-beta22',
+            'reference' => '8.x-1.0-beta22',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/gin_toolbar',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'drupal/gnode' => array(
             'pretty_version' => '1.5.0',
@@ -1800,6 +1818,15 @@
                 0 => '9.3.21',
             ),
         ),
+        'drupal/toolbar_visibility' => array(
+            'pretty_version' => '2.1.0',
+            'version' => '2.1.0.0',
+            'reference' => '8.x-2.1',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/toolbar_visibility',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'drupal/tour' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -2106,7 +2133,7 @@
         'opigno/opigno-composer' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '32f36f8b949dd6b8cd679f17b94476bd19fbc117',
+            'reference' => '2e911cb2d10df45e9b61f53404e7d2c1065eae45',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
