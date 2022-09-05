@@ -3,7 +3,7 @@
         'name' => 'opigno/opigno-composer',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '2e911cb2d10df45e9b61f53404e7d2c1065eae45',
+        'reference' => '626a448860e59410569bcab4e9164ccd8c0c791b',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -1902,6 +1902,15 @@
                 0 => '9.3.21',
             ),
         ),
+        'drupal/views_dynamic_fields_and_filters-views_dynamic_fields_and_filters' => array(
+            'pretty_version' => '1.0.0',
+            'version' => '1.0.0.0',
+            'reference' => '1.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/views_dynamic_fields_and_filters-views_dynamic_fields_and_filters',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'drupal/views_infinite_scroll' => array(
             'pretty_version' => '1.8.0',
             'version' => '1.8.0.0',
@@ -2133,7 +2142,7 @@
         'opigno/opigno-composer' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '2e911cb2d10df45e9b61f53404e7d2c1065eae45',
+            'reference' => '626a448860e59410569bcab4e9164ccd8c0c791b',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * @file
+ * Contains the views_pre_build hook for "Views Dynamic fields and filters".
+ */
+
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_views_pre_build().
+ *
+ * Disable/Enable fields and filters based on configurated filters.
+ */
+function views_dynamic_fields_and_filters_views_pre_build(ViewExecutable $view) {
+
+  $display = $view->getDisplay();
+  $extenders = $display->getExtenders();
+
+  if (!isset($extenders['views_dynamic_fields_and_filters'])) {
+    return;
+  }
+  $dff = $extenders['views_dynamic_fields_and_filters'];
+
+  $dff->extendCacheIfEnabled();
+  foreach ($view->field as $key => $field) {
+    $admin_label = $field->options['admin_label'];
+    if ($dff->isDffLabel($admin_label) && !$dff->testLabel($admin_label)) {
+      $view->field[$key]->options['exclude'] = TRUE;
+    }
+  }
+  foreach ($view->filter as $key => $filter) {
+    $admin_label = $filter->options['admin_label'];
+    if ($dff->isDffLabel($admin_label) && !$dff->testLabel($admin_label)) {
+      unset($view->filter[$key]);
+    }
+  }
+
+}

@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @file
+ * Contains install & uninstall function for "Views Dynamic fields and filters".
+ */
+
+/**
+ * Implements hook_install().
+ *
+ * Add views_dynamic_fields_and_filters to the views.settings.display_extenders.
+ */
+function views_dynamic_fields_and_filters_install() {
+  // Enable plugin.
+  $config = \Drupal::service('config.factory')->getEditable('views.settings');
+  $display_extenders = $config->get('display_extenders') ?: [];
+  $display_extenders[] = 'views_dynamic_fields_and_filters';
+  $config->set('display_extenders', $display_extenders);
+  $config->save();
+}
+
+/**
+ * Implements hook_uninstall().
+ *
+ * Remove the display_extender on uninstall.
+ */
+function views_dynamic_fields_and_filters_uninstall() {
+  // Disable plugin.
+  $config = \Drupal::service('config.factory')->getEditable('views.settings');
+  $display_extenders = $config->get('display_extenders') ?: [];
+  $key = array_search('views_dynamic_fields_and_filters', $display_extenders);
+  if ($key !== FALSE) {
+    unset($display_extenders[$key]);
+    $config->set('display_extenders', $display_extenders);
+    $config->save();
+  }
+}
