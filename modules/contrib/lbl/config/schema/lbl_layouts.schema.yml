@@ -1,0 +1,35 @@
+layout_plugin.settings.*:
+  type: layout_plugin.settings
+  label: 'Settings for layout'
+  mapping:
+    title:
+      type: string
+      label: 'Section title'
+    title_tag:
+      type: integer
+      label: 'Headline weight'
+    text:
+      type: string
+      label: 'Section teaser'
+    reverse:
+      type: boolean
+      label: 'Reverse columns'
+    background:
+      type: string
+      label: 'Background color'
+    full_width:
+      type: boolean
+      label: 'Full width'
+    breakpoints:
+      label: 'Breakpoints'
+      type: sequence
+      nullable: true
+      sequence:
+        type: sequence
+        nullable: true
+        label: 'View Mode'
+        sequence:
+          type: integer
+    background_color:
+      type: string
+      label: 'Background color'

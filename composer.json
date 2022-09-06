@@ -83,7 +83,8 @@
         "drupal/admin_toolbar": "^3.1",
         "drupal/gin_toolbar": "^1.0@beta",
         "drupal/toolbar_visibility": "^2.1",
-        "drupal/views_dynamic_fields_and_filters-views_dynamic_fields_and_filters": "^1.0"
+        "drupal/views_dynamic_fields_and_filters-views_dynamic_fields_and_filters": "^1.0",
+        "drupal/lbl": "^1.0"
     },
     "require-dev": {
         "drush/drush": "^10",

@@ -1,0 +1,242 @@
+two_column:
+  label: "Two columns (LBL)"
+  category: "Layouts"
+  class: '\Drupal\lbl\BaseLayout'
+  template: templates/two-column
+  default_region: left
+  icon_map:
+    - [left, right]
+  variants:
+    default:
+      title: "Default"
+      map:
+        - [left, right]
+    left:
+      title: "Default"
+      map:
+        - [left, left, right]
+    right:
+      title: "Default"
+      map:
+        - [left, right, right]
+    below:
+      title: "Default"
+      map:
+        - [left]
+        - [right]
+  regions:
+    left:
+      label: Left
+    right:
+      label: Right
+
+three_column:
+  label: "Three columns (LBL)"
+  class: '\Drupal\lbl\BaseLayout'
+  category: "Layouts"
+  template: templates/three-column
+  default_region: center
+  icon_map:
+    - [left, center, right]
+  variants:
+    default:
+      title: "Default"
+      map:
+        - [left, center, right]
+    first_big:
+      title: "Tables devices"
+      map:
+        - [left, left]
+        - [center, right]
+    left_two:
+      title: "Left two"
+      map:
+        - [left, right]
+        - [center, right]
+    right_two:
+      title: "Left two"
+      map:
+        - [left, center]
+        - [left, right]
+    below:
+      title: "Small devices"
+      map:
+        - [left]
+        - [center]
+        - [right]
+  regions:
+    left:
+      label: Left
+    center:
+      label: center
+    right:
+      label: Right
+
+four_column:
+  label: "Four columns (LBL)"
+  class: '\Drupal\lbl\BaseLayout'
+  category: "Layouts"
+  template: templates/four-column
+  default_region: center
+  icon_map:
+    - [first, second, third, four]
+  variants:
+    default:
+      title: "Default"
+      map:
+        - [first, second, third, four]
+    big:
+      title: "Tables devices"
+      map:
+        - [first, first, first]
+        - [second, third, four]
+    columns:
+      title: "2 Columns"
+      map:
+        - [first, second]
+        - [third, four]
+    left:
+      title: "2 Columns"
+      map:
+        - [first, second]
+        - [first, third]
+        - [first, four]
+    left_big:
+      title: "Left first big"
+      map:
+        - [first, third]
+        - [first, third]
+        - [first, four]
+        - [second, four]
+
+    below:
+      title: "Small devices"
+      map:
+        - [first]
+        - [second]
+        - [third]
+        - [four]
+  regions:
+    first:
+      label: First
+    second:
+      label: Second
+    third:
+      label: Third
+    four:
+      label: Four
+
+five_column:
+  label: "Five columns (LBL)"
+  class: '\Drupal\lbl\BaseLayout'
+  category: "Layouts"
+  template: templates/five-column
+  default_region: center
+  icon_map:
+    - [first, second, third, four, five]
+  variants:
+    default:
+      title: "Default"
+      map:
+        - [first, second, third, four, five]
+    two_big:
+      title: "Tables devices"
+      map:
+        - [first, first, first, second, second, second]
+        - [third, third, four, four, five, five]
+    left:
+      title: "Left"
+      map:
+        - [first, third]
+        - [first, third]
+        - [first, four]
+        - [second, four]
+        - [second, five]
+        - [second, five]
+    top:
+      title: "Left two"
+      map:
+        - [first, first, first, first]
+        - [second, third, four, five]
+    middle:
+      title: "Middle big"
+      map:
+        - [first, second]
+        - [third, third]
+        - [four, five]
+    below:
+      title: "Small devices"
+      map:
+        - [first]
+        - [second]
+        - [third]
+        - [four]
+        - [five]
+  regions:
+    first:
+      label: First
+    second:
+      label: Second
+    third:
+      label: Third
+    four:
+      label: Four
+    five:
+      label: Five
+
+six_column:
+  label: "Six columns (LBL)"
+  class: '\Drupal\lbl\BaseLayout'
+  category: "Layouts"
+  template: templates/six-column
+  default_region: center
+  icon_map:
+    - [first, second, third, four, five, six]
+  variants:
+    default:
+      title: "Default"
+      map:
+        - [first, second, third, four, five, six]
+    big_two:
+      title: "Tables devices"
+      map:
+        - [first, first, second, second]
+        - [third, four, five, six]
+    big:
+      title: "Left two"
+      map:
+        - [first, first, first, first, first]
+        - [second, third, four, five, six]
+    column_2:
+      title: "Left two"
+      map:
+        - [first, second, third]
+        - [four, five, six]
+    column_3:
+      title: "Left two"
+      map:
+        - [first, second]
+        - [third, four]
+        - [five, six]
+    below:
+      title: "Small devices"
+      map:
+        - [first]
+        - [second]
+        - [third]
+        - [four]
+        - [five]
+        - [six]
+  regions:
+    first:
+      label: First
+    second:
+      label: Second
+    third:
+      label: Third
+    four:
+      label: Four
+    five:
+      label: Five
+    six:
+      label: Six

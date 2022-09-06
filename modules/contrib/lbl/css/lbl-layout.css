@@ -1,0 +1,3 @@
+.lbl-layout {
+  gap: var(--lbl-gap, 30px);
+}

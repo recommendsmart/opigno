@@ -1,0 +1,20 @@
+{
+  "name": "drupal/lbl",
+  "description": "Adding breakpoint aware layouts",
+  "type": "drupal-module",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Erik Seifert",
+      "email": "erik@shaque.net"
+    }
+  ],
+  "homepage": "https://drupal.org/project/lbl",
+  "support": {
+    "issues": "https://drupal.org/project/issues/lbl",
+    "source": "https://git.drupalcode.org/project/lbl"
+  },
+  "require": {
+    "mrclay/minify": "^3.0"
+  }
+}

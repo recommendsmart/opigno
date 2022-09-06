@@ -1,0 +1,13 @@
+name: Layouts
+type: module
+description: Add multiple default layout and settings to layout builder.
+package: Layoutbuilder
+core_version_requirement: ^9 || ^10
+dependencies:
+  - drupal:layout_discovery
+  - drupal:layout_builder
+
+# Information added by Drupal.org packaging script on 2022-09-06
+version: '1.0.0'
+project: 'lbl'
+datestamp: 1662463097
