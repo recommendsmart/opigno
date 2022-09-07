@@ -3,7 +3,7 @@
         'name' => 'opigno/opigno-composer',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '7602896975d22648ae0060ab04b7efe78b651e79',
+        'reference' => '016c7b722f470bd06b28aed95c7393514322f0f2',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -1629,6 +1629,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'drupal/pwa' => array(
+            'pretty_version' => '1.5.0',
+            'version' => '1.5.0.0',
+            'reference' => '8.x-1.5',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/pwa',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'drupal/queue_ui' => array(
             'pretty_version' => '2.2.0',
             'version' => '2.2.0.0',
@@ -2205,7 +2214,7 @@
         'opigno/opigno-composer' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '7602896975d22648ae0060ab04b7efe78b651e79',
+            'reference' => '016c7b722f470bd06b28aed95c7393514322f0f2',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -2398,8 +2407,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0',
-                1 => '1.0.0 || 2.0.0 || 3.0.0',
+                0 => '1.0.0 || 2.0.0 || 3.0.0',
+                1 => '1.0|2.0',
             ),
         ),
         'psy/psysh' => array(
