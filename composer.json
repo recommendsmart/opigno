@@ -85,7 +85,8 @@
         "drupal/toolbar_visibility": "^2.1",
         "drupal/views_dynamic_fields_and_filters-views_dynamic_fields_and_filters": "^1.0",
         "drupal/lbl": "^1.0",
-        "drupal/pwa": "^1.5"
+        "drupal/pwa": "^1.5",
+        "drupal/anu_lms": "^2.8"
     },
     "require-dev": {
         "drush/drush": "^10",

@@ -1,0 +1,29 @@
+name: Anu LMS
+description: Deceptively simple learning management system (LMS) for individual teachers, educational organisations and businesses.
+type: module
+package: Anu LMS
+core_version_requirement: ^9.3
+dependencies:
+  - allowed_formats:allowed_formats
+  # TODO: Switch to CKEditor 5. No point in using old version.
+  - drupal:ckeditor
+  - drupal:image
+  - drupal:link
+  - drupal:media_library
+  - drupal:options
+  - drupal:path
+  - drupal:rest
+  - drupal:taxonomy
+  - eck:eck
+  - field_group:field_group
+  - inline_entity_form:inline_entity_form
+  - paragraphs:paragraphs
+  - paragraphs_selection:paragraphs_selection
+  - paragraphs_browser:paragraphs_browser
+  - rest_entity_recursive:rest_paragraphs_recursive
+  - weight:weight
+
+# Information added by Drupal.org packaging script on 2022-09-07
+version: '2.8.1'
+project: 'anu_lms'
+datestamp: 1662558940

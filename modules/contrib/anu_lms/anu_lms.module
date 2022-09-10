@@ -1,0 +1,205 @@
+<?php
+
+/**
+ * @file
+ * Main entry point for the module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\NodeInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\paragraphs\Entity\Paragraph;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Updates description.
+ */
+function anu_lms_form_node_course_delete_form_alter(&$form) {
+  $form['description']['#markup'] = t('This will delete all modules and lessons in this course and the translations. Are you sure you want to delete?');
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Updates description.
+ */
+function anu_lms_form_node_module_delete_form_alter(&$form) {
+  $form['description']['#markup'] = t('This will delete all lessons in this module and the translations. Are you sure you want to delete?');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ *
+ * Removes leftover content related to the node.
+ */
+function anu_lms_node_delete(NodeInterface $node) {
+  // Collects leftover contents IDs.
+  if ($node->getType() == 'course') {
+
+    // Collect module paragraphs IDs.
+    $modules = $node->get('field_course_module')->referencedEntities();
+
+    if (!empty($modules)) {
+      // Collect IDs of referenced lessons and quizes.
+      $nids = [];
+      foreach ($modules as $module) {
+        $nids = array_merge($nids, array_column($module->get('field_module_lessons')->getValue(), 'target_id'));
+        if ($module->hasField('field_module_assessment')) {
+          $nids = array_merge($nids, array_column($module->get('field_module_assessment')->getValue(), 'target_id'));
+        }
+
+      }
+    }
+  }
+
+  if (!empty($nids)) {
+    // Deletes nodes by chunks.
+    $storage = \Drupal::entityTypeManager()->getStorage('node');
+    foreach (array_chunk($nids, 50) as $chunk) {
+      $nodes = $storage->loadMultiple($chunk);
+      $storage->delete($nodes);
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ *
+ * Enables progress for courses that belong to a category with locking enabled.
+ */
+function anu_lms_node_presave(NodeInterface $node) {
+  if ($node->getType() !== 'course') {
+    return;
+  }
+  // Collect categories.
+  $categories = $node->get('field_course_category')->referencedEntities();
+
+  foreach ($categories as $category) {
+    if ($category->field_enable_course_sequence->value) {
+      $node->field_course_linear_progress->value = TRUE;
+      return;
+    }
+  }
+}
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ *
+ * Case for boolean_checkbox.
+ *
+ * Disable widget when the course belongs to a category that requires
+ * progress to be enabled.
+ */
+function anu_lms_field_widget_boolean_checkbox_form_alter(&$element, FormStateInterface $form_state, $context) {
+  if ($context['items']->getName() !== 'field_course_linear_progress') {
+    return;
+  }
+  $course = $context['items']->getEntity();
+  $categories = $course->get('field_course_category')->referencedEntities();
+  foreach ($categories as $category) {
+    if (!$category->field_enable_course_sequence->value) {
+      continue;
+    }
+    $element['value']['#disabled'] = TRUE;
+    $element['value']['#default_value'] = TRUE;
+    $element['warning'] = [
+      '#markup' => t('This course belongs to a category that requires for this setting to be enabled so it can not be edited'),
+    ];
+    return;
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Add an option to enable locking.
+ */
+function anu_lms_form_views_form_sort_courses_sort_page_alter(&$form, FormStateInterface $form_state) {
+  $termId = Drupal::routeMatch()->getParameter('taxonomy_term');
+  $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($termId);
+  $form['sequence'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Courses must be completed in this order'),
+    '#default_value' => $term->field_enable_course_sequence->value,
+  ];
+  $form['#submit'][] = 'anu_lms_form_views_form_sort_courses_sort_page_submit';
+}
+
+/**
+ * Custom submit to enable locking.
+ */
+function anu_lms_form_views_form_sort_courses_sort_page_submit(&$form, FormStateInterface $form_state) {
+  if ($form_state->getValue('sequence')) {
+    anu_lms_form_views_form_sort_courses_enable_progress($form['field_weight']);
+  }
+
+  // Store the preference about the sequence.
+  $termId = Drupal::routeMatch()->getParameter('taxonomy_term');
+  $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($termId);
+  $term->field_enable_course_sequence->value = $form_state->getValue('sequence');
+  $term->save();
+}
+
+/**
+ * Enable linear progress for all courses in the form.
+ */
+function anu_lms_form_views_form_sort_courses_enable_progress($elements) {
+  foreach ($elements as $element) {
+    if (!isset($element['entity']['#value'])) {
+      continue;
+    }
+    $course = $element['entity']['#value'];
+    $course->field_course_linear_progress->value = TRUE;
+    $course->save();
+  }
+}
+
+/**
+ * Implements hook_anu_lms_sw_scripts_alter().
+ *
+ * Include custom Anu service worker script if there is at least one audio
+ * paragraph in the system.
+ */
+function anu_lms_anu_lms_sw_scripts_alter(&$data) {
+  try {
+    $query = \Drupal::entityTypeManager()->getStorage('paragraph')->getQuery();
+    $audio_paragraphs_exist = $query->accessCheck(FALSE)
+      ->condition('type', 'lesson_audio')
+      ->condition('status', TRUE)
+      ->range(0, 1)
+      ->execute();
+
+    // Inject custom Anu service worker only if at least one audio paragraph
+    // exists.
+    if (!empty($audio_paragraphs_exist)) {
+      $data[] = "/" . \Drupal::service('extension.path.resolver')->getPath('module', 'anu_lms') . '/js/dist/serviceworker.min.js';
+    }
+  }
+  catch (\Exception $exception) {
+    watchdog_exception('anu_lms', $exception);
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ *
+ * Adds an empty page to a lesson if there are no pages.
+ */
+function anu_lms_entity_insert(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() !== 'node' || $entity->bundle() !== 'module_lesson') {
+    return;
+  }
+
+  $lesson_content = $entity->get('field_module_lesson_content');
+
+  if (!empty($lesson_content->getValue())) {
+    return;
+  }
+
+  $lesson_content->appendItem(Paragraph::create([
+    'type' => 'lesson_section',
+  ]));
+
+  $entity->save();
+}

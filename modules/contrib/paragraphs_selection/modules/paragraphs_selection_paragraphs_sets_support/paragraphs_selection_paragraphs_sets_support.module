@@ -1,0 +1,51 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\paragraphs_sets\ParagraphsSetInterface;
+use Drupal\Core\Serialization\Yaml;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function paragraphs_selection_paragraphs_sets_support_form_paragraphs_set_form_alter(&$form, FormStateInterface $form_state) {
+  /** @var \Drupal\paragraphs_sets\ParagraphsSetInterface $paragraph_set */
+  $paragraph_set = $form_state->getFormObject()->getEntity();
+
+  $selection_config = $paragraph_set->getThirdPartySetting('paragraphs_selection', 'selection', '');
+  $selection_config = Yaml::encode($selection_config);
+
+  $form['selection'] = [
+    '#type' => 'textarea',
+    '#title' => t('Availability'),
+    '#default_value' => $selection_config,
+    '#description' => t('Define on which fields this bundle should be available.'),
+  ];
+
+  $form['selection_example'] = [
+    '#type' => 'details',
+    '#title' => t('Example configuration'),
+  ];
+  $form['selection_example']['code'] = [
+    '#prefix' => '<pre>',
+    '#suffix' => '</pre>',
+    '#markup' => t('fields:<br />&nbsp;&nbsp;-<br />&nbsp;&nbsp;&nbsp;&nbsp;name: node.page.elements<br />&nbsp;&nbsp;&nbsp;&nbsp;weight: 10'),
+  ];
+
+  $form['#entity_builders'][] = 'paragraphs_selection_paragraphs_sets_support_form_paragraphs_sets_form_builder';
+}
+
+/**
+ * Entity builder for the paragraphs type form with selection property.
+ *
+ * @see paragraphs_selection_paragraphs_sets_support_form_paragraphs_set_form_alter()
+ */
+function paragraphs_selection_paragraphs_sets_support_form_paragraphs_sets_form_builder($entity_type, ParagraphsSetInterface $type, &$form, FormStateInterface $form_state) {
+  if ($selection_config = $form_state->getValue('selection')) {
+    $selection_config = Yaml::decode($selection_config);
+
+    $type->setThirdPartySetting('paragraphs_selection', 'selection', $selection_config);
+  }
+  else {
+    $type->unsetThirdPartySetting('paragraphs_selection', 'selection');
+  }
+}

@@ -1,0 +1,12 @@
+name: Anu LMS Examples
+type: module
+description: Examples on how to extend Anu LMS.
+package: Anu LMS
+core_version_requirement: ^8 || ^9
+dependencies:
+  - anu_lms:anu_lms
+
+# Information added by Drupal.org packaging script on 2022-09-07
+version: '2.8.1'
+project: 'anu_lms'
+datestamp: 1662558940

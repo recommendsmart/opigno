@@ -1,0 +1,6 @@
+{
+  "name": "drupal/paragraphs_selection",
+  "description": "Let paragraph bundles define where they can be used.",
+  "type": "drupal-module",
+  "license": "GPL-2.0"
+}

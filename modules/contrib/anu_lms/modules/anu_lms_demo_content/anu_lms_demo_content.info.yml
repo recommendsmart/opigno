@@ -1,0 +1,12 @@
+name: Anu LMS Demo content
+description: Creates demo content for Anu LMS.
+type: module
+package: Anu LMS
+core_version_requirement: ^9
+dependencies:
+  - anu_lms:anu_lms
+
+# Information added by Drupal.org packaging script on 2022-09-07
+version: '2.8.1'
+project: 'anu_lms'
+datestamp: 1662558940

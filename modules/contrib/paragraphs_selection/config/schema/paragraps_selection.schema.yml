@@ -1,0 +1,22 @@
+# Schema for the entity reference 'paragraph_reverse' selection handler settings.
+entity_reference_selection.paragraph_reverse:
+  type: entity_reference_selection
+  mapping:
+    negate:
+      type: integer
+    self_field_id:
+      type: string
+      label: 'Reference to the field this selection is attached to.'
+paragraphs.paragraphs_type.*.third_party.paragraphs_selection:
+  type: mapping
+  label: 'Third party settings to store the fields this paragraphs is attached to'
+  mapping:
+    fields:
+      type: sequence
+      sequence:
+        type: mapping
+        mapping:
+          id:
+            type: string
+          weight:
+            type: integer

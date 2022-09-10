@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @file
+ * Hooks for the paragraphs_selection module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_ENTITY_ID_presave().
+ *
+ * Entity Reference Selection plugins can't perform any logic when submitting
+ * the form because they are a sub-form of the field config form.
+ */
+function paragraphs_selection_field_config_presave(EntityInterface $entity) {
+  if ($entity->getType() !== 'entity_reference_revisions' || $entity->getSetting('handler') !== 'paragraph_reverse') {
+    return;
+  }
+
+  $entityTypeManager = \Drupal::service('entity_type.manager');
+
+  $targetType = $entity->getFieldStorageDefinition()->getSetting('target_type');
+  $bundleEntityType = $entityTypeManager->getDefinition($targetType)->getBundleEntityType();
+  $bundleStorage = $entityTypeManager->getStorage($bundleEntityType);
+  $settings = $entity->getSetting('handler_settings');
+  foreach ($settings['target_bundles_drag_drop'] ?? [] as $bundleKey => $bundleConfig) {
+    $bundle = $bundleStorage->load($bundleKey);
+    $selection = $bundle->getThirdPartySetting('paragraphs_selection', 'fields', []);
+    $newSelection = $selection;
+    $enabled = isset($settings['negate']) && $settings['negate'] === '1' ? !$bundleConfig['enabled'] : $bundleConfig['enabled'];
+
+    foreach ($newSelection as $itemKey => $value) {
+      if ($value['id'] === $entity->id()) {
+        unset($newSelection[$itemKey]);
+      }
+    }
+    if ($enabled) {
+      $newSelection[] = [
+        'id' => $entity->id(),
+        'weight' => $bundleConfig['weight'],
+      ];
+    }
+
+    if ($selection !== $newSelection) {
+      if (empty($newSelection)) {
+        $bundle->unsetThirdPartySetting('paragraphs_selection', 'fields');
+      }
+      else {
+        $bundle->setThirdPartySetting('paragraphs_selection', 'fields', array_values($newSelection));
+      }
+      $bundle->save();
+    }
+  }
+  unset($settings['target_bundles']);
+  unset($settings['target_bundles_drag_drop']);
+  $settings['self_field_id'] = $entity->id();
+  $entity->setSetting('handler_settings', $settings);
+  $entity->calculateDependencies();
+}

@@ -2080,6 +2080,180 @@
             "install-path": "../../modules/contrib/admin_toolbar"
         },
         {
+            "name": "drupal/allowed_formats",
+            "version": "1.5.0",
+            "version_normalized": "1.5.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/allowed_formats.git",
+                "reference": "8.x-1.5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/allowed_formats-8.x-1.5.zip",
+                "reference": "8.x-1.5",
+                "shasum": "dbf61bee7aec87beaa2cf307c1d0d9d5b896328c"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.5",
+                    "datestamp": "1648060331",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Northern Commerce (formerly Digital Echidna)",
+                    "homepage": "https://www.drupal.org/northern-commerce-formerly-digital-echidna",
+                    "role": "Supporting organization"
+                },
+                {
+                    "name": "Jordan Thompson (nord102)",
+                    "homepage": "https://www.drupal.org/u/nord102",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Wunder",
+                    "homepage": "https://www.drupal.org/wunder",
+                    "role": "Supporting organization"
+                },
+                {
+                    "name": "Florian Loretan (floretan)",
+                    "homepage": "https://www.drupal.org/u/floretan",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Limit which text formats are available for each field instance.",
+            "homepage": "https://www.drupal.org/project/allowed_formats",
+            "support": {
+                "source": "http://cgit.drupalcode.org/allowed_formats",
+                "issues": "https://www.drupal.org/project/issues/allowed_formats"
+            },
+            "install-path": "../../modules/contrib/allowed_formats"
+        },
+        {
+            "name": "drupal/anu_lms",
+            "version": "2.8.1",
+            "version_normalized": "2.8.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/anu_lms.git",
+                "reference": "2.8.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/anu_lms-2.8.1.zip",
+                "reference": "2.8.1",
+                "shasum": "15b3373589d72fecf225663fd367a5bff290d1c8"
+            },
+            "require": {
+                "cweagans/composer-patches": "^1",
+                "drupal/allowed_formats": "^1",
+                "drupal/ckeditor": "*",
+                "drupal/core": "^9",
+                "drupal/eck": "^1@beta",
+                "drupal/field_group": "^3",
+                "drupal/inline_entity_form": "^1@RC",
+                "drupal/paragraphs": "^1",
+                "drupal/paragraphs_browser": "^1",
+                "drupal/paragraphs_selection": "^2",
+                "drupal/rest_entity_recursive": "^2@RC",
+                "drupal/rest_paragraphs_recursive": "*",
+                "drupal/weight": "^3"
+            },
+            "require-dev": {
+                "drupal/gnode": "*",
+                "drupal/group": "*",
+                "drupal/groupmedia": "*",
+                "drupal/range": "*",
+                "drupal/search_api": "*",
+                "drupal/search_api_db": "*",
+                "drupal/views_data_export": "*",
+                "drupal/xls_serialization": "*"
+            },
+            "suggest": {
+                "drupal/pwa": "Allows using Anu LMS offline."
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.8.1",
+                    "datestamp": "1662558932",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                },
+                "enable-patching": true,
+                "patches": {
+                    "drupal/core": {
+                        "Make exposed filter values available as tokens for text areas": "https://www.drupal.org/files/issues/2022-01-19/2761273-41.patch"
+                    },
+                    "drupal/paragraphs": {
+                        "Fix error with empty langcode on saving in certain cases": "https://www.drupal.org/files/issues/2020-06-25/paragraphs-2901390-51.patch"
+                    },
+                    "drupal/entity_reference_revisions": {
+                        "Improve performance of referencedEntities()": "https://www.drupal.org/files/issues/2022-07-25/entity_reference_revisions-improve-referenced-entities-performance-3281020-7.patch"
+                    },
+                    "drupal/paragraphs_browser": {
+                        "Fix Call to undefined method FileSystem::uriScheme()": "https://www.drupal.org/files/issues/2022-06-09/getscheme-deprecated.patch",
+                        "Fix overlap of paragraphs in admin UI": "https://www.drupal.org/files/issues/2022-08-29/fieldset-overlap-admin-theme-3275985-4.patch",
+                        "Fix not supporting custom paragraph bundle filtering widgets": "https://www.drupal.org/files/issues/2022-08-31/paragraphs_browser-add-support-of-custom-paragraphs-bundle-filtering-widgets-3307156-2.patch"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "beloglazov91",
+                    "homepage": "https://www.drupal.org/user/3431497"
+                },
+                {
+                    "name": "iamdroid",
+                    "homepage": "https://www.drupal.org/user/892728"
+                },
+                {
+                    "name": "kalabro",
+                    "homepage": "https://www.drupal.org/user/1399638"
+                },
+                {
+                    "name": "pavel.bulat",
+                    "homepage": "https://www.drupal.org/user/3568596"
+                },
+                {
+                    "name": "Spleshka",
+                    "homepage": "https://www.drupal.org/user/810676"
+                }
+            ],
+            "description": "Deceptively simple learning management system (LMS) for individual teachers, educational organisations and businesses.",
+            "homepage": "https://drupal.org/project/anu_lms",
+            "keywords": [
+                "Drupal",
+                "LMS"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/anu_lms",
+                "issues": "https://www.drupal.org/project/issues/anu_lms"
+            },
+            "install-path": "../../modules/contrib/anu_lms"
+        },
+        {
             "name": "drupal/aristotle",
             "version": "3.0.2",
             "version_normalized": "3.0.2.0",
@@ -4116,6 +4290,94 @@
                 "source": "https://git.drupalcode.org/project/dropzonejs"
             },
             "install-path": null
+        },
+        {
+            "name": "drupal/eck",
+            "version": "1.0.0-beta2",
+            "version_normalized": "1.0.0.0-beta2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/eck.git",
+                "reference": "8.x-1.0-beta2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/eck-8.x-1.0-beta2.zip",
+                "reference": "8.x-1.0-beta2",
+                "shasum": "6c671eef0fc89cc48cee70666548871e6321ec6e"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.0-beta2",
+                    "datestamp": "1591283484",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "See contributors",
+                    "homepage": "https://www.drupal.org/node/1155832/committers"
+                },
+                {
+                    "name": "acrazyanimal",
+                    "homepage": "https://www.drupal.org/user/696648"
+                },
+                {
+                    "name": "akalata",
+                    "homepage": "https://www.drupal.org/user/498926"
+                },
+                {
+                    "name": "dpopdan",
+                    "homepage": "https://www.drupal.org/user/2759811"
+                },
+                {
+                    "name": "eric.napier",
+                    "homepage": "https://www.drupal.org/user/501688"
+                },
+                {
+                    "name": "fmizzell",
+                    "homepage": "https://www.drupal.org/user/1312210"
+                },
+                {
+                    "name": "legolasbo",
+                    "homepage": "https://www.drupal.org/user/2480548"
+                },
+                {
+                    "name": "mducharme",
+                    "homepage": "https://www.drupal.org/user/616996"
+                },
+                {
+                    "name": "mihai_brb",
+                    "homepage": "https://www.drupal.org/user/2065978"
+                },
+                {
+                    "name": "pifagor",
+                    "homepage": "https://www.drupal.org/user/2375692"
+                },
+                {
+                    "name": "wjaspers",
+                    "homepage": "https://www.drupal.org/user/813890"
+                }
+            ],
+            "description": "ECK (Entity Construction Kit) allows users to create and administer entity types, bundles and entities from the UI.",
+            "homepage": "https://www.drupal.org/project/eck",
+            "support": {
+                "source": "http://git.drupal.org/project/eck.git",
+                "issues": "https://www.drupal.org/project/issues/eck"
+            },
+            "install-path": "../../modules/contrib/eck"
         },
         {
             "name": "drupal/embed",
@@ -8024,6 +8286,214 @@
             "install-path": null
         },
         {
+            "name": "drupal/paragraphs",
+            "version": "1.15.0",
+            "version_normalized": "1.15.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/paragraphs.git",
+                "reference": "8.x-1.15"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/paragraphs-8.x-1.15.zip",
+                "reference": "8.x-1.15",
+                "shasum": "2ed2d3199553010fa1c500181bbebe676e9e60c1"
+            },
+            "require": {
+                "drupal/core": "^9.3 || ^10",
+                "drupal/entity_reference_revisions": "~1.3"
+            },
+            "require-dev": {
+                "drupal/block_field": "1.x-dev",
+                "drupal/diff": "1.x-dev",
+                "drupal/entity_browser": "2.x-dev",
+                "drupal/entity_usage": "2.x-dev",
+                "drupal/field_group": "3.x-dev",
+                "drupal/inline_entity_form": "1.x-dev",
+                "drupal/paragraphs-paragraphs_library": "*",
+                "drupal/replicate": "1.x-dev",
+                "drupal/search_api": "1.x-dev",
+                "drupal/search_api_db": "*"
+            },
+            "suggest": {
+                "drupal/entity_browser": "Recommended for an improved user experience when using the Paragraphs library module"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.15",
+                    "datestamp": "1661440897",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                },
+                "patches_applied": {
+                    "Fix error with empty langcode on saving in certain cases": "https://www.drupal.org/files/issues/2020-06-25/paragraphs-2901390-51.patch"
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Berdir",
+                    "homepage": "https://www.drupal.org/user/214652"
+                },
+                {
+                    "name": "Frans",
+                    "homepage": "https://www.drupal.org/user/514222"
+                },
+                {
+                    "name": "jeroen.b",
+                    "homepage": "https://www.drupal.org/user/1853532"
+                },
+                {
+                    "name": "jstoller",
+                    "homepage": "https://www.drupal.org/user/99012"
+                },
+                {
+                    "name": "miro_dietiker",
+                    "homepage": "https://www.drupal.org/user/227761"
+                },
+                {
+                    "name": "Primsi",
+                    "homepage": "https://www.drupal.org/user/282629"
+                }
+            ],
+            "description": "Enables the creation of Paragraphs entities.",
+            "homepage": "https://www.drupal.org/project/paragraphs",
+            "support": {
+                "source": "https://git.drupalcode.org/project/paragraphs"
+            },
+            "install-path": "../../modules/contrib/paragraphs"
+        },
+        {
+            "name": "drupal/paragraphs_browser",
+            "version": "1.0.0",
+            "version_normalized": "1.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/paragraphs_browser.git",
+                "reference": "8.x-1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/paragraphs_browser-8.x-1.0.zip",
+                "reference": "8.x-1.0",
+                "shasum": "f544b64a87479053ff51be98521e8e84752fe32c"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9",
+                "drupal/paragraphs": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.0",
+                    "datestamp": "1610299421",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                },
+                "patches_applied": {
+                    "Fix Call to undefined method FileSystem::uriScheme()": "https://www.drupal.org/files/issues/2022-06-09/getscheme-deprecated.patch",
+                    "Fix overlap of paragraphs in admin UI": "https://www.drupal.org/files/issues/2022-08-29/fieldset-overlap-admin-theme-3275985-4.patch",
+                    "Fix not supporting custom paragraph bundle filtering widgets": "https://www.drupal.org/files/issues/2022-08-31/paragraphs_browser-add-support-of-custom-paragraphs-bundle-filtering-widgets-3307156-2.patch"
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Deciphered",
+                    "homepage": "https://www.drupal.org/user/103796"
+                },
+                {
+                    "name": "Mojiferous",
+                    "homepage": "https://www.drupal.org/user/1678298"
+                },
+                {
+                    "name": "michaellander",
+                    "homepage": "https://www.drupal.org/user/636494"
+                },
+                {
+                    "name": "tandroid",
+                    "homepage": "https://www.drupal.org/user/2879591"
+                }
+            ],
+            "description": "Provides browser for adding additional paragraphs.",
+            "homepage": "https://www.drupal.org/project/paragraphs_browser",
+            "support": {
+                "source": "https://git.drupalcode.org/project/paragraphs_browser"
+            },
+            "install-path": "../../modules/contrib/paragraphs_browser"
+        },
+        {
+            "name": "drupal/paragraphs_selection",
+            "version": "2.0.4",
+            "version_normalized": "2.0.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/paragraphs_selection.git",
+                "reference": "2.0.4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/paragraphs_selection-2.0.4.zip",
+                "reference": "2.0.4",
+                "shasum": "db89e41f635a46e5f5cd05436e8c762f3e60333c"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9",
+                "drupal/paragraphs": "*"
+            },
+            "require-dev": {
+                "drupal/paragraphs": "*",
+                "drupal/paragraphs_sets": "*",
+                "drupal/paragraphs_sets-paragraphs_sets_alter": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.4",
+                    "datestamp": "1638539826",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "jan.stoeckler",
+                    "homepage": "https://www.drupal.org/user/103809"
+                },
+                {
+                    "name": "rodrigoaguilera",
+                    "homepage": "https://www.drupal.org/user/408170"
+                }
+            ],
+            "description": "Let paragraph bundles define where they can be used.",
+            "homepage": "https://www.drupal.org/project/paragraphs_selection",
+            "support": {
+                "source": "https://git.drupalcode.org/project/paragraphs_selection"
+            },
+            "install-path": "../../modules/contrib/paragraphs_selection"
+        },
+        {
             "name": "drupal/pdf",
             "version": "dev-1.x",
             "version_normalized": "dev-1.x",
@@ -8440,6 +8910,134 @@
                 "issues": "https://www.drupal.org/project/issues/queue_ui"
             },
             "install-path": "../../modules/contrib/queue_ui"
+        },
+        {
+            "name": "drupal/rest_entity_recursive",
+            "version": "2.0.4-rc4",
+            "version_normalized": "2.0.4.0-RC4",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/rest_entity_recursive.git",
+                "reference": "2.0.4-rc4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/rest_entity_recursive-2.0.4-rc4.zip",
+                "reference": "2.0.4-rc4",
+                "shasum": "7515dde737afe5e15eb2dcd562c08376f1d15e9f"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9 || ^10"
+            },
+            "require-dev": {
+                "drupal/consumer_image_styles": "*",
+                "drupal/paragraphs": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.4-rc4",
+                    "datestamp": "1660815924",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "branimir.juranic",
+                    "homepage": "https://www.drupal.org/user/3331091"
+                },
+                {
+                    "name": "iamdroid",
+                    "homepage": "https://www.drupal.org/user/892728"
+                },
+                {
+                    "name": "kalabro",
+                    "homepage": "https://www.drupal.org/user/1399638"
+                },
+                {
+                    "name": "pavel.bulat",
+                    "homepage": "https://www.drupal.org/user/3568596"
+                },
+                {
+                    "name": "skorzh",
+                    "homepage": "https://www.drupal.org/user/813560"
+                },
+                {
+                    "name": "Spleshka",
+                    "homepage": "https://www.drupal.org/user/810676"
+                }
+            ],
+            "description": "A new \"json_recursive\" REST format exposes all fields and referenced entities by default.",
+            "homepage": "https://www.drupal.org/project/rest_entity_recursive",
+            "support": {
+                "source": "https://git.drupalcode.org/project/rest_entity_recursive"
+            },
+            "install-path": "../../modules/contrib/rest_entity_recursive"
+        },
+        {
+            "name": "drupal/rest_paragraphs_recursive",
+            "version": "2.0.4-rc4",
+            "version_normalized": "2.0.4.0-RC4",
+            "require": {
+                "drupal/core": "^8 || ^9 || ^10",
+                "drupal/paragraphs": "*",
+                "drupal/rest_entity_recursive": "*"
+            },
+            "type": "metapackage",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.4-rc4",
+                    "datestamp": "1660815924",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "branimir.juranic",
+                    "homepage": "https://www.drupal.org/user/3331091"
+                },
+                {
+                    "name": "iamdroid",
+                    "homepage": "https://www.drupal.org/user/892728"
+                },
+                {
+                    "name": "kalabro",
+                    "homepage": "https://www.drupal.org/user/1399638"
+                },
+                {
+                    "name": "pavel.bulat",
+                    "homepage": "https://www.drupal.org/user/3568596"
+                },
+                {
+                    "name": "skorzh",
+                    "homepage": "https://www.drupal.org/user/813560"
+                },
+                {
+                    "name": "Spleshka",
+                    "homepage": "https://www.drupal.org/user/810676"
+                }
+            ],
+            "description": "Enhanced Paragraphs support for \"json_recursive\" REST format.",
+            "homepage": "https://www.drupal.org/project/rest_entity_recursive",
+            "support": {
+                "source": "https://git.drupalcode.org/project/rest_entity_recursive"
+            },
+            "install-path": null
         },
         {
             "name": "drupal/restui",
@@ -9560,6 +10158,85 @@
                 "source": "https://git.drupalcode.org/project/views_templates"
             },
             "install-path": "../../modules/contrib/views_templates"
+        },
+        {
+            "name": "drupal/weight",
+            "version": "3.3.0",
+            "version_normalized": "3.3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/weight.git",
+                "reference": "8.x-3.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/weight-8.x-3.3.zip",
+                "reference": "8.x-3.3",
+                "shasum": "b225d54d4a8ce409ca1a899c6de41806eb1348e3"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-3.3",
+                    "datestamp": "1615219112",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Harry Slaughter",
+                    "homepage": "https://www.drupal.org/user/28233"
+                },
+                {
+                    "name": "NancyDru",
+                    "homepage": "https://www.drupal.org/user/101412"
+                },
+                {
+                    "name": "Neslee Canil Pinto",
+                    "homepage": "https://www.drupal.org/user/3580850"
+                },
+                {
+                    "name": "Shreya Shetty",
+                    "homepage": "https://www.drupal.org/user/2943029"
+                },
+                {
+                    "name": "davisben",
+                    "homepage": "https://www.drupal.org/user/1204214"
+                },
+                {
+                    "name": "deviantintegral",
+                    "homepage": "https://www.drupal.org/user/71291"
+                },
+                {
+                    "name": "jjeff",
+                    "homepage": "https://www.drupal.org/user/17190"
+                },
+                {
+                    "name": "kevinquillen",
+                    "homepage": "https://www.drupal.org/user/317279"
+                },
+                {
+                    "name": "ziomizar",
+                    "homepage": "https://www.drupal.org/user/814348"
+                }
+            ],
+            "description": "Allows arbitrary ordering of entities.",
+            "homepage": "https://www.drupal.org/project/weight",
+            "support": {
+                "source": "https://git.drupalcode.org/project/weight"
+            },
+            "install-path": "../../modules/contrib/weight"
         },
         {
             "name": "drush/drush",

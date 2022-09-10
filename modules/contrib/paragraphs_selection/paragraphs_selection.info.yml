@@ -1,0 +1,12 @@
+name: Paragraphs Selection
+type: module
+description: 'Let paragraph bundles define where they can be used.'
+package: Paragraphs
+core_version_requirement: ^8.8 || ^9
+dependencies:
+  - paragraphs:paragraphs
+
+# Information added by Drupal.org packaging script on 2021-12-03
+version: '2.0.4'
+project: 'paragraphs_selection'
+datestamp: 1638539829

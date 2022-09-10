@@ -3,7 +3,7 @@
         'name' => 'opigno/opigno-composer',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '016c7b722f470bd06b28aed95c7393514322f0f2',
+        'reference' => '39ac9885fda68ec31a21f736bc35867354b0f588',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -297,6 +297,24 @@
             'replaced' => array(
                 0 => '9.3.21',
             ),
+        ),
+        'drupal/allowed_formats' => array(
+            'pretty_version' => '1.5.0',
+            'version' => '1.5.0.0',
+            'reference' => '8.x-1.5',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/allowed_formats',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'drupal/anu_lms' => array(
+            'pretty_version' => '2.8.1',
+            'version' => '2.8.1.0',
+            'reference' => '2.8.1',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/anu_lms',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'drupal/aristotle' => array(
             'pretty_version' => '3.0.2',
@@ -849,6 +867,15 @@
             'replaced' => array(
                 0 => '9.3.21',
             ),
+        ),
+        'drupal/eck' => array(
+            'pretty_version' => '1.0.0-beta2',
+            'version' => '1.0.0.0-beta2',
+            'reference' => '8.x-1.0-beta2',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/eck',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'drupal/editor' => array(
             'dev_requirement' => false,
@@ -1579,6 +1606,33 @@
                 0 => '9.3.21',
             ),
         ),
+        'drupal/paragraphs' => array(
+            'pretty_version' => '1.15.0',
+            'version' => '1.15.0.0',
+            'reference' => '8.x-1.15',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/paragraphs',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'drupal/paragraphs_browser' => array(
+            'pretty_version' => '1.0.0',
+            'version' => '1.0.0.0',
+            'reference' => '8.x-1.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/paragraphs_browser',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'drupal/paragraphs_selection' => array(
+            'pretty_version' => '2.0.4',
+            'version' => '2.0.4.0',
+            'reference' => '2.0.4',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/paragraphs_selection',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'drupal/path' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -1670,6 +1724,24 @@
             'replaced' => array(
                 0 => '9.3.21',
             ),
+        ),
+        'drupal/rest_entity_recursive' => array(
+            'pretty_version' => '2.0.4-rc4',
+            'version' => '2.0.4.0-RC4',
+            'reference' => '2.0.4-rc4',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/rest_entity_recursive',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'drupal/rest_paragraphs_recursive' => array(
+            'pretty_version' => '2.0.4-rc4',
+            'version' => '2.0.4.0-RC4',
+            'reference' => NULL,
+            'type' => 'metapackage',
+            'install_path' => NULL,
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'drupal/restui' => array(
             'pretty_version' => '1.20.0',
@@ -1953,6 +2025,15 @@
                 0 => '9.3.21',
             ),
         ),
+        'drupal/weight' => array(
+            'pretty_version' => '3.3.0',
+            'version' => '3.3.0.0',
+            'reference' => '8.x-3.3',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/weight',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'drupal/workflows' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -2214,7 +2295,7 @@
         'opigno/opigno-composer' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '016c7b722f470bd06b28aed95c7393514322f0f2',
+            'reference' => '39ac9885fda68ec31a21f736bc35867354b0f588',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

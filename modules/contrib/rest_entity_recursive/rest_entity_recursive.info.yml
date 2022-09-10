@@ -1,0 +1,10 @@
+name: REST Entity Recursive
+description: A new "json_recursive" REST format exposes all fields and referenced entities by default.
+package: Web services
+type: module
+core_version_requirement: ^8 || ^9 || ^10
+
+# Information added by Drupal.org packaging script on 2022-08-18
+version: '2.0.4-rc4'
+project: 'rest_entity_recursive'
+datestamp: 1660815926

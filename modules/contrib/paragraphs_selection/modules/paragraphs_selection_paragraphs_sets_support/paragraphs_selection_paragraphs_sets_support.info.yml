@@ -1,0 +1,15 @@
+name: Paragraphs Selection Paragraphs Sets Support
+type: module
+description: Add Paragraphs Sets support to Paragraphs Selection.
+core: 8.x
+package: Paragraphs
+dependencies:
+  - paragraphs:paragraphs
+  - paragraphs_sets:paragraphs_sets
+  - paragraphs_sets:paragraphs_sets_alter
+  - paragraphs_selection:paragraphs_selection
+
+# Information added by Drupal.org packaging script on 2021-12-03
+version: '2.0.4'
+project: 'paragraphs_selection'
+datestamp: 1638539829
