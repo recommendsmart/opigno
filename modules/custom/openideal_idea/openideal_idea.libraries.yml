@@ -1,0 +1,10 @@
+autocomplete:
+  js:
+    js/autocomplete.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+fivestar:
+  css:
+    base:
+      css/fivestar.css: {}
