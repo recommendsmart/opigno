@@ -10,8 +10,3 @@ dependencies:
   - openideal_idea:openideal_idea
   - openideal_media:openideal_media
   - openideal_layout:openideal_layout
-
-# Information added by Drupal.org packaging script on 2021-03-29
-version: '3.0.8'
-project: 'idea'
-datestamp: 1617030358
