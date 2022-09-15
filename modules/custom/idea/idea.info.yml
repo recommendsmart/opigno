@@ -1,0 +1,8 @@
+name: Idea
+description: 'Provides Idea content type and related configuration. '
+type: module
+core_version_requirement: '^8.9 || ^9'
+dependencies:
+  - comment
+  - comments_order
+  - field

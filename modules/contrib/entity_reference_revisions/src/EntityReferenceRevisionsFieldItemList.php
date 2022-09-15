@@ -3,6 +3,7 @@
 namespace Drupal\entity_reference_revisions;
 
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Entity\RevisionableStorageInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemListTranslationChangesInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -38,8 +39,15 @@ class EntityReferenceRevisionsFieldItemList extends EntityReferenceFieldItemList
     // Load and add the existing entities.
     if ($ids) {
       $target_type = $this->getFieldDefinition()->getSetting('target_type');
+      $storage = \Drupal::entityTypeManager()->getStorage($target_type);
+
+      // Aim to load all revisions in bulk if storage type supports it.
+      if ($storage instanceof RevisionableStorageInterface) {
+        $entities = $storage->loadMultipleRevisions($ids);
+      }
+
       foreach ($ids as $delta => $target_id) {
-        $entity = \Drupal::entityTypeManager()->getStorage($target_type)->loadRevision($target_id);
+        $entity = $entities[$target_id] ?? $storage->loadRevision($target_id);
         if ($entity) {
           $target_entities[$delta] = $entity;
         }

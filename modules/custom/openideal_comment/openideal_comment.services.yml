@@ -1,7 +1,0 @@
-services:
-  openideal_comment.subscriber:
-    class: Drupal\openideal_comment\EventSubscriber\OpenidealCommentEventSubscriber
-    arguments:
-      - '@entity_type.manager'
-    tags:
-      - { name: event_subscriber }

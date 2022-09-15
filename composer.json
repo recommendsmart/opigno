@@ -86,7 +86,10 @@
         "drupal/views_dynamic_fields_and_filters-views_dynamic_fields_and_filters": "^1.0",
         "drupal/lbl": "^1.0",
         "drupal/pwa": "^1.5",
-        "drupal/anu_lms": "^2.8"
+        "drupal/anu_lms": "^2.8",
+        "drupal/features": "^3.12",
+        "drupal/features_permissions": "^1.0",
+        "drupal/rules": "^3.0@alpha"
     },
     "require-dev": {
         "drush/drush": "^10",

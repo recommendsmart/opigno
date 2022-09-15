@@ -1,0 +1,14 @@
+name: Features Permissions
+description: 'Creates exportable permission config entities from roles for Features'
+package: Development
+
+type: module
+core_version_requirement: ^8.9 || ^9.0
+
+dependencies:
+  - features:features
+
+# Information added by Drupal.org packaging script on 2022-03-23
+version: '1.0.0'
+project: 'features_permissions'
+datestamp: 1648053056

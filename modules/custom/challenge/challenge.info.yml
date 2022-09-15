@@ -1,0 +1,10 @@
+name: Challenge
+type: module
+core_version_requirement: '^8.9 || ^9'
+dependencies:
+  - comment
+  - features
+  - field
+  - menu_ui
+  - node
+  - text

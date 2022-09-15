@@ -7,7 +7,7 @@ dependencies:
   - drupal:layout_discovery
   - drupal:layout_builder
 
-# Information added by Drupal.org packaging script on 2022-09-06
-version: '1.0.0'
+# Information added by Drupal.org packaging script on 2022-09-13
+version: '1.0.1'
 project: 'lbl'
-datestamp: 1662463097
+datestamp: 1663069181

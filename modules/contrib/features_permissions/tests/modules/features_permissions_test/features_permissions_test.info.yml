@@ -1,0 +1,10 @@
+name: 'Features Permissions Test Module'
+type: module
+package: Testing
+dependencies:
+  - features_permissions
+
+# Information added by Drupal.org packaging script on 2022-03-23
+version: '1.0.0'
+project: 'features_permissions'
+datestamp: 1648053056
