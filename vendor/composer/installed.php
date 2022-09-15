@@ -3,7 +3,7 @@
         'name' => 'opigno/opigno-composer',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '4432463ca4139660eddec02c4fb2cf58e4273471',
+        'reference' => '7aa00911518f75e65ea51529ec33ee534cf155ea',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -459,6 +459,15 @@
             'replaced' => array(
                 0 => '9.3.21',
             ),
+        ),
+        'drupal/comments_order' => array(
+            'pretty_version' => '3.0.1',
+            'version' => '3.0.1.0',
+            'reference' => '3.0.1',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../modules/contrib/comments_order',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'drupal/commerce' => array(
             'pretty_version' => '2.27.0',
@@ -2340,7 +2349,7 @@
         'opigno/opigno-composer' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '4432463ca4139660eddec02c4fb2cf58e4273471',
+            'reference' => '7aa00911518f75e65ea51529ec33ee534cf155ea',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

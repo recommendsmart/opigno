@@ -89,7 +89,8 @@
         "drupal/anu_lms": "^2.8",
         "drupal/features": "^3.12",
         "drupal/features_permissions": "^1.0",
-        "drupal/rules": "^3.0@alpha"
+        "drupal/rules": "^3.0@alpha",
+        "drupal/comments_order": "^3.0"
     },
     "require-dev": {
         "drush/drush": "^10",
