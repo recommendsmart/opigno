@@ -2,24 +2,20 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.teaser
-    - field.field.node.idea.body
-    - field.field.node.idea.field_challenge
-    - field.field.node.idea.field_comment
-    - node.type.idea
+    - field.field.node.challenge.field_description
+    - node.type.challenge
   module:
     - text
     - user
-id: node.idea.teaser
+id: node.challenge.default
 targetEntityType: node
-bundle: idea
-mode: teaser
+bundle: challenge
+mode: default
 content:
-  body:
-    type: text_summary_or_trimmed
-    label: hidden
-    settings:
-      trim_length: 600
+  field_description:
+    type: text_default
+    label: above
+    settings: {  }
     third_party_settings: {  }
     weight: 101
     region: content
@@ -32,7 +28,5 @@ hidden:
   entity_print_view_epub: true
   entity_print_view_pdf: true
   entity_print_view_word_docx: true
-  field_challenge: true
-  field_comment: true
   private_message_link: true
   search_api_excerpt: true

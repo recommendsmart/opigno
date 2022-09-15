@@ -3,6 +3,7 @@ description: 'Provides Idea content type and related configuration. '
 type: module
 core_version_requirement: '^8.9 || ^9'
 dependencies:
+  - 'challenge:challenge'
   - 'comments_order:comments_order'
   - 'drupal:comment'
   - 'drupal:field'
@@ -11,4 +12,5 @@ dependencies:
   - 'drupal:path'
   - 'drupal:text'
   - 'drupal:user'
+  - 'entity_reference_revisions:entity_reference_revisions'
   - 'idea:idea'

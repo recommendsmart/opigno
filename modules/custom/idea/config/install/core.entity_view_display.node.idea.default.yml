@@ -2,11 +2,14 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_display.comment.comment.default
     - field.field.node.idea.body
+    - field.field.node.idea.field_challenge
     - field.field.node.idea.field_comment
     - node.type.idea
   module:
     - comment
+    - entity_reference_revisions
     - text
     - user
 id: node.idea.default
@@ -20,6 +23,15 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 101
+    region: content
+  field_challenge:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 103
     region: content
   field_comment:
     type: comment_default

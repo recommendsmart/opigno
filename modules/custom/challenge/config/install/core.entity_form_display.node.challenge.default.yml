@@ -2,82 +2,60 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.idea.body
-    - field.field.node.idea.field_challenge
-    - field.field.node.idea.field_comment
-    - node.type.idea
+    - field.field.node.challenge.field_description
+    - node.type.challenge
   module:
-    - comment
-    - entity_reference_revisions
     - path
     - text
-id: node.idea.default
+id: node.challenge.default
 targetEntityType: node
-bundle: idea
+bundle: challenge
 mode: default
 content:
-  body:
-    type: text_textarea_with_summary
-    weight: 121
-    region: content
-    settings:
-      rows: 9
-      summary_rows: 3
-      placeholder: ''
-      show_summary: false
-    third_party_settings: {  }
   created:
     type: datetime_timestamp
-    weight: 10
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_challenge:
-    type: entity_reference_revisions_autocomplete
-    weight: 123
+  field_description:
+    type: text_textarea
+    weight: 1
     region: content
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
+      rows: 5
       placeholder: ''
-    third_party_settings: {  }
-  field_comment:
-    type: comment_default
-    weight: 122
-    region: content
-    settings: {  }
     third_party_settings: {  }
   path:
     type: path
-    weight: 30
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
   promote:
     type: boolean_checkbox
-    weight: 15
+    weight: 4
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 120
+    weight: 7
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
-    weight: 16
+    weight: 5
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: -5
+    weight: 0
     region: content
     settings:
       size: 60
@@ -85,7 +63,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 5
+    weight: 2
     region: content
     settings:
       match_operator: CONTAINS
