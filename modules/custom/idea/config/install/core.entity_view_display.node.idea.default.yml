@@ -1,0 +1,43 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.idea.body
+    - field.field.node.idea.field_comment
+    - node.type.idea
+  module:
+    - comment
+    - text
+    - user
+id: node.idea.default
+targetEntityType: node
+bundle: idea
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  field_comment:
+    type: comment_default
+    label: above
+    settings:
+      view_mode: default
+      pager_id: 0
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  private_message_link: true
+  search_api_excerpt: true
